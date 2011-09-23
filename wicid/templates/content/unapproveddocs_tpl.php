@@ -281,6 +281,13 @@ if ($doccount > 0) {
     $table->width = '100%';
     $table->startRow();
     $nextflag = "nonext";
+
+    //Store count
+    $textinput2 = new textinput('rcount');
+    $textinput2->size = 1;
+    $textinput2->value = $rows;
+    $textinput2->setType('hidden');
+    
     //Add prev button
     if ($newprev >= 0) {
         $str .= "prev";
@@ -289,7 +296,7 @@ if ($doccount > 0) {
         //Add Form
         $prevform = new form('prevform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newprev, 'rowcount' => $totalrowcount)));
 
-        $prevform->addToForm("</ br> " . $button->show() . " </ br>");
+        $prevform->addToForm("</ br> " . $button->show().$textinput2->show() . " </ br>");
 
         $table->addCell($prevform->show(), "50%", 'top', 'right');
     }
@@ -301,7 +308,7 @@ if ($doccount > 0) {
         //Add Form
         $nextform = new form('nextform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newstart, 'rowcount' => $totalrowcount)));
 
-        $nextform->addToForm("</ br> " . $button->show() . " </ br>");
+        $nextform->addToForm("</ br> " . $button->show().$textinput2->show() . " </ br>");
         if (!empty($str)) {
             $table->addCell($nextform->show(), "50%", 'top', 'left');
         } else {
@@ -318,6 +325,35 @@ if ($doccount > 0) {
     $navtable = $table->show();
 }
 
+$dd = &new dropdown('rcount');
+$dd->addOption('50', '50');
+$dd->addOption('100', '100');
+$dd->addOption('150', '150');
+$dd->addOption('200', '200');
+$dd->addOption('250', '250');
+$dd->addOption('300', '300');
+$dd->addOption('350', '350');
+$dd->addOption('400', '400');
+$dd->addOption('450', '450');
+$dd->addOption('500', '500');
+$dd->selected = $rows;
+$dd->onchangeScript = 'onchange="document.forms[\'totalrowcount\'].submit();"';
+
+//Select no of records to display
+$rcountform = new form('totalrowcount', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'Y', 'start' => 0, 'rowcount' => $files['count'], 'folder' => $dir)));
+$button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordgo', 'wicid', 'List'));
+$button->setToSubmit();
+$rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. </ br>");
+
+//Create table to hold the rowcount
+$table = &$this->newObject("htmltable", "htmlelements");
+$table->width = '100%';
+$table->startRow();
+$table->endRow();
+$table->startRow();
+$table->addCell($rcountform->show(), "50%", 'top', 'left', Null, 'colspan="2"');
+$table->endRow();
+$rcounttable = $table->show();
 
 //Create legend for the unnapproved docs
 $fs = new fieldset();
@@ -325,9 +361,9 @@ $fs->setLegend($this->objLanguage->languageText('mod_wicid_unapproved', 'wicid',
 
 //Check if str is empty
 if (!empty($str)) {
-    $fs->addContent($form->show() . "<br/>" . $navtable);
+    $fs->addContent($rcounttable . "<br/>" . $form->show() . "<br/>" . $navtable);
 } else {
-    $fs->addContent($form->show());
+    $fs->addContent($rcounttable . "<br/>" . $form->show());
 }
 echo $fs->show();
 ?>

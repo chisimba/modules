@@ -5,6 +5,7 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 
 //Append javascript to check all fields
 $this->appendArrayVar('headerParams', "
@@ -88,6 +89,8 @@ if ($filecount > 0) {
     $textinput->value = $filecount;
     $textinput->setType('hidden');
 
+    
+
     $table->startRow();
     $table->addCell($selectall->show() . $textinput->show() . "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
@@ -122,7 +125,7 @@ if ($filecount > 0) {
     }
 } else {
     $table->startRow();
-    $table->addCell('<strong class="confirm">'.$this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')).'</strong>';
+    $table->addCell('<strong class="confirm">' . $this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')) . '</strong>';
     $table->endRow();
 }
 
@@ -137,9 +140,12 @@ if ($filecount > 0) {
 
 //Add Navigations
 if ($filecount > 0) {
+
+
     //Compute new start val
     $newstart = $start + $rows;
     $newprev = $start - $rows;
+
     //Navigation Flag
     $str = "";
     //Create table to hold buttons(forms)
@@ -147,6 +153,13 @@ if ($filecount > 0) {
     $table->width = '100%';
     $table->startRow();
     $nextflag = "nonext";
+
+    //Store count
+    $textinput2 = new textinput('rcount');
+    $textinput2->size = 1;
+    $textinput2->value = $rows;
+    $textinput2->setType('hidden');
+
     //Add prev button
     if ($newprev >= 0) {
         $str .= "prev";
@@ -155,7 +168,7 @@ if ($filecount > 0) {
         //Add Form
         $prevform = new form('prevform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newprev, 'rowcount' => $files['count'], 'folder' => $dir)));
 
-        $prevform->addToForm("</ br> " . $button->show() . " </ br>");
+        $prevform->addToForm("</ br> " . $button->show() .$textinput2->show(). " </ br>");
 
         $table->addCell($prevform->show(), "50%", 'top', 'right');
     }
@@ -167,7 +180,7 @@ if ($filecount > 0) {
         //Add Form
         $nextform = new form('nextform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newstart, 'rowcount' => $files['count'], 'folder' => $dir)));
 
-        $nextform->addToForm("</ br> " . $button->show() . " </ br>");
+        $nextform->addToForm("</ br> " . $button->show() .$textinput2->show(). " </ br>");
         if (!empty($str)) {
             $table->addCell($nextform->show(), "50%", 'top', 'left');
         } else {
@@ -178,19 +191,49 @@ if ($filecount > 0) {
         $nextflag = "next";
     }
     if ($nextflag == "nonext") {
-        $table->addCell(" ", "50%", 'top', 'left');
+        $table->addCell("", "50%", 'top', 'left');
     }
-    $table->endRow();
     $navtable = $table->show();
 }
+
+$dd = &new dropdown('rcount');
+$dd->addOption('50', '50');
+$dd->addOption('100', '100');
+$dd->addOption('150', '150');
+$dd->addOption('200', '200');
+$dd->addOption('250', '250');
+$dd->addOption('300', '300');
+$dd->addOption('350', '350');
+$dd->addOption('400', '400');
+$dd->addOption('450', '450');
+$dd->addOption('500', '500');
+$dd->selected = $rows;
+$dd->onchangeScript = 'onchange="document.forms[\'totalrowcount\'].submit();"';
+
+//Select no of records to display
+$rcountform = new form('totalrowcount', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => 0, 'rowcount' => $files['count'], 'folder' => $dir)));
+$button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordgo', 'wicid', 'List'));
+$button->setToSubmit();
+$rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. </ br>");
+
+//Create table to hold the rowcount
+$table = &$this->newObject("htmltable", "htmlelements");
+$table->width = '100%';
+$table->startRow();
+$table->endRow();
+$table->startRow();
+$table->addCell($rcountform->show(), "50%", 'top', 'left', Null, 'colspan="2"');
+$table->endRow();
+$rcounttable = $table->show();
+
 //Add documents table to fieldset
 $fs = new fieldset();
 $fs->setLegend($this->objLanguage->languageText('mod_wicid_topics', 'wicid', 'Topics'));
 //Check if str is empty
 if (!empty($str)) {
-    $fs->addContent($form->show() . "<br/>" . $navtable);
+    $fs->addContent($rcounttable . "<br/>" . $form->show() . "<br/>" . $navtable);
 } else {
-    $fs->addContent($form->show());
+    $fs->addContent($rcounttable . "<br/>" .$form->show());
 }
 echo $fs->show();
 ?>

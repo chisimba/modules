@@ -319,14 +319,15 @@ class wicid extends controller {
      * @return form
      */
     public function __viewfolder() {
-//Set show rows
+        //Set show rows
         $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
-//Select records Limit array
+        $rows = $this->getParam("rcount", $rows);
+        //Select records Limit array
         $limit = array();
         $limit['start'] = $start;
         $limit['rows'] = $rows;
-//Get the rowcount
+        //Get the rowcount
         $rowcount = $this->getParam("rowcount", Null);
 
         $rejecteddocuments = $this->documents->getdocuments($this->mode, 'N', "Y", $limit, $rowcount);
@@ -1242,7 +1243,7 @@ class wicid extends controller {
         //Set show rows
         $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
-        
+        $rows = $this->getParam("rcount", $rows);
         //Select records Limit array
         $limit = array();
         $limit['start'] = $start;
@@ -1269,6 +1270,7 @@ class wicid extends controller {
 //Set show rows
         $rows = 10;
         $start = $this->getParam("start", 0);
+        $rows = $this->getParam("rcount", $rows);
 //Select records Limit array
         $limit = array();
         $limit['start'] = $start;
