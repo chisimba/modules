@@ -77,7 +77,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                     <div class="groupSubLinksList">
 
                         <img src="skins/unesco_oer/images/icon-group-calendar.png" alt="Group Calendar" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid=<? echo $groupid; ?>" class="greenTextBoldLink">Group calendar</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid=<?php echo $groupid; ?>&page=10a_tpl.php" class="greenTextBoldLink">Group calendar</a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">

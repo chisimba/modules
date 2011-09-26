@@ -56,8 +56,11 @@ class grouputil extends object {
     public function content($group) {
 
         $thumbLink = new link($this->uri(array("action" => '11a', 'id' => $group['id'], "page" => '10a_tpl.php')));
-
         $thumbLink->link = '<img src="' . $group['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
+        $groupnameLink= new link($this->uri(array("action" => '11a', 'id' => $group['id'], "page" => '10a_tpl.php')));
+        $groupnameLink->link=$group['name'];
+        $groupnameLink->cssClass="groupGridViewHeading greenText";
+
         $userid = $this->objUser->userId();
         if ($this->ObjDbUserGroups->ismemberOfgroup($userid, $group['id'])) {
 
@@ -79,7 +82,7 @@ class grouputil extends object {
 <div class="whiteBackgroundBox">
                             ' . $thumbLink->show() . '
                             <div class="groupGridViewHeading greenText">
-                             ' . $group['name'] . '
+                             ' .$groupnameLink->show(). '
                             </div>
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span>' . $this->ObjDbUserGroups->groupMembers($group['id']) . '<br><br>
@@ -426,6 +429,44 @@ class grouputil extends object {
             }
             echo $content;
         }
+    }
+
+
+    function communitiesGroupList(){
+        $product = $this->newObject('product', 'unesco_oer');
+        $product->loadProduct($productID);
+        $language = $product->getLanguageName();
+        $institution = $product->getInstitutionName();
+        $institutionId = $product->getInstitutionID();
+        $Thumbnail = $product->getThumbnailPath();
+
+        $AdaptProductLink= $Link = new link($this->uri(array("action" =>'adaptProduct', 'productID' => $productID, "page" => '10a_tpl.php')));
+        $AdaptProductLink="make adaptation";
+        $AdaptProductLink->cssClass = "adaptationLinks";
+
+        $content;
+        $content.='<div class="listAdaptations tenPixelTopPadding">
+                        <div class="floaLeftDiv">
+
+                            <img src="'.$Thumbnail.' alt="Adaptation placeholder">
+                        </div>
+                    <div class="rightColumInnerDiv">
+                      <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                            Adapted in <a href="#" class="productAdaptationGridViewLinks">'.$language.'</a>
+                            <br>
+                            <div class="listingAdaptationsLinkAndIcon">
+
+                               <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <div class="textNextToTheListingIconDiv"><a href="" class="adaptationLinks">'.$AdaptProductLink->show().'</a></div>
+                   	  		</div>
+
+               		  <div class="listingAdaptationsLinkAndIcon">
+                             <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                      </div>
+                        </div>
+
+                    </div>';
     }
 
 
