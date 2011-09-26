@@ -450,9 +450,8 @@ class product extends object {
         $this->setContacts($this->getParam('contacts'));
         $this->setStatus($this->getParam('status'));
         $this->setRights($this->getParam('rights'));
-        $this->setRightsHolder($this->getParam('rights_holder'));
+        $this->setRightsHolder($this->getParam('creativecommons'));
         $this->setProvenance($this->getParam('provenance'));
-        ;
         $this->setCoverage($this->getParam('coverage'));
         $this->setStatus($this->getParam('status'));
         $this->setKeyWords($this->getParam('keywords'));
@@ -860,10 +859,11 @@ class product extends object {
         $table->endRow();
 
 
-        $iconList = $this->objCC->show($cclic);
+//        $iconList = $this->objCC->show($cclic);
 
         $objLicenseChooser = $this->newObject('licensechooser', 'creativecommons');
         $objLicenseChooser->icontype = 'small';
+        $objLicenseChooser->defaultValue = $this->getRightsHolder();
         //field for rights holder
         $fieldName = 'rights_holder';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');

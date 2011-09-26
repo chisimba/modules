@@ -36,6 +36,7 @@ class curriculum extends content {
 
     public function showInput($productID, $prevAction = NULL) {
         $objLanguage = $this->getObject('language','language');
+        $productUtil = $this->getObject('productutil', 'unesco_oer');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -61,8 +62,9 @@ class curriculum extends content {
          $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
+        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_click','unesco_oer');
         $table->startRow();
-        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'));
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer').$productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();

@@ -595,10 +595,6 @@ echo $Comment->commentbox($productID);
                     <br>
                 </div>
     </div>
-<?php
-$js = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ellipsis.js') . '" type="text/javascript"></script>';
-echo $js;
-?>
                     <script type="text/javascript">
 
                         $(document).ready(function(){
