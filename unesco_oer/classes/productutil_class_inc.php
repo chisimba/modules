@@ -985,14 +985,14 @@ function createParameterArray($parameterString){
     return $parameterArray;
 }
 
-function getToolTip($toolTip = NULL){
+function getToolTip($toolTip = NULL, $onClick = 'return false;'){
     if (empty($toolTip)) {
         $objLanguage = $this->getObject('language','language');
         $toolTip = $objLanguage->languageText('mod_unesco_oer_no_tooltip','unesco_oer');
     }
     $toolTip = "<span>$toolTip</span>";
     $image = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
-    return " <div class='tooltip' >$image $toolTip</div>";
+    return " <div onclick=". $onClick ." class='tooltip' >$image $toolTip</div>";
 }
 
 }

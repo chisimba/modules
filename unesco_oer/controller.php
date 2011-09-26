@@ -2536,6 +2536,11 @@ class unesco_oer extends controller {
         $pdf->partWrite($instructions);
         return $pdf->show();
     }
+
+    public function __help() {
+        return 'help_tpl.php';
+    }
+
     }
 
 ?>
