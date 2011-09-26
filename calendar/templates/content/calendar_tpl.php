@@ -116,7 +116,7 @@ echo $calendarNavigation.$eventsCalendar;
 
 echo $eventsList;
 
-$addEventLink = new link($this->uri(array('action' => 'add')));
+$addEventLink = new link($this->uri(array('action' => 'add','groupid'=>$groupid)));
 
 $addEventLink->link = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase');
 

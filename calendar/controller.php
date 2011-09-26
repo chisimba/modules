@@ -1,36 +1,34 @@
 <?php
+
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
-* Calendar Controller
-* This class controls all functionality to run the calendar module. It now integrates user calendar and contextcalendar
-* @author Tohir Solomons & yasser buchana
-* @copyright (c) 2004 University of the Western Cape
-* @package calendar
-* @version 2
-*/
-class calendar extends controller
-{
+ * Calendar Controller
+ * This class controls all functionality to run the calendar module. It now integrates user calendar and contextcalendar
+ * @author Tohir Solomons & yasser buchana
+ * @copyright (c) 2004 University of the Western Cape
+ * @package calendar
+ * @version 2
+ */
+class calendar extends controller {
 
     /**
-    * Constructor method to instantiate objects and get variables
-    */
-    function init()
-    {
+     * Constructor method to instantiate objects and get variables
+     */
+    function init() {
         $this->objCalendar = $this->getObject('managecalendar');
         //$this->objCalendar =& $this->getObject('dbcalendar', 'calendarbase');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->dateFunctions = $this->getObject('dateandtime', 'utilities');
         $this->objICal = $this->getObject('ical');
         $this->objCalendarInterface = $this->getObject('calendarinterface');
-		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
         // User Details
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = & $this->getObject('user', 'security');
         $this->setVarByRef('fullname', $this->objUser->fullname());
         $this->userId = $this->objUser->userId();
 
@@ -49,16 +47,16 @@ class calendar extends controller
         $this->setVarByRef('courseTitle', $this->contextTitle);
         $this->setVarByRef('isInContext', $this->isInContext);
 
-       // $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
+        // $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
         $this->isContextLecturer = $this->objContextGroups->isContextLecturer();
 
         // Give User Lecturer Rights if User is Admin
         //if ($this->isValid('manage_course_event')) {
         /*
-        if ($this->objUser->isCourseAdmin()) {
-            $this->isContextLecturer = TRUE;
-        }
-        */
+          if ($this->objUser->isCourseAdmin()) {
+          $this->isContextLecturer = TRUE;
+          }
+         */
 
 
         //if ($this->isValid('manage_site_event')) {
@@ -82,18 +80,16 @@ class calendar extends controller
         // Load Language Class
         $this->objLanguage = $this->getObject('language', 'language');
 
-        $this->objAttachments =& $this->getObject('attachments');
-
+        $this->objAttachments = & $this->getObject('attachments');
     }
 
     /**
-    * Method to process actions to be taken
-    *
-    * @param string $action String indicating action to be taken
-    */
-    function dispatch($action=Null)
-    {
-        $this->setVar('pageSuppressXML',true);
+     * Method to process actions to be taken
+     *
+     * @param string $action String indicating action to be taken
+     */
+    function dispatch($action=Null) {
+        $this->setVar('pageSuppressXML', true);
 
         if ($this->isInContext) {
             $this->setLayoutTemplate('calendar_layout_tpl.php');
@@ -101,8 +97,7 @@ class calendar extends controller
             $this->setLayoutTemplate('user_layout_tpl.php');
         }
 
-        switch ($action)
-        {
+        switch ($action) {
             case 'add':
                 return $this->showAddForm();
 
@@ -130,21 +125,22 @@ class calendar extends controller
             case 'deleteattachment':
                 return $this->deleteAttachment($this->getParam('id'), $this->getParam('mode'), $this->getParam('filename'));
 
-			case 'icalexport':
-				$this->objICal->export();
-				break;
+            case 'icalexport':
+                $this->objICal->export();
+                break;
             default:
                 return $this->showEvents();
         }
     }
 
     /**
-    * Method to show events for the current month. This is the default action
-    */
-    function showEvents()
-    {
+     * Method to show events for the current month. This is the default action
+     */
+    function showEvents() {
         $month = $this->getParam('month', date('m'));
         $year = $this->getParam('year', date('Y'));
+        $groupid = $this->getParam("groupid");
+
         $this->setVarByRef('month', $month);
         $this->setVarByRef('year', $year);
 
@@ -161,14 +157,16 @@ class calendar extends controller
         $this->setVarByRef('calendarNavigation', $this->objCalendarInterface->getNav());
         $this->setVarByRef('eventsList', $this->objCalendarInterface->getEventsList());
 
+
+        $this->setVarByRef("groupid", $groupid);
+
         return 'calendar_tpl.php';
     }
 
     /**
-    * Method to show the Add Event Form
-    */
-    function showAddForm()
-    {
+     * Method to show the Add Event Form
+     */
+    function showAddForm() {
         // Determines the default list of views available
         if ($this->isInContext) {
             $defaultList = 'all';
@@ -186,26 +184,27 @@ class calendar extends controller
 
         $this->setVar('mode', 'add');
 
-        $temporaryId = $this->objUser->userId().'_'.mktime();
+        $temporaryId = $this->objUser->userId() . '_' . mktime();
         $this->setVarByRef('temporaryId', $temporaryId);
+        $this->setVarByRef('groupid', $this->getParam("groupid"));
 
         return 'addedit_event_tpl.php';
     }
 
     /**
-    * Method to process a form and save an event
-    */
-    function saveEvent($eventFor)
-    {
+     * Method to process a form and save an event
+     */
+    function saveEvent($eventFor) {
         $date = $this->getParam('date');
         $date2 = $this->getParam('date2');
         $eventtitle = $this->getParam('title');
         $eventdetails = $this->getParam('details');
-        $eventurl  = $this->getParam('url');
-        $multidayevent  = $this->getParam('multidayevent');
+        $eventurl = $this->getParam('url');
+        $multidayevent = $this->getParam('multidayevent');
         $timeFrom = $this->getParam('timefrom');
         $timeTo = $this->getParam('timeto');
 
+        $groupid = $this->getParam("groupid");
 
 
         $eventsList = 'all';
@@ -215,34 +214,39 @@ class calendar extends controller
             // Insert Multidate event
             //$this->objCalendar->insertMultiDayEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId);
             // Insert Single Day event
-            switch ($eventFor)
-            {
+            switch ($eventFor) {
                 case 0: // Save User Event
                     //$event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
 
- 		break;
-                case 1: // Save Course Event
-                    $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
                     break;
+                case 1: // Save Course Event
+                
+                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
+                    break;
+                case 2: // Save Single group Event
+                   $event = $this->objCalendar->insertMultiDayGroupEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId,$groupid);
+                  break;
+
 
                 case 3: // Save Site Event
-                    $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId);
+                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId);
                     $eventsList = 'site';
                     break;
-
             }
-
         } else {
             // Insert Single Day event
-            switch ($eventFor)
-            {
+            switch ($eventFor) {
                 case 0: // Save Single User Event
-                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,$this->userId, 0, NULL, $timeFrom, $timeTo);
+                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $this->userId, 0, NULL, $timeFrom, $timeTo);
                     $eventsList = 'user';
                     break;
                 case 1: // Save Single Course Event
                     $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, 0, NULL, $timeFrom, $timeTo);
                     break;
+                case 2: // Save Single group Event
+                    $event = $this->objCalendar->insertSingleGroupEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, 0, NULL, $timeFrom, $timeTo, $groupid);
+                    break;
+
                 case 3:  // Save Single Site Event
                     $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, 0, NULL, $timeFrom, $timeTo);
                     $eventsList = 'site';
@@ -265,16 +269,15 @@ class calendar extends controller
 //
         //$this->objAttachments->transfer($_POST['temporary_id'],$event);
 
-        return $this->nextAction(NULL, array('message'=>'eventadded', 'month'=>$monthYear['month'], 'year'=>$monthYear['year'], 'events'=>$eventsList));
+        return $this->nextAction(NULL, array('message' => 'eventadded', 'month' => $monthYear['month'], 'year' => $monthYear['year'], 'events' => $eventsList));
     }
 
     /**
-    * Method to prepare a form for editing an event
-    *
-    * @param string $id Record Id of the event to edit
-    */
-    function showEditForm($id)
-    {
+     * Method to prepare a form for editing an event
+     *
+     * @param string $id Record Id of the event to edit
+     */
+    function showEditForm($id) {
         // Determines the default list of views available
         if ($this->isInContext) {
             $defaultList = 'all';
@@ -304,8 +307,7 @@ class calendar extends controller
                 $event['multiday_event_start_id'] = $event['id'];
             }
             // get date of last event
-            $event['eventdate2']  = $this->objCalendar->getLastMultiDayEvent($event['multiday_event_start_id']);
-
+            $event['eventdate2'] = $this->objCalendar->getLastMultiDayEvent($event['multiday_event_start_id']);
         } else {
             $event['eventdate2'] = '';
         }
@@ -317,20 +319,18 @@ class calendar extends controller
         return 'addedit_event_tpl.php';
     }
 
-
     /**
-    * Method to process a form and update an event
-    */
-    function updateEvent()
-    {
+     * Method to process a form and update an event
+     */
+    function updateEvent() {
 
-        $id  = $this->getParam('id');
+        $id = $this->getParam('id');
         $date = $this->getParam('date');
         $date2 = $this->getParam('date2');
         $eventtitle = $this->getParam('title');
         $eventdetails = $this->getParam('details');
-        $eventurl  = $this->getParam('url');
-        $multidayevent  = $this->getParam('multidayevent');
+        $eventurl = $this->getParam('url');
+        $multidayevent = $this->getParam('multidayevent');
         $multiday_event_original = $this->getParam('multiday_event_original');
 
         $timeFrom = $this->getParam('timefrom');
@@ -349,18 +349,14 @@ class calendar extends controller
         } else {
             return $this->nextAction(NULL);
         }
-
-
-
     }
 
     /**
-    * Method to delete an event
-    *
-    * @param string $id Record Id of the Event
-    */
-    function deleteEvent($id)
-    {
+     * Method to delete an event
+     *
+     * @param string $id Record Id of the Event
+     */
+    function deleteEvent($id) {
         // Get the event from the database
         $event = $this->objCalendar->getSingle($id);
 
@@ -369,7 +365,7 @@ class calendar extends controller
         // get the date - this is necessary for the redirect
         $date = $event['eventdate'];
 
-        if (count ($event) != 0) {
+        if (count($event) != 0) {
             $monthYear = $this->dateFunctions->getMonthYear($date);
             $returnArray['year'] = $monthYear['year'];
             $returnArray['month'] = $monthYear['month'];
@@ -382,7 +378,6 @@ class calendar extends controller
             if ($event['userorcontext'] == '1' && $event['context'] == 'root') {
                 $returnArray['events'] = 'site';
             }
-
         } else {
             $returnArray['message'] = 'notallowedtodelete';
         }
@@ -395,12 +390,11 @@ class calendar extends controller
     }
 
     /**
-    * Method to show the iframe containing the attachments when adding or editing events
-    * @param string $id Temporary Id of event when adding, or Record Id when editing
-    * @param string $mode - either 'add' or 'edit'
-    */
-    function attachmentWindow($id, $mode)
-    {
+     * Method to show the iframe containing the attachments when adding or editing events
+     * @param string $id Temporary Id of event when adding, or Record Id when editing
+     * @param string $mode - either 'add' or 'edit'
+     */
+    function attachmentWindow($id, $mode) {
         $this->setLayoutTemplate(NULL);
 
         $this->setVar('pageSuppressIM', TRUE);
@@ -427,17 +421,14 @@ class calendar extends controller
     }
 
     /**
-    * Method to upload an attachment
-    */
-    function uploadAttachment()
-    {
+     * Method to upload an attachment
+     */
+    function uploadAttachment() {
         $id = $_POST['id'];
         $mode = $_POST['mode'];
         try {
             $this->objAttachments->uploadFile($id);
-        }
-        catch (CustomException $e)
-        {
+        } catch (CustomException $e) {
             die($e);
         }
 //        if ($_FILES['userFile']['error'] != 4) {
@@ -448,76 +439,69 @@ class calendar extends controller
 //                $this->objEventAttachments->insertSingle($fileId, $id, $this->userId);
 //            }
 //        }
-        return $this->nextAction('tempframe', array('id'=>$id, 'mode'=>$mode));
+        return $this->nextAction('tempframe', array('id' => $id, 'mode' => $mode));
     }
 
     /**
-    * Method to Download an Attachment
-    * @param string $id Record Id of the attachment
-    * @param string $event Record Id of the Event
-    */
-    function downloadAttachment($id, $event)
-    {
+     * Method to Download an Attachment
+     * @param string $id Record Id of the attachment
+     * @param string $event Record Id of the Event
+     */
+    function downloadAttachment($id, $event) {
         $file = $this->objEventAttachments->getFile($id, $event);
 
         if ($file == FALSE) {
-            return $this->nextAction(NULL, array('error'=>'attachment'));
+            return $this->nextAction(NULL, array('error' => 'attachment'));
         } else {
             $this->objUploader->outputFile($file['attachment_id'], TRUE);
         }
     }
 
-    function deleteAttachment($id, $mode, $filename)
-    {
+    function deleteAttachment($id, $mode, $filename) {
         $this->objAttachments->deleteFile($id, $filename);
-        return $this->nextAction('tempframe', array('id'=>$tempId, 'mode'=>$mode));
+        return $this->nextAction('tempframe', array('id' => $tempId, 'mode' => $mode));
     }
 
     /**
-    * Method to check whether the user has access to edit an event
-    * @param array $event Event Details
-    * @return True if user has access, or redirects to screen with pop up message
-    */
-    function checkEventEditPermission($event)
-    {
+     * Method to check whether the user has access to edit an event
+     * @param array $event Event Details
+     * @return True if user has access, or redirects to screen with pop up message
+     */
+    function checkEventEditPermission($event) {
         // If the event does not exists, return to the Calendar
         if ($event == FALSE) {
-            return $this->nextAction(NULL, array('message'=>'eventeditnotexists'));
+            return $this->nextAction(NULL, array('message' => 'eventeditnotexists'));
         }
 
         // Default to Access
         $okToEdit = FALSE;
 
 
-        switch ($event['userorcontext'])
-            {
-                case 0:
-                    if ($event['userfirstentry'] == $this->objUser->userId()) {
-                        $okToEdit = TRUE;
-                    }
-                    break;
-                case 1:
-                    if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
-                        $okToEdit = TRUE;
-                    }
-                    break;
-                case 3:
-                    if ($this->objUser->isAdmin()) {
-                        $okToEdit = TRUE;
-                    }
-                    break;
-            }
+        switch ($event['userorcontext']) {
+            case 0:
+                if ($event['userfirstentry'] == $this->objUser->userId()) {
+                    $okToEdit = TRUE;
+                }
+                break;
+            case 1:
+                if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
+                    $okToEdit = TRUE;
+                }
+                break;
+            case 3:
+                if ($this->objUser->isAdmin()) {
+                    $okToEdit = TRUE;
+                }
+                break;
+        }
 
         // Redirect if no permission
         if ($okToEdit == FALSE) {
-            return $this->nextAction(NULL, array('message'=>'notallowedtoedit'));
+            return $this->nextAction(NULL, array('message' => 'notallowedtoedit'));
         } else {
             return TRUE;
         }
-
-
     }
-
 
 }
 
