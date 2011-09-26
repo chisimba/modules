@@ -104,4 +104,3 @@ class dbfeaturedproduct extends dbtable
     }
 }
 ?>
-

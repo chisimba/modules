@@ -59,4 +59,3 @@ class dbinstitutiontypes extends dbtable {
 }
 
 ?>
-

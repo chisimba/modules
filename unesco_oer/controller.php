@@ -97,7 +97,7 @@ class unesco_oer extends controller {
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
         $this->ObjDbUserGroups = $this->getObject('dbusergroups');
-        $this->objGroupUtil = $this->getObject('grouputil');
+//        $this->objGroupUtil = $this->getObject('grouputil');
         $this->objDbgroupInstitutions = $this->getObject('dbgroupinstitutions');
         $this->objDbmodules = $this->getObject('dbmodules');
         $this->objDbcurricula = $this->getObject('dbcurricula');

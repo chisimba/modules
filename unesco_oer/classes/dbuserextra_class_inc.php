@@ -272,9 +272,3 @@ class dbuserextra extends dbtable {
 //     }
 }
 ?>
-
-
-
-
-
-

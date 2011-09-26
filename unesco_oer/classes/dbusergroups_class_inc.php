@@ -125,9 +125,3 @@ class dbusergroups extends dbtable {
 
 }
 ?>
-
-
-
-
-
-
