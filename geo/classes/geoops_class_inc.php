@@ -89,6 +89,7 @@ class geoops extends object
 		$objSelectFile         = $this->newObject('selectfile', 'filemanager');
 		$this->objUser         = $this->getObject('user', 'security');
 		$this->objMongo        = $this->getObject('geomongo', 'mongo');
+		$this->objCookie        = $this->getObject('cookie', 'utilities');
 	}
 
 	public function getWikipedia($lon, $lat, $radius=1500) {
@@ -157,11 +158,11 @@ class geoops extends object
 		}
 		if($this->objModules->checkIfRegistered('simplemap') && $this->objModules->checkIfRegistered('georss'))
 		{
-			$form = new form ('geoloc', $this->uri(array('action'=>'setlocation')));
+			$form = new form ('geoloc', $this->uri(array('action'=>'addplacedetails')));
 			$this->loadClass('label', 'htmlelements');
 			$this->objHead = $this->getObject('htmlheading', 'htmlelements');
 			$this->objHead->type = 3;
-			$this->objHead->str = $this->objLanguage->languageText("mod_events_geoposition", "events");
+			$this->objHead->str = $this->objLanguage->languageText("mod_geo_addplace", "geo");
 			$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
 			$css = '<style type="text/css">
         #map {
@@ -198,8 +199,9 @@ class geoops extends object
 
             map.events.register(\"click\", map, function(e) {
                 var lonlat = map.getLonLatFromViewPortPx(e.xy);
-                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
-                                          + lonlat.lon
+                OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" + lonlat.lon;
+                OpenLayers.Util.getElement(\"input_lat\").value = lonlat.lat; 
+                OpenLayers.Util.getElement(\"input_lon\").value = lonlat.lon; 
             });
 
         }
@@ -218,7 +220,7 @@ class geoops extends object
 			$ptable->endRow();
 			// and now the map
 			$ptable->startRow();
-			$gtlabel = new label($this->objLanguage->languageText("mod_events_geoposition", "events") . ':', 'input_geotags');
+			$gtlabel = new label($this->objLanguage->languageText("mod_geo_geoposition", "geo") . ':', 'input_geotags');
 			$gtags = '<div id="map"></div>';
 			$geotags = new textinput('geotag', NULL, NULL, '100%');
 			if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
@@ -227,11 +229,49 @@ class geoops extends object
 			//$ptable->addCell($gtlabel->show());
 			$ptable->addCell($gtags.$geotags->show());
 			$ptable->endRow();
+			$patable = $this->newObject('htmltable', 'htmlelements');
+			$patable->cellpadding = 3;
+			// place name
+			$patable->startRow();
+			$namelabel = new label($this->objLanguage->languageText("mod_geo_placename", "geo") . ':', 'input_name');
+			$name = new textinput('name', NULL, NULL, '100%');
+			$patable->addCell($namelabel->show());
+			$patable->addCell($name->show());
+			$patable->endRow();
+			// longitude
+			$patable->startRow();
+			$latlabel = new label($this->objLanguage->languageText("mod_geo_latitude", "geo") . ':', 'input_lat');
+			$lat = new textinput('lat', NULL, NULL, '100%');
+			$patable->addCell($latlabel->show());
+			$patable->addCell($lat->show());
+			$patable->endRow();
+			// latitude
+			$patable->startRow();
+			$lonlabel = new label($this->objLanguage->languageText("mod_geo_longitude", "geo") . ':', 'input_lon');
+			$lon = new textinput('lon', NULL, NULL, '100%');
+			$patable->addCell($lonlabel->show());
+			$patable->addCell($lon->show());
+			$patable->endRow();
+			// type
+			$patable->startRow();
+			$typelabel = new label($this->objLanguage->languageText("mod_geo_type", "geo") . ':', 'input_type');
+			$type = new dropdown('type', NULL, NULL, '100%');
+			$type->addOption('landmark', 'landmark');
+			$patable->addCell($typelabel->show());
+			$patable->addCell($type->show());
+			$patable->endRow();
+			// alternate names
+			$patable->startRow();
+			$altlabel = new label($this->objLanguage->languageText("mod_geo_altnames", "geo") . ':', 'input_altnames');
+			$alt = new textinput('altnames', NULL, NULL, '100%');
+			$patable->addCell($altlabel->show());
+			$patable->addCell($alt->show());
+			$patable->endRow();
 
 			$fieldset = $this->newObject('fieldset', 'htmlelements');
 			$fieldset->legend = '';
-			$fieldset->contents = $ptable->show();
-			$button = new button ('submitform', $this->objLanguage->languageText("mod_events_setlocation", "events"));
+			$fieldset->contents = $ptable->show()."<br />".$patable->show();
+			$button = new button ('submitform', $this->objLanguage->languageText("mod_geo_addplace", "geo"));
 			$button->setToSubmit();
 			$form->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
 			$ret .= $form->show();
@@ -242,14 +282,14 @@ class geoops extends object
 
 		return $ret;
 	}
-	
+
 	public function getHTML5Loc() {
 		$form = new form ('geoloc', $this->uri(array('action'=>'setlocation')));
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
-        $url = $this->uri(array('action' => 'setloc'), 'geo');
-        $url = str_replace('&amp;', '&', $url);
-	    $js = '<script type="text/javascript">
+		$this->loadClass('label', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$url = $this->uri(array('action' => 'setloc'), 'geo');
+		$url = str_replace('&amp;', '&', $url);
+		$js = '<script type="text/javascript">
                if (navigator.geolocation) {
                    navigator.geolocation.getCurrentPosition(function(position) {  
                    var url="'.$url.'&lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
@@ -257,53 +297,53 @@ class geoops extends object
                    });
                }
                </script>';
-        // add the lot to the headerparams...
-		$this->appendArrayVar('headerParams', $js);	
+		// add the lot to the headerparams...
+		$this->appendArrayVar('headerParams', $js);
 		return '<div id="pos"></div>';
 	}
-	
-    public function makeMapMarkers($dataObj, $lat, $lon) {
-        // build up a set of markers for a google map
-        $head = "<markers>";
-        $body = NULL;
-        foreach($dataObj as $data) {
-            if($data->latitude == "" || $data->longitude == "") {
-                continue;
-            }
-            else {
-                $body .= '<marker lat="'.$data->latitude.'" lng="'.$data->longitude.'" info="'.htmlspecialchars($data->name).'" />';
-            }
-        }
-        $body .= '<marker lat="'.$lat.'" lng="'.$lon.'" info="'.htmlentities("You are here!").'" />';
-        $tail = "</markers>";
-        $data = $head.$body.$tail;
-        $filename = microtime(TRUE)."markers.xml";
-        $path = $this->objConfig->getModulePath()."geo/".$filename;
-        if(!file_exists($path)) {
-            touch($path);
-            chmod($path, 0777);
-        }
-        else {
-            unlink($path);
-            touch($path);
-            chmod($path, 0777);
-        }
-        file_put_contents($path, $data);
-        
-        return $filename;
-    }
-    
-    public function makeGMap($lat, $lon, $path, $zoom = 14) {
-    	$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
-    	$uri = $this->uri('');
-        //$css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
-        $css = '<style type="text/css">  
+
+	public function makeMapMarkers($dataObj, $lat, $lon) {
+		// build up a set of markers for a google map
+		$head = "<markers>";
+		$body = NULL;
+		foreach($dataObj as $data) {
+			if($data->latitude == "" || $data->longitude == "") {
+				continue;
+			}
+			else {
+				$body .= '<marker lat="'.$data->latitude.'" lng="'.$data->longitude.'" info="'.htmlspecialchars($data->name).'" />';
+			}
+		}
+		$body .= '<marker lat="'.$lat.'" lng="'.$lon.'" info="'.htmlentities("You are here!").'" />';
+		$tail = "</markers>";
+		$data = $head.$body.$tail;
+		$filename = microtime(TRUE)."markers.xml";
+		$path = $this->objConfig->getModulePath()."geo/".$filename;
+		if(!file_exists($path)) {
+			touch($path);
+			chmod($path, 0777);
+		}
+		else {
+			unlink($path);
+			touch($path);
+			chmod($path, 0777);
+		}
+		file_put_contents($path, $data);
+
+		return $filename;
+	}
+
+	public function makeGMap($lat, $lon, $path, $zoom = 14) {
+		$gmapsapikey = $this->objSysConfig->getValue('mod_simplemap_apikey', 'simplemap');
+		$uri = $this->uri('');
+		//$css = '<link href="http://www.google.com/apis/maps/base.css" rel="stylesheet" type="text/css"></link>';
+		$css = '<style type="text/css">
             html, body {
                 font: 100%/1.5 Arial; 
             }
         </style>';
-        $this->appendArrayVar('headerParams', $css);
-        $google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=$gmapsapikey\"
+		$this->appendArrayVar('headerParams', $css);
+		$google = "<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true&amp;key=$gmapsapikey\"
             type=\"text/javascript\"></script>
     <script type=\"text/javascript\">
     //<![CDATA[
@@ -347,20 +387,20 @@ class geoops extends object
 
     //]]>
     </script>";
-    
-        // add the lot to the headerparams...
-        $this->appendArrayVar('headerParams', $css.$google);
-        $this->appendArrayVar('bodyOnLoad', "load();");
-        
-        $gtags = '<div id="map" style="width: 768px; height: 768px"></div>';
-        return $gtags;
-    }
-    
-    public function placeSearchForm() {
-    	$sform = new form ('placesearch', $this->uri(array('action'=>'placesearch')));
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
-        $pstable = $this->newObject('htmltable', 'htmlelements');
+
+		// add the lot to the headerparams...
+		$this->appendArrayVar('headerParams', $css.$google);
+		$this->appendArrayVar('bodyOnLoad', "load();");
+
+		$gtags = '<div id="map" style="width: 768px; height: 768px"></div>';
+		return $gtags;
+	}
+
+	public function placeSearchForm() {
+		$sform = new form ('placesearch', $this->uri(array('action'=>'placesearch')));
+		$this->loadClass('label', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$pstable = $this->newObject('htmltable', 'htmlelements');
 		$pstable->cellpadding = 3;
 		$pstable->startRow();
 		$llabel = new label($this->objLanguage->languageText("mod_geo_limit", "geo") . ':', 'input_limit');
@@ -373,7 +413,7 @@ class geoops extends object
 		$pstable->addCell($llabel->show());
 		$pstable->addCell($limit->show());
 		$pstable->endRow();
-		
+
 		$fieldset = $this->newObject('fieldset', 'htmlelements');
 		$fieldset->legend = $this->objLanguage->languageText("mod_geo_placesearch", "geo");
 		$fieldset->contents = $pstable->show();
@@ -381,104 +421,85 @@ class geoops extends object
 		$button->setToSubmit();
 		$sform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
 		return $sform->show();
-    }
-    
-    public function addPlaceForm() {
-    	$aform = new form ('placeadd', $this->uri(array('action'=>'placeadd')));
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
-        $patable = $this->newObject('htmltable', 'htmlelements');
-		$patable->cellpadding = 3;
-		// place name
-		$patable->startRow();
-		$namelabel = new label($this->objLanguage->languageText("mod_geo_placename", "geo") . ':', 'input_name');
-		$name = new textinput('limit', NULL, NULL, '100%');
-		$patable->addCell($namelabel->show());
-		$patable->addCell($name->show());
-		$patable->endRow();
-		// longitude
-		
-		// latitude
-		// type
-		// alternate names
-		// population
-		
-		$fieldset = $this->newObject('fieldset', 'htmlelements');
-		$fieldset->legend = $this->objLanguage->languageText("mod_geo_placeadd", "geo");
-		$fieldset->contents = $patable->show();
-		$button = new button ('submitform', $this->objLanguage->languageText("mod_geo_addplace", "geo"));
-		$button->setToSubmit();
-		$aform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
-		
-		return $aform->show();
-    }
-    
-    /**
-     * Welcome block
-     *
-     * Block to display welcome messages when logged in, or a sign in link if not
-     *
-     * @return string
-     */
-    public function showWelcomeBox() {
-        $objFeaturebox = $this->getObject('featurebox', 'navigation');
-        $linklist = NULL;
-        if($this->objUser->isLoggedIn() == FALSE) {
-            $signinlink = $this->newObject('alertbox', 'htmlelements');
-            $signuplink = $this->newObject('alertbox', 'htmlelements');
-            $registerlink = $this->newObject('alertbox', 'htmlelements');
-            // Make sure to show the sign up link only if registrations are allowed!
-            if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
-                $signuplink = $signuplink->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $this->uri(array('action' => 'showregister'), 'userregistration'));
-            }
-            else {
-                $signuplink = NULL;
-            }
-            $signinlink = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_geo_toaddplaces", "geo").", ";
-            $linklist .= $signinlink;
-            $linklist .= $this->objLanguage->languageText("mod_geo_orifyoudonthaveacc", "geo").", ".$signuplink;
-        }
-        else {
-            //user is logged in
-            $invitelink = $this->newObject('alertbox', 'htmlelements');
-            $invitelink = $invitelink->show($this->objLanguage->languageText("mod_geo_invitefriends", "geo"), $this->uri(array('action' => 'invitefriend')));
+	}
 
-            $linklist .= $invitelink;
-        }
-        // location link is always visible
-        $changeloclink = $this->newObject('link', 'htmlelements');
-        $changeloclink->href = $this->uri(array('action' => 'changelocation'));
-        $changeloclink->link = $this->objLanguage->languageText("mod_geo_changeloc", "geo");
+	
 
-        $linklist .= "<br /><ul><li>".$changeloclink->show()."</li></ul>";
-        $linklist .= "<br />".$this->objLanguage->languageText("mod_geo_numrecs", "geo").": ".number_format($this->objMongo->getRecordCount());
-        return $objFeaturebox->show($this->objLanguage->languageText("mod_geo_welcome", "geo"),$linklist);
-    }
+	/**
+	 * Welcome block
+	 *
+	 * Block to display welcome messages when logged in, or a sign in link if not
+	 *
+	 * @return string
+	 */
+	public function showWelcomeBox() {
+		$objFeaturebox = $this->getObject('featurebox', 'navigation');
+		$linklist = NULL;
+		if($this->objUser->isLoggedIn() == FALSE) {
+			$signinlink = $this->newObject('alertbox', 'htmlelements');
+			$signuplink = $this->newObject('alertbox', 'htmlelements');
+			$registerlink = $this->newObject('alertbox', 'htmlelements');
+			// Make sure to show the sign up link only if registrations are allowed!
+			if(strtolower($this->objConfig->getallowSelfRegister()) == 'true') {
+				$signuplink = $signuplink->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $this->uri(array('action' => 'showregister'), 'userregistration'));
+			}
+			else {
+				$signuplink = NULL;
+			}
+			$signinlink = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_geo_toaddplaces", "geo").", ";
+			$linklist .= $signinlink;
+			$linklist .= $this->objLanguage->languageText("mod_geo_orifyoudonthaveacc", "geo").", ".$signuplink;
+		}
+		else {
+			//user is logged in
+			$invitelink = $this->newObject('alertbox', 'htmlelements');
+			$invitelink = $invitelink->show($this->objLanguage->languageText("mod_geo_invitefriends", "geo"), $this->uri(array('action' => 'invitefriend')));
 
-    /**
-     * Sign in block
-     *
-     * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
-     *
-     * @return string
-     */
-    public function showSignInBox() {
-        $objBlocks = $this->getObject('blocks', 'blocks');
-        $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $objBlocks->showBlock('login', 'security', 'none'));
-    }
+			$linklist .= $invitelink;
+		}
+		// location link is always visible
+		$changeloclink = $this->newObject('link', 'htmlelements');
+		$changeloclink->href = $this->uri(array('action' => 'changelocation'));
+		$changeloclink->link = $this->objLanguage->languageText("mod_geo_changeloc", "geo");
 
-    /**
-     * Sign up block
-     *
-     * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
-     *
-     * @return string
-     */
-    public function showSignUpBox() {
-        $objBlocks = $this->getObject('blocks', 'blocks');
-        $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $objBlocks->showBlock('register', 'security', 'none'));
-    }
+		// add location link is always visible
+		$addloclink = $this->newObject('link', 'htmlelements');
+		$addloclink->href = $this->uri(array('action' => 'addplace'));
+		$addloclink->link = $this->objLanguage->languageText("mod_geo_addplace", "geo");
+
+
+		$linklist .= "<br /><ul>";
+		$linklist .= "<li>".$changeloclink->show()."</li>";
+		$linklist .= "<li>".$addloclink->show()."</li>";
+		$linklist .= "</ul>";
+		$linklist .= "<br />".$this->objLanguage->languageText("mod_geo_numrecs", "geo").": ".number_format($this->objMongo->getRecordCount());
+		return $objFeaturebox->show($this->objLanguage->languageText("mod_geo_welcome", "geo"),$linklist);
+	}
+
+	/**
+	 * Sign in block
+	 *
+	 * Used in conjunction with the welcome block as a alertbox link. The sign in simply displays the block to sign in to Chisimba
+	 *
+	 * @return string
+	 */
+	public function showSignInBox() {
+		$objBlocks = $this->getObject('blocks', 'blocks');
+		$objFeatureBox = $this->getObject('featurebox', 'navigation');
+		return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $objBlocks->showBlock('login', 'security', 'none'));
+	}
+
+	/**
+	 * Sign up block
+	 *
+	 * Method to generate a sign up (register) block for the module. It uses a linked alertbox to format the response
+	 *
+	 * @return string
+	 */
+	public function showSignUpBox() {
+		$objBlocks = $this->getObject('blocks', 'blocks');
+		$objFeatureBox = $this->getObject('featurebox', 'navigation');
+		return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $objBlocks->showBlock('register', 'security', 'none'));
+	}
 }
 ?>

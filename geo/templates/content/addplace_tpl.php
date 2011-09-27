@@ -20,21 +20,9 @@ if(!isset($zoom)) {
 	$zoom = 14;
 }
 $leftCol .= $this->objOps->showWelcomeBox();
-$path = $this->objOps->makeMapMarkers($choices, $lat, $lon);
 
-$middleColumn .= $this->objOps->makeGMap($lat, $lon, $path, $zoom);
-$radius = 5;
-
-$middleColumn .= $this->objOps->placeSearchForm();
-//$rightSideColumn = $this->objOps->addPlaceForm();
-//$objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
-// parse wikipedia data
-//$wik = $this->objMongo->mongoWikipedia($objWikipedia);
-//var_dump($wik);
-
-//$objFlickr    = $this->objOps->getFlickr($lon, $lat, $radius);
-// parse Flickr data
-//$this->objMongo->mongoFlickr($objFlickr);
+$middleColumn .= $this->objOps->geoLocationForm($editparams = NULL, $eventform = FALSE);
+//$middleColumn .= $this->objOps->addPlaceForm();
                 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

@@ -253,6 +253,22 @@ class geo extends controller
                 }
                 $this->nextAction('');
                 break;
+            
+            case 'addplace': 
+            	return 'addplace_tpl.php';
+            	break;
+            	
+            case 'addplacedetails':
+            	$geotag = $this->getParam('geotag');
+            	$name = $this->getParam('name');
+            	$lat = floatval($this->getParam('lat'));
+            	$lon = floatval($this->getParam('lon'));
+            	$type = $this->getParam('type');
+            	$altnames = $this->getParam('altnames');
+            	$insarr = array("name" => $name, "latitude" => $lat, "longitude" => $lon, "type" => $type, "alternatenames" => $altnames);
+            	$this->objMongo->upsertRecord($insarr, "forceupdate");
+            	$this->nextAction('');
+            	break;
                 
             default:
                 $this->nextAction('');
