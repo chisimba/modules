@@ -119,6 +119,8 @@ class geomongo extends object
         $database              = $this->objSysConfig->getValue('database', 'mongo');
         $this->db              = $this->objMongo->$database;
         $this->collection      = new MongoCollection($this->db, $this->objSysConfig->getValue('collection', 'mongo'));
+        $this->objProxy        = $this->getObject('proxyparser', 'utilities');
+        
     }
     
     public function getByLonLat($lon, $lat, $limit = 10) {
@@ -191,26 +193,103 @@ class geomongo extends object
             $result++;
         }
         
-        var_dump(json_encode($wikipedia));
+        return json_encode($wikipedia);
     }
     
     public function mongoFlickr($objFlickr) {
         var_dump($objFlickr);
     }
     
+    public function getElevation($latitude, $longitude) {
+        // get the elevation
+    	$url = "http://maps.googleapis.com/maps/api/elevation/json?locations=$latitude,$longitude&sensor=false";
+    	$proxyArr = $this->objProxy->getProxy();
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		//curl_setopt($ch, CURLOPT_HEADER, 1);
+		curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		if (!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
+			curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'] . ":" . $proxyArr['proxy_port']);
+			curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'] . ":" . $proxyArr['proxy_pass']);
+		}
+		$elejson = curl_exec($ch);
+		$ele = json_decode($elejson);
+		if($ele->status == "OK") {
+			$res = $ele->results;
+			$res = $res[0];
+			$elevation = $res->elevation;
+			$resolution = $res->resolution;
+		}
+		else {
+			$elevation = 0;
+			$resolution = 0;
+		}
+		return array("elevation" => $elevation, "resolution" => $resolution);
+    }
+    
+    public function upsertRecord($insertarr, $mode = "forceupdate") {
+    	$this->objOps          = $this->getObject('geoops', 'geo');
+    	if($mode == "forceupdate") {
+    	    $ele = $this->getElevation($insertarr['latitude'], $insertarr['longitude']);
+		    $elevation = $ele['elevation'];
+		    // get wikipedia info url(s)
+		    $wiki = $this->objOps->getWikipedia($insertarr['longitude'], $insertarr['latitude'], $radius=50);
+		    $wiki = $wiki->articles;
+		    if(ucwords($insertarr['name']) == ucwords($wiki[0]->title)) {
+			    $wikipedia = $wiki[0]->url;
+		    }
+		    else {
+			    $wikipedia = "";
+		    }
+    	}
+    	$cursor = $this->collection->update(array("name" => ucwords($insertarr['name'])), 
+    	                                          array("loc" => array($insertarr['longitude'], $insertarr['latitude']), 
+    	                                          "name" => array(ucwords($insertarr['name'])), 
+    	                                          "longitude" => array(floatval($insertarr['longitude'])),
+    	                                          "latitude" => array(floatval($insertarr['latitude'])),
+    	                                          "type" => array($insertarr['type']),
+    	                                          "wikipedia" => array($wikipedia),
+    	                                          "elevation" => array(floatval($elevation)),
+    	                                          //"countrycode" => array($insertarr['countrycode']),
+    	                                          //"timezone" => array($insertarr['timezone']),
+    	                                          "alternatenames" => array(ucwords($insertarr['alternatenames'])), 
+    	                                          "asciiname" => array(ucwords($insertarr['name'])),
+    	                                          "population" => array(floatval($insertarr['population'])),
+    	                                          ), array("upsert" => true));
+        return $cursor; // boolean!
+    }
+    
+    public function getRecordCount() {
+    	$cursor = $this->collection->count();
+    	return $cursor;
+    }
+    
     private function jsonCursor($cursor) {
         $ret = new StdClass();
         $resultno = 1;
         foreach ($cursor as $obj) {
-            $ret->$resultno = array('location' => $obj['loc'], 'elevation' => $obj['elevation'][0], 'name' => $obj['name'][0], 
-                                    'countrycode' => $obj['countrycode'][0], 'longitude' => $obj['longitude'][0], 'latitude' => $obj['latitude'][0],
-                                    'timezone' => $obj['timezone'][0], 'alternatenames' => $obj['alternatenames'][0], 'asciiname' => $obj['asciiname'][0],
-                                    'population' => $obj['population'][0]); 
+            $ret->$resultno = array('location' => $obj['loc'], 
+                                    'elevation' => $obj['elevation'][0], 
+                                    'name' => $obj['name'][0],
+                                    'type' => $obj['type'][0],
+                                    'wikipedia' => $obj['wikipedia'][0], 
+                                    //'countrycode' => $obj['countrycode'][0], 
+                                    'longitude' => $obj['longitude'][0], 
+                                    'latitude' => $obj['latitude'][0],
+                                    //'timezone' => $obj['timezone'][0], 
+                                    'alternatenames' => $obj['alternatenames'][0], 
+                                    //'asciiname' => $obj['asciiname'][0],
+                                    //'population' => $obj['population'][0]
+            ); 
             $resultno++;
         }
         
         return $ret;
     }
+    
+    
 
     /**
      * Inserts data into the collection.
