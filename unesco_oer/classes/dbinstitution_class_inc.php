@@ -21,6 +21,8 @@ class dbinstitution extends dbtable {
 
     function init() {
         parent::init("tbl_unesco_oer_institutions");
+      
+          $this->product_adaptaion_data = 'tbl_unesco_oer_product_adaptation_data';
         $objUser = $this->getObject('user', 'security');
     }
 
@@ -36,6 +38,18 @@ class dbinstitution extends dbtable {
 
     function getInstitutionById($id) {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id = '$id'";
+
+        return $this->getArray($sql);
+    }
+    
+      function getInstitutionIdbyType($type) {
+        $sql = "SELECT id FROM tbl_unesco_oer_institutions WHERE type = '$type'";
+
+        return $this->getArray($sql);
+    }
+    
+      function getProductIdbyInstid($type) {
+        $sql = "SELECT product_id FROM $this->product_adaptaion_data WHERE institution_id = '$type'";
 
         return $this->getArray($sql);
     }
@@ -100,6 +114,12 @@ class dbinstitution extends dbtable {
     }
 
     function getInstitutionName($name) {
+        $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name='$name'";
+        $InstitutionName = $this->getArray($sql);
+        return $InstitutionName[0]['name'];
+    }
+    
+     function getInstitutionByName($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name='$name'";
         $InstitutionName = $this->getArray($sql);
         return $InstitutionName[0]['name'];

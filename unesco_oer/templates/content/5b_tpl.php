@@ -133,7 +133,18 @@ $product = $this->getObject('product');
                              
                                     
                                 </h3><br>
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="greenTextLink">View group</a></div>
+                                <div class="textNextToTheListingIconDiv">
+                                 <?php
+                                  $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
+                                  $groupLink->link = 'View Group';
+                                  $groupLink->cssClass = "greenTextLink";
+                                      echo $groupLink->show();
+                                 ?>
+                                    
+                                    
+                                    
+                                    
+                                </div>
                             </div>
                     	</div>
                             
@@ -158,7 +169,7 @@ $product = $this->getObject('product');
         
                  ?>
            
-                
+              
                 <div class="headingHolder">
                     <?php
                     

@@ -16,6 +16,7 @@ class filterdisplay extends object {
 
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getobject('dbproducts', 'unesco_oer');
+          $this->objDbInstitutionTypes = $this->getobject('dbinstitutiontypes', 'unesco_oer');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
@@ -36,6 +37,9 @@ class filterdisplay extends object {
         $this->Filterinfo['AuthorFilter'] = $this->getParam('AuthorFilter');
         $this->Filterinfo['LanguageFilter'] = $this->getParam('LanguageFilter');
         $this->Filterinfo['NumFilter'] = $this->getParam('NumFilter');
+         $this->Filterinfo['InstitutionFilter'] = $this->getParam('InstitutionFilter');
+          $this->Filterinfo['RegionFilter'] = $this->getParam('RegionFilter');
+           $this->Filterinfo['CountryFilter'] = $this->getParam('CountryFilter');
     }
 
     function SideFilter($page, $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum) {
@@ -175,6 +179,39 @@ class filterdisplay extends object {
         $filterAuth->setSelected($this->Filterinfo['AuthorFilter']);
         $form->addtoform($filterAuth->show());
         $form->addtoform(' </div><br>');
+        
+        
+        
+        $form->addToForm('<div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">');
+        $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer'));
+        $form->addtoform(' </div>');
+
+
+        $form->addToForm('<div class="blueBackground">');
+        $products = $this->objDbInstitutionTypes->getInstitutionTypes();
+        $filterinstitution = new dropdown('InstitutionFilter');
+        $filterinstitution->cssClass = "leftColumnSelectDropdown";
+        $filterinstitution->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
+        foreach ($products as $product) {
+
+            $filterinstitution->addOption($product['type']);
+        }
+
+        $filterinstitution->setSelected($this->Filterinfo['InstitutionFilter']);
+        $form->addtoform($filterinstitution->show());
+        $form->addtoform(' </div><br>');
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         //items per page

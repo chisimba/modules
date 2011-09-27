@@ -27,6 +27,7 @@ class javafilt extends object {
         $this->objProductUtil = $this->getObject('productutil', 'unesco_oer');
         $this->objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
         $this->objDbInstitution = $this->getObject('dbinstitution', 'unesco_oer');
+         $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes', 'unesco_oer');
     }
 
     public function displayprods() {
@@ -50,6 +51,7 @@ class javafilt extends object {
         $pagelayout = $this->getParam('adaptation');
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
+        $institutionFilter = $this->getParam('inst');
 
 
 
@@ -188,6 +190,39 @@ class javafilt extends object {
                 $TempTheme[$i] = $Theme['product_id'];
             }
         }
+        
+        
+        
+           if (!($institutionFilter == Null or $institutionFilter == 'All')) {
+
+           
+               
+               $Instypeid = $this->objDbInstitutionTypes->findTypeID($institutionFilter);
+               $Instids = $this->objDbInstitution->getInstitutionIdbyType($Instypeid);
+            
+         //     $content .= $Instids[0]['id'];
+              
+            $TempInst = array(); //convert to 1d array
+            $i = 0;
+            foreach ($Instids as  $Instid) {
+             
+             
+
+                $prodids = $this->objDbInstitution->getProductIdbyInstid($Instid['id']);
+                
+                foreach ($prodids as  $prodid) {
+                       $i++;
+                 
+                       $TempInst[$i] = $prodid['product_id'];
+                }
+                 
+//           foreach ($TempInst as $temp){
+//               $content .= $temp;
+//               
+//           }
+               // 
+            }
+        }
 
 
 
@@ -206,7 +241,7 @@ class javafilt extends object {
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap);
+        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst);
         $filter_empty_arrays = array_filter($array_to_intersect);
 
         $total = count($filter_empty_arrays);
@@ -232,7 +267,8 @@ class javafilt extends object {
 
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
-                if (($AuthFilter == Null or $AuthFilter == 'All')) {
+                if (($AuthFilter == Null or $AuthFilter == 'All'))
+                     if (($institutionFilter == Null or $institutionFilter == 'All')){
 
 
                     if ($browsecheck == '1') {
@@ -300,7 +336,7 @@ class javafilt extends object {
         $Besoractile = $this->getParam('bestprac');
         $Guide = $this->GetParam('guide');
         $NumFilter = $this->getParam('numperpage');
-
+         $institutionFilter = $this->getParam('inst');
         $pagelayout = $this->getParam('adaptation');
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
@@ -376,6 +412,41 @@ class javafilt extends object {
 //   $buildstring .= ' and creator = ' . "'$AuthFilter'";
 
 
+         if (!($institutionFilter == Null or $institutionFilter == 'All')) {
+
+           
+               
+               $Instypeid = $this->objDbInstitutionTypes->findTypeID($institutionFilter);
+               $Instids = $this->objDbInstitution->getInstitutionIdbyType($Instypeid);
+            
+         //     $content .= $Instids[0]['id'];
+              
+            $TempInst = array(); //convert to 1d array
+            $i = 0;
+            foreach ($Instids as  $Instid) {
+             
+             
+
+                $prodids = $this->objDbInstitution->getProductIdbyInstid($Instid['id']);
+                
+                foreach ($prodids as  $prodid) {
+                     
+                 
+                       $TempInst[$i] = $prodid['product_id'];
+                         $i++;
+                }
+                 
+           foreach ($TempInst as $temp){
+         //    echo $temp;
+         
+               
+           }
+               // 
+            }
+        }
+        
+        
+        
 
 
 
@@ -389,6 +460,7 @@ class javafilt extends object {
 
                 $TempTheme[$i] = $Theme['product_id'];
                 $i++;
+               // echo $Theme['product_id'];
             }
         }
 
@@ -412,7 +484,7 @@ class javafilt extends object {
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap);
+        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst);
         $filter_empty_arrays = array_filter($array_to_intersect);
 
         $total = count($filter_empty_arrays);
@@ -440,7 +512,8 @@ class javafilt extends object {
 
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
-                if (($AuthFilter == Null or $AuthFilter == 'All')) {
+                if (($AuthFilter == Null or $AuthFilter == 'All'))
+                      if (($institutionFilter == Null or $institutionFilter == 'All')){
 
 
                     if ($browsecheck == '1') {
@@ -889,6 +962,7 @@ class javafilt extends object {
                 $abLink->link = $i;
 
                 echo $abLink->show();
+                
             }
         };
     }
