@@ -237,8 +237,10 @@ class geomongo extends object
 		    // get wikipedia info url(s)
 		    $wiki = $this->objOps->getWikipedia($insertarr['longitude'], $insertarr['latitude'], $radius=50);
 		    $wiki = $wiki->articles;
-		    if(ucwords($insertarr['name']) == ucwords($wiki[0]->title)) {
-			    $wikipedia = $wiki[0]->url;
+		    if(!empty($wiki)) {
+		        if(ucwords($insertarr['name']) == ucwords($wiki[0]->title)) {
+			        $wikipedia = $wiki[0]->url;
+		        }
 		    }
 		    else {
 			    $wikipedia = "";
@@ -256,7 +258,7 @@ class geomongo extends object
     	                                          //"timezone" => array($insertarr['timezone']),
     	                                          "alternatenames" => array(ucwords($insertarr['alternatenames'])), 
     	                                          "asciiname" => array(ucwords($insertarr['name'])),
-    	                                          "population" => array(floatval($insertarr['population'])),
+    	                                          // "population" => array(floatval($insertarr['population'])),
     	                                          ), array("upsert" => true));
         return $cursor; // boolean!
     }
