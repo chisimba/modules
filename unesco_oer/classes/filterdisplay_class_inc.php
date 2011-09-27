@@ -228,6 +228,26 @@ class filterdisplay extends object {
         
         
         
+         $form->addToForm('<div class="moduleHeader darkBlueText"><img src="skins/unesco_oer/images/icon-filter-author.png" alt="Author" class="modulesImages">');
+        $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_Country', 'unesco_oer'));
+        $form->addtoform(' </div>');
+
+
+        $form->addToForm('<div class="blueBackground">');
+        $products = $this->objDbRegions->getRegions();
+        $filterRegion = new dropdown('CountryFilter');
+        $filterRegion->cssClass = "leftColumnSelectDropdown";
+        $filterRegion->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
+        foreach ($products as $product) {
+
+            $filterRegion->addOption($product['region']);
+        }
+
+        $filterRegion->setSelected($this->Filterinfo['CountryFilter']);
+        $form->addtoform($filterRegion->show());
+        $form->addtoform(' </div><br>');
+        
+        
         
         
         
