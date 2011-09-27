@@ -26,7 +26,7 @@ $middleColumn .= $this->objOps->makeGMap($lat, $lon, $path, $zoom);
 $radius = 5;
 
 $middleColumn .= $this->objOps->placeSearchForm();
-
+// $rightSideColumn = $this->objOps->addPlaceForm();
 //$objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
 // parse wikipedia data
 //$wik = $this->objMongo->mongoWikipedia($objWikipedia);

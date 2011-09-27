@@ -134,8 +134,15 @@ class geo extends controller
                 $radius       = $this->getParam('radius', 1500);
                 $objWikipedia = $this->objOps->getWikipedia($lon, $lat, $radius);
                 // parse wikipedia data
-                $this->objMongo->mongoWikipedia($objWikipedia);
+                $wikijson = $this->objMongo->mongoWikipedia($objWikipedia);
+                $wikijson = json_decode($wikijson);
+                var_dump($wikijson);
                 break;
+                
+            case 'testupsert' :
+            	$insertarr = array('name' => 'Castle of good hoopoe', 'latitude' => -33.92587, 'longitude' => 18.4278, 'type' => 'thing', 'countrycode' => "test", "timezone" => "testzone", 'alternatenames' => "alt1, alt2, alt3", "population" => 0);
+            	$this->objMongo->upsertRecord($insertarr, "forceupdate");
+            	break;
                 
             case 'getflickr' :
                 $lon          = $this->getParam('lon', NULL);

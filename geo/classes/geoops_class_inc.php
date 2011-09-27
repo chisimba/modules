@@ -88,6 +88,7 @@ class geoops extends object
 		$this->loadClass('form', 'htmlelements');
 		$objSelectFile         = $this->newObject('selectfile', 'filemanager');
 		$this->objUser         = $this->getObject('user', 'security');
+		$this->objMongo        = $this->getObject('geomongo', 'mongo');
 	}
 
 	public function getWikipedia($lon, $lat, $radius=1500) {
@@ -362,7 +363,6 @@ class geoops extends object
         $pstable = $this->newObject('htmltable', 'htmlelements');
 		$pstable->cellpadding = 3;
 		$pstable->startRow();
-		$pstable->startRow();
 		$llabel = new label($this->objLanguage->languageText("mod_geo_limit", "geo") . ':', 'input_limit');
 		$limit = new textinput('limit', NULL, NULL, '10%');
 		$limit->setValue(10);
@@ -381,6 +381,36 @@ class geoops extends object
 		$button->setToSubmit();
 		$sform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
 		return $sform->show();
+    }
+    
+    public function addPlaceForm() {
+    	$aform = new form ('placeadd', $this->uri(array('action'=>'placeadd')));
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $patable = $this->newObject('htmltable', 'htmlelements');
+		$patable->cellpadding = 3;
+		// place name
+		$patable->startRow();
+		$namelabel = new label($this->objLanguage->languageText("mod_geo_placename", "geo") . ':', 'input_name');
+		$name = new textinput('limit', NULL, NULL, '100%');
+		$patable->addCell($namelabel->show());
+		$patable->addCell($name->show());
+		$patable->endRow();
+		// longitude
+		
+		// latitude
+		// type
+		// alternate names
+		// population
+		
+		$fieldset = $this->newObject('fieldset', 'htmlelements');
+		$fieldset->legend = $this->objLanguage->languageText("mod_geo_placeadd", "geo");
+		$fieldset->contents = $patable->show();
+		$button = new button ('submitform', $this->objLanguage->languageText("mod_geo_addplace", "geo"));
+		$button->setToSubmit();
+		$aform->addToForm($fieldset->show().'<p align="center"><br />'.$button->show().'</p>');
+		
+		return $aform->show();
     }
     
     /**
@@ -421,6 +451,7 @@ class geoops extends object
         $changeloclink->link = $this->objLanguage->languageText("mod_geo_changeloc", "geo");
 
         $linklist .= "<br /><ul><li>".$changeloclink->show()."</li></ul>";
+        $linklist .= "<br />".$this->objLanguage->languageText("mod_geo_numrecs", "geo").": ".number_format($this->objMongo->getRecordCount());
         return $objFeaturebox->show($this->objLanguage->languageText("mod_geo_welcome", "geo"),$linklist);
     }
 
