@@ -25,14 +25,32 @@ class dbregions extends dbtable {
 
     public function init() {
         parent::init('tbl_unesco_oer_regions');
+         $this->product_adaptaion_data = 'tbl_unesco_oer_product_adaptation_data';
     }
 
     public function getRegionByID($id) {
         return $this->getRow('id', $id);
     }
+    
+    function getProdbyid($type) {
+        $sql = "SELECT product_id FROM $this->product_adaptaion_data WHERE region = '$type'";
+
+        return $this->getArray($sql);
+    }
+    
+      public function getRegions() {
+        $sql = "select * from tbl_unesco_oer_regions";
+        return $this->getArray($sql);
+    }  
+    public function getRegionid($region) {
+        $sql = "select id from tbl_unesco_oer_regions where region = '$region'";
+        return $this->getArray($sql);
+    }
 
     public function addRegion($region) {
         $this->insert(array('region'=>$region));
     }
+    
+    
 }
 ?>

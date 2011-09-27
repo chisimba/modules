@@ -20,6 +20,7 @@ class javafilt extends object {
         $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
         $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $this->objLanguage = $this->getObject("language", "language");
+        $this->objDbRegions = $this->getObject('dbregions', 'unesco_oer');
 
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
@@ -52,6 +53,7 @@ class javafilt extends object {
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
         $institutionFilter = $this->getParam('inst');
+        $regionFilter = $this->getParam('Reg');
 
 
 
@@ -191,6 +193,20 @@ class javafilt extends object {
             }
         }
         
+          if (!($regionFilter == Null or $regionFilter == 'All')) {
+               
+            $regionid = $this->objDbRegions->getRegionid($regionFilter);     
+            $prodids = $this->objDbRegions->getProdbyid($regionid[0]['id']);
+            $TempRegion = array(); //convert to 1d array
+            $i = 0;
+            foreach ($prodids as $prodid) {
+
+                $TempRegion[$i] = $prodid['product_id'];
+                $i++;
+            }
+        }
+
+        
         
         
            if (!($institutionFilter == Null or $institutionFilter == 'All')) {
@@ -241,7 +257,7 @@ class javafilt extends object {
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst);
+        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst,$TempRegion);
         $filter_empty_arrays = array_filter($array_to_intersect);
 
         $total = count($filter_empty_arrays);
@@ -268,7 +284,8 @@ class javafilt extends object {
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
                 if (($AuthFilter == Null or $AuthFilter == 'All'))
-                     if (($institutionFilter == Null or $institutionFilter == 'All')){
+                     if (($institutionFilter == Null or $institutionFilter == 'All'))
+                           if (($regionFilter == Null or $regionFilter == 'All')){
 
 
                     if ($browsecheck == '1') {
@@ -337,6 +354,7 @@ class javafilt extends object {
         $Guide = $this->GetParam('guide');
         $NumFilter = $this->getParam('numperpage');
          $institutionFilter = $this->getParam('inst');
+           $regionFilter = $this->getParam('Reg');
         $pagelayout = $this->getParam('adaptation');
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
@@ -409,7 +427,20 @@ class javafilt extends object {
                 $i++;
             }
         }
-//   $buildstring .= ' and creator = ' . "'$AuthFilter'";
+        
+           if (!($regionFilter == Null or $regionFilter == 'All')) {
+               
+            $regionid = $this->objDbRegions->getRegionid($regionFilter);     
+            $prodids = $this->objDbRegions->getProdbyid($regionid[0]['id']);
+            $TempRegion = array(); //convert to 1d array
+            $i = 0;
+            foreach ($prodids as $prodid) {
+
+                $TempRegion[$i] = $prodid['product_id'];
+                $i++;
+            }
+        }
+
 
 
          if (!($institutionFilter == Null or $institutionFilter == 'All')) {
@@ -435,13 +466,7 @@ class javafilt extends object {
                        $TempInst[$i] = $prodid['product_id'];
                          $i++;
                 }
-                 
-           foreach ($TempInst as $temp){
-         //    echo $temp;
-         
-               
-           }
-               // 
+      // 
             }
         }
         
@@ -484,7 +509,7 @@ class javafilt extends object {
 
 
 
-        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst);
+        $array_to_intersect = array($TempAuth, $TempTheme, $Templang, $tempadap,$TempInst,$TempRegion);
         $filter_empty_arrays = array_filter($array_to_intersect);
 
         $total = count($filter_empty_arrays);
@@ -513,7 +538,8 @@ class javafilt extends object {
         if (($LangFilter == Null or $LangFilter == 'All'))
             if (($ThemeFilter == Null or $ThemeFilter == 'All'))
                 if (($AuthFilter == Null or $AuthFilter == 'All'))
-                      if (($institutionFilter == Null or $institutionFilter == 'All')){
+                      if (($institutionFilter == Null or $institutionFilter == 'All'))
+                          if (($regionFilter == Null or $regionFilter == 'All')){
 
 
                     if ($browsecheck == '1') {

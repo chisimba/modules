@@ -54,6 +54,7 @@ function ajaxFunction23(id,ProdID,browsecheck){
     var bestprac = document.getElementById('input_BestPractices').checked;
     var sort = document.getElementById('input_SortFilter').value
     var institution = document.getElementById('input_InstitutionFilter').value
+      var region = document.getElementById('input_RegionFilter').value
     var adaptation = document.getElementById('filterDiv').title;
     
    
@@ -63,7 +64,7 @@ function ajaxFunction23(id,ProdID,browsecheck){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID + "&inst=" + institution ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID + "&inst=" + institution + "&Reg=" + region ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilternum&" + queryString, true);
     ajaxRequest.send(null);
@@ -134,6 +135,7 @@ function ajaxFunction(id,ProdID,browsecheck){
     var bestprac = document.getElementById('input_BestPractices').checked;
     var sort = document.getElementById('input_SortFilter').value
     var institution = document.getElementById('input_InstitutionFilter').value
+     var region = document.getElementById('input_RegionFilter').value
     var adaptation = document.getElementById('filterDiv').title;
 
 
@@ -141,7 +143,7 @@ function ajaxFunction(id,ProdID,browsecheck){
      
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac  + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID   +"&id=" + id + "&inst=" + institution ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac  + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID   +"&id=" + id + "&inst=" + institution + "&Reg=" + region ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilter&" + queryString, true);
     ajaxRequest.send(null);
