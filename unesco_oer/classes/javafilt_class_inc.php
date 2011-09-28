@@ -301,7 +301,7 @@ class javafilt extends object {
                 if (($AuthFilter == Null or $AuthFilter == 'All'))
                      if (($institutionFilter == Null or $institutionFilter == 'All'))
                            if (($regionFilter == Null or $regionFilter == 'All'))
-                                   if (($CountryFilter == Null or $CountryFilter == 'All')){
+                                if (($CountryFilter == Null or $CountryFilter == 'All')){
 
 
                     if ($browsecheck == '1') {
