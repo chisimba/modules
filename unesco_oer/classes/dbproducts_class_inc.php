@@ -43,6 +43,21 @@ class dbproducts extends dbtable
 
         return $this->getArray($sql);
     }
+    
+     function getProductlanguages()
+    {
+        $sql = "select distinct country_code from $this->adaptationTable ";
+
+        return $this->getArray($sql);
+    }
+    
+     function getProductidbycountry($country)
+    {
+        $sql = "select product_id from $this->adaptationTable where country_code = '$country' ";
+
+        return $this->getArray($sql);
+    }
+    
     function getadapted($id)
     {
         $sql = "select * from $this->_tableName where parent_id = '$id' and deleted = 0";

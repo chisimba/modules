@@ -26,8 +26,8 @@ class filterdisplay extends object {
         $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
         $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
         $this->objProductUtil = $this->getObject('productutil', 'unesco_oer');
-            $this->objDbRegions = $this->getObject('dbregions', 'unesco_oer');
-
+        $this->objDbRegions = $this->getObject('dbregions', 'unesco_oer');
+        $this->objDbReporting = $this->getObject('dbreporting', 'unesco_oer');
 
         $this->Filterinfo['ThemeFilter'] = $this->getParam('ThemeFilter');
         $this->Filterinfo['Model'] = $this->getParam('Model');
@@ -234,13 +234,14 @@ class filterdisplay extends object {
 
 
         $form->addToForm('<div class="blueBackground">');
-        $products = $this->objDbRegions->getRegions();
+        $products = $this->objDbProducts->getProductLanguages();
+        
         $filterRegion = new dropdown('CountryFilter');
         $filterRegion->cssClass = "leftColumnSelectDropdown";
         $filterRegion->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
         foreach ($products as $product) {
-
-            $filterRegion->addOption($product['region']);
+            $countryname = $this->objDbReporting->getCountryName($product['country_code']);
+            $filterRegion->addOption($product['country_code'],$countryname);
         }
 
         $filterRegion->setSelected($this->Filterinfo['CountryFilter']);
