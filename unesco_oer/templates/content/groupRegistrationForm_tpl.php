@@ -1,4 +1,7 @@
-
+<head>
+    
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  </head>
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
@@ -323,9 +326,12 @@ if (isset($userstring[7]) && $mode == 'add')
     $longitude->value = $userstring[7];
 }
 
+$table->addCell(' 
+    ');
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_longitude', 'unesco_oer').$required); // obj lang
 $table->addCell($longitude->show());
+
 $table->endRow();
 
 //latitude
@@ -362,7 +368,9 @@ $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
-$fieldset->contents = $table->show();
+
+$fieldset->contents = '<label style= "font-size:18px">Address: </label><input id="address"  type="text"/>
+    <div id="map_canvas" style="width:500px; height:300px"></div><br/>' .$table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
@@ -479,7 +487,22 @@ echo $form->show();
 
 echo '</div>';
 
+
+ $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-1.6.2.min.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+     $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-ui-1.8.16.custom.min.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+      $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/main.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+
+
 ?>
+
+
+
+ 
+
+
 <script type="text/javascript">
 function SubmitProduct()
 {
