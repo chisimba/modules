@@ -492,7 +492,7 @@ echo '</div>';
     $this->appendArrayVar('headerParams', $js);
      $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-ui-1.8.16.custom.min.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
-      $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/mapapi.js').'" type="text/javascript"></script>';
+      $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/main.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
 
 
