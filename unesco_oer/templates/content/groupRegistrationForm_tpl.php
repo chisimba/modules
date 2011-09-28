@@ -369,8 +369,8 @@ $table->endRow();
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
 
-$fieldset->contents = '<label style= "font-size:18px">Address: </label><input id="address"  type="text"/>
-    <div id="map_canvas" style="width:500px; height:300px"></div><br/>' .$table->show();
+$fieldset->contents = '<label>Address: </label><input id="address"  type="text"/>
+    <div id="map_canvas" style="width:600px; height:300px"></div><br/>' .$table->show();
 
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
