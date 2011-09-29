@@ -210,7 +210,6 @@ class dbreporting extends dbtable
                GROUP BY tbl_unesco_oer_institution_types.type
                ORDER BY Count DESC';
 
-
        $type = $this->getArray($sql);
        $Count = $type;
        return $Count;
@@ -240,6 +239,13 @@ class dbreporting extends dbtable
        $evol = $this->getArray($sql);
        $Count = $evol;
        return $Count;
+   }
+
+   function getProductThemes(){
+       $sql = 'SELECT theme FROM tbl_unesco_oer_product_themes';
+       $themes = $this->getArray($sql);
+       return $themes;
+
    }
 
 
