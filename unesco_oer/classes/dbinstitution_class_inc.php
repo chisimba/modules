@@ -21,9 +21,9 @@ class dbinstitution extends dbtable {
 
     function init() {
         parent::init("tbl_unesco_oer_institutions");
-      
-          $this->product_adaptaion_data = 'tbl_unesco_oer_product_adaptation_data';
-        $objUser = $this->getObject('user', 'security');
+
+        $this->product_adaptaion_data = 'tbl_unesco_oer_product_adaptation_data';
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -41,14 +41,14 @@ class dbinstitution extends dbtable {
 
         return $this->getArray($sql);
     }
-    
-      function getInstitutionIdbyType($type) {
+
+    function getInstitutionIdbyType($type) {
         $sql = "SELECT id FROM tbl_unesco_oer_institutions WHERE type = '$type'";
 
         return $this->getArray($sql);
     }
-    
-      function getProductIdbyInstid($type) {
+
+    function getProductIdbyInstid($type) {
         $sql = "SELECT product_id FROM $this->product_adaptaion_data WHERE institution_id = '$type'";
 
         return $this->getArray($sql);
@@ -71,22 +71,18 @@ class dbinstitution extends dbtable {
             'thumbnail' => $thumbnail
         );
 
-        $this->insert($data);
+        $id = $this->insert($data);
 
 
         // Prepare to add context to search index
         $objIndexData = $this->getObject('indexdata', 'search');
-
-
-
         $saveDate = date('Y-m-d H:M:S');
-        $url = $this->uri(array('action' => '4', 'institutionId' => ''), 'contextcontent');
-
+        //module=unesco_oer&action=4&institutionId=gen11Srv48Nme53_3499_1312799815
+        $url = $this->uri(array('action' => '4', 'institutionId' => $id), 'unesco_oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
 
-        $userId = 32;
-        ////        $this->objUser->userId();
+        $userId = $this->objUser->userId();
         $module = 'unesco_oer';
 
         $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
@@ -118,8 +114,8 @@ class dbinstitution extends dbtable {
         $InstitutionName = $this->getArray($sql);
         return $InstitutionName[0]['name'];
     }
-    
-     function getInstitutionByName($name) {
+
+    function getInstitutionByName($name) {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE name='$name'";
         $InstitutionName = $this->getArray($sql);
         return $InstitutionName[0]['name'];
@@ -135,11 +131,11 @@ class dbinstitution extends dbtable {
     // function is responsible to dispaly the map and its images
     function MapHandler($im, $lat, $long) {
         if (empty($long)
-
-            )$long = 28.0316;
+        )
+            $long = 28.0316;
         if (empty($lat)
-
-            )$lat = -26.19284;
+        )
+            $lat = -26.19284;
         $red = imagecolorallocate($im, 255, 0, 0);
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
@@ -190,24 +186,56 @@ class dbinstitution extends dbtable {
         $tempPuid = $this->getArray($sql);
         $puid = $tempPuid[0]['puid'];
 //        echo $puid;
-        return $this->update(
-                'puid',
-                $puid,
-                array(
-                    'name' => $name,
-                    'description' => $description,
-                    'country' => $country,
-                    'type' => $type,
-                    'address1' => $address1,
-                    'address2' => $address2,
-                    'address3' => $address3,
-                    'city' => $city,
-                    'websiteLink' => $websiteLink,
-                    'keyword1' => $keyword1,
-                    'keyword2' => $keyword2,
-                    'zip' => $zip,
-                    'thumbnail' => $thumbnail)
+        $result = $this->update(
+                'puid', $puid, array(
+            'name' => $name,
+            'description' => $description,
+            'country' => $country,
+            'type' => $type,
+            'address1' => $address1,
+            'address2' => $address2,
+            'address3' => $address3,
+            'city' => $city,
+            'websiteLink' => $websiteLink,
+            'keyword1' => $keyword1,
+            'keyword2' => $keyword2,
+            'zip' => $zip,
+            'thumbnail' => $thumbnail)
         );
+        if ($result != FALSE) {
+
+            // Call Object
+            $objIndexData = $this->getObject('indexdata', 'search');
+
+            // Prep Data
+            $docId = 'institution_' . $id;
+            $docDate = date('Y-m-d H:M:S');
+            ;
+            $url = $this->uri(array('action' => '4', 'institutionId' => $id), 'unesco_oer');
+            $title = stripslashes($name);
+
+            // Remember to add all info you want to be indexed to this field
+            $contents = stripslashes($description);
+
+            // A short overview that gets returned with the search results
+            $objTrim = $this->getObject('trimstr', 'strings');
+            $teaser = $objTrim->strTrim(strip_tags(stripslashes($description)), 300);
+
+            $module = 'unesco_oer';
+            $userId = $this->objUser->userId();
+            $additionalSearchIndex = array(
+                'country' => $country,
+                'type' => $type,
+                'city' => $city,
+            );
+
+            // Add to Index
+            $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
+
+            return $result;
+        } else {
+            return FALSE;
+        }
     }
 
     public function getInstitutionCountry($country) {
@@ -230,4 +258,5 @@ class dbinstitution extends dbtable {
     }
 
 }
+
 ?>

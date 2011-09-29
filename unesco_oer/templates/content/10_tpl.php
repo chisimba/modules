@@ -412,9 +412,3 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
             </div>
         </div>
     </div>
-
-
-
-
-
-

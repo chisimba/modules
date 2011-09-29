@@ -1296,8 +1296,9 @@ class unesco_oer extends controller {
                 exit();
             }
             $thumbnail = 'usrfiles/' . $results['path'];
+  
         } else {
-            echo " old == $prevThumbnail<br/>";
+           // echo " old == $prevThumbnail<br/>";
             // First Check if user has uploaded
             $fileInputName = "fileupload";
             if (array_key_exists($fileInputName, $_FILES)) {
@@ -1316,6 +1317,7 @@ class unesco_oer extends controller {
                 }
                 $thumbnail = 'usrfiles/' . $results['path'];
             }
+         
         }
 
         /* else {
@@ -1332,11 +1334,11 @@ class unesco_oer extends controller {
         $formAction = 'editInstitutionSubmit';
         $formError = false;
         $this->setVarByRef('formError', $formError);
-
+        
         $validate = $this->objInstitutionManager->validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-
+  
         if ($validate['valid']) {
-
+  
             $this->objInstitutionManager->editInstitution($institutionId, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
 
             return $this->__viewInstitutions();
