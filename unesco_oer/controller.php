@@ -1938,6 +1938,16 @@ class unesco_oer extends controller {
      *
      */
 
+
+    function __linkInstitution(){
+        $rightList = $this->getParam('rightList');
+        foreach ($rightList as $array) {
+            $this->objDbgroupInstitutions->add_group_institutions($id, $array);
+            }
+            return $this->__11a();
+
+    }
+
     function __saveNewGroup() {
         if (!$_POST) { // Check that user has submitted a page
             return $this->nextAction(NULL);

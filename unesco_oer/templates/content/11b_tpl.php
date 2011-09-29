@@ -112,7 +112,7 @@ $topicsNum = count($topics);
                             $header->type = 1;
                             $header->str = $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer');
                             echo '<div style="padding:10px;">' . $header->show();
-                            $uri = $this->uri(array('action' => 'saveNewGroup'));
+                            $uri = $this->uri(array('action' => 'linkInstitution'));
                             $form = new form('register', $uri);
                             $table = $this->newObject('htmltable', 'htmlelements');
                             $table->width = '100%';
