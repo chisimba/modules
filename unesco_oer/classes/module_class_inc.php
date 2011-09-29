@@ -190,7 +190,6 @@ class module extends content {
 
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer'));
-        $table->addCell($fieldName);
         $table->endRow();
 
         $table->startRow();

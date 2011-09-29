@@ -2567,26 +2567,8 @@ class unesco_oer extends controller {
     }
 
     public function __testPDF(){
-        $pdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
-        $instructions = "
-                <ul>
-                    <li>
-                        Use tree on the left to navigate existing conents
-                    </li>
-                    <li>
-                        Click on content in order to edit it.
-                    </li>
-                    <li>
-                        Click on the 'Create new ...' options to create new contents.
-                    </li>
-                    <li>
-                        All contents have the option to delete when being edited.
-                    </li>
-                </ul>
-            ";
-        $pdf->initWrite();
-        $pdf->partWrite($instructions);
-        return $pdf->show();
+        $generator = $this->getObject('documentgenerator','unesco_oer');
+        return $generator->showProductPDF('gen13Srv49Nme7_6076_1312449952');
     }
 
     public function __help() {
