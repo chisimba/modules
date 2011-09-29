@@ -57,10 +57,27 @@
 
                                     Select country<br>
                                     <select name="theme" size="1" multiple class="countrySelectBox" id="country">
-                                    	<option value="">Algeria</option>
-                                        <option value="">Angola</option>
-                                        <option value="">Benin</option>
-                                        <option value="">Botswana</option>
+
+                                    <?php
+                                                $temp = $this->objDbreporting->getBreakdownCountryAdaptations();
+                                                $ArrayCount = sizeof($temp);
+                                                $countryArray = array();
+
+                                                for ($i=0; $i < $ArrayCount; $i++)
+                                                    {
+                                                       $countryCode =  $temp[$i]["country"];
+                                                       $countryName = $this->objDbreporting->getCountryName($countryCode);
+                                                       $countryArray[] = $countryName;
+                                                    }
+
+                                                sort($countryArray,SORT_STRING);
+
+                                                for ($z=0; $z < $ArrayCount; $z++)
+                                                    {
+                                                       echo "<option value=''>$countryArray[$z]</option>";
+                                                    }
+
+                                             ?>
 
                                     </select>
                                 	<br>
@@ -87,11 +104,25 @@
                                 <div class="leftLegendContentHolder">
                                 	UNESCO theme:<br>
                                     <select name="theme" size="1" multiple class="countrySelectBox" id="region">
-                                    	<option value="">Access to information</option>
 
-                                        <option value="">Africa</option>
-                                        <option value="">Anti-Doping</option>
-                                        <option value="">Archives</option>
+                                    <?php
+                                                $themeArray = $this->objDbreporting->getProductThemes();
+                                                $ArrayCount = sizeof($themeArray);
+                                                $themeArray2 = array();
+
+                                                for ($i=0; $i < $ArrayCount; $i++)
+                                                    {
+                                                       $themeArray2[] = $themeArray[$i]["theme"];
+                                                    }
+
+                                                sort($themeArray2,SORT_STRING);
+
+                                                for ($z=0; $z < $ArrayCount; $z++)
+                                                    {
+                                                       echo "<option value=''>$themeArray2[$z]</option>";
+                                                    }
+
+                                             ?>
                                     </select>
                                 	<br>
                                     Use CTRL button to select more than one country
@@ -115,11 +146,26 @@
 
                             <div class="legendContent">
                                 <div class="legendWideContentHolder">
-                                	<input type="checkbox" name=""> Model
-                                    <input type="checkbox" name=""> Guide
-                                    <input type="checkbox" name=""> Handbook
-                                    <input type="checkbox" name=""> Manual
-                                    <input type="checkbox" name=""> Best practice
+
+                                <?php
+                                    $temp = $this->objDbreporting->getBreakdownTypeAdaptation();
+                                    $ArrayCount = sizeof($temp);
+                                    $arrayTypes = array();
+
+                                    for ($i=0; $i < $ArrayCount; $i++)
+                                       {
+                                        $arrayTypes[] = $temp[$i]["description"];
+                                       }
+
+                                    sort($arrayTypes,SORT_STRING);
+
+                                    for ($z=0; $z < $ArrayCount; $z++)
+                                     {
+                                        echo "<input type='checkbox' name=''>$arrayTypes[$z]";
+
+                                     }
+                                ?>
+
                                 </div>
                             </div>
 
@@ -129,10 +175,25 @@
                             <legend>Adapted by institution type</legend>
                             <div class="legendContent">
                                  <div class="legendWideContentHolder">
-                                	<input type="checkbox" name=""> School
-                                    <input type="checkbox" name=""> NGO
-                                    <input type="checkbox" name=""> IGO
-                                    <input type="checkbox" name=""> Private Sector
+                                <?php
+                                    $temp = $this->objDbreporting->getInstitutionTypeBreakdownAdaptation();
+                                    $ArrayCount = sizeof($temp);
+                                    $arrayTypes = array();
+
+                                    for ($i=0; $i < $ArrayCount; $i++)
+                                       {
+                                        $arrayTypes[] = $temp[$i]["type"];
+                                       }
+
+                                    sort($arrayTypes,SORT_STRING);
+
+                                    for ($z=0; $z < $ArrayCount; $z++)
+                                     {
+                                        echo "<input type='checkbox' name=''>$arrayTypes[$z]";
+
+                                     }
+                                ?>
+                                     
                                 </div>
 
                             </div>
@@ -143,10 +204,25 @@
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
                                 	<select name="theme" size="1" multiple class="countrySelectBox" id="region">
+                                    <?php
+                                                $temp = $this->objDbreporting->getLanguageBreakdownOriginals();
+                                                $ArrayCount = sizeof($temp);
+                                                $languageArray = array();
 
-                                    	<option value="">English</option>
-                                        <option value="">French</option>
-                                        <option value="">Spanish</option>
+                                                for ($i=0; $i < $ArrayCount; $i++)
+                                                    {
+                                                       $languageArray[] = $temp[$i]["language"];
+                                                    }
+
+                                                sort($languageArray,SORT_STRING);
+
+                                                for ($z=0; $z < $ArrayCount; $z++)
+                                                    {
+                                                       echo "<option value=''>$languageArray[$z]</option>";
+                                                    }
+
+                                             ?>
+
                                     </select>
                                     <br>
                                     Use CTRL button to select more than one language
