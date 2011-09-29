@@ -33,7 +33,7 @@ class dbgroups extends dbtable {
     }
 
     function getAllGroups() {
-        $sql = "select * from tbl_unesco_oer_groups";
+        $sql = "select * from tbl_unesco_oer_groups where parent_id is  NULL";
         return $this->getArray($sql);
     }
 
@@ -555,6 +555,38 @@ class dbgroups extends dbtable {
         $sql="select * from tbl_forum_topic where id ='$topicid'";
         $array = $this->getArray($sql);
         return $array[0]['replies'];
+    }
+    function saveSubGroup($name,$website,$description,$brief_descriptiont,$interest,$parent_id) {
+        $data = array(
+            'name' => $name,
+            'email' => '',
+            'address' =>'',
+            'city' => '',
+            'state' => '',
+            'country' =>'',
+            'postalcode' => '',
+            'website' => $website,
+            'LinkedInstitution' =>'',
+            'loclat' => '',
+            'loclong' => '',
+            'description' => $description,
+            'admin' => $admin,
+            'thumbnail' => '',
+            'description_one' => $brief_description,
+            'description_two' => '',
+            'description_three' =>'',
+            'description_four' => '',
+            'interests'=>$interest,
+             'parent_id'=>$parent_id
+        );
+        return $this->insert($data);
+    }
+
+
+    function getGroupSubgroup($groupid){
+        $sql="select * from tbl_unesco_oer_groups where parent_id='$groupid'";
+        $array = $this->getArray($sql);
+        return $array;
     }
 
 

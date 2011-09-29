@@ -63,12 +63,27 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Subgroups</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">
+                                 <?php
+                                $groupid = $this->getParam('id');
+                                $addSubgroupLink = new link($this->uri(array("action" =>"subgroupListingForm", "parent_id" => $groupid, "page" => "10a_tpl.php")));
+                                $addSubgroupLink->link = 'Subgroups';
+                                 $addSubgroupLink->cssClass = 'greenTextBoldLink';
+                                echo $addSubgroupLink->show();
+                                ?>
+                                </a></div>
                     </div>
                     <div class="groupSubLinksList">
 
                         <img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="New Group" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Create a new subgroup</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">
+                                <?php
+                                $groupid = $this->getParam('id');
+                                $addSubgroupLink = new link($this->uri(array("action" =>"subgroupForm", "parent_id" =>$groupid, "page" => "10a_tpl.php")));
+                                $addSubgroupLink->link = 'Create a new subgroup';
+                                 $addSubgroupLink->cssClass = 'greenTextBoldLink';
+                                echo $addSubgroupLink->show();
+                                ?></a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-email-alerts.png" alt="Email Alerts" width="18" height="18" class="smallLisitngIcons">

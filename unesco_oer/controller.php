@@ -2028,6 +2028,45 @@ class unesco_oer extends controller {
         return 'groupmembers_tpl.php';
     }
 
+ function __subgroupForm(){
+     return 'subGroupRegistrationForm_tpl.php';
+ }
+
+
+
+
+   function __subgroupListingForm(){
+       return 'subGroupListingForm_tpl.php';
+   }
+
+
+ function __saveSubgroup() {
+        $parent_id = $this->getParam("parent_id");
+        $this->setVar('parent_id', $parent_id);
+        $subgroupname = $this->getParam('subgroup_name');
+        $description = $this->getParam('description');
+        $brief_description = $this->getParam('briefdescription');
+        $interest = $this->getParam('interest');
+        $website = $this->getParam('group_website');
+        //oer resource
+        $checkFields = array(
+            $subgroupname,
+            $description,
+        );
+        $problems = array();
+        if (!$this->__checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'subGroupRegistrationForm_tpl.php';
+        } else {
+            $this->objDbGroups->saveSubGroup($subgroupname, $website,$description,$brief_description, $interest, $parent_id);
+            return 'subGroupListingForm_tpl.php';
+        }
+    }
+
     function __test() {
         return "test_tpl.php";
     }
@@ -2121,6 +2160,9 @@ class unesco_oer extends controller {
         $this->objDbGroups->deleteGroup($id);
         return 'groupListingForm_tpl.php';
     }
+
+
+
 
 //    function __searchGroup() {
 //        if ($this->getParam('search') == '') {

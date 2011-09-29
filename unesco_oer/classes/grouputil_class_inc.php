@@ -26,7 +26,9 @@ class grouputil extends object {
         $this->objLanguagecode = $this->getObject('languagecode', 'language');
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
         $this->objPost = $this->getObject('dbpost','forum');
-       $this->objDateTime =  $this->getObject('dateandtime', 'utilities');
+        $this->objDateTime =  $this->getObject('dateandtime', 'utilities');
+        $js = '<script language="JavaScript" src="' . $this->getResourceUri('grouputil.js') . '" type="text/javascript"></script>';
+        $this->appendArrayVar('headerParams', $js);
     }
 
     public function groupPerPage() {
@@ -473,73 +475,3 @@ class grouputil extends object {
 
 }
 ?>
-
-
-
-<script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript">
-
-    jQuery(document).ready(function(){
-
-        jQuery("a[id=joingroup]").click(function(){
-
-            var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
-            if(r== true){
-                window.location=this.href;
-            }
-            return false;
-        }
-    );
-
-    }
-);
-
-    jQuery(document).ready(function(){
-
-        jQuery("a[id=memberofgroup]").click(function(){
-
-            var r=confirm( "Your are a member of this group\n you can not join again....!!!");
-            if(r== true){
-                window.location=this.href;
-            }
-            return false;
-        }
-
-
-    );
-    }
-);
-
-
-    jQuery(document).ready(function(){
-
-        jQuery("a[id=leavegroup]").click(function(){
-
-            var r=confirm( "Are you sure you want to leave the group?");
-            if(r== true){
-                window.location=this.href;
-            }
-            return false;
-        }
-    );
-
-    }
-);
-
-    jQuery(document).ready(function(){
-
-        jQuery("a[id=cantleavegroup]").click(function(){
-
-            var r=confirm( "You are not a member of this group\n Action Leave group failed....!!!!");
-            if(r== true){
-                window.location=this.href;
-            }
-            return false;
-        }
-    );
-
-    }
-);
-
-
-</script>

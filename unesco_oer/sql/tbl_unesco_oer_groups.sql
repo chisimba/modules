@@ -26,7 +26,9 @@ $fields = array(
                 'description_two'=>array('type'=>'text','length'=>255),
                 'description_three'=>array('type'=>'text','length'=>255),
                 'description_four'=>array('type'=>'text','length'=>255),
-                'thumbnail' =>array('type' => 'text', 'length' =>255)
+                'thumbnail' =>array('type' => 'text', 'length' =>255),
+                'interests' =>array('type' => 'text', 'length' =>255),
+                'parent_id'=> array('type' => 'text','length' => 32)
                         
 		
 );

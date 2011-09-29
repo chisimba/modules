@@ -251,6 +251,24 @@
         </data>
     </update>
 
+        <update>
+        <table>tbl_unesco_oer_groups</table>
+        <version>0.145</version>
+        <description>new field on tbl_unesco_oer_groups</description>
+        <data>
+            <add>
+                <name>parent_id</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+            <add>
+                <name>interests</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
+
 </updates>
 
 

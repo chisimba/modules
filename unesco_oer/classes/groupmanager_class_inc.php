@@ -14,6 +14,8 @@ class groupmanager extends object {
 
     public function init() {
         $this->objForum = & $this->getObject('dbforum', 'forum');
+        $this->objDbGroups = $this->getObject('dbgroups','unesco_oer');
+        $this->objDbOERresources = $this->getObject('dbgroupoerresource','unesco_oer');
       
   
     }
@@ -70,7 +72,7 @@ class groupmanager extends object {
         );
 
         $problems = array();
-        if (!$this->__checkFields($checkFields)) {
+        if (!$this->checkFields($checkFields)) {
             $problems[] = 'missingfields';
         }
         if (count($problems) > 0) {
@@ -85,6 +87,27 @@ class groupmanager extends object {
             $this->setVar('mode', $mode);
             return 'manageOERresources_tpl.php';
         }
+    }
+
+
+    function saveSubgroup($subgroupname,$website,$description,$brief_description,$interest,$parent_id){
+            $checkFields = array(
+            $subgroupname,
+            $description,
+            );
+        $problems = array();
+        if (!$this->checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'subGroupRegistrationForm_tpl.php';
+        } else {
+              $this->objDbGroups->saveSubGroup($subgroupname,$website,$description,$brief_description,$interest,$parent_id);
+             return 'subGroupListingForm_tpl.php';
+              }
+        
     }
    
 
