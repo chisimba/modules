@@ -10,8 +10,25 @@ var marker;
     
 function initialize(){
 //MAP
-  var latlng = new google.maps.LatLng(41.659,-4.714);
-  var options = {
+  
+ 
+
+  
+    if (google.loader.ClientLocation) 
+    {        
+        var latlng = new google.maps.LatLng(
+            google.loader.ClientLocation.latitude,
+            google.loader.ClientLocation.longitude
+        );
+     
+      
+    }
+
+else
+    var latlng = new google.maps.LatLng(20.659,20.714);
+
+
+var options = {
     zoom: 16,
     center: latlng,
     mapTypeId: google.maps.MapTypeId.SATELLITE
