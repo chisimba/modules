@@ -111,7 +111,7 @@ class dbfileuploads extends dbtable {
     public function searchFileInAllNodes($filter, $filtervalue) {
         $sql = "select * from tbl_wicid_documents as A ";
 
-        $refVal = explode("-", $filtervalue);
+        $refVal = explode("-", $filtervalue);        
 
         //Derermine the where clause based on filter
         switch ($filter) {
@@ -131,11 +131,15 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.docname like '%" . $filtervalue . "%'";
                 break;
             default:
-                $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or (A.refno = '" . $refVal[0] . "' and A.userid = '" . $refVal[1] . "' )";
+                if(count($refVal)==2){
+                $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or (A.refno = '" . $refVal[0] . "' and A.ref_version = '" . $refVal[1] . "' )";
+                } else {
+                    $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%'";
+                }
                 break;
         }
 
-        $sql .= " and A.active ='Y' order by A.date_created DESC";
+        $sql .= " order by A.date_created DESC";
 
         $rows = $this->getArray($sql);
 

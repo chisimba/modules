@@ -44,9 +44,14 @@ if ($doccount > 0) {
     $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone"));
     $table->addHeaderCell($this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment"));
     $table->endHeaderRow();
+    $count = 0;
     foreach ($documents as $document) {
         if (count($document) > 1) {
-            $table->startRow();
+            if (($count % 2) == 0) {
+                $table->startRow("even");
+            } else {
+                $table->startRow("odd");
+            }
             $table->addCell($document['owner']);
             $table->addCell($document['refno']);
             $table->addCell($document['filename']);
@@ -54,6 +59,7 @@ if ($doccount > 0) {
             $table->addCell($document['telephone']);
             $table->addCell($document['attachmentstatus']);
             $table->endRow();
+            $count++;
         }
     }
 } else {
@@ -84,7 +90,7 @@ if ($doccount > 0) {
     $textinput2->size = 1;
     $textinput2->value = $rows;
     $textinput2->setType('hidden');
-    
+
     //Add prev button
     if ($newprev >= 0) {
         $str .= "prev";
@@ -93,7 +99,7 @@ if ($doccount > 0) {
         //Add Form
         $prevform = new form('prevform', $this->uri(array('action' => 'rejecteddocuments', 'mode' => $mode, 'start' => $newprev, 'rowcount' => $totalrowcount)));
 
-        $prevform->addToForm("</ br> " . $button->show() .$textinput2->show() . " </ br>");
+        $prevform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
 
         $table->addCell($prevform->show(), "50%", 'top', 'right');
     }
@@ -105,7 +111,7 @@ if ($doccount > 0) {
         //Add Form
         $nextform = new form('nextform', $this->uri(array('action' => 'rejecteddocuments', 'mode' => $mode, 'start' => $newstart, 'rowcount' => $totalrowcount)));
 
-        $nextform->addToForm("</ br> " . $button->show() .$textinput2->show() . " </ br>");
+        $nextform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
         if (!empty($str)) {
             $table->addCell($nextform->show(), "50%", 'top', 'left');
         } else {
@@ -136,7 +142,7 @@ $dd->selected = $rows;
 $dd->onchangeScript = 'onchange="document.forms[\'totalrowcount\'].submit();"';
 
 //Select no of records to display
-$rcountform = new form('totalrowcount', $this->uri(array('action' => 'rejecteddocuments', 'mode' => $mode, 'active' => 'Y', 'start' => 0, 'rowcount' => $files['count'], 'folder' => $dir)));
+$rcountform = new form('totalrowcount', $this->uri(array('action' => 'rejecteddocuments', 'mode' => $mode, 'active' => 'Y', 'start' => 0)));
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordgo', 'wicid', 'List'));
 $button->setToSubmit();
 $rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. </ br>");

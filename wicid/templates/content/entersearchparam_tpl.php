@@ -47,7 +47,12 @@ if (count($files) >= 1) {
 
                 //Show checkbox even without attachment
                 //Add row to render the record data
-                $table->startRow();
+                //Check if even
+                if (($count % 2) == 0) {
+                    $table->startRow("even");
+                } else {
+                    $table->startRow("odd");
+                }
                 $table->addCell($dlink2->show());
                 $table->addCell($document['refno']);
                 $table->addCell($document['owner']);
@@ -72,7 +77,11 @@ if (count($files) >= 1) {
 
                 //Show checkbox even without attachment
                 //Add row to render the record data
-                $table->startRow();
+                if (($count % 2) == 0) {
+                    $table->startRow("even");
+                } else {
+                    $table->startRow("odd");
+                }
                 $table->addCell($link->show());
                 $table->addCell($document['refno']);
                 $table->addCell($document['owner']);
@@ -93,7 +102,11 @@ if (count($files) >= 1) {
                 $count++;
             } elseif ($document['doctype'] == "Rejected") {
                 //Add row to render the record data
-                $table->startRow();
+                if (($count % 2) == 0) {
+                    $table->startRow("even");
+                } else {
+                    $table->startRow("odd");
+                }
                 $table->addCell($document['filename']);
                 $table->addCell($document['refno']);
                 $table->addCell($document['owner']);

@@ -174,8 +174,8 @@ $objIcon->setIcon('edit');
 
 if ($doccount > 0) {
     $count = 0;
+    $table->startHeaderRow();
 
-    $table->startRow();
     //Add checkbox if there are docs to show
     if ($doccount > 0) {
         //Create a check all checkbox
@@ -186,20 +186,20 @@ if ($doccount > 0) {
         $textinput->size = 1;
         $textinput->value = $doccount;
         $textinput->setType('hidden');
-        $table->addCell("<b>" . $selectall->show() . $textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+        $table->addHeaderCell("<b>" . $selectall->show() . $textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
     } else {
-        $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+        $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
     }
 
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
 
-    $table->endRow();
+    $table->endHeaderRow();
 
     foreach ($documents as $document) {
         if (count($document) > 1) {
@@ -224,7 +224,11 @@ if ($doccount > 0) {
             $approve->setId('set4batch_' . $count);
 
             //Add row to render the record data
-            $table->startRow();
+            if (($count % 2) == 0) {
+                $table->startRow("even");
+            } else {
+                $table->startRow("odd");
+            }
             $table->addCell($approve->show());
             $table->addCell($link->show());
             $table->addCell($document['refno']);
@@ -248,7 +252,7 @@ if ($doccount > 0) {
 } else {
     //Loads if no records were found
     $table->startRow();
-    $table->addCell('<strong id="confirm">'.$this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')).'</strong>';
+    $table->addCell('<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')) . '</strong>';
     $table->endRow();
 }
 
@@ -264,7 +268,7 @@ if ($doccount > 0) {
     $button->setToSubmit();
 
     $form->addToForm("  " . $button->show());
-    $form->addToForm("<br />" .'<strong id="confirm">'. $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved')).'</strong.';
+    $form->addToForm("<br />" . '<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved')) . '</strong.';
 }
 
 //Add Navigations
@@ -287,7 +291,7 @@ if ($doccount > 0) {
     $textinput2->size = 1;
     $textinput2->value = $rows;
     $textinput2->setType('hidden');
-    
+
     //Add prev button
     if ($newprev >= 0) {
         $str .= "prev";
@@ -296,7 +300,7 @@ if ($doccount > 0) {
         //Add Form
         $prevform = new form('prevform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newprev, 'rowcount' => $totalrowcount)));
 
-        $prevform->addToForm("</ br> " . $button->show().$textinput2->show() . " </ br>");
+        $prevform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
 
         $table->addCell($prevform->show(), "50%", 'top', 'right');
     }
@@ -308,7 +312,7 @@ if ($doccount > 0) {
         //Add Form
         $nextform = new form('nextform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newstart, 'rowcount' => $totalrowcount)));
 
-        $nextform->addToForm("</ br> " . $button->show().$textinput2->show() . " </ br>");
+        $nextform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
         if (!empty($str)) {
             $table->addCell($nextform->show(), "50%", 'top', 'left');
         } else {
@@ -340,7 +344,7 @@ $dd->selected = $rows;
 $dd->onchangeScript = 'onchange="document.forms[\'totalrowcount\'].submit();"';
 
 //Select no of records to display
-$rcountform = new form('totalrowcount', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'Y', 'start' => 0, 'rowcount' => $files['count'], 'folder' => $dir)));
+$rcountform = new form('totalrowcount', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'Y', 'start' => 0)));
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordgo', 'wicid', 'List'));
 $button->setToSubmit();
 $rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. </ br>");

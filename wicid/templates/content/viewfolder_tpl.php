@@ -91,13 +91,13 @@ if ($filecount > 0) {
 
     
 
-    $table->startRow();
-    $table->addCell($selectall->show() . $textinput->show() . "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
-    $table->endRow();
+    $table->startHeaderRow();
+    $table->addHeaderCell($selectall->show() . $textinput->show() . "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', "Ref No") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', "Owner") . "</b>");
+    $table->endHeaderRow();
     foreach ($files as $file) {
         if (count($file) > 1) {
             $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
@@ -112,8 +112,12 @@ if ($filecount > 0) {
             $approve = &new checkBox($docId . '_app', Null, Null);
             $approve->setValue('execute');
             $approve->setId('set4batch_' . $count);
-
-            $table->startRow();
+            //Check if even
+            if (($count % 2) == 0) {
+                $table->startRow("even");
+            } else {
+                $table->startRow("odd");
+            }
             $table->addCell($approve->show());
             $table->addCell($dlink1->show());
             $table->addCell($dlink2->show());
