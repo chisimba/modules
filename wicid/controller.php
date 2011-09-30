@@ -164,11 +164,15 @@ class wicid extends controller {
             $filter = 'Default';
             $filtervalue = $this->getParam("filtervalue", Null);
         }
-        //  $documents = $this->documents->getdocuments($this->mode);
+        $documents = $this->documents->getdocuments($this->mode);
         $rejecteddocuments = $this->documents->getdocuments($this->mode, "Y");
 
         $dir = $this->getParam("folder", "");
         $mode = $this->getParam("mode", "");
+        $doctype = array();
+        $doctype['approveddocs'] = $this->getParam("approveddocs", "");
+        $doctype['unapproveddocs'] = $this->getParam("unapproveddocs", "");
+        $doctype['rejecteddocs'] = $this->getParam("rejecteddocs", "");
 
         $objPreviewFolder = $this->getObject('previewfolder');
 
@@ -178,7 +182,7 @@ class wicid extends controller {
         if ($dir == $basedir) {
             $selected = "";
         }
-        $files = $this->objUtils->searchFileInAllNodes($filter, $filtervalue);
+        $files = $this->objUploads->searchFileInAllNodes($filter, $filtervalue, $doctype);
 
         $this->setVarByRef("files", $files);
         $this->setVarByRef("documents", $documents);

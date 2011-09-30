@@ -12,110 +12,101 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+//Get edit icon
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('edit');
+
 $table = &$this->newObject('htmltable', 'htmlelements');
-/*
-if ($filter == 'Default') {
-    $textinput = new textinput('filtervalue');
-    $textinput->size = 30;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Search by Ref No, Title, Owner or Telephone') . ": </b>", "350px", "top", "right");
-    $table->addCell($textinput->show(), "30px", "top", "left");
-} elseif ($filter == 'Owner') {
-    $textinput = new textinput('filtervalue');
-    $textinput->size = 30;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_ownername', 'wicid', 'Owner name') . ": </b>", "120px", "top", "right");
-    $table->addCell($textinput->show(), "30px", "top", "left");
-} elseif ($filter == 'Ref No') {
-    $textinput = new textinput('filtervalue');
-    $textinput->size = 30;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', 'Ref No') . ": </b>", "120px", "top", "right");
-    $table->addCell($textinput->show(), "30px", "top", "left");
-} elseif ($filter == 'Telephone') {
-    $textinput = new textinput('filtervalue');
-    $textinput->size = 30;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_telno', 'wicid', 'Telephone No') . ": </b>", "120px", "top", "right");
-    $table->addCell($textinput->show(), "30px", "top", "left");
-} elseif ($filter == 'Date') {
-    $objDateTime = $this->getObject('dateandtime', 'utilities');
-    $objDatePicker = $this->newObject('datepicker', 'htmlelements');
-    $objDatePicker->name = 'startdate';
-    $objDatePicker2 = $this->newObject('datepicker', 'htmlelements');
-    $objDatePicker2->name = 'enddate';
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": </b>", "120px", "top", "right");
-    $table->addCell($objDatePicker->show(), "190px", "top", "left");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": </b>", "120px", "top", "right");
-    $table->addCell($objDatePicker2->show(), "190px", "top", "left");
-
-} elseif ($filter == 'Title') {
-    $textinput = new textinput('filtervalue');
-    $textinput->size = 30;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_doctitle', 'wicid', 'Document title') . ": </b>", "120px", "top", "right");
-    $table->addCell($textinput->show(), "30px", "top", "left");
-}
-
-//Add the submit button
-$button = new button('searchdoc', $this->objLanguage->languageText('mod_wicid_search', 'wicid', 'Search'));
-$button->setToSubmit();
-
-//Add button to table
-$table->addCell($button->show());
-$table->endRow();
-
-//Add form
-$form = new form('filterform', $this->uri(array('action' => 'filterbyparam', 'filter' => $filter)));
-
-//Add table to form
-$form->addToForm($table->show());
-
-//Add form to fieldset
-$filterset = new fieldset();
-if ($filter == 'Default') {
-    $filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocs', 'wicid', 'Search Documents'));
-} else {
-    $filterset->setLegend($this->objLanguage->languageText('mod_wicid_searchdocsby', 'wicid', 'Search Documents By') . " <b>" . $filter . "</b>");
-}
-$filterset->addContent($form->show());
-
-echo $filterset->show();
- * 
- */
 //Add table to show results
 $table = &$this->newObject('htmltable', 'htmlelements');
 //Display results if search was positive
 if (count($files) >= 1) {
-
+    $count = 0;
     $table->startRow();
-    //$table->addCell("<b>Select</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', 'Type') . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', 'Title') . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', 'Ref No') . "</b>");
     $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', 'Owner') . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
+    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
     $table->endRow();
-    foreach ($files as $file) {
-        $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
-        $dlink1->link = $file['thumbnailpath'];
 
-        $dlink2 = new link($this->uri(array("action" => "downloadfile", "filepath" => $file['id'], "filename" => $file['actualfilename'])));
-        $dlink2->link = $file['actualfilename'];
-        //Get the document Id
-        $docId = $this->documents->getIdWithRefNo($file['refno']);
+    foreach ($files as $document) {
+        if (!empty($document['id'])) {
+            //Present depending on type of document (Approved, Unapproved, Rejected
+            if ($document['doctype'] == "Approved") {
+                $type = "";
 
-        //Create checkbox to help select record for batch execution
-        $approve = &new checkBox($docId . '_app', Null, Null);
-        $approve->setValue('execute');
+                $dlink1 = new link($this->uri(array("action" => "downloadfile", "filepath" => $document['filepath'], "filename" => $document['fullfilename'])));
+                $dlink1->link = $document['thumbnailpath'];
 
-        $table->startRow();
-        //$table->addCell($approve->show());
-        $table->addCell($dlink1->show());
-        $table->addCell($dlink2->show());
-        $table->addCell($file['refno']);
-        $table->addCell($file['owner'] . '(' . $file['telephone'] . ')');
-        $table->endRow();
+                $dlink2 = new link($this->uri(array("action" => "downloadfile", "filepath" => $document['filepath'], "filename" => $document['fullfilename'])));
+                $dlink2->link = $document['filename'];
+
+                //Show checkbox even without attachment
+                //Add row to render the record data
+                $table->startRow();
+                $table->addCell($dlink2->show());
+                $table->addCell($document['refno']);
+                $table->addCell($document['owner']);
+                $table->addCell($document['topic']);
+                $table->addCell($document['telephone']);
+                // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
+                //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
+
+
+                $uplink = new link($this->uri(array("action" => "uploadfile", "docname" => $document['filename'], "docid" => $document['id'], "topic" => $document['topic'])));
+                $uplink->link = $objIcon->show();
+
+                $table->addCell($dlink1->show());
+                $table->addCell($document['date']);
+                $table->addCell($document['doctype']);
+                $table->endRow();
+                //Increment count
+                $count++;
+            } elseif ($document['doctype'] == "Unapproved") {
+                $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
+                $link->link = $document['filename'];
+
+                //Show checkbox even without attachment
+                //Add row to render the record data
+                $table->startRow();
+                $table->addCell($link->show());
+                $table->addCell($document['refno']);
+                $table->addCell($document['owner']);
+                $table->addCell($document['topic']);
+                $table->addCell($document['telephone']);
+                // w.setUrl(GWT.getHostPageBaseURL() + Constants.MAIN_URL_PATTERN + "?module=wicid&action=uploadfile&docname=" + document.getTitle()
+                //         + "&docid=" + document.getId() + "&topic=" + document.getTopic());
+
+
+                $uplink = new link($this->uri(array("action" => "uploadfile", "docname" => $document['filename'], "docid" => $document['id'], "topic" => $document['topic'])));
+                $uplink->link = $objIcon->show();
+
+                $table->addCell($document['attachmentstatus'] . $uplink->show());
+                $table->addCell($document['date']);
+                $table->addCell($document['doctype']);
+                $table->endRow();
+                //Increment count
+                $count++;
+            } elseif ($document['doctype'] == "Rejected") {
+                //Add row to render the record data
+                $table->startRow();
+                $table->addCell($document['filename']);
+                $table->addCell($document['refno']);
+                $table->addCell($document['owner']);
+                $table->addCell($document['topic']);
+                $table->addCell($document['telephone']);
+                $table->addCell($document['attachmentstatus']);
+                $table->addCell($document['date']);
+                $table->addCell($document['doctype']);
+                $table->endRow();
+                //Increment count
+                $count++;
+            }
+        }
     }
     //Create legend for the search results
     $fs = new fieldset();

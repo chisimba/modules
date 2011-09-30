@@ -324,15 +324,16 @@ class userutils extends object {
      * Function to get documents based on passed params
      * @param string $filter the type of parameter to use
      * @param string or array $filtervalue the value supplied by the user
+     * @param array doctype ("approveddocs","unapproveddocs","rejecteddocs")
      * @return array
      */
 
-    public function searchFileInAllNodes($filter, $filtervalue) {
+    public function searchFileInAllNodes($filter, $filtervalue, $doctype=null) {
         $objFileUploads = $this->getObject('dbfileuploads');
         $today = getdate();
 
         $owner = $this->getUserId();
-        $rows = $objFileUploads->searchFileInAllNodes($filter, $filtervalue);
+        $rows = $objFileUploads->searchFileInAllNodes($filter, $filtervalue, $doctype);
         $files = array();
 
         foreach ($rows as $row) {

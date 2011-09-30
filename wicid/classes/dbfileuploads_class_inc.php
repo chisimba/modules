@@ -104,13 +104,13 @@ class dbfileuploads extends dbtable {
      * Function to get documents based on passed params
      * @param string $filter the type of parameter to use
      * @param string $filtervalue the value supplied by the user
+     * @param array doctype ("approveddocs","unapproveddocs","rejecteddocs")
      * @return array
      */
 
     public function searchFileInAllNodes($filter, $filtervalue) {
-        $sql = "select A.refno,A.telephone, A.docname, A.date_created, A.contact_person, A.userid, B.date_uploaded, B.filename, B.filepath, B.docid
-              from tbl_wicid_documents as A
-                join tbl_wicid_fileuploads as B on A.id = B.docid ";
+        $sql = "select * from tbl_wicid_documents as A ";
+
         $refVal = explode("-", $filtervalue);
 
         //Derermine the where clause based on filter
@@ -119,7 +119,7 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.contact_person like '%" . $filtervalue . "%'";
                 break;
             case 'Ref No':
-                $sql .= "where A.refno like '%" . $filtervalue . "%'";                
+                $sql .= "where A.refno like '%" . $filtervalue . "%'";
                 break;
             case 'Telephone':
                 $sql .= "where A.telephone like '%" . $filtervalue . "%'";
@@ -134,9 +134,101 @@ class dbfileuploads extends dbtable {
                 $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or (A.refno = '" . $refVal[0] . "' and A.userid = '" . $refVal[1] . "' )";
                 break;
         }
-        $sql .= " and A.active ='Y' order by A.date_created DESC";        
 
-        return $this->getArray($sql);
+        $sql .= " and A.active ='Y' order by A.date_created DESC";
+
+        $rows = $this->getArray($sql);
+
+        $rowcount = count($rows);
+
+        $docs = array();
+
+
+        foreach ($rows as $row) {
+            //$owner=$this->userutils->getUserId();
+            if (strlen(trim($row['contact_person'])) == 0) {
+                $owner = $this->objUser->fullname($row['userid']);
+            } else {
+                $owner = $row['contact_person'];
+            }
+
+            if ($row['upload'] == '') {
+                $attachmentStatus = "No";
+            } else {
+                $attachmentStatus = Null;
+            }
+
+            $statusS = $row['status'];
+            switch ($statusS) {
+                case 0:
+                    $status = "Creator";
+                    break;
+                case 1:
+                    $status = "APO";
+                    break;
+                case 2:
+                    $status = "Subfaculty";
+                    break;
+                case 3:
+                    $status = "Faculty";
+                    break;
+                case 4:
+                    $status = "Senate";
+                    break;
+            }
+
+            $currentuserid = $row['currentuserid'];
+            $fullname = $this->objUser->fullname($currentuserid);
+            $doctype = "";
+            $filepath = "";
+            $thumbnailpath = "";
+            $fullfilename = "";
+            
+            //Check type
+            if (($row['rejectdoc'] == 'N' || $row['rejectdoc']==null) && $row['active'] == 'N' && ($row['deletedoc'] == 'N' || $row['deletedoc']==null)) {
+                $doctype = 'Unapproved';
+            }
+            if ($row['rejectdoc'] == 'Y') {
+                $doctype = 'Rejected';
+            }
+            if (($row['rejectdoc'] == 'N' || $row['rejectdoc']==null) && $row['active'] == 'Y') {
+                $doctype = 'Approved';                
+                $sql = "select * from tbl_wicid_fileuploads where docid='".$row['id']."'";
+
+                $fpathsql = $this->getArray($sql);
+                if(count($fpathsql)>0){
+                  $fullfilename = $fpathsql[0]['filename'];
+                  $filepath = $fpathsql[0]['filepath'];
+                  $thumbnailpath = '<img src="' . $this->objUserutils->sitePath . '/wicid/resources/images/ext/' . $this->objUserutils->findexts($fpathsql[0]['filename']) . '.png" width="22" height="22">';
+                }
+            }
+            $docs[] = array(
+                'userid' => $row['userid'],
+                'owner' => $owner,
+                'refno' => $row['refno'] . "-" . $row['ref_version'],
+                'filename' => $row['docname'],
+                'fullfilename' => $fullfilename,
+                'group' => $row['groupid'],
+                'id' => $row['id'],
+                'topic' => $row['topic'],
+                'department' => $row['department'],
+                'telephone' => $row['telephone'],
+                'date' => $row['date_created'],
+                'attachmentstatus' => $attachmentStatus,
+                'status' => $status,
+                'currentuserid' => $fullname,
+                'version' => $row['version'],
+                'ref_version' => $row['ref_version'],
+                'reject_doc' => $row['rejectdoc'],
+                'active' => $row['active'],
+                'doctype' => $doctype,
+                'filepath' => $filepath,
+                'thumbnailpath' => $thumbnailpath
+            );
+        }
+        $docs['count'] = $rowcount;
+
+        return $docs;
     }
 
     /**

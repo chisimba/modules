@@ -12,6 +12,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $this->loadClass('tabcontent', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
+$this->loadClass('checkbox', 'htmlelements');
 
 
 //Create a dropdown to hold the search parameters
@@ -33,7 +34,7 @@ $textinput = new textinput('filtervalue');
 $textinput->size = 17;
 
 $table = &$this->newObject('htmltable', 'htmlelements');
-$table->width = '800px';
+$table->width = '600px';
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 $objDatePicker = $this->newObject('datepicker', 'htmlelements');
 $objDatePicker->name = 'startdate';
@@ -47,7 +48,6 @@ $objElementDefault->addOption('Default',$this->objLanguage->languageText('mod_wi
 $objElementDefault->setSelected('Default');
 $objElementDefault = $objElementDefault->show();
 
-
 //Radio button Group
 $objElementDate = new radio('filter');
 $objElementDate->addOption('Date',$this->objLanguage->languageText('mod_wicid_phrasesearchby', 'wicid', 'Search by')." ".$this->objLanguage->languageText('mod_wicid_searchbydate', 'wicid', 'Date'));
@@ -55,23 +55,41 @@ $objElementDate->addOption('Date',$this->objLanguage->languageText('mod_wicid_ph
 $objElementDate =  $objElementDate->show();
 
 $table->startRow();
-$table->addCell($objElementDefault.": ", "", "top", "left","","",'1');
-$table->addCell($objElementDate . ": ", "", "top", "left","","colspan='5'",'1');
+$table->addCell($objElementDefault.": ", "30%", "top", "left");
+$table->addCell($textinput->show(), "35%", "top", "left");
+//$table->addCell("<b>".$this->objLanguage->languageText('mod_wicid_documenttype', 'wicid', 'Document type')." : </b>", "35%", "top", "left");
+$table->endRow();
+//Check Box for approved doc
+$objSearchDocType = new checkbox('approveddocs', $this->objLanguage->languageText('mod_wicid_approveddocs','wicid','Approved documents'));
+$objSearchDocType->setValue('Y');
+$table->startRow();
+$table->addCell($objElementDate . ": ", "30%", "top", "left");
+$table->addCell(" ", "35%", "top", "left");
+//$table->addCell($objSearchDocType->show()." ".$this->objLanguage->languageText('mod_wicid_approveddocs','wicid','Approved documents'), "35%", "top", "left");
+$table->endRow();
+//Check Box for unapproveddocs
+$objSearchDocType = new checkbox('unapproveddocs', $this->objLanguage->languageText('mod_wicid_approveddocs','wicid','Approved documents'));
+$objSearchDocType->setValue('Y');
+$table->startRow();
+$table->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": ", "30%", "top", "left");
+$table->addCell($objDatePicker->show(), "35%", "top", "left");
+//$table->addCell($objSearchDocType->show()." ".$this->objLanguage->languageText('mod_wicid_unapproveddocs','wicid','Unapproved documents'), "35%", "top", "left");
+$table->endRow();
+//Check Box for rejecteddocs
+$objSearchDocType = new checkbox('rejecteddocs', $this->objLanguage->languageText('mod_wicid_approveddocs','wicid','Approved documents'));
+$objSearchDocType->setValue('Y');
+$table->startRow();
+$table->addCell("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": ", "30%", "top", "left");
+$table->addCell($objDatePicker2->show(), "35%", "top", "left");
+//$table->addCell($objSearchDocType->show()." ".$this->objLanguage->languageText('mod_wicid_rejecteddocs','wicid','Rejected documents'), "35%", "top", "left");
 $table->endRow();
 $table->startRow();
-$table->addCell($textinput->show(), "", "top", "left","","",'1');
-$table->addCell($this->objLanguage->languageText('mod_wicid_startdate', 'wicid', 'Start date') . ": ", "", "top", "left","","",'1');
-$table->addCell($objDatePicker->show(), "", "top", "left","","",'1');
-$table->addCell("", "", "top", "left","","",'1');
+$table->addCell($filterbutton->show(), "30%", "top", "left");
+$table->addCell(" ", "35%", "top", "left");
+//$table->addCell("", "35%", "top", "left");
 $table->endRow();
 $table->startRow();
-$table->addCell("", "", "top", "left","","",'1');
-$table->addCell($this->objLanguage->languageText('mod_wicid_enddate', 'wicid', 'End date') . ": ", "", "top", "left","","",'1');
-$table->addCell($objDatePicker2->show(), "", "top", "left","","",'1');
-$table->addCell($filterbutton->show(), "", "top", "left","","",'1');
-$table->endRow();
-$table->startRow();
-$table->addCell("* "." ".$this->objLanguage->languageText('mod_wicid_thisincludes', 'wicid', 'This includes').": ".$this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Ref No., Title, Owner or Telephone'), "", "top", "left","","colspan='6'",'1');
+$table->addCell("* "." ".$this->objLanguage->languageText('mod_wicid_thisincludes', 'wicid', 'This includes').": ".$this->objLanguage->languageText('mod_wicid_searchby', 'wicid', 'Ref No., Title, Owner or Telephone'), "100%", "top", "left","","colspan='2'");
 $table->endRow();
 
 //Add date to fieldset
@@ -97,6 +115,7 @@ $searchForm = new form('filesearch', $this->uri(array('action' => 'search')));
 $searchForm->method = 'GET';
 $hiddenInput = new hiddeninput('module', 'filemanager');
 $searchForm->addToForm($hiddenInput->show());
+
 
 $hiddenInput = new hiddeninput('action', 'search');
 $searchForm->addToForm($hiddenInput->show());
