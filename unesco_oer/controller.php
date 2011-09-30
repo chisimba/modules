@@ -2570,7 +2570,7 @@ class unesco_oer extends controller {
 
     public function __testPDF(){
         $generator = $this->getObject('documentgenerator','unesco_oer');
-        return $generator->showProductPDF('gen13Srv49Nme7_6076_1312449952');
+        return $generator->showProductPDF($this->getParam('id'));
     }
 
     public function __help() {

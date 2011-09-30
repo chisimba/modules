@@ -38,9 +38,41 @@ class documentgenerator extends object {
         $product = $this->getObject('product');
         $product->loadProduct($productID);
         $this->pdf->initWrite();
-        $this->pdf->partWrite($product->getTitle());
-        $this->pdf->partWrite($product->getDescription());
+
+        //Front Page//
+        $frontPage = "
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <h1 align='CENTER'>{$product->getTitle()}</h1>
+            ";
+        //Contents page//
+        $contents = "
+            <h1>Contents</h1>
+            ";
+        //Document content//
+        $contentManager = $product->getContentManager();
+        $document = $this->generateContentsHTML($contentManager->getAllContents());
+
+        $this->pdf->partWrite($frontPage);
+        $this->pdf->partWrite($contents);
+        $this->pdf->partWrite($document);
         return $this->pdf;
+    }
+
+    private function generateContentsHTML($contentObjects){
+        $html = "";
+        foreach ($contentObjects as $contentObject) {
+            $html .= "<h1>{$contentObject->getTitle()}</h1>";
+            $html .= $contentObject->printHTML();
+            $html .= $this->generateContentsHTML($contentObject->getContents());
+        }
+
+        return $html;
+//        return 'hello';
     }
 
 }

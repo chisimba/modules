@@ -458,6 +458,10 @@ class content extends object
     public function setParentObject(&$parentobject){
         $this->parentobject =  $parentobject;
     }
+
+    public function printHTML(){
+        return "Nothing to Print!";
+    }
 }
 
 ?>

@@ -260,12 +260,19 @@ if ($this->objUser->isLoggedIn()) {
     
 }
 
+$uri = $this->uri(array('action' => "testPDF", 'id' => $productID));
+$printLink = new link($uri);
+$printLink->title = 'print';
+$linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+$printLink->link = $linkText;
+echo $printLink->show();
+
 $products = $this->objDbProducts->getProductByID($productID);
 echo $this->objProductUtil->populatebookmark($products);
 ?>
 
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Email" width="19" height="15"></a>-->
-              <A HREF="javascript:window.print()"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Email" width="19" height="15"></A>
+<!--              <A HREF="javascript:window.print()"><img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Email" width="19" height="15"></A>-->
 
 <!--                <a href="#"><img src="skins/unesco_oer/images/icon-content-top-download.png" alt="Download" width="19" height="15"></a>-->
 
