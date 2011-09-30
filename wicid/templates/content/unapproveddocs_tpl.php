@@ -186,9 +186,10 @@ if ($doccount > 0) {
         $textinput->size = 1;
         $textinput->value = $doccount;
         $textinput->setType('hidden');
-        $table->addHeaderCell("<b>" . $selectall->show() . $textinput->show() . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+        //$this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select")
+        $table->addHeaderCell("<b>" . $selectall->show() . $textinput->show() . "</b>");
     } else {
-        $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
+        $table->addHeaderCell(" ");
     }
 
     $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', "Title") . "</b>");
