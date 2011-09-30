@@ -134,7 +134,7 @@ class dbfileuploads extends dbtable {
                 if(count($refVal)==2){
                 $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or (A.refno = '" . $refVal[0] . "' and A.ref_version = '" . $refVal[1] . "' )";
                 } else {
-                    $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%'";
+                    $sql .= "where A.docname like '%" . $filtervalue . "%' or A.telephone like '%" . $filtervalue . "%' or A.contact_person like '%" . $filtervalue . "%' or A.refno = '" . $filtervalue . "' or A.ref_version = '" . $filtervalue . "'";
                 }
                 break;
         }
