@@ -22,16 +22,16 @@ $table = &$this->newObject('htmltable', 'htmlelements');
 //Display results if search was positive
 if (count($files) >= 1) {
     $count = 0;
-    $table->startRow();
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', 'Title') . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', 'Ref No') . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', 'Owner') . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
-    $table->addCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
-    $table->endRow();
+    $table->startHeaderRow();
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_title', 'wicid', 'Title') . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_refno', 'wicid', 'Ref No') . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_owner', 'wicid', 'Owner') . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_topic', 'wicid', "Topic") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_telephone', 'wicid', "Telephone") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_attachment', 'wicid', "Attachment") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_date', 'wicid', "Date") . "</b>");
+    $table->addHeaderCell("<b>" . $this->objLanguage->languageText('mod_wicid_type', 'wicid', "Type") . "</b>");
+    $table->endHeaderRow();
 
     foreach ($files as $document) {
         if (!empty($document['id'])) {
