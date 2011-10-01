@@ -246,6 +246,10 @@ class geomongo extends object
 			    $wikipedia = "";
 		    }
     	}
+    	else {
+    		$wikipedia = "";
+    		$elevation = 0;
+    	}
     	$cursor = $this->collection->update(array("name" => ucwords($insertarr['name'])), 
     	                                          array("loc" => array($insertarr['longitude'], $insertarr['latitude']), 
     	                                          "name" => array(ucwords($insertarr['name'])), 
@@ -265,6 +269,12 @@ class geomongo extends object
     
     public function getRecordCount() {
     	$cursor = $this->collection->count();
+    	return $cursor;
+    }
+    
+    public function getDistinct($key) {
+    	
+    	$cursor = $this->db->command(array("distinct" => $this->objSysConfig->getValue('collection', 'mongo'), "key" => $key));
     	return $cursor;
     }
     
