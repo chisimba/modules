@@ -140,8 +140,9 @@ class geo extends controller
                 break;
                 
             case 'testupsert' :
-            	$insertarr = array('name' => 'Castle of good hoopoe', 'latitude' => -33.92587, 'longitude' => 18.4278, 'type' => 'thing', 'countrycode' => "test", "timezone" => "testzone", 'alternatenames' => "alt1, alt2, alt3", "population" => 0);
-            	$this->objMongo->upsertRecord($insertarr, "forceupdate");
+            	//$insertarr = array('name' => 'Castle of good hoopoe', 'latitude' => -33.92587, 'longitude' => 18.4278, 'type' => 'thing', 'countrycode' => "test", "timezone" => "testzone", 'alternatenames' => "alt1, alt2, alt3", "population" => 0);
+            	//$this->objMongo->upsertRecord($insertarr, "forceupdate");
+            	$this->objOps->postgisKludge();
             	break;
                 
             case 'getflickr' :

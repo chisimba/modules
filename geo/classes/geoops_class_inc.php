@@ -256,7 +256,16 @@ class geoops extends object
 			$patable->startRow();
 			$typelabel = new label($this->objLanguage->languageText("mod_geo_type", "geo") . ':', 'input_type');
 			$type = new dropdown('type', NULL, NULL, '100%');
-			$type->addOption('landmark', 'landmark');
+			$types = $this->objMongo->getDistinct("type");
+			$types = $types['values'];
+			foreach($types as $ptype) {
+				if($ptype == "null" || $ptype == "undefined" || $ptype == "") {
+					continue;
+				}
+				else {
+			        $type->addOption($ptype, ucwords($ptype));
+				}
+			}
 			$patable->addCell($typelabel->show());
 			$patable->addCell($type->show());
 			$patable->endRow();
@@ -423,7 +432,7 @@ class geoops extends object
 		return $sform->show();
 	}
 
-	
+
 
 	/**
 	 * Welcome block
@@ -446,8 +455,9 @@ class geoops extends object
 			else {
 				$signuplink = NULL;
 			}
-			$signinlink = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')))." ".$this->objLanguage->languageText("mod_geo_toaddplaces", "geo").", ";
-			$linklist .= $signinlink;
+			$signinlink1 = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')));
+			$signinlink1 .= " ".$this->objLanguage->languageText("mod_geo_toaddplaces", "geo").", ";
+			$linklist .= $signinlink1;
 			$linklist .= $this->objLanguage->languageText("mod_geo_orifyoudonthaveacc", "geo").", ".$signuplink;
 		}
 		else {
@@ -470,7 +480,13 @@ class geoops extends object
 
 		$linklist .= "<br /><ul>";
 		$linklist .= "<li>".$changeloclink->show()."</li>";
-		$linklist .= "<li>".$addloclink->show()."</li>";
+		if($this->objUser->isLoggedIn()) {
+		    $linklist .= "<li>".$addloclink->show()."</li>";
+		}
+		else {
+			$signinlink2 = $signinlink->show($this->objLanguage->languageText("mod_geo_signin", "geo"), $this->uri(array('action' => 'showsignin')));
+			$linklist .= "<li>".$signinlink2." ".$this->objLanguage->languageText("mod_geo_toadd", "geo")."</li>";
+		}
 		$linklist .= "</ul>";
 		$linklist .= "<br />".$this->objLanguage->languageText("mod_geo_numrecs", "geo").": ".number_format($this->objMongo->getRecordCount());
 		return $objFeaturebox->show($this->objLanguage->languageText("mod_geo_welcome", "geo"),$linklist);
@@ -500,6 +516,63 @@ class geoops extends object
 		$objBlocks = $this->getObject('blocks', 'blocks');
 		$objFeatureBox = $this->getObject('featurebox', 'navigation');
 		return $objFeatureBox->show($this->objLanguage->languageText("mod_geo_signup", "geo"), $objBlocks->showBlock('register', 'security', 'none'));
+	}
+
+	public function postgisKludge() {
+		$dbconn = pg_connect("host=localhost dbname=gis user=postgres password=postgres")
+		or die('Could not connect: ' . pg_last_error());
+
+		// Performing SQL query
+		$query = 'select *,point(the_geom) from south_africa_location';
+		$result = pg_query($query) or die('Query failed: ' . pg_last_error());
+
+		while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+			// var_dump($line);
+			$line['point'] = str_replace("(", "", $line['point']);
+			$line['point'] = str_replace(")", "", $line['point']);
+			$pt = explode(",", $line['point']);
+			$lon = floatval($pt[0]);
+			$lat = floatval($pt[1]);
+			$insarr = array('name' => $line['NAME'], 'latitude' => $lat, 'longitude' => $lon, 'type' => $line['PLACE'], 'alternatenames' => "");
+			
+			$this->objMongo->upsertRecord($insarr, "noupdate");
+		}
+
+		// Free resultset
+		pg_free_result($result);
+		
+		// Performing SQL query
+		$query = 'select *,point(the_geom) from south_africa_poi';
+		$result = pg_query($query) or die('Query failed: ' . pg_last_error());
+
+		while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+			// var_dump($line);
+			$line['point'] = str_replace("(", "", $line['point']);
+			$line['point'] = str_replace(")", "", $line['point']);
+			$pt = explode(",", $line['point']);
+			$lon = floatval($pt[0]);
+			$lat = floatval($pt[1]);
+			$types = explode(":", $line['NAME']);
+			
+			if(count($types) == 2) {
+				$name = $types[1];
+				$subtype = $types[0];
+			}
+			else {
+				$name = $types[0];
+				$subtype = "";
+			}
+			$insarr = array('name' => $name, 'latitude' => $lat, 'longitude' => $lon, 'type' => $line['CATEGORY'], 'subtype' => $subtype, 'alternatenames' => "");
+			$this->objMongo->upsertRecord($insarr, "noupdate");
+		}
+
+		// Free resultset
+		pg_free_result($result);
+
+		// Closing connection
+		pg_close($dbconn);
+		
+		return;
 	}
 }
 ?>
