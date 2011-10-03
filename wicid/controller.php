@@ -381,12 +381,12 @@ class wicid extends controller {
                 $successmsg = $dir . " " . $this->objLanguage->languageText('mod_wicid_createsuccess', 'wicid', "was created successfully");
                 $this->setVarByRef('successmsg', $successmsg);
             } else if ($createcheck == "fail") {
-                if($dir == "/") {
-                $successmsg = $this->objLanguage->languageText('mod_wicid_entertopicname', 'wicid', "You need to type in a meaningful topic name before submitting");
-                $this->setVarByRef('successmsg', $successmsg);
+                if ($dir == "/") {
+                    $successmsg = $this->objLanguage->languageText('mod_wicid_entertopicname', 'wicid', "You need to type in a meaningful topic name before submitting");
+                    $this->setVarByRef('successmsg', $successmsg);
                 } else {
-                $successmsg = $dir . " " . $this->objLanguage->languageText('mod_wicid_createfail', 'wicid', "was not created successfully. A corresponding topic already exists");
-                $this->setVarByRef('successmsg', $successmsg);
+                    $successmsg = $dir . " " . $this->objLanguage->languageText('mod_wicid_createfail', 'wicid', "was not created successfully. A corresponding topic already exists");
+                    $this->setVarByRef('successmsg', $successmsg);
                 }
             }
         }
@@ -398,6 +398,7 @@ class wicid extends controller {
         $this->setVarByRef("successmsg", $successmsg);
         return "createfolder_tpl.php";
     }
+
     /**
      * function that loads delete folder form
      *
@@ -414,6 +415,7 @@ class wicid extends controller {
         $this->setVarByRef("successmsg", $message);
         return "deletefolder_tpl.php";
     }
+
     function __getdefaultfolder($dir) {
         $handle = opendir($dir);
         $files = array();
@@ -938,39 +940,57 @@ class wicid extends controller {
      */
 
     function __batchexecute() {
-//Get parameters
+        //Get parameters
         $submit = strtolower($this->getParam('submit'));
         $id = $this->getParam('id');
         $mode = $this->getParam('mode');
         $active = $this->getParam('active', 'Y');
         $rejected = $this->getParam('rejected', 'N');
+        $start = $this->getParam('start', null);
+        $rowcount = $this->getParam('rowcount', null);
+        $rcount = $this->getParam('rcount', null);
+        $folder = $this->getParam('folder', null);
+        $sourceaction = $this->getParam('sourceaction', 'unapproveddocs');
 
         $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
 
-//Check and execute action
+        //Check and execute action
         if ($submit == "approve selected") {
-//Step through the documents and approve those selected
+            $countapproved = 0;
+            //Step through the documents and approve those selected
             if (isset($documents)) {
                 foreach ($documents as $document) {
-//if ($document['attachmentstatus'] != "No")
+                    //if ($document['attachmentstatus'] != "No")
                     if ($this->getParam($document['id'] . '_app') == 'execute') {
-                        $this->documents->approveDocs($document['id']);
+                        $check = $this->documents->approveDocs($document['id']);
+                        if ($check > 0)
+                            $countapproved++;
                     }
                 }
             }
+            if ($countapproved > 0) {
+                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countapproved . ' record(s) approved successfully. Note: Only records with attachments were approved.'));
+            } else {
+                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were approved. Note: Only records with attachments can be approved.'));
+            }
         } elseif ($submit == "delete selected") {
-
-//Step through the documents and approve those selected
+            $countdeleted = 0;
+            //Step through the documents and approve those selected
             if (isset($documents)) {
-
                 foreach ($documents as $document) {
                     if ($this->getParam($document['id'] . '_app') == 'execute') {
                         $this->documents->deleteDocuments($document['id']);
+                        $countdeleted++;
                     }
                 }
             }
+
+            if ($countdeleted > 0) {
+                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countdeleted . ' record(s) deleted successfully'));
+            } else {
+                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were deleted'));
+            }
         }
-        $this->nextAction("unapproveddocs");
     }
 
     function __rejectdocument() {
@@ -1237,17 +1257,19 @@ class wicid extends controller {
         $version = $this->getParam('version');
         $this->documents->reclaimDocument($userid, $docid, $version);
     }
-    
+
     /*
      * Function that returns unapproved documents
      */
+
     public function __unapproveddocs() {
         $selected = "unapproved";
-        
+
         //Set show rows
         $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
         $rows = $this->getParam("rcount", $rows);
+
         //Select records Limit array
         $limit = array();
         $limit['start'] = $start;
@@ -1258,7 +1280,9 @@ class wicid extends controller {
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);        
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);
+        $message = $this->getParam("message", "");
+        $this->setVarByRef("message", $message);
         $this->setVarByRef("start", $start);
         $this->setVarByRef("rows", $rows);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);

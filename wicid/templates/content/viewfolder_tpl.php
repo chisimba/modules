@@ -73,7 +73,7 @@ $fs->addContent($links);
 echo $fs->show();
 
 //Add Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'mode' => $mode, 'active' => 'Y', 'rowcount' => $files['count'])));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction'=>'viewfolder', 'mode' => $mode, 'active' => 'Y', 'rcount' => $rows, 'rowcount' => $files['count'], 'start'=> $start, 'folder'=>$dir)));
 
 $table = &$this->newObject("htmltable", "htmlelements");
 //Store file count

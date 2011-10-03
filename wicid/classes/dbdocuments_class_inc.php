@@ -434,10 +434,12 @@ class dbdocuments extends dbtable {
         $userid = $this->userutils->getUserId();
         $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $countapproved = 0;
         foreach ($ids as $id) {
             //Check if record has an attachment
-            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");
+            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");            
             if (!empty($checkupload)) {
+                $countapproved++;
                 $this->update('id', $id, $data);
                 $doc = $this->getDocument($id);
                 //print_r($doc);
@@ -473,6 +475,7 @@ class dbdocuments extends dbtable {
                 }
             }
         }
+        return $countapproved;
     }
 
     /**
