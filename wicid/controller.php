@@ -957,21 +957,33 @@ class wicid extends controller {
         //Check and execute action
         if ($submit == "approve selected") {
             $countapproved = 0;
+            $countunapproved = 0;
             //Step through the documents and approve those selected
             if (isset($documents)) {
                 foreach ($documents as $document) {
                     //if ($document['attachmentstatus'] != "No")
                     if ($this->getParam($document['id'] . '_app') == 'execute') {
                         $check = $this->documents->approveDocs($document['id']);
-                        if ($check > 0)
+                        if ($check > 0) {
                             $countapproved++;
+                        } else {
+                            $countunapproved++;
+                        }
                     }
                 }
             }
             if ($countapproved > 0) {
-                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countapproved . ' record(s) approved successfully. Note: Only records with attachments were approved.'));
+                if ($countunapproved > 0) {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countapproved . ' record(s) approved successfully. ' . $countunapproved . ' record(s) were NOT appproved. Note: Only records with attachments were approved.'));
+                } else {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countapproved . ' record(s) approved successfully. Note: Only records with attachments were approved.'));
+                }
             } else {
-                return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were approved. Note: Only records with attachments can be approved.'));
+                if ($countunapproved > 0) {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countunapproved . ' record(s) were NOT approved. Note: Only records with attachments can be approved.'));
+                } else {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were approved. Note: Only records with attachments can be approved.'));
+                }
             }
         } elseif ($submit == "delete selected") {
             $countdeleted = 0;

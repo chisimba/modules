@@ -73,8 +73,10 @@ $fs->addContent($links);
 echo $fs->show();
 
 //Add Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction'=>'viewfolder', 'mode' => $mode, 'active' => 'Y', 'rcount' => $rows, 'rowcount' => $files['count'], 'start'=> $start, 'folder'=>$dir)));
-
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'rcount' => $rows, 'rowcount' => $files['count'], 'start' => $start, 'folder' => $dir)));
+if (!empty($message)) {
+    $form->addToForm("<br />" . '<strong id="confirm">' . $message . '</strong>');
+}
 $table = &$this->newObject("htmltable", "htmlelements");
 //Store file count
 $filecount = $files['count'];
@@ -89,7 +91,7 @@ if ($filecount > 0) {
     $textinput->value = $filecount;
     $textinput->setType('hidden');
 
-    
+
 
     $table->startHeaderRow();
     $table->addHeaderCell($selectall->show() . $textinput->show() . "<b>" . $this->objLanguage->languageText('mod_wicid_select', 'wicid', "Select") . "</b>");
@@ -172,7 +174,7 @@ if ($filecount > 0) {
         //Add Form
         $prevform = new form('prevform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newprev, 'rowcount' => $files['count'], 'folder' => $dir)));
 
-        $prevform->addToForm("</ br> " . $button->show() .$textinput2->show(). " </ br>");
+        $prevform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
 
         $table->addCell($prevform->show(), "50%", 'top', 'right');
     }
@@ -184,7 +186,7 @@ if ($filecount > 0) {
         //Add Form
         $nextform = new form('nextform', $this->uri(array('action' => 'viewfolder', 'mode' => $mode, 'active' => 'Y', 'start' => $newstart, 'rowcount' => $files['count'], 'folder' => $dir)));
 
-        $nextform->addToForm("</ br> " . $button->show() .$textinput2->show(). " </ br>");
+        $nextform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
         if (!empty($str)) {
             $table->addCell($nextform->show(), "50%", 'top', 'left');
         } else {
@@ -237,7 +239,7 @@ $fs->setLegend($this->objLanguage->languageText('mod_wicid_topics', 'wicid', 'To
 if (!empty($str)) {
     $fs->addContent($rcounttable . "<br/>" . $form->show() . "<br/>" . $navtable);
 } else {
-    $fs->addContent($rcounttable . "<br/>" .$form->show());
+    $fs->addContent($rcounttable . "<br/>" . $form->show());
 }
 echo $fs->show();
 ?>

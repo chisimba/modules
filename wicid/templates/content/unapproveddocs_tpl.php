@@ -259,6 +259,13 @@ if ($doccount > 0) {
 
 // Form
 $form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'rcount' => $rows, 'rowcount' => $files['count'], 'start' => $start, 'folder' => $dir)));
+if ($doccount > 0) {
+    if (!empty($message)) {
+        $form->addToForm("<br />" . '<strong id="confirm">' . $message . '</strong>');
+    } else {
+        $form->addToForm("<br />" . '<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_approvenote', 'wicid', 'Note: Only records with attachments will be approved') . '</strong>');
+    }
+}
 $form->addToForm($table->show());
 if ($doccount > 0) {
     $button = new button('submit', $this->objLanguage->languageText('mod_wicid_approveselected', 'wicid', 'Approve Selected'));
