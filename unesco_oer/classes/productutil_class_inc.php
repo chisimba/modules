@@ -985,6 +985,9 @@ function createParameterArray($parameterString){
     return $parameterArray;
 }
 
+//    Example onClick
+//    $uri = $this->uri(array('action'=>'help'));
+//    $onClick = "window.open('$uri','help','resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=1000,height=750');";
 function getToolTip($toolTip = NULL, $onClick = 'return false;'){
     if (empty($toolTip)) {
         $objLanguage = $this->getObject('language','language');

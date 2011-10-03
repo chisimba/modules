@@ -62,11 +62,9 @@ class curriculum extends content {
          $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
-        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_click','unesco_oer');
-        $uri = $this->uri(array('action'=>'help'));
-        $onClick = "window.open('$uri','help','resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=1000,height=750');";
+        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
         $table->startRow();
-        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer').$productUtil->getToolTip($tooltip,$onClick));
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer').$productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
