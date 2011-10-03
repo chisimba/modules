@@ -286,11 +286,16 @@ class curriculum extends content {
         return $success;
     }
 
-    public function printHTML() {
-        $html = "";
-        $html .= "<h2>Forward</h2>" . $this->_forward;
-        $html .= "<h2>Background</h2>" . $this->_background;
-        $html .= "<h2>Introductory Description</h2>" . $this->_introductory_description;
+    public function printHTML($level) {
+        if($level >= 3){
+            $level++;
+        } else {
+            $level = 3;
+        }
+        $html = parent::printHTML($level);;
+        $html .= "<h$level>1. Forward</h$level>" . $this->_forward;
+        $html .= "<h$level>2. Background</h$level>" . $this->_background;
+        $html .= "<h$level>3. Introductory Description</h$level>" . $this->_introductory_description;
         return $html;
     }
 }

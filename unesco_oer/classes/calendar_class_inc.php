@@ -161,5 +161,9 @@ class calendar extends content
         if ($success) $this->deleteAllContents ();
         return $success;
     }
+
+    public function printHTML($level) {
+        return parent::printHTML($level);
+    }
 }
 ?>

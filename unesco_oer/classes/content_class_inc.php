@@ -459,8 +459,8 @@ class content extends object
         $this->parentobject =  $parentobject;
     }
 
-    public function printHTML(){
-        return "Nothing to Print!";
+    public function printHTML($level){
+        return "<h$level>{$this->getTitle()}</h$level>";
     }
 }
 

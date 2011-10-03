@@ -63,16 +63,17 @@ class documentgenerator extends object {
         return $this->pdf;
     }
 
-    private function generateContentsHTML($contentObjects){
+    private function generateContentsHTML($contentObjects, $level = 1){
         $html = "";
         foreach ($contentObjects as $contentObject) {
-            $html .= "<h1>{$contentObject->getTitle()}</h1>";
-            $html .= $contentObject->printHTML();
-            $html .= $this->generateContentsHTML($contentObject->getContents());
+            if (!$contentObject->isDeleted()){
+//                $html .= "<h$level>{$contentObject->getTitle()}</h$level>"; //TODO move code to function below where it belongs
+                $html .= $contentObject->printHTML($level);
+                $html .= $this->generateContentsHTML($contentObject->getContents(), $level+1);
+            }
         }
 
         return $html;
-//        return 'hello';
     }
 
 }

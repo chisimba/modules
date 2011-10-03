@@ -394,6 +394,18 @@ class module extends content {
         return $success;
     }
 
+    public function printHTML($level) {
+        $html = parent::printHTML($level);
+
+        $html = "
+            <li>
+                $this->_title
+            </li>
+            ";
+
+        return $html;
+    }
+
 }
 
 ?>
