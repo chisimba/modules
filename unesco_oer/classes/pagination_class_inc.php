@@ -13,14 +13,11 @@ class pagination extends object {
 
 
 
-
-
-
   public   function getPaginationString($page = 1, $totalitems, $limit = 15, $adjacents = 3, $targetpage = "/", $pagestring = "?page=")
 {
 	//defaults
 	if(!$adjacents) $adjacents = 1;
-	if(!$limit) $limit = 15;
+	if(!$limit) $limit ;
 	if(!$page) $page = 1;
 	if(!$targetpage) $targetpage = "/";
 

@@ -263,6 +263,17 @@ class dbuserextra extends dbtable {
     }
 
 
+    function isGroupOwner($userid,$groupid){
+        $sql="SELECT * FROM tbl_unesco_oer_groups WHERE admin='$userid' AND id='$groupid'";
+        $array=$this->getArray($sql);
+        if(count($array)>0){
+            return TRUE;
+        }  else {
+            return FALSE;
+        }
+    }
+
+
 
 //     function hasGroup($id){
 //         $sql="SELECT * FROM tbl_unesco_oer_userextra WHERE id='$id'";

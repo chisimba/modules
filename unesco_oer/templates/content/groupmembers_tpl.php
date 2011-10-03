@@ -28,8 +28,7 @@ $this->loadClass('textinput', 'htmlelements');
 
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
                 	<a href="#" class="groupsBreadCrumbColor">
-
-                                                                                     <?php
+                             <?php
                              $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
                              $GroupLink->link="Groups";
                              echo $GroupLink->show();

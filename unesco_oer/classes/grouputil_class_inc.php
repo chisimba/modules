@@ -140,45 +140,84 @@ class grouputil extends object {
     //return group members
 
     public function groupMembers($groupid) {
-
+       
         $groupOwnerId = $this->objDbGroups->getGroupOwner($groupid);
-
         $arrays = $this->ObjDbUserGroups->getGroupUser($groupid);
-        //(<span class="greenText fontBold">Group Administrator</span>)
-        foreach ($arrays as $array) {
-            if (strcmp($groupOwnerId, $array[0]['userid'])) {
-                $firstname = $this->objUseExtra->getUserfirstname($groupOwnerId);
-                $surname = $this->objUseExtra->getUserSurname($groupOwnerId);
+        $adminInfo=$this->objUseExtra->getUserbyUserID($arrays[0]['userid']);
 
-                $content.=' 
+   //CHECK IF IS A GROUP OWNER
+        if(!$this->objUseExtra->isGroupOwner($this->objUser->isLoggedIn(),$groupid)){
+            
+            foreach ($arrays as $array) {
+                $userInfo=$this->objUseExtra->getUserbyUserID($array['userid']);
+
+                if(strcmp($array['userid'],$groupOwnerId)==0){
+                    $firstname =  $userInfo[0]['firstname'];
+                    $surname =  $userInfo[0]['surname'];
+                    $content.='
+                             <div class="memberList">
+                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                             <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . '(<span class="greenText fontBold">Group Administrator</span>) </div>
+                              </div>';
+           }
+
+           if(!(strcmp($array['userid'],$groupOwnerId)==0) && $this->ObjDbUserGroups->notApproved($array['userid'])){
+                    $firstname =$userInfo[0]['firstname'];
+                    $surname = $userInfo[0]['surname'];
+                    $content.='<div class="memberList">
+                              <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                              <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . ' </div>
+                              </div>';
+                    }
+
+                    if(!$this->ObjDbUserGroups->notApproved($array['userid'])){
+                        $Link = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
+                        $Link->link = '<img src="skins/unesco_oer/images/icon-join-group.png" width="18" height="18"></div>';
+                        $firstname =$userInfo[0]['firstname'];
+                        $surname = $userInfo[0]['surname'];
+                        $content.='<div class="memberList">
+                                   <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
+                                   <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . ' </div>
+                                   <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-join-group.png" width="18" height="18"></div>
+                               </div>';
+                        }
+
+             
+           }
+           echo $content;
+        }else{
+            foreach ($arrays as $array) {
+                $userInfo=$this->objUseExtra->getUserbyUserID($array['userid']);
+                if(strcmp($array['userid'],$groupOwnerId)==0){
+                      $firstname =  $userInfo[0]['firstname'];
+                      $surname =  $userInfo[0]['surname'];
+                       $content.='
                     <div class="memberList">
                     <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                     <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . '(<span class="greenText fontBold">Group Administrator</span>) </div>
                      </div>';
-            } else {
-                if (strcmp($this->objUser->userId(), $groupOwnerId) && $this->ObjDbUserGroups->notApproved($array[0]['userid'])) {
-                    $Link = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
-                    $Link->link = '<img src="skins/unesco_oer/images/icon-join-group.png" width="18" height="18"></div>';
+           }
 
-                    $firstname = $this->objUseExtra->getUserSurnameByID($array[0]['id']);
-                    $surname = $this->objUseExtra->getUserfirstnameByID($array[0]['id']);
-                    $content.='<div class="memberList">
+                   if($this->ObjDbUserGroups->notApproved($array['userid']) && !(strcmp($array['userid'],$groupOwnerId)==0)){
+                  $firstname =$userInfo[0]['firstname'];
+                  $surname = $userInfo[0]['surname'];
+                  $content.='<div class="memberList">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
                             <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . ' </div>
-                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-join-group.png" width="18" height="18"></div>
-                           </div>';
-                } else {
-                    $firstname = $this->objUseExtra->getUserSurnameByID($array[0]['id']);
-                    $surname = $this->objUseExtra->getUserfirstnameByID($array[0]['id']);
-                    $content.='<div class="memberList">
-                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-member.png" width="18" height="18"></div>
-                            <div class="memberIconText">' . $firstname . " " . " " . " " . $surname . ' </div>
-                           </div>';
-                }
-            }
+                                                      </div>';
+
+           }
+           }
+
+           echo $content;
         }
-        echo $content;
-    }
+
+}
+
+
+
+    
+
 
     public function groupAdaptation($groupid) {
 

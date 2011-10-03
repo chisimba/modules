@@ -481,6 +481,9 @@ class dbgroups extends dbtable {
         return $array[0]['admin'];
     }
 
+
+
+
 //    function getGroupOwnerID($groupid) {
 //      $sql = "SELECT * FROM tbl_unesco_oer_groups WHERE id = '$groupid'";
 //      $owner= $this->getArray($sql);

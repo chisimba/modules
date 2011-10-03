@@ -64,7 +64,7 @@ class dbusergroups extends dbtable {
     function notApproved($userid){
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userid'";
         $array=$this->getArray($sql);
-        if(strcmp($array[0]['approved'],'N' )){
+        if(strcmp($array[0]['approved'],'N')){
             return TRUE;
             }else{
                 return FALSE;
