@@ -111,14 +111,14 @@ class dbquestions extends dbtable {
             $qnid = $id;
 
         //Add record to blocks
-        if ($inserting == 1) {
+        if ($inserting == 1) { // JC TRUE
             $arrData = array();
             $arrData['categoryid'] = $fields['testid'];
-            $arrData['title'] = $fields['qtype'];
+            $arrData['title'] = $fields['questiontype']; //qtype
             $arrData['side'] = "main";
             $arrData['isblock'] = "1";
             $arrData['content'] = $id;
-            $arrData['blockname'] = $fields['qtype'];
+            $arrData['blockname'] = $fields['questiontype']; //qtype
             $arrData['blockmodule'] = "mcqtests";
             $this->dbBlocks->insertBlock($arrData);
         }
@@ -135,7 +135,7 @@ class dbquestions extends dbtable {
     public function addNewQuestion($fields) {
         $fields['updated'] = date('Y-m-d H:i:s');
         $id = $this->insert($fields);
-        //Add record to blocks        
+        //Add record to blocks
         $arrData = array();
         $arrData['categoryid'] = $fields['testid'];
         $arrData['title'] = $fields['qtype'];
