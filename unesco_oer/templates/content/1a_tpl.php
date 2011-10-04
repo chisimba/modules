@@ -1,3 +1,4 @@
+
 <?php
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -12,6 +13,18 @@ if ($finalstring == null) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 
@@ -20,6 +33,8 @@ $this->appendArrayVar('headerParams', $js);
 
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('addProduct.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
+
+
 ?>
 <div class="mainContentHolder">
 
@@ -255,4 +270,3 @@ $this->appendArrayVar('headerParams', $js);
         </div>
     </div>
 </div>
-

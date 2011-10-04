@@ -2,7 +2,7 @@
 <html>
     <head>
         <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
-        <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+   
         <?php
         $base = '<script language="JavaScript" src="' . $this->getResourceUri('ckeditor/ckeditor.js', 'ckeditor') . '" type="text/javascript"></script>';
         $baseajax = '<script language="JavaScript" src="' . $this->getResourceUri('ckeditor/_source/core/ajax.js', 'ckeditor') . '" type="text/javascript"></script>';
@@ -17,19 +17,23 @@
     
                 $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&pair=' + section_id + '&productID=' + $('.product_id').attr('id'));
      
-   
+                  
             }
 
             function newSection(path){
-   
+    
                 $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&pair=' + path + '&productID=' + $('.product_id').attr('id'),
-                function(){$('#form_add').validate()});
+                function()
+                {$('#form_add').validate()
+                alert('ggg');
+            
+        });
             }
 
 
 
 
-            $('#upload').live('click', function() {
+            $('#upload').live('click', function() {   
                 $("#form_add_products_ui").validate();
             });
 
