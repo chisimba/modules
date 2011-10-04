@@ -158,6 +158,9 @@ $table->addCell($resource_publisher->show());
 $table->endRow();
 
 $FileUploadButton = new button ('fileupload',$this->objLanguage->languageText('mod_unesco_oer_group_file_upload_button', 'unesco_oer'));
+//$FileUploadButtonLink = new link($this->uri(array('action' => "saveOER","groupid"=>$this->getParam('groupid'))));
+//$FileUploadButtonLink->link=$Savebutton->show();
+
 $table->startRow();
 $table->addCell($FileUploadButton->show());
 $table->endRow();

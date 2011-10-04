@@ -125,15 +125,13 @@ if (strcmp($mode, 'addfixup') == 0) {
 $this->objUseExtra->editCheck($this->objUser->PKID(),$this->objUser->userId());
 
 $subgroups=$this->objDbGroups->getGroupSubgroup($parent_id);
-echo count($subgroups);
 if (count($subgroups) > 0) {
     foreach ($subgroups as $subgroup) {
-        echo" sdasdsa";
         $myTable->startRow();
-        $myTable->addCell("sfasfsa", null, null, null, "user", null, null);
-        $myTable->addCell($subgroup['description_one'], null, null, null, "user", null, null);
-        $myTable->addCell($subgroup['interests'], null, null, null, "user", null, null);
+        $myTable->addCell($subgroup['name'], null, null, null, "user", null, null);
+        $myTable->addCell($subgroup['description'], null, null, null, "user", null, null);
         $myTable->addCell($subgroup['website'], null, null, null, "user", null, null);
+        $myTable->addCell($subgroup['interests'], null, null, null, "user", null, null);
 //
 //        $objIcon->setIcon('edit');
 //
