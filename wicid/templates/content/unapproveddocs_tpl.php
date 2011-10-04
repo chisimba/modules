@@ -204,8 +204,9 @@ if ($doccount > 0) {
 
     foreach ($documents as $document) {
         if (count($document) > 1) {
+            $astatus = $document['attachmentstatus'];            
             //$topic=  substr($document['topic'], strlen($this->baseDir));
-            $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'])));
+            $link = new link($this->uri(array("action" => "editdocument", "id" => $document['id'], 'mode' => $mode, 'active' => 'N', 'rcount' => $rows, 'rowcount' => $documents['count'], 'start' => $start, 'astatus' => $astatus)));
             $link->link = $document['filename'];
 
             //Dont show checkbox if there is no attachment
@@ -265,7 +266,7 @@ if ($doccount > 0) {
 }
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'rcount' => $rows, 'rowcount' => $files['count'], 'start' => $start, 'folder' => $dir)));
+$form = new form('registerdocumentform', $this->uri(array('action' => 'batchexecute', 'sourceaction' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'rcount' => $rows, 'rowcount' => $documents['count'], 'start' => $start)));
 if ($doccount > 0) {
     if (!empty($message)) {
         $form->addToForm("<br />" . '<strong id="confirm">' . $message . '</strong>');
@@ -349,7 +350,7 @@ if ($doccount > 0) {
 }
 
 $dd = &new dropdown('rcount');
-$dd->addOption('50', '50');
+$dd->addOption('1', '50');
 $dd->addOption('100', '100');
 $dd->addOption('150', '150');
 $dd->addOption('200', '200');

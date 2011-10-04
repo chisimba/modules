@@ -505,12 +505,15 @@ class dbdocuments extends dbtable {
         $ids = explode(",", $docids);
         $ext = '.na';
         $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $countrejected = 0;
         foreach ($ids as $id) {
             if (strlen($id) > 0) {
                 $data = array('rejectDoc' => 'Y');
                 $res = $this->update('id', $id, $data);
+                $countrejected++;
             }
         }
+        return $countrejected;
     }
 
     /**

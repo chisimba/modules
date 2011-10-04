@@ -829,8 +829,23 @@ class wicid extends controller {
 
         $id = $this->getParam("id");
         $document = $this->documents->getDocument($id);
+        $oldmode = $this->getParam('mode');
+        $active = $this->getParam('active', 'Y');
+        $start = $this->getParam('start', null);
+        $rowcount = $this->getParam('rowcount', null);
+        $rcount = $this->getParam('rcount', null);
+        $attachmentstatus = $this->getParam('astatus', null);
+        $errormessages = $this->getParam('errormessages', null);
         $mode = "edit";
+
         $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("oldmode", $oldmode);
+        $this->setVarByRef("active", $active);
+        $this->setVarByRef("start", $start);
+        $this->setVarByRef("rowcount", $rowcount);
+        $this->setVarByRef("rcount", $rcount);
+        $this->setVarByRef("astatus", $attachmentstatus);
+        $this->setVarByRef("errormessages", $errormessages);
         $this->setVarByRef("document", $document);
         return "addeditdocument_tpl.php";
     }
@@ -931,8 +946,17 @@ class wicid extends controller {
 
     function __approvedocument() {
         $id = $this->getParam('id');
-        $this->documents->approveDocs($id);
-        $this->nextAction("unapproveddocs");
+        $mode = $this->getParam('mode');
+        $active = $this->getParam('active', 'Y');        
+        $start = $this->getParam('start', null);
+        $rowcount = $this->getParam('rowcount', null);
+        $rcount = $this->getParam('rcount', null);
+        $check = $this->documents->approveDocs($id);
+        if ($check > 0) {
+            $this->nextAction("unapproveddocs", array('active' => $active, 'start' => $start, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'The record was approved successfully.'));
+        } else {
+            $this->nextAction("unapproveddocs", array('active' => $active, 'start' => $start, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'The record was not approved successfully.'));
+        }
     }
 
     /*
@@ -941,7 +965,7 @@ class wicid extends controller {
 
     function __batchexecute() {
         //Get parameters
-        $submit = strtolower($this->getParam('submit'));
+        $submitval = strtolower($this->getParam('submit'));
         $id = $this->getParam('id');
         $mode = $this->getParam('mode');
         $active = $this->getParam('active', 'Y');
@@ -953,9 +977,14 @@ class wicid extends controller {
         $sourceaction = $this->getParam('sourceaction', 'unapproveddocs');
 
         $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
-
+        $toapprove = "approve selected";
+        $todelete = "delete selected";
+        $submitval = strip_tags($submitval);
+        //Returns zero if strings match
+        $doapprove = strcmp($submitval, $toapprove);
+        $dodelete = strcmp($submitval, $todelete);
         //Check and execute action
-        if ($submit == "approve selected") {
+        if ($doapprove == 0) {
             $countapproved = 0;
             $countunapproved = 0;
             //Step through the documents and approve those selected
@@ -985,7 +1014,7 @@ class wicid extends controller {
                     return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were approved. Note: Only records with attachments can be approved.'));
                 }
             }
-        } elseif ($submit == "delete selected") {
+        } elseif ($todelete == 0) {
             $countdeleted = 0;
             //Step through the documents and approve those selected
             if (isset($documents)) {
@@ -1007,8 +1036,17 @@ class wicid extends controller {
 
     function __rejectdocument() {
         $id = $this->getParam('id');
-        $this->documents->rejectDocs($id);
-        $this->nextAction("unapproveddocs");
+        $mode = $this->getParam('mode');
+        $active = $this->getParam('active', 'Y');        
+        $start = $this->getParam('start', null);
+        $rowcount = $this->getParam('rowcount', null);
+        $rcount = $this->getParam('rcount', null);
+        $check = $this->documents->rejectDocs($id);
+        if ($check > 0) {
+            $this->nextAction("unapproveddocs", array('active' => $active, 'start' => $start, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'The record was rejected successfully.'));
+        } else {
+            $this->nextAction("unapproveddocs", array('active' => $active, 'start' => $start, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'The record was not rejected successfully.'));
+        }
     }
 
     function __deleteDocs() {

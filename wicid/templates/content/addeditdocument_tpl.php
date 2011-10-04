@@ -17,7 +17,6 @@ if ($mode == 'edit') {
     $selected = $this->baseDir . $document['topic'];
 }
 
-
 if ($selected == '') {
 
     $folders = $this->__getdefaultfolder($this->baseDir);
@@ -160,7 +159,7 @@ $fs->setLegend($legend);
 $fs->addContent($table->show());
 
 // Form
-$form = new form('registerdocumentform', $this->uri(array('action' => $action)));
+$form = new form('registerdocumentform', $this->uri(array('action' => $action, 'mode' => $oldmode, 'active' => $active, 'rcount' => $rcount, 'rowcount' => $rowcount, 'start' => $start)));
 
 $hiddenSelected = new hiddeninput('selected', $cfile);
 $form->addToForm($hiddenSelected->show());
@@ -193,13 +192,16 @@ $form->addToForm('<br/>' . $button->show());
 
 if ($this->objUser->isAdmin()) {
     if ($mode == 'edit') {
-        $button = new button('approve', "Approve");
-        $uri = $this->uri(array('action' => 'approvedocument', 'id' => $document['id']));
-        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $form->addToForm($button->show());
+        $atstatus = null;
+        if ($astatus == $atstatus) {
+            $button = new button('approve', "Approve");
+            $uri = $this->uri(array('action' => 'approvedocument', 'id' => $document['id'], 'mode' => $oldmode, 'active' => $active, 'rcount' => $rcount, 'rowcount' => $rowcount, 'start' => $start));
+            $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+            $form->addToForm($button->show());
+        }
 
         $button = new button('reject', "Reject");
-        $uri = $this->uri(array('action' => 'rejectdocument', 'id' => $document['id']));
+        $uri = $this->uri(array('action' => 'rejectdocument', 'id' => $document['id'], 'mode' => $oldmode, 'active' => $active, 'rcount' => $rcount, 'rowcount' => $rowcount, 'start' => $start));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $form->addToForm($button->show());
     }
