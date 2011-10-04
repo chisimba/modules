@@ -10,25 +10,13 @@ var marker;
     
 function initialize(){
 //MAP
+
+
+
+
+var latlng = new google.maps.LatLng(43.5,2.3);
   
- 
-
-  
-    if (google.loader.ClientLocation) 
-    {        
-        var latlng = new google.maps.LatLng(
-            google.loader.ClientLocation.latitude,
-            google.loader.ClientLocation.longitude
-        );
-     
-      
-    }
-
-else
-    var latlng = new google.maps.LatLng(20.659,20.714);
-
-
-var options = {
+  var options = {
     zoom: 16,
     center: latlng,
     mapTypeId: google.maps.MapTypeId.SATELLITE
@@ -43,10 +31,78 @@ var options = {
     map: map,
     draggable: true
   });
+  
+
+
+
+
+
+
+  
+ if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(success, error);
+} else {
+  alert('geolocation not supported');
+}
+
+function success(position) {
+ 
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+   
+  map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+   var location = new google.maps.LatLng(lat,lng);
+   
+         marker.setPosition(location);
+  
+      geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          $('#address').val(results[0].formatted_address);
+          $('#input_group_loclat').val(marker.getPosition().lat());
+          $('#input_group_loclong').val(marker.getPosition().lng());
+        }
+      }
+    });
+
+  
+}
+
+function error(msg) {
+  alert('error: ' + msg);
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  
+//    if (google.loader.ClientLocation) 
+//    {        
+//        var latlng = new google.maps.LatLng(
+//            google.loader.ClientLocation.latitude,
+//            google.loader.ClientLocation.longitude
+//        );
+//     
+//      
+//    }
+
+//else
+    
+
+
+
 				
 }
 		
-$(document).ready(function() { 
+ $(document).ready(function() { 
          
   initialize();
 				  
@@ -90,3 +146,5 @@ $(document).ready(function() {
   });
   
 });
+  
+  

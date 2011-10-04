@@ -315,6 +315,7 @@ $form->addToForm('<br />');
 $table = $this->newObject('htmltable', 'htmlelements');
 $longitude = new textinput('group_loclong');
 $longitude->size = 38;
+$longitude->extra = ' readonly="readonly"';
 if ($mode == 'addfixup') {
     $longitude->value = $this->getParam('group_loclong');
 
@@ -338,6 +339,7 @@ $table->endRow();
 //latitude
 $latitude = new textinput('group_loclat');
 $latitude->size = 38;
+$latitude->extra = ' readonly="readonly"';
 if ($mode == 'addfixup') {
     $latitude->value = $this->getParam('group_loclong');
 
@@ -370,7 +372,7 @@ $table->endRow();
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
 
-$fieldset->contents = '<label>Address: </label><input id="address"  type="text"/>
+$fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> Please enter Your location if the provided location is incorrect
     <div id="map_canvas" style="width:600px; height:300px"></div><br/>' .$table->show();
 
 $form->addToForm($fieldset->show());
