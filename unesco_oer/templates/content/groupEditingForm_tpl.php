@@ -1,4 +1,5 @@
-
+   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+     <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
@@ -372,7 +373,10 @@ $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
-$fieldset->contents = $table->show();
+
+$fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> Please enter Your location if the provided location is incorrect
+    <div id="map_edit" style="width:600px; height:300px"></div><br/>' . $table->show();
+
 $form->addToForm($fieldset->show());
 $form->addToForm('<br />');
 
@@ -520,6 +524,13 @@ if ($mode == 'addfixup' && count($messages) > 0) {
 }
 
 echo $form->show();
+
+$js = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-1.6.2.min.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+     $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/jquery-ui-1.8.16.custom.min.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
+      $js = '<script language="JavaScript" src="'.$this->getResourceUri('js/mapedit.js').'" type="text/javascript"></script>';
+    $this->appendArrayVar('headerParams', $js);
 
 
 ?>
