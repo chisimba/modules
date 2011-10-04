@@ -12,14 +12,12 @@ function initialize(){
 //MAP
 
 
-
-
 var latlng = new google.maps.LatLng(43.5,2.3);
   
   var options = {
     zoom: 16,
     center: latlng,
-    mapTypeId: google.maps.MapTypeId.SATELLITE
+    mapTypeId: google.maps.MapTypeId.ROADMAP
   };
         
   map = new google.maps.Map(document.getElementById("map_canvas"), options);
@@ -33,16 +31,11 @@ var latlng = new google.maps.LatLng(43.5,2.3);
   });
   
 
-
-
-
-
-
   
  if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(success, error);
 } else {
-  alert('geolocation not supported');
+  alert('geolocation not supported. Please enter address manually');
 }
 
 function success(position) {
@@ -72,33 +65,6 @@ function error(msg) {
   alert('error: ' + msg);
 }
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
-  
-//    if (google.loader.ClientLocation) 
-//    {        
-//        var latlng = new google.maps.LatLng(
-//            google.loader.ClientLocation.latitude,
-//            google.loader.ClientLocation.longitude
-//        );
-//     
-//      
-//    }
-
-//else
-    
-
-
-
 				
 }
 		
