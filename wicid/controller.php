@@ -1281,6 +1281,7 @@ class wicid extends controller {
         $rows = $this->pageSize;
         $start = $this->getParam("start", 0);
         $rows = $this->getParam("rcount", $rows);
+        $attonly = $this->getParam("onlyattached", null);
 
         //Select records Limit array
         $limit = array();
@@ -1292,11 +1293,12 @@ class wicid extends controller {
 
         $tobeeditedfoldername = $this->getParam("tobeeditedfoldername", Null);
         $attachmentStatus = $this->getParam("attachmentStatus", Null);
-        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount);
+        $documents = $this->documents->getdocuments($this->mode, 'N', "N", $limit, $rowcount, $attonly);
         $message = $this->getParam("message", "");
         $this->setVarByRef("message", $message);
         $this->setVarByRef("start", $start);
         $this->setVarByRef("rows", $rows);
+        $this->setVarByRef("attonly", $attonly);
         $this->setVarByRef("tobeeditedfoldername", $tobeeditedfoldername);
         $this->setVarByRef("documents", $documents);
         $this->setVarByRef("selected", $selected);

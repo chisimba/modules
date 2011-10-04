@@ -251,10 +251,17 @@ if ($doccount > 0) {
         }
     }
 } else {
-    //Loads if no records were found
-    $table->startRow();
-    $table->addCell('<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')) . '</strong>';
-    $table->endRow();
+    if ($attonly == "onlyattached") {
+        //Loads if no records with attachments were found
+        $table->startRow();
+        $table->addCell('<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_norecordswithattachments', 'wicid', 'No records with attachments were found')) . '</strong>';
+        $table->endRow();
+    } else {
+        //Loads if no records were found
+        $table->startRow();
+        $table->addCell('<strong id="confirm">' . $this->objLanguage->languageText('mod_wicid_norecords', 'wicid', 'There are no records found')) . '</strong>';
+        $table->endRow();
+    }
 }
 
 // Form
@@ -355,11 +362,20 @@ $dd->addOption('500', '500');
 $dd->selected = $rows;
 $dd->onchangeScript = 'onchange="document.forms[\'totalrowcount\'].submit();"';
 
+//Check box for select only documents with attachments
+if ($attonly == "onlyattached") {
+    $onlyattached = &new checkBox('onlyattached', Null, true);
+} else {
+    $onlyattached = &new checkBox('onlyattached', Null, Null);
+}
+$onlyattached->setValue('onlyattached');
+
 //Select no of records to display
 $rcountform = new form('totalrowcount', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'Y', 'start' => 0)));
 $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordgo', 'wicid', 'List'));
 $button->setToSubmit();
-$rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. </ br>");
+
+$rcountform->addToForm("</ br> " . $button->show() . " " . $dd->show() . " records. Select only records with attachments?" . $onlyattached->show() . " </ br>");
 
 //Create table to hold the rowcount
 $table = &$this->newObject("htmltable", "htmlelements");

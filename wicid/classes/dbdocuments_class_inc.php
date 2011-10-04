@@ -156,12 +156,17 @@ class dbdocuments extends dbtable {
      * @param string mode
      * @param array limit stores the start and end rows
      * @param string rowcount stores the count of records for this selection
+     * @param string attonly if value is onlyattached select only those with attachments
      */
 
-    public function getdocuments($mode="default", $rejected = "N", $active="N", $limit=Null, $rowcount=Null) {
-
-        $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='$active' or active is null)
+    public function getdocuments($mode="default", $rejected = "N", $active="N", $limit=Null, $rowcount=Null, $attonly=Null) {
+        if ($attonly == "onlyattached") {
+            $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='$active' or active is null)
+        and (rejectDoc= '$rejected' or rejectDoc is null) and upload='Y'";
+        } else {
+            $sql = "select * from tbl_wicid_documents where (deleteDoc = 'N' or deleteDoc is null) and  (active='$active' or active is null)
         and (rejectDoc= '$rejected' or rejectDoc is null)";
+        }
 
         if (!$this->objUser->isadmin()) {
 
@@ -181,7 +186,7 @@ class dbdocuments extends dbtable {
         $docs = array();
 
 
-        foreach ($rows as $row) {
+        foreach ($rows as $row) {            
             //$owner=$this->userutils->getUserId();
             if (strlen(trim($row['contact_person'])) == 0) {
                 $owner = $this->objUser->fullname($row['userid']);
@@ -437,7 +442,7 @@ class dbdocuments extends dbtable {
         $countapproved = 0;
         foreach ($ids as $id) {
             //Check if record has an attachment
-            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");            
+            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");
             if (!empty($checkupload)) {
                 $countapproved++;
                 $this->update('id', $id, $data);
