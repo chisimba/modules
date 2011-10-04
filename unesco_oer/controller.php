@@ -1904,9 +1904,45 @@ class unesco_oer extends controller {
         return "addOERform_tpl.php";
     }
 
+
+
     function __saveOER(){
-       $this->groupmanager->AddOerResource();
-       }
+        $groupid = $this->getParam('groupid');
+        $resource_name = $this->getParam('resource_name');
+        $resource_type = $this->getParam('resource_type');
+        $author = $this->getParam('resource_author');
+        $publisher = $this->getParam('resource_publisher');
+          //$file = $this->getParam('group_name');
+
+        $checkFields = array(
+            $resource_name,
+            $resource_type,
+            $author,
+            $publisher,
+            //$file
+        );
+
+        $problems = array();
+        if (!$this->__checkFields($checkFields)) {
+            $problems[] = 'missingfields';
+        }
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'addOERform_tpl.php';
+        } else {
+            $OERid = $this->objDbOERresources->addGroupOerResource($groupid, $resource_name, $resource_type, $author, $publisher, $file);
+            $groupresources=$this->objDbOERresources->getResource($groupid);
+            $this->setVar('resources',$groupresources);
+            $mode = 'addfixup';
+            $this->setVar('mode', $mode);
+            $this->setVar('groupid', $groupid);
+            return 'manageOERresources_tpl.php';
+        }
+    }
+
+
+
 
 
 
@@ -1916,6 +1952,8 @@ class unesco_oer extends controller {
 
     public function __deleteOERresource(){
         $groupid = $this->getParam("groupid");
+        $id=$this->getParam("id");
+        $this->objDbOERresources->deleteGroupResource($id,$groupid);
         return "manageOERresources_tpl.php";
     }
 

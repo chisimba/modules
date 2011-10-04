@@ -88,7 +88,7 @@ $myTable->addHeaderCell($this->objLanguage->languageText('mod_unesco_oer_group_d
 $myTable->endHeaderRow();
 
 if (strcmp($mode, 'addfixup') == 0){
-    $resources=$this->objDbOERresources->getResource($groupid);
+    $resources=$this->objDbOERresources->getResource($this->getParam('groupid'));
 }else{
     $groupid=$this->getParam('groupid');
     $resources=$this->objDbOERresources->getResource($groupid);
@@ -105,7 +105,7 @@ if (count($resources) > 0) {
         $myTable->addCell($resource['author'], null, null, null, "user", null, null);
         $myTable->addCell($resource['publisher'], null, null, null, "user", null, null);
         $objIcon->setIcon('delete');
-        $deleteLink = new link($this->uri(array('action' =>"deleteOERresource", 'id' => $group['id'])));
+        $deleteLink = new link($this->uri(array('action' =>"deleteOERresource", 'groupid'=>$this->getParam('groupid'),'id' =>$resource['id'],"page" => "10a_tpl.php")));
         $deleteLink->link = $objIcon->show();
         $deleteLink->cssClass = 'deleteresource';
         $myTable->addCell($deleteLink->show());

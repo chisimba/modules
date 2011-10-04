@@ -18,7 +18,7 @@
 class dbgroupoerresource extends dbtable {
 
     function init() {
-        parent::init("tbl_unesco_oer_group_resources");
+        parent::init('tbl_unesco_oer_group_resources');
     }
 
     function addGroupOerResource($groupid,$resource_name, $resource_type, $author, $publisher, $file) {
@@ -34,12 +34,12 @@ class dbgroupoerresource extends dbtable {
     }
 
     function deleteGroupResource($id,$groupid){
-        $sql = "DELETE FROM tbl_unesco_oer_group_resources WHERE id='$id' AND groupid=$groupid";
+        $sql = "DELETE FROM tbl_unesco_oer_group_resources WHERE id='$id' AND groupid='$groupid'";
         $this->getArray($sql);
     }
     
     function getResource($groupid){
-        $sql="SELECT * FROM tbl_unesco_oer_group_resources WHERE groupid=$groupid";
+        $sql="SELECT * FROM tbl_unesco_oer_group_resources WHERE groupid='$groupid'";
         $array=$this->getArray($sql);
         return $array;
     }

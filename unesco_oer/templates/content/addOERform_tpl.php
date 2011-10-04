@@ -63,7 +63,7 @@ $header->str =$this->objDbGroups->getGroupName($this->getParam('groupid')).":"."
 
 echo $header->show();
 
-$uri=$this->uri(array('action'=>'editGroup','id'=>$this->getParam('id')));
+$uri=$this->uri(array('action' => "saveOER","groupid"=>$this->getParam('groupid'),"page" => "10a_tpl.php"));
 $form = new form ('editer',$uri);
 //$form->extra = 'enctype="multipart/form-data"';
 $messages = array();
@@ -88,9 +88,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_resorce_name_message', 'unesco_oer');
     }
 }
-if (isset($userstring[1]) && $mode == 'add')
+if (isset($userstring[0]) && $mode == 'add')
 {
-    $resource_name->value = $userstring[1];
+    $resource_name->value = $userstring[0];
 }
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_name','unesco_oer').$required); // obj lang
@@ -128,9 +128,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_resorce_author_message', 'unesco_oer');
     }
 }
-if (isset($userstring[1]) && $mode == 'add')
+if (isset($userstring[2]) && $mode == 'add')
 {
-    $resource_author->value = $userstring[1];
+    $resource_author->value = $userstring[2];
 }
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_author','unesco_oer').$required); // obj lang
@@ -148,9 +148,9 @@ if ($mode == 'addfixup') {
         $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_resorce_publisher_message', 'unesco_oer');
     }
 }
-if (isset($userstring[1]) && $mode == 'add')
+if (isset($userstring[3]) && $mode == 'add')
 {
-   $resource_publisher->value = $userstring[1];
+   $resource_publisher->value = $userstring[3];
 }
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_puublisher','unesco_oer').$required); // obj lang
@@ -159,7 +159,7 @@ $table->endRow();
 
 $FileUploadButton = new button ('fileupload',$this->objLanguage->languageText('mod_unesco_oer_group_file_upload_button', 'unesco_oer'));
 $table->startRow();
-$table->addCell($FileUploadButton->show().$required);
+$table->addCell($FileUploadButton->show());
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
@@ -173,18 +173,42 @@ $fieldset->contents = $table->show();
 
 $Savebutton = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
 $Savebutton->setToSubmit();
-$SavebuttonLink = new link($this->uri(array('action' => "sav","groupid"=>$this->getParam('groupid'))));
-$SavebuttonLink->link=$Savebutton->show();
+//$SavebuttonLink = new link($this->uri(array('action' => "saveOER","groupid"=>$this->getParam('groupid'))));
+//$SavebuttonLink->link=$Savebutton->show();
 
 $Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
 
 $form->addToForm($fieldset->show());
 $form->extra = 'enctype="multipart/form-data"';
-$form->addToForm('<p align="right">'.$SavebuttonLink->show().$Cancelbutton->show().'</p>');
+$form->addToForm('<p align="right">'.$Savebutton->show().$Cancelbutton->show().'</p>');
 
+if ($mode == 'addfixup') {
+
+    foreach ($problems as $problem)
+    {
+        $messages[] = $this->__explainProblemsInfo($problem);
+    }
+
+}
+
+
+if ($mode == 'addfixup' && count($messages) > 0) {
+    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
+
+    echo '<ul>';
+        foreach ($messages as $message)
+        {
+            if ($message != '') {
+                echo '<li class="error">'.$message.'</li>';
+            }
+        }
+
+    echo '</ul></li></ul>';
+}
 
 
 echo $form->show();
+
 
 
 ?>
