@@ -350,7 +350,7 @@ if ($doccount > 0) {
 }
 
 $dd = &new dropdown('rcount');
-$dd->addOption('1', '50');
+$dd->addOption('50', '50');
 $dd->addOption('100', '100');
 $dd->addOption('150', '150');
 $dd->addOption('200', '200');
