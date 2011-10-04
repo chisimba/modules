@@ -317,7 +317,7 @@ if ($doccount > 0) {
         $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordprevious', 'wicid', 'Previous'));
         $button->setToSubmit();
         //Add Form
-        $prevform = new form('prevform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newprev, 'rowcount' => $totalrowcount)));
+        $prevform = new form('prevform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newprev, 'onlyattached' => $attonly, 'rowcount' => $totalrowcount)));
 
         $prevform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
 
@@ -329,7 +329,7 @@ if ($doccount > 0) {
         $button = new button('submit', $this->objLanguage->languageText('mod_wicid_wordnext', 'wicid', 'Next'));
         $button->setToSubmit();
         //Add Form
-        $nextform = new form('nextform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newstart, 'rowcount' => $totalrowcount)));
+        $nextform = new form('nextform', $this->uri(array('action' => 'unapproveddocs', 'mode' => $mode, 'active' => 'N', 'start' => $newstart, 'onlyattached' => $attonly, 'rowcount' => $totalrowcount)));
 
         $nextform->addToForm("</ br> " . $button->show() . $textinput2->show() . " </ br>");
         if (!empty($str)) {
