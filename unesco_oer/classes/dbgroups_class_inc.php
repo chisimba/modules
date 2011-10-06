@@ -49,9 +49,9 @@ class dbgroups extends dbtable {
 
     function getGroupForumId($groupid) {
         $sql =
-                "select id from tbl_forum where forum_context = '$groupid'";
+                "select id from tbl_forum where forum_workgroup = '$groupid'";
         $result = $this->getArray($sql);
-        return $result['id'];
+        return $result[0]['id'];
     }
 
     function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four) {

@@ -224,11 +224,15 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                         <?php
                             $forumId = $this->objDbGroups->getGroupForumId($groupid);
-                            $addDiscussionLink = new link($this->uri(array("action" => "newTopicForm", "groupid" => $groupid, "forumid" => $forumid, "page" => "10a_tpl.php")));
+                        //    echo $groupid;
+                            echo $forumId;
+                            $addDiscussionLink = new link('/unesco_oer/index.php?module=forum&action=newtopic&id='.$forumId.'&type=context');
                             $addDiscussionLink->link = 'add a discussion';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                             echo $addDiscussionLink->show();
                         ?>
+<!--                        http://localhost/unesco_oer/index.php?module=forum&action=newtopic&id=gen14Srv26Nme38_77856_1311232246&type=context-->
+                        
                         </div>
                     </div>
 

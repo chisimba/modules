@@ -2557,34 +2557,7 @@ class unesco_oer extends controller {
      * @param string $id - Record ID of the Forum message will be posted in
      * @return string Template - forum_newtopic.php
      */
-    public function __newTopicForm() {
-        $groupid = $this->getParam("groupid");
-        $forumid = $this->getParam("forumid");
-        $forum = $this->objForum->getForum($forumid);
-
-        $discussionTypes = $this->objDiscussionType->getDiscussionTypes();
-        $this->setVarByRef('forumid', $id);
-        $this->setVarByRef('forum', $forum);
-        $this->setVarByRef('discussionTypes', $discussionTypes);
-
-        // Check if form is a result of server-side validation or not'
-        if ($this->getParam('message') == 'missing') {
-            $details = $this->getSession($this->getParam('tempid'));
-            $this->setVarByRef('details', $details);
-            $temporaryId = $details['temporaryId'];
-            $this->setVar('mode', 'fix');
-        } else {
-            $temporaryId = $this->objUser->userId() . '_' . mktime();
-            $this->setVar('mode', 'new');
-        }
-        $this->setVarByRef('temporaryId', $temporaryId);
-        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($id, $this->objUser->userId());
-        $this->setVarByRef('numTopicSubscriptions', $numTopicSubscriptions);
-        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($id, $this->objUser->userId());
-        $this->setVarByRef('forumSubscription', $forumSubscription);
-        return "forum_newtopic.php";
-    }
-
+ 
     /**
      *
      *
