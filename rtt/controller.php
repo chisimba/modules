@@ -19,9 +19,11 @@ class rtt extends controller {
         $this->objUser = $this->newObject('user', 'security');
         $this->objRttUtil = $this->getObject('rttutil', 'rtt');
         $this->objDbRtt = $this->getObject('dbrtt', 'rtt');
+        $this->objDbRttUser = $this->getObject('dbrttusers', 'rtt');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->objDBRttJnlp = $this->getObject("dbrttjnlp");
     }
 
     public function dispatch($action) {
@@ -30,7 +32,7 @@ class rtt extends controller {
             
         } else {
             if (!$this->objContext->isInContext()) {
-                return "needtojoin_tpl.php";
+                //       return "needtojoin_tpl.php";
             }
         }
 
@@ -90,7 +92,7 @@ class rtt extends controller {
      * @return <type>
      */
     function __home() {
-        $this->objRttUtil->generateJNLP();
+
         return "home_tpl.php";
     }
 
@@ -99,8 +101,8 @@ class rtt extends controller {
      */
     function __demo() {
         //$this->setVar('pageSuppressBand', TRUE);
-       // $this->setVar('suppressFooter', TRUE);
-       // $this->setVar('pageSuppressToolbar', TRUE);
+        // $this->setVar('suppressFooter', TRUE);
+        // $this->setVar('pageSuppressToolbar', TRUE);
         return "demohome_tpl.php";
     }
 
@@ -109,19 +111,51 @@ class rtt extends controller {
           $this->setVar('suppressFooter', TRUE);
           $this->setVar('pageSuppressToolbar', TRUE); */
         $nickname = $this->getParam("name");
-        $username= $this->objRttUtil->genRandomString();
+        $username = $this->objRttUtil->genRandomString();
         // $nickname="demo";
         //$username="demo";
-        $this->objRttUtil->generateDemoJNLP($nickname,$username);
+        $this->objRttUtil->generateDemoJNLP($nickname, $username);
         $this->setVarByRef("username", $username);
         return "launchdemo_tpl.php";
+    }
+
+    function __restservice() {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="RTT Realm"');
+            header('HTTP/1.0 401 Unauthorized');
+
+            exit;
+        } else {
+            $username = $_SERVER['PHP_AUTH_USER'];
+            $password = $_SERVER['PHP_AUTH_PW'];
+            if ($this->objDbRttUser->authenticateUser($username, $password)) {
+                $params = $this->objDBRttJnlp->getParams($username);
+
+                $result = "";
+                foreach ($params as $param) {
+                    //if ($param['jnlp_key'] = ! '' || $param['jnlp_value'] != '') {
+                        $result.=$param['jnlp_key'] . '=' . $param['jnlp_value'] . '!';
+                    //}
+                }
+                echo $result;
+            } else {
+                header('WWW-Authenticate: Basic realm="RTT Realm"');
+                header('HTTP/1.0 401 Authentication Failed');
+            }
+        }
+
+        die();
+    }
+
+    function __runjnlp() {
+        return $this->objRttUtil->runJNLP();
     }
 
     /**
      * Method to turn off login requirement for certain actions
      */
     public function requiresLogin($action) {
-        $requiresLogin = array('demo', 'joindemo');
+        $requiresLogin = array('demo', 'joindemo', 'restservice');
         if (in_array($action, $requiresLogin)) {
             return FALSE;
         } else {
