@@ -157,20 +157,25 @@ $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_resorce_p
 $table->addCell($resource_publisher->show());
 $table->endRow();
 
-$FileUploadButton = new button ('fileupload',$this->objLanguage->languageText('mod_unesco_oer_group_file_upload_button', 'unesco_oer'));
-//$FileUploadButtonLink = new link($this->uri(array((module,forum),'action' => "saveOER","groupid"=>$this->getParam('groupid'))));
-//$FileUploadButtonLink->link=$Savebutton->show();
+//$FileUploadButton = new button ('fileupload',$this->objLanguage->languageText('mod_unesco_oer_group_file_upload_button', 'unesco_oer'));
+//$table->startRow();
+//$table->addCell($FileUploadButton->show());
+//$table->endRow();
+
+
+
+
+$file='
+<div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid=<?php echo $groupid; ?>&page=10a_tpl.php"" class="greenTextBoldLink">Group files</a></div>';
 
 $table->startRow();
-$table->addCell($FileUploadButton->show());
+$table->addCell($file);
 $table->endRow();
 
 $fieldset = $this->newObject('fieldset', 'htmlelements');
 $fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset_oer', 'unesco_oer');
 $fieldset->contents = $table->show();
 //File uploader
-
-
 
 
 

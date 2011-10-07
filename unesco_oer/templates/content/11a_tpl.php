@@ -19,7 +19,9 @@ $topicsNum = count($topics);
         <ul><li class="first">Home</li>
             <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'>Groups</a></li>
 <!--            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'>Groups Grid</a></li>-->
-           <li>Group</li>
+           <li><?php
+                 echo $this->objDbGroups->getGroupName($this->getParam('id'));
+                 ?></li>
             <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
             <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
             <li>witsjunction</li>
