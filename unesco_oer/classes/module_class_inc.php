@@ -39,6 +39,7 @@ class module extends content {
     }
 
     public function showInput($productID, $prevAction = NULL) {
+        $productUtil = $this->getObject('productutil', 'unesco_oer');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -66,7 +67,8 @@ class module extends content {
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -98,7 +100,8 @@ class module extends content {
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_entry_requirements','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -116,7 +119,8 @@ class module extends content {
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_outcomes_objectives','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -129,7 +133,8 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_delivery_mode','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -142,7 +147,8 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_number_of_hours','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -158,7 +164,8 @@ class module extends content {
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -171,7 +178,8 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_assessment','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
@@ -182,14 +190,14 @@ class module extends content {
 
         $fieldName = 'schedule_of_classes';
         $editor->name = $fieldName;
-        $editor->height = '150px';
-        // $editor->width = '70%';
+        $editor->height = '450px';
 
         $editor->setBasicToolBar();
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_schedule_of_activities','unesco_oer');
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer') . $productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();

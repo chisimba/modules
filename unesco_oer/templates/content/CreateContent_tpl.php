@@ -110,7 +110,7 @@ echo '<div id="sections">
     
 <fieldset>
 <legend>' . $output . '</legend>
-
+<div class="wideLeftFloatDiv" style="width:100%;" >
 <div class="leftColumnDiv" >';
 
 
@@ -120,7 +120,8 @@ echo '</div>';
 
 
 
-echo '<div class="centerColumnDiv"">';
+//echo '<div class="centerColumnDiv"">';
+echo '<div class="rightWideColumnDiv" style="width:75%;" ">';
 echo $contentManager->showInput($this->getParam('prevAction'));
-echo "</div></fieldset></div></div></div>";
+echo "</div></div></fieldset></div></div></div>";
 ?>

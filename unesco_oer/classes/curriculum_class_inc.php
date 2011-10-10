@@ -69,11 +69,9 @@ class curriculum extends content {
 
         $table->startRow();
         $table->addCell($textinput->show());
-        $table->endRow();
+        $table->endRow();               
 
-        
-        
-        
+
         $fieldName = 'forward';
         $editor = $this->newObject('htmlarea', 'htmlelements');
       
@@ -117,8 +115,9 @@ class curriculum extends content {
         $editor->setBasicToolBar();
         $editor->setContent($this->_introductory_description);
 
+        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer') . " " . $objLanguage->languageText('mod_unesco_oer_tooltip_description_long','unesco_oer');
         $table->startRow();
-        $table->addCell($objLanguage->languageText('mod_unesco_oer_curriculum_description', 'unesco_oer'));
+        $table->addCell($objLanguage->languageText('mod_unesco_oer_curriculum_description', 'unesco_oer').$productUtil->getToolTip($tooltip));
         $table->endRow();
 
         $table->startRow();
