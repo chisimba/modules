@@ -19,8 +19,12 @@ $this->loadClass('htmlheading', 'htmlelements');
 $header = new htmlHeading();
 //$header->str = $this->objLanguage->
 //        languageText('mod_unesco_oer_add_data_heading', 'unesco_oer');
-$header->str = 'HELP';
+$header->str = 'Site Reference';
+$header->align = 'CENTER';
 $header->type = 2;
 echo $header->show();
+
+$hel
+
 
 ?>

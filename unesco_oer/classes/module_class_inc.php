@@ -92,7 +92,7 @@ class module extends content {
 
         $fieldName = "entry_requirements";
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
         $editor->cssClass = "required";
         // $editor->width = '70%';
 
@@ -112,7 +112,7 @@ class module extends content {
 
         $fieldName = 'outcomes';
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
@@ -157,7 +157,7 @@ class module extends content {
 
         $fieldName = "description";
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();

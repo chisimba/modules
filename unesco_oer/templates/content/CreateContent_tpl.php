@@ -24,10 +24,9 @@
     
                 $('.root').load('index.php?module=unesco_oer&action=saveContent&option=new&pair=' + path + '&productID=' + $('.product_id').attr('id'),
                 function()
-                {$('#form_add').validate()
-                alert('ggg');
+                {$('#form_add').validate();
             
-        });
+                });
             }
 
 
