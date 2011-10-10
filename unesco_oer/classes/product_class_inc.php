@@ -753,8 +753,8 @@ class product extends object {
         $fieldName = 'description';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
-        $editor->height = '150px';
-        $editor->width = '70%';
+        $editor->height = '450px';
+        $editor->width = '98%';
         $editor->setBasicToolBar();
         $editor->setContent($this->getDescription());
         $table->startRow();
@@ -769,8 +769,8 @@ class product extends object {
         $fieldName = 'abstract';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
-        $editor->height = '150px';
-        $editor->width = '70%';
+        $editor->height = '450px';
+        $editor->width = '98%';
         $editor->setBasicToolBar();
         $editor->setContent($this->getAbstract());
         $table->startRow();
