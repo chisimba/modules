@@ -352,26 +352,45 @@ $tableC->addCell('Website Link');
 $tableC->addCell($textinput->show());
 $tableC->endRow();
 
-
-$user_current_membership = $this->ObjDbUserGroups->getUserGroups($this->getParam('id'));
+//$userid = $this->objUser->userId();
+$user_current_membership = $this->ObjDbUserGroups->getUserGroups($this->getParam("userid"));
 $currentMembership = array();
 $availablegroups = array();
 $groups = $this->objDbGroups->getAllGroups();
-foreach ($groups as $group) {
-    if (count($user_current_membership) > 0) {
-        foreach ($user_current_membership as $membership) {
-            if($membership['groupid'] !=NULL){
-            if (strcmp($group['id'], $membership['groupid']) == 0 ) {
+//foreach ($groups as $group) {
+//    if (count($user_current_membership) > 0) {
+//        foreach ($user_current_membership as $membership) {
+//            if($membership['groupid'] !=NULL){
+//            if (strcmp($group['id'], $membership['groupid']) == 0 ) {
+//
+//                array_push($currentMembership, $group);
+//            }else {
+//                array_push($availablegroups, $group);
+//            }}
+//        }
+//    } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+//        array_push($availablegroups, $group);
+//    }
+//}
 
-                array_push($currentMembership, $group);
+
+foreach ($groups as $group) {
+
+          foreach ($user_current_membership as $membership) {
+            if(strcmp($membership[0]['approved'],"Y")==0){
+              array_push($currentMembership, $group);
             }else {
                 array_push($availablegroups, $group);
-            }}
+            }
         }
-    } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-        array_push($availablegroups, $group);
-    }
+    
+
+//    } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+//        array_push($availablegroups, $group);
+//    }
 }
+
+
 
 $objSelectBox = $this->newObject('selectbox', 'htmlelements');
 $objSelectBox->create($form, 'leftList[]', 'Available Groups', 'rightList[]', 'Chosen Groups');

@@ -1588,11 +1588,10 @@ class unesco_oer extends controller {
 
             $pkid = $this->objUserAdmin->addUser($userId, $username, $password, $title, $firstname, $surname, $email, $sex, $country, $cellnumber, $staffnumber = NULL, 'useradmin', $accountstatus);
 //add to table userextra
-            $id = $this->objUseExtra->getLastInsertedId($userId, $username, $password, $title, $firstname, $surname, $email, $sex);
-            $this->ObjDbUserGroups->adduser($id);
+                    
             $this->objUseExtra->SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $typeOfOccupation, $WorkingPhone, $DescriptionText, $WebsiteLink);
             foreach ($rightData as $right) {
-                $this->ObjDbUserGroups->joingroup($id, $right);
+                $this->ObjDbUserGroups->joingroup($userId,$right);
             }
 
 

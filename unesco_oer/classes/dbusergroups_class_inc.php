@@ -53,7 +53,7 @@ class dbusergroups extends dbtable {
         $this->insert($data);
     }
 
-    function adduser($id) {
+    function adduser($userid) {
         $data = array(
             'id' => $id,
             'groupid' => ''
@@ -86,8 +86,8 @@ class dbusergroups extends dbtable {
     }
 
     // get a user list of groups that he belong
-    function getUserGroups($id) {
-        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$id'";
+    function getUserGroups($userid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userid'";
         return $this->getArray($sql);
     }
 
