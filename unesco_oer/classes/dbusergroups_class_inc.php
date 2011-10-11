@@ -114,6 +114,16 @@ class dbusergroups extends dbtable {
             return 0;
         }
     }
+    
+    function ismemberOfAnygroup($userid) {
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userid'";
+        $array = $this->getArray($sql);
+        if (count($array) > 0) {
+            return 1; //TRUE
+        } else {
+            return 0;
+        }
+    }
 
     function check_availableUserGroup($userId, $groupid) {
         $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE id='$userId' and groupid='$groupid'";

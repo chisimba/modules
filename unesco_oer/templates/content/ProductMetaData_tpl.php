@@ -20,6 +20,9 @@
 
 </script>
   <?php
+
+  
+  
         $homelink = new link('home');
         $homelink->href = $this->uri(array("action"=>"home"));
         $homelink->link = 'Home';
@@ -65,7 +68,57 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+//  $userid = $this->objUser->userId();
+//
+//if ($this->ObjDbUserGroups->ismemberOfAnygroup($userid)) {
+//    
+//  echo '  <div class="gridViewGroupBackgroundColor">
+//        <div class="paddingGroubGridListingTable">
+//            <table class="groupListingTable" cellspacing="0" cellpadding="0">
+//                <td>';
+//
+//             
+//                    $objTable = $this->getObject('htmltable', 'htmlelements');
+//                    //$objTable->cssClass = "gridListingTable";
+//                    //$objTable->width = NULL;
+//
+//                    $groups = $this->objDbGroups->getAllGroups();
+//                    $newRow = true;
+//                    $count = 0;
+//                    foreach ($groups as $group) {
+//                        $count++;
+//                        if ($newRow) {
+//                            $objTable->startRow();
+//                            $objTable->addCell($this->objGroupUtil->content($group));
+//                            $newRow = false;
+//                        } else {
+//                            $objTable->addCell($this->objGroupUtil->content($group));
+//                        }
+//                        if ($count == 3) {
+//                            $newRow = true;
+//                            $objTable->endRow();
+//                            $count = 0;
+//                        }
+//                    }
+//                    echo $objTable->show();
+//
+////                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
+////                $fieldset1->setLegend();
+////                $fieldset1->addContent($objTable->show());
+////                echo $fieldset1->show();
+//                    // echo $objTable->show();
+//               echo'
+//                </td>
+//            </table>
+//        </div>
+//    </div>';
+//               
+//          
+//}
+
+
 echo $product->showMetaDataInput($this->getParam('nextAction'),$this->getParam('cancelAction'), $this->getParam('cancelParams'));
+
 //var_dump($product->dummyValue);
 
 ?>

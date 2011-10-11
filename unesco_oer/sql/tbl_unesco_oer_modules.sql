@@ -35,7 +35,8 @@ $fields = array(
                 'comments_history' => array('type' => 'text'),
                 'schedule_of_classes' => array('type' => 'text'),
                 'parentid' => array('type' => 'text','length' => 32,'null'),
-                'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
+                'deleted' => array('type' => 'integer','length' => 1,'default' => '0'),
+                    'remark' => array('type' => 'text', 'length' => 255)
  		);
 
 ?>

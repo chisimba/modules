@@ -110,7 +110,7 @@ class productutil extends object {
         $adaptLink->link = $linkText;
 
         $objUser = $this->getObject('user', 'security');
-        $imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
+        $imageBottomFlag =  $adaptLink->show();
 
         $content.='
                                 <div class="imageGridListing">'.
@@ -428,7 +428,7 @@ class productutil extends object {
         $adaptLink->link = $linkText;
 
         $objUser = $this->getObject('user', 'security');
-        $imageBottomFlag = $this->objUser->isLoggedIn() ? $adaptLink->show() : '';
+        $imageBottomFlag = $adaptLink->show();
 
         $content.='
                    <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>

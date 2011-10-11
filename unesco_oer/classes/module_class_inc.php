@@ -231,6 +231,20 @@ class module extends content {
         $table->startRow();
         $table->addCell($textinput->show());
         $table->endRow();
+        
+        $fieldName = 'Remark';
+        $textinput = new textinput('remark');
+        $textinput->cssClass = "required";
+        $textinput->setValue($this->_metaDataArray['remark']);
+
+        $table->startRow();
+        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($textinput->show());
+        $table->endRow();
 
         $dropdown = new dropdown('status');
         $dropdown->cssClass = "required";
@@ -306,6 +320,7 @@ class module extends content {
         $content.= '<h3 class="greyText">Scheduele of Activities</h3><br> ' . $this->_metaDataArray['schedule_of_classes'] . '<br><br>';
         $content.= '<h3 class="greyText">Associated Material</h3><br> ' . $this->_metaDataArray['associated_material'] . '<br><br>';
         $content.= '<h3 class="greyText">Comments history</h3><br> ' . $this->_metaDataArray['comments_history'] . '<br><br>';
+          $content.= '<h3 class="greyText">Remarks</h3><br> ' . $this->_metaDataArray['remark'] . '<br><br>';
 
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
@@ -333,6 +348,7 @@ class module extends content {
             'schedule_of_classes' => $this->getParam('scheduele_of_classes'),
             'associated_material' => $this->getParam('associated_material'),
             'comments_history' => $this->getParam('comments_history'),
+            'remark' => $this->getParam('remark'),
             'object' => $this
         );
 

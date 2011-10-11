@@ -31,6 +31,7 @@ class curriculum extends content {
     private $_forward;
     private $_background;
     private $_introductory_description;
+     private $_remark;
     
 
 
@@ -124,6 +125,25 @@ class curriculum extends content {
         $table->addCell($editor->show());
         $table->endRow();
         
+        
+        $fieldName = 'remark';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '150px';
+        //$editor->width = '70%';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_remark);
+
+        $tooltip = 'Reason for adaptation';
+        $table->startRow();
+        $table->addCell(' Remark '.$productUtil->getToolTip($tooltip));
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+        
+        
         $dropdown = new dropdown('status');
         $dropdown->addOption($objLanguage->languageText('mod_unesco_oer_status_disabled', 'unesco_oer'));
         $dropdown->addOption($objLanguage->languageText('mod_unesco_oer_status_draft', 'unesco_oer'));
@@ -178,6 +198,7 @@ class curriculum extends content {
         $content = " <h3 class='greyText'> $forwardHeading : </h3>$this->_forward<br>" ;
         $content .= " <h3 class='greyText'> $backgroundHeading : </h3>$this->_background<br>" ;
         $content .= " <h3 class='greyText'> $descriptionHeading : </h3>$this->_introductory_description<br>" ;
+            $content .= " <h3 class='greyText'> Remark : </h3>$this->_remark<br>" ;
 
         return $content;
     }
@@ -193,6 +214,7 @@ class curriculum extends content {
         $this->_forward = $this->getParam('forward');
         $this->_introductory_description = $this->getParam('introductory_description');
         $this->_title = $this->getParam('title');
+          $this->_remark = $this->getParam('remark');
     
 
         if (empty($this->_id)) {
@@ -211,6 +233,7 @@ class curriculum extends content {
                     $this->_forward,
                     $this->_background,
                     $this->_introductory_description,
+                     $this->_remark,
                     $this->tempID
                     );
     }
@@ -221,7 +244,8 @@ class curriculum extends content {
             'title' => $this->_title,
             'forward'=> $this->_forward,
             'background'=> $this->_background,
-            'introductory_description'=> $this->_introductory_description
+            'introductory_description'=> $this->_introductory_description,
+             'remark' => $this->_remark
         );
 
         $this->objDbCurricula->updateCurriculum(
@@ -255,6 +279,7 @@ class curriculum extends content {
 
         $this->_background = $dataArray['background'];
         $this->_forward = $dataArray['forward'];
+          $this->_remark = $dataArray['remark'];
         $this->_introductory_description = $dataArray['introductory_description'];
         $this->_id = $dataArray['id'];
         $this->_title = $dataArray['title'];
@@ -293,6 +318,7 @@ class curriculum extends content {
         $html .= "<h$level>1. Forward</h$level>" . $this->_forward;
         $html .= "<h$level>2. Background</h$level>" . $this->_background;
         $html .= "<h$level>3. Introductory Description</h$level>" . $this->_introductory_description;
+           $html .= "<h$level>4. Remarks</h$level>" . $this->_remark;
         return $html;
     }
 }

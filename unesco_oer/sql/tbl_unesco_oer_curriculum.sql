@@ -29,6 +29,7 @@ $fields = array(
                 'introductory_description'=>array('type' =>'text'),
                 'calendar' => array('type' =>'text', 'length' => 255),
                   'parentid' => array('type' => 'text','length' => 32,'null'),
-                  'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
+                  'deleted' => array('type' => 'integer','length' => 1,'default' => '0'),
+                    'remark' => array('type' => 'text', 'length' => 255)
  		);
 ?>

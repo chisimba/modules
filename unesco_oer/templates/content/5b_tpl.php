@@ -159,7 +159,7 @@ $product = $this->getObject('product');
             <div class="LeftWiderColumnDiv">
                <?php
                  $navigation = '';
-                 $treelevel = $existingContent->getParentList();
+                  $treelevel = $existingContent->getParentList();
                  foreach($treelevel as $currentlevel){
                      $navigation .= $currentlevel . " | ";
         

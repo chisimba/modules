@@ -92,6 +92,16 @@ class product extends object {
      *
      * @var <type>
      */
+    
+     private $_remark;
+     
+       /*     * Reason for adaptation
+     *
+     * @var <type>
+     */
+    
+    
+    
     private $_abstract;
 //    /**Description Table of Contents
 //     *
@@ -282,6 +292,7 @@ class product extends object {
         $tempData['translation_of'] = $this->getTranslationID();
         $tempData['description'] = $this->getDescription();
         $tempData['abstract'] = $this->getAbstract();
+    
         $tempData['creator'] = $this->getAuthors();
         $tempData['contacts'] = $this->getContacts();
         $tempData['publisher'] = $this->getPublisher();
@@ -368,6 +379,7 @@ class product extends object {
         $tempData['country_code'] = $this->getCountryCode();
         $tempData['group_id'] = $this->getGroupID();
         $tempData['institution_id'] = $this->getInstitutionID();
+        $tempData['remark'] = $this->getRemark();
 
         return $tempData;
     }
@@ -396,6 +408,7 @@ class product extends object {
         $this->setPublisher($product['publisher']);
         $this->setDescription($product['description']);
         $this->setAbstract($product['abstract']);
+      
         $this->setOtherContributers($product['other_contributors']);
         $this->setContacts($product['contacts']);
         $this->setStatus($product['status']);
@@ -429,6 +442,7 @@ class product extends object {
         $this->setCountryCode($data['country_code']);
         $this->setGroupID($data['group_id']);
         $this->setInstitutionID($data['institution_id']);
+          $this->setRemark($data['remark']);
     }
 
     /*     * This function upadates relevant fields of the product provided you use
@@ -446,6 +460,7 @@ class product extends object {
         $this->setPublisher($this->getParam('publisher'));
         $this->setDescription($this->getParam('description'));
         $this->setAbstract($this->getParam('abstract'));
+  
         $this->setOtherContributers($this->getParam('other_contributors'));
         $this->setContacts($this->getParam('contacts'));
         $this->setStatus($this->getParam('status'));
@@ -483,6 +498,8 @@ class product extends object {
         $this->setCountryCode($this->getParam('country'));
         $this->setGroupID($this->getParam('group'));
         $this->setInstitutionID($this->getParam('institution'));
+        $this->setRemark($this->getParam('remark'));
+        
     }
 
     /*     * This function validates the input on product meta data input page
@@ -979,6 +996,26 @@ class product extends object {
             // setup table and table headings with input fields
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->cssClass = "moduleHeader";
+            
+            
+        $fieldName = 'remark';
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '100px';
+        $editor->width = '98%';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->getRemark());
+        $table->startRow();
+        $tooltip = 'Reason for creating adaptation';
+        $table->addCell('Remark' . $productUtil->getToolTip($tooltip));
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+            
+            
+            
+            
 
             //Field for Region
             $fieldName = 'region';
@@ -1225,6 +1262,10 @@ class product extends object {
     function setAbstract($abstract) {
         $this->_abstract = $abstract;
     }
+    
+    function setRemark($Remark) {
+        $this->_remark = $Remark;
+    }
 
     function setOtherContributers($contributors) {
         $this->_othercontributors = $contributors;
@@ -1404,6 +1445,10 @@ class product extends object {
 
     function getAbstract() {
         return $this->_abstract;
+    }
+    
+     function getRemark() {
+        return $this->_remark;
     }
 
     function getOtherContributers() {

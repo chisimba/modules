@@ -26,6 +26,7 @@ $fields = array(
                 'country_code'=>array('type'=>'text','length'=>2),
                 'group_id' =>array('type' =>'text','length'=>32),
                 'institution_id' => array('type' =>'text','length'=>32),
+                 'remark' => array('type' => 'text', 'length' => 255)
  		);
 
 ?>

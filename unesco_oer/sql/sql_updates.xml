@@ -268,6 +268,50 @@
             </add>
         </data>
     </update>
+    
+    
+    
+        <update>
+        <table>tbl_unesco_oer_product_adaptation_data</table>
+        <version>0.149</version>
+        <description>new field giving reason for adaptation</description>
+        <data>
+            <add>
+                <name>remark</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+           
+        </data>
+    </update>
+    
+       <update>
+        <table>tbl_unesco_oer_curriculum</table>
+        <version>0.149</version>
+        <description>new field giving reason for adaptation</description>
+        <data>
+            <add>
+                <name>remark</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+           
+        </data>
+    </update>
+    
+       <update>
+        <table>tbl_unesco_oer_modules</table>
+        <version>0.149</version>
+        <description>new field giving reason for adaptation</description>
+        <data>
+            <add>
+                <name>remark</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+           
+        </data>
+    </update>
 
 </updates>
 
