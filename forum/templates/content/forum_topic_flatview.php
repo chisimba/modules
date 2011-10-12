@@ -22,6 +22,7 @@ $js='
 
 echo $js;
 
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -38,6 +39,7 @@ $link = new link($this->uri(array('action'=>'forum', 'id'=>$post['forum_id'], 't
 $link->link = $post['forum_name'];
 $headerString = $link->show().' &gt; '.stripslashes($post['post_title']);
 
+
 $header->str=$headerString;
 
 if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
@@ -53,12 +55,15 @@ if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forum
 
 echo $header->show();
 
+
+
 //Confirmation messages
 if ($this->getParam('message') == 'save') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
     $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));
     $timeoutMessage->setTimeout(20000);
     echo ('<p>'.$timeoutMessage->show().'</p>');
+    
 }
 if ($this->getParam('message') == 'postupdated') {
     $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
@@ -164,6 +169,7 @@ if ($post['status'] != 'CLOSE' && !$forumlocked && $this->getParam('message') ==
     echo $header->show();
 
     echo $this->objPost->showPostReplyForm($post['post_id'], FALSE);
+    
 }
 
 // $replylink = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$forumtype)));

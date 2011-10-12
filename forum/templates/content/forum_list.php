@@ -102,6 +102,7 @@ foreach ($forums as $forum) {
             $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($post['datelastupdated']);
         } else {
             $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
+           
         }
 
         $postDetails .= '<br /><strong>'.$user.$datefield.'</strong>';
