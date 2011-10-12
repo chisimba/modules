@@ -91,6 +91,11 @@ class dbusergroups extends dbtable {
         return $this->getArray($sql);
     }
 
+    function getGroupsByUserID($userID){
+        $sql = "SELECT * FROM tbl_unesco_oer_user_groups WHERE userid='$userID'";
+        return $this->getArray($sql);
+    }
+
     // when a user what to leave a particular group
     function leavegroup($id, $groupid) {
         $sql = "DELETE  FROM  tbl_unesco_oer_user_groups WHERE id='$id' AND groupid='$groupid'";

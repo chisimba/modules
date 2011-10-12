@@ -158,10 +158,11 @@
                                        }
 
                                     sort($arrayTypes,SORT_STRING);
+                                    $checkbox = new checkbox('AdaptationType');
 
                                     for ($z=0; $z < $ArrayCount; $z++)
                                      {
-                                        echo "<input type='checkbox' name=''>$arrayTypes[$z]";
+                                        echo $checkbox->show().$arrayTypes[$z].' ';
 
                                      }
                                 ?>
@@ -186,11 +187,11 @@
                                        }
 
                                     sort($arrayTypes,SORT_STRING);
+                                    $checkbox = new checkbox('AdaptationInstitutionType');
 
                                     for ($z=0; $z < $ArrayCount; $z++)
                                      {
-                                        echo "<input type='checkbox' name=''>$arrayTypes[$z]";
-
+                                        echo $checkbox->show().$arrayTypes[$z].' ';
                                      }
                                 ?>
                                      

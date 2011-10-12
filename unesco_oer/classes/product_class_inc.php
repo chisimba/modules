@@ -753,6 +753,8 @@ class product extends object {
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_language','unesco_oer');
         $title .= $productUtil->getToolTip($tooltip);
         $productLanguages = $this->objDbProductLanguages->getProductLanguages();
+        //$langs = $this->objLanguage->getLangs();
+        //var_dump($langs);
         $this->_objAddDataUtil->addDropDownToTable(
                 $title, 4, $fieldName, $productLanguages, $this->getLanguageID(), 'code', $table, 'id'
         );
@@ -1038,7 +1040,7 @@ class product extends object {
             $table->endRow();
 
             $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
-            $arrayUserGroups = $objDbUserGroups->getUserGroups($this->_user->PKId());
+            $arrayUserGroups = $objDbUserGroups->getGroupsByUserID($this->_user->userId());
 
             /*
             if (empty($arrayUserGroups)) {
