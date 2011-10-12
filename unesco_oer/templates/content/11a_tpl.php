@@ -208,12 +208,12 @@ function SubmitProduct()
 
                                         $joinGroupLink = new link($this->uri(array('action' => "11a")));
                                         $joinGroupLink->link = 'Join Group';
-                                        $joinGroupLink->cssId = 'memberofgroup';
+                                        $joinGroupLink->cssId = 'member';
                                     } else {
 
                                         $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
                                         $joinGroupLink->link = 'Join Group';
-                                        $joinGroupLink->cssId = 'joingroup';
+                                        $joinGroupLink->cssId = 'join';
                                     }
                                     $joinGroupLink->cssClass = 'greenTextBoldLink';
                                     echo $joinGroupLink->show();
@@ -470,7 +470,7 @@ function SubmitProduct()
 
 jQuery(document).ready(function(){
 
-    jQuery("a[id=joingroup]").click(function(){
+    jQuery("a[id=join]").click(function(){
 
         var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
         if(r== true){
@@ -485,7 +485,7 @@ jQuery(document).ready(function(){
 
 jQuery(document).ready(function(){
 
-    jQuery("a[id=memberofgroup]").click(function(){
+    jQuery("a[id=member]").click(function(){
 
         var r=confirm( "Your are a member of this group\n you can not join again....!!!");
         if(r== true){

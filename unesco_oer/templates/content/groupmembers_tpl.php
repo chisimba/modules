@@ -226,7 +226,7 @@ function SubmitProduct()
                 <ul id="innerMenuTabs">
                      <li class="onState"><a href="#">
                              <?php
-                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'))));
+                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
                              $memberLink->link="Members(".$No_Of_Members.")";
                              echo $memberLink->show();

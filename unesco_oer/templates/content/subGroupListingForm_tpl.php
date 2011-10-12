@@ -41,16 +41,13 @@ $header->str =$parentInfo[0]['name']." ".$this->objLanguage->languageText('mod_u
 <div class="breadCrumb module">
     <div id='breadcrumb'>
         <ul><li class="first">Home</li>
-            <li><a href='?module=unesco_oer&action=controlpanel' alt='Adminstrative Tools' title='Adminstrative Tools'>Adminstrative Tools</a></li>
-           <li>Users</li>
-            <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
-            <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
-            <li>witsjunction</li>
-           -->
-        </ul>
+            <li><a href='?module=unesco_oer&action=10&page=10a_tpl.php' alt='Adminstrative Tools' title='Adminstrative Tools'>Groups</a></li>
+            <li><a href='?module=unesco_oer&action=11a&id=<?php echo $this->getParam("parent_id")?>&page=10a_tpl.php' alt='Adminstrative Tools' title='Adminstrative Tools'><?php echo $parentInfo[0]['name']." "."Home"?></a></li>
+            <li><a href='?module=unesco_oer&action=8a&id=<?php echo $this->getParam("parent_id")?>&page=10a_tpl.php' alt='Adminstrative Tools' title='Adminstrative Tools'><?php echo $parentInfo[0]['name']; ?></a></li>
+            <li>Subgroup</li>
+            </ul>
+        </div>
     </div>
-
-</div>
 
 <?php
 echo '<div id="userheading">';
@@ -151,7 +148,7 @@ if (count($subgroups) > 0) {
 }
 
 $fs = new fieldset();
-$fs->setLegend("Users");
+$fs->setLegend($this->objLanguage->languageText('mod_unesco_oer_sub_group_create', 'unesco_oer'));
 $fs->addContent($myTable->show());
 echo $fs->show();
 ?>

@@ -59,14 +59,17 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                     <div class="groupSubLinksList">
 
                         <img src="skins/unesco_oer/images/icon-group-discussion.png" alt="Group discussion" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=forum" class="greenTextBoldLink">Group discussion</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="?module=forum&action=forum&id=<?php
+                        $groupid = $this->getParam('id');
+                        echo $this->objDbGroups->getGroup_pkid_in_forum($groupid);
+                        ?>&page=10a_tpl.php   " class="greenTextBoldLink">Group discussion</a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
                         <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">
                                  <?php
                                 $groupid = $this->getParam('id');
-                                $addSubgroupLink = new link($this->uri(array("action" =>"subgroupListingForm", "parent_id" => $groupid, "page" => "10a_tpl.php")));
+                                $addSubgroupLink = new link($this->uri(array("action" =>"subgroupListingForm", "parent_id" => $groupid,"page" => "10a_tpl.php")));
                                 $addSubgroupLink->link = 'Subgroups';
                                  $addSubgroupLink->cssClass = 'greenTextBoldLink';
                                 echo $addSubgroupLink->show();
@@ -96,7 +99,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid=<?php echo $groupid; ?>&page=10a_tpl.php"" class="greenTextBoldLink">Group files</a></div>
+                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid=<?php echo $groupid; ?>&page=10a_tpl.php" class="greenTextBoldLink">Group files</a></div>
                     </div>
                     <div class="greyDivider"></div>
 
@@ -104,7 +107,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <a href="#" class="greenTextBoldLink">
                             <?php
                             $groupid = $this->getParam('id');
-                            $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupid, "page" => "10a_tpl.php")));
+                            $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupid,"page" => "10a_tpl.php")));
                             $addDiscussionLink->link = 'Manage OER Resources';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                             echo $addDiscussionLink->show();
@@ -216,17 +219,14 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                             <div class="showAlldiscussions">
 
-                                <a href="?module=forum&action=forum&id=
-                        <?php
+                                <a href="?module=forum&action=forum&id=<?php
                             $groupid = $this->getParam('id');
                             echo $this->objDbGroups->getGroup_pkid_in_forum($groupid);
                         ?>&page=10a_tpl.php   " class="greenTextBoldLink">All discussions</a> |
 
                         <?php
                             $forumId = $this->objDbGroups->getGroupForumId($groupid);
-                        //    echo $groupid;
-                            echo $forumId;
-                            $addDiscussionLink = new link('/unesco_oer/index.php?module=forum&action=newtopic&id='.$forumId.'&type=context');
+                            $addDiscussionLink = new link('/unesco_oer/index.php?module=forum&action=newtopic&id='.$forumId.'&type=context&page=10a_tpl.php');
                             $addDiscussionLink->link = 'add a discussion';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                             echo $addDiscussionLink->show();
