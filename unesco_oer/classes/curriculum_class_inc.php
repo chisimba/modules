@@ -127,12 +127,10 @@ class curriculum extends content {
         
         
         $fieldName = 'remark';
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = $fieldName;
-        $editor->height = '150px';
-        //$editor->width = '70%';
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_remark);
+         $textinput = new textinput($fieldName);
+         $textinput->cssClass = "required";
+        $textinput->setValue($this->_remark);
+      
 
         $tooltip = 'Reason for adaptation';
         $table->startRow();
@@ -140,7 +138,7 @@ class curriculum extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($editor->show());
+        $table->addCell($textinput->show());
         $table->endRow();
         
         
@@ -294,6 +292,8 @@ class curriculum extends content {
         return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
     
+   
+    
     public function getCompareLink($test,$id) {
         return $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $id));
     }
@@ -307,6 +307,11 @@ class curriculum extends content {
 
         return $success;
     }
+    
+     public function showRemark() {
+        
+        return  $this->_remark;
+     }
 
     public function printHTML($level) {
         if($level >= 3){

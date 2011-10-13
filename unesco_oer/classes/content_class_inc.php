@@ -278,10 +278,24 @@ class content extends object
     }
 
     function getTreeNodes($editable = FALSE,  $highlighted = FALSE, $origional = FALSE, $compare = FALSE,$selectedID = NULL, $productID = NULL) {
-
+ 
+        $productUtil = $this->getObject('productutil', 'unesco_oer');
+    
         $this->loadClass('treenode', 'tree');
         
         $test = implode(',',$selectedID);
+        $product = $this->getObject('product'); 
+        $product->loadProduct($productID);
+        $content = $product->getContentManager();
+   
+       
+        $existingContent = $content->getContentByContentID($this->getID());
+        
+       // $tooltip = $existingContent->showRemark();
+         // echo $tooltip;
+      //  echo  $existingContent->showReadOnlyInput(); 
+       //
+      // echo $existingContent->showRemark();
 
         $icon = 'icon-product-closed-folder.png';
         if (!empty ($this->icon)) $icon = $this->icon;
@@ -320,7 +334,7 @@ class content extends object
         // Makes tree a link if not editing when adding product metadata
         if ($editable){
                         $node = new treenode(array(
-                                                        'text' => $title,
+                                                        'text' => $title  ,
                                                         'link' => "#", 'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         //'expanded' => $this->hasContents()),
@@ -333,9 +347,9 @@ class content extends object
                       else{
                             $node = new treenode(array(
 //                                                        'text' => $title . $hiddenInput->show()."<div class='treetrunc'></div>",
-                                                        'text' => $title . $hiddenInput->show(),
+                                                        'text' => ($highlighted ? $title . $hiddenInput->show() .$productUtil->getToolTip($existingContent->showRemark()): $title . $hiddenInput->show()),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
-                                                         'link' => $link,
+                                                         'link' => $link ,
                                                         'icon' => $icon,
                                                         'expandedIcon' => $expandedIcon,
                                                         'expanded' => $this->hasContents()),
@@ -362,7 +376,7 @@ class content extends object
                 }
 
                 $node->addItem(new treenode(array(
-                                                'text' => $option,
+                                                'text' => $option ,
                                                 'link' => "#",
                                                 'icon' => 'icon-add-to-adaptation.png',
                                                 'expandedIcon' => 'icon-add-to-adaptation.png',
@@ -389,7 +403,15 @@ class content extends object
         }
     }
     
+    function showRemark(){
+      
+    }
+    
     function getViewLink($productID = NULL){
+        return FALSE;
+    }
+    
+     function getsectionID(){
         return FALSE;
     }
     
@@ -462,6 +484,7 @@ class content extends object
     public function printHTML($level){
         return "<h$level>{$this->getTitle()}</h$level>";
     }
+    
 }
 
 ?>

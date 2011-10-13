@@ -331,6 +331,14 @@ class module extends content {
 
         return $content;
     }
+    
+    public function showRemark() {
+        
+        return  $this->_metaDataArray['remark'];
+        
+        
+        
+    }
 
     public function handleUpload() {
         $this->_title = $this->getParam('title');
@@ -406,6 +414,8 @@ class module extends content {
     public function getViewLink($productID) {
         return $this->uri(array('action' => 'ViewProductSection', 'productID' => $productID, 'path' => $this->getID()));
     }
+    
+    
 
     public function getCompareLink($test, $id) {
         return $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $id));

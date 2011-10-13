@@ -1390,9 +1390,13 @@ class product extends object {
 
     ////////////////   GETTERS   ////////////////
 
+      
+ 
+    
     function getTitle() {
         return $this->_title;
     }
+  
 
     function getAlternativeTitle() {
         return $this->_alternativetitle;
@@ -1672,7 +1676,9 @@ class product extends object {
 
         return $tempProduct;
     }
-
+    
+      
+   
 }
 
 ?>

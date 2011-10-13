@@ -15,7 +15,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
+   echo '  <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>  ';
  //var_dump($selectedproducts);
  $this->loadClass('link', 'htmlelements');
      $this->loadClass('textinput', 'htmlelements');
@@ -26,7 +26,7 @@
                                 $temp = $product->getParentID();
                        
                                 $product->LoadProduct($temp);
-
+    
 ?>
 
 <html>
@@ -163,31 +163,29 @@
                                
                                      }
 
-   echo $adaptLink->show();
+                            echo $adaptLink->show();
     ?>     
-                              
-                              
-                             
-                
-                            
+        
                                 <div class="treeFrame">
                               
                                       <?php
                                 
                                
                                  $content = $product->getContentManager();
-                                   
-                                  
+                                 
+                           
+                                 
+                                           
                                 echo     $content->getContentTree(FALSE,TRUE,False,FALSE,$selectedproducts);
-                                
-                                
+                           
+                            //    echo $product->getRemark();
                                 ?>
-                                    
-                                    
-                                    
+                
                                 </div>
                                 
                                 <?php
+                                
+                           
                                 
                                 
                                 $product = $this->getObject('product', 'unesco_oer');
@@ -195,9 +193,23 @@
 //                                    $product = $this->newObject('product', 'unesco_oer');
                                   
                                     $product->loadProduct($selectedproduct);
-                      
-                                    $content = $product->getContentManager();
                                     
+                                    
+                                    $productID = $selectedproduct;
+                                    $divheading =   $productID .'Div';
+                                    $linkheading =   $productID. 'Link';
+                                    $div = '#' . $productID . 'Div';
+                                    $link = '#' .  $productID . 'Link';
+                                
+
+                              
+                                    $editLink = new link("javascript:void(0)");
+                                    $editLink->cssId = $linkheading;
+                                    $editLink->link =  'Show Product Tree';
+                                    
+                             
+                        
+                                    $content = $product->getContentManager();
                                     $contentHTML = $content->getContentTree(FALSE,TRUE, TRUE,FALSE,$selectedproducts);
 
 //                                    $creatorName = 'Error has occurred!';
@@ -220,12 +232,13 @@
                                                $adaptLink->link = $linkText;
                                
                                      }
-           
+                    //  echo $product->getRemark();
                                     echo '   
+          
                                 <div class="toogle">
                                 
                             </div>
-						</div>
+			</div>
                         
                         <div class="spaceNextToToggleBoxes"></div>
                         <div class="toggleBoxAdaptation">
@@ -233,17 +246,39 @@
                                 <h4><a href="#" class="adaptationListingLink">'.$creatorName.'</a></h4>
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
-                                
-                                
-                                <div class="treeFrame">
+                                <br><br>
+                                <div> <p> 
+                                  <font size="3">  Adaptation Remarks :</font>                
+                                        </P>
+                                 '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
+
+                                </div>
+                                <div class="treeFrame" id="'.$divheading.'">
                             	<ul class="ulMinusPublish">'. $contentHTML . '
                       
                         </ul> 
                             </div>
-                                       ';
+                            
+
+                            ';
+                                    
+                                        echo"
+                                    
+
+                                      <script>
+
+                                     $('$div').hide();
+                                    
+                                         $('$link').click(function(){
+
+                                                  $('$div').slideToggle();
+            
+                                            });
+                                    </script>"
+                                      ;
                                     
                               
-                                }
+                                } 
                                 
                                 
                            
@@ -268,6 +303,8 @@
                         
                         var link = 'index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
                         $('#compare').attr('href',link);
+                      
+                      
                   }
                   
                   
@@ -287,6 +324,9 @@
        
                   }
                   
+                  
+                  
+             
                   
               </script>
       <style type="text/css">

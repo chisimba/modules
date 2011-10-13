@@ -7,6 +7,7 @@
     $this->objDbComments = $this->getobject('dbcomments', 'unesco_oer');
     $product = $this->getObject('product','unesco_oer');
     $product->loadProduct($productID);
+  
      //load java script
     $js = '<script language="JavaScript" src="'.$this->getResourceUri('ratingsys.js').'" type="text/javascript"></script>';
     $this->appendArrayVar('headerParams', $js);
@@ -231,7 +232,8 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
             
               $content = $product->getContentManager();
               echo  $content->getContentTree(FALSE);
-           
+
+             
                ?>                   
                                                 
                                                 

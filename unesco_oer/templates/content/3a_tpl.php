@@ -10,6 +10,10 @@ $this->loadClass('treenode', 'tree');
 $product = $this->getObject('product', 'unesco_oer');
 $product->loadProduct($productID);
 
+ $productUtil = $this->getObject('productutil', 'unesco_oer');
+
+
+
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 
