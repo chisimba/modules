@@ -158,7 +158,6 @@ class module extends content {
         $fieldName = "description";
         $editor->name = $fieldName;
         $editor->height = '450px';
-        // $editor->width = '70%';
 
         $editor->setBasicToolBar();
         $editor->setContent($this->_metaDataArray[$fieldName]);

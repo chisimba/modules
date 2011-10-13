@@ -15,6 +15,7 @@
  */
 
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('windowpop', 'htmlelements');
 
 $header = new htmlHeading();
 //$header->str = $this->objLanguage->
@@ -24,7 +25,22 @@ $header->align = 'CENTER';
 $header->type = 2;
 echo $header->show();
 
-$hel
 
+            //Popup window
+            $objPop= &new windowpop; echo 'me';
+            $uri =  $this->uri(array('action'=>'home'));
+            $objPop->set('location',$uri);
+
+            $toolTip = "<span>toolTip</span>";
+            $image = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
+
+            $objPop->set('linktext'," <div class='tooltip' >$image $toolTip</div>");
+            $objPop->set('width','800');
+            $objPop->set('height','600');
+            $objPop->set('left','300');
+            $objPop->set('top','400');
+            //leave the rest at default values
+            $objPop->putJs(); // you only need to do this once per page
+            echo $objPop->show();
 
 ?>
