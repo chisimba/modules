@@ -218,7 +218,7 @@ $product = $this->getObject('product');
                   
               echo  $existingContent->showReadOnlyInput(); 
         
-                  echo $existingContent->showRemark(); 
+       
                  ?>
                 </div>
             </div>

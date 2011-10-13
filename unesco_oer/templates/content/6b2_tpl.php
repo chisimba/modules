@@ -357,7 +357,7 @@ $product->LoadProduct($chosenid);
                     $product = $this->getObject('product');
                     $product->loadProduct($chosenid);
                     $content = $product->getContentManager();
-                    echo $content->getContentTree(FALSE,FALSE,TRUE,TRUE,$selectedproducts);
+                    echo $content->getContentTree(FALSE,True,TRUE,TRUE,$selectedproducts);
                     
             //    echo $origionalproduct;
        

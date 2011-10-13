@@ -164,24 +164,47 @@
                                      }
 
                             echo $adaptLink->show();
+                            
+                            echo '<br><br><br> <font size="3">  Adaptation Remarks :</font>     <br><br>';
+                            
+                            echo $product->getRemark() . '<br><br>';
+                            
+                               $editLink = new link("javascript:void(0)");
+                               $editLink->cssId = 'treelink';
+                               $editLink->link =  'Show Product Tree';
+                           echo   $editLink->show();
+                               
+                           
     ?>     
-        
-                                <div class="treeFrame">
+                       
+                      <div class="treeFrame" >
+                          <div id ="tree">
                               
                                       <?php
                                 
                                
                                  $content = $product->getContentManager();
                                  
-                           
                                  
-                                           
+    
                                 echo     $content->getContentTree(FALSE,TRUE,False,FALSE,$selectedproducts);
                            
                             //    echo $product->getRemark();
                                 ?>
-                
+                          </div>
                                 </div>
+                      
+                        <script>
+
+                                     $('#tree').hide();
+                                    
+                                         $('#treelink').click(function(){
+
+                                                  $('#tree').slideToggle();
+            
+                                            });
+                                    </script>
+        
                                 
                                 <?php
                                 
@@ -253,10 +276,12 @@
                                  '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
 
                                 </div>
-                                <div class="treeFrame" id="'.$divheading.'">
+                                <div class="treeFrame" >
+                                <div id="'.$divheading.'">
                             	<ul class="ulMinusPublish">'. $contentHTML . '
                       
                         </ul> 
+                          </div>
                             </div>
                             
 

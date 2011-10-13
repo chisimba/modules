@@ -486,7 +486,7 @@ if ($check == FALSE) {
                     $product = $this->getObject('product');
                     $product->loadProduct($origionalproduct);
                     $content = $product->getContentManager();
-                    echo $content->getContentTree(FALSE, FALSE, TRUE, TRUE, $selectedproducts);
+                    echo $content->getContentTree(FALSE, true, TRUE, TRUE, $selectedproducts);
 
                     //    echo $origionalproduct;
                     ?>
