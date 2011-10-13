@@ -136,6 +136,10 @@ class jeremytest extends controller
         return 'ajaxprogress_tpl.php';
     }
 
+    public function __testzipmanager()
+    {
+        return 'testzipmanager_tpl.php';
+    }
 }
 
 ?>
