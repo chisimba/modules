@@ -24,22 +24,28 @@
 
  * @author davidwaf
  */
-class dblangaugetext extends dbtable {
+class dbhiddenlangs extends dbtable {
 
     function init() {
-        parent::init('tbl_languagetext');
+        parent::init('tbl_hiddenlangs');
     }
 
-    function getLanguageTextItems() {
-        $sql = "select * from tbl_languagetext";
+    function isHidden($langid) {
+        $sql = "select * from tbl_hiddenlangs where langid = '".$langid."'";
+        $data= $this->getArray($sql);
+        return count($data) > 0 ? true: false;
+    }
+
+    function unhideLang($langid) {
+        $sql = "delete from tbl_hiddenlangs where langid = '".$langid."'";
         return $this->getArray($sql);
     }
 
-    function getLanguageTextItem($code) {
-        $sql = "select * from tbl_languagetext where code = '$code'";
-        return $this->getArray($sql);
+    function hideLang($langid){
+        $this->unhideLang($langid);
+        $data=array("langid"=>$langid);
+        $this->insert($data);
     }
-
 }
 
 ?>
