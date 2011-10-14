@@ -372,8 +372,26 @@ echo $product->getAuthors();
                     </ul>
                     <span class="greyText fontBold">Related news:</span>
                     <br><br>
-                    Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related news</a></div>
+                    
+                    <?php
+                    $this->objNewsCategories = $this->getObject('dbnewscategories','news');
+        $this->objNewsStories = $this->getObject('dbnewsstories','news');
+        $categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
+        
+                        foreach ($categories as $category) {
+        if ($category['blockonfrontpage'] == 'Y') {
+            $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
+            if ($nonTopStories != '') {
+                $middle .= '<div  class="halfwidth_left"><h3>' . $category['categoryname'] . '</h3>';
+                $middle .= $nonTopStories . '</div>';
+                $counter++;
+            }
+        }
+    }
+                  echo $middle;  
+                    ?>
+                    
+                    <div class="viewAllnewsBlueDiv"><a href="?module=news" class="greyTextLink">See all related news</a></div>
                     <span class="greyText fontBold">Related events:</span>
                     <br><br>
                     Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
