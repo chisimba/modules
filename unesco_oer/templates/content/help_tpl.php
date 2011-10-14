@@ -43,4 +43,20 @@ echo $header->show();
             $objPop->putJs(); // you only need to do this once per page
             echo $objPop->show();
 
+            $objJquery = $this->getObject('jquery','jquery');
+            $objJquery->loadCluetipPlugin();
 ?>
+
+<div class="ttip" title="Hello Worlds">TOOLTIP JS TEST</div>
+<script type="text/javascript">
+    jQuery.noConflict();
+    jQuery(document).ready(function(){
+        jQuery(".ttip").cluetip();
+    });
+//
+//    var $ = jQuery.noConflict();
+//    $(function){
+//
+//    }
+
+</script>
