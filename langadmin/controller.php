@@ -5,7 +5,7 @@ class langadmin extends controller {
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLangAdmin = $this->getObject("langutil");
-        $this->objDbLangText = $this->getObject("dblangaugetext");
+        $this->objDbLangText = $this->getObject("dblanguagetext");
         $this->objConfig = $this->getObject('altconfig', 'config');
         $objMkDir = $this->getObject('mkdir', 'files');
     }
@@ -95,6 +95,19 @@ class langadmin extends controller {
         return $this->nextAction("home");
     }
 
+    function __hide(){
+        $hiddenlangs = $this->getObject("dbhiddenlangs");
+        $id=$this->getParam("langid");
+        $hiddenlangs->hideLang($id);
+        return $this->nextAction("home");
+    }
+  
+      function __unhide(){
+        $hiddenlangs = $this->getObject("dbhiddenlangs");
+        $id=$this->getParam("langid");
+        $hiddenlangs->unhideLang($id);
+        return $this->nextAction("home");
+    }
     function __showNewLangTemplate() {
 
         return "addeditlang_tpl.php";
