@@ -988,14 +988,16 @@ function createParameterArray($parameterString){
 //    Example onClick
 //    $uri = $this->uri(array('action'=>'help'));
 //    $onClick = "window.open('$uri','help','resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=1000,height=750');";
-function getToolTip($toolTip = NULL, $onClick = 'return false;'){
+function getToolTip($toolTip = NULL, $html = NULL){
     if (empty($toolTip)) {
         $objLanguage = $this->getObject('language','language');
         $toolTip = $objLanguage->languageText('mod_unesco_oer_no_tooltip','unesco_oer');
     }
     $toolTip = "<span>$toolTip</span>";
-    $image = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
-    return " <div onclick=". $onClick ." class='tooltip' >$image $toolTip</div>";
+    if(empty($html))
+        $html = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
+//    return " <div onclick=". $onClick ." class='tooltip' >$image $toolTip</div>";
+    return " <div class='tooltip' >$html $toolTip</div>";
 }
 
 }
