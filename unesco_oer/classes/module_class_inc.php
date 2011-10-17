@@ -68,7 +68,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_title',$title)));
         $table->endRow();
 
         $table->startRow();

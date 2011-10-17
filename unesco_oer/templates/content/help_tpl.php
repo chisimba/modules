@@ -14,40 +14,23 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('windowpop', 'htmlelements');
-
-$header = new htmlHeading();
-//$header->str = $this->objLanguage->
-//        languageText('mod_unesco_oer_add_data_heading', 'unesco_oer');
-$header->str = 'Site Reference';
-$header->align = 'CENTER';
-$header->type = 2;
-echo $header->show();
-
-
-            //Popup window
-            $objPop= &new windowpop; echo 'me';
-            $uri =  $this->uri(array('action'=>'home'));
-            $objPop->set('location',$uri);
-
-            $toolTip = "<span>toolTip</span>";
-            $image = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
-
-            $objPop->set('linktext'," <div class='tooltip' >$image $toolTip</div>");
-            $objPop->set('width','800');
-            $objPop->set('height','600');
-            $objPop->set('left','300');
-            $objPop->set('top','400');
-            //leave the rest at default values
-            $objPop->putJs(); // you only need to do this once per page
-            echo $objPop->show();
-
-            $objJquery = $this->getObject('jquery','jquery');
-            $objJquery->loadCluetipPlugin();
 ?>
+<div class="productsListView">
+    <?php
+    $this->loadClass('htmlheading', 'htmlelements');
+    $header = new htmlHeading();
+    $header->str = $this->getParam('helphead');
+//    $header->align = 'CENTER';
+    $header->type = 3;
+    echo $header->show();
 
-<div class="ttip" title="Hello Worlds">TOOLTIP JS TEST</div>
+    echo "<p>".$this->objLanguage->languageText($this->getParam('helpcode'),$this->getParam('helpmodule'))."</p>";
+
+    //            $objJquery = $this->getObject('jquery','jquery');
+    //            $objJquery->loadCluetipPlugin();
+    ?>
+</div>
+<!--<div class="ttip" title="Hello Worlds">TOOLTIP JS TEST</div>
 <script type="text/javascript">
     jQuery.noConflict();
     jQuery(document).ready(function(){
@@ -59,4 +42,4 @@ echo $header->show();
 //
 //    }
 
-</script>
+</script>-->
