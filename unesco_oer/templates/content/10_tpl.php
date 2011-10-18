@@ -40,12 +40,12 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">
 
                 <?php
-                $link = new link($this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php')));
+                $link = new link($this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid)));
                 $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
                             Create Group';
                 $link->cssClass="greenTextBoldLink";
-                if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()){
-                echo '&nbsp;' . $link->show();}
+              //  if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()){
+                echo '&nbsp;' . $link->show();
                 ?>
 
 
@@ -150,6 +150,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 <td>
 
                     <?php
+                   
                     $objTable = $this->getObject('htmltable', 'htmlelements');
                     //$objTable->cssClass = "gridListingTable";
                     //$objTable->width = NULL;
@@ -161,10 +162,10 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                         $count++;
                         if ($newRow) {
                             $objTable->startRow();
-                            $objTable->addCell($this->objGroupUtil->content($group));
+                            $objTable->addCell($this->objGroupUtil->content($group,$onestepid));
                             $newRow = false;
                         } else {
-                            $objTable->addCell($this->objGroupUtil->content($group));
+                            $objTable->addCell($this->objGroupUtil->content($group,$onestepid));
                         }
                         if ($count == 3) {
                             $newRow = true;
@@ -172,6 +173,8 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                             $count = 0;
                         }
                     }
+                
+                  
                     echo $objTable->show();
 
 //                $fieldset1 = $this->newObject('fieldset', 'htmlelements');
@@ -414,3 +417,20 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
             </div>
         </div>
     </div>
+    
+    <?php
+    if ($onestepid != null){
+        
+        echo " <script>
+     
+            
+         alert('You are not a member of any group. Please select a group or create one.');
+       
+
+        </script>";
+        
+    }
+    
+    ?>
+
+    

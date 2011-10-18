@@ -1887,6 +1887,7 @@ class unesco_oer extends controller {
     }
 
     function __groupRegistationForm() {
+        $this->setVarByRef('onestepid', $this->getParam('onestepid'));
 
         return 'groupRegistrationForm_tpl.php';
     }
@@ -1964,6 +1965,15 @@ class unesco_oer extends controller {
         $this->ObjDbUserGroups->joingroup($userid, $groupid);
         return $this->__10();
     }
+    
+     function __onestepjoinGroup() {
+        $groupid = $this->getParam("groupid");
+        $userid = $this->getParam("userid");
+        $productID = $this->getparam('productID');
+        $this->ObjDbUserGroups->joingroup($userid, $groupid);
+        $this->setVarByRef('productID',$productID);
+        return $this->__adaptProduct();
+    }
 
     function __leaveGroup() {
         $id = $this->getParam("id");
@@ -1982,11 +1992,13 @@ class unesco_oer extends controller {
 
     function __linkInstitution(){
         $rightList = $this->getParam('rightList');
+        $id = $this->getParam('id');
         foreach ($rightList as $array) {
+            
             $this->objDbgroupInstitutions->add_group_institutions($id, $array);
             }
             return $this->__11a();
-
+        
     }
 
     function __saveNewGroup() {
@@ -1995,7 +2007,7 @@ class unesco_oer extends controller {
         }
         $name = $this->getParam('group_name');
         $email = $this->getParam('register_email');
-
+          $onestepid = $this->getParam('productID');
         $address = $this->getParam('group_address');
         $city = $this->getParam('group_city');
         $state = $this->getParam('group_state');
@@ -2012,6 +2024,7 @@ class unesco_oer extends controller {
         $description_two = $this->getParam('description_two');
         $description_three = $this->getParam('description_three');
         $description_four = $this->getParam('description_four');
+        
 
 
         $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
@@ -2065,8 +2078,15 @@ class unesco_oer extends controller {
 
             //create group forum
             $this->groupmanager->saveForum($id, $name, $description);
+      
+            if ($onestepid != null){
+                $this->setVarByRef('productID', $onestepid);
+                        return $this->__adaptProduct($onestepid);
+                
+                
+            }else return $this->__groupListingForm();
 
-            return $this->__groupListingForm();
+            
         }
     }
 
@@ -2352,12 +2372,24 @@ class unesco_oer extends controller {
         return $this->__home();
     }
 
-    function __adaptProduct() {
+    function __adaptProduct($onestepid) {
         $product = $this->getObject('product', 'unesco_oer');
         $product->loadProduct($this->getParam('productID'));
         $adaptation = $product->makeAdaptation();
         $this->setVarByRef('product', $adaptation);
-        return "ProductMetaData_tpl.php";
+        
+         if ($this->ObjDbUserGroups->getGroupsByUserID($this->objUser->userId()) == null) {
+           
+               $this->setVarByRef('onestepid',$this->getParam('productID'));
+             return '10_tpl.php';
+          
+             
+             
+    
+     
+ } else  return "ProductMetaData_tpl.php";
+        
+      
     }
 
     function __saveContent() {

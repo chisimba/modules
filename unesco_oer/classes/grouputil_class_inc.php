@@ -55,23 +55,34 @@ class grouputil extends object {
         return $content;
     }
 
-    public function content($group) {
+    public function content($group,$onestep) {
 
         $thumbLink = new link($this->uri(array("action" => '11a', 'id' => $group['id'], "page" => '10a_tpl.php')));
         $thumbLink->link = '<img src="' . $group['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
         $groupnameLink= new link($this->uri(array("action" => '11a', 'id' => $group['id'], "page" => '10a_tpl.php')));
         $groupnameLink->link=$group['name'];
         $groupnameLink->cssClass="groupGridViewHeading greenText";
-
+  //echo $onestep;
+  
         $userid = $this->objUser->userId();
         if ($this->ObjDbUserGroups->ismemberOfgroup($userid, $group['id'])) {
+      
 
-            $joinGroupLink = new link($this->uri(array('action' => "10")));
+            
+        $joinGroupLink = new link($this->uri(array('action' => "10")));
+        
+
             $joinGroupLink->link = 'Join';
             $joinGroupLink->cssId = 'memberofgroup';
         } else {
+            
+            if ($onestep != null){
+            
+               $joinGroupLink = new link($this->uri(array('action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
+            
+        } else     $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
 
-            $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
+         
             $joinGroupLink->link = 'Join';
             $joinGroupLink->cssId = 'joingroup';
         }

@@ -25,7 +25,7 @@ class dbusergroups extends dbtable {
         $data = array(
             'userid' => $userid,
             'groupid' => $groupid,
-            'approved'=>N    //byDefault
+            'approved'=> Y    //byDefault
         );
         $this->insert($data);
     }

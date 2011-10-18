@@ -165,7 +165,12 @@
 
                             echo $adaptLink->show();
                             
-                            echo '<br><br><br> <font size="3">  Adaptation Remarks :</font>     <br><br>';
+                            echo '<br><br><br>
+                                   <div class = "remarks">
+                                      <font size="3">  Adaptation Remarks :</font>    
+                                      
+                                        </div>
+                                        <br><br>';
                             
                             echo $product->getRemark() . '<br><br>';
                             
@@ -176,9 +181,9 @@
                                
                            
     ?>     
-                       
+                           <div id ="tree">
                       <div class="treeFrame" >
-                          <div id ="tree">
+                      
                               
                                       <?php
                                 
@@ -271,16 +276,19 @@
                                 <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
                                 <br><br>
                                 <div> <p> 
+                                  <div class = "remarks">
                                   <font size="3">  Adaptation Remarks :</font>                
                                         </P>
                                  '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
-
+                                        </div>
                                 </div>
+                             
+                                  <div id="'.$divheading.'">
                                 <div class="treeFrame" >
-                                <div id="'.$divheading.'">
-                            	<ul class="ulMinusPublish">'. $contentHTML . '
+                              
+                            	'. $contentHTML . '
                       
-                        </ul> 
+                        
                           </div>
                             </div>
                             

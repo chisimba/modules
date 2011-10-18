@@ -115,10 +115,15 @@
 //               
 //          
 //}
-
+// if ($this->ObjDbUserGroups->getGroupsByUserID($this->objUser->userId()) == null) {
+//     echo 'no group';
+//     
+//     
+// } else echo 'groups';
 
 echo $product->showMetaDataInput($this->getParam('nextAction'),$this->getParam('cancelAction'), $this->getParam('cancelParams'));
 
 //var_dump($product->dummyValue);
 
+  
 ?>

@@ -61,8 +61,10 @@ function toggleInstitutionDropDown(value,dropdowndiv, productID)
 function SubmitProduct(element, value)
 {
     var objForm = document.forms['add_products_ui'];
+  
     objForm.elements[element].value = value;
     objForm.submit();
+    
 }
 
 function addOption(dropdown, text, value )

@@ -1,4 +1,6 @@
 <?php
+
+
     $this->loadClass('commentmanager','unesco_oer');
     $this->loadClass('textarea', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
