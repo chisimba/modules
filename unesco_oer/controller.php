@@ -115,6 +115,7 @@ class unesco_oer extends controller {
 //$this->objUtils = $this->getObject('utilities');
 //$this->objGoogleMap=$this->getObject('googlemapapi');
 //$this->objGoogleMap = new googlemapapi();
+        $this->objdisplayreportgenerator = $this->getObject('displayreportgenerator');
     }
 
     /**
@@ -2559,6 +2560,7 @@ class unesco_oer extends controller {
 
     function __deleteLanguage() {
         $this->objDbProductLanguages->deleteLanguage($this->getParam('languageId'));
+
         return $this->__viewLanguages();
     }
 
@@ -2621,6 +2623,28 @@ class unesco_oer extends controller {
         return 'help_tpl.php';
     }
 
+    public  function __processReportingForm(){
+        $adaptationTypes = $this->getParam('AdaptationType');
+        $institutionTypes = $this->getParam('InstitutionType');
+        $countryNames = $this->getParam('countryDropdown');
+        $themeNames = $this->getParam('themeDropdown');
+        $langNames = $this->getParam('langDropdown');
+        $regions = $this->getParam('regionDropdown');
+
+        $query = $this->objDbreporting->createReportQuery($adaptationTypes,$institutionTypes,
+                $countryNames,$themeNames,$langNames,$regions);
+
+
+
+//        var_dump($adaptationTypes);
+//        var_dump($institutionTypes);
+//        var_dump($countryNames);
+//        var_dump($themeNames);
+//        var_dump($langNames);
+//        var_dump($regions);
+        die();
+
     }
+}
 
 ?>

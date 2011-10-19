@@ -27,11 +27,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
  */
 class dbreporting extends dbtable
 {
-    
+
     function init(){
-        
-        parent::init("tbl_unesco_oer_products");
-        
+        parent::init("tbl_unesco_oer_products");        
     }
 
    /**
@@ -245,6 +243,198 @@ class dbreporting extends dbtable
        $sql = 'SELECT theme FROM tbl_unesco_oer_product_themes';
        $themes = $this->getArray($sql);
        return $themes;
+
+   }
+
+   //functions used to populate downloadable report - all adaptations
+   function getRegionID($regions){
+
+       $arrayCount = sizeof($regions);
+       $regionID = array();
+
+       for ($i=0; $i < $arrayCount; $i++)
+          {
+
+           switch($regions[$i]){
+
+               case 'Africa' :
+                   $regionID[$i] = "'region_1'";
+                   break;
+               case 'Arab States' :
+                   $regionID[$i] = "'region_2'";
+                   break;
+               case 'Asia and the Pacific' :
+                   $regionID[$i] = "'region_3'";
+                   break;
+               case 'Europe and North America':
+                   $regionID[$i] = "'region_4'";
+                   break;
+               default:
+                   $regionID[$i] = "'region_1'";
+           }
+
+
+          }
+
+          return $regionID;
+
+   }
+
+   function getProductsByRegion($regions){
+
+       $arrayCount = sizeof($regions);
+       $allSql = array();
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
+                FROM tbl_unesco_oer_product_adaptation_data
+                WHERE tbl_unesco_oer_product_adaptation_data.region = $regions[$x]";
+         $allSql = $this->getArray($sql);
+       }
+       
+       return $allSql;
+   }
+
+   function getThemeID($themeID){
+
+       $arrayCount = sizeof($themeID);
+       $allSql = array();
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $query = "'$themeID[$x]'";
+         $sql = "SELECT tbl_unesco_oer_product_themes.id
+                FROM tbl_unesco_oer_product_themes
+                WHERE tbl_unesco_oer_product_themes.theme = $query";
+         $allSql[] = $this->getArray($sql);
+       }
+
+       return $allSql;
+
+   }
+
+   function getProductsByTheme($theme){
+
+       $arrayCount = sizeof($theme);
+       $allSql = array();
+
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $themeName = "'".$theme[$x][0]["id"]."'";
+         $sql = "SELECT tbl_unesco_oer_product_theme_junction.product_id
+                FROM tbl_unesco_oer_product_theme_junction
+                WHERE tbl_unesco_oer_product_theme_junction.theme_id = $themeName ";
+         $allSql = $this->getArray($sql);
+       }
+
+       return $allSql;
+
+   }
+
+   function getAdaptationTypeID($adaptationTypes){
+
+       $arrayCount = sizeof($adaptationTypes);
+       $allSql = array();
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $query = "'$adaptationTypes[$x]'";
+         $sql = "SELECT tbl_unesco_oer_resource_types.id
+                FROM tbl_unesco_oer_resource_types
+                WHERE tbl_unesco_oer_resource_types.description = $query";
+         $allSql[] = $this->getArray($sql);
+       }
+
+       return $allSql;
+
+   }
+
+   function getProductsByType($type){
+
+       $arrayCount = sizeof($type);
+       $allSql = array();
+
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $typeName = "'".$type[$x][0]["id"]."'";
+         $sql = "SELECT tbl_unesco_oer_products.id
+                FROM tbl_unesco_oer_products
+                WHERE tbl_unesco_oer_products.resource_type = $typeName AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0";
+         $allSql = $this->getArray($sql);
+       }
+
+       return $allSql;
+
+   }
+
+   function getInstitutionByTypes($institutionTypes){
+
+       $arrayCount = sizeof($institutionTypes);
+       $allSql = array();
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $query = "'$institutionTypes[$x]'";
+         $sql = "SELECT tbl_unesco_oer_institution_types.id
+                FROM tbl_unesco_oer_institution_types
+                WHERE tbl_unesco_oer_institution_types.type = $query";
+         $allSql[] = $this->getArray($sql);
+       }
+     
+       $arrayCount = sizeof($allSql);
+       $allSql1 = array();
+
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $query = "'".$allSql[$x][0]["id"]."'";
+         $sql = "SELECT tbl_unesco_oer_institutions.id
+                FROM tbl_unesco_oer_institutions
+                WHERE tbl_unesco_oer_institutions.type = $query";
+         $allSql1[] = $this->getArray($sql);
+       }
+       var_dump($allSql1);
+       return $allSql1;
+   }
+
+   function getProductsByInstitutionType($institutionID){
+
+       $arrayCount = sizeof($institutionID);
+       $allSql = array();
+
+       for ($x = 0; $x < $arrayCount; $x++)
+       {
+         $institution = "'".$institutionID[$x][0]["id"]."'";
+         $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
+                FROM tbl_unesco_oer_product_adaptation_data
+                WHERE tbl_unesco_oer_product_adaptation_data.institution_id = $institution ";
+         $allSql = $this->getArray($sql);
+       }
+
+       return $allSql;    
+
+   }
+
+   function createReportQuery($adaptationTypes,$institutionTypes,$countryNames,$themeNames,$langNames,$regions){
+
+      $regionID = $this->getRegionID($regions);
+      $regionSQL = $this->getProductsByRegion($regionID);
+
+      $themeID = $this->getThemeID($themeNames);
+      $themeSQL = $this->getProductsByTheme($themeID);
+
+      $typeID = $this->getAdaptationTypeID($adaptationTypes);
+      $typeSQL = $this->getProductsByType($typeID);
+
+      $instType = $this->getInstitutionByTypes($institutionTypes);
+      $intsitutionSQL = $this->getProductsByInstitutionType($instType);
+
+
+      
+      //var_dump($regionSQL);
+      //var_dump($themeSQL);
+      //var_dump($typeSQL);
+      var_dump($intsitutionSQL);
+
+
+      return $arrayQuery;
 
    }
 
