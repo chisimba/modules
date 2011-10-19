@@ -329,8 +329,9 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 <!--                            English | <a href="#" class="greyTextLink">German</a>-->
                             <?php
                             $translations = $product->getTranslationsList();
+                            $langs = $this->objLanguage->getLangs();
                             foreach ($translations as $translation) {
-                                $prodLanguage = $this->objDbProductLanguages->getLanguageNameByID($translation['language']);
+                                $prodLanguage = $langs[$translation['language']];
                                 if ($product->getIdentifier() == $translation['id']){
                                     echo " $prodLanguage ";
                                 } else {

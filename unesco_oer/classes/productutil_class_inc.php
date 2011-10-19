@@ -132,8 +132,9 @@ class productutil extends object {
         $dropdown = new dropdown($product['id']."_dropdown");
 
         $translations = $objProduct->getTranslationsList();
+        $langs = $this->objLanguage->getLangs();
         foreach ($translations as $translation) {
-            $prodLanguage = $this->objDbproductlanguages->getLanguageNameByID($translation['language']);
+            $prodLanguage = $langs[$translation['language']];
 //            $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
 //            $content .= '<option '. $selected .' value="'. $translation['id'].'">' . $prodLanguage . '</option>';
             $dropdown->addOption($translation['id'], $prodLanguage);

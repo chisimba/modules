@@ -352,8 +352,9 @@ echo $product->getAuthors();
                     <ul>
                     <?php
                     $translations = $product->getTranslationsList();
+                    $langs = $this->objLanguage->getLangs();
                     foreach ($translations as $translation) {
-                        $prodLanguage = $this->objDbProductLanguages->getLanguageNameByID($translation['language']);
+                        $prodLanguage = $langs[$translation['language']];
                         $selected = ($product->getIdentifier() == $translation['id']) ? '(current)' : '';
                         $languageTag = "<li><a href='{$this->uri(array('action'=>'ViewProduct', 'id'=>$translation['id']))}' class='liStyleLink'>$prodLanguage $selected</a></li>";
                         echo $languageTag;

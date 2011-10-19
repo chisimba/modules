@@ -1410,7 +1410,10 @@ class product extends object {
     }
 
     function getLanguageName() {
-        return $this->objDbProductLanguages->getLanguageNameByID($this->getLanguageID());
+//        return $this->objDbProductLanguages->getLanguageNameByID($this->getLanguageID());
+        $langs = $this->objLanguage->getLangs();
+//        var_dump($langs); die();
+        return $langs[$this->getLanguageID()];
     }
 
     public function getTranslationID() {

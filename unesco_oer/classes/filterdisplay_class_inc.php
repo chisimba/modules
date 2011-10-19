@@ -148,13 +148,13 @@ class filterdisplay extends object {
         $form->addtoform('</div>'); //
         //languages
         $form->addToForm('<div class="blueBackground">');
-        $products = $this->objDbproductlanguages->getProductLanguages();
+        $products = $this->objLanguage->getLangs();
         $filterLang = new dropdown('LanguageFilter');
         $filterLang->cssClass = "leftColumnSelectDropdown";
         $filterLang->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
-        foreach ($products as $product) {
+        foreach ($products as $id=>$product) {
 
-            $filterLang->addOption($product['id'], $product['name']);
+            $filterLang->addOption($id, $product);
         }
 
         $filterLang->setSelected($this->Filterinfo['LanguageFilter']);

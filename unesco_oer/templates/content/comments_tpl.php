@@ -13,7 +13,6 @@ $this->loadClass('textinput', 'htmlelements');
         $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
-         $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
 
