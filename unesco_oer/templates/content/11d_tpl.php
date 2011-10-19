@@ -53,8 +53,18 @@ $this->loadClass('textinput', 'htmlelements');
                       <div class="saveCancelButtonHolder">
                 <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
                                     Link to institution</a></div>
+                          
 
                         </div>
+                          
+                            <div id="showhide" style="display: none;">
+
+<?php
+$content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
+ echo $content;
+
+?>
+                            </div>
                         <div class="saveCancelButtonHolder">
                             <div class="buttonSubmit"><a href=""><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" height="18" width="18"></a></div>
                             <div class="textNextoSubmitButton"><a href="#" class="greenTextBoldLink">
@@ -90,7 +100,7 @@ $this->loadClass('textinput', 'htmlelements');
                 <ul id="innerMenuTabs">
                      <li><a href="#">
                              <?php
-                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
                              $memberLink->link="Members(".$No_Of_Members.")";
                              echo $memberLink->show();
@@ -329,5 +339,59 @@ $this->loadClass('textinput', 'htmlelements');
                     </div>
 
   
+<script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript">
+
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=joingroup]").click(function(){
+
+        var r=confirm( "Are you sure you want to join this group?\nClick Ok a request will be sent to the group admin");
+        if(r== true){
+            window.location=this.href;
+        }
+        return false;
+    }
+);
+
+}
+);
+
+jQuery(document).ready(function(){
+
+    jQuery("a[id=memberofgroup]").click(function(){
+
+       alert('You are already a member of this Group');
+    }
+
+
+);
+}
+);
+
+$(document).ready(function(){
+                              $('#instLink').click(function(){
+                                $('#showhide').slideToggle();
+                                $('.greenTextBoldLink').atrib('class','greyText');
+
+                  });
+
+
+});
+
+$('button[name=cancelform]').click(
+    function() {
+//        window.location ='index.php?module=unesco_oer&action=11a&id=_13858_1315227715&page=10a_tpl.php';
+    $('#showhide').slideToggle();
+    }
+);
+
+
+
+
+
+
+                     </script>
 
 

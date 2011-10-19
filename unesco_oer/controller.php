@@ -1982,7 +1982,18 @@ class unesco_oer extends controller {
     function __linkInstitution() {
         $rightList = $this->getParam('rightList');
         $id = $this->getParam('id');
-        foreach ($rightList as $array) {
+ 
+        $user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
+        $currentMembership = array();
+        foreach ($user_current_membership as $membership) {
+        array_push($currentMembership, $membership['institution_id']);
+    
+        }
+        
+    
+        $results = array_diff($rightList,$currentMembership);
+        $this->setVarByRef('rightList', $currentMembership);
+        foreach ($results as $array) {
 
             $this->objDbgroupInstitutions->add_group_institutions($id, $array);
         }

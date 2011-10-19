@@ -91,102 +91,10 @@ $topicsNum = count($topics);
 
 <?php
 
+ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
+ echo $content;
 
 
-$this->loadClass('form', 'htmlelements');
-$this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('htmltable','htmlelements');
-$this->loadClass('textinput','htmlelements');
-$this->loadClass('label', 'htmlelements');
-$this->loadClass('fieldset','htmlelements');
-
-// setup and show heading
-$header = new htmlheading();
-$header->type = 1;
-$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer');
-echo '<div style="padding:10px;">'.$header->show();
-$uri=$this->uri(array('action'=>'linkInstitution' , 'id' => $this->getParam('id')));
-$form = new form ('register', $uri);
-$table = $this->newObject('htmltable', 'htmlelements');
-$table->width = '100%';
-$table->border = '0';
-$tableable->cellspacing = '0';
-$table->cellpadding = '2';
-
-$table = $this->newObject('htmltable', 'htmlelements');
-
-$user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
-$currentMembership = array();
-$availablegroups = array();
-$groups = $this->objDbInstitution->getAllInstitutions();
-foreach ($groups as $group) {
-    if (count($user_current_membership) > 0) {
-        foreach ($user_current_membership as $membership) {
-            if($membership['institution_id'] !=NULL){
-            if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
-                array_push($currentMembership, $group);
-            }else {
-                array_push($availablegroups, $group);
-            }}
-        }
-    } else {
-        array_push($availablegroups, $group);
-    }
-}
-
-$objSelectBox = $this->newObject('selectbox','htmlelements');
-$objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
-$objSelectBox->insertLeftOptions(
-                        $availablegroups,
-                        'id',
-                        'name' );
-$objSelectBox->insertRightOptions(
-                               $currentMembership,
-                               'id',
-                               'name');
-
-$tblLeft = $this->newObject( 'htmltable','htmlelements');
-$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
-//Construct tables for right selectboxes
-$tblRight = $this->newObject( 'htmltable', 'htmlelements');
-$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
-//Construct tables for selectboxes and headings
-$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
-$tblSelectBox->width = '90%';
-$tblSelectBox->startRow();
-    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
-    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
-$tblSelectBox->endRow();
-$tblSelectBox->startRow();
-    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
-    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
-$tblSelectBox->endRow();
-
-$table->startRow();
-$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
-$table->addCell($tblSelectBox->show());
-$table->endRow();
-
-
-$fieldset = $this->newObject('fieldset', 'htmlelements');
-$fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
-$fieldset->contents = $table->show();
-
-$form->addToForm($fieldset->show());
-$form->addToForm('<br />');
-
-$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
-$action = $objSelectBox->selectAllOptions($objSelectBox->objRightList )." SubmitProduct();";
-$button->setOnClick('javascript: ' . $action);
-
-$Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
-
-$form->extra = 'enctype="multipart/form-data"';
-$form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
-
-echo $form->show();
-
-echo '</div> ';
 
 ?>
 <script type="text/javascript">
@@ -206,7 +114,7 @@ function SubmitProduct()
                                  
                                     if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
 
-                                        $joinGroupLink = new link($this->uri(array('action' => "11a")));
+                                        $joinGroupLink = new link('#');
                                         $joinGroupLink->link = 'Join Group';
                                         $joinGroupLink->cssId = 'member';
                                     } else {
@@ -230,7 +138,7 @@ function SubmitProduct()
                 <ul id="innerMenuTabs">
                      <li class="onState"><a href="#">
                              <?php
-                             $memberLink=new link($this->uri(array("action" =>'groupMembersForm','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
                              $memberLink->link="Members(".$No_Of_Members.")";
                              echo $memberLink->show();
@@ -487,11 +395,7 @@ jQuery(document).ready(function(){
 
     jQuery("a[id=member]").click(function(){
 
-        var r=confirm( "Your are a member of this group\n you can not join again....!!!");
-        if(r== true){
-            window.location=this.href;
-        }
-        return false;
+       alert('You are already a member of this Group');
     }
 
 
@@ -502,7 +406,7 @@ jQuery(document).ready(function(){
 $(document).ready(function(){
                               $('#instLink').click(function(){
                                 $('#showhide').slideToggle();
-                                $('.greenTextBoldLink').atrib('class','greyText');
+//               
 
                   });
 

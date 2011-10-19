@@ -21,6 +21,8 @@ class grouputil extends object {
     public function init() {
         $this->ObjDbUserGroups = $this->getObject("dbusergroups", "unesco_oer");
         $this->objDbGroups = $this->getObject("dbgroups", "unesco_oer");
+          $this->objDbInstitution = $this->getObject("dbinstitution", "unesco_oer");
+            $this->objLanguage = $this->getObject("language", "language");
         $this->objUser = $this->getObject('user', 'security');
         $this->objUseExtra = $this->getObject("dbuserextra", "unesco_oer");
         $this->objLanguagecode = $this->getObject('languagecode', 'language');
@@ -520,6 +522,173 @@ class grouputil extends object {
 
                     </div>';
     }
+    
+    
+    
+    public function Linkinstitution($id){
+        
+
+        
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('fieldset','htmlelements');
+
+
+$user_current_membership = $this->objDbGroups->getGroupInstitutions($id);
+$currentMembership = array();
+$availablegroups = array();
+$availablebox = array();
+$memberbox = array();
+
+
+$groups = $this->objDbInstitution->getAllInstitutions();
+
+
+foreach ($groups as $group) {
+    array_push($availablegroups, $group['id']);
+}
+
+foreach ($user_current_membership as $membership) {
+     array_push($currentMembership, $membership['institution_id']);
+    
+}
+
+//var_dump($availablegroups);
+
+  $results = array_diff($availablegroups,$currentMembership);
+  //var_dump($results);
+  
+  foreach ($results as $result){ 
+      foreach($groups as $group){
+                                
+          if ($group['id'] == $result){ 
+              array_push($availablebox, $group);
+          }
+      }
+  }
+  
+  foreach ($user_current_membership as $membership){ 
+      foreach($groups as $group){
+                                
+          if ($group['id'] == $membership['institution_id']){ 
+              array_push($memberbox, $group);
+          }
+      }
+  }
+  
+
+
+
+
+
+
+// setup and show heading
+$header = new htmlheading();
+$header->type = 1;
+$header->str = $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer');
+echo '<div style="padding:10px;">'.$header->show();
+
+
+
+$uri=$this->uri(array('action'=>'linkInstitution' , 'id' => $id));
+$form = new form ('register', $uri);
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->width = '100%';
+$table->border = '0';
+$tableable->cellspacing = '0';
+$table->cellpadding = '2';
+
+$table = $this->newObject('htmltable', 'htmlelements');
+
+
+
+
+//foreach ($groups as $group) {
+//    if (count($user_current_membership) > 0) {
+//        foreach ($user_current_membership as $membership) {
+//            if($membership['institution_id'] !=NULL){echo ' TTTTTTTTTTTTTTTTTTTTT';
+//            if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
+//                array_push($currentMembership, $group);
+//            }else {
+//                array_push($availablegroups, $group);
+//            }} 
+//        } 
+//    } else {
+//        array_push($availablegroups, $group); 
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+$objSelectBox = $this->newObject('selectbox','htmlelements');
+$objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
+$objSelectBox->insertLeftOptions(
+                        $availablebox,
+                        'id',
+                        'name' );
+$objSelectBox->insertRightOptions(
+                               $memberbox,
+                               'id',
+                               'name');
+
+$tblLeft = $this->newObject( 'htmltable','htmlelements');
+$objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+//Construct tables for right selectboxes
+$tblRight = $this->newObject( 'htmltable', 'htmlelements');
+$objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+//Construct tables for selectboxes and headings
+$tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+$tblSelectBox->width = '90%';
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
+    $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+$tblSelectBox->endRow();
+$tblSelectBox->startRow();
+    $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
+    $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+$tblSelectBox->endRow();
+
+$table->startRow();
+$table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
+$table->addCell($tblSelectBox->show());
+$table->endRow();
+
+
+$fieldset = $this->newObject('fieldset', 'htmlelements');
+$fieldset->legend = $this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
+$fieldset->contents = $table->show();
+
+$form->addToForm($fieldset->show());
+$form->addToForm('<br />');
+
+$button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+$action = $objSelectBox->selectAllOptions($objSelectBox->objRightList )." SubmitProduct();";
+$button->setOnClick('javascript: ' . $action);
+
+$Cancelbutton = new button ('cancelform',$this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
+
+$form->extra = 'enctype="multipart/form-data"';
+$form->addToForm('<p align="right">'.$button->show().$Cancelbutton->show().'</p>');
+
+echo $form->show();
+echo '</div> ';
+
+    }
+    
+    
+    
+    
+    
 
 
 
