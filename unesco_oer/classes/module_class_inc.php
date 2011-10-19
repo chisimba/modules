@@ -103,7 +103,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_entry_requirements','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_requirements',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -122,7 +124,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_outcomes_objectives','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_outcomes_objectives',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -136,7 +140,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_delivery_mode','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_delivery_mode',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -150,7 +156,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_number_of_hours','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_number_of_hours',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -164,6 +172,7 @@ class module extends content {
         $editor->setBasicToolBar();
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
+        // TODO add help link that includes long description here !
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip));
@@ -180,7 +189,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_assessment','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_assessment',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -198,7 +209,9 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_schedule_of_activities','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_schedule_of_activities',$title)));
         $table->endRow();
 
         $table->startRow();

@@ -747,14 +747,17 @@ class product extends object {
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_language', 'unesco_oer');
         $title .= $productUtil->getToolTip($tooltip);
-        $productLanguages = $this->objDbProductLanguages->getProductLanguages();
-        //$langs = $this->objLanguage->getLangs();
-        //var_dump($langs);
+//        $productLanguages = $this->objDbProductLanguages->getProductLanguages();
+        $langs = $this->objLanguage->getLangs();
+        $productLanguages = array();
+        foreach ($langs as $key => $value) {
+            $productLanguages[] = array('code' => $value, 'id' => $key);
+        }
         $this->_objAddDataUtil->addDropDownToTable(
                 $title, 4, $fieldName, $productLanguages, $this->getLanguageID(), 'code', $table, 'id'
         );
 
-        //field for the language
+        //field for the translation
         $fieldName = 'translation_of';
         $title = $this->objLanguage->languageText('mod_unesco_oer_translation', 'unesco_oer');
 //        $title .= '<font color="#FF2222">* '. $this->validationArray[$fieldName]['message']. '</font>';

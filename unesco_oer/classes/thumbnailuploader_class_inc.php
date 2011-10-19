@@ -33,7 +33,7 @@ class thumbnailuploader extends object{
         parent::init();
         $this->_uploadInput = $this->getObject('uploadinput','filemanager');
         //define some MIME types for Images
-        $this->_restrictedFileList = array('jpg','png','gif','tiff','ico');
+        $this->_restrictedFileList = array('jpg','png','gif','tiff','ico', 'bmp');
 
         $this->_upload = $this->getObject('upload','filemanager');
     }
