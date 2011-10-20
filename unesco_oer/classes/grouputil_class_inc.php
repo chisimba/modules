@@ -83,7 +83,7 @@ class grouputil extends object {
              //  $joinGroupLink = new link($this->uri(array('action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
                    $joinGroupLink = new link('#');
                     $joinGroupLink->link = 'Join';
-                  $joinGroupLink->cssId = 'check';
+                  $joinGroupLink->cssId = $group['id'];
                   
         } else  {   $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
 
