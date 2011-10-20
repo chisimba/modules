@@ -1,47 +1,47 @@
 
-
+<script type="text/javascript" src="packages/unesco_oer/resources/bubble-tooltip.js"></script> 
 <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
-  <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
+<link href="packages/unesco_oer/resources/bubble-tooltip.css" rel="stylesheet" type="text/css"/>
+
+
 <script>
    
 
 
- $(document).ready(
-        function()
-        {
+    $(document).ready(
+    function()
+    {
             
-            $("#form_add_products_ui").validate();
+        $("#form_add_products_ui").validate();
        
        
-        });
+    });
 
 
 
 
 </script>
-  <?php
+<?php
+$homelink = new link('home');
+$homelink->href = $this->uri(array("action" => "home"));
+$homelink->link = 'Home';
 
-  
-  
-        $homelink = new link('home');
-        $homelink->href = $this->uri(array("action"=>"home"));
-        $homelink->link = 'Home';
-
-        $productNavCap = 'New Product';
-        if ($product->isAdaptation()) {
-            $homelink->href = "?module=unesco_oer&action=FilterProducts&adaptationstring=parent_id+is+not+null+and+deleted+%3D+0&page=2a_tpl.php";
-            $homelink->link = 'Product Adaptations';
-            $productID = $product->getIdentifier();
-            if (empty ($productID)) {
-                $productNavCap = 'New Adaptation';
-            } else {
-                $productNavCap = 'Edit Adaptation';
-            }
-
-        } else {
-            if (!$product->isDeleted()) $productNavCap = 'Edit Product';
-        }
-  ?>
+$productNavCap = 'New Product';
+if ($product->isAdaptation()) {
+    $homelink->href = "?module=unesco_oer&action=FilterProducts&adaptationstring=parent_id+is+not+null+and+deleted+%3D+0&page=2a_tpl.php";
+    $homelink->link = 'Product Adaptations';
+    $productID = $product->getIdentifier();
+    if (empty($productID)) {
+        $productNavCap = 'New Adaptation';
+    } else {
+        $productNavCap = 'Edit Adaptation';
+    }
+} else {
+    if (!$product->isDeleted())
+        $productNavCap = 'Edit Product';
+}
+?>
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
@@ -53,7 +53,7 @@
 
 </div>
 <?php
-/* 
+/*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -121,9 +121,12 @@
 //     
 // } else echo 'groups';
 
-echo $product->showMetaDataInput($this->getParam('nextAction'),$this->getParam('cancelAction'), $this->getParam('cancelParams'));
+echo $product->showMetaDataInput($this->getParam('nextAction'), $this->getParam('cancelAction'), $this->getParam('cancelParams'));
 
 //var_dump($product->dummyValue);
-
-  
 ?>
+<div id="bubble_tooltip">
+    <div class="bubble_top"><span></span></div>
+    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+    <div class="bubble_bottom"></div>
+</div>
