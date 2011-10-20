@@ -40,12 +40,22 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">
 
                 <?php
+                
+                if ($onestepid != null){
                 $link = new link('#');
                 $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
                             Create Group';
                 $link->cssId = 'creategroup';
                 $link->cssClass="greenTextBoldLink";
               //  if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()){
+                
+                }else{
+                      $link = new link($this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid)));
+                $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
+                            Create Group';             
+                $link->cssClass="greenTextBoldLink";
+                   
+                }
                 echo '&nbsp;' . $link->show();
                 ?>
 
