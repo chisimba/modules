@@ -452,7 +452,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
        foreach ($groups as $group){
         echo "  $('#".$group['id']."').click(function(){
          
-        if(confirm('Are you sure?'))
+        if(confirm('Do you want to create or link this group to an institution?'))
 {
 
     
@@ -483,7 +483,7 @@ else
   
      $('#creategroup').click(function(){
          
-        if(confirm("Are you sure?"))
+        if(confirm("Do you want to create or link this group to an institution?"))
 {
 //$this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid))
     
