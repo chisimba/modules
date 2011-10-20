@@ -347,7 +347,7 @@ class content extends object
                       else{
                             $node = new treenode(array(
 //                                                        'text' => $title . $hiddenInput->show()."<div class='treetrunc'></div>",
-                                                        'text' => ($highlighted ? $title . $hiddenInput->show() .$productUtil->getToolTip($existingContent->showRemark(), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>"): $title . $hiddenInput->show()),
+                                                        'text' => ($highlighted ? $title . $hiddenInput->show() .$productUtil->getToolTip(strip_tags($existingContent->showRemark()), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>"): $title . $hiddenInput->show()),
                                                    //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
                                                          'link' => $link ,
                                                         'icon' => $icon,

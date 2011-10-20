@@ -248,6 +248,27 @@ class module extends content {
         $table->addCell($textinput->show());
         $table->endRow();
         
+//            $fieldName = 'remark';
+//        $editor->name = $fieldName;
+//        $editor->height = '450px';
+//        // $editor->width = '70%';
+//
+//        $editor->setBasicToolBar();
+//        $editor->setContent($this->_metaDataArray[$fieldName]);
+//
+//        $table->startRow();
+//        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+//        $table->addCell($fieldName);
+//        $table->endRow();
+//
+//        $table->startRow();
+//        $table->addCell($editor->show());
+//        $table->endRow();
+//        
+        
+        
+        
+        
         $fieldName = 'Remark';
         $textinput = new textinput('remark');
         $textinput->cssClass = "required";
