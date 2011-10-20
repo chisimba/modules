@@ -1095,12 +1095,20 @@ class unesco_oer extends controller {
             
                  return $this->__viewInstitutions();
                 
-            } else  {
+            } else if (!(($onestepid != null) && ($groupid == null)))  {
                 
                    $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $groupid);
          
                  $this->objDbgroupInstitutions->add_group_institutions($groupid,$id);
                 return $this->__adaptProduct($onestepid);
+            } else {
+                
+                  $this->setVarByRef('onestepid', $onestepid);
+                 return $this->__groupRegistationForm($onestepid);
+                 
+                
+                
+                
             }
          
            
@@ -1902,8 +1910,11 @@ class unesco_oer extends controller {
         return 'confirm_tpl.php';
     }
 
-    function __groupRegistationForm() {
-        $this->setVarByRef('onestepid', $this->getParam('onestepid'));
+    function __groupRegistationForm($onestepid) {
+        if ($onestepid == null){
+            $onestepid = $this->getParam('onestepid');
+        } 
+        $this->setVarByRef('onestepid', $onestepid);
 
         return 'groupRegistrationForm_tpl.php';
     }
@@ -2001,6 +2012,7 @@ class unesco_oer extends controller {
     function __linkInstitution() {
         $rightList = $this->getParam('rightList');
         $id = $this->getParam('id');
+        $onestepid = $this->getParam('productID');
  
         $user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
         $currentMembership = array();
@@ -2016,7 +2028,16 @@ class unesco_oer extends controller {
 
             $this->objDbgroupInstitutions->add_group_institutions($id, $array);
         }
-        return $this->__11a();
+        
+        if ( $onestepid == null){
+            
+             return $this->__11a();
+        } else{
+               $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $id);
+               return $this->__adaptProduct($onestepid);
+            
+        }
+       
     }
 
     function __saveNewGroup() {

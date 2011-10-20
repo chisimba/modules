@@ -40,9 +40,10 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
         <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">
 
                 <?php
-                $link = new link($this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid)));
+                $link = new link('#');
                 $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
                             Create Group';
+                $link->cssId = 'creategroup';
                 $link->cssClass="greenTextBoldLink";
               //  if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()){
                 echo '&nbsp;' . $link->show();
@@ -460,7 +461,34 @@ else
         
      });
         
- });       
+    
+ 
+  
+     $('#creategroup').click(function(){
+         
+        if(confirm("Are you sure?"))
+{
+//$this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid))
+    
+   var link = 'index.php?module=unesco_oer&action=institutionEditor&onestepid=' + '<?php echo $onestepid?> ' ;
+    location = link;
+////  
+// 
+  
+}
+else
+{
+//    
+     var link = 'index.php?module=unesco_oer&action=groupRegistationForm&onestepid='  +  '<?php echo $onestepid?>'  ;
+    location = link;
+   
+}
         
+        
+     });
+        
+      
+        
+    } );     
         
         </script>

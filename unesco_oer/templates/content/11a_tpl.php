@@ -94,7 +94,9 @@ echo $onestepid;
 
 <?php
 
- $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
+
+
+ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'),$onestepid);
  echo $content;
 
 

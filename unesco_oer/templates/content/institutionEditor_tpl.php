@@ -335,8 +335,7 @@
         $form_data->addToForm($displayErrors . $fieldsetInstitutionInfo->show() . '<br />' . $fieldset2->show() . '<br />' . $buttons);
         echo $form_data->show();
         
-        echo $onestepid . 'fffffffffff           ';
-        echo $groupid;
+       
         ?>
     </body>
 </html>

@@ -531,7 +531,7 @@ class grouputil extends object {
     
     
     
-    public function Linkinstitution($id){
+    public function Linkinstitution($id,$onestepid){
         
 
         
@@ -599,7 +599,7 @@ echo '<div style="padding:10px;">'.$header->show();
 
 
 
-$uri=$this->uri(array('action'=>'linkInstitution' , 'id' => $id));
+$uri=$this->uri(array('action'=>'linkInstitution' , 'id' => $id, 'productID' => $onestepid ));
 $form = new form ('register', $uri);
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->width = '100%';
