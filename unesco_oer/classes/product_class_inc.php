@@ -606,7 +606,7 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $title .= $productUtil->getToolTip($tooltip);
-        $title='<a href="#"  onmouseover="showToolTip(event,\''.$tooltip.'\');return false" onmouseout="hideToolTip()">'.$title.'</a>';
+//        $title='<a href="#"  onmouseover="showToolTip(event,\''.$tooltip.'\');return false" onmouseout="hideToolTip()">'.$title.'</a>';
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getTitle(), $table
         );

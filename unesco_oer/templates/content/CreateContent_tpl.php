@@ -27,6 +27,15 @@
                 {$('#form_add').validate();
             
                 });
+
+                $("head").append("<link>");
+                css = $("head").children(":last");
+                css.attr({
+                    rel:  "stylesheet",
+                    type: "text/css",
+                    href: "packages/unesco_oer/resources/bubble-tooltip.css"
+                });
+                $.getScript("packages/unesco_oer/resources/bubble-tooltip.js");
             }
 
 
@@ -35,9 +44,6 @@
             $('#upload').live('click', function() {   
                 $("#form_add_products_ui").validate();
             });
-
-
-
 
         </script>
     </head>
@@ -123,4 +129,13 @@ echo '</div>';
 echo '<div class="rightWideColumnDiv" style="width:75%;" ">';
 echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div></div></fieldset></div></div></div>";
+
+$link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="stylesheet" type="text/css"/>';
+       $this->appendArrayVar('headerParams', $link);
 ?>
+<div id="bubble_tooltip">
+    <div class="bubble_top"><span></span></div>
+    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+    <div class="bubble_bottom"></div>
+</div>
+<!--<link href="chapter3.html" type="text/html" />-->

@@ -985,19 +985,26 @@ function createParameterArray($parameterString){
     return $parameterArray;
 }
 
-//    Example onClick
-//    $uri = $this->uri(array('action'=>'help'));
-//    $onClick = "window.open('$uri','help','resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=1000,height=750');";
+//Include the following div in the pages where it is required
+//
+//<div id="bubble_tooltip">
+//    <div class="bubble_top"><span></span></div>
+//    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+//    <div class="bubble_bottom"></div>
+//</div>
 function getToolTip($toolTip = NULL, $html = NULL){
+       $js = '<script language="JavaScript" src="' . $this->getResourceUri('bubble-tooltip.js') . '" type="text/javascript"></script>';
+       $this->appendArrayVar('headerParams', $js);
+       $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="stylesheet" type="text/css"/>';
+       $this->appendArrayVar('headerParams', $link);
     if (empty($toolTip)) {
         $objLanguage = $this->getObject('language','language');
         $toolTip = $objLanguage->languageText('mod_unesco_oer_no_tooltip','unesco_oer');
     }
-    $toolTip = "<span>$toolTip</span>";
     if(empty($html))
         $html = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
-//    return " <div onclick=". $onClick ." class='tooltip' >$image $toolTip</div>";
-    return " <div class='tooltip' >$html $toolTip</div>";
+
+    return ' <div class="tempME" style="display:inline;"  onmouseover="showToolTip(event,\''.$toolTip.'\');return false" onmouseout="hideToolTip()">'. $html . '</div>';
 }
 
 }

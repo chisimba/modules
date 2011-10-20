@@ -1,8 +1,8 @@
 
-<script type="text/javascript" src="packages/unesco_oer/resources/bubble-tooltip.js"></script> 
+<!--<script type="text/javascript" src="packages/unesco_oer/resources/bubble-tooltip.js"></script> -->
 <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
 <script type="text/javascript" src="packages/unesco_oer/resources/jquery.validate.js"></script>
-<link href="packages/unesco_oer/resources/bubble-tooltip.css" rel="stylesheet" type="text/css"/>
+<!--<link href="packages/unesco_oer/resources/bubble-tooltip.css" rel="stylesheet" type="text/css"/>-->
 
 
 <script>
