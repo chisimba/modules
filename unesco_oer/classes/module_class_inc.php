@@ -172,10 +172,11 @@ class module extends content {
         $editor->setBasicToolBar();
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
-        // TODO add help link that includes long description here !
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -183,9 +184,10 @@ class module extends content {
         $table->endRow();
 
         $fieldName = 'assesment';
-        $textinput = new textinput($fieldName);
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray[$fieldName]);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_assessment','unesco_oer');
@@ -195,7 +197,7 @@ class module extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
 
         //$editor = $this->newObject('htmlarea', 'htmlelements');
