@@ -11,6 +11,8 @@ $limit =  " limit 30";
 $order = 'date';
 $topics = $this->objTopic->showTopicsInForum($forum['id'], $this->objUser->userId(), $forum['archivedate'], $order, 'asc', NULL, $limit);
 $topicsNum = count($topics);
+$onestepid = $this->getParam('onestepid');
+echo $onestepid;
 ?>
 
 <div style="clear:both;"></div>
@@ -69,10 +71,11 @@ $topicsNum = count($topics);
                       </div>
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
+                         
                             <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
                                     Link to institution</a></div>
                         </div>
-                          <div id="showhide" style="display: none;">
+                           <div id="showhide" style="display: none;">
 <!--                              <ul>
                                 <li>
                                     Use tree on the left to navigate existing conents
@@ -125,6 +128,20 @@ function SubmitProduct()
                                     }
                                     $joinGroupLink->cssClass = 'greenTextBoldLink';
                                     echo $joinGroupLink->show();
+                                    
+                                    ?>
+                                 <span class="greenText">|&nbsp;</span>
+                                 
+                                 <?php
+                                    
+     
+  
+    $addInstitutionLink = new link($this->uri(array('action' => 'institutionEditor' , 'onestepid' => $onestepid , 'groupid' => $this->getParam('id'))));
+    $addInstitutionLink->link = 'Create Institution';
+    $addInstitutionLink->cssClass = 'greenTextBoldLink';
+       echo  $addInstitutionLink->show()
+                                    
+                                    
                                     ?>
                                 </a>
                             <span class="greenText">|&nbsp;</span></div>
@@ -361,9 +378,7 @@ function SubmitProduct()
 
                                                 echo $temp;
 
-
-
-
+  
 ?>
                                         </body>
                                  </html>
@@ -419,4 +434,5 @@ $('button[name=cancelform]').click(
     $('#showhide').slideToggle();
     }
 );
+   
 </script>

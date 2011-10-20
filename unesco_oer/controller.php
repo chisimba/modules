@@ -1058,6 +1058,8 @@ class unesco_oer extends controller {
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
         $prevThumbnail = $this->getParam('thumbnail');
+            $onestepid = $this->getParam('productID');
+            $groupid = $this->getParam('groupid');
 
 //Form related data members
         $formAction = 'createInstitutionSubmit';
@@ -1087,9 +1089,21 @@ class unesco_oer extends controller {
 
         if ($validate['valid']) {
 
-            $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-
-            return $this->__viewInstitutions();
+       $id =     $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+            
+             if ($onestepid == null){
+            
+                 return $this->__viewInstitutions();
+                
+            } else  {
+                
+                   $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $groupid);
+         
+                 $this->objDbgroupInstitutions->add_group_institutions($groupid,$id);
+                return $this->__adaptProduct($onestepid);
+            }
+         
+           
         } else {
 
 //There has been an error, go back to the form to fix it
@@ -1111,9 +1125,14 @@ class unesco_oer extends controller {
             $this->setVarByRef('formAction', $formAction);
             $this->setVarByRef('errorMessage', $validate);
             $this->setVarByRef('thumbnail', $thumbnail);
+        
+            
+          
+                 return "institutionEditor_tpl.php";
+                
+          
 
-
-            return "institutionEditor_tpl.php";
+           
         }
     }
 
@@ -2456,7 +2475,12 @@ class unesco_oer extends controller {
     public function __institutionEditor() {
 
         $institutionId = $this->getParam('institutionId');
+         $onestepid = $this->getParam('onestepid');
+         $groupid = $this->getParam('groupid');
+                 
         $this->setVarByRef('institutionId', $institutionId);
+             $this->setVarByRef('onestepid', $onestepid);
+                $this->setVarByRef('groupid', $groupid);
 
         return "institutionEditor_tpl.php";
     }

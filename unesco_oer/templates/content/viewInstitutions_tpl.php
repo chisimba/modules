@@ -24,6 +24,8 @@
     $this->loadClass('htmlheading', 'htmlelements');
     $this->loadClass('link', 'htmlelements');
     $objIcon = $this->newObject('geticon', 'htmlelements');
+   
+
 
  ?>
     <div style="clear:both;"></div> 

@@ -231,7 +231,7 @@ class curriculum extends content {
                     $this->_forward,
                     $this->_background,
                     $this->_introductory_description,
-                     $this->_remark,
+                    $this->_remark,
                     $this->tempID
                     );
     }

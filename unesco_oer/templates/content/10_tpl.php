@@ -432,5 +432,35 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
     }
     
     ?>
-
+     <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+    <script>
+        
+   $(document).ready(function(){      
+     $('#check').click(function(){
+         
+        if(confirm("Are you sure?"))
+{
+//    $thumbLink = new link($this->uri(array("action" => '11a', 'id' => $group['id'], "page" => '10a_tpl.php')));
+  //{'action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
     
+   var link = 'index.php?module=unesco_oer&action=11a&id=' + '<?php echo $group['id']?>' + '&onestepid=' + '<?php echo $onestepid?>' ;
+    location = link;
+  
+  
+  
+}
+else
+{
+    
+     var link = 'index.php?module=unesco_oer&action=onestepjoingroup&groupid=' + '<?php echo $group['id']?>' + '&productID=' + '<?php echo $onestepid?>' + '&userid=' + '<?php echo $this->objUser->userId()?>' ;
+    location = link;
+   
+}
+        
+        
+     });
+        
+ });       
+        
+        
+        </script>

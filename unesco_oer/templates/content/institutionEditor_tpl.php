@@ -7,6 +7,9 @@
     </head>
     <body>
         <?php
+    
+
+        
         //Display errors
         error_reporting(E_ALL);
         ini_set('display_errors', 'Off');
@@ -326,11 +329,14 @@
 
         //createform, add fields to it and display
         $uri = $this->uri(array(
-                    'action' => $formAction, 'institutionId' => $institutionId, 'prevAction' => $prevAction));
+                    'action' => $formAction, 'institutionId' => $institutionId, 'prevAction' => $prevAction, 'productID' => $onestepid , 'groupid' => $groupid));
         $form_data = new form('add_institution_ui', $uri);
         $form_data->extra = 'enctype="multipart/form-data"';
         $form_data->addToForm($displayErrors . $fieldsetInstitutionInfo->show() . '<br />' . $fieldset2->show() . '<br />' . $buttons);
         echo $form_data->show();
+        
+        echo $onestepid . 'fffffffffff           ';
+        echo $groupid;
         ?>
     </body>
 </html>

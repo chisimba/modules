@@ -456,6 +456,11 @@ class dbgroups extends dbtable {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$id'";
         return $this->getArray($sql);
     }
+    
+     function getLastEntry() {
+        $sql = "SELECT id FROM tbl_unesco_oer_institutions order by id desc limit 1";
+        return $this->getArray($sql);
+    }
 
     function getInstitutionThumbnail($institutionid) {
         $sql = "SELECT * FROM tbl_unesco_oer_institutions WHERE id ='$institutionid'";

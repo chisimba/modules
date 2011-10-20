@@ -86,6 +86,7 @@ class dbinstitution extends dbtable {
         $module = 'unesco_oer';
 
         $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+        return $id;
     }
 
     //to get an institution latitude

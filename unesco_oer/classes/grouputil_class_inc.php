@@ -80,13 +80,17 @@ class grouputil extends object {
             
             if ($onestep != null){
             
-               $joinGroupLink = new link($this->uri(array('action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
-            
-        } else     $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
+             //  $joinGroupLink = new link($this->uri(array('action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
+                   $joinGroupLink = new link('#');
+                    $joinGroupLink->link = 'Join';
+                  $joinGroupLink->cssId = 'check';
+                  
+        } else  {   $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
 
          
             $joinGroupLink->link = 'Join';
             $joinGroupLink->cssId = 'joingroup';
+        }
         }
 
         $joinGroupLink->cssClass = 'greenTextBoldLink';
@@ -105,7 +109,9 @@ class grouputil extends object {
                				 	<div class="linkTextNextToJoinGroupIcons">' . $joinGroupLink->show() . '</div>
                             </div>
 
-                            </div>';
+                            </div> 
+                          
+';
 
         return $content;
     }
