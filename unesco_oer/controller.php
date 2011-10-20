@@ -2119,6 +2119,7 @@ class unesco_oer extends controller {
             $this->groupmanager->saveForum($id, $name, $description);
 
             if ($onestepid != null) {
+                
                 $this->setVarByRef('productID', $onestepid);
                 return $this->__adaptProduct($onestepid);
             }else
