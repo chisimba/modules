@@ -25,7 +25,6 @@ class productutil extends object {
         $this->_institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "unesco_oer");
-         $this->objDbproductlanguages = $this->getObject("dbproductlanguages", "unesco_oer");
         $this->objDbAvailableProductLanguages = $this->getObject("dbavailableproductlanguages", "unesco_oer");
         $this->objUser = $this->getObject("user", "security");
            $this->objbookmarkmanager = $this->getObject('bookmarkmanager');
@@ -347,8 +346,8 @@ class productutil extends object {
                 ";
 
             $index = 0;
-            $prodLanguages = $this->objDbproductlanguages->getLanguageNameByID($product['language']);
-         $content .= '<option value="">' . $prodLanguages . '</option>';
+         $prodLanguages = $this->objLanguage->getLangs();
+         $content .= '<option value="">' . $prodLanguages[$product['language']] . '</option>';
 //            foreach ($product as $languages) {
 ////Check if languages is empty
 //                foreach ($languages as $language) {

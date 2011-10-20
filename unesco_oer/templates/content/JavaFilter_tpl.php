@@ -12,7 +12,6 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('filterdisplay', 'unesco_oer');
 $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
-$this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
 $this->objDbresourcetypes = $this->getobject('dbresourcetypes', 'unesco_oer');
 
 

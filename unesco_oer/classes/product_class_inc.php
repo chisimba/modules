@@ -27,7 +27,6 @@ class product extends object {
     public $objLanguage;
     public $objDbResourceTypes;
     public $objDbProductThemes;
-    public $objDbProductLanguages;
     public $objThumbUploader;
     public $objDbRelationTypes;
     public $objDbProductKeywords;
@@ -259,7 +258,6 @@ class product extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDbResourceTypes = $this->getObject('dbresourcetypes');
         $this->objDbProductThemes = $this->getObject('dbproductthemes');
-        $this->objDbProductLanguages = $this->getObject('dbproductlanguages');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbRelationTypes = $this->getObject('dbrelationtype');
         $this->objDbProductKeywords = $this->getObject('dbproductkeywords');
@@ -748,7 +746,6 @@ class product extends object {
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_language', 'unesco_oer');
         $title .= $productUtil->getToolTip($tooltip);
-//        $productLanguages = $this->objDbProductLanguages->getProductLanguages();
         $langs = $this->objLanguage->getLangs();
         $productLanguages = array();
         foreach ($langs as $key => $value) {
@@ -1411,9 +1408,7 @@ class product extends object {
     }
 
     function getLanguageName() {
-//        return $this->objDbProductLanguages->getLanguageNameByID($this->getLanguageID());
         $langs = $this->objLanguage->getLangs();
-//        var_dump($langs); die();
         return $langs[$this->getLanguageID()];
     }
 

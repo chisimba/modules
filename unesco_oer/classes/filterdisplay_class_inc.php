@@ -24,7 +24,6 @@ class filterdisplay extends object {
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->objDbproductthemes = $this->getobject('dbproductthemes', 'unesco_oer');
-        $this->objDbproductlanguages = $this->getobject('dbproductlanguages', 'unesco_oer');
         $this->objProductUtil = $this->getObject('productutil', 'unesco_oer');
         $this->objDbRegions = $this->getObject('dbregions', 'unesco_oer');
         $this->objDbReporting = $this->getObject('dbreporting', 'unesco_oer');
