@@ -193,6 +193,7 @@ class displayreportgenerator extends object
         $langSelect->extra = ' multiple="1" size="4" style="width:200pt;" ';
 
         $langArray = $this->objDbReporting->getLanguageBreakdownAdaptations();
+        
         $ArrayCount = sizeof($langArray);
         $langArray2 = array();
 

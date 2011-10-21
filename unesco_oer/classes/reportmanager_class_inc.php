@@ -16,7 +16,7 @@ class reportmanager extends object {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
 
-    public function generatePDFReport($text, $outputname, $templateName="report1.jrxml") {
+    public function generatePDFReport($text, $outputname, $templateName="test.jrxml") {
 
         $objAltConfig = $this->getObject('altconfig', 'config');
         $modPath = $objAltConfig->getModulePath();
@@ -32,22 +32,19 @@ class reportmanager extends object {
 
         $host = $resourcePath; //$objSysConfig->getValue('JAVA_BRIDGE_HOST', 'unesco_oer');
 
-
         $this->checkJavaExtension($host, $port);
 
         $compileManager = new JavaClass("net.sf.jasperreports.engine.JasperCompileManager");
-        $report = $compileManager->compileReport(realpath($resourcePath . "/reports/$templateName"));
+
+        $report = $compileManager->compileReport("/var/www/html/unesco_oer/packages/unesco_oer/resources/reports/".$templateName);
 
         $fillManager = new JavaClass("net.sf.jasperreports.engine.JasperFillManager");
 
         $params = new Java("java.util.HashMap");
         $params->put("text", $text);
 
-        $class = new JavaClass("java.lang.Class");
-        $class->forName("com.mysql.jdbc.Driver");
-        $driverManager = new JavaClass("java.sql.DriverManager");
-        $conn = $driverManager->getConnection($jdbcURL, $jdbcUsername, $jdbcPassword);
-        $jasperPrint = $fillManager->fillReport($report, $params, $conn);
+        $emptyDataSource = new Java("net.sf.jasperreports.engine.JREmptyDataSource");
+        $jasperPrint = $fillManager->fillReport($report, $params, $emptyDataSource);
 
         $outputPath = realpath(".") . "/" . $outputname;
 
@@ -57,7 +54,8 @@ class reportmanager extends object {
         header("Content-type: application/pdf");
         readfile($outputPath);
 
-        unlink($outputPath);
+        unlink($outputPath);      
+
     }
 
     function checkJavaExtension($host, $port) {
@@ -68,27 +66,26 @@ class reportmanager extends object {
 
             if ($sapi_type == "cgi" || $sapi_type == "cgi-fcgi" || $sapi_type == "cli") {
                 if (!(PHP_SHLIB_SUFFIX == "so" && @dl('java.so')) && !(PHP_SHLIB_SUFFIX == "dll" && @dl('php_java.dll')) && !(@include_once("java/Java.inc")) && !(require_once("http://127.0.0.1:$port/java/Java.inc"))) {
-
+                    echo 'test';
+                    die();
                     return "java extension not installed.";
                 }
             } else {
 
                 if (!(@include_once("java/Java.inc"))) {
                     $javainc = "$host/reports/java/Java.inc";
-
-                    require_once($javainc);
-                    echo $javainc;
-                    die();
+                    require_once('packages/unesco_oer/resources/reports/java/Java.inc');
                 }
             }
         }
         if (!function_exists("java_get_server_name")) {
-            return "The loaded java extension is not the PHP/Java Bridge";
-        }
+            echo "The loaded java extension is not the PHP/Java Bridge";
 
+        }
+                           
         return true;
+         
     }
 
 }
-
 ?>

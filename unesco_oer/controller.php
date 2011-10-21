@@ -41,17 +41,14 @@ class unesco_oer extends controller {
     public $objDbOERresources;
     public $objDbreporting;
     public $objchartgenerator;
-
     /**
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
-
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
-
     /**
      * @var object $objUser User Object Object
      */
@@ -2670,17 +2667,9 @@ class unesco_oer extends controller {
 
         $query = $this->objDbreporting->createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames, $langNames, $regions);
 
-
-
-//        var_dump($adaptationTypes);
-//        var_dump($institutionTypes);
-//        var_dump($countryNames);
-//        var_dump($themeNames);
-//        var_dump($langNames);
-//        var_dump($regions);
-        die();
+        $objReportManager = $this->getObject("reportmanager");
+        $objReportManager->generatePDFReport("$query", "output.pdf", "test.jrxml");
     }
 
 }
-
 ?>
