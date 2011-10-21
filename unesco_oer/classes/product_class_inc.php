@@ -937,32 +937,34 @@ class product extends object {
 
         //Field for accreditation
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->setLegend('Accreditation');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_unesco_oer_accreditation', 'unesco_oer'));
         $acredTable = $this->newObject('htmltable', 'htmlelements');
         $acredTable->cssClass = "moduleHeader";
 
         $fieldName = 'is_accredited';
-        $title = $fieldName;
+        $title = $this->objLanguage->languageText('mod_unesco_oer_accreditation_is', 'unesco_oer');
         $acredTable->startRow();
         $acredTable->addCell($title);
         $acredTable->endRow();
         $acredTable->startRow();
         $objRadio = $this->newObject('radio','htmlelements');
         $objRadio->name = $fieldName;
-        $objRadio->addOption('YES','Yes');
-        $objRadio->addOption('NO','No');
-        $objRadio->setSelected($this->_accreditationdata[$fieldName]);
+        $objRadio->addOption('YES',$this->objLanguage->languageText('mod_unesco_oer_yes', 'unesco_oer'));
+        $objRadio->addOption('NO',$this->objLanguage->languageText('mod_unesco_oer_no', 'unesco_oer'));
+        $selected = $this->_accreditationdata[$fieldName];
+        if (empty($selected)) $selected = 'NO';
+        $objRadio->setSelected($selected);
         $acredTable->addCell($objRadio->show());
         $acredTable->endRow();
 
         $fieldName = 'accreditation_body';
-        $title = $fieldName;
+        $title = $this->objLanguage->languageText('mod_unesco_oer_accreditation_body', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->_accreditationdata[$fieldName], $acredTable
         );
 
         $fieldName = 'accreditation_date';
-        $title = $fieldName;
+        $title = $this->objLanguage->languageText('mod_unesco_oer_accreditation_date', 'unesco_oer');
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->_accreditationdata[$fieldName], $acredTable
         );
