@@ -571,6 +571,7 @@ class product extends object {
         $this->loadClass('hiddeninput', 'htmlelements');
 
         $productUtil = $this->getObject('productutil', 'unesco_oer');
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
 
         // setup and show heading
         $header = new htmlHeading();
@@ -605,7 +606,7 @@ class product extends object {
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_title', 'unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_title',$title));
 //        $title='<a href="#"  onmouseover="showToolTip(event,\''.$tooltip.'\');return false" onmouseout="hideToolTip()">'.$title.'</a>';
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getTitle(), $table
@@ -615,7 +616,7 @@ class product extends object {
         $fieldName = 'alternative_title';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_alt_title_short', 'unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_title_alternative', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_alt_title_long',$title));
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getAlternativeTitle(), $table
         );
@@ -670,7 +671,7 @@ class product extends object {
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_creator_short', 'unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_creator', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_creator_long',$title));
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getAuthors(), $table
         );
@@ -679,7 +680,7 @@ class product extends object {
         $fieldName = 'other_contributors';
         $title = $this->objLanguage->languageText('mod_unesco_oer_other_contributors', 'unesco_oer');
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_contributor_short', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_contributor_long',$title));
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getOtherContributers(), $table
         );
@@ -689,7 +690,7 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_publisher', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_publisher', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_publisher',$title));
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getPublisher(), $table
         );
@@ -745,7 +746,7 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_languages', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_language', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_language',$title));
         $langs = $this->objLanguage->getLangs();
         $productLanguages = array();
         foreach ($langs as $key => $value) {
@@ -774,7 +775,7 @@ class product extends object {
         $editor->setContent($this->getDescription());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short', 'unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
         $table->endRow();
         $table->startRow();
         $table->addCell($editor->show());
@@ -790,7 +791,7 @@ class product extends object {
         $editor->setContent($this->getAbstract());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_abstract', 'unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer') . $productUtil->getToolTip($tooltip));
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_abstract',$title)));
         $table->endRow();
         $table->startRow();
         $table->addCell($editor->show());
@@ -851,7 +852,7 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer');
         $title .= '<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_type_short', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_type_long',$title));
         $resourceTypes = $this->objDbResourceTypes->getResourceTypes();
         $this->_objAddDataUtil->addDropDownToTable(
                 $title, 4, $fieldName, $resourceTypes, $this->getContentType(), 'description', $table, 'id'
@@ -879,7 +880,7 @@ class product extends object {
         $fieldName = 'rights';
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights', 'unesco_oer');
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_rights_short', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_rights_long',$title));
         $fieldName = 'rights_holder';
         $detailsLink = new link($this->uri(array(),"creativecommons"));
         $licenceinfo= $this->objLanguage->languageText('mod_unesco_oer_licencinginfo', 'unesco_oer');
@@ -941,7 +942,7 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_relation', 'unesco_oer');
         $title .= '<font color="#FF2222"> ' . $this->validationArray[$fieldName]['message'] . '</font>';
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_relation', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_relation',$title));
         $products = $this->_objDbProducts->getAll();
         $this->_objAddDataUtil->addDropDownToTable(
                 $title, 4, $fieldName, $products, $this->_relation, 'title', $table, 'id'
@@ -951,7 +952,7 @@ class product extends object {
         $fieldName = 'coverage';
         $title = $this->objLanguage->languageText('mod_unesco_oer_coverage', 'unesco_oer');
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_coverage', 'unesco_oer');
-        $title .= $productUtil->getToolTip($tooltip);
+        $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_coverage',$title));
         $this->_objAddDataUtil->addTextInputToTable(
                 $title, 4, $fieldName, '90%', $this->getCoverage(), $table
         );
@@ -992,8 +993,9 @@ class product extends object {
             $editor->setBasicToolBar();
             $editor->setContent($this->getRemark());
             $table->startRow();
-            $tooltip = 'Reason for creating adaptation';
-            $table->addCell('Remark' . $productUtil->getToolTip($tooltip));
+            $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
+            $title = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
+            $table->addCell('Remark' . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
             $table->endRow();
             $table->startRow();
             $table->addCell($editor->show());

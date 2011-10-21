@@ -36,6 +36,8 @@ class calendar extends content
 
     public function showInput($productID, $prevAction = NULL) {
         $objLanguage = $this->getObject('language','language');
+        $productUtil = $this->getObject('productutil', 'unesco_oer');
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -61,8 +63,10 @@ class calendar extends content
         $textinput->cssClass = "required";
         $textinput->setValue($this->_title);
 
+        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
+        $title = $objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
         $table->startRow();
-        $table->addCell($objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer'));
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_title',$title)));
         $table->endRow();
 
         $table->startRow();

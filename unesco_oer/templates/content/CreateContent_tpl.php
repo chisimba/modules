@@ -16,7 +16,15 @@
                 //$('.root').hide();
     
                 $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&pair=' + section_id + '&productID=' + $('.product_id').attr('id'));
-     
+
+                $("head").append("<link>");
+                css = $("head").children(":last");
+                css.attr({
+                    rel:  "stylesheet",
+                    type: "text/css",
+                    href: "packages/unesco_oer/resources/bubble-tooltip.css"
+                });
+                $.getScript("packages/unesco_oer/resources/bubble-tooltip.js");
                   
             }
 
@@ -69,7 +77,7 @@
 ?>
 <div class ="productsBackgroundColor ">
     <div class="greyText">
-        <div class="test">
+<!--        <div class="test">-->
 
             <?php
             $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $origional, "page" => '1a_tpl.php')));
@@ -138,4 +146,6 @@ $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="s
     <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
     <div class="bubble_bottom"></div>
 </div>
+<!--        </div>
+    </div>-->
 <!--<link href="chapter3.html" type="text/html" />-->

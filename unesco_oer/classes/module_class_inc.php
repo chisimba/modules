@@ -40,6 +40,7 @@ class module extends content {
 
     public function showInput($productID, $prevAction = NULL) {
         $productUtil = $this->getObject('productutil', 'unesco_oer');
+        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $pair = $option = '';
         if ($this->getID()) {
             $pair = $this->getPairString();
@@ -67,10 +68,9 @@ class module extends content {
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
-        $title = $this->objLanguage->languageText('mod_unesco_oer_module_title', 'unesco_oer');
-        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_title',$title)));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -83,7 +83,9 @@ class module extends content {
         $textinput->setValue($this->_metaDataArray['audience']);
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_level', 'unesco_oer'));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_module_level','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_level', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_module_level',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -103,7 +105,6 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_entry_requirements','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_requirements', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_requirements',$title)));
         $table->endRow();
@@ -124,7 +125,6 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_outcomes_objectives','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_outcomes', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_outcomes_objectives',$title)));
         $table->endRow();
@@ -134,38 +134,44 @@ class module extends content {
         $table->endRow();
 
         $fieldName = 'mode';
-        $textinput = new textinput($fieldName);
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray[$fieldName]);
+//        $textinput = new textinput($fieldName);
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_metaDataArray[$fieldName]);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_delivery_mode','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_mode', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_delivery_mode',$title)));
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
 
         $fieldName = 'no_of_hours';
-        $textinput = new textinput($fieldName);
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray[$fieldName]);
+//        $textinput = new textinput($fieldName);
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_metaDataArray[$fieldName]);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_number_of_hours','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_no_of_hours', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_number_of_hours',$title)));
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
 
-        $fieldName = "description";
+        $fieldName = "content";
         $editor->name = $fieldName;
         $editor->height = '450px';
 
@@ -174,7 +180,6 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
         $table->endRow();
@@ -191,7 +196,6 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_assessment','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_assessment', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_assessment',$title)));
         $table->endRow();
@@ -211,7 +215,6 @@ class module extends content {
 
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_schedule_of_activities','unesco_oer');
-        $objHelpLink = $this->getObject('helplink','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_module_schedule_of_classes', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_schedule_of_activities',$title)));
         $table->endRow();
@@ -220,68 +223,80 @@ class module extends content {
         $table->addCell($editor->show());
         $table->endRow();
 
-        $fieldName = 'Associated Material';
-        $textinput = new textinput('associated_material');
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['associated_material']);
+//        $fieldName = 'Associated Material';
+        $fieldName = 'associated_material';
+//        $textinput = new textinput('associated_material');
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_metaDataArray['associated_material']);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
         //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
+        $title = $this->objLanguage->languageText('mod_unesco_oer_module_associated_material', 'unesco_oer');
+        $table->addCell($title);
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+//        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
 
-        $fieldName = 'Comments History';
-        $textinput = new textinput('comments_history');
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['comments_history']);
+//        $fieldName = 'Comments History';
+        $fieldName = 'comments_history';
+//        $textinput = new textinput('comments_history');
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_metaDataArray['comments_history']);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($textinput->show());
-        $table->endRow();
-        
-//            $fieldName = 'remark';
-//        $editor->name = $fieldName;
-//        $editor->height = '450px';
-//        // $editor->width = '70%';
-//
-//        $editor->setBasicToolBar();
-//        $editor->setContent($this->_metaDataArray[$fieldName]);
-//
-//        $table->startRow();
-//        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_comments_history', 'unesco_oer'));
 //        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+        
+        $fieldName = 'remark';
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        // $editor->width = '70%';
+
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
+
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
+//        $table->addCell($fieldName);
+        $table->endRow();
+
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
+
+        
+        
+        
+        
+//        $fieldName = 'Remark';
+//        $textinput = new textinput('remark');
+//        $textinput->cssClass = "required";
+//        $textinput->setValue($this->_metaDataArray['remark']);
+//
+//        $table->startRow();
+//        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
+////        $table->addCell($fieldName);
 //        $table->endRow();
 //
 //        $table->startRow();
-//        $table->addCell($editor->show());
+//        $table->addCell($textinput->show());
 //        $table->endRow();
-//        
-        
-        
-        
-        
-        $fieldName = 'Remark';
-        $textinput = new textinput('remark');
-        $textinput->cssClass = "required";
-        $textinput->setValue($this->_metaDataArray['remark']);
-
-        $table->startRow();
-        //$table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer'));
-        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($textinput->show());
-        $table->endRow();
 
         $dropdown = new dropdown('status');
         $dropdown->cssClass = "required";
@@ -390,10 +405,11 @@ class module extends content {
             'no_of_hours' => $this->getParam('no_of_hours'),
             'mode' => $this->getParam('mode'),
             'assesment' => $this->getParam('assesment'),
-            'schedule_of_classes' => $this->getParam('scheduele_of_classes'),
+            'schedule_of_classes' => $this->getParam('schedule_of_classes'),
             'associated_material' => $this->getParam('associated_material'),
             'comments_history' => $this->getParam('comments_history'),
             'remark' => $this->getParam('remark'),
+            'content' => $this->getParam('content'),
             'object' => $this
         );
 
