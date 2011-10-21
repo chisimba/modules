@@ -132,6 +132,7 @@ class productutil extends object {
 
         $translations = $objProduct->getTranslationsList();
         $langs = $this->objLanguage->getLangs();
+        $langs['en'] = 'English';
         foreach ($translations as $translation) {
             $prodLanguage = $langs[$translation['language']];
 //            $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
@@ -347,6 +348,7 @@ class productutil extends object {
 
             $index = 0;
          $prodLanguages = $this->objLanguage->getLangs();
+         $langs['en'] = 'English';
          $content .= '<option value="">' . $prodLanguages[$product['language']] . '</option>';
 //            foreach ($product as $languages) {
 ////Check if languages is empty

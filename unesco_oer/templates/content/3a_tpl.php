@@ -353,6 +353,7 @@ echo $product->getAuthors();
                     <?php
                     $translations = $product->getTranslationsList();
                     $langs = $this->objLanguage->getLangs();
+                    $langs['en'] = 'English';
                     foreach ($translations as $translation) {
                         $prodLanguage = $langs[$translation['language']];
                         $selected = ($product->getIdentifier() == $translation['id']) ? '(current)' : '';

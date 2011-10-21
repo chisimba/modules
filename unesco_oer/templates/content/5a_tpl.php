@@ -330,6 +330,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             <?php
                             $translations = $product->getTranslationsList();
                             $langs = $this->objLanguage->getLangs();
+                            $langs['en'] = 'English';
                             foreach ($translations as $translation) {
                                 $prodLanguage = $langs[$translation['language']];
                                 if ($product->getIdentifier() == $translation['id']){

@@ -748,6 +748,7 @@ class product extends object {
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_language', 'unesco_oer');
         $title .= $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_language',$title));
         $langs = $this->objLanguage->getLangs();
+        $langs['en'] = 'English';
         $productLanguages = array();
         foreach ($langs as $key => $value) {
             $productLanguages[] = array('code' => $value, 'id' => $key);
@@ -920,6 +921,38 @@ class product extends object {
         // setup table and table headings with input fields
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->cssClass = "moduleHeader";
+
+        //Field for accreditation
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend('Accreditation');
+        $acredTable = $this->newObject('htmltable', 'htmlelements');
+        $acredTable->cssClass = "moduleHeader";
+
+        $fieldName = 'is_accredited';
+        $title = $fieldName;
+        $acredTable->startRow();
+        $acredTable->addCell($title);
+        $acredTable->endRow();
+        $acredTable->startRow();
+//        $acredTable->addCell($title);
+        $acredTable->endRow();
+
+        $fieldName = 'accreditation_body';
+        $title = $fieldName;
+        $this->_objAddDataUtil->addTextInputToTable(
+                $title, 4, $fieldName, '90%', $this->getContacts(), $acredTable
+        );
+
+        $fieldName = 'accreditation_date';
+        $title = $fieldName;
+        $this->_objAddDataUtil->addTextInputToTable(
+                $title, 4, $fieldName, '90%', $this->getContacts(), $acredTable
+        );
+
+        $fieldset->addContent($acredTable->show());
+        $table->startRow();
+        $table->addCell($fieldset->show());
+        $table->endRow();
 
         //Field for Contacts
         $fieldName = 'contacts';
@@ -1411,6 +1444,7 @@ class product extends object {
 
     function getLanguageName() {
         $langs = $this->objLanguage->getLangs();
+        $langs['en'] = 'English';
         return $langs[$this->getLanguageID()];
     }
 
