@@ -130,6 +130,12 @@ class product extends object {
      */
     private $_coverage;
 
+    /** Accreditation Data Array
+     *
+     * @var array
+     */
+    private $_accreditationdata;
+
     /*     * status
      *
      * @var <type>
@@ -268,6 +274,7 @@ class product extends object {
 
         $this->setContentManager($this->newObject('contentmanager'));
         $this->_user = $this->getObject('user', 'security');
+        $this->_accreditationdata = array();
     }
 
     ////////////////   METHODS   ////////////////
@@ -301,6 +308,9 @@ class product extends object {
         $tempData['status'] = $this->getStatus();
         $tempData['deleted'] = $this->isDeleted();
         $tempData['thumbnail'] = $this->getThumbnailPath();
+        $tempData['is_accredited'] = $this->_accreditationdata['is_accredited'];
+        $tempData['accreditation_body'] = $this->_accreditationdata['accreditation_body'];
+        $tempData['accreditation_date'] = $this->_accreditationdata['accreditation_date'];
 
         $keywords = array();
 
@@ -417,6 +427,8 @@ class product extends object {
         $this->loadKeyWords($product['id']);
         $this->setDeletionStatus($product['deleted']);
 
+        $this->setAccreditationData($product['is_accredited'], $product['accreditation_body'], $product['accreditation_date']);
+
         $this->getContentManager();
 
         if ($this->isAdaptation()) {
@@ -467,6 +479,7 @@ class product extends object {
         $this->setRelation($this->getParam('relation'), $this->getParam('relation_type'));
         $this->setDeletionStatus(0);
         $this->setParentID($this->getParam('parentID'));
+        $this->setAccreditationData($this->getParam('is_accredited'), $this->getParam('accreditation_body'), $this->getParam('accreditation_date'));
 
         $themesSelected = array();
         $umbrellaThemes = $this->objDbProductThemes->getUmbrellaThemes();
@@ -934,19 +947,24 @@ class product extends object {
         $acredTable->addCell($title);
         $acredTable->endRow();
         $acredTable->startRow();
-//        $acredTable->addCell($title);
+        $objRadio = $this->newObject('radio','htmlelements');
+        $objRadio->name = $fieldName;
+        $objRadio->addOption('YES','Yes');
+        $objRadio->addOption('NO','No');
+        $objRadio->setSelected($this->_accreditationdata[$fieldName]);
+        $acredTable->addCell($objRadio->show());
         $acredTable->endRow();
 
         $fieldName = 'accreditation_body';
         $title = $fieldName;
         $this->_objAddDataUtil->addTextInputToTable(
-                $title, 4, $fieldName, '90%', $this->getContacts(), $acredTable
+                $title, 4, $fieldName, '90%', $this->_accreditationdata[$fieldName], $acredTable
         );
 
         $fieldName = 'accreditation_date';
         $title = $fieldName;
         $this->_objAddDataUtil->addTextInputToTable(
-                $title, 4, $fieldName, '90%', $this->getContacts(), $acredTable
+                $title, 4, $fieldName, '90%', $this->_accreditationdata[$fieldName], $acredTable
         );
 
         $fieldset->addContent($acredTable->show());
@@ -1407,6 +1425,12 @@ class product extends object {
         $this->_institution = $institutionID;
     }
 
+    private function  setAccreditationData($isAccredited, $body, $date) {
+        $this->_accreditationdata['is_accredited'] = $isAccredited;
+        $this->_accreditationdata['accreditation_body'] = $body;
+        $this->_accreditationdata['accreditation_date'] = $date;
+    }
+
     ////////////////   GETTERS   ////////////////
 
 
@@ -1695,6 +1719,10 @@ class product extends object {
         $this->setIdentifier($tempId);
 
         return $tempProduct;
+    }
+
+    function getAccreditationData() {
+        return $this->_accreditationdata;
     }
 
 }

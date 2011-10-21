@@ -30,6 +30,9 @@ $fields = array(
                 'relation_type' =>array('type' =>'text','length'=>32),
                 'status' => array('type' => 'text', 'length'=>255),
                 'thumbnail'=>array('type'=>'text','length'=>512),
-                'deleted' => array('type' => 'integer','length' => 1,'default' => '0')
+                'deleted' => array('type' => 'integer','length' => 1,'default' => '0'),
+                'is_accredited' => array('type'=>'text','length'=>4),
+                'accreditation_body' => array('type'=>'text','length'=>255),
+                'accreditation_date' => array('type'=>'text','length'=>255)
  		);
 ?>

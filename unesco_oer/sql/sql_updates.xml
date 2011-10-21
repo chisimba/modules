@@ -313,6 +313,33 @@
         </data>
     </update>
 
+    <update>
+        <table>tbl_unesco_oer_products</table>
+        <version>0.154</version>
+        <description>Added fields for accreditation data</description>
+        <data>
+            <add>
+                <name>is_accredited</name>
+                <type>text</type>
+                <length>4</length>
+            </add>
+        </data>
+        <data>
+            <add>
+                <name>accreditation_body</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+        <data>
+            <add>
+                <name>accreditation_date</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
+
 </updates>
 
 
