@@ -273,7 +273,7 @@ class module extends content {
 
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
-//        $table->addCell($fieldName);
+       $table->addCell($fieldName);
         $table->endRow();
 
         $table->startRow();
@@ -291,7 +291,7 @@ class module extends content {
 //
 //        $table->startRow();
 //        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
-////        $table->addCell($fieldName);
+//        $table->addCell($fieldName);
 //        $table->endRow();
 //
 //        $table->startRow();
