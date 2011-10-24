@@ -87,7 +87,7 @@ class contentmanager extends object {
             ";
 
 
-        $output = "<div class='roeot' >$instructions</div>";
+        $output = "<div class='root' >$instructions</div>";
         $output .= $buttonSubmit->show();
         $output .= "<div class='product_id' id='{$this->getProductID()}'></div>";
 
