@@ -47,10 +47,30 @@
             }
 
 
+      
+
+
+
 
 
             $('#upload').live('click', function() {   
                 $("#form_add_products_ui").validate();
+//                
+//                  varError = "";
+//            var objCKeditor1 =  document.getElementById('cke_remark');
+//            if(CKeditorAPI.GetInstance(objCKeditor1.id).GetXHTML(true) =="")
+//            {
+//                varError += "Entering text in fckeditor is mandatory.\n";
+//            }
+//            if(varError !='')
+//            {
+//                alert(varError);
+//                return false;
+//            }
+//                
+//                
+                
+           
             });
 
         </script>
