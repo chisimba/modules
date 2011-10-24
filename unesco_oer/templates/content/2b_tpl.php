@@ -393,30 +393,39 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
 
                                 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);   
                         ?>
-                                        <div class="spaceBetweenRightBorderedDivs">
-                                            <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
-                                        </div>
-                                        <div class="rightColumnBorderedDiv">
-                                            <div class="rightColumnContentPadding">
+                                     <div class="spaceBetweenRightBorderedDivs">
+                                    <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
+                                </div>
+                                <div class="rightColumnBorderedmap">
+                                    <div >
 
-                                    <!DOCTYPE html>
-                                    <html>
-                                        <head>
-                                            <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-                                            <style type="text/css">
-                                                html { height: 100% }
-                                                body { height: 100%; margin: 0px; padding: 0px }
-                                                #map_canvas { height: 100% }
-                                            </style>
-                                            <script type="text/javascript"
-                                                    src="http://maps.google.com/maps/api/js?sensor=true">
-                                            </script>
- <script type="text/javascript">
-
+                      
+                                      <!DOCTYPE html>
+                                
+                                            <head>
+                                                <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+                                                <style type="text/css">
+                                                    html { height: 100% }
+                                                    body { height: 100%; margin: 0px; padding: 0px }
+                                                    #map_canvas { height: 100% }
+                                                </style>
+                                                <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+                                                <script type="text/javascript"
+                                                        src="http://maps.google.com/maps/api/js?sensor=true">
+                                                </script>
+                                                 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
+                                                <script type="text/javascript">
+                                                    
+              
+                   
+                   
+                   
+                   
+                   
                                                 var marker = new Array();
 
 
-                                                function initialize() {
+                                              $(document).ready(function(){ 
 
                                                     myLatlng = [
 
@@ -506,17 +515,20 @@ $js = '<script language="JavaScript" src="'.$this->getResourceUri('filterproduct
                                                     }
 
 
-                                                }
+                                                });
 
                                             </script>
                                         </head>
-                                        <body onload="initialize()">
-                                            <div id="map_canvas" style="width:100%; height:20%"></div>
-                                            <?php
-                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2b_tpl.php', 'MapEntries' => $MapEntries)));
+                         
+                                            <div id="map_canvas" style="width:210; height:110"></div>
+<?php
+                                                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
-                                            echo $form->show();
-                                          
+                                                echo $form->show();
+                                                
+                                                
+                                                
+                                                
                                             ?>
                                         </body>
                                     </html>

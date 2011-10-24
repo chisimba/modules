@@ -404,10 +404,8 @@ if ($adaptationstring == null)
                                 <div class="rightColumnBorderedmap">
                                     <div >
 
-                            <?php
-                            ?>
-
-                                        <!DOCTYPE html>
+                      
+                                      <!DOCTYPE html>
                                 
                                             <head>
                                                 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -525,22 +523,14 @@ if ($adaptationstring == null)
 
                                             </script>
                                         </head>
-<!--                                        <body onload="initialize()">-->
+                         
                                             <div id="map_canvas" style="width:210; height:110"></div>
 <?php
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
                                                 echo $form->show();
                                                 
-                                                
-                                                
-                                                
-                                                
-                                     
-                                                
-                                                
-                                                
-                                                
+                                           
 ?>
                                         </body>
                                     </html>

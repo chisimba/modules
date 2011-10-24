@@ -595,18 +595,35 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
 
                 </div>
-                <div class="rightColumnBorderedDiv">
-                	<div class="rightColumnContentPadding">
+                  <div class="rightColumnBorderedmap">
+                                    <div >
 
-                                            <script type="text/javascript"
-                                                    src="http://maps.google.com/maps/api/js?sensor=true">
-                                            </script>
- <script type="text/javascript">
-
+                      
+                                      <!DOCTYPE html>
+                                
+                                            <head>
+                                                <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+                                                <style type="text/css">
+                                                    html { height: 100% }
+                                                    body { height: 100%; margin: 0px; padding: 0px }
+                                                    #map_canvas { height: 100% }
+                                                </style>
+                                                <script type="text/javascript"
+                                                        src="http://maps.google.com/maps/api/js?sensor=true">
+                                                </script>
+                                                 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
+                                                <script type="text/javascript">
+                                                    
+              
+                   
+                   
+                   
+                   
+                   
                                                 var marker = new Array();
 
 
-                                                function initialize() {
+                                              $(document).ready(function(){ 
 
                                                     myLatlng = [
 
@@ -696,20 +713,20 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                                     }
 
 
-                                                }
+                                                });
 
                                             </script>
+                                        </head>
+                         
+                                            <div id="map_canvas" style="width:210; height:110"></div>
+<?php
+                                                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
-                                        <body onload="initialize()">
-                                            <div id="map_canvas" style="width:100%; height:20%"></div>
-                                            <?php
-                                            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2b_tpl.php', 'MapEntries' => $MapEntries)));
-
-                                            echo $form->show();
-
+                                                echo $form->show();
+                                                
+                                                
                                             ?>
-                                        </body>
-
+                                       
 
 
 
