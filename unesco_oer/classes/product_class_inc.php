@@ -789,7 +789,8 @@ class product extends object {
         $editor->setContent($this->getDescription());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short', 'unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
+        $title = $this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title));
+        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
         $table->endRow();
         $table->startRow();
         $table->addCell($editor->show());
