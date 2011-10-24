@@ -806,7 +806,8 @@ class product extends object {
         $editor->setContent($this->getAbstract());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_abstract', 'unesco_oer');
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_abstract',$title)));
+        $title = $this->objLanguage->languageText('mod_unesco_oer_description_abstract', 'unesco_oer') . $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_abstract',$title));
+        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
         $table->endRow();
         $table->startRow();
         $table->addCell($editor->show());
@@ -841,12 +842,15 @@ class product extends object {
         $objSelectBox->insertRightOptions($this->getKeyWords(), 'id', 'keyword');
         //Construct tables for left selectboxes
         $tblLeft = $this->newObject('htmltable', 'htmlelements');
+        $tblLeft->cssClass = "moduleHeader";
         $objSelectBox->selectBoxTable($tblLeft, $objSelectBox->objLeftList);
         //Construct tables for right selectboxes
         $tblRight = $this->newObject('htmltable', 'htmlelements');
+        $tblRight->cssClass = "moduleHeader";
         $objSelectBox->selectBoxTable($tblRight, $objSelectBox->objRightList);
         //Construct tables for selectboxes and headings
         $tblSelectBox = $this->newObject('htmltable', 'htmlelements');
+        $tblSelectBox->cssClass = "moduleHeader";
         $tblSelectBox->width = '90%';
         $tblSelectBox->startRow();
         $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrLeft'], '100pt');
