@@ -68,9 +68,9 @@ class module extends content {
         $textinput->setValue($this->_title);
 
         $table->startRow();
-        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
-        $title = $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer');
-        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_title','unesco_oer');
+        $title = $this->objLanguage->languageText('mod_unesco_oer_title', 'unesco_oer');
+        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_title',$title)));
         $table->endRow();
 
         $table->startRow();
@@ -273,7 +273,6 @@ class module extends content {
 
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
-       $table->addCell($fieldName);
         $table->endRow();
 
         $table->startRow();
@@ -424,7 +423,7 @@ class module extends content {
 
     protected function saveNew() {
         $this->_id = NULL;
-        $this->_metaDataArray['parentid'] = $this->_metaDataArray['id'];
+//        $this->_metaDataArray['parentid'] = $this->_metaDataArray['id'];
         unset($this->_metaDataArray['id']);
         unset($this->_metaDataArray['puid']);
         $this->_metaDataArray['year_id'] = $this->getParentID();

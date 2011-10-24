@@ -79,7 +79,7 @@ class curriculum extends content {
         $editor = $this->newObject('htmlarea', 'htmlelements');
       
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
        // $editor->width = '70%';
         
         $editor->setBasicToolBar();
@@ -97,7 +97,7 @@ class curriculum extends content {
         $fieldName = 'background';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
         //$editor->width = '70%';
         $editor->setBasicToolBar();
         $editor->setContent($this->_background);
@@ -113,7 +113,7 @@ class curriculum extends content {
         $fieldName = 'introductory_description';
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = $fieldName;
-        $editor->height = '150px';
+        $editor->height = '450px';
         //$editor->width = '70%';
         $editor->setBasicToolBar();
         $editor->setContent($this->_introductory_description);
@@ -130,9 +130,10 @@ class curriculum extends content {
         
         
         $fieldName = 'remark';
-         $textinput = new textinput($fieldName);
-         $textinput->cssClass = "required";
-        $textinput->setValue($this->_remark);
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->setBasicToolBar();
+        $editor->setContent($this->_metaDataArray[$fieldName]);
       
 
         $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_remark', 'unesco_oer');
@@ -142,7 +143,7 @@ class curriculum extends content {
         $table->endRow();
 
         $table->startRow();
-        $table->addCell($textinput->show());
+        $table->addCell($editor->show());
         $table->endRow();
         
         
