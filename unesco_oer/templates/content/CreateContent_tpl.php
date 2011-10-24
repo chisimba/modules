@@ -9,7 +9,7 @@
         echo $base;
         echo $baseajax;
         ?>
-        <script  >
+        <script  language="JavaScript" type="text/javascript">
    
 
             function edit(section_id){
