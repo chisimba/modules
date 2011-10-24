@@ -129,6 +129,14 @@ class curriculum extends content {
         $table->endRow();
         
         
+       
+        $product = $this->getObject('product');
+        $product->loadProduct($productID);
+//        
+        if ($product->isAdaptation()){
+          
+        
+        
         $fieldName = 'remark';
         $editor->name = $fieldName;
         $editor->height = '450px';
@@ -145,6 +153,8 @@ class curriculum extends content {
         $table->startRow();
         $table->addCell($editor->show());
         $table->endRow();
+        
+        }
         
         
         $dropdown = new dropdown('status');
@@ -201,7 +211,9 @@ class curriculum extends content {
         $content = " <h3 class='greyText'> $forwardHeading : </h3>$this->_forward<br>" ;
         $content .= " <h3 class='greyText'> $backgroundHeading : </h3>$this->_background<br>" ;
         $content .= " <h3 class='greyText'> $descriptionHeading : </h3>$this->_introductory_description<br>" ;
+            if (!($this->_remark == null)){
             $content .= " <h3 class='greyText'> Remark : </h3>$this->_remark<br>" ;
+            }
 
         return $content;
     }

@@ -245,27 +245,34 @@ class module extends content {
         $table->endRow();
 
 //        $fieldName = 'Comments History';
-        $fieldName = 'comments_history';
-//        $textinput = new textinput('comments_history');
-//        $textinput->cssClass = "required";
-//        $textinput->setValue($this->_metaDataArray['comments_history']);
-        $editor->name = $fieldName;
-        $editor->height = '450px';
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray[$fieldName]);
-
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_comments_history', 'unesco_oer'));
-//        $table->addCell($fieldName);
-        $table->endRow();
-
-        $table->startRow();
-        $table->addCell($editor->show());
-        $table->endRow();
+//        $fieldName = 'comments_history';
+////        $textinput = new textinput('comments_history');
+////        $textinput->cssClass = "required";
+////        $textinput->setValue($this->_metaDataArray['comments_history']);
+//        $editor->name = $fieldName;
+//        $editor->height = '450px';
+//        $editor->setBasicToolBar();
+//        $editor->setContent($this->_metaDataArray[$fieldName]);
+//
+//        $table->startRow();
+//        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_comments_history', 'unesco_oer'));
+////        $table->addCell($fieldName);
+//        $table->endRow();
+//
+//        $table->startRow();
+//        $table->addCell($editor->show());
+//        $table->endRow();
         
-        $fieldName = 'remark';
+         $parents = $this->getParentObjectList();
+        $product = $this->getObject('product');
+        $product->loadProduct($parents[0]->getParentID());
+//        
+        if ($product->isAdaptation()){
+          
+                 $fieldName = 'remark';
         $editor->name = $fieldName;
         $editor->height = '450px';
+             $editor->cssClass = "required";
         // $editor->width = '70%';
 
         $editor->setBasicToolBar();
@@ -279,7 +286,12 @@ class module extends content {
         $table->addCell($editor->show());
         $table->endRow();
 
+            
+            
+        }
         
+   
+       
         
         
         
@@ -370,8 +382,16 @@ class module extends content {
         $content.= '<h3 class="greyText">Assesment</h3><br> ' . $this->_metaDataArray['assesment'] . '<br><br>';
         $content.= '<h3 class="greyText">Scheduele of Activities</h3><br> ' . $this->_metaDataArray['schedule_of_classes'] . '<br><br>';
         $content.= '<h3 class="greyText">Associated Material</h3><br> ' . $this->_metaDataArray['associated_material'] . '<br><br>';
-        $content.= '<h3 class="greyText">Comments history</h3><br> ' . $this->_metaDataArray['comments_history'] . '<br><br>';
+ 
+        
+          $parents = $this->getParentObjectList();
+        $product = $this->getObject('product');
+        $product->loadProduct($parents[0]->getParentID());
+//        
+        if ($product->isAdaptation()){
+          
           $content.= '<h3 class="greyText">Remarks</h3><br> ' . $this->_metaDataArray['remark'] . '<br><br>';
+        }
 
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
