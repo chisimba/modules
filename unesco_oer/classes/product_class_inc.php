@@ -853,7 +853,7 @@ class product extends object {
         $tblSelectBox->cssClass = "moduleHeader";
         $tblSelectBox->width = '90%';
         $tblSelectBox->startRow();
-        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrLeft'], '100pt');
+        $tblSelectBox->addCell('<h4>'.$objSelectBox->arrHeaders['hdrLeft'].'</h4>', '100pt');
         $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrRight'], '100pt');
         $tblSelectBox->endRow();
         $tblSelectBox->startRow();
