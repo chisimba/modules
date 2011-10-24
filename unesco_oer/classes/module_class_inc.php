@@ -179,7 +179,7 @@ class module extends content {
         $editor->setContent($this->_metaDataArray[$fieldName]);
 
         $table->startRow();
-        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
+        $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_long','unesco_oer');
         $title = $this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer');
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
         $table->endRow();

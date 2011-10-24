@@ -118,7 +118,7 @@ class curriculum extends content {
         $editor->setBasicToolBar();
         $editor->setContent($this->_introductory_description);
 
-        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_description_short','unesco_oer');
+        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_description_long','unesco_oer');
         $title = $objLanguage->languageText('mod_unesco_oer_curriculum_description', 'unesco_oer');
         $table->startRow();
         $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_description_long',$title)));
