@@ -906,8 +906,8 @@ class product extends object {
         $detailsLink->link = "<h3>$licenceinfo</h3>";
 
         $table->startRow();
-//        $table->addCell($detailsLink->show());
-        $this->_objAddDataUtil->addTitleToRow($detailsLink->show(), 4, $table);
+        $table->addCell($detailsLink->show());
+//        $this->_objAddDataUtil->addTitleToRow($detailsLink->show(), 4, $table);
         $table->endRow();
 
         $objLicenseChooser = $this->newObject('licensechooser', 'creativecommons');
