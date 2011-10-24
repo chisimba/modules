@@ -854,7 +854,7 @@ class product extends object {
         $tblSelectBox->width = '90%';
         $tblSelectBox->startRow();
         $tblSelectBox->addCell('<h4>'.$objSelectBox->arrHeaders['hdrLeft'].'</h4>', '100pt');
-        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrRight'], '100pt');
+        $tblSelectBox->addCell('<h4>'.$objSelectBox->arrHeaders['hdrRight'].'</h4>', '100pt');
         $tblSelectBox->endRow();
         $tblSelectBox->startRow();
         $tblSelectBox->addCell($tblLeft->show(), '100pt');
@@ -906,7 +906,8 @@ class product extends object {
         $detailsLink->link = "<h3>$licenceinfo</h3>";
 
         $table->startRow();
-        $table->addCell($detailsLink->show());
+//        $table->addCell($detailsLink->show());
+        $this->_objAddDataUtil->addTitleToRow($detailsLink->show(), 4, $table);
         $table->endRow();
 
         $objLicenseChooser = $this->newObject('licensechooser', 'creativecommons');
@@ -949,7 +950,7 @@ class product extends object {
         $fieldName = 'is_accredited';
         $title = $this->objLanguage->languageText('mod_unesco_oer_accreditation_is', 'unesco_oer');
         $acredTable->startRow();
-        $acredTable->addCell($title);
+        $this->_objAddDataUtil->addTitleToRow($title, 4, $acredTable);
         $acredTable->endRow();
         $acredTable->startRow();
         $objRadio = $this->newObject('radio','htmlelements');
