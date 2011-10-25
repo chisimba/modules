@@ -15,22 +15,18 @@
 		<defaultValueExpression><![CDATA[new java.lang.Double(0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="region" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="theme" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="type" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="institution" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="parameter1" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="50" splitType="Stretch"/>
-	</title>
-	<pageHeader>
-		<band height="50" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="30" splitType="Stretch"/>
-	</columnHeader>
-	<detail>
-		<band height="223" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="21" width="535" height="202"/>
+				<reportElement key="textField-1" x="0" y="0" width="512" height="50"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -40,20 +36,77 @@
 				<textElement>
 					<font size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Adaptations By Filter: "+$P{text}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Adaptations By Multiple Criteria"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="802" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="21" width="535" height="90"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Region: "+$P{region}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="111" width="535" height="91"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Theme: "+$P{theme}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="202" width="535" height="91"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Type: "+$P{type}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="293" width="535" height="98"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Institution Type : "+$P{institution}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="391" width="535" height="98"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Language : "+$P{language}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="30" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="50" splitType="Stretch"/>
-	</pageFooter>
-	<lastPageFooter>
-		<band height="50" splitType="Stretch"/>
-	</lastPageFooter>
-	<summary>
-		<band height="50" splitType="Stretch"/>
-	</summary>
 </jasperReport>

@@ -41,7 +41,11 @@ class reportmanager extends object {
         $fillManager = new JavaClass("net.sf.jasperreports.engine.JasperFillManager");
 
         $params = new Java("java.util.HashMap");
-        $params->put("text", $text);
+        $params->put("region", $text);
+        $params->put("theme","");
+        $params->put("type","");
+        $params->put("institution","");
+        $params->put("language","");
 
         $emptyDataSource = new Java("net.sf.jasperreports.engine.JREmptyDataSource");
         $jasperPrint = $fillManager->fillReport($report, $params, $emptyDataSource);

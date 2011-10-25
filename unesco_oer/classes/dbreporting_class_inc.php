@@ -274,12 +274,11 @@ class dbreporting extends dbtable {
         $arrayCount = sizeof($regions);
         $allSql = array();
         for ($x = 0; $x < $arrayCount; $x++) {
-            //$regionName = "'".$regions[$x][0]["id"]."'"
             $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
                 FROM tbl_unesco_oer_product_adaptation_data
                 WHERE tbl_unesco_oer_product_adaptation_data.region = $regions[$x]";
 
-            $allSql = $this->getArray($sql);
+            $allSql[] = $this->getArray($sql);
         }
 
         return $allSql;
@@ -310,7 +309,7 @@ class dbreporting extends dbtable {
             $sql = "SELECT tbl_unesco_oer_product_theme_junction.product_id
                 FROM tbl_unesco_oer_product_theme_junction
                 WHERE tbl_unesco_oer_product_theme_junction.theme_id = $themeName ";
-            $allSql = $this->getArray($sql);
+            $allSql[] = $this->getArray($sql);
         }
 
         return $allSql;
@@ -338,13 +337,13 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $typeName = "'" . $type[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_products.id
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator 
                 FROM tbl_unesco_oer_products
                 WHERE tbl_unesco_oer_products.resource_type = $typeName AND tbl_unesco_oer_products.parent_id IS NOT NULL
                 AND tbl_unesco_oer_products.deleted = 0";
-            $allSql = $this->getArray($sql);
+            $allSql[] = $this->getArray($sql);
         }
-
+        
         return $allSql;
     }
 
@@ -370,7 +369,7 @@ class dbreporting extends dbtable {
                 WHERE tbl_unesco_oer_institutions.type = $query";
             $allSql1[] = $this->getArray($sql);
         }
-        //var_dump($allSql1);
+
         return $allSql1;
     }
 
@@ -384,7 +383,7 @@ class dbreporting extends dbtable {
             $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
                 FROM tbl_unesco_oer_product_adaptation_data
                 WHERE tbl_unesco_oer_product_adaptation_data.institution_id = $institution ";
-            $allSql = $this->getArray($sql);
+            $allSql[] = $this->getArray($sql);
         }
 
         return $allSql;
@@ -413,11 +412,11 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $lang = "'" . $langID[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_products.id
+            $sql = "SELECT SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
                 FROM tbl_unesco_oer_products
                 WHERE tbl_unesco_oer_products.language = $lang AND tbl_unesco_oer_products.parent_id IS NOT NULL
                 AND tbl_unesco_oer_products.deleted = 0";
-            $allSql = $this->getArray($sql);
+            $allSql[] = $this->getArray($sql);
         }
 
         return $allSql;
@@ -454,11 +453,17 @@ class dbreporting extends dbtable {
             
             foreach ($tempArray as $Products){
                 foreach($Products as $Prod ){
-                  $allProducts .= $Prod." ";  
+                    foreach($Prod as $Prodd){
+                      $allProducts .= $Prodd." ";  
+                    }
+                    
                 }
                 
             }
         }
+        
+//        var_dump($allProducts);
+//        die();
 
         return $allProducts;
     }
