@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+
         <div class="mainContentHolder">
         	<div class="subNavigation"></div>
         	<!-- Left Wide column DIv -->
@@ -41,15 +41,16 @@
                 </ul>
                 </div>
                                     <?php                                    
-                                    $displayReport = $this->objdisplayreportgenerator->displayForm();
-                                    echo $displayReport;
+                                   $displayReport = $this->objdisplayreportgenerator->displayForm();
+                                   echo $displayReport;
                                     ?>
+            </div>
+        </div>
 
 
-                                    
-
-                    
-         
+       
+  
+          
 
             <!-- Right column DIv -->
             <div class="rightColumnDiv">
@@ -181,7 +182,7 @@
 
                                             </script>
                                         </head>
-                                        <body onload="initialize()">
+                   
                                             <div id="map_canvas" style="width:100%; height:20%"></div>
 <?php
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
@@ -194,17 +195,18 @@
                                                 
                                                 
 ?>
-            </div>
+                                    </div>
+                                </div>
         </div>
         </div>
-        </div>
-                        </div>
-        </div>
+      
         
-            </div>
+ 
+       
+        
+   
             
-        <!-- Footer-->
+     
 
         
-</body>
-</html>
+

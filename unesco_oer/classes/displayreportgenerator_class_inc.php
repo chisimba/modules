@@ -252,9 +252,9 @@ class displayreportgenerator extends object
                         </div>
 
                     </div>
-                </div>
+                
                 <br><br><br>
-                </div>';
+                ';
 
         $objForm->addToForm($content);
 
