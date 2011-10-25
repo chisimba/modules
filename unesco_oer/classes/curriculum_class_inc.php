@@ -135,26 +135,25 @@ class curriculum extends content {
 //        
         if ($product->isAdaptation()){
           
-        
-        
-        $fieldName = 'remark';
-        $editor->name = $fieldName;
-        $editor->height = '450px';
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray[$fieldName]);
-      
 
-        $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_remark', 'unesco_oer');
-        $title = $objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer');
-        $table->startRow();
-        $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
-        $table->endRow();
+                $fieldName = 'remark';
+                $editor->name = $fieldName;
+                $editor->height = '450px';
+                $editor->setBasicToolBar();
+                $editor->setContent($this->_metaDataArray[$fieldName]);
 
-        $table->startRow();
-        $table->addCell($editor->show());
-        $table->endRow();
+
+                $tooltip = $objLanguage->languageText('mod_unesco_oer_tooltip_remark', 'unesco_oer');
+                $title = $objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer');
+                $table->startRow();
+                $table->addCell($title . $productUtil->getToolTip($tooltip, $objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
+                $table->endRow();
+
+                $table->startRow();
+                $table->addCell($editor->show());
+                $table->endRow();
         
-        }
+        } else $this->_metaDataArray[$fieldName] = 'UNESCO OER ORIGIONAL';
         
         
         $dropdown = new dropdown('status');
@@ -211,9 +210,9 @@ class curriculum extends content {
         $content = " <h3 class='greyText'> $forwardHeading : </h3>$this->_forward<br>" ;
         $content .= " <h3 class='greyText'> $backgroundHeading : </h3>$this->_background<br>" ;
         $content .= " <h3 class='greyText'> $descriptionHeading : </h3>$this->_introductory_description<br>" ;
-            if (!($this->_remark == null)){
+    
             $content .= " <h3 class='greyText'> Remark : </h3>$this->_remark<br>" ;
-            }
+           
 
         return $content;
     }

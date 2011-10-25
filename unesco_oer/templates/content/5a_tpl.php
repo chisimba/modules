@@ -400,7 +400,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                          $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
-                             echo $comments[2];
+                        echo   $this->objProductUtil->smart_trim($comments[2],50);
                             ?>
 
                       
@@ -416,7 +416,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                         $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
-                             echo $comments[1];
+                                echo   $this->objProductUtil->smart_trim($comments[1],50);
 
                             ?>
                             </a>
@@ -537,7 +537,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                             $Comment = $this->getobject('commentmanager', 'unesco_oer');
                              $comments =  $Comment->recentcomment($productID);
-                             echo $comments[1];
+                               echo   $this->objProductUtil->smart_trim($comments[1],50);
 
 
 

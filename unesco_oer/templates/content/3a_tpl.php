@@ -412,7 +412,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     <?php
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
     $comments = $Comment->recentcomment($productID);
-    echo $comments[2];
+  echo   $this->objProductUtil->smart_trim($comments[2],50);
     ?>
 
 
@@ -426,7 +426,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     <?php
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
     $comments = $Comment->recentcomment($productID);
-    echo $comments[1];
+ echo  $this->objProductUtil->smart_trim($comments[1],50);
     ?>
                                 </a>
                             </div>
@@ -516,7 +516,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
 
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
     $comments = $Comment->recentcomment($productID);
-    echo $comments[1];
+    echo   $this->objProductUtil->smart_trim($comments[1],50);
 
     echo'  </div>
                                   </div>';

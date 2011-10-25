@@ -268,27 +268,27 @@ class module extends content {
         $product->loadProduct($parents[0]->getParentID());
 //        
         if ($product->isAdaptation()){
-          
-                 $fieldName = 'remark';
-        $editor->name = $fieldName;
-        $editor->height = '450px';
-             $editor->cssClass = "required";
-        // $editor->width = '70%';
 
-        $editor->setBasicToolBar();
-        $editor->setContent($this->_metaDataArray[$fieldName]);
+                         $fieldName = 'remark';
+                $editor->name = $fieldName;
+                $editor->height = '450px';
+                     $editor->cssClass = "required";
+                // $editor->width = '70%';
 
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
-        $table->endRow();
+                $editor->setBasicToolBar();
+                $editor->setContent($this->_metaDataArray[$fieldName]);
 
-        $table->startRow();
-        $table->addCell($editor->show());
-        $table->endRow();
+                $table->startRow();
+                $table->addCell($this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'));
+                $table->endRow();
+
+                $table->startRow();
+                $table->addCell($editor->show());
+                $table->endRow();
 
             
             
-        }
+        }  else $this->_metaDataArray[$fieldName] = 'UNESCO OER ORIGIONAL';
         
    
        
@@ -388,10 +388,10 @@ class module extends content {
         $product = $this->getObject('product');
         $product->loadProduct($parents[0]->getParentID());
 //        
-        if ($product->isAdaptation()){
+
           
           $content.= '<h3 class="greyText">Remarks</h3><br> ' . $this->_metaDataArray['remark'] . '<br><br>';
-        }
+       
 
         //$action = "";
         //$buttonSubmit->setOnClick('javascript: ' . $action);
