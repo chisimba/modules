@@ -2671,5 +2671,9 @@ class unesco_oer extends controller {
         $objReportManager->generatePDFReport("$query", "output.pdf", "test.jrxml");
     }
 
+    public function __selectAdaptation() {
+        return "selectAdaptation_tpl.php";
+    }
+
 }
 ?>
