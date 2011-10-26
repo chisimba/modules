@@ -202,7 +202,14 @@ $product = $this->getObject('product');
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
 
-                             
+                                if ($existingContent->getType() == 'module') {
+                                    $uri = $this->uri(array('action' => 'selectGroup', 'productid' => $productID, 'sectionid'=>$existingContent->getID()));
+                                    $adaptLink = new link($uri);
+                                    $adaptLink->title = "Adapt Section";
+                                    $linkText = '<img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Print" width="19" height="15">';
+                                    $adaptLink->link = $linkText;
+                                    echo $adaptLink->show();
+                                }
 
                             }
                             ?>

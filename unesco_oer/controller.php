@@ -2675,5 +2675,9 @@ class unesco_oer extends controller {
         return "selectAdaptation_tpl.php";
     }
 
+    public function __selectGroup() {
+        return "selectGroup_tpl.php";
+    }
+
 }
 ?>

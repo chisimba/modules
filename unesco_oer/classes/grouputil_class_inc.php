@@ -238,7 +238,7 @@ class grouputil extends object {
     
 
 
-    public function groupAdaptation($groupid) {
+    public function groupAdaptation($groupid, $customURIarray = NULL) {
 
         $content = '';
         $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
@@ -253,11 +253,18 @@ class grouputil extends object {
                 $institutionId = $product->getInstitutionID();
                 $Thumbnail = $product->getThumbnailPath();
 
-                $Link = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
+                $uri = $this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php'));
+
+                if (!empty($customURIarray)) {
+                    $customURIarray['adaptationid'] = $productID;
+                    $uri = $this->uri($customURIarray);
+                }
+
+                $Link = new link($uri);
                 $Link->link = '<img src="' . $Thumbnail . ' "alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">';
 
                 $Title = $this->objDbGroups->getAdaptedProductTitle($productID);
-                $TittleLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php')));
+                $TittleLink = new link($uri);
                 $TittleLink->link = $Title;
 
                 $InstitutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $institutionId, "page" => '10a_tpl.php')));
@@ -299,8 +306,9 @@ class grouputil extends object {
         echo $content;
     }
 
-    public function topcontent($groupid) {
-        $Link = new link($this->uri(array("action" => '8a', 'id' => $groupid, "page" => '10a_tpl.php')));
+    public function topcontent($groupid , $uri = NULL) {
+        if (empty($uri)) $uri = $this->uri(array("action" => '8a', 'id' => $groupid, "page" => '10a_tpl.php'));
+        $Link = new link($uri);
         $Link->link = $this->objDbGroups->getGroupName($groupid);
         $Link->cssClass="greenTextBoldLink";
 
