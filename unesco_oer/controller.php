@@ -2664,11 +2664,11 @@ class unesco_oer extends controller {
         $themeNames = $this->getParam('themeDropdown');
         $langNames = $this->getParam('langDropdown');
         $regions = $this->getParam('regionDropdown');
-
+        //$query = array();
         $query = $this->objDbreporting->createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames, $langNames, $regions);
 
         $objReportManager = $this->getObject("reportmanager");
-        $objReportManager->generatePDFReport("$query", "output.pdf", "test.jrxml");
+        $objReportManager->generatePDFReport($query, "output.pdf", "test.jrxml");
     }
 
     public function __selectAdaptation() {

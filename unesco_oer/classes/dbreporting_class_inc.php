@@ -274,9 +274,12 @@ class dbreporting extends dbtable {
         $arrayCount = sizeof($regions);
         $allSql = array();
         for ($x = 0; $x < $arrayCount; $x++) {
-            $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
-                FROM tbl_unesco_oer_product_adaptation_data
-                WHERE tbl_unesco_oer_product_adaptation_data.region = $regions[$x]";
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                FROM tbl_unesco_oer_products
+                JOIN tbl_unesco_oer_product_adaptation_data
+                ON tbl_unesco_oer_product_adaptation_data.product_id = tbl_unesco_oer_products.id
+                WHERE tbl_unesco_oer_product_adaptation_data.region = $regions[$x] AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0";
 
             $allSql[] = $this->getArray($sql);
         }
@@ -306,9 +309,12 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $themeName = "'" . $theme[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_product_theme_junction.product_id
-                FROM tbl_unesco_oer_product_theme_junction
-                WHERE tbl_unesco_oer_product_theme_junction.theme_id = $themeName ";
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                FROM tbl_unesco_oer_products
+                JOIN tbl_unesco_oer_product_theme_junction
+                ON tbl_unesco_oer_product_theme_junction.product_id = tbl_unesco_oer_products.id
+                WHERE tbl_unesco_oer_product_theme_junction.theme_id = $themeName AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0 ";
             $allSql[] = $this->getArray($sql);
         }
 
@@ -364,9 +370,14 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $query = "'" . $allSql[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_institutions.id
-                FROM tbl_unesco_oer_institutions
-                WHERE tbl_unesco_oer_institutions.type = $query";
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                FROM tbl_unesco_oer_product_adaptation_data
+                JOIN tbl_unesco_oer_institutions
+                ON tbl_unesco_oer_institutions.id = tbl_unesco_oer_product_adaptation_data.institution_id
+                JOIN tbl_unesco_oer_products
+                ON tbl_unesco_oer_products.id = tbl_unesco_oer_product_adaptation_data.product_id
+                WHERE tbl_unesco_oer_institutions.type = $query AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0";
             $allSql1[] = $this->getArray($sql);
         }
 
@@ -380,9 +391,12 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $institution = "'" . $institutionID[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_product_adaptation_data.product_id
-                FROM tbl_unesco_oer_product_adaptation_data
-                WHERE tbl_unesco_oer_product_adaptation_data.institution_id = $institution ";
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                FROM tbl_unesco_oer_products 
+                JOIN tbl_unesco_oer_product_adaptation_data
+                ON tbl_unesco_oer_product_adaptation_data.product_id = tbl_unesco_oer_products.id
+                WHERE tbl_unesco_oer_product_adaptation_data.institution_id = $institution AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0 ";
             $allSql[] = $this->getArray($sql);
         }
 
@@ -446,13 +460,14 @@ class dbreporting extends dbtable {
         $langs = $this->getLangID($langNames);
         $langSQL = $this->getProductsByLanguage($langs);
         $arrayQuery[] = $langSQL;
-        
+        $allProductsArr = array();
         for ($x=0; $x <5; $x++){            
             
             $tempArray = $arrayQuery[$x];
-            
+            $allProducts = "";
             foreach ($tempArray as $Products){
                 foreach($Products as $Prod ){
+                    
                     foreach($Prod as $Prodd){
                       $allProducts .= $Prodd." ";  
                     }
@@ -460,12 +475,10 @@ class dbreporting extends dbtable {
                 }
                 
             }
+            $allProductsArr[] = $allProducts;
         }
-        
-//        var_dump($allProducts);
-//        die();
 
-        return $allProducts;
+        return $allProductsArr;
     }
 
 }

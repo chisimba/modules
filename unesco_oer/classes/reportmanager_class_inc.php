@@ -39,13 +39,14 @@ class reportmanager extends object {
         $report = $compileManager->compileReport("/var/www/html/unesco_oer/packages/unesco_oer/resources/reports/".$templateName);
 
         $fillManager = new JavaClass("net.sf.jasperreports.engine.JasperFillManager");
-
+        $fillArray = array();
+        $fillArray = $text;
         $params = new Java("java.util.HashMap");
-        $params->put("region", $text);
-        $params->put("theme","");
-        $params->put("type","");
-        $params->put("institution","");
-        $params->put("language","");
+        $params->put("region", $fillArray[0]);
+        $params->put("theme",$fillArray[1]);
+        $params->put("type",$fillArray[2]);
+        $params->put("institution",$fillArray[3]);
+        $params->put("language",$fillArray[4]);
 
         $emptyDataSource = new Java("net.sf.jasperreports.engine.JREmptyDataSource");
         $jasperPrint = $fillManager->fillReport($report, $params, $emptyDataSource);
