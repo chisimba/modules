@@ -19,7 +19,7 @@
 	<parameter name="theme" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="type" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="institution" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="parameter1" class="java.lang.String"/>
+	<parameter name="language" class="java.lang.String" isForPrompting="false"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

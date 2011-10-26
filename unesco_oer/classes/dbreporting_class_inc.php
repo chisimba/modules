@@ -412,7 +412,7 @@ class dbreporting extends dbtable {
 
         for ($x = 0; $x < $arrayCount; $x++) {
             $lang = "'" . $langID[$x][0]["id"] . "'";
-            $sql = "SELECT SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
                 FROM tbl_unesco_oer_products
                 WHERE tbl_unesco_oer_products.language = $lang AND tbl_unesco_oer_products.parent_id IS NOT NULL
                 AND tbl_unesco_oer_products.deleted = 0";
