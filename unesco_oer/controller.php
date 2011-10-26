@@ -41,18 +41,23 @@ class unesco_oer extends controller {
     public $objDbOERresources;
     public $objDbreporting;
     public $objchartgenerator;
+
     /**
      * @var object $objLanguage Language Object
      */
     public $objLanguage;
+
     /**
      * @var object $objUserAdmin User Administration \ Object
      */
     public $objUserAdmin;
+
     /**
      * @var object $objUser User Object Object
      */
     public $objUser;
+    public $objGroupAdminModel;
+    public $objGroups;
 
     /**
      *
@@ -113,6 +118,8 @@ class unesco_oer extends controller {
 //$this->objGoogleMap=$this->getObject('googlemapapi');
 //$this->objGoogleMap = new googlemapapi();
         $this->objdisplayreportgenerator = $this->getObject('displayreportgenerator');
+        $this->objGroupAdminModel = $this->getObject("groupadminmodel", "groupadmin");
+        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
     }
 
     /**
@@ -173,6 +180,19 @@ class unesco_oer extends controller {
         } else {
             return FALSE;
         }
+    }
+
+    function hasMemberPermissions() {
+        $userId = $this->objUser->userid();
+        $groupId = $this->objGroups->getId('Members');
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId);
+    }
+
+    function hasEditorPermissions() {
+        $userId = $this->objUser->userid();
+        $groupId = $this->objGroups->getId('Editors');
+       
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId);
     }
 
     /**
@@ -572,7 +592,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection');
+        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
@@ -594,7 +614,13 @@ class unesco_oer extends controller {
      */
 
     public function __controlpanel() {
-        return "controlpanel_tpl.php";
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return "controlpanel_tpl.php";
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     public function __adddata() {
@@ -919,8 +945,13 @@ class unesco_oer extends controller {
     }
 
     public function __viewKeywords() {
-
-        return 'viewKeywords_tpl.php';
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return 'viewKeywords_tpl.php';
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     public function __deleteKeyword() {
@@ -1055,8 +1086,8 @@ class unesco_oer extends controller {
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
         $prevThumbnail = $this->getParam('thumbnail');
-            $onestepid = $this->getParam('productID');
-            $groupid = $this->getParam('groupid');
+        $onestepid = $this->getParam('productID');
+        $groupid = $this->getParam('groupid');
 
 //Form related data members
         $formAction = 'createInstitutionSubmit';
@@ -1086,29 +1117,22 @@ class unesco_oer extends controller {
 
         if ($validate['valid']) {
 
-       $id =     $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-            
-             if ($onestepid == null){
-            
-                 return $this->__viewInstitutions();
-                
-            } else if (!(($onestepid != null) && ($groupid == null)))  {
-                
-                   $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $groupid);
-         
-                 $this->objDbgroupInstitutions->add_group_institutions($groupid,$id);
+            $id = $this->objInstitutionManager->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+
+            if ($onestepid == null) {
+
+                return $this->__viewInstitutions();
+            } else if (!(($onestepid != null) && ($groupid == null))) {
+
+                $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $groupid);
+
+                $this->objDbgroupInstitutions->add_group_institutions($groupid, $id);
                 return $this->__adaptProduct($onestepid);
             } else {
-                
-                  $this->setVarByRef('onestepid', $onestepid);
-                 return $this->__groupRegistationForm($onestepid);
-                 
-                
-                
-                
+
+                $this->setVarByRef('onestepid', $onestepid);
+                return $this->__groupRegistationForm($onestepid);
             }
-         
-           
         } else {
 
 //There has been an error, go back to the form to fix it
@@ -1130,14 +1154,10 @@ class unesco_oer extends controller {
             $this->setVarByRef('formAction', $formAction);
             $this->setVarByRef('errorMessage', $validate);
             $this->setVarByRef('thumbnail', $thumbnail);
-        
-            
-          
-                 return "institutionEditor_tpl.php";
-                
-          
 
-           
+
+
+            return "institutionEditor_tpl.php";
         }
     }
 
@@ -1446,8 +1466,13 @@ class unesco_oer extends controller {
     }
 
     public function __userListingForm() {
-
-        return 'UserListingForm_tpl.php';
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return 'UserListingForm_tpl.php';
+        } else {
+            $message = "You do not permissions to access this feature";
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     public function __userEditRegistrationForm() {
@@ -1908,17 +1933,22 @@ class unesco_oer extends controller {
     }
 
     function __groupRegistationForm($onestepid) {
-        if ($onestepid == null){
+        if ($onestepid == null) {
             $onestepid = $this->getParam('onestepid');
-        } 
+        }
         $this->setVarByRef('onestepid', $onestepid);
 
         return 'groupRegistrationForm_tpl.php';
     }
 
     function __groupListingForm() {
-
-        return 'groupListingForm_tpl.php';
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return 'groupListingForm_tpl.php';
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     function __groupListingFormMain() {
@@ -2010,31 +2040,28 @@ class unesco_oer extends controller {
         $rightList = $this->getParam('rightList');
         $id = $this->getParam('id');
         $onestepid = $this->getParam('productID');
- 
+
         $user_current_membership = $this->objDbGroups->getGroupInstitutions($this->getParam('id'));
         $currentMembership = array();
         foreach ($user_current_membership as $membership) {
-        array_push($currentMembership, $membership['institution_id']);
-    
+            array_push($currentMembership, $membership['institution_id']);
         }
-        
-    
-        $results = array_diff($rightList,$currentMembership);
+
+
+        $results = array_diff($rightList, $currentMembership);
         $this->setVarByRef('rightList', $currentMembership);
         foreach ($results as $array) {
 
             $this->objDbgroupInstitutions->add_group_institutions($id, $array);
         }
-        
-        if ( $onestepid == null){
-            
-             return $this->__11a();
-        } else{
-               $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $id);
-               return $this->__adaptProduct($onestepid);
-            
+
+        if ($onestepid == null) {
+
+            return $this->__11a();
+        } else {
+            $this->ObjDbUserGroups->joingroup($this->objUser->userId(), $id);
+            return $this->__adaptProduct($onestepid);
         }
-       
     }
 
     function __saveNewGroup() {
@@ -2116,7 +2143,7 @@ class unesco_oer extends controller {
             $this->groupmanager->saveForum($id, $name, $description);
 
             if ($onestepid != null) {
-                
+
                 $this->setVarByRef('productID', $onestepid);
                 return $this->__adaptProduct($onestepid);
             }else
@@ -2400,17 +2427,25 @@ class unesco_oer extends controller {
     }
 
     function __adaptProduct($onestepid) {
-        $product = $this->getObject('product', 'unesco_oer');
-        $product->loadProduct($this->getParam('productID'));
-        $adaptation = $product->makeAdaptation();
-        $this->setVarByRef('product', $adaptation);
 
-        if ($this->ObjDbUserGroups->getGroupsByUserID($this->objUser->userId()) == null) {
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            $product = $this->getObject('product', 'unesco_oer');
+            $product->loadProduct($this->getParam('productID'));
+            $adaptation = $product->makeAdaptation();
+            $this->setVarByRef('product', $adaptation);
 
-            $this->setVarByRef('onestepid', $this->getParam('productID'));
-            return '10_tpl.php';
-        } else
-            return "ProductMetaData_tpl.php";
+            if ($this->ObjDbUserGroups->getGroupsByUserID($this->objUser->userId()) == null) {
+
+                $this->setVarByRef('onestepid', $this->getParam('productID'));
+                return '10_tpl.php';
+            } else {
+                return "ProductMetaData_tpl.php";
+            }
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     function __saveContent() {
@@ -2494,12 +2529,12 @@ class unesco_oer extends controller {
     public function __institutionEditor() {
 
         $institutionId = $this->getParam('institutionId');
-         $onestepid = $this->getParam('onestepid');
-         $groupid = $this->getParam('groupid');
-                 
+        $onestepid = $this->getParam('onestepid');
+        $groupid = $this->getParam('groupid');
+
         $this->setVarByRef('institutionId', $institutionId);
-             $this->setVarByRef('onestepid', $onestepid);
-                $this->setVarByRef('groupid', $groupid);
+        $this->setVarByRef('onestepid', $onestepid);
+        $this->setVarByRef('groupid', $groupid);
 
         return "institutionEditor_tpl.php";
     }
@@ -2549,8 +2584,13 @@ class unesco_oer extends controller {
      */
 
     public function __viewInstitutions() {
-
-        return "viewInstitutions_tpl.php";
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return "viewInstitutions_tpl.php";
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     public function __mypage() {
@@ -2564,8 +2604,13 @@ class unesco_oer extends controller {
     }
 
     public function __viewProductThemes() {
-
-        return 'viewProductThemes_tpl.php';
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return 'viewProductThemes_tpl.php';
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     function __deleteTheme() {
@@ -2590,8 +2635,13 @@ class unesco_oer extends controller {
     }
 
     public function __viewProductTypes() {
-
-        return 'viewProductTypes_tpl.php';
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            return 'viewProductTypes_tpl.php';
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     function __deleteProductType() {
@@ -2675,9 +2725,40 @@ class unesco_oer extends controller {
         return "selectAdaptation_tpl.php";
     }
 
-    public function __selectGroup() {
-        return "selectGroup_tpl.php";
+    public function __showopenidlogin() {
+        return "openidlogin_tpl.php";
+    }
+
+    public function __oidreturn() {
+        $auth = $this->getObject("openidauth");
+        return $auth->postauth();
+    }
+
+    public function __oidauth() {
+        $auth = $this->getObject("openidauth");
+        return $auth->auth();
+    }
+
+    public function __restricted() {
+        return "restricted_tpl.php";
+    }
+
+    public function __openidauth() {
+        $openidauth = $this->getObject("openidauth");
+        $openidauth->auth();
+    }
+
+    public function __backopenid() {
+
+        $backopenid = $this->getObject("backopenid");
+        $postlogin = $backopenid->postauth();
+        return $this->nextAction(NULL, NULL, $postlogin);
+    }
+
+    public function __openidloginresult() {
+        return "openidloginresult_tpl.php";
     }
 
 }
+
 ?>
