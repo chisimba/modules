@@ -376,31 +376,11 @@ class dbreporting extends dbtable {
                 ON tbl_unesco_oer_institutions.id = tbl_unesco_oer_product_adaptation_data.institution_id
                 JOIN tbl_unesco_oer_products
                 ON tbl_unesco_oer_products.id = tbl_unesco_oer_product_adaptation_data.product_id
-                WHERE tbl_unesco_oer_institutions.type = $query AND tbl_unesco_oer_products.parent_id IS NOT NULL
-                AND tbl_unesco_oer_products.deleted = 0";
+                WHERE tbl_unesco_oer_institutions.type = $query ";
             $allSql1[] = $this->getArray($sql);
         }
-
+        
         return $allSql1;
-    }
-
-    function getProductsByInstitutionType($institutionID) {
-
-        $arrayCount = sizeof($institutionID);
-        $allSql = array();
-
-        for ($x = 0; $x < $arrayCount; $x++) {
-            $institution = "'" . $institutionID[$x][0]["id"] . "'";
-            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
-                FROM tbl_unesco_oer_products 
-                JOIN tbl_unesco_oer_product_adaptation_data
-                ON tbl_unesco_oer_product_adaptation_data.product_id = tbl_unesco_oer_products.id
-                WHERE tbl_unesco_oer_product_adaptation_data.institution_id = $institution AND tbl_unesco_oer_products.parent_id IS NOT NULL
-                AND tbl_unesco_oer_products.deleted = 0 ";
-            $allSql[] = $this->getArray($sql);
-        }
-
-        return $allSql;
     }
     
     function getLangID($langNames){
@@ -453,8 +433,7 @@ class dbreporting extends dbtable {
         $typeSQL = $this->getProductsByType($typeID);
         $arrayQuery[] = $typeSQL;
         
-        $instType = $this->getInstitutionByTypes($institutionTypes);
-        $intsitutionSQL = $this->getProductsByInstitutionType($instType);
+        $intsitutionSQL = $this->getInstitutionByTypes($institutionTypes);        
         $arrayQuery[] = $intsitutionSQL;
         
         $langs = $this->getLangID($langNames);
