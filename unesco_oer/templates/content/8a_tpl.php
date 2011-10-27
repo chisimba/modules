@@ -51,7 +51,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         $currLoggedInID = $this->objUser->userId();
                         $id = $this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
                         $groupid = $this->getParam('id');
+                           if ($this->hasMemberPermissions()){
                         echo $this->objGroupUtil->leaveGroup($id, $groupid);
+                           }
                         ?>
 <!--                           <img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Leave group</a></div>-->
@@ -85,7 +87,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                 $addSubgroupLink = new link($this->uri(array("action" =>"subgroupForm", "parent_id" =>$groupid, "page" => "10a_tpl.php")));
                                 $addSubgroupLink->link = 'Create a new subgroup';
                                  $addSubgroupLink->cssClass = 'greenTextBoldLink';
-                                echo $addSubgroupLink->show();
+                                    if ($this->hasMemberPermissions()){
+                                          echo $addSubgroupLink->show();
+                                    }
                                 ?></a></div>
                     </div>
                     <div class="groupSubLinksList">
@@ -93,13 +97,29 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Email alerts</a></div>
                     </div>
                     <div class="groupSubLinksList">
+<?php
+   if ($this->hasMemberPermissions()){
+       
+       echo ' <img src="skins/unesco_oer/images/icon-group-calendar.png" alt="Group Calendar" width="18" height="18" class="smallLisitngIcons">
+                        
+                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid='.$groupid.' &page=10a_tpl.php" class="greenTextBoldLink">Group calendar</a></div>';
+       
+   }
 
-                        <img src="skins/unesco_oer/images/icon-group-calendar.png" alt="Group Calendar" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid=<?php echo $groupid; ?>&page=10a_tpl.php" class="greenTextBoldLink">Group calendar</a></div>
+?>
+                       
                     </div>
                     <div class="groupSubLinksList">
-                        <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid=<?php echo $groupid; ?>&page=10a_tpl.php" class="greenTextBoldLink">Group files</a></div>
+                        <?php
+   if ($this->hasMemberPermissions()){
+       
+      echo '   <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">
+                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid='. $groupid.'&page=10a_tpl.php" class="greenTextBoldLink">Group files</a></div>';
+       
+   }
+
+?>
+                    
                     </div>
                     <div class="greyDivider"></div>
 
@@ -110,7 +130,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupid,"page" => "10a_tpl.php")));
                             $addDiscussionLink->link = 'Manage OER Resources';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
+                               if ($this->hasEditorPermissions()){
                             echo $addDiscussionLink->show();
+                               }
                             ?>
 
                         </a><br>
@@ -123,7 +145,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             $addDiscussionLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupid, "page" => "10a_tpl.php")));
                             $addDiscussionLink->link = 'Add OER Resources';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
+                               if ($this->hasMemberPermissions()){
                             echo $addDiscussionLink->show();
+                               }
                             ?>
                         </a>
                     </div>
@@ -229,7 +253,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             $addDiscussionLink = new link('/unesco_oer/index.php?module=forum&action=newtopic&id='.$forumId.'&type=context&page=10a_tpl.php');
                             $addDiscussionLink->link = 'add a discussion';
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
+                               if ($this->hasMemberPermissions()){
                             echo $addDiscussionLink->show();
+                               }
                         ?>
 <!--                        http://localhost/unesco_oer/index.php?module=forum&action=newtopic&id=gen14Srv26Nme38_77856_1311232246&type=context-->
                         
@@ -271,7 +297,9 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             $addresourceLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupid, "page" => "10a_tpl.php")));
                             $addresourceLink->link = 'add resource';
                             $addresourceLink->cssClass = 'greyTextBoldLink';
-                            echo $addresourceLink->show();
+                               if ($this->hasMemberPermissions()){
+                           echo $addresourceLink->show();
+                               }
                         ?>
                        </div>
                 </div>

@@ -129,7 +129,10 @@ function SubmitProduct()
                                         $joinGroupLink->cssId = 'join';
                                     }
                                     $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    
+                                    if ($this->hasMemberPermissions()){
                                     echo $joinGroupLink->show();
+                                    }
                                     
                                     ?>
                                  <span class="greenText">|&nbsp;</span>
@@ -344,7 +347,7 @@ function SubmitProduct()
 
                                                     var myOptions = {
                                                         zoom: 0,
-                                                        center: myLatlng[0],
+                                                         center: new google.maps.LatLng(0, 0),
                                                         mapTypeId: google.maps.MapTypeId.ROADMAP
                                                     }
                                                     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);

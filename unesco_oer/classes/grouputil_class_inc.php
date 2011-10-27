@@ -23,6 +23,8 @@ class grouputil extends object {
         $this->objDbGroups = $this->getObject("dbgroups", "unesco_oer");
           $this->objDbInstitution = $this->getObject("dbinstitution", "unesco_oer");
             $this->objLanguage = $this->getObject("language", "language");
+             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+               $this->objGroupAdminModel = $this->getObject("groupadminmodel", "groupadmin");
         $this->objUser = $this->getObject('user', 'security');
         $this->objUseExtra = $this->getObject("dbuserextra", "unesco_oer");
         $this->objLanguagecode = $this->getObject('languagecode', 'language');
@@ -94,6 +96,12 @@ class grouputil extends object {
         }
 
         $joinGroupLink->cssClass = 'greenTextBoldLink';
+   
+        if ($this->hasMemberPermissions()){
+        $showgrouplink = $joinGroupLink->show();
+        
+        
+             } else $showgrouplink = null;
 
 
         $content.='
@@ -106,7 +114,7 @@ class grouputil extends object {
                             <div class="groupMemberAndJoinLinkDiv">
                             	<span class="greenText">Members :</span>' . $this->ObjDbUserGroups->groupMembers($group['id']) . '<br><br>
                                 <a href="#"><img src="skins/unesco_oer/images/icon-join-group.png" alt="Join Group" width="18" height="18" class="smallLisitngIcons"></a>
-               				 	<div class="linkTextNextToJoinGroupIcons">' . $joinGroupLink->show() . '</div>
+               				 	<div class="linkTextNextToJoinGroupIcons"> '. $showgrouplink .'</div>
                             </div>
 
                             </div> 
@@ -699,6 +707,15 @@ echo '</div> ';
 
     }
     
+    
+ 
+    function hasMemberPermissions() {
+        $userId = $this->objUser->userid();
+        $groupId = $this->objGroups->getId('Members');
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId) || $this->objUser->isAdmin() || $this->hasEditorPermissions();
+    } 
+
+   
     
     
     

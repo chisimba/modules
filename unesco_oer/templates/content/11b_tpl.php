@@ -114,7 +114,9 @@ $topicsNum = count($topics);
                                     $joinGroupLink->cssId = 'joingroup';
                                 }
                                 $joinGroupLink->cssClass = 'greenTextBoldLink';
-                                echo $joinGroupLink->show();
+                                if ($this->hasMemberPermissions()){
+                                    echo $joinGroupLink->show();
+                                    }
                                 ?>
 
                             </a>
@@ -293,7 +295,7 @@ echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 
                                                     var myOptions = {
                                                         zoom: 0,
-                                                        center: myLatlng[0],
+                                                         center: new google.maps.LatLng(0, 0),
                                                         mapTypeId: google.maps.MapTypeId.ROADMAP
                                                     }
                                                     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);

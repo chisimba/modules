@@ -83,7 +83,9 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                                         $joinGroupLink->cssId = 'joingroup';
                                     }
                                     $joinGroupLink->cssClass = 'greenTextBoldLink';
+                                    if ($this->hasMemberPermissions()){
                                     echo $joinGroupLink->show();
+                                    }
                                     ?>
 
                                   </a>
@@ -281,7 +283,7 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
 
                                                     var myOptions = {
                                                         zoom: 0,
-                                                        center: myLatlng[0],
+                                                         center: new google.maps.LatLng(0, 0),
                                                         mapTypeId: google.maps.MapTypeId.ROADMAP
                                                     }
                                                     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
