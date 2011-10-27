@@ -239,6 +239,12 @@ class dbreporting extends dbtable {
         $themes = $this->getArray($sql);
         return $themes;
     }
+    
+    function getProductKeywords(){
+        $sql = 'SELECT keyword FROM tbl_unesco_oer_product_keywords';
+        $keywords = $this->getArray($sql);
+        return $keywords;       
+    }
 
     //functions used to populate downloadable report - all adaptations
     function getRegionID($regions) {
@@ -417,8 +423,43 @@ class dbreporting extends dbtable {
         return $allSql;
         
     }
+    
+    function getKeywordID($keywords){
+        
+        $arrayCount = sizeof($keywords);
+        $allSql = array();
+        for ($x = 0; $x < $arrayCount; $x++) {
+            $query = "'$keywords[$x]'";
+            $sql = "SELECT tbl_unesco_oer_product_keywords.id
+                FROM tbl_unesco_oer_product_keywords
+                WHERE tbl_unesco_oer_product_keywords.keyword = $query";
+            $allSql[] = $this->getArray($sql);
+        }      
+        
+        return $allSql;      
+        
+    }
+    
+    function getProductsByKeywords($keywordID){
+        
+        $arrayCount = sizeof($keywordID);
+        $allSql = array();
 
-    function createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames, $langNames, $regions) {
+        for ($x = 0; $x < $arrayCount; $x++) {
+            $keyword = "'" . $keywordID[$x][0]["id"] . "'";
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                FROM tbl_unesco_oer_products
+                JOIN tbl_unesco_oer_product_keyword_junction
+                ON tbl_unesco_oer_product_keyword_junction.product_id = tbl_unesco_oer_products.id
+                WHERE tbl_unesco_oer_product_keyword_junction.keyword_id = $keyword AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted = 0 ";
+            $allSql[] = $this->getArray($sql);
+        }
+
+        return $allSql;
+    }
+
+    function createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames,$keywordNames, $langNames, $regions) {
         
         $arrayQuery = array();
         
@@ -430,6 +471,10 @@ class dbreporting extends dbtable {
         $themeSQL = $this->getProductsByTheme($themeID);
         $arrayQuery[] = $themeSQL;
         
+        $keywordID = $this->getkeywordID($keywordNames);
+        $keywordSQL = $this->getProductsByKeywords($keywordID);
+        $arrayQuery[] = $keywordSQL;      
+                  
         $typeID = $this->getAdaptationTypeID($adaptationTypes);
         $typeSQL = $this->getProductsByType($typeID);
         $arrayQuery[] = $typeSQL;
@@ -457,7 +502,7 @@ class dbreporting extends dbtable {
             }
             $allProductsArr[] = $allProducts;
         }
-
+        
         return $allProductsArr;
     }
 

@@ -106,21 +106,35 @@ class displayreportgenerator extends object
           {
             $themeSelect->addOption($themeArray2[$z]);
           }
+          
+        $keywordSelect = new dropdown('keywordDropdown[]');
+        $keywordSelect->extra = ' multiple="1" size="4" style="width:200pt;" ';
+        
+        $keywordArray = $this->objDbReporting->getProductKeywords();
+        $ArrayCount = sizeof($keywordArray);
+        $keywordArray2 = array();
+
+        for ($i=0; $i < $ArrayCount; $i++)
+          {
+             $keywordArray2[] = $keywordArray[$i]["keyword"];
+          }
+
+        sort($keywordArray2,SORT_STRING);
+
+        for ($z=0; $z < $ArrayCount; $z++)
+          {
+            $keywordSelect->addOption($keywordArray2[$z]);
+          }        
 
         $content .= $themeSelect->show().'
                                 	<br>
-                                    Use CTRL button to select more than one country
+                                    Use CTRL button to select more than one theme
                                 </div>
                                 <div class="rightLegendContentHolder">
 
-                                	Keyword:<br>
-                                    <input type="text" name="" class="keywordBox">
-                                    <br><br>
-                                    Search for keywords in:<br>
-                                    <input type="radio" name="radio" id=""> Product<br>
-                                    <input type="radio" name="radio" id=""> Sections<br>
-
-                                    <input type="radio" name="radio" id=""> Products and sections<br>
+                                	Keyword:<br>'.$keywordSelect->show().'
+                                            <br>
+                                    Use CTRL button to select more than one keyword                                    
                                 </div>
                             </div>
                         </fieldset>
