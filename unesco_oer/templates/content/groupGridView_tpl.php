@@ -254,7 +254,7 @@ echo $this->objGroupUtil->groupPerPage();
                                 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
                                 <div class="spaceBetweenRightBorderedDivs">
-                                    <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
+                                    <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                                 </div>
                                 <div class="rightColumnBorderedmap">
                         <div >

@@ -74,12 +74,12 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                                     if ($this->ObjDbUserGroups->ismemberOfgroup($userId , $this->getParam('id'))) {
 
                                         $joinGroupLink = new link($this->uri(array('action' => "11a")));
-                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_group_join', 'unesco_oer') ;
                                         $joinGroupLink->cssId = 'memberofgroup';
                                     } else {
 
                                         $joinGroupLink = new link($this->uri(array('action' => "joingroup",'join'=>'join', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
-                                        $joinGroupLink->link = 'Join Group';
+                                        $joinGroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_group_join', 'unesco_oer') ;
                                         $joinGroupLink->cssId = 'joingroup';
                                     }
                                     $joinGroupLink->cssClass = 'greenTextBoldLink';
@@ -196,7 +196,7 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                                 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
                                 <div class="spaceBetweenRightBorderedDivs">
-                                    <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
+                                    <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                                 </div>
                               <div class="rightColumnBorderedmap">
                         <div >

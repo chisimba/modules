@@ -120,7 +120,7 @@
             	<div class="moduleHeader greenText">GROUPS TOOLS</div>
                 <div class="moduleHeader darkBlueText">
                 <img src="images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
-                <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">Create Group</a></div>
+                <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_group_heading', 'unesco_oer') ?></a></div>
                 </div>
                 <br><br>
                 <div class="moduleHeader darkBlueText"><img src="images/icon-filter-items-per-page.png" alt="Items per page" class="modulesImages">Groups per page</div>
@@ -263,7 +263,7 @@
                      </div>
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
-                	<div class="featuredHeader pinkText">BROWSER ADAPTATION BY MAP</div>
+                	<div class="featuredHeader pinkText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                 </div>
                 <div class="rightColumnBorderedDiv">
                 	<div class="rightColumnContentPadding">

@@ -34,7 +34,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 <!-- Left Colum -->
 <div class="leftColumnDiv">
 
-    <div class="moduleHeader greenText">GROUPS TOOLS</div>
+    <div class="moduleHeader greenText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_group_tools', 'unesco_oer') ?></div>
     <div class="moduleHeader darkBlueText">
 <!--                <img src="images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">-->
         <div class="linkTextNextToCreateGroupIcons"><a href="#" class="greenTextBoldLink">
@@ -56,7 +56,9 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 $link->cssClass="greenTextBoldLink";
                    
                 }
-                echo '&nbsp;' . $link->show();
+               if ($this->objUser->isAdmin()) {
+                   echo '&nbsp;' . $link->show();
+               }
                 ?>
 
 
@@ -302,7 +304,9 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                     echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
             ?>
                     <div class="spaceBetweenRightBorderedDivs">
-                        <div class="featuredHeader">BROWSER ADAPTATION BY MAP</div>
+                        <div class="featuredHeader">
+                            
+                       <?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?>  </div>
                     </div>
                     <div class="rightColumnBorderedmap">
                         <div >

@@ -592,7 +592,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection','testpdf');
+        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection','testpdf', 'javafilternum', 'javafilter');
 
         if (in_array($action, $notrequired)) {
             return FALSE;

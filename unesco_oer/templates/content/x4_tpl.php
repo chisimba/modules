@@ -361,7 +361,7 @@ $institutionGUI->getInstitution($institutionId);
                         </div>
                     </div>
                     <div class="spaceBetweenRightBorderedDivs">
-                        <div class="featuredHeader pinkText">BROWSER ADAPTATION BY MAP</div>
+                        <div class="featuredHeader pinkText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                     </div>
                     <div class="rightColumnBorderedDiv">
                         <div class="rightColumnContentPadding">
