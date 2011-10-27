@@ -458,10 +458,38 @@ class dbreporting extends dbtable {
 
         return $allSql;
     }
+    
+//    function getProductsByCountry($countryNames){
+//        
+//        $sql = "SELECT tbl_unesco_oer_product_adaptation_data.country_code, tbl_unesco_oer_product_adaptation_data.product_id
+//                FROM tbl_unesco_oer_product_adaptation_data";
+//        $allSql = $this->getArray($sql);    
+//      
+//        $arrayCount = sizeof($allSql);
+//        $prod = array();       
+//
+//        foreach($countryNames as $country){
+//            $x = 0;
+//            if($country == $this->getCountryName($allSql[$x]["country_code"])){
+//                $prod = $x;
+//            } 
+//            $x++;
+//            
+//        }
+//        
+//        var_dump($prod);
+//        die();
+//        
+//        
+//        
+//    }
 
     function createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames,$keywordNames, $langNames, $regions) {
         
         $arrayQuery = array();
+        
+//        $countries = $this->getProductsByCountry($countryNames);
+
         
         $regionID = $this->getRegionID($regions);
         $regionSQL = $this->getProductsByRegion($regionID);

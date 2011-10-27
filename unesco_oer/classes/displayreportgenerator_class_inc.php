@@ -7,7 +7,6 @@ class displayreportgenerator extends object
 {
     public function init() {
 
-
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
@@ -16,11 +15,10 @@ class displayreportgenerator extends object
         $this->loadClass('form', 'htmlelements');
         $this->objDbReporting = $this->getObject('dbreporting', 'unesco_oer');
 
-
     }
 
     public function displayForm(){
-
+        
         $uri = $this->uri ( array( 'action' => 'processReportingForm' ) );
         $objForm = new form('formReport',$uri);
 
@@ -133,7 +131,7 @@ class displayreportgenerator extends object
                                 </div>
                                 <div class="rightLegendContentHolder">
 
-                                	Keyword:<br>'.$keywordSelect->show().'
+                                	UNESCO keyword:<br>'.$keywordSelect->show().'
                                             <br>
                                     Use CTRL button to select more than one keyword                                    
                                 </div>
