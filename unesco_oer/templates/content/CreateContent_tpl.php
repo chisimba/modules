@@ -1,5 +1,4 @@
 
-<html>
     <head>
         <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
    
@@ -10,8 +9,6 @@
         echo $baseajax;
         ?>
         <script  language="JavaScript" type="text/javascript">
-   
-
             function edit(section_id){
                 //$('.root').hide();
     
@@ -47,11 +44,6 @@
             }
 
 
-      
-
-
-
-
 
             $('#upload').live('click', function() {   
                 $("#form_add_products_ui").validate();
@@ -75,9 +67,6 @@
 
         </script>
     </head>
-
-</html>
-
 
 <?php
 /*
@@ -148,13 +137,18 @@ echo '<div id="sections">
 
 
 
+
+
+
 echo $contentManager->getContentTree(TRUE);
 echo '</div>';
+
+//echo '<div class="centerColumnDiv"">';//echo '<div class="centerColumnDiv"">';
 
 
 
 //echo '<div class="centerColumnDiv"">';
-echo '<div class="rightWideColumnDiv" style="width:75%;" ">';
+echo '<div class="rightWideColumnDiv" style="width:75%;">';
 echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div></div></fieldset></div>";
 
