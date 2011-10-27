@@ -212,6 +212,11 @@ class displayreportgenerator extends object
         $buttonGenerate = new button('generate');
         $buttonGenerate->setValue('Generate Report');
         $buttonGenerate->setToSubmit();
+        
+        $buttonReset = new button('reset');
+        $buttonReset->setValue('Reset');
+        $buttonReset->setToReset();
+        
 
         $content .= $langSelect->show().'<br>
                                     Use CTRL button to select more than one language
@@ -247,7 +252,7 @@ class displayreportgenerator extends object
                             </div>
                             <div class="saveCancelButtonHolder">
                                 
-                                '.$buttonGenerate->show().'
+                                '.$buttonGenerate->show().' '.$buttonReset->show().'
                             </div>
                         </div>
 
