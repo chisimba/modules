@@ -2489,7 +2489,7 @@ class unesco_oer extends controller {
                     $pairArray = $contentManager->getPairArray($pair);
                     $existingContent = $contentManager->getContentByContentID($pairArray[1]);
                     echo $existingContent->showInput($productID);
-                    die;
+                    die();
                     break;
 
                 case 'saveedit':
@@ -2502,6 +2502,27 @@ class unesco_oer extends controller {
                     $pairArray = $contentManager->getPairArray($pair);
                     $existingContent = $contentManager->getContentByContentID($pairArray[1]);
                     $existingContent->delete();
+                    break;
+
+                case 'insert':
+                    $originalID = $this->getParam('originalproductid');
+                    $originalpair = $this->getParam('originalpair');
+                    $insertInfo = array('productid'=>$originalID,'pair'=>$originalpair);
+                    $this->setVarByRef('insertInfo',$insertInfo);
+                    return "CreateContent_tpl.php";
+                    break;
+
+                case 'insertedit':
+                    $originalID = $this->getParam('originalproductid'); echo "OrigProdID: $originalID ";
+                    $originalProduct = $this->newObject('product');
+                    $originalProduct->loadProduct($originalID); echo "ProdName: {$originalProduct->getTitle()} ";
+                    $originalContentManager = $originalProduct->getContentManager();
+                    $originalPairArray = $originalContentManager->getPairArray($this->getParam('originalpair'));
+                    var_dump($originalPairArray);
+                    $existingContent = $originalContentManager->getContentByContentID($originalPairArray[1]);
+                    $existingContent->prepareForCopy($this->getParam('newParent'));
+                    echo $existingContent->showInput($productID);
+                    die();
                     break;
 
                 default:

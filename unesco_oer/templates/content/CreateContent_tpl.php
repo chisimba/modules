@@ -43,6 +43,20 @@
                 $.getScript("packages/unesco_oer/resources/bubble-tooltip.js");
             }
 
+            function insertEditSection(orignalpair,originalproductid,newParent){
+
+                $('.root').load('index.php?module=unesco_oer&action=saveContent&option=insertedit&originalpair=' + orignalpair + '&originalproductid=' + originalproductid + '&newParent=' + newParent + '&productID=' + $('.product_id').attr('id'));
+
+                $("head").append("<link>");
+                css = $("head").children(":last");
+                css.attr({
+                    rel:  "stylesheet",
+                    type: "text/css",
+                    href: "packages/unesco_oer/resources/bubble-tooltip.css"
+                });
+                $.getScript("packages/unesco_oer/resources/bubble-tooltip.js");
+            }
+
 
 
             $('#upload').live('click', function() {   
@@ -139,8 +153,8 @@ echo '<div id="sections">
 
 
 
-
-echo $contentManager->getContentTree(TRUE);
+//getContentTree($editable = FALSE, $highlighted = FALSE, $origional = FALSE, $compare = FALSE, $productIDS = NULL)
+echo $contentManager->getContentTree(TRUE,FALSE, FALSE, FALSE, NULL, $insertInfo);
 echo '</div>';
 
 //echo '<div class="centerColumnDiv"">';//echo '<div class="centerColumnDiv"">';

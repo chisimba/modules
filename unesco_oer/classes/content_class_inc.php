@@ -277,8 +277,7 @@ class content extends object
         return !empty($this->_contents);
     }
 
-    function getTreeNodes($editable = FALSE,  $highlighted = FALSE, $origional = FALSE, $compare = FALSE,$selectedID = NULL, $productID = NULL) {
- 
+    function getTreeNodes($editable = FALSE,  $highlighted = FALSE, $origional = FALSE, $compare = FALSE,$selectedID = NULL, $productID = NULL, $insertInfo = NULL) {
         $productUtil = $this->getObject('productutil', 'unesco_oer');
     
         $this->loadClass('treenode', 'tree');
@@ -362,7 +361,7 @@ class content extends object
 
         foreach ($this->_contents as $content){
             if (!$content->isDeleted()){
-                $node->addItem($content->getTreeNodes($editable, $highlighted,$origional,$compare,$selectedID,$productID));
+                $node->addItem($content->getTreeNodes($editable, $highlighted,$origional,$compare,$selectedID,$productID,$insertInfo));
             }
         }
 
@@ -483,6 +482,10 @@ class content extends object
 
     public function printHTML($level){
         return "<h$level>{$this->getTitle()}</h$level>";
+    }
+
+    public function prepareForCopy($newParentID){
+        
     }
     
 }

@@ -50,7 +50,7 @@ class displayreportgenerator extends object
         }                                                                                 
 
 
-        $content .= ' <div class="tenPixelPaddingLeft">
+        $content .= ' <div class="tenPixelPaddingLeft"></div>
                 <div class="topReportingDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                         <fieldset>
@@ -78,8 +78,9 @@ class displayreportgenerator extends object
                                     Use CTRL button to select more than one region
                                     </div>
                                 </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                        
 
                         <br>
                         <fieldset>
@@ -272,7 +273,8 @@ class displayreportgenerator extends object
 
                     </div>
                 
-                <br><br><br>
+                
+                
                 ';
 
         $objForm->addToForm($content);

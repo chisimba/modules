@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
-        <div class="mainContentHolder">
+<!--        <div class="mainContentHolder">-->
         	<div class="subNavigation"></div>
         	<!-- Left Wide column DIv -->
             <div class="groupWideLeftColumn">
@@ -45,20 +45,13 @@
                                    echo $displayReport;
                                     ?>
             </div>
-        </div>
-
-
-       
-  
-          
-
-            <!-- Right column DIv -->
+                <!-- Right column DIv -->
             <div class="rightColumnDiv">
-                                
+
                                     <div class="featuredHeader" ><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
                                     <div class="rightColumnBorderedDiv">
 <?php
-                             
+
                                 $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
                                 foreach ($featuredProducts as $featuredProduct) {
 
@@ -84,7 +77,7 @@
                                     <div class="rightColumnContentPadding">
 
                                         <!DOCTYPE html>
-                                
+
                                             <head>
                                                 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
                                                 <style type="text/css">
@@ -182,31 +175,22 @@
 
                                             </script>
                                         </head>
-                   
+
                                             <div id="map_canvas" style="width:100%; height:20%"></div>
 <?php
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
-                                                echo $form->show();                                                            
-                                                                                            
-                                                                                    
-                                               
-                                                
-                                                
-                                                
+                                                echo $form->show();
+
+
+
+
+
+
 ?>
                                     </div>
                                 </div>
         </div>
-        </div>
-      
-        
- 
-       
-        
-   
-            
-     
-        
-
-        
+<!--        </div>-->
+                
+<!--        </div>-->

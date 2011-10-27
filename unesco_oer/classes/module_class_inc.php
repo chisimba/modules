@@ -451,6 +451,14 @@ class module extends content {
         $this->_id = $this->objDbModules->addModule($this->_metaDataArray);
     }
 
+    public function prepareForCopy($newParentID) {
+        unset($this->_metaDataArray['id']);
+        unset($this->_id);
+        unset($this->_metaDataArray['puid']);
+        $this->_metaDataArray['year_id'] = $newParentID;
+        $this->setParentID($newParentID);
+    }
+
     public function getContentsByParentID($parentID) {
         $modulesData = $this->objDbModules->getModulesByYearID($parentID);
         $modulesArray = array();

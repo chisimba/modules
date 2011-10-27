@@ -167,5 +167,21 @@ class year extends content {
     public function printHTML($level) {
         return parent::printHTML($level);
     }
+
+    public function getTreeNodes($editable = FALSE, $highlighted = FALSE, $origional = FALSE, $compare = FALSE, $selectedID = NULL, $productID = NULL, $insertInfo = NULL) {
+        $node = parent::getTreeNodes($editable, $highlighted, $origional, $compare, $selectedID, $productID, $insertInfo);
+        if (!empty($insertInfo)){
+            $node->addItem(new treenode(array(
+                                            'text' => '[Insert here]' ,
+                                            'link' => "#",
+                                            'icon' => 'icon-add-to-adaptation.png',
+                                            'expandedIcon' => 'icon-add-to-adaptation.png',
+                                            'expanded' => TRUE),
+                                        array('onclick' => "javascript: insertEditSection('".$insertInfo['pair']."','".$insertInfo['productid']."','".$this->getID()."');")
+                                            ));
+        }
+
+        return $node;
+    }
 }
 ?>

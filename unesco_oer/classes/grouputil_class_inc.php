@@ -264,7 +264,7 @@ class grouputil extends object {
                 $uri = $this->uri(array("action" => 'ViewProduct', 'id' => $productID, "page" => '10a_tpl.php'));
 
                 if (!empty($customURIarray)) {
-                    $customURIarray['adaptationid'] = $productID;
+                    $customURIarray['productID'] = $productID;
                     $uri = $this->uri($customURIarray);
                 }
 
