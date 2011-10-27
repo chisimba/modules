@@ -12,10 +12,10 @@
                 <div class="topReportingDiv">
                 	<div class="paddingContentTopLeftRightBottom">
                      <div class="memberList">
-                     <img src="images/adapted-product-grid-institution-logo-placeholder.jpg" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                     
                       <div class="textNextToGroupIcon">
                       	<h2 class="greyText">Reporting Tool</h2>
-                       	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet elit vitae neque consequat congue sed ac nunc. Phasellus mattis rhoncus commodo. Fusce non metus ut nunc dapibus cursus et sit amet diam. Nunc non nibh sit amet leo bibendum sagittis. Vestibulum posuere tincidunt tincidunt. Aenean euismod vulputate volutpat.
+                       	
                        </div>
 
                       </div>
