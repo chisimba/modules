@@ -94,6 +94,13 @@ class dbproducts extends dbtable
 
         return $this->getArray($sql);
     }
+    
+     function getAllProducts()
+    {
+        $sql = "select * from $this->_tableName ";
+
+        return $this->getArray($sql);
+    }
 
     function addProduct($productArray, $adaptationData = NULL)
     {

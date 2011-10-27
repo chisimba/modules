@@ -73,13 +73,13 @@ class filterdisplay extends object {
 
 
         $form->addToForm('<div class="moduleHeader darkBlueText">');
-        $form->addToForm("Product matches filter criteria<br/>");
+        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_filter_criteria', 'unesco_oer'));
         $form->addToForm('<img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">');
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer'));
         $form->addToForm(' </div>'); //module subheader
 
         $form->addToForm('<div class="blueBackground blueBackgroundCheckBoxText">');
-        $products = $this->objDbProducts->getProducts(0, 10);
+        $products =$this->objDbProducts->getAllProducts();
         $checkbox = new checkbox('Model');
         $checkbox2 = new checkbox('Handbook');
         $checkbox3 = new checkbox('Guide');
@@ -169,7 +169,7 @@ class filterdisplay extends object {
 
 
         $form->addToForm('<div class="blueBackground">');
-        $products = $this->objDbProducts->getProducts(0, 10);
+        $products = $this->objDbProducts->getAllProducts();
         $filterAuth = new dropdown('AuthorFilter');
         $filterAuth->cssClass = "leftColumnSelectDropdown";
         $filterAuth->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
@@ -260,8 +260,7 @@ class filterdisplay extends object {
         $form->addtoform($this->objLanguage->languageText('mod_unesco_oer_items_per_page', 'unesco_oer'));
         $form->addtoform(' </div>');
         $form->addToForm('<div class="blueBackground"> ');
-        $products = $this->objDbProducts->getProducts(0, 10);
-        $filterNum = new dropdown('NumFilter');
+        $products =$this->objDbProducts->getAllProducts();       $filterNum = new dropdown('NumFilter');
         $filterNum->cssClass = "leftColumnSelectDropdown";
         $filterNum->addoption($this->objLanguage->languageText('mod_unesco_oer_filter_all', 'unesco_oer'));
         $filterNum->addOption('1');
@@ -317,7 +316,7 @@ class filterdisplay extends object {
         $form->addToForm('<div class="sortBy">');
 
 
-        $products = $this->objDbProducts->getProducts(0, 10);
+        $products =$this->objDbProducts->getAllProducts();
         $filtersort = new dropdown('SortFilter');
         $filterLang->cssClass = "leftColumnSelectDropdown";
 
