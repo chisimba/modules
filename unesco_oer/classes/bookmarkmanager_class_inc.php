@@ -21,6 +21,8 @@ class bookmarkmanager extends dbtable {
         parent::init("tbl_unesco_oer_bookmarks");
         $this->objLanguage = $this->getObject("language", "language");
         $this->objUser = $this->getObject("user", "security");
+          $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+               $this->objGroupAdminModel = $this->getObject("groupadminmodel", "groupadmin");
 
 
         $this->loadClass('link', 'htmlelements');
@@ -447,8 +449,11 @@ class bookmarkmanager extends dbtable {
             $form->addToForm("<br>Bookmark Description *<br> ");
             $form->addToForm($commentText);
             $form->addToForm("<br><br>");
-            $form->addToForm($button->show());
-            $form->addToForm($cancelbtn->show());
+            
+              if ($this->hasMemberPermissions()){
+                       $form->addToForm($button->show());
+                       $form->addToForm($cancelbtn->show());
+              }
             
         
               $content .=   $form->show() ." 
@@ -458,6 +463,20 @@ class bookmarkmanager extends dbtable {
         
 
         return $content;
+    }
+    
+    
+      function hasMemberPermissions() {
+        $userId = $this->objUser->userid();
+        $groupId = $this->objGroups->getId('Members');
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId) || $this->objUser->isAdmin() || $this->hasEditorPermissions();
+    } 
+    
+     function hasEditorPermissions() {
+        $userId = $this->objUser->userid();
+        $groupId = $this->objGroups->getId('Editors');
+       
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId)  || $this->objUser->isAdmin();
     }
 
 }
