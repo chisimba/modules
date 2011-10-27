@@ -437,7 +437,7 @@ class unesco_oer extends controller {
         echo $temp;
     }
 
-    public function __JavaFilternum() {
+    public function __JaViewvaFilternum() {
 
 
 
@@ -592,7 +592,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection');
+        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'ViewProductSection','testpdf');
 
         if (in_array($action, $notrequired)) {
             return FALSE;

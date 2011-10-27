@@ -273,6 +273,12 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
                             }
+                            $uri = $this->uri(array('action' => "testPDF", 'id' => $productID));
+                            $printLink = new link($uri);
+                            $printLink->title = 'print';
+                            $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+                            $printLink->link = $linkText;
+                            echo $printLink->show();
                             ?>
 <!--                    	<a href="#"><img src="skins/unesco_oer/images/icon-content-top-print.png" width="19" height="15"></a>
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
