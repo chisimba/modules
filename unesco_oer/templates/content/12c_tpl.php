@@ -91,6 +91,11 @@
                 "<?php echo $resource ?>", "bar5_chart",
                 "300", "300", "9.0.0", "expressInstall.swf",
                 {"get-data":"get_bar5"} );
+                
+             swfobject.embedSWF(
+                "<?php echo $resource ?>", "line_chart",
+                "300", "300", "9.0.0", "expressInstall.swf",
+                {"get-data":"get_line"} );
 
             function get_pie()
                 {
@@ -166,10 +171,23 @@
                     echo "return JSON.stringify($chart);";
                     ?>
                 }
+             
+             function get_line()
+                {
+                   <?php
+                    $data2 = $this->objDbreporting->getEvolutionByAdaptation();
+                    $data1 = $this->objDbreporting->getEvolutionByOriginal();
+                    $title = "Originals & Adaptations - Evolution";
+
+                    $chart = $this->objchartgenerator->drawLineChart($title,$data1, $data2);
+                    echo "return JSON.stringify($chart);";
+                    ?>
+                }
 
             </script>
 
                <div id="pie_chart"></div>
+               <div id="line_chart"></div>               
                <div id="bar_chart"></div>
                <div id="bar1_chart"></div>
                <div id="bar2_chart"></div>

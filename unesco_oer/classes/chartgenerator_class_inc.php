@@ -168,8 +168,63 @@ function drawHorizontalBarChart1($ChartName,$data,$filter)
         return $chart->toPrettyString();
     }
     
-}
+    function drawLineChart($ChartName,$data1, $data2){
+        
+        $title = new title($ChartName);
+        $title->set_style( '{color: #FF0000; font-size: 14px}' );
+        
+        $chart = new open_flash_chart();
+        
+        $chart->set_title( $title );
 
+        $s = new scatter_line( '#d01f3c', 3 );
+        $def = new solid_dot();
+        $def->size(3)->halo_size(2);
+        $s->set_default_dot_style( $def );
+        $data1Count = sizeof($data1);
+        $v = array();
+        
+        for($x = 0; $x != $data1Count; $x++){
+            $v[] = new scatter_value(intval($data1[$x]["month"]-1),intval($data1[$x]["count"]));
+            //$v[] = new scatter_value(5+$x,5);
+        }
+        
+        $s->set_values( $v );
+        $s->set_key( "Originals", 9 );
+
+        $chart->add_element( $s );
+
+        $t = new scatter_line( '#356aa0', 3 );
+        $def = new solid_dot();
+        $def->size(3)->halo_size(2);
+        $t->set_default_dot_style( $def );
+        $data2Count = sizeof($data2);
+        $v = array();
+        
+        for($x = 0; $x != $data2Count; $x++){
+            $v[] = new scatter_value(intval($data2[$x]["month"])-1,intval($data2[$x]["count"]));
+        }        
+        
+        $t->set_values( $v );
+        $t->set_key( "Adaptations", 9 );
+
+        $chart->add_element( $t );
+        $arrayMonths = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+        $chart->set_bg_colour('#fff3b0');
+        
+        $x = new x_axis();
+        $xLabels = new x_axis_labels();
+        $xLabels->set_labels($arrayMonths);
+        $xLabels->set_vertical();
+        $x->set_labels($xLabels);
+
+        $chart->set_x_axis( $x );
+
+        return $chart->toPrettyString();
+    }
+    
+}
 
 
 ?>

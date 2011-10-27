@@ -217,6 +217,7 @@ class dbreporting extends dbtable {
                ORDER BY Count DESC';
         $evol = $this->getArray($sql);
         $Count = $evol;
+
         return $Count;
     }
 
@@ -331,7 +332,7 @@ class dbreporting extends dbtable {
                 FROM tbl_unesco_oer_resource_types
                 WHERE tbl_unesco_oer_resource_types.description = $query";
             $allSql[] = $this->getArray($sql);
-        }
+        }        
 
         return $allSql;
     }
