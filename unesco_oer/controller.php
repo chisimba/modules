@@ -185,14 +185,14 @@ class unesco_oer extends controller {
     function hasMemberPermissions() {
         $userId = $this->objUser->userid();
         $groupId = $this->objGroups->getId('Members');
-        return $this->objGroupAdminModel->isGroupMember($userId, $groupId);
-    }
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId) || $this->objUser->isAdmin() || $this->hasEditorPermissions();
+    } 
 
     function hasEditorPermissions() {
         $userId = $this->objUser->userid();
         $groupId = $this->objGroups->getId('Editors');
        
-        return $this->objGroupAdminModel->isGroupMember($userId, $groupId);
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId)  || $this->objUser->isAdmin();
     }
 
     /**

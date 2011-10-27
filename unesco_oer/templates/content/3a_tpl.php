@@ -234,7 +234,7 @@ $this->appendArrayVar('headerParams', $js);
                 <div class="twentyPixelPaddingLeft">
                     <div class="printEmailDownloadIcons">
 <?php
-if ($this->objUser->isAdmin() | $this->hasEditorPermissions()) {
+if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
     $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');;
