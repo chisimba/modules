@@ -133,21 +133,14 @@ echo $fs->show();
 
     jQuery("a[class=deleteTheme]").click(function(){
 
-    var r=confirm( "
-    <?php
-    echo $this->objLanguage->languageText('mod_unesco_oer_product_theme_delete_confirm', 'unesco_oer');
-    ?>");
+    var r=confirm( "<?php echo $this->objLanguage->languageText('mod_unesco_oer_product_theme_delete_confirm', 'unesco_oer'); ?>");
     if(r== true){
     window.location=this.href;
     }
     return false;
-    }
+    });
 
-
-    );
-
-    }
-
-
-    );
+    });
+    
+    
 </script>
