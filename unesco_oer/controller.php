@@ -437,7 +437,7 @@ class unesco_oer extends controller {
         echo $temp;
     }
 
-    public function __JaViewvaFilternum() {
+    public function __JavaFilternum() {
 
 
 
