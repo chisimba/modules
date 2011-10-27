@@ -252,7 +252,9 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
-
+                            }
+                            
+                            if ($this->hasMemberPermissions() && $this->ObjDbUserGroups->ismemberOfgroup($this->objUser->userId(), $groupInfo['id'])) {
                                 $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
                                 $deleteLink = new link($uri);
                                 $deleteLink->title = "Delete Product";
@@ -260,12 +262,12 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
                                 $deleteLink->link = $linkText;
                                 echo $deleteLink->show();
-
+                            }
                                 $hiddenInput = new hiddeninput('hasAdaptations');
                                 $hiddenInput->value = $product->hasAdaptation();
                                 $hiddenInput->extra = "id='hasAdaptations'";
                                 echo $hiddenInput->show();
-
+                            if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
                                 $uri = $this->uri(array('action' => "createFeaturedAdaptation", 'id' => $productID));
                                 $editLink = new link($uri);
                                 $editLink->title = "Make Featured Product";

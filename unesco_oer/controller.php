@@ -2434,7 +2434,7 @@ class unesco_oer extends controller {
 
     function __adaptProduct($onestepid) {
 
-        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+        if ($this->hasMemberPermissions()) {
             $product = $this->getObject('product', 'unesco_oer');
             $product->loadProduct($this->getParam('productID'));
             $adaptation = $product->makeAdaptation();
