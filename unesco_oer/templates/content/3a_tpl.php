@@ -118,7 +118,7 @@ $this->appendArrayVar('headerParams', $js);
             $adaptationDivEnd = '</div>';
             $adaptationImg = '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">';
 
-            if ($this->objUser->isLoggedIn()) {
+            if ($this->hasMemberPermissions()) {
                 $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID , 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
@@ -521,9 +521,10 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     echo'  </div>
                                   </div>';
 }
-
-$Comment = $this->getobject('commentmanager', 'unesco_oer');
-echo $Comment->commentbox($productID);
+if ($this->hasMemberPermissions()){
+    $Comment = $this->getobject('commentmanager', 'unesco_oer');
+    echo $Comment->commentbox($productID);
+}
 ?>
                     <!--                <div class="commentSubmit">
                                            <div class="submiText"><a href="" class="searchGoLink">SUBMIT</a></div> 

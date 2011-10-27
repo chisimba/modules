@@ -2348,16 +2348,22 @@ class unesco_oer extends controller {
      */
 
     public function __newProduct() {
-        $product = $this->newObject('product', 'unesco_oer');
-        $product->createBlankProduct();
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            $product = $this->newObject('product', 'unesco_oer');
+            $product->createBlankProduct();
 
-        $params = array(
-            'productID' => $product->getIdentifier(),
-            'nextAction' => $this->getParam('nextAction'),
-            'cancelAction' => $this->getParam('cancelAction')
-        );
+            $params = array(
+                'productID' => $product->getIdentifier(),
+                'nextAction' => $this->getParam('nextAction'),
+                'cancelAction' => $this->getParam('cancelAction')
+            );
 
-        $this->nextAction('saveProductMetaData', $params);
+            $this->nextAction('saveProductMetaData', $params);
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
+        }
     }
 
     public function __saveProductMetaData() {
@@ -2449,60 +2455,66 @@ class unesco_oer extends controller {
     }
 
     function __saveContent() {
-        $productID = $this->getParam('productID');
-        $pair = $this->getParam('pair');
-        $option = $this->getParam('option');
-        $contentManager = $this->getObject('contentmanager');
-        $product = $this->newObject('product');
+        if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
+            $productID = $this->getParam('productID');
+            $pair = $this->getParam('pair');
+            $option = $this->getParam('option');
+            $contentManager = $this->getObject('contentmanager');
+            $product = $this->newObject('product');
 
 
-        if ($productID) {
-            $product->loadProduct($productID);
-            $contentManager = $product->getContentManager();
+            if ($productID) {
+                $product->loadProduct($productID);
+                $contentManager = $product->getContentManager();
+            }
+
+            $this->setVarByRef('contentManager', $contentManager);
+            $this->setVarByRef('product', $product);
+
+            switch ($option) {
+                case 'new':
+                    $newContent = $contentManager->generateNewContent($pair);
+                    echo $newContent->showInput($productID);
+                    die();
+                    break;
+
+                case 'save':
+                    $newContent = $contentManager->generateNewContent($pair);
+                    $newContent->handleUpload();
+                    $contentManager->addNewContent($newContent);
+                    return "CreateContent_tpl.php";
+                    break;
+
+                case 'edit':
+                    $pairArray = $contentManager->getPairArray($pair);
+                    $existingContent = $contentManager->getContentByContentID($pairArray[1]);
+                    echo $existingContent->showInput($productID);
+                    die;
+                    break;
+
+                case 'saveedit':
+                    $pairArray = $contentManager->getPairArray($pair);
+                    $existingContent = $contentManager->getContentByContentID($pairArray[1]);
+                    $existingContent->handleUpload();
+                    break;
+
+                case 'delete':
+                    $pairArray = $contentManager->getPairArray($pair);
+                    $existingContent = $contentManager->getContentByContentID($pairArray[1]);
+                    $existingContent->delete();
+                    break;
+
+                default:
+                    break;
+            }
+
+
+            return "CreateContent_tpl.php";
+        } else {
+            $message = $this->objLanguage->languageText('mod_unesco_accessdenied', 'unesco_oer');
+            $this->setVarByRef("message", $message);
+            return "message_tpl.php";
         }
-
-        $this->setVarByRef('contentManager', $contentManager);
-        $this->setVarByRef('product', $product);
-
-        switch ($option) {
-            case 'new':
-                $newContent = $contentManager->generateNewContent($pair);
-                echo $newContent->showInput($productID);
-                die();
-                break;
-
-            case 'save':
-                $newContent = $contentManager->generateNewContent($pair);
-                $newContent->handleUpload();
-                $contentManager->addNewContent($newContent);
-                return "CreateContent_tpl.php";
-                break;
-
-            case 'edit':
-                $pairArray = $contentManager->getPairArray($pair);
-                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
-                echo $existingContent->showInput($productID);
-                die;
-                break;
-
-            case 'saveedit':
-                $pairArray = $contentManager->getPairArray($pair);
-                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
-                $existingContent->handleUpload();
-                break;
-
-            case 'delete':
-                $pairArray = $contentManager->getPairArray($pair);
-                $existingContent = $contentManager->getContentByContentID($pairArray[1]);
-                $existingContent->delete();
-                break;
-
-            default:
-                break;
-        }
-
-
-        return "CreateContent_tpl.php";
     }
 
     public function __deleteContent() {
@@ -2723,6 +2735,10 @@ class unesco_oer extends controller {
 
     public function __selectAdaptation() {
         return "selectAdaptation_tpl.php";
+    }
+
+    public function __selectGroup() {
+        return "selectGroup_tpl.php";
     }
 
     public function __showopenidlogin() {

@@ -448,7 +448,7 @@ class module extends content {
         unset($this->_metaDataArray['puid']);
         $this->_metaDataArray['year_id'] = $this->getParentID();
             $this->_metaDataArray['object'] = $this;
-//        $this->_id = $this->objDbModules->addModule($this->_metaDataArray);
+        $this->_id = $this->objDbModules->addModule($this->_metaDataArray);
     }
 
     public function getContentsByParentID($parentID) {

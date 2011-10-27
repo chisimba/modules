@@ -127,7 +127,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
             $adaptationLinkDiv = '<div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv">';
 
-            if ($this->objUser->isLoggedIn()) {
+            if ($this->hasMemberPermissions()) {
                 $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct' , 'cancelAction' => 'ViewProduct', 'cancelParams'=> "id=$productID"));
                 $adaptLink = new link($uri);
                 $adaptLink->cssClass = "adaptationLinks";
@@ -245,7 +245,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                 <div class="innerRightContent">
                 	<div class="printEmailDownloadIcons">
                             <?php
-                            if ($this->objUser->isLoggedIn()) {
+                            if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
                                 $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
                                 $editLink = new link($uri);
                                 $editLink->title = "Edit Metadata";
@@ -555,11 +555,11 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
 
                     }
 
+                    if ($this->hasMemberPermissions()) {
+                        $Comments = $this->getobject('commentmanager', 'unesco_oer');
+                              echo   $Comments->commentbox($productID);
 
-                    $Comments = $this->getobject('commentmanager', 'unesco_oer');
-                          echo   $Comments->commentbox($productID);
-
-
+                    }
 
 
 
