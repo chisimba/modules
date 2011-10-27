@@ -187,7 +187,7 @@ class ILLperiodical extends dbTable {
         $table->startRow();
         $table->addCell($cellLabel->show(), '', 'center', 'left', '');
         $table->addCell($objcell->show(), '', 'center', 'left', '');
-        $objForm->addRule('period_cell', 'cell Must contain valid numbers', 'numeric');
+        //$objForm->addRule('period_cell', 'cell Must contain valid numbers', 'numeric');
 
         $objtel = new textinput('periodical_tell');
         $telLabel = new label($this->objLanguage->languageText("mod_libraryforms_commenttele", "libraryforms"), "periodical_tell");
@@ -221,7 +221,7 @@ class ILLperiodical extends dbTable {
         $studLabel = new label($this->objLanguage->languageText("mod_libraryforms_commentstudentno", "libraryforms"), "periodical_student");
         $table->addCell($studLabel->show(), '', 'center', 'left', '');
         $table->addCell($objstud->show(), '', 'center', 'left', '');
-        $objForm->addRule(array('periodical_student' => 'periodical_student', 'length' => 10), 'Your Studentno is too long', 'maxlength');
+        $objForm->addRule(array('name'=>'periodical_student','periodical_student' => 'periodical_student', 'length' => 10), 'Your Studentno is too long', 'maxlength');
         $table->endRow();
 
 
