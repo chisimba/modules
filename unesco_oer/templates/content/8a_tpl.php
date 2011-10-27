@@ -72,7 +72,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                  <?php
                                 $groupid = $this->getParam('id');
                                 $addSubgroupLink = new link($this->uri(array("action" =>"subgroupListingForm", "parent_id" => $groupid,"page" => "10a_tpl.php")));
-                                $addSubgroupLink->link = 'Subgroups';
+                                $addSubgroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_sub_group', 'unesco_oer');
                                  $addSubgroupLink->cssClass = 'greenTextBoldLink';
                                 echo $addSubgroupLink->show();
                                 ?>
@@ -85,7 +85,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                 <?php
                                 $groupid = $this->getParam('id');
                                 $addSubgroupLink = new link($this->uri(array("action" =>"subgroupForm", "parent_id" =>$groupid, "page" => "10a_tpl.php")));
-                                $addSubgroupLink->link = 'Create a new subgroup';
+                                $addSubgroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_sub_group_create', 'unesco_oer');
                                  $addSubgroupLink->cssClass = 'greenTextBoldLink';
                                     if ($this->hasMemberPermissions()){
                                           echo $addSubgroupLink->show();
@@ -128,7 +128,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             <?php
                             $groupid = $this->getParam('id');
                             $addDiscussionLink = new link($this->uri(array("action" => "manageOERresource", "groupid" => $groupid,"page" => "10a_tpl.php")));
-                            $addDiscussionLink->link = 'Manage OER Resources';
+                            $addDiscussionLink->link = $this->objLanguage->languageText('mod_unesco_oer_manage_resource', 'unesco_oer');
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                                if ($this->hasEditorPermissions()){
                             echo $addDiscussionLink->show();
@@ -143,7 +143,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             <?php
                             $groupid = $this->getParam('id');
                             $addDiscussionLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupid, "page" => "10a_tpl.php")));
-                            $addDiscussionLink->link = 'Add OER Resources';
+                            $addDiscussionLink->link = $this->objLanguage->languageText('mod_unesco_oer_add_resource', 'unesco_oer');
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                                if ($this->hasMemberPermissions()){
                             echo $addDiscussionLink->show();
@@ -166,7 +166,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                     <h2 class="greenText"><?php
                             echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')))
             ?></h2><br>
-                        <span class="greenText fontBold">Description</span>
+                        <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_description', 'unesco_oer') ?>: </span>
 
                     <?php
                             echo $this->objGroupUtil->groupDescription($this->getParam('id'));
@@ -176,33 +176,32 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                                 <li class="noPaddingList">Photjournalism</li>
                                                 <li class="noPaddingList">Print writing and Design</li>-->
                             <br>
-                            <span class="greenText fontBold">Brief description: </span>
+                            <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer') ?> :  </span>
                     <?php
                             echo $this->objDbGroups->getGroupDescription($this->getParam('id'));
                     ?>
 
                             <br><br>
-                            <span class="greenText fontBold">Interest: </span>
+                            <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_group_interest', 'unesco_oer') ?> : </span>
 
                             <br><br>
-                            <span class="greenText fontBold">Website: </span>
+                            <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_users_website_link', 'unesco_oer') ?> : </span>
                     <?php
                             echo $this->objDbGroups->getWebsite($this->getParam('id'));
                     ?>
                             <br><br>
-                            <span class="greenText fontBold">Region: </span>Africa
+                            <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_region', 'unesco_oer') ?> : </span>Africa
                             <br><br>
-                            <span class="greenText fontBold">Country: </span>
+                            <span class="greenText fontBold"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_Country', 'unesco_oer') ?> : </span>
                     <?php
                             echo $this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')))
                     ?>
                             <br><br>
-                            <span class="greenText fontBold">School database revcord URL: </span>http://www.unesco-ci.org
-                        </div>
+                            </div>
                     </div>
 
                    <div class="discussionListingDiv">
-                        <div class="discussionListHeadingDiv">Latest discussion</div>
+                        <div class="discussionListHeadingDiv"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_latest_discussion', 'unesco_oer') ?> </div>
 
                         <div class="discussionListDiv">
 
@@ -246,7 +245,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                 <a href="?module=forum&action=forum&id=<?php
                             $groupid = $this->getParam('id');
                             echo $this->objDbGroups->getGroup_pkid_in_forum($groupid);
-                        ?>&page=10a_tpl.php   " class="greenTextBoldLink">All discussions</a> |
+                        ?>&page=10a_tpl.php   " class="greenTextBoldLink"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_all_discussion', 'unesco_oer') ?> </a> |
 
                         <?php
                             $forumId = $this->objDbGroups->getGroupForumId($groupid);
@@ -268,7 +267,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                 <!--- OER Resources -->
                 <div class="resourcesListingDiv">
-                    <div class="resourcesListHeadingDiv">OER Resources</div>
+                    <div class="resourcesListHeadingDiv"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_resource', 'unesco_oer') ?></div>
                     <div class="resourcesListDiv">
                         <?php
                             $groupid = $this->getParam('id');
@@ -290,7 +289,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                             Adapted in : <a href="" class="greyTextLink">English</a>
                         </div>-->
                         <div class="showAlldiscussions">
-                            <a href="" class="greyTextBoldLink">All OER resources</a> |
+                            <a href="" class="greyTextBoldLink"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_all_resource', 'unesco_oer') ?></a> |
 
                         <?php
                             $groupid = $this->getParam('id');
