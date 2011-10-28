@@ -339,7 +339,7 @@ class curriculum extends content {
         $html .= "<h$level>1. Forward</h$level>" . $this->_forward;
         $html .= "<h$level>2. Background</h$level>" . $this->_background;
         $html .= "<h$level>3. Introductory Description</h$level>" . $this->_introductory_description;
-           $html .= "<h$level>4. Remarks</h$level>" . $this->_remark;
+           $html .= "<h$level>4. Comments History</h$level>" . $this->_remark;
         return $html;
     }
 }

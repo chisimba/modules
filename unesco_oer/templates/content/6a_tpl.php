@@ -172,7 +172,7 @@
                             
                             echo '<br><br><br>
                                    <div class = "remarks">
-                                      <font size="3">  Adaptation Remarks :</font>    
+                                      <font size="3">  Comments History :</font>    
                                       
                                         </div>
                                         <br><br>';
@@ -282,7 +282,7 @@
                                 <br><br>
                                 <div> <p> 
                                   <div class = "remarks">
-                                  <font size="3">  Adaptation Remarks :</font>                
+                                  <font size="3">  Comments History :</font>                
                                         </P>
                                  '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
                                         </div>

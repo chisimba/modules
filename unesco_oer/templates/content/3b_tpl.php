@@ -129,11 +129,12 @@ $this->appendArrayVar('headerParams', $js);
                                                                                 <option value="">DESC</option>
                                                                            </select>-->
                     </div>
-</div>
-                
-  <div class="centerColumnDiv">
+         
+
+            
+ 
                                           
-                <div  id='filterDiv' title = "3b" ALIGN="left">
+                <div  id='filterDiv' title = "3b" float ="left">
            
                       <?php
                       
@@ -265,9 +266,9 @@ $this->appendArrayVar('headerParams', $js);
                 ?>
                             
                   
-                        
-                        
-                    </div>
+                </div>
+             
+         
         <div id ="bookmarks">
                         <?php
                           $bookmark = $this->objbookmarkmanager->populateGridView($products);
@@ -279,6 +280,7 @@ $this->appendArrayVar('headerParams', $js);
                 
   </div>
             </div>
+          
  
                 <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                 <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>

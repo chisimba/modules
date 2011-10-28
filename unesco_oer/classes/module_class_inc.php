@@ -390,7 +390,7 @@ class module extends content {
 //        
 
           
-          $content.= '<h3 class="greyText">Remarks</h3><br> ' . $this->_metaDataArray['remark'] . '<br><br>';
+          $content.= '<h3 class="greyText">Comments History</h3><br> ' . $this->_metaDataArray['remark'] . '<br><br>';
        
 
         //$action = "";
