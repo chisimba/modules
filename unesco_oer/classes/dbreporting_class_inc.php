@@ -459,37 +459,32 @@ class dbreporting extends dbtable {
         return $allSql;
     }
     
-//    function getProductsByCountry($countryNames){
-//        
-//        $sql = "SELECT tbl_unesco_oer_product_adaptation_data.country_code, tbl_unesco_oer_product_adaptation_data.product_id
-//                FROM tbl_unesco_oer_product_adaptation_data";
-//        $allSql = $this->getArray($sql);    
-//      
-//        $arrayCount = sizeof($allSql);
-//        $prod = array();       
-//
-//        foreach($countryNames as $country){
-//            $x = 0;
-//            if($country == $this->getCountryName($allSql[$x]["country_code"])){
-//                $prod = $x;
-//            } 
-//            $x++;
-//            
-//        }
-//        
-//        var_dump($prod);
-//        die();
-//        
-//        
-//        
-//    }
+    function getProductsByCountry($countryNames){
+        
+        $arrayCount = sizeof($countryNames);
+        $allSql = array(); 
+        
+        for ($x = 0; $x < $arrayCount; $x++) {
+            $countryCode = "'".$countryNames[$x]."'";
+            
+            $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
+                    FROM tbl_unesco_oer_product_adaptation_data
+                    JOIN tbl_unesco_oer_products
+                    ON tbl_unesco_oer_products.id = tbl_unesco_oer_product_adaptation_data.product_id
+                    WHERE tbl_unesco_oer_product_adaptation_data.country_code = $countryCode AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                    AND tbl_unesco_oer_products.deleted = 0";
+            $allSql[] = $this->getArray($sql);
+        }
+        
+        return $allSql;      
+    }
 
     function createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames,$keywordNames, $langNames, $regions) {
         
         $arrayQuery = array();
         
-//        $countries = $this->getProductsByCountry($countryNames);
-
+        $countriesSQL = $this->getProductsByCountry($countryNames);
+        $arrayQuery[] = $countriesSQL;
         
         $regionID = $this->getRegionID($regions);
         $regionSQL = $this->getProductsByRegion($regionID);
@@ -513,8 +508,10 @@ class dbreporting extends dbtable {
         $langs = $this->getLangID($langNames);
         $langSQL = $this->getProductsByLanguage($langs);
         $arrayQuery[] = $langSQL;
+        
         $allProductsArr = array();
-        for ($x=0; $x <5; $x++){            
+        //extracting Product Name & Creator
+        for ($x=0; $x <6; $x++){            
             
             $tempArray = $arrayQuery[$x];
             $allProducts = "";
@@ -522,7 +519,7 @@ class dbreporting extends dbtable {
                 foreach($Products as $Prod ){
                     
                     foreach($Prod as $Prodd){
-                      $allProducts .= $Prodd." ";  
+                      $allProducts .= $Prodd.", ";  
                     }
                     
                 }

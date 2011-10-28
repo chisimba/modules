@@ -29,11 +29,12 @@ class displayreportgenerator extends object
 
         $countrySelect->extra = ' multiple="1" size="4" style="width:200pt;" ';
         $countryArray = array();
+        $countryCode = array();
 
         for ($i=0; $i < $ArrayCount; $i++)
             {
-              $countryCode =  $temp[$i]["country"];
-              $countryName = $this->objDbReporting->getCountryName($countryCode);
+              $countryCode[] =  $temp[$i]["country"];
+              $countryName = $this->objDbReporting->getCountryName($countryCode[$i]);
               $countryArray[] = $countryName;
             }
 
@@ -41,7 +42,7 @@ class displayreportgenerator extends object
 
         for ($z=0; $z < $ArrayCount; $z++)
         {
-            $countrySelect->addOption($countryArray[$z]);
+            $countrySelect->addOption($countryCode[$z],$countryArray[$z]);
         }                                                                                 
 
 

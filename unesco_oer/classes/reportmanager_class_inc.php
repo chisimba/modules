@@ -42,12 +42,15 @@ class reportmanager extends object {
         $fillArray = array();
         $fillArray = $text;
         $params = new Java("java.util.HashMap");
-        $params->put("region", $fillArray[0]);
-        $params->put("theme",$fillArray[1]);
-        $params->put('keyword',$fillArray[2]);
-        $params->put("type",$fillArray[3]);
-        $params->put("institution",$fillArray[4]);
-        $params->put("language",$fillArray[5]);
+        
+        $params->put("country",$fillArray[0] );
+        $params->put("region", $fillArray[1]);
+        $params->put("theme",$fillArray[2]);
+        $params->put('keyword',$fillArray[3]);
+        $params->put("type",$fillArray[4]);
+        $params->put("institution",$fillArray[5]);
+        $params->put("language",$fillArray[6]);
+
 
         $emptyDataSource = new Java("net.sf.jasperreports.engine.JREmptyDataSource");
         $jasperPrint = $fillManager->fillReport($report, $params, $emptyDataSource);

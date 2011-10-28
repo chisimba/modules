@@ -2741,6 +2741,7 @@ class unesco_oer extends controller {
     }
 
     public function __processReportingForm() {
+        
         $adaptationTypes = $this->getParam('AdaptationType');
         $institutionTypes = $this->getParam('InstitutionType');
         $countryNames = $this->getParam('countryDropdown');
@@ -2748,7 +2749,7 @@ class unesco_oer extends controller {
         $keywordNames = $this->getParam('keywordDropdown');
         $langNames = $this->getParam('langDropdown');
         $regions = $this->getParam('regionDropdown');
-        //$query = array();
+
         $query = $this->objDbreporting->createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames,$keywordNames, $langNames, $regions);
 
         $objReportManager = $this->getObject("reportmanager");

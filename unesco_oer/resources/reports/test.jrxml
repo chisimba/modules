@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -21,6 +21,7 @@
 	<parameter name="institution" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="language" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="keyword" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="country" class="java.lang.String" isForPrompting="false"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -44,7 +45,7 @@
 	<detail>
 		<band height="802" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="21" width="535" height="90"/>
+				<reportElement key="textField-1" x="0" y="98" width="535" height="90"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -57,7 +58,7 @@
 				<textFieldExpression><![CDATA["Products By Region: "+$P{region}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="111" width="535" height="91"/>
+				<reportElement key="textField-1" x="0" y="188" width="535" height="91"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -70,7 +71,7 @@
 				<textFieldExpression><![CDATA["Products By Theme: "+$P{theme}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="300" width="535" height="91"/>
+				<reportElement key="textField-1" x="0" y="377" width="535" height="91"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -83,7 +84,7 @@
 				<textFieldExpression><![CDATA["Products By Type: "+$P{type}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="391" width="535" height="98"/>
+				<reportElement key="textField-1" x="0" y="468" width="535" height="98"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -96,7 +97,7 @@
 				<textFieldExpression><![CDATA["Products By Institution Type : "+$P{institution}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="489" width="535" height="98"/>
+				<reportElement key="textField-1" x="0" y="566" width="535" height="98"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -109,7 +110,7 @@
 				<textFieldExpression><![CDATA["Products By Language : "+$P{language}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-1" x="0" y="202" width="535" height="98"/>
+				<reportElement key="textField-1" x="0" y="279" width="535" height="98"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -120,6 +121,19 @@
 					<font size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Products By Keyword : "+$P{keyword}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="0" width="535" height="98"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Products By Country : "+$P{country}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
