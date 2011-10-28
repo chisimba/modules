@@ -81,9 +81,13 @@ class chartgenerator extends object
         $chart->set_title($title);
         $chart->add_element($bar);
         $chart->set_bg_colour('#fff3b0');
+        
         $xlabel = new x_axis();
         $xlabel->set_labels_from_array($NewArrayLang);
         $chart->set_x_axis($xlabel);
+        
+        $yAxis  = new y_axis();
+        $chart->set_y_axis($yAxis);
 
         return $chart->toPrettyString();
     }
@@ -186,7 +190,6 @@ function drawHorizontalBarChart1($ChartName,$data,$filter)
         
         for($x = 0; $x != $data1Count; $x++){
             $v[] = new scatter_value(intval($data1[$x]["month"]-1),intval($data1[$x]["count"]));
-            //$v[] = new scatter_value(5+$x,5);
         }
         
         $s->set_values( $v );
