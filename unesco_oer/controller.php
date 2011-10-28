@@ -2480,9 +2480,15 @@ class unesco_oer extends controller {
 
                 case 'save':
                     $newContent = $contentManager->generateNewContent($pair);
-                    $newContent->handleUpload();
-                    $contentManager->addNewContent($newContent);
-                    return "CreateContent_tpl.php";
+                    $isUpload = $this->getParam('upload');
+                    if (!empty($isUpload)){
+                        $newContent->handleUpload();
+                        $contentManager->addNewContent($newContent);
+                        return "CreateContent_tpl.php";
+                    } else {
+                        $true = TRUE;
+                        $this->setVarByRef('invalid', $true);
+                    }
                     break;
 
                 case 'edit':

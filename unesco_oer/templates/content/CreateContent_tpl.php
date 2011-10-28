@@ -163,6 +163,7 @@ echo '</div>';
 
 //echo '<div class="centerColumnDiv"">';
 echo '<div class="rightWideColumnDiv" style="width:75%;">';
+if ($invalid) echo '<font face="Arial" color="#FF2222">Previous Submission Failed!</font>';
 echo $contentManager->showInput($this->getParam('prevAction'));
 echo "</div></div></fieldset></div>";
 
