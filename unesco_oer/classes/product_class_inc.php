@@ -1061,7 +1061,7 @@ class product extends object {
             $table->endRow();
 
 
-
+        
 
 
             //Field for Region
@@ -1129,7 +1129,10 @@ class product extends object {
             $fieldset->setLegend('Adaptation information');
             $fieldset->addContent($table->show());
             $output .= $fieldset->show();
-        }
+        } 
+        
+        
+        
         /*               end of                         */
         /*         Adaptation Fields                    */
         /*                                              */

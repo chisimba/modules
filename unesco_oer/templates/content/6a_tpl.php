@@ -172,12 +172,14 @@
                             
                             echo '<br><br><br>
                                    <div class = "remarks">
-                                      <font size="3">  Comments History :</font>    
+                                      <font size="3">  Comments History :</font>   
+                                   
+                                
                                       
                                         </div>
-                                        <br><br>';
+                                        <br><br>    UNESCO OER Origional
                             
-                            echo $product->getRemark() . '<br><br>';
+                     <br><br>';
                             
                                $editLink = new link("javascript:void(0)");
                                $editLink->cssId = 'treelink';
