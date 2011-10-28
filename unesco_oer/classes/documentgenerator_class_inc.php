@@ -55,11 +55,13 @@ class documentgenerator extends object {
             ";
         //Document content//
         $contentManager = $product->getContentManager();
-        $document = $this->generateContentsHTML($contentManager->getAllContents());
+        $outline = $this->generateContentsHTML($contentManager->getAllContents());
+        $details = $this->generateModuleDetailsHTML($contentManager->getAllContents());
 
         $this->pdf->partWrite($frontPage);
-        $this->pdf->partWrite($contents);
-        $this->pdf->partWrite($document);
+//        $this->pdf->partWrite($contents);
+        $this->pdf->partWrite($outline);
+        $this->pdf->partWrite($details);
         return $this->pdf;
     }
 
@@ -70,6 +72,19 @@ class documentgenerator extends object {
 //                $html .= "<h$level>{$contentObject->getTitle()}</h$level>"; //TODO move code to function below where it belongs
                 $html .= $contentObject->printHTML($level);
                 $html .= $this->generateContentsHTML($contentObject->getContents(), $level+1);
+            }
+        }
+
+        return $html;
+    }
+
+    private function generateModuleDetailsHTML($contentObjects, $level = 1){
+        $html = "";
+        foreach ($contentObjects as $contentObject) {
+            if (!$contentObject->isDeleted()){
+//                $html .= "<h$level>{$contentObject->getTitle()}</h$level>"; //TODO move code to function below where it belongs
+                if ($contentObject->getType()=="module") $html .= "<H2>{$contentObject->getTitle()}</H2>".$contentObject->showReadOnlyInput();
+                $html .= $this->generateModuleDetailsHTML($contentObject->getContents(), $level+1);
             }
         }
 
