@@ -785,7 +785,7 @@ class product extends object {
         $editor->name = $fieldName;
         $editor->height = '450px';
         $editor->width = '98%';
-        $editor->setBasicToolBar();
+       // $editor->setBasicToolBar();
         $editor->setContent($this->getDescription());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_description_long', 'unesco_oer');
@@ -802,7 +802,7 @@ class product extends object {
         $editor->name = $fieldName;
         $editor->height = '450px';
         $editor->width = '98%';
-        $editor->setBasicToolBar();
+       // $editor->setBasicToolBar();
         $editor->setContent($this->getAbstract());
         $table->startRow();
         $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_abstract', 'unesco_oer');
