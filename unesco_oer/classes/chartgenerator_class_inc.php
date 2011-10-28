@@ -68,9 +68,13 @@ class chartgenerator extends object
         $ArrayCount = sizeof($data);
         $NewArrayData = array();
         $NewArrayLang = array();
+        $countMax = 0;
 
         for( $i=0; $i!=$ArrayCount; $i++){
+            
             $NewArrayData[] = intval($data[$i]["count"]);
+            
+            if ($countMax < $NewArrayData[$i]){ $countMax = $NewArrayData[$i];} 
             $NewArrayLang[] = $data[$i][$filter];
         }
 
@@ -86,7 +90,9 @@ class chartgenerator extends object
         $xlabel->set_labels_from_array($NewArrayLang);
         $chart->set_x_axis($xlabel);
         
+
         $yAxis  = new y_axis();
+        $yAxis->set_range(0,$countMax+2,1);
         $chart->set_y_axis($yAxis);
 
         return $chart->toPrettyString();
@@ -187,6 +193,7 @@ function drawHorizontalBarChart1($ChartName,$data,$filter)
         $s->set_default_dot_style( $def );
         $data1Count = sizeof($data1);
         $v = array();
+        $countMax = 0;
         
         for($x = 0; $x != $data1Count; $x++){
             $v[] = new scatter_value(intval($data1[$x]["month"]-1),intval($data1[$x]["count"]));
@@ -203,9 +210,13 @@ function drawHorizontalBarChart1($ChartName,$data,$filter)
         $t->set_default_dot_style( $def );
         $data2Count = sizeof($data2);
         $v = array();
+        $countMax = 0;
         
         for($x = 0; $x != $data2Count; $x++){
+            $tempMax = intval($data2[$x]["count"]);
             $v[] = new scatter_value(intval($data2[$x]["month"])-1,intval($data2[$x]["count"]));
+            
+            if ($countMax < $tempMax){ $countMax = $tempMax;} 
         }        
         
         $t->set_values( $v );
@@ -223,6 +234,10 @@ function drawHorizontalBarChart1($ChartName,$data,$filter)
         $x->set_labels($xLabels);
 
         $chart->set_x_axis( $x );
+        
+        $yAxis  = new y_axis();
+        $yAxis->set_range(0,$countMax+2,1);
+        $chart->set_y_axis($yAxis);
 
         return $chart->toPrettyString();
     }
