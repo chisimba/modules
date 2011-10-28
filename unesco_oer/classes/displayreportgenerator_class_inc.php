@@ -21,10 +21,7 @@ class displayreportgenerator extends object
         
         $uri = $this->uri ( array( 'action' => 'processReportingForm' ) );
         $objForm = new form('formReport',$uri);
-
-        $dd= new dropdown('dropdown');
-        $dd->addOption();
-
+        
         $countrySelect = new dropdown('countryDropdown[]');
         
         $temp = $this->objDbReporting->getBreakdownCountryAdaptations();
@@ -48,21 +45,19 @@ class displayreportgenerator extends object
         }                                                                                 
 
 
-        $content .= ' <div class="tenPixelPaddingLeft"></div>
+        $content .= ' 
                 <div class="topReportingDiv">
-                	<div class="paddingContentTopLeftRightBottom">
-                        <fieldset>
+                	<fieldset>
                             <legend>Country and region</legend>
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                    Select country/region preset<br>'.
-                                $dd->show().'
-                                </div>
-                                <div class="rightLegendContentHolder">
-                                    Select country<br>.'
+                                   Select country<br>.'
                                    .$countrySelect->show().'<br>
                                     Use CTRL button to select more than one country
-                                    <br><br> ';
+                                    <br><br> 
+                                </div>
+                                <div class="rightLegendContentHolder">
+                                     ';
 
         $regionSelect = new dropdown('regionDropdown[]');
         $regionSelect->extra = ' multiple="1" size="4" style="width:200pt;" ';
@@ -77,7 +72,7 @@ class displayreportgenerator extends object
                                     </div>
                                 </div>
                                 </fieldset>
-                            </div>
+                            
                         
 
                         <br>
