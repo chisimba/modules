@@ -284,5 +284,9 @@ class dbproducts extends dbtable
         $translatedProduct = $this->getAll("WHERE id='$translationID'");
         return array_merge($translatedProduct, $translationsOfProduct);
     }
+
+    public function getAllAssocAdaptations($id, $groupid) {
+        
+    }
 }
 ?>
