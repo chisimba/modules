@@ -371,8 +371,8 @@ echo $product->getAuthors();
                         
                                                 <li><a href="#" class="liStyleLink">لعربية</a></li>
                                                 <li><a href="#" class="liStyleLink">中文</a></li>-->
-                    </ul>
-                    <span class="greyText fontBold">Related news:</span>
+<!--                    </ul>
+                    <span class="greyText fontBold">Related news:</span>-->
                     <br><br>
                     
                     <?php
@@ -393,11 +393,11 @@ echo $product->getAuthors();
                   echo $middle;  
                     ?>
                     
-                    <div class="viewAllnewsBlueDiv"><a href="?module=news" class="greyTextLink">See all related news</a></div>
+<!--                    <div class="viewAllnewsBlueDiv"><a href="?module=news" class="greyTextLink">See all related news</a></div>
                     <span class="greyText fontBold">Related events:</span>
                     <br><br>
                     Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>
+                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>-->
 <?php
 if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     ?>
