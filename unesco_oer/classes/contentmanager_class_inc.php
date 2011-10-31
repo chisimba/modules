@@ -187,7 +187,7 @@ class contentmanager extends object {
                 $menu->addItem($content->getTreeNodes($editable, $highlighted, $origional, $compare, $productIDS, $this->getProductID(), $insertInfo));
             }
         }
-        if ($editable) {
+        if ($editable && empty($insertInfo)) {
             foreach ($this->_content_types as $key => $value) {
                 $objLanguage = $this->getObject('language', 'language');
                 $newCaption = $objLanguage->languageText('mod_unesco_oer_content_new','unesco_oer');

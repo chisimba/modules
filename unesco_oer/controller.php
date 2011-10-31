@@ -2763,6 +2763,21 @@ class unesco_oer extends controller {
     }
 
     public function __selectAdaptation() {
+        $groupid = $this->getParam('groupid');
+        $this->setVarByRef('groupid',$groupid);
+        $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
+
+        $adaptations = $this->objDbProducts->getAllOERAdaptations($this->getParam('originalproductid'));
+
+        $diff = array_uintersect(
+                $adaptations, $arrays, create_function(
+                        '$a,$b', 'if ($a[' . '"id"' . '] == $b[' . '"product_id"' . ']) return 0;
+                         elseif (($a[' . '"id"' . '] > $b[' . '"product_id"' . '])) return 1;
+                         else return -1;'
+                )
+        );
+
+        $this->setVarByRef('customApaptationList', $diff);
         return "selectAdaptation_tpl.php";
     }
 

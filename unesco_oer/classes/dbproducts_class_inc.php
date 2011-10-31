@@ -280,13 +280,43 @@ class dbproducts extends dbtable
             $translationID = $product['translation_of'];
         }
 
-        $translationsOfProduct = $this->getAll("WHERE translation_of='$translationID'");
-        $translatedProduct = $this->getAll("WHERE id='$translationID'");
+        $translationsOfProduct = $this->getAll("WHERE translation_of='$translationID' and parent_id is null");
+        $translatedProduct = $this->getAll("WHERE id='$translationID' and parent_id is null");
         return array_merge($translatedProduct, $translationsOfProduct);
     }
 
-    public function getAllAssocAdaptations($id, $groupid) {
-        
+    function getOERbyProductID($id) {
+        $product = $this->getRow('id', $id);
+        if ($product['parent_id'] == NULL) {
+            return $product;
+        } else {
+            return $this->getOERbyProductID($product['parent_id']);
+        }
+    }
+
+    function getAllOERAdaptations($OER_id) {
+        $OER_product = $this->getRow('id', $OER_id);
+        if ($OER_product['parent_id'] != NULL) {
+            $OER_product = $this->getOERbyProductID($OER_id);
+        }
+
+        return $this->getAllAdaptations($OER_product['id']);
+    }
+
+    function getAllAdaptations($id) {
+        $filter = "WHERE parent_id = '$id' AND deleted=0";
+        $adaptations = $this->getAll($filter);
+
+        $subAdaptations = array();
+
+        foreach ($adaptations as $adaptation) {
+            $subAdaptations = array_merge($subAdaptations,$this->getAllAdaptations($adaptation['id']));
+
+        }
+
+        $adaptations = array_merge($adaptations,$subAdaptations);
+
+        return $adaptations;
     }
 }
 ?>

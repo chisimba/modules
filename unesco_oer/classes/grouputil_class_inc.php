@@ -246,13 +246,22 @@ class grouputil extends object {
     
 
 
-    public function groupAdaptation($groupid, $customURIarray = NULL) {
+    public function groupAdaptation($groupid, $customURIarray = NULL, $customApaptationList = NULL) {
 
         $content = '';
-        $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
+        $arrays = array();
+        if (empty($customApaptationList)){
+            $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
+        } else {
+            $arrays = $customApaptationList;
+        }
         if (count($arrays) > 0) {
             foreach ($arrays as $array) {
+                if (empty($customApaptationList)){
                 $productID = $array['product_id'];
+                } else {
+                    $productID = $array['id'];
+                }
 
                 $product = $this->newObject('product', 'unesco_oer');
                 $product->loadProduct($productID);

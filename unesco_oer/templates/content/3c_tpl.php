@@ -196,7 +196,14 @@ if ($this->objUser->isLoggedIn()) {
     echo $editLink->show();
     
     
-    
+    if ($existingContent->getType() == 'module') {
+        $uri = $this->uri(array('action' => 'selectGroup', 'originalproductid' => $productID, 'originalpair'=>$existingContent->getPairString()));
+        $adaptLink = new link($uri);
+        $adaptLink->title = "Adapt Section";
+        $linkText = '<img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Print" width="19" height="15">';
+        $adaptLink->link = $linkText;
+        echo $adaptLink->show();
+    }
     
     
 }

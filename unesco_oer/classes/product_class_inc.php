@@ -1097,7 +1097,8 @@ class product extends object {
 
             $objDbGroups = $this->getObject('dbgroups', 'unesco_oer');
 
-            $groups = array(array("id" => NULL, "name" => "default"));
+//            $groups = array(array("id" => NULL, "name" => "default"));
+            $groups = array();
             foreach ($arrayUserGroups as $userGroupRow) {
                 $groupArray = $objDbGroups->getGroupInfo($userGroupRow['groupid']);
                 array_push($groups, $groupArray[0]);

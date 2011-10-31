@@ -17,10 +17,12 @@
 
 $objDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
 $arrayUserGroups = $objDbUserGroups->getGroupsByUserID($this->objUser->userId());
+$fieldsetTitle = $this->objLanguage->languageText('mod_unesco_oer_select_group', 'unesco_oer');
+echo "<fieldset> <legend>$fieldsetTitle</legend>";
 foreach ($arrayUserGroups as $userGroup) {
     $uri = $this->uri(array('action'=>'selectAdaptation', 'groupid'=>$userGroup['groupid'],'originalpair'=>$this->getParam('originalpair'), 'originalproductid'=>$this->getParam('originalproductid')));
     echo $this->objGroupUtil->topcontent($userGroup['groupid'], $uri);
 }
-
+echo "</fieldset>";
 
 ?>

@@ -16,6 +16,8 @@
 
 $uriArray = array('action'=>'saveContent','option'=>'insert','originalpair'=>$this->getParam('originalpair'), 'originalproductid'=>$this->getParam('originalproductid'));
 
-echo $this->objGroupUtil->groupAdaptation($this->getParam('groupid'),$uriArray);
-
+$fieldsetTitle = $this->objLanguage->languageText('mod_unesco_oer_select_adaptation', 'unesco_oer');
+echo "<fieldset> <legend>$fieldsetTitle</legend>";
+$this->objGroupUtil->groupAdaptation($groupid,$uriArray, $customApaptationList);
+echo "</fieldset>";
 ?>
