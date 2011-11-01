@@ -186,13 +186,13 @@ class unesco_oer extends controller {
         $userId = $this->objUser->userid();
         $groupId = $this->objGroups->getId('Members');
         return $this->objGroupAdminModel->isGroupMember($userId, $groupId) || $this->objUser->isAdmin() || $this->hasEditorPermissions();
-    } 
+    }
 
     function hasEditorPermissions() {
         $userId = $this->objUser->userid();
         $groupId = $this->objGroups->getId('Editors');
-       
-        return $this->objGroupAdminModel->isGroupMember($userId, $groupId)  || $this->objUser->isAdmin();
+
+        return $this->objGroupAdminModel->isGroupMember($userId, $groupId) || $this->objUser->isAdmin();
     }
 
     /**
@@ -592,7 +592,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection','testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
+        $notrequired = array('aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
@@ -2481,7 +2481,7 @@ class unesco_oer extends controller {
                 case 'save':
                     $newContent = $contentManager->generateNewContent($pair);
                     $isUpload = $this->getParam('upload');
-                    if (!empty($isUpload)){
+                    if (!empty($isUpload)) {
                         $newContent->handleUpload();
                         $contentManager->addNewContent($newContent);
                         return "CreateContent_tpl.php";
@@ -2513,15 +2513,17 @@ class unesco_oer extends controller {
                 case 'insert':
                     $originalID = $this->getParam('originalproductid');
                     $originalpair = $this->getParam('originalpair');
-                    $insertInfo = array('productid'=>$originalID,'pair'=>$originalpair);
-                    $this->setVarByRef('insertInfo',$insertInfo);
+                    $insertInfo = array('productid' => $originalID, 'pair' => $originalpair);
+                    $this->setVarByRef('insertInfo', $insertInfo);
                     return "CreateContent_tpl.php";
                     break;
 
                 case 'insertedit':
-                    $originalID = $this->getParam('originalproductid'); echo "OrigProdID: $originalID ";
+                    $originalID = $this->getParam('originalproductid');
+                    echo "OrigProdID: $originalID ";
                     $originalProduct = $this->newObject('product');
-                    $originalProduct->loadProduct($originalID); echo "ProdName: {$originalProduct->getTitle()} ";
+                    $originalProduct->loadProduct($originalID);
+                    echo "ProdName: {$originalProduct->getTitle()} ";
                     $originalContentManager = $originalProduct->getContentManager();
                     $originalPairArray = $originalContentManager->getPairArray($this->getParam('originalpair'));
                     var_dump($originalPairArray);
@@ -2747,7 +2749,7 @@ class unesco_oer extends controller {
     }
 
     public function __processReportingForm() {
-        
+
         $adaptationTypes = $this->getParam('AdaptationType');
         $institutionTypes = $this->getParam('InstitutionType');
         $countryNames = $this->getParam('countryDropdown');
@@ -2756,7 +2758,7 @@ class unesco_oer extends controller {
         $langNames = $this->getParam('langDropdown');
         $regions = $this->getParam('regionDropdown');
 
-        $query = $this->objDbreporting->createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames,$keywordNames, $langNames, $regions);
+        $query = $this->objDbreporting->createReportQuery($adaptationTypes, $institutionTypes, $countryNames, $themeNames, $keywordNames, $langNames, $regions);
 
         $objReportManager = $this->getObject("reportmanager");
         $objReportManager->generatePDFReport($query, "output.pdf", "test.jrxml");
@@ -2764,7 +2766,7 @@ class unesco_oer extends controller {
 
     public function __selectAdaptation() {
         $groupid = $this->getParam('groupid');
-        $this->setVarByRef('groupid',$groupid);
+        $this->setVarByRef('groupid', $groupid);
         $arrays = $this->objDbGroups->getGroupProductadaptation($groupid);
 
         $adaptations = $this->objDbProducts->getAllOERAdaptations($this->getParam('originalproductid'));
@@ -2817,6 +2819,38 @@ class unesco_oer extends controller {
 
     public function __openidloginresult() {
         return "openidloginresult_tpl.php";
+    }
+
+    public function __aboutus() {
+        $objDbNewsStories = $this->getObject("dbnewsstories", "news");
+        $objDbNewsCategories = $this->getObject("dbnewscategories", "news");
+        $aboutusid = "";
+        $cats = $objDbNewsCategories->getCategories();
+        foreach ($cats as $cat) {
+            if ($cat['categoryname'] == 'aboutus') {
+                $aboutusid = $cat['id'];
+            }
+        }
+        $stories = $objDbNewsStories->getCategoryStories($aboutusid);
+
+        $this->setVarByRef("stories", $stories);
+        return "aboutus_tpl.php";
+    }
+
+    public function __contactus() {
+        $objDbNewsStories = $this->getObject("dbnewsstories", "news");
+        $objDbNewsCategories = $this->getObject("dbnewscategories", "news");
+     
+        $contactusid = "";
+        $cats = $objDbNewsCategories->getCategories();
+        foreach ($cats as $cat) {
+            if ($cat['categoryname'] == 'contactus') {
+                $contactusid = $cat['id'];
+            }
+        }
+        $stories = $objDbNewsStories->getCategoryStories($contactusid);
+        $this->setVarByRef("stories", $stories);
+        return "contactus_tpl.php";
     }
 
 }
