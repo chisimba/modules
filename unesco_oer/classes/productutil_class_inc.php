@@ -802,7 +802,7 @@ class productutil extends object {
 
 
 
-public function populatebookmark($product) {
+    public function populatebookmark($product) {
 
         $content = '     
                            <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
@@ -961,31 +961,31 @@ public function populatebookmark($product) {
 
 
 
-function getCurrentParameterString($condtion = NULL, $default = NULL){
-    $parameterList = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?')+1);
-    $parameterList = str_replace('&', '__', $parameterList);
-    if ($condtion != NULL) {
-        $parameterArray = $this->createParameterArray($parameterList);
-        foreach ($condtion as $key => $value) {
-            if ($parameterArray[$key] == $value)                return str_replace('&', '__', $default);
+    function getCurrentParameterString($condtion = NULL, $default = NULL){
+        $parameterList = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?')+1);
+        $parameterList = str_replace('&', '__', $parameterList);
+        if ($condtion != NULL) {
+            $parameterArray = $this->createParameterArray($parameterList);
+            foreach ($condtion as $key => $value) {
+                if ($parameterArray[$key] == $value)                return str_replace('&', '__', $default);
+            }
         }
+        return $parameterList;
     }
-    return $parameterList;
-}
 
-function createParameterArray($parameterString){
-    if (empty ($parameterString)) return NULL;
-    $tempArray = explode('__', $parameterString);
-    $parameterArray = array();
-    foreach ($tempArray as $paramPairString) {
-        $paramPairArray = explode('=', $paramPairString);
+    function createParameterArray($parameterString){
+        if (empty ($parameterString)) return NULL;
+        $tempArray = explode('__', $parameterString);
+        $parameterArray = array();
+        foreach ($tempArray as $paramPairString) {
+            $paramPairArray = explode('=', $paramPairString);
 
-        $parameterArray[urldecode($paramPairArray[0])] = urldecode($paramPairArray[1]);
+            $parameterArray[urldecode($paramPairArray[0])] = urldecode($paramPairArray[1]);
+        }
+    //    unset($parameterArray['action']);
+    //    unset($parameterArray['module']);
+        return $parameterArray;
     }
-//    unset($parameterArray['action']);
-//    unset($parameterArray['module']);
-    return $parameterArray;
-}
 
 //Include the following div in the pages where it is required
 //
@@ -994,95 +994,105 @@ function createParameterArray($parameterString){
 //    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
 //    <div class="bubble_bottom"></div>
 //</div>
-function getToolTip($toolTip = NULL, $html = NULL){
-       $js = '<script language="JavaScript" src="' . $this->getResourceUri('bubble-tooltip.js') . '" type="text/javascript"></script>';
-       $this->appendArrayVar('headerParams', $js);
-       $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="stylesheet" type="text/css"/>';
-       $this->appendArrayVar('headerParams', $link);
-    if (empty($toolTip)) {
-        $objLanguage = $this->getObject('language','language');
-        $toolTip = $objLanguage->languageText('mod_unesco_oer_no_tooltip','unesco_oer');
+    function getToolTip($toolTip = NULL, $html = NULL){
+           $js = '<script language="JavaScript" src="' . $this->getResourceUri('bubble-tooltip.js') . '" type="text/javascript"></script>';
+           $this->appendArrayVar('headerParams', $js);
+           $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="stylesheet" type="text/css"/>';
+           $this->appendArrayVar('headerParams', $link);
+        if (empty($toolTip)) {
+            $objLanguage = $this->getObject('language','language');
+            $toolTip = $objLanguage->languageText('mod_unesco_oer_no_tooltip','unesco_oer');
+        }
+        if(empty($html))
+            $html = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
+
+        return ' <div class="tempME" style="display:inline;"  onmouseover="showToolTip(event,\''.$toolTip.'\');return false" onmouseout="hideToolTip()">'. $html . '</div>';
     }
-    if(empty($html))
-        $html = "<img src='skins/unesco_oer/images/icon-help.png' alt='help' width='15' height='15'>";
 
-    return ' <div class="tempME" style="display:inline;"  onmouseover="showToolTip(event,\''.$toolTip.'\');return false" onmouseout="hideToolTip()">'. $html . '</div>';
-}
+    function smart_trim($text, $max_len, $trim_middle = false, $trim_chars = '...')
+    {
+            $text = trim($text);
 
-function smart_trim($text, $max_len, $trim_middle = false, $trim_chars = '...')
-{ 
-	$text = trim($text);
+            if (strlen($text) < $max_len) {
 
-	if (strlen($text) < $max_len) {
+                    return $text;
 
-		return $text;
+            } elseif ($trim_middle) {
 
-	} elseif ($trim_middle) {
+                    $hasSpace = strpos($text, ' ');
+                    if (!$hasSpace) {
+                            /**
+                             * The entire string is one word. Just take a piece of the
+                             * beginning and a piece of the end.
+                             */
+                            $first_half = substr($text, 0, $max_len / 2);
+                            $last_half = substr($text, -($max_len - strlen($first_half)));
+                    } else {
+                            /**
+                             * Get last half first as it makes it more likely for the first
+                             * half to be of greater length. This is done because usually the
+                             * first half of a string is more recognizable. The last half can
+                             * be at most half of the maximum length and is potentially
+                             * shorter (only the last word).
+                             */
+                            $last_half = substr($text, -($max_len / 2));
+                            $last_half = trim($last_half);
+                            $last_space = strrpos($last_half, ' ');
+                            if (!($last_space === false)) {
+                                    $last_half = substr($last_half, $last_space + 1);
+                            }
+                            $first_half = substr($text, 0, $max_len - strlen($last_half));
+                            $first_half = trim($first_half);
+                            if (substr($text, $max_len - strlen($last_half), 1) == ' ') {
+                                    /**
+                                     * The first half of the string was chopped at a space.
+                                     */
+                                    $first_space = $max_len - strlen($last_half);
+                            } else {
+                                    $first_space = strrpos($first_half, ' ');
+                            }
+                            if (!($first_space === false)) {
+                                    $first_half = substr($text, 0, $first_space);
+                            }
+                    }
 
-		$hasSpace = strpos($text, ' ');
-		if (!$hasSpace) {
-			/**
-			 * The entire string is one word. Just take a piece of the
-			 * beginning and a piece of the end.
-			 */
-			$first_half = substr($text, 0, $max_len / 2);
-			$last_half = substr($text, -($max_len - strlen($first_half)));
-		} else {
-			/**
-			 * Get last half first as it makes it more likely for the first
-			 * half to be of greater length. This is done because usually the
-			 * first half of a string is more recognizable. The last half can
-			 * be at most half of the maximum length and is potentially
-			 * shorter (only the last word).
-			 */
-			$last_half = substr($text, -($max_len / 2));
-			$last_half = trim($last_half);
-			$last_space = strrpos($last_half, ' ');
-			if (!($last_space === false)) {
-				$last_half = substr($last_half, $last_space + 1);
-			}
-			$first_half = substr($text, 0, $max_len - strlen($last_half));
-			$first_half = trim($first_half);
-			if (substr($text, $max_len - strlen($last_half), 1) == ' ') {
-				/**
-				 * The first half of the string was chopped at a space.
-				 */
-				$first_space = $max_len - strlen($last_half);
-			} else {
-				$first_space = strrpos($first_half, ' ');
-			}
-			if (!($first_space === false)) {
-				$first_half = substr($text, 0, $first_space);
-			}
-		}
- 
-		return $first_half.$trim_chars.$last_half;
+                    return $first_half.$trim_chars.$last_half;
 
-	} else {
+            } else {
 
-		$trimmed_text = substr($text, 0, $max_len);
-		$trimmed_text = trim($trimmed_text);
-		if (substr($text, $max_len, 1) == ' ') {
-			/**
-			 * The string was chopped at a space.
-			 */
-			$last_space = $max_len;
-		} else {
-			/**
-			 * In PHP5, we can use 'offset' here -Mike
-			 */
-			$last_space = strrpos($trimmed_text, ' ');
-		}
-		if (!($last_space === false)) {
-			$trimmed_text = substr($trimmed_text, 0, $last_space);
-		}
-		return $trimmed_text.$trim_chars;
+                    $trimmed_text = substr($text, 0, $max_len);
+                    $trimmed_text = trim($trimmed_text);
+                    if (substr($text, $max_len, 1) == ' ') {
+                            /**
+                             * The string was chopped at a space.
+                             */
+                            $last_space = $max_len;
+                    } else {
+                            /**
+                             * In PHP5, we can use 'offset' here -Mike
+                             */
+                            $last_space = strrpos($trimmed_text, ' ');
+                    }
+                    if (!($last_space === false)) {
+                            $trimmed_text = substr($trimmed_text, 0, $last_space);
+                    }
+                    return $trimmed_text.$trim_chars;
 
-	}
+            }
 
-}
+    }
 
+    function addThis($img_link, $width = 125, $height = 16) {
 
+        $content = '
+            <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=250&amp;pubid=xa-4e09cecf254052c9">
+                <img src="'.$img_link.'" width="'.$width.'" height="'.$height.'" alt="Share">
+            </a>
+            <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e09cecf254052c9"></script>
+        ';
+        return $content;
+
+    }
 
 
 }

@@ -258,9 +258,18 @@ if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
     $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
-    $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
+    $linkText = '<img src="skins/unesco_oer/images/icon_featured.png" alt="Print" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
+
+//    $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
+//    $editLink = new link($uri);
+//    $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');;
+//    $linkText = '<img src="skins/unesco_oer/images/icon-content-top-email.png" alt="Print" width="19" height="15">';
+//    $editLink->link = $linkText;
+//    echo $editLink->show();
+
+    echo $this->objProductUtil->addThis("skins/unesco_oer/images/icon-content-top-email.png",19,15);
     
 }
 

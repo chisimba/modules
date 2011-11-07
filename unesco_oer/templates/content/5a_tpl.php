@@ -271,10 +271,13 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 $uri = $this->uri(array('action' => "createFeaturedAdaptation", 'id' => $productID));
                                 $editLink = new link($uri);
                                 $editLink->title = "Make Featured Product";
-                                $linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+                                $linkText = '<img src="skins/unesco_oer/images/icon_featured.png" alt="Print" width="19" height="15">';
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
                             }
+
+                            echo $this->objProductUtil->addThis("skins/unesco_oer/images/icon-content-top-email.png",19,15);
+
                             $uri = $this->uri(array('action' => "testPDF", 'id' => $productID));
                             $printLink = new link($uri);
                             $printLink->title = 'print';
