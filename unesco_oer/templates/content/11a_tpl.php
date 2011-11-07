@@ -12,7 +12,7 @@ $order = 'date';
 $topics = $this->objTopic->showTopicsInForum($forum['id'], $this->objUser->userId(), $forum['archivedate'], $order, 'asc', NULL, $limit);
 $topicsNum = count($topics);
 $onestepid = $this->getParam('onestepid');
-echo $onestepid;
+//echo $onestepid;
 ?>
 
 <div style="clear:both;"></div>

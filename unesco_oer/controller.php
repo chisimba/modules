@@ -2025,11 +2025,22 @@ class unesco_oer extends controller {
     function __leaveGroup() {
         $id = $this->getParam("id");
         $groupid = $this->getParam("groupid");
-        echo $groupid;
+     //   echo $groupid;
 // $currLoggedInID = $this->objUser->userId();
 //$id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
         $this->ObjDbUserGroups->leaveGroup($id, $groupid);
-        return $this->__8a();
+        return $this->__10();
+    }
+    
+      function __DelinkGroup() {
+        $instid = $this->getParam("instid");
+        $groupid = $this->getParam("id");
+     //   echo $groupid;
+// $currLoggedInID = $this->objUser->userId();
+//$id=$this->objUseExtra->getUserbyUserIdbyUserID($currLoggedInID);
+        $this->objDbgroupInstitutions->removegrouplink($instid, $groupid);
+          $this->setVarByRef('id', $groupid);
+        return $this->__11d();
     }
 
     /*

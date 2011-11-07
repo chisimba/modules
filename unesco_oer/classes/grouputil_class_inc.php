@@ -97,11 +97,11 @@ class grouputil extends object {
 
         $joinGroupLink->cssClass = 'greenTextBoldLink';
    
-        if ($this->hasMemberPermissions()){
+//        if ($this->hasMemberPermissions()){
         $showgrouplink = $joinGroupLink->show();
         
         
-             } else $showgrouplink = null;
+//             } else $showgrouplink = null;
 
 
         $content.='
@@ -304,20 +304,62 @@ class grouputil extends object {
     public function groupInstitution($groupid) {
         $content = '';
         $arrayInstitutionId = $this->objDbGroups->getInstitutions($groupid);
+        
+            
+        
+        
+      
+        
+        
 
         foreach ($arrayInstitutionId as $institutionid) {
+            
+        
+      
+            
+            
+            
             //if(strcmp($institutionid,"Null")!=0){
             $institutionThumbnail = $this->objDbGroups->getInstitutionThumbnail($institutionid);
             $institutionname = $this->objDbGroups->getInstitutionName($institutionid);
+              $groupnameLink= new link($this->uri(array("action" => 'DelinkGroup', 'id' => $groupid, 'instid' => $institutionid, "page" => '10a_tpl.php')));
+              $groupnameLink->link= "Remove Institution";
+                 $groupnameLink->cssClass="groupGridViewHeading greenText";  
+                 
+                 $userid = $this->objUser->userId();      
+        if ($this->ObjDbUserGroups->ismemberOfgroup($userid, $groupid)) {
+            
 
             $content.='  <div class="discussionList"><img src="' . $institutionThumbnail . ' "alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
                             <div class="textNextToGroupIcon">
                                 <h2>
                                 ' . $institutionname . '</h2>
-                                   <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
+                                   <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a> 
+                                   
+                            <div class= "institutionLink">' . $groupnameLink->show().'
+                          
+                </div>
                             </div>
+                            
+                             </div>
+                   ';} else {
+                        $content.='  <div class="discussionList"><img src="' . $institutionThumbnail . ' "alt="Adaptation placeholder" class="smallAdaptationImageGrid" height="49" width="45">
+                            <div class="textNextToGroupIcon">
+                                <h2>
+                                ' . $institutionname . '</h2>
+                                   <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a> 
+                                   
+                    
+                            </div>
+                            
                              </div>
                    ';
+                       
+                       
+                       
+                       
+                       
+                   }
         //}
         }
         echo $content;
@@ -351,15 +393,14 @@ class grouputil extends object {
             $LeavegroupLink = new link($this->uri(array('action' => "leaveGroup", 'id' => $id, 'groupid' => $groupid, "page" => '10a_tpl.php')));
             $LeavegroupLink->link = 'Leave group';
             $LeavegroupLink->cssId = 'leavegroup';
-        } else {
-            $LeavegroupLink = new link($this->uri(array('action' => "8a", "page" => '10a_tpl.php')));
-            $LeavegroupLink->link = 'Leave group';
-            $LeavegroupLink->cssId = 'cantleavegroup';
-        }
-
-        $LeavegroupLink->cssClass = "greenTextBoldLink";
+              $LeavegroupLink->cssClass = "greenTextBoldLink";
         $content.='<img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
                            <div class="linksTextNextToSubIcons">' . $LeavegroupLink->show() . '</div>';
+        } else {
+            $content = null;
+        }
+
+      
         return $content;
     }
 

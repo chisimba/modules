@@ -28,6 +28,11 @@ class dbgroupinstitutions extends dbtable {
         );
         $this->insert($data);
     }
+    
+    function removegrouplink($intid, $groupid) {
+        $sql = "DELETE  FROM  tbl_unesco_oer_group_institutions WHERE institution_id='$intid' AND group_id='$groupid'";
+        return $this->getArray($sql);
+    }
 
     function add_group($groupid) {
         $data = array(
