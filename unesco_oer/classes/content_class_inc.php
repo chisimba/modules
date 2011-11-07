@@ -293,7 +293,7 @@ class content extends object {
             $hiddenInput->extra = "id='{$this->getID()}' class='$this->_originalID'";
             $hiddenInput->value = $this->getTitle();
         } else {
-            $hiddenInput->extra = "id='{$this->getID()}' class='$this->_originalID'";
+            $hiddenInput->extra = "id='{$this->getID()}' class='{$this->getID()}'";
             $hiddenInput->value = $this->getTitle();
         }
 
@@ -469,7 +469,7 @@ class content extends object {
         return "<h$level>{$this->getTitle()}</h$level>";
     }
 
-    public function prepareForCopy($newParentID) {
+    public function prepareForCopy($newParentID, $originalID = NULL) {
         
     }
 

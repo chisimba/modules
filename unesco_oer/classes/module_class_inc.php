@@ -354,6 +354,12 @@ class module extends content {
         $action = "$('.root').html('');";
         $buttonCancel->setOnClick('javascript: ' . $action);
         $form_data->addToForm($buttonCancel->show());
+        
+        if (!empty($this->_originalID)) {
+            $hiddenInput = new hiddeninput('originalid');
+            $hiddenInput->value = $this->_originalID;
+            $form_data->addToForm($hiddenInput->show());
+        }
 
 
         $content = '<body>';
@@ -429,6 +435,7 @@ class module extends content {
             'comments_history' => $this->getParam('comments_history'),
             'remark' => $this->getParam('remark'),
             'content' => $this->getParam('content'),
+            'parentid' => $this->getParam('originalid'),
             'object' => $this
         );
 
@@ -451,12 +458,14 @@ class module extends content {
 //        $this->_id = $this->objDbModules->addModule($this->_metaDataArray);
     }
 
-    public function prepareForCopy($newParentID) {
+    public function prepareForCopy($newParentID, $originalID) {
         unset($this->_metaDataArray['id']);
         unset($this->_id);
         unset($this->_metaDataArray['puid']);
         $this->_metaDataArray['year_id'] = $newParentID;
         $this->setParentID($newParentID);
+        $this->_originalID = $originalID;
+        $this->_metaDataArray['parentid'] = $this->_originalID;
     }
 
     public function getContentsByParentID($parentID) {

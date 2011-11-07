@@ -2539,7 +2539,7 @@ class unesco_oer extends controller {
                     $originalPairArray = $originalContentManager->getPairArray($this->getParam('originalpair'));
                     var_dump($originalPairArray);
                     $existingContent = $originalContentManager->getContentByContentID($originalPairArray[1]);
-                    $existingContent->prepareForCopy($this->getParam('newParent'));
+                    $existingContent->prepareForCopy($this->getParam('newParent'), $originalPairArray[1]);
                     echo $existingContent->showInput($productID);
                     die();
                     break;

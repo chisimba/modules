@@ -34,14 +34,15 @@ class dbcurricula extends dbtable
         return $this->getAll($filter);
     }
 
-    function addCurriculum($product_id, $title, $forward, $background, $description,$parentid) {
+    function addCurriculum($product_id, $title, $forward, $background, $description,$parentid, $remark) {
         $data = array(
             'product_id' => $product_id,
             'title' => $title,
             'forward'=> $forward,
             'background'=> $background,
             'introductory_description'=> $description,
-            'parentid' => $parentid
+            'parentid' => $parentid,
+            'remark' => $remark
         );
 
         $id = $this->insert($data);
