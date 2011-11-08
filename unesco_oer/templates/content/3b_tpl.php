@@ -142,6 +142,7 @@ $this->appendArrayVar('headerParams', $js);
                         $products = $this->objDbProducts->getadapted($productID);
 
                         $prod = $this->getObject('product', 'unesco_oer');
+                        $dbcountries=$this->getObject('dbcountries','unesco_oer');
 
                         foreach ($products as $product) {
 
@@ -157,6 +158,7 @@ $this->appendArrayVar('headerParams', $js);
                             $grouptitle = $this->objDbGroups->getGroupName($groupid['group_id']);
                             $grouptype = $this->objDbGroups->getGroupName($groupid['group_id']);
                             $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
+                            $countryName=$dbcountries->getCountryName($groupid['country_code']);
 
 
                             $abLink = new link($this->uri(array("action" => '11a', 'id' => $groupid['group_id'], "page" => '10a_tpl.php')));
@@ -178,7 +180,7 @@ $this->appendArrayVar('headerParams', $js);
                             $bookLink->link = $linkText;
 
                             $prod->loadProduct($product['id']);
-                            $institutionID = $prod->getInstitutionID();
+                            $institutionID = $groupid['institution_id'];//$prod->getInstitutionID();
 
                             $content = '      
                             <div class="adaptedByDiv3a">Adapted by:</div>
@@ -198,11 +200,9 @@ $this->appendArrayVar('headerParams', $js);
 
                                 $content .= $institutiontype . ' | ';
                             }
-                            if ($groupid != null) {
-                                $content.="Group |";
-                            }else{
-                                $content.="Institutuin |";
-                            }
+                            
+                            $content.=$countryName."|";
+                           
                             $content.= $prod->getCountryName() . ' <br> 
                                ' . $prod->getLanguageName() . '</p>
                             </div>
