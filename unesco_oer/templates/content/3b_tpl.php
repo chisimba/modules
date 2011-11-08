@@ -158,7 +158,9 @@ $this->appendArrayVar('headerParams', $js);
                             $grouptitle = $this->objDbGroups->getGroupName($groupid['group_id']);
                             $grouptype = $this->objDbGroups->getGroupName($groupid['group_id']);
                             $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
-                            $countryName=$dbcountries->getCountryName($groupid['country_code']);
+                            $countryCode=$groupid['country_code'];
+                          
+                            $countryName=$dbcountries->getCountryByCode($countryCode);
 
 
                             $abLink = new link($this->uri(array("action" => '11a', 'id' => $groupid['group_id'], "page" => '10a_tpl.php')));
