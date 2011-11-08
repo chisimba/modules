@@ -145,15 +145,13 @@ $this->appendArrayVar('headerParams', $js);
 
                         foreach ($products as $product) {
 
-
                             $count++;
+
                             $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
                             $adaptLink = new link($uri);
                             $adaptLink->cssClass = "adaptationLinks";
                             $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
                             $adaptLink->link = $linkText;
-
-
 
                             $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
                             $grouptitle = $this->objDbGroups->getGroupName($groupid['group_id']);
@@ -180,13 +178,9 @@ $this->appendArrayVar('headerParams', $js);
                             $bookLink->link = $linkText;
 
                             $prod->loadProduct($product['id']);
-                            
                             $institutionID = $prod->getInstitutionID();
 
-
-
                             $content = '      
-                    	
                             <div class="adaptedByDiv3a">Adapted by:</div>
                             <div class="gridSmallImageAdaptation">
                             	' . $abLink->show() . ' 
@@ -204,8 +198,11 @@ $this->appendArrayVar('headerParams', $js);
 
                                 $content .= $institutiontype . ' | ';
                             }
-
-
+                            if ($groupid != null) {
+                                $content.="Group |";
+                            }else{
+                                $content.="Institutuin |";
+                            }
                             $content.= $prod->getCountryName() . ' <br> 
                                ' . $prod->getLanguageName() . '</p>
                             </div>
@@ -214,12 +211,12 @@ $this->appendArrayVar('headerParams', $js);
                                     
                                       ';
 
-                          //  if ($this->objUser->isLoggedIn()) {
-                                $content .= '<div class="imgFloatRight">
+                            //  if ($this->objUser->isLoggedIn()) {
+                            $content .= '<div class="imgFloatRight">
                                       <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
                                     </div>
                                     <div >' . $adaptLink->show();
-                         //   };
+                            //   };
 
 
                             $content.= '
