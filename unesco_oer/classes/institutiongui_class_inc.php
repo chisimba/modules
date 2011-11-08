@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,20 +107,28 @@ class institutiongui extends object {
     }
 
     function showEditInstitutionLink($institutionId) {
+        
+        
+        
+        $img = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
+        $img->cssClass = 'Farright';
+        $img->link = '<img width="22" height="22"  src="skins/unesco_oer/images/icon-edit-section.png">';
+
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'adaptationListingLink';
         $updateInstitutionCaption = $this->_objLanguage->languageText('mod_unesco_oer_institution_Update_heading', 'unesco_oer');
-        $acLink->link = $updateInstitutionCaption;
+        $acLink->link ='<img width="22" height="22" align="bottom"  src="skins/unesco_oer/images/icon-edit-section.png">'. $updateInstitutionCaption;
 
         return $acLink->show();
     }
 
     function showDeleteInstitutionLink($institutionId) {
+
+
         $acLink = new link($this->uri(array("action" => "deleteInstitution", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'deleteinstitution';
         $deleteInstitutionCaption = $this->_objLanguage->languageText('mod_unesco_oer_group_delete', 'unesco_oer');
-        $acLink->link = $deleteInstitutionCaption;
-
+        $acLink->link =$deleteInstitutionCaption;
         return $acLink->show();
     }
 
@@ -128,13 +137,15 @@ class institutiongui extends object {
         $acLink->cssClass = 'Farright';
         $acLink->link = '<img src="skins/unesco_oer/images/icon-filter-institution-type.png" width="18" height="18">';
 
-        return $acLink->show();
+        return "";// $acLink->show();
     }
 
     function showEditInstitutionLinkThumbnail($institutionId) {
+
+
         $acLink = new link($this->uri(array("action" => "institutionEditor", 'institutionId' => $institutionId)));
         $acLink->cssClass = 'Farright';
-        $acLink->link = '<img src="skins/unesco_oer/images/icon-edit-section.png">';
+        $acLink->link = '<img align="middle" width="22" height="22" src="skins/unesco_oer/images/icon-edit-section.png">';
 
         return $acLink->show();
     }
@@ -152,4 +163,5 @@ class institutiongui extends object {
     }
 
 }
+
 ?>

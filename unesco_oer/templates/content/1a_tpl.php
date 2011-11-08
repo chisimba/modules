@@ -13,18 +13,6 @@ if ($finalstring == null) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 
@@ -82,9 +70,6 @@ $this->appendArrayVar('headerParams', $js);
             <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="RSS Feed" width="18" height="18" class="imgFloatRight">
             <div class="feedLinkDiv"><a href="#" class="rssFeedLink">RSS Feed</a></div>
         </div>
-
-
-
 
     </div>
     <!-- Center column DIv -->
