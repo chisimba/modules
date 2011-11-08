@@ -5,7 +5,6 @@ class langadmin extends controller {
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLangAdmin = $this->getObject("langutil");
-        
         $this->objConfig = $this->getObject('altconfig', 'config');
         $objMkDir = $this->getObject('mkdir', 'files');
     }
@@ -76,7 +75,7 @@ class langadmin extends controller {
     }
 
     function __addLang() {
-        // set some info about the new lang
+// set some info about the new lang
         $langid = $this->getParam('langid');
         $name = $this->getParam("name");
         $meta = $this->getParam("meta");
@@ -95,19 +94,20 @@ class langadmin extends controller {
         return $this->nextAction("home");
     }
 
-    function __hide(){
+    function __hide() {
         $hiddenlangs = $this->getObject("dbhiddenlangs");
-        $id=$this->getParam("langid");
+        $id = $this->getParam("langid");
         $hiddenlangs->hideLang($id);
         return $this->nextAction("home");
     }
-  
-      function __unhide(){
+
+    function __unhide() {
         $hiddenlangs = $this->getObject("dbhiddenlangs");
-        $id=$this->getParam("langid");
+        $id = $this->getParam("langid");
         $hiddenlangs->unhideLang($id);
         return $this->nextAction("home");
     }
+
     function __showNewLangTemplate() {
 
         return "addeditlang_tpl.php";
@@ -119,7 +119,7 @@ class langadmin extends controller {
 
     function __editTranslation() {
         $code = $this->getParam("code");
-        $this->objDbLangText = $this->getObject("dblanguagetext","langadmin");
+        $this->objDbLangText = $this->getObject("dblanguagetext", "langadmin");
         $item = $this->objDbLangText->getLanguageTextItem($code);
         $this->setVarByRef("code", $code);
         $this->setVarByRef("description", $item[0]['description']);
@@ -152,7 +152,7 @@ class langadmin extends controller {
         @chmod($destinationDir, 0777);
         $langFile = $destinationDir . '/' . $langid . '_language_items.txt';
         $fh = fopen($langFile, 'w') or die("can't open file");
-        $this->objLangText = $this->getObject("dblangaugetext");
+        $this->objLangText = $this->getObject("dblanguagetext", "langadmin");
         $texts = $this->objLangText->getLanguageTextItems();
 
         foreach ($texts as $text) {
@@ -167,10 +167,10 @@ class langadmin extends controller {
             if ($module == 'unesco') {
                 $module = $module . "_" . $arrName[2];
             }
-            //get the english translation first
+//get the english translation first
             $_SESSION['language'] = 'en';
             $engTranslation = $this->objLanguage->languageText($code, $module);
-            $line.=$engTranslation.'~';
+            $line.=$engTranslation . '~';
 
             $_SESSION['language'] = $langid;
             $line.=$this->objLanguage->languageText($code, $module);
@@ -261,7 +261,7 @@ class langadmin extends controller {
 
             $filename = $result['filename'];
             $file = fopen($destinationDir . '/' . $filename, "r") or exit("Unable to open file!");
-            //Output a line of the file until the end is reached
+//Output a line of the file until the end is reached
             while (!feof($file)) {
 
                 $line = fgets($file);
@@ -277,13 +277,13 @@ class langadmin extends controller {
                 if ($module == 'unesco') {
                     $module = $module . "_" . $arrName[2];
                 }
-              
+
                 $this->objLanguage->addLangItem($parts[0], $module, $stringArray);
             }
         }
         fclose($file);
-        return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id, 
-            'filename' =>$$filename) );
+        return $this->nextAction('ajaxuploadresults', array('id' => $generatedid, 'fileid' => $id,
+                    'filename' => $$filename));
     }
 
     /**
