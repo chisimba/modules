@@ -11,6 +11,8 @@ $this->loadClass('filterdisplay', 'unesco_oer');
 if ($adaptationstring == null)
     $adaptationstring = "relation is not null";
 $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
+$institutionDB = $this->getObject('dbinstitution','unesco_oer');
+$productsDB = $this->getObject('dbproducts','unesco_oer');
 $institutionGUI->getInstitution($institutionId);
 ?>
 
@@ -65,17 +67,40 @@ $institutionGUI->getInstitution($institutionId);
 
                     <br><br>
                     <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
+                                            <div class="leftColumnDiv">
+                            
+                        </div>
+                    <div class="innerRightColumn4">
+
+
+                    <div class="rightColumInnerDiv">
+                        <?php
+                            $productsByID = $institutionDB->getProductIdbyInstid($institutionId);
+                            foreach($productsByID as $productsByInst){
+                                $products[] = $productsDB->getOERbyProductID($productsByInst["product_id"]);
+                            }  
+
+                        ?>
+                      <div class="blueListingHeading">Model Curricula for Journalism Education</div>
+                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
+                            <br>
+                            <div class="listingAdaptationsLinkAndIcon">
+                               <img src="images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                               <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                   	  		</div>
+                                
+               		  <div class="listingAdaptationsLinkAndIcon">
+                             <img src="images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
+                             <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                      </div>
+                        </div>
+                    </div>
                     <br>
 
                     
                     </div>
                 </div>
-
-                <div class="innerRightColumn4">
-
-                </div>
-            </div>
-        </div>
+            
         <div class="innerRightContent">
             <div class="rightColumn4RightPadding">
                 <div class="printEmailDownloadIcons">
@@ -115,6 +140,11 @@ $institutionGUI->getInstitution($institutionId);
 
                 </div>
             </div>
+
+
+            </div>
+        </div>
+
 
        
 </div>
