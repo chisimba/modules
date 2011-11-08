@@ -61,7 +61,7 @@ $this->appendArrayVar('headerParams', $js);
              
                 ?>
               </h2>
-        	</div>
+        	
             </div>
           <div class="wideLeftFloatDiv">
         	<!-- Left Colum -->
@@ -115,7 +115,7 @@ $this->appendArrayVar('headerParams', $js);
                     <div class="sortBy">
 <?php
                           $search = $this->getobject('filterdisplay', 'unesco_oer');
-                         echo $search->SortDisp('3b_tpl.php', $SortFilter, $TotalPages,  $NumFilter, $PageNum);
+                       //  echo $search->SortDisp('3b_tpl.php', $SortFilter, $TotalPages,  $NumFilter, $PageNum);
 
                     ?>
 
@@ -153,6 +153,7 @@ $this->appendArrayVar('headerParams', $js);
 //               	  <tr> ');
                          $products = $this->objDbProducts->getadapted($productID);
               
+                         $prod = $this->getObject('product', 'unesco_oer');
                          
             foreach ($products as $product){
                        
@@ -168,10 +169,15 @@ $this->appendArrayVar('headerParams', $js);
 
                 $groupid = $this->objDbProducts->getAdaptationDataByProductID($product['id']);
                 $grouptitle =  $this->objDbGroups-> getGroupName($groupid['group_id']);
+                $grouptype =  $this->objDbGroups-> getGroupName($groupid['group_id']);
                 $thumbnail = $this->objDbGroups->getThumbnail($groupid['group_id']);
                    
                     
                  $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
+                 $abLink->link =  "<img src='" . $thumbnail . "' width='45' height='49' >";
+                 $abLink->cssClass = "smallAdaptationImageGrid";
+                 
+                  $abLink= new link($this->uri(array("action" => '11a','id'=>$groupid['group_id'],"page"=>'10a_tpl.php')));
                  $abLink->link =  "<img src='" . $thumbnail . "' width='45' height='49' >";
                  $abLink->cssClass = "smallAdaptationImageGrid";
                    
@@ -185,56 +191,128 @@ $this->appendArrayVar('headerParams', $js);
                    $linkText = '<img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"> Bookmark';
                    $bookLink->link = $linkText;
                    
-               
-               
-                       $content = '
-                            
-                            <div class="adaptedByDiv3a">Adapted by:</div>
-                            <div class="gridSmallImageAdaptation" >
-                            	' . $abLink->show() .' 
-                                <span class="greyListingHeading">
+                  $prod->loadProduct($product['id']);
+                 $institutionID = $prod->getInstitutionID();
+              
                    
-                                </span>
-                  			</div>
-                            <div class="gridAdaptationLinksDiv">' .
+                   
+              $content ='      
+                    	
+                            <div class="adaptedByDiv3a">Adapted by:</div>
+                            <div class="gridSmallImageAdaptation">
+                            	' . $abLink->show() .' 
+                                <span class="greyListingHeading">' .
                     
                          $grouptitle
-                       .'
-                    
+                       .'</span>
+                  			</div>
+                            <div class="gridAdaptationLinksDiv">
+                            	<p  class="productAdaptationGridViewLinks"> ';
+              
+                    if (!empty ($institutionID)) {
+                           $objInstitutionManager = $this->getObject('institutionmanager', 'unesco_oer');
+                             $objInstitutionManager->getInstitution($institutionID);
+                              $institutiontype = $objInstitutionManager->getInstitutionType();
+                        
+                       $content .=     $institutiontype .' | ';
+                        
+                    }
+                          
+          
+                           $content.=  $prod->getCountryName() .' <br> 
+                               '. $prod->getLanguageName() .'</p>
                             </div>
                             <div class="">
                             	<div class="product3aViewDiv">
-                                    <div class="imgFloatRight">
-                                      <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
-                                    </div>
-                                    <div class="listingAdaptationLinkDiv">
-                                        <a href="#" class="adaptationLinks">';
+                                    
+                                      ';
                        
                        if ($this->objUser->isLoggedIn()) {
-                           $content .=  $adaptLink->show();
+                           $content .=  '<div class="imgFloatRight">
+                                      <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
+                                    </div>
+                                    <div >' . $adaptLink->show();
                                    
                            };
                        
                        
-                       $content.= '</a>
+                       $content.= '
                                     </div>
                            	  </div>
                                 
                        		  <div class="product3aViewDiv">
                                     <div class="imgFloatRight">
-                                   '. $bookLink->show().'
+                                    	 '. $bookLink->show().'
                                 </div>
-                                    
-                                  
+                                    <div class="listingAdaptationLinkDiv">
+                                   
+                                 	</div>
                                 </div>
                                  <div class="product3aViewDiv">
                                     <div class="imgFloatRight">'.
-                 
-                         $checkbox->show().'
-                  
+                
+                         $checkbox->show().'</div>
                                    <div class="listingAdaptationLinkDiv">
                                     <a href="#" class="bookmarkLinks">Compare</a>
-                                 	</div>';
+                                 	</div>
+                                </div>
+                                
+                                
+                            </div>
+               ';
+                   
+                   
+                   
+               
+               
+//                       $content = '
+//                            
+//                            <div class="adaptedByDiv3a">Adapted by:</div>
+//                            <div class="gridSmallImageAdaptation" >
+//                            	' . $abLink->show() .' 
+//                                <span class="greyListingHeading">
+//                   
+//                                </span>
+//                  			</div>
+//                            <div class="gridAdaptationLinksDiv">' .
+//                    
+//                         $grouptitle
+//                       .'
+//                    
+//                            </div>
+//                            <div class="">
+//                            	<div class="product3aViewDiv">
+//                                    <div class="imgFloatRight">
+//                                      <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18">
+//                                    </div>
+//                                    <div class="listingAdaptationLinkDiv">
+//                                        <a href="#" class="adaptationLinks">';
+//                       
+//                       if ($this->objUser->isLoggedIn()) {
+//                           $content .=  $adaptLink->show();
+//                                   
+//                           };
+//                       
+//                       
+//                       $content.= '</a>
+//                                    </div>
+//                           	  </div>
+//                                
+//                       		  <div class="product3aViewDiv">
+//                                    <div class="imgFloatRight">
+//                                   '. $bookLink->show().'
+//                                </div>
+//                                    
+//                                  
+//                                </div>
+//                                 <div class="product3aViewDiv">
+//                                    <div class="imgFloatRight">'.
+//                 
+//                         $checkbox->show().'
+//                  
+//                                   <div class="listingAdaptationLinkDiv">
+//                                    <a href="#" class="bookmarkLinks">Compare</a>
+//                                 	</div>';
                     
                 
           if ($newRow) {
@@ -280,7 +358,9 @@ $this->appendArrayVar('headerParams', $js);
                 
   </div>
             </div>
-          
+          </div>
+</div>   
+</div>
  
                 <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
                 <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
