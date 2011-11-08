@@ -2472,6 +2472,7 @@ class unesco_oer extends controller {
             $option = $this->getParam('option');
             $contentManager = $this->getObject('contentmanager');
             $product = $this->newObject('product');
+            $reload = $this->getParam('reload');
 
 
             if ($productID) {
@@ -2481,6 +2482,7 @@ class unesco_oer extends controller {
 
             $this->setVarByRef('contentManager', $contentManager);
             $this->setVarByRef('product', $product);
+            $this->setVarByRef('reload', $reload);
 
             switch ($option) {
                 case 'new':
@@ -2504,9 +2506,14 @@ class unesco_oer extends controller {
 
                 case 'edit':
                     $pairArray = $contentManager->getPairArray($pair);
-                    $existingContent = $contentManager->getContentByContentID($pairArray[1]);
-                    echo $existingContent->showInput($productID);
-                    die();
+                    $existingContent = $contentManager->getContentByContentID($pairArray[1]);                    
+                    if (empty($reload)) {
+                        echo $existingContent->showInput($productID);
+                        die();
+                    } else {
+                        $this->setVarByRef('productID', $productID);
+                        $this->setVarByRef('existingContent', $existingContent);
+                    }
                     break;
 
                 case 'saveedit':

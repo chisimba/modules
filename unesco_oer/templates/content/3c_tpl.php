@@ -168,7 +168,12 @@
                       
                       <?php
 if ($this->objUser->isLoggedIn()) {
-    $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
+//    'index.php?module=unesco_oer
+//    &action=saveContent
+//    &option=edit
+//    &pair=' + section_id + '
+//    &productID=' + $('.product_id').attr('id'));
+    $uri = $this->uri(array('action' => 'saveContent', 'productID' => $productID, 'option' => 'edit', 'pair'=>$existingContent->getPairString(), 'reload'=>TRUE ));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');;
     $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';

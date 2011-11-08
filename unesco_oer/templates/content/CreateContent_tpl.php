@@ -164,7 +164,12 @@ echo '</div>';
 //echo '<div class="centerColumnDiv"">';
 echo '<div class="rightWideColumnDiv" style="width:75%;">';
 if ($invalid) echo '<font face="Arial" color="#FF2222">Previous Submission Failed!</font>';
-echo $contentManager->showInput($this->getParam('prevAction'));
+if (empty($reload)) {
+    echo $contentManager->showInput($this->getParam('prevAction'));
+} else {
+    echo "<div class='root' >{$existingContent->showInput($productID)}</div>";
+    echo "<div class='product_id' id='$productID'></div>";
+}
 echo "</div></div></fieldset></div>";
 
 $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="stylesheet" type="text/css"/>';

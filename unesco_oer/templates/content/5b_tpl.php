@@ -195,7 +195,7 @@ $product = $this->getObject('product');
                                 $hiddenInput->extra = "id='hasAdaptations'";
                                 echo $hiddenInput->show();
                      
-                                $uri = $this->uri(array('action' => 'saveProductMetaData', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction'=>'ViewProduct', 'cancelParams'=>"id=$productID" ));
+                                $uri = $this->uri(array('action' => 'saveContent', 'productID' => $productID, 'option' => 'edit', 'pair'=>$existingContent->getPairString(), 'reload'=>TRUE ));
                                 $editLink = new link($uri);
                                 $editLink->title = "Edit Metadata";
                                 $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
