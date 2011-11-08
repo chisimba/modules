@@ -168,11 +168,6 @@
                       
                       <?php
 if ($this->objUser->isLoggedIn()) {
-//    'index.php?module=unesco_oer
-//    &action=saveContent
-//    &option=edit
-//    &pair=' + section_id + '
-//    &productID=' + $('.product_id').attr('id'));
     $uri = $this->uri(array('action' => 'saveContent', 'productID' => $productID, 'option' => 'edit', 'pair'=>$existingContent->getPairString(), 'reload'=>TRUE ));
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');;
@@ -180,18 +175,19 @@ if ($this->objUser->isLoggedIn()) {
     $editLink->link = $linkText;
     echo $editLink->show();
 
-    $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
-    $deleteLink = new link($uri);
-    $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');;
-    $deleteLink->cssId = "deleteProduct";
+//    $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
+    $uri2 = $this->uri(array(
+                'action' => "saveContent",
+                'productID' => $productID,
+                'pair' => $existingContent->getPairString(),
+                'option' => 'delete')
+            );
+    $deleteLink = new link($uri2);
+    $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_sections_delete', 'unesco_oer');;
+    $deleteLink->cssId = "deleteSection";
     $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
     $deleteLink->link = $linkText;
     echo $deleteLink->show();
-
-    $hiddenInput = new hiddeninput('hasAdaptations');
-    $hiddenInput->value = $product->hasAdaptation();
-    $hiddenInput->extra = "id='hasAdaptations'";
-    echo $hiddenInput->show();
 
     $uri = $this->uri(array('action' => "createFeaturedProduct", 'id' => $productID));
     $editLink = new link($uri);
@@ -261,15 +257,11 @@ if ($this->objUser->isLoggedIn()) {
 
                         jQuery(document).ready(function(){
 //
-                            jQuery("a[id=deleteProduct]").click(function(){
-                                if(jQuery("#hasAdaptations").val()==true){
-                                    alert('This product has adaptations, you may not delete it.');
-                                } else {
-                                    var r=confirm( "Are you sure you want to delete this product?");
+                            jQuery("a[id=deleteSection]").click(function(){
+                                    var r=confirm( "Are you sure you want to delete this section?");
                                     if(r== true){
                                         window.location=this.href;
                                     }
-                                }
                                     return false;
                                 }
 

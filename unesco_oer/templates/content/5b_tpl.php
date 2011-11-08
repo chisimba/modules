@@ -182,18 +182,18 @@ $product = $this->getObject('product');
                         <?php
                         
                             if ($this->objUser->isLoggedIn()) {
-                                   $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
-                                $deleteLink = new link($uri);
+                               $uri2 = $this->uri(array(
+                                    'action' => "saveContent",
+                                    'productID' => $productID,
+                                    'pair' => $existingContent->getPairString(),
+                                    'option' => 'delete')
+                                );
+                                $deleteLink = new link($uri2);
                                 $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');;
-                                $deleteLink->cssId = "deleteProduct";
+                                $deleteLink->cssId = "deleteSection";
                                 $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
                                 $deleteLink->link = $linkText;
                                 echo $deleteLink->show();
-
-                                $hiddenInput = new hiddeninput('hasAdaptations');
-                                $hiddenInput->value = $product->hasAdaptation();
-                                $hiddenInput->extra = "id='hasAdaptations'";
-                                echo $hiddenInput->show();
                      
                                 $uri = $this->uri(array('action' => 'saveContent', 'productID' => $productID, 'option' => 'edit', 'pair'=>$existingContent->getPairString(), 'reload'=>TRUE ));
                                 $editLink = new link($uri);
@@ -258,15 +258,11 @@ $product = $this->getObject('product');
 
                         jQuery(document).ready(function(){
 //
-                            jQuery("a[id=deleteProduct]").click(function(){
-                                if(jQuery("#hasAdaptations").val()==true){
-                                    alert('This product has adaptations, you may not delete it.');
-                                } else {
-                                    var r=confirm( "Are you sure you want to delete this product?");
+                            jQuery("a[id=deleteSection]").click(function(){
+                                    var r=confirm( "Are you sure you want to delete this section?");
                                     if(r== true){
                                         window.location=this.href;
                                     }
-                                }
                                     return false;
                                 }
 
