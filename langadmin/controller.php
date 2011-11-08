@@ -5,7 +5,7 @@ class langadmin extends controller {
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLangAdmin = $this->getObject("langutil");
-        $this->objDbLangText = $this->getObject("dblanguagetext");
+        
         $this->objConfig = $this->getObject('altconfig', 'config');
         $objMkDir = $this->getObject('mkdir', 'files');
     }
@@ -119,6 +119,7 @@ class langadmin extends controller {
 
     function __editTranslation() {
         $code = $this->getParam("code");
+        $this->objDbLangText = $this->getObject("dblanguagetext","langadmin");
         $item = $this->objDbLangText->getLanguageTextItem($code);
         $this->setVarByRef("code", $code);
         $this->setVarByRef("description", $item[0]['description']);
