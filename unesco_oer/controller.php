@@ -543,7 +543,7 @@ class unesco_oer extends controller {
 
         $ProdId = $this->objDbGroups->getidbylocation($lat, $lng);
         $products = $this->objDbGroups->getGroupProductadaptation($ProdId[0]['id']);
-   echo $ProdId[0]['id'];
+  // echo $ProdId[0]['id'];
         $temp = TRUE;
 
         $this->setVarByRef("finalstring", $products);
