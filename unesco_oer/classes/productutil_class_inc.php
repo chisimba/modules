@@ -234,17 +234,17 @@ class productutil extends object {
             $product = $products[$i] + $languages;
 
 
-         //   $editbutton = new button( "Submit","Submit");
-          //  $editbutton->cssClass = "listingLanguageLinkAndIcon";
-            
-         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $products[$i]['id'] , 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
-         $adaptLink = new link($uri);
-         $adaptLink->cssClass = "adaptationLinks";
-         $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
-         $adaptLink->link = $linkText;
+            //   $editbutton = new button( "Submit","Submit");
+            //  $editbutton->cssClass = "listingLanguageLinkAndIcon";
+
+            $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $products[$i]['id'], 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
+            $adaptLink = new link($uri);
+            $adaptLink->cssClass = "adaptationLinks";
+            $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
+            $adaptLink->link = $linkText;
 
 
-          $parentid = $product['id'];
+            $parentid = $product['id'];
             $textname = $temp . "text";
             $commentboxname = $temp . "comment";
             $buttonid = $temp . 'btn';
@@ -265,7 +265,7 @@ class productutil extends object {
             //  $userid = objdbuserextra->
             $userid = $this->objUser->userId();
 
-        //    echo $userid;
+            //    echo $userid;
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
@@ -339,7 +339,7 @@ class productutil extends object {
                     <td>
               <div class='listingIconsHoldingDiv'>
                         <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='smallLisitngIcons'>
-                        <div class='textNextToTheListingIconDiv'>". $adaptLink->show() ."</div>
+                        <div class='textNextToTheListingIconDiv'>" . $adaptLink->show() . "</div>
                   </div>
                     </td>
                     <td>
@@ -501,14 +501,14 @@ class productutil extends object {
         $abLink->cssClass = "adaptationListingLink";
         $abLink->link = $adaptedProduct->getTitle();
         $parentid = $adaptedProduct->getParentID();
-        
-          $bookLink = new link('#');
+
+        $bookLink = new link('#');
         $bookLink->cssClass = "bookmarkLinks";
         $bookLink->cssId = $adaptedProduct->getIdentifier();
         $linkText = $this->objLanguage->languageText('mod_unesco_oer_bookmark', 'unesco_oer');
         $bookLink->link = $linkText;
-        
-         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
+
+        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
@@ -516,7 +516,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $adaptedProduct->getIdentifier())));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link =  $adaptedProduct->getNoOfAdaptations()  . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
+        $CommentLink->link = $adaptedProduct->getNoOfAdaptations() . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -533,41 +533,52 @@ class productutil extends object {
 
         $content.='
                     <div class="adaptationListView">
+                    <table width="100%">
+                    <tr>
+                    <td>
                         <div class="productAdaptationListViewLeftColumn">
-                            <h2>'. $abLink->show() . ' </h2><br>
+                            <h2>' . $abLink->show() . ' </h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                            <div class="textNextToTheListingIconDiv">  ' . $CommentLink->show() . ' </div>
-                        </div>';
+                        </div>
+                      </td>  
+                      ';
         $instutionID = $adaptedProduct->getInstitutionID();
-        if (empty ($instutionID)) {
+        if (empty($instutionID)) {
             $groupLink = new link($this->uri(array("action" => '11', 'id' => $adaptedProduct->getGroupID())));
             $groupLink->cssClass = "greenText";
             $groupLink->link = $adaptedProduct->getGroupName();
-            $content .= '<div class="productAdaptationListViewMiddleColumn">
+            $content .= '
+                        <td>
+                       <div class="productAdaptationListViewMiddleColumn">
                                 <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
+                                
                             </div>
+                            </td>
+                            <td>
                             <div class="productAdaptationListViewRightColumn">
                                 <h2 class="greenText">' . $groupLink->show() . '</h2>
                                 <br>
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
                                     <div class="textNextToTheListingIconDiv">
-                                        <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                     </div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
+                                    <div class="textNextToTheListingIconDiv">' . $bookLink->show() . '</div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
+                                    <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
                                 </div>
                             </div>
                         </div>
+                        </td>
                         ';
         } else {
             $this->_institutionGUI->getInstitution($instutionID);
@@ -577,60 +588,42 @@ class productutil extends object {
             $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $instutionID)));
             $institutionLink->link = $name;
 
-            $content .='<div class="productAdaptationListViewMiddleColumn">
+            $content .='<td>
+                  <div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             <span class="pinkText centerAlign">Adapted by</span>
                         </div>
+                        </td>
+                        <td>
                         <div class="productAdaptationListViewRightColumn">
                             <h2 class="darkGreyColour">' . $institutionLink->show() . '</h2>
                             <br>
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">
-                                    <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                 </div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
+                                <div class="textNextToTheListingIconDiv">' . $bookLink->show() . '</div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
+                                <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
                             </div>
                         </div>
-                        </div>';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    </td> 
+                    </tr>
+                    </table>
+</div>
+               ';
         }
         return $content;
     }
-
 
     /**
      * This function populates a "section" with the most adapted products in a most adapted tab
@@ -986,8 +979,8 @@ class productutil extends object {
 
         return $content;
     }
-    
-     public function populategroupbookmark($product) {
+
+    public function populategroupbookmark($product) {
 
         $content = '     
                            <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
@@ -1085,7 +1078,6 @@ class productutil extends object {
         if ($bookmarks[0]['product_id'] != $parentid) {
             $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
             $textinput->value = $product['name'];
-         
         } else {
 
             $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
