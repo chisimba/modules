@@ -501,6 +501,18 @@ class productutil extends object {
         $abLink->cssClass = "adaptationListingLink";
         $abLink->link = $adaptedProduct->getTitle();
         $parentid = $adaptedProduct->getParentID();
+        
+          $bookLink = new link('#');
+        $bookLink->cssClass = "bookmarkLinks";
+        $bookLink->cssId = $adaptedProduct->getIdentifier();
+        $linkText = 'Bookmark';
+        $bookLink->link = $linkText;
+        
+         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
+        $adaptLink = new link($uri);
+        $adaptLink->cssClass = "adaptationLinks";
+        $linkText = 'Make Adaptation';
+        $adaptLink->link = $linkText;
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $adaptedProduct->getIdentifier())));
         $CommentLink->cssClass = 'adaptationLinks';
@@ -547,12 +559,12 @@ class productutil extends object {
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                    <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                    <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
                                 </div>
                             </div>
                         </div>
@@ -581,12 +593,12 @@ class productutil extends object {
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
                             </div>
                         </div>
                         </div>';

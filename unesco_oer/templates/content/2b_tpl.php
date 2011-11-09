@@ -161,6 +161,18 @@ $this->appendArrayVar('headerParams', $js);
                 }
                 ?>
             </div>
+            
+               <?php
+                 
+
+      
+       $bookmark = $this->objbookmarkmanager->populateGridView($products);
+       echo $bookmark;
+    
+      
+      
+      
+          ?>  
 
 
             <!-- Pagination-->
