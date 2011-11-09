@@ -986,6 +986,161 @@ class productutil extends object {
 
         return $content;
     }
+    
+     public function populategroupbookmark($product) {
+
+        $content = '     
+                           <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+                            <script>
+                           $(document).ready(function(){';
+
+        //   foreach ($data as $products) {
+        //  for ($i = $start; $i < ($end); $i++) { 
+
+        $temp = str_replace(" ", "", $product['name']);
+
+        $divheading = '.' . $temp . 'Div';
+        $linkheading = '.' . $temp . 'Link';
+        $titleheading = '.' . $temp . 'name';
+        $btnheading = '#' . $temp . 'btn';
+        $cancelbtnheading = '#' . $product['id'] . "cancelbtn";
+        $cancelbtnid = $product['id'] . "cancelbtn";
+        $content.= "
+                  $('$divheading').hide();
+
+                  $('$linkheading').show();
+           
+                  $('$linkheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading ').slideToggle(); 
+
+                  });
+            
+            $('$btnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                   $('$titleheading ').slideToggle(); 
+
+                  });
+            
+               $('$cancelbtnheading').click(function(){
+
+                  $('$divheading').slideToggle();
+                  $('$titleheading ').slideToggle();
+                   
+                 
+
+                  });"
+
+        ;
+
+
+        $content .= '        
+
+                                    });
+
+                            </script>
+                                        ';
+
+
+        //  foreach ($data as $products) {
+        //  for ($i = $start; $i < ($end); $i++) { 
+        $temp = str_replace(" ", "", $product['name']);
+        $divheading = $temp . 'Div';
+        $linkheading = $temp . 'Link';
+        $titleheading = $temp . 'name';
+        $btnheading = $temp . 'btn';
+
+//  
+
+        $parentid = $product['id'];
+
+        $textname = $temp . "text";
+        $commentboxname = $temp . "comment";
+        $textinput = new textinput($textname);
+        $textinput->value = $product['name'];
+
+        $commentText = new textarea($commentboxname);
+        $commentText->setCssClass("commentTextBox");
+        //TODO make parameter pagename dynamic
+
+
+        $button = new button('submitComment', "Save bookmark");
+        $button->cssId = $btnheading;
+
+        $cancelbtn = new button('Cancel', "Cancel");
+        $cancelbtn->cssId = $cancelbtnid;
+
+
+        $time = time();
+        $userid = $this->objUser->userId();
+        //  $userid = objdbuserextra->
+
+        $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+        $bookmarks = $this->objbookmarkmanager->getBookmarkbyID($product['id'], $userid);
+        $bookmarkid = $bookmarks[0]['id'];
+
+        if ($bookmarks[0]['product_id'] != $parentid) {
+            $button->onclick = "javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname') ;";
+            $textinput->value = $product['name'];
+         
+        } else {
+
+            $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid')  ";
+            $textinput->value = $bookmarks[0]['label'];
+            $commentText->value = $bookmarks[0]['description'];
+        }
+
+
+
+        $form = new form('3a_comments_ui', $uri);
+        $form->addToForm("Label * <br>");
+        $form->addToForm($textinput);
+        $form->addToForm("<br>Bookmark Description *<br> ");
+        $form->addToForm($commentText);
+        $form->addToForm("<br><br>");
+
+        $form->addToForm($button->show()); //TODO use text link instead of button
+        $form->addToForm($cancelbtn->show());
+
+
+
+
+
+        /* if ($product['new'] == 'true') {
+          $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
+          } */
+
+//This so
+        $content.="
+                  
+           
+                    
+                <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Email' width='19' height='15'></a>
+                Bookmark
+                
+                ";
+
+
+
+
+        $content .= "
+                    
+   <div class='$divheading'> 
+                
+ 
+                
+             
+                " . $form->show() . "
+     
+                </div>
+
+        ";
+
+        return $content;
+    }
 
     function getCurrentParameterString($condtion = NULL, $default = NULL) {
         $parameterList = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '?') + 1);

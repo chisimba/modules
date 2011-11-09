@@ -12,6 +12,10 @@ $order = 'date';
 $topics = $this->objTopic->showTopicsInForum($forum['id'], $this->objUser->userId(), $forum['archivedate'], $order, 'asc', NULL, $limit);
 $topicsNum = count($topics);
 
+
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
+
 ?>
 
 
@@ -40,9 +44,16 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <div class="linksTextNextToSubIcons"><a href="#" class="greyTextBoldLink">Subscribe to feed</a></div>
                     </div>
                     <div class="groupSubLinksList">
-                        <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greyTextBoldLink">Bookmark this</a></div>
+                       
+                        <div class="linksTextNextToSubIcons">
+                        
+                        <?php
+                        $products = $this->objDbGroups->getGroupInfo($this->getParam('id'));
 
+                        echo $this->objProductUtil->populategroupbookmark($products[0]);
+//                        var_dump($products);
+                        ?>
+</div>
                     </div>
                     <div class="greyDivider"></div>
                     <br>
