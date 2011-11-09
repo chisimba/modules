@@ -183,6 +183,7 @@ $institutionGUI->getInstitution($institutionId);
         </div>
     </div>
 
+    <!--
     <div class="rightColumnDiv">
         <div class="rightColumnDiv">
             <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
@@ -206,6 +207,7 @@ $institutionGUI->getInstitution($institutionId);
             <br>
         </div>
     </div>
+    -->
 
 
 </div>
