@@ -549,7 +549,7 @@ class productutil extends object {
             $groupLink->cssClass = "greenText";
             $groupLink->link = $adaptedProduct->getGroupName();
             $content .= '
-                        <td width="20%">
+                        <td width="20%" align="left" valign="top">
                        <div class="productAdaptationListViewMiddleColumn">
                                 <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
@@ -588,7 +588,7 @@ class productutil extends object {
             $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $instutionID)));
             $institutionLink->link = $name;
 
-            $content .='<td width="20%">
+            $content .='<td width="20%"  align="left" valign="top">
                   <div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             <span class="pinkText centerAlign">Adapted by</span>
