@@ -22,7 +22,7 @@ $product = $this->getObject('product');
  
      $groupInfo = $product->getGroupInfo();
 ?>
-    <div class="mainContentHolder">
+<!--    <div class="mainContentHolder">-->
         	<div class="subNavigation"></div>
             <div class="wideTopContentHolderDiv">
             	
@@ -158,15 +158,22 @@ $product = $this->getObject('product');
             
             <div class="LeftWiderColumnDiv">
                <?php
-                 $navigation = '';
-                  $treelevel = $existingContent->getParentList();
-                 foreach($treelevel as $currentlevel){
-                     $navigation .= $currentlevel . " | ";
-        
-                 }
-                 $rest = substr($navigation, 0, -3);
-                 echo $rest;
-        
+                $navigation = '';
+                $treelevel = $existingContent->getParentObjectList();
+                foreach ($treelevel as $currentlevel) {
+                    $title = $currentlevel->getTitle();
+                    if($currentlevel->getViewLink($productID)){
+                        $titleLink = new link($currentlevel->getViewLink($productID));
+                        $titleLink->link = $title;
+                        $titleLink->cssClass = "greyText Underline";
+                        $title = $titleLink->show();
+                    }else{
+                        $title = "<span class='greyText'>$title</span>";
+                    }
+                    $navigation .= $title . " | ";
+                }
+                $rest = substr($navigation, 0, -3);
+                echo $rest;
                  ?>
            
               
@@ -252,7 +259,7 @@ $product = $this->getObject('product');
             
             </div>
       </div>
-    </div>
+<!--    </div>-->
 
  <script type="text/javascript">
 
