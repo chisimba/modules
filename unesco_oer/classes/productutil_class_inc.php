@@ -535,7 +535,7 @@ class productutil extends object {
                     <div class="adaptationListView">
                     <table width="100%">
                     <tr>
-                    <td>
+                    <td width="40%">
                         <div class="productAdaptationListViewLeftColumn">
                             <h2>' . $abLink->show() . ' </h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
@@ -549,14 +549,14 @@ class productutil extends object {
             $groupLink->cssClass = "greenText";
             $groupLink->link = $adaptedProduct->getGroupName();
             $content .= '
-                        <td>
+                        <td width="20%">
                        <div class="productAdaptationListViewMiddleColumn">
                                 <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
                                 
                             </div>
                             </td>
-                            <td>
+                            <td width="40%">
                             <div class="productAdaptationListViewRightColumn">
                                 <h2 class="greenText">' . $groupLink->show() . '</h2>
                                 <br>
@@ -588,13 +588,13 @@ class productutil extends object {
             $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $instutionID)));
             $institutionLink->link = $name;
 
-            $content .='<td>
+            $content .='<td width="20%">
                   <div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             <span class="pinkText centerAlign">Adapted by</span>
                         </div>
                         </td>
-                        <td>
+                        <td width="40%">
                         <div class="productAdaptationListViewRightColumn">
                             <h2 class="darkGreyColour">' . $institutionLink->show() . '</h2>
                             <br>
