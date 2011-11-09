@@ -27,7 +27,7 @@ class dbgroups extends dbtable {
     }
 
     function getidbylocation($loclat, $loclong) {
-        $sql = "select * from tbl_unesco_oer_groups where loclat = $loclat and loclong = $loclong";
+        $sql = "select * from tbl_unesco_oer_groups where loclat = '$loclat' and loclong = '$loclong'";
 
         return $this->getArray($sql);
     }
