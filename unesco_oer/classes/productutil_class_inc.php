@@ -500,7 +500,7 @@ class productutil extends object {
         $this->loadClass('link', 'htmlelements');
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier())));
-        $abLink->cssClass = "listingLanguageLinkAndIcon";
+        $abLink->cssClass = "adaptationListingLink";
         $abLink->link = $adaptedProduct->getTitle(); 
         $parentid = $adaptedProduct->getParentID();
 
@@ -524,68 +524,71 @@ class productutil extends object {
         $content.='
                     <div class="adaptationListView">
                         <div class="productAdaptationListViewLeftColumn">
-                            <h2><a href="#" class="adaptationListingLink">' . $abLink->show() . ' </a></h2><br><br>
-                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                           <div class="listingAdaptationLinkDiv">  ' . $CommentLink->show() . ' </div>
+                            <h2>'. $abLink->show() . ' </h2><br>
+                            <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                           <div class="textNextToTheListingIconDiv">  ' . $CommentLink->show() . ' </div>
                         </div>';
-        if ($adaptedProduct->getThumbnailPath() != NULL) {
+        $instutionID = $adaptedProduct->getInstitutionID();
+        if (empty ($instutionID)) {
+            $groupLink = new link($this->uri(array("action" => '11', 'id' => $adaptedProduct->getGroupID())));
+            $groupLink->cssClass = "greenText";
+            $groupLink->link = $adaptedProduct->getGroupName();
             $content .= '<div class="productAdaptationListViewMiddleColumn">
-                                <img src="images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
+                                <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
                             </div>
                             <div class="productAdaptationListViewRightColumn">
-                                <h2 class="greenText">' . $adaptedProduct->getGroupName() . '</h2>
+                                <h2 class="greenText">' . $groupLink->show() . '</h2>
                                 <br>
                                 <div class="productAdaptationViewDiv">
-                                    <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv">
+                                    <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
+                                    <div class="textNextToTheListingIconDiv">
                                         <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                     </div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
-                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                    <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
-                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                                    <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                                 </div>
                             </div>
                         </div>
                         ';
         } else {
-            $this->_institutionGUI->getInstitution($adaptedProduct->getGroupName());
+            $this->_institutionGUI->getInstitution($instutionID);
             $name = $this->_institutionGUI->showInstitutionName();
             $creator = $adaptedProduct->getGroupName();
 
-            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $creator)));
-            $institutionLink->cssClass = 'darkGreyColour';
+            $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $instutionID)));
             $institutionLink->link = $name;
 
             $content .='<div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
-                            Adapted by
+                            <span class="pinkText centerAlign">Adapted by</span>
                         </div>
                         <div class="productAdaptationListViewRightColumn">
                             <h2 class="darkGreyColour">' . $institutionLink->show() . '</h2>
                             <br>
                             <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv">
+                                <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv">
                                     <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                 </div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="bookmarkLinks">bookmark</a></div>
+                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
-                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="imgFloatRight">
-                                <div class="listingAdaptationLinkDiv paddingSpaceProductAdaptationRightColumnListView"><a href="#" class="adaptationLinks">make adaptation</a></div>
+                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
                             </div>
                         </div>
                         </div>';
