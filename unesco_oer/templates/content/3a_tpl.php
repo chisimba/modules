@@ -21,6 +21,8 @@ $this->appendArrayVar('headerParams', $js);
 $js = '<script language="JavaScript" src="' . $this->getResourceUri('ratingsys.js') . '" type="text/javascript"></script>';
 $this->appendArrayVar('headerParams', $js);
 ?>
+<div class="subNavigation"></div>
+<div class="LeftWideColumnDiv">
 <div class="breadCrumb">
     <ul>
         <li>
@@ -130,7 +132,7 @@ if ($this->hasMemberPermissions()) {
 }
 ?>
             <!--</div>-->
-            <br><br>
+            
             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
             <div class="listingAdaptationLinkDivWide"><a href="#" class="adaptationLinks">
 <?php
@@ -191,28 +193,27 @@ echo $content->getContentTree(FALSE, FALSE);
 ?>
                 <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
 
-
-                <!--                <ul class="ulPlusPublish">
-                                    <li class="grey"><a href="">Folder 1</a></li>
-                                </ul>-->
-                <!--                <ul class="overflow2">
-                                    <li><a href=""><span>Folder 2</span></a>
-                                        <ul class="overflow2">
-                                            <li><a href=""><span>Section 1</span></a></li>
-                                            <li><a href=""><span>Section 2</span></a></li>-->
-                <!--                            <li><a href=""><span>Sectiongsgerg 3</span></a></li>-->
-                <!--                            <ul class="overflow2" >
-                                                <li class="grey"><a href=""><span>Sub-folder 1</span></a>
-                                                    <ul class="ulDocument">
-                                                        <li class="grey"><a href="">Section 4</a></li>
-                                                        <li class="grey"><a href="">Section 5</a></li>
-                                                        <li class="grey"><a href="">Section 6</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>-->
-                <!--                        </ul>-->
-                </li>
-                </ul>
+<!--                <ul class="ulPlusPublish">
+                    <li class="grey"><a href="">Folder 1</a></li>
+                </ul>-->
+<!--                <ul class="overflow2">
+                    <li><a href=""><span>Folder 2</span></a>
+                        <ul class="overflow2">
+                            <li><a href=""><span>Section 1</span></a></li>
+                            <li><a href=""><span>Section 2</span></a></li>-->
+<!--                            <li><a href=""><span>Sectiongsgerg 3</span></a></li>-->
+<!--                            <ul class="overflow2" >
+                                <li class="grey"><a href=""><span>Sub-folder 1</span></a>
+                                    <ul class="ulDocument">
+                                        <li class="grey"><a href="">Section 4</a></li>
+                                        <li class="grey"><a href="">Section 5</a></li>
+                                        <li class="grey"><a href="">Section 6</a></li>
+                                    </ul>
+                                </li>
+                            </ul>-->
+<!--                        </ul>-->
+<!--                    </li>
+                </ul>-->
             </div>
 
         </div>
@@ -363,138 +364,88 @@ echo $product->getAuthors();
 
 //                    $languageTag = "<li><a href='#' class='liStyleLink'>$prodLanguage</a></li>";
 //                    echo $languageTag;
-            ?>
-                <!--                    	<li><a href="#" class="liStyleLink">English</a></li>
-                                        <li><a href="#" class="liStyleLink">Français</a></li>
-                                        <li><a href="#" class="liStyleLink">Español</a></li>
-                                        <li><a href="#" class="liStyleLink">Русский</a></li>
-                
-                                        <li><a href="#" class="liStyleLink">لعربية</a></li>
-                                        <li><a href="#" class="liStyleLink">中文</a></li>-->
-                <!--                    </ul>
-                                    <span class="greyText fontBold">Related news:</span>-->
-                <br><br>
-
-<?php
-$this->objNewsCategories = $this->getObject('dbnewscategories', 'news');
-$this->objNewsStories = $this->getObject('dbnewsstories', 'news');
-$categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
-
-foreach ($categories as $category) {
-    if ($category['blockonfrontpage'] == 'Y') {
-        $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
-        if ($nonTopStories != '') {
-            $middle .= '<div  class="halfwidth_left"><h3>' . $category['categoryname'] . '</h3>';
-            $middle .= $nonTopStories . '</div>';
-            $counter++;
-        }
-    }
-}
-echo $middle;
-?>
-
-                <!--                    <div class="viewAllnewsBlueDiv"><a href="?module=news" class="greyTextLink">See all related news</a></div>
-                                    <span class="greyText fontBold">Related events:</span>
-                                    <br><br>
-                                    Integer venenatis, augue vel iaculis commodo, ante nisi bibendum odio, ac tristique arcu nibh at augue.
-                                    <div class="viewAllnewsBlueDiv"><a href="#" class="greyTextLink">See all related events</a></div>-->
-                <?php
-                if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                     ?>
-                    <span class="greyText fontBold"> <?php echo $this->objLanguage->languageText('mod_unesco_oer_user_comment', 'unesco_oer') ?>     </span>
+                    </ul>
+                        <!--                    	<li><a href="#" class="liStyleLink">English</a></li>
+                                                <li><a href="#" class="liStyleLink">Français</a></li>
+                                                <li><a href="#" class="liStyleLink">Español</a></li>
+                                                <li><a href="#" class="liStyleLink">Русский</a></li>
+                        
+                                                <li><a href="#" class="liStyleLink">لعربية</a></li>
+                                                <li><a href="#" class="liStyleLink">中文</a></li>-->
+<!--                    </ul>
+                    <span class="greyText fontBold">Related news:</span>-->
                     <br><br>
-
-                    <div class="listCommunityRelatedInfoDiv">
-                        <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                        <div class="communityRelatedInfoText">
-                            <a href="#" class="greyTextLink">
-
+                    
                     <?php
-                    $Comment = $this->getobject('commentmanager', 'unesco_oer');
-                    $comments = $Comment->recentcomment($productID);
-                    echo $this->objProductUtil->smart_trim($comments[2], 50);
+                    $this->objNewsCategories = $this->getObject('dbnewscategories','news');
+                    $this->objNewsStories = $this->getObject('dbnewsstories','news');
+                    $categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
+        
+                    foreach ($categories as $category) {
+                        if ($category['blockonfrontpage'] == 'Y') {
+                            $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
+                            if ($nonTopStories != '') {
+                                $middle .= '<span class="greyText fontBold">' . $category['categoryname'] . '</span>';
+                                $middle .= $nonTopStories . '';
+                                $counter++;
+                            }
+                        }
+                    }
+                    echo $middle;
                     ?>
-
-
-                            </a>
-                        </div>
-                    </div>
-                    <div class="listCommunityRelatedInfoDiv">
-                        <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                        <div class="communityRelatedInfoText">
-                            <a href="#" class="greyTextLink">
-    <?php
-    $Comment = $this->getobject('commentmanager', 'unesco_oer');
-    $comments = $Comment->recentcomment($productID);
-    echo $this->objProductUtil->smart_trim($comments[1], 50);
+<?php
+if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
     ?>
-                            </a>
-                        </div>
-                    </div>
+                        <span class="greyText fontBold"> <?php   echo $this->objLanguage->languageText('mod_unesco_oer_user_comment', 'unesco_oer'); ?>     </span>
+                        <br><br>
+
+                        <div class="commentsDiv">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                            <div class="comments">
+                                <a href="#" class="greyTextLink">
                                 <?php
-                                if (($this->objDbComments->getTotalcomments($productID) > 2)) {
-                                    ?>
-
-        <!--                            <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
-                                    <script>
-                                        $(document).ready(function(){
-
-                         
-                                            $(".slidingDiv").hide();
-
-                                            $(".greyTextLink").show();
-
-                         
-
-                                            $('.greyTextLink').click(function(){
-
-                                                $(".slidingDiv").slideToggle();
-
-                                            });
-
-
-                                        });
-
-                                    </script>-->
-
-
-
-        <?php
-        $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));
-        $addlink->cssClass = "greyTextLink";
-        $addlink->link = $this->objLanguage->languageText('mod_unesco_oer_show_comment', 'unesco_oer');
-        echo $addlink->show();
-        ?>
+                                $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                                $comments = $Comment->recentcomment($productID);
+                                echo   $this->objProductUtil->smart_trim($comments[2],50);
+                                ?>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="commentsDiv">
+                            <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                            <div class="comments">
+                                <a href="#" class="greyTextLink">
+                                <?php
+                                $Comment = $this->getobject('commentmanager', 'unesco_oer');
+                                $comments = $Comment->recentcomment($productID);
+                                echo  $this->objProductUtil->smart_trim($comments[1],50);
+                                ?>
+                                </a>
+                            </div>
+                        </div>
+                        <?php
+                        if (($this->objDbComments->getTotalcomments($productID) > 2)) {
+                            $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));
+                            $addlink->cssClass = "greyTextLink";
+                            $addlink->link = $this->objLanguage->languageText('mod_unesco_oer_show_comment', 'unesco_oer')  ;
+                            echo $addlink->show();
+                        ?>
                         <div class="slidingDiv">
-
-
                         <?php
                         $comments = $this->objDbComments->getComment($productID);
                         $content = '';
                         $totalcomments = $this->objDbComments->getTotalcomments($productID);
-
-
                         for ($i = 0; $i < $totalcomments - 2; $i++) {
-
-
-                            $content .= '        <div class="listCommunityRelatedInfoDiv">
-                                    	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
-                                          <div class="communityRelatedInfoText">
-                        	<a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] .
-                                    ' </a>
-                                             </div>
-                                        </div>';
-                        }
-
-                        //  echo $content
-                        ?> 
-
-                            <!--                                <a href="javascript:void(0)" class="greyTextLink">-->
-
-                            <?php
-//                                echo $this->objLanguage->languageText('mod_unesco_oer_comments_hide', 'unesco_oer');
-                            ?>
-                            <!--                                </a>-->
+                          $content .= '        <div class="commentsDiv">
+                                                        <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
+                                                          <div class="comments">
+                                                            <a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] . ' </a>
+                                                          </div>
+                                                        </div>
+                                               </div>';
+                                                          }
+                        ?>
                         </div>
 
 
@@ -503,20 +454,21 @@ echo $middle;
     <?php
 } else if (($this->objDbComments->getTotalcomments($productID) == 1)) {
 
-
-    echo '
-                        <span class="greyText fontBold"><div id="usercomments"><h1>User comments:</h1></div></span>
+?>
+    <span class="greyText fontBold"> <?php   echo $this->objLanguage->languageText('mod_unesco_oer_user_comment', 'unesco_oer') ?>     </span>
                     <br><br>
                     <div class="commentsDiv">
                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png" alt="Comments"></div>
-                        <div class="communityRelatedInfoText">';
+                        <div class="comments">';
+<?php
 
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
     $comments = $Comment->recentcomment($productID);
     echo $this->objProductUtil->smart_trim($comments[1], 50);
-
-    echo'  </div>
-                                  </div>';
+?>
+                        </div>
+                    </div>
+<?php
 }
 if ($this->hasMemberPermissions()) {
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
@@ -532,12 +484,15 @@ if ($this->hasMemberPermissions()) {
     </div>
 
 
-
-    <div class="rightColumnDiv">
-        <div class="featuredHeader blueText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
-        <div class="rightColumnBorderedDiv">
-            <div class="rightColumnContentPadding">
-                <div class="rightColumnContentPadding">
+                    
+                    
+    </div>
+    </div>
+<div class="rightColumnDiv">
+                            <div class="featuredHeader blueText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
+                            <div class="rightColumnBorderedDiv">
+                                <div class="rightColumnContentPadding">
+                                    <div class="rightColumnContentPadding">
 <?php
 $featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
 $featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
@@ -585,7 +540,6 @@ echo $objTabs->show();
 
         </div>
         <br>
-    </div>
 </div>
 <script type="text/javascript">
 
