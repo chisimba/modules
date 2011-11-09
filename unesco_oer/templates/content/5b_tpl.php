@@ -73,7 +73,7 @@ $product = $this->getObject('product');
                                     <?php
                                 echo $product->getTitle();   
                                  ?> 
-                                    </a></h3><br>
+                                    </h3><br>
                                 <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
                             </div>
@@ -157,6 +157,7 @@ $product = $this->getObject('product');
             <div class="hunderedPercentGreyHorizontalLine"></div>
             
             <div class="LeftWiderColumnDiv">
+                <div class="pageBreadCrumb">
                <?php
                 $navigation = '';
                 $treelevel = $existingContent->getParentObjectList();
@@ -165,7 +166,7 @@ $product = $this->getObject('product');
                     if($currentlevel->getViewLink($productID)){
                         $titleLink = new link($currentlevel->getViewLink($productID));
                         $titleLink->link = $title;
-                        $titleLink->cssClass = "greyText Underline";
+                        $titleLink->cssClass = "greyText";
                         $title = $titleLink->show();
                     }else{
                         $title = "<span class='greyText'>$title</span>";
@@ -175,7 +176,7 @@ $product = $this->getObject('product');
                 $rest = substr($navigation, 0, -3);
                 echo $rest;
                  ?>
-           
+                </div>
               
                 <div class="headingHolder">
                     <?php
@@ -249,13 +250,13 @@ $product = $this->getObject('product');
            
           
             <div class="spaceBetweenRightBorderedDivs"></div>
-            <div class="rightColumnBorderedDivKeywordsWider">
+<!--            <div class="rightColumnBorderedDivKeywordsWider">
                 <div class="rightColumnContentPadding">
                     
                     <h3 class="greyText">Section keywords</h3><br>
                     <a href="#" class="greyTextLink">equipment</a> | <a href="#" class="greyTextLink">computer</a>
                  </div>
-            </div>
+            </div>-->
             
             </div>
       </div>

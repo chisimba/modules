@@ -34,7 +34,7 @@ $this->appendArrayVar('headerParams', $js);
             ?>
             <!--    <a href="#" class="blueText noUnderline">UNESCO OER Products</a> -->
         </li>
-        <li>
+        <li>|
             <!--    <a >-->
             <!--                        Model Curriculum for Journalism Education-->
             <?php
