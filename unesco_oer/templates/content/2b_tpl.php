@@ -77,15 +77,54 @@ $this->appendArrayVar('headerParams', $js);
             </div>
 
 
-        </div>
-        <!-- Center column DIv -->
-        <div class="centerColumnDiv">
-            <div class="GridListViewDiv">
-                <div class="sortBy">
-                    <?php
-                    $search = $this->getobject('filterdisplay', 'unesco_oer');
-                    echo $search->SortDisp('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
-                    ?>
+                                            foreach ($products as $product) {
+                                                       $objProduct = $this->getObject('product');
+                                    if ($browsecheck) {
+                                        $objProduct->loadProduct($product['product_id']);
+                                    }
+                                    else
+                                        $objProduct->loadProduct($product);
+                                                    
+                                                    echo $this->objProductUtil->populateAdaptedListView($objProduct);
+                                                    
+                                            }
+                            ?>
+                               
+                               
+                           </div>
+                                              <?php
+                 
+            
+                        
+        
+      
+       $bookmark = $this->objbookmarkmanager->populateGridView($products);
+       echo $bookmark;
+    
+      
+      
+      
+          ?>     
+                                <!--
+                                <div class="adaptationListView">
+                                    <div class="productAdaptationListViewLeftColumn">
+                                        <h2><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h2><br>
+                                        <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
+                                        <div class="listingAdaptationLinkDiv"><a href="#" class="adaptationLinks">See all adaptations (11)</a></div>
+                                    </div>
+                                    <div class="productAdaptationListViewMiddleColumn">
+                                        <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
+                                        Adapted by
+                                    </div>
+                                    <div class="productAdaptationListViewRightColumn">
+                                        <h2 class="darkGreyColour">Polytechnic of Namibia</h2>
+                                        <br>
+                                        <div class="productAdaptationViewDiv">
+                                            <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="imgFloatRight">
+                                            <div class="listingAdaptationLinkDiv">
+                                                <a href="#" class="bookmarkLinks">English</a> | <a href="#" class="bookmarkLinks">German</a>
+                                            </div>
+                                        </div>
 
 
 
