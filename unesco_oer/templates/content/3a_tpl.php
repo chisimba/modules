@@ -488,7 +488,59 @@ if ($this->hasMemberPermissions()) {
                     
     </div>
     </div>
+<div class="rightColumnDiv">
+                            <div class="featuredHeader blueText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
+                            <div class="rightColumnBorderedDiv">
+                                <div class="rightColumnContentPadding">
+                                    <div class="rightColumnContentPadding">
+<?php
+$featuredProductID = $this->objDbFeaturedProduct->getCurrentFeaturedProductID();
+$featuredProduct = $this->objDbProducts->getProductByID($featuredProductID);
 
+echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
+?>
+
+                    <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">
+
+<?php
+//The reason it does not display the number of adaptations is because this uses puid as the id and the function getNoOfAdaptations uses id as the id
+
+
+$NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id']);
+echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
+?>
+
+                        </a></div>
+                </div>
+            </div>
+        </div>
+        <div class="spaceBetweenRightBorderedDivs">
+            <div class="featuredHeader innerPadding blueText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_most', 'unesco_oer') ?></div>
+        </div>
+        <!--tabs -->
+        <!--                	<div class="tabsOffState">ADAPTED</div>
+                            <div class="tabsOnState">RATED</div>
+                            <div class="tabsOffState">COMMENTED</div>-->
+
+        <div class="rightColumnBorderedDiv">
+
+
+<?php
+$objTabs = $this->newObject('tabcontent', 'htmlelements');
+$objTabs->setWidth(180);
+//                                        $objTabs->cssClass = "tabsOnState";
+$mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
+$mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
+$mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
+$objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'), $mostAdapted);
+$objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_rated', 'unesco_oer'), $mostRated);
+$objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_Comments', 'unesco_oer'), $mostCommented);
+echo $objTabs->show();
+?>
+
+        </div>
+        <br>
+</div>
 <script type="text/javascript">
 
     $(document).ready(function(){
