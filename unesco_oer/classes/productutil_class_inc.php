@@ -312,28 +312,37 @@ class productutil extends object {
                     </td>
                    </tr>
                     <tr><td>
+                    <table width=\"100%\">
+                    <tr>
+                    <td>
                     <div class='productlistViewLeftFloat'>
                         <img src='skins/unesco_oer/images/icon-new.png' alt='New' width='18' height='18'class='imgFloatRight'>
                         <div class='listingAdaptationLinkDiv'>new</div>
-                  	</div>
+                    </div>
+                    </td>
+                    <td>                    
                     <div class='listingIconsHoldingDiv'>
                         <img src='skins/unesco_oer/images/small-icon-adaptations.png' alt='Adaptation' width='18' height='18'class='smallLisitngIcons'>
                         <div class='textNextToTheListingIconDiv'><a href='#' class='adaptationLinks'>" . $CommentLink->show() . " </a></div>
                     </div>
+                    </td>
+                    <td>
                     <div class='listingIconsHoldingDiv'>
                         <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Bookmark' width='18' height='18'class='imgFloatRight'>
-                        <div class='textNextToTheListingIconDiv'>
-                
-                    </div>
+                        <div class='onebtextNextToTheListingIconDiv'></div>
+                        <a href='javascript:void(0)'   id='$linkheading'>Bookmark    </a>
                    
-                    
-                <a href='javascript:void(0)'   id='$linkheading'>Bookmark    </a></div>
-             
-                 </div>            
+                    </div>
+                     </td>
+                    </tr>
+                   <tr>
+                    <td>
               <div class='listingIconsHoldingDiv'>
                         <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='smallLisitngIcons'>
                         <div class='textNextToTheListingIconDiv'>". $adaptLink->show() ."</div>
                   </div>
+                    </td>
+                    <td>
                     <div class='listingIconsHoldingDiv'>
                       <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='smallLisitngIcons'>
                         <div class='textNextToTheListingIconDiv'>
@@ -348,7 +357,10 @@ class productutil extends object {
             $content .= "</select>
                         </div>
         
-                    </div> <br><br><br><br>
+                    </div>
+             </td>
+             </tr>
+         </table> 
         </td>
                     </tr>
                     </table>
@@ -359,7 +371,7 @@ class productutil extends object {
                 </div>
                 
              </div>
-        
+                
 
         ";
         }
