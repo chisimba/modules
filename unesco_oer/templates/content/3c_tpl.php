@@ -77,7 +77,15 @@ $existingContent = $content->getContentByContentID($path);
             <div class="listTopLinks">
                 <div class="productLinksViewDiv">
                     <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                    <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+                    <div class="textNextToTheListingIconDiv">
+<!--                        <a href="#" class="productsLink">Full view of product</a>-->
+                    <?php
+                    $productLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID)));
+                    $productLink->cssClass = 'productsLink';
+                    $productLink->link = 'Full view of product';
+                    echo $productLink->show();
+                    ?>
+                    </div>
                 </div>
             </div>
 
@@ -141,9 +149,16 @@ $existingContent = $content->getContentByContentID($path);
 
 <?php
                 $navigation = '';
-                $treelevel = $existingContent->getParentList();
+                $treelevel = $existingContent->getParentObjectList();
                 foreach ($treelevel as $currentlevel) {
-                    $navigation .= $currentlevel . " | ";
+                    $title = $currentlevel->getTitle();
+                    if($currentlevel->getViewLink($productID)){
+                        $titleLink = new link($currentlevel->getViewLink($productID));
+                        $titleLink->link = $title;
+                        $titleLink->cssClass = "greyTextLink";
+                        $title = $titleLink->show();
+                    }
+                    $navigation .= $title . " | ";
                 }
                 $rest = substr($navigation, 0, -3);
                 echo $rest;
