@@ -577,7 +577,7 @@ class productutil extends object {
                                     <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
                                 </div>
                             </div>
-                        </div>
+                       
                         </td>
                         ';
         } else {
