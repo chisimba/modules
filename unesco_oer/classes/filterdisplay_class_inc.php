@@ -72,8 +72,8 @@ class filterdisplay extends object {
 
 
 
-        $form->addToForm('<div class="moduleHeader darkBlueText">');
-        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_filter_criteria', 'unesco_oer') . '<br>');
+        $form->addToForm('<div class="moduleSubHeader">');
+        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_filter_criteria', 'unesco_oer') . '</div><br><div class="moduleHeader darkBlueText">');
         $form->addToForm('<img src="skins/unesco_oer/images/icon-filter-type.png" alt="Type of product" class="modulesImages">');
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_product_type', 'unesco_oer'));
         $form->addToForm(' </div>'); //module subheader

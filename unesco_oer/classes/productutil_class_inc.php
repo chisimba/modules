@@ -272,15 +272,13 @@ class productutil extends object {
             //  $userid = objdbuserextra->
              $userid = $this->objUser->userId();
 
-            echo $userid;
+        //    echo $userid;
 
             $location = $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             
             
            $button->onclick = "  javascript:bookmarksave('$time','$parentid','$userid','$textname','$commentboxname')  "; 
-                                                             
-                 
-                    
+ 
       
                //javascript:bookmarkupdate('$time','$parentid','$userid','$textname','$commentboxname'); 
 
@@ -316,32 +314,31 @@ class productutil extends object {
 
             $content.="
                   <div class='productsListView'>
-                   <h2>" . $abLink->show() . "</h2><br>
-                    <div class='productlistViewLeftFloat'>
-                        <img src='skins/unesco_oer/images/icon-new.png' alt='New' width='18' height='18'class='imgFloatRight'>
-                        <div class='listingAdaptationLinkDiv'>new</div>
+                   <h2>" . $abLink->show() . "</h2><br><br><br>
+                    <div class='listingIconsHoldingDiv'>
+                        <img src='skins/unesco_oer/images/icon-new.png' alt='New' width='18' height='18'class='smallLisitngIcons'>
+                        <div class='textNextToTheListingIconDiv'>new</div>
                   	</div>
-                    <div class='productlistViewLeftFloat'>
-                        <img src='skins/unesco_oer/images/small-icon-adaptations.png' alt='Adaptation' width='18' height='18'class='imgFloatRight'>
-                        <div class='listingAdaptationLinkDiv'><a href='#' class='adaptationLinks'>" . $CommentLink->show() . " </a></div>
+                    <div class='listingIconsHoldingDiv'>
+                        <img src='skins/unesco_oer/images/small-icon-adaptations.png' alt='Adaptation' width='18' height='18'class='smallLisitngIcons'>
+                        <div class='textNextToTheListingIconDiv'><a href='#' class='adaptationLinks'>" . $CommentLink->show() . " </a></div>
                     </div>
-                    <div class='productlistViewLeftFloat'>
+                    <div class='listingIconsHoldingDiv'>
                         <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Bookmark' width='18' height='18'class='imgFloatRight'>
-                        <div class='listingAdaptationLinkDiv'>
+                        <div class='textNextToTheListingIconDiv'>
                 
-            </div>
+        
                     
-                <a href='javascript:void(0)'   id='$linkheading'>Bookmark
+                <a href='javascript:void(0)'   id='$linkheading'>Bookmark    </a></div>
              
-                   </div>
-             
-              <div class='productlistViewLeftFloat'>
-                        <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='imgFloatRight'>
-                        <div class='listingAdaptationLinkDiv'><a href='#' class='adaptationLinks'>make adaptation</a></div>
+                 </div>            
+              <div class='listingIconsHoldingDiv'>
+                        <img src='skins/unesco_oer/images/small-icon-make-adaptation.png' alt='Make Adaptation' width='18' height='18'class='smallLisitngIcons'>
+                        <div class='textNextToTheListingIconDiv'><a href='#' class='adaptationLinks'>make adaptation</a></div>
                   </div>
-                    <div class='productlistViewLeftFloat'>
-                      <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='imgFloatRight'>
-                        <div class='listingAdaptationLinkDiv'>
+                    <div class='listingIconsHoldingDiv'>
+                      <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='smallLisitngIcons'>
+                        <div class='textNextToTheListingIconDiv'>
                         	<select name='' class='listingsLanguageDropDown'>
        
                 ";
@@ -374,6 +371,7 @@ class productutil extends object {
                 </div>
                 
              </div>
+        
 
         ";
         }
@@ -592,6 +590,31 @@ class productutil extends object {
                             </div>
                         </div>
                         </div>';
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         return $content;
     }
