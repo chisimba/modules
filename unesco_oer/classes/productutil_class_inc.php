@@ -240,7 +240,7 @@ class productutil extends object {
          $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $products[$i]['id'] , 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
          $adaptLink = new link($uri);
          $adaptLink->cssClass = "adaptationLinks";
-         $linkText = 'Make Adaptation';
+         $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
          $adaptLink->link = $linkText;
 
 
@@ -505,13 +505,13 @@ class productutil extends object {
           $bookLink = new link('#');
         $bookLink->cssClass = "bookmarkLinks";
         $bookLink->cssId = $adaptedProduct->getIdentifier();
-        $linkText = 'Bookmark';
+        $linkText = $this->objLanguage->languageText('mod_unesco_oer_bookmark', 'unesco_oer');
         $bookLink->link = $linkText;
         
          $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
-        $linkText = 'Make Adaptation';
+        $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
         $adaptLink->link = $linkText;
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $adaptedProduct->getIdentifier())));
