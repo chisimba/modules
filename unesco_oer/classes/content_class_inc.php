@@ -337,7 +337,7 @@ class content extends object {
                         'expandedIcon' => $expandedIcon,
                         'expanded' => $this->hasContents()),
                             array(
-                                'onclick' => ($highlighted ? "javascript: highlight('{$this->getID()}','$test' );" : ''),
+                                'onclick' => ($highlighted ? "javascript: highlight('{$this->getID()}','$test', '{$this->getPairString()}' );" : ''),
                     ));
         }
 

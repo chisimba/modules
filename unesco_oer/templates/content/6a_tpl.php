@@ -117,8 +117,8 @@
                 <div class="compareToolsHeading">Compare Tools</div>
                  <div class="compareToolsTextDiv">
                 
-<!--                      <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">Add to adaptation</a></div>
+                      <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                        <div class="textNextToTheListingIconDiv"><a href="#" id="adaptsection" class="adaptationLinks">Add to adaptation</a></div><!--
                         
                       <a href="#"><img src="images/icon-find-related.png" alt="Find Related" width="18" height="18"class="smallLisitngIcons"></a>
                         <div class="textNextToTheListingIconDiv"><a href="#" class="greySmallLink">Find related</a></div>
@@ -172,14 +172,14 @@
                             
                             echo '<br><br><br>
                                    <div class = "remarks">
-                                      <font size="3">  Comments History :</font>   
+                                      <font size="2">  Comments History :</font>   
                                    
-                                
+                                  </div>
                                       
-                                        </div>
-                                        <br><br>    UNESCO OER Origional
-                            
-                     <br><br>';
+                                      
+                                        <br><br>     <font size="2">  UNESCO OER Origional</font>
+                          
+                     <br><br>  ';
                             
                                $editLink = new link("javascript:void(0)");
                                $editLink->cssId = 'treelink';
@@ -284,7 +284,7 @@
                                 <br><br>
                                 <div> <p> 
                                   <div class = "remarks">
-                                  <font size="3">  Comments History :</font>                
+                                  <font size="2">  Comments History :</font>                
                                         </P>
                                  '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
                                         </div>
@@ -332,7 +332,7 @@
          </div>
       <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
               <script>
-                  function highlight(id,productid)
+                  function highlight(id,productid,pairid)
                   {
 //                      $('#' + id).parent().css('background-color', 'red');  
                         //$('#' + id).parent().toggleClass('highlight');
@@ -343,7 +343,12 @@
                         
                         var link = 'index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
                         $('#compare').attr('href',link);
-                      
+                        
+                       var link = 'index.php?module=unesco_oer&action=selectGroup&origionalproductid=' + productid + '&origionalpair=' + pairid;
+                        $('#adaptsection').attr('href',link);
+                        
+                        
+             
                       
                   }
                   
