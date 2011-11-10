@@ -512,7 +512,7 @@ class productutil extends object {
      * @param <type> $adaptedProduct
      * @return <type> $content
      */
-    public function populateAdaptedListView($adaptedProduct) {
+     public function populateAdaptedListView($adaptedProduct) {
         $this->loadClass('link', 'htmlelements');
         $content = '';
         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier())));
@@ -526,7 +526,7 @@ class productutil extends object {
         $linkText = $this->objLanguage->languageText('mod_unesco_oer_bookmark', 'unesco_oer');
         $bookLink->link = $linkText;
 
-        $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
+         $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $parentid, 'nextAction' => 'ViewProduct', 'cancelAction' => 'home'));
         $adaptLink = new link($uri);
         $adaptLink->cssClass = "adaptationLinks";
         $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
@@ -534,7 +534,7 @@ class productutil extends object {
 
         $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $adaptedProduct->getIdentifier())));
         $CommentLink->cssClass = 'adaptationLinks';
-        $CommentLink->link = $adaptedProduct->getNoOfAdaptations() . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
+        $CommentLink->link =  $adaptedProduct->getNoOfAdaptations()  . ' ' . $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer');
 
         /* if ($product['new'] == 'true') {
           $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
@@ -551,52 +551,41 @@ class productutil extends object {
 
         $content.='
                     <div class="adaptationListView">
-                    <table width="99%">
-                    <tr>
-                    <td width="33%">
                         <div class="productAdaptationListViewLeftColumn">
-                            <h2>' . $abLink->show() . ' </h2><br>
+                            <h2>'. $abLink->show() . ' </h2><br>
                             <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                            <div class="textNextToTheListingIconDiv">  ' . $CommentLink->show() . ' </div>
-                        </div>
-                      </td>  
-                      ';
+                        </div>';
         $instutionID = $adaptedProduct->getInstitutionID();
-        if (empty($instutionID)) {
+        if (empty ($instutionID)) {
             $groupLink = new link($this->uri(array("action" => '11', 'id' => $adaptedProduct->getGroupID())));
             $groupLink->cssClass = "greenText";
             $groupLink->link = $adaptedProduct->getGroupName();
-            $content .= '
-                        <td width="33%" align="left" valign="top">
-                       <div class="productAdaptationListViewMiddleColumn">
+            $content .= '<div class="productAdaptationListViewMiddleColumn">
                                 <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
                                 <span class="greenText">Managed by</span>
-                                
                             </div>
-                            </td>
-                            <td width="33%">
                             <div class="productAdaptationListViewRightColumn">
                                 <h2 class="greenText">' . $groupLink->show() . '</h2>
                                 <br>
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
                                     <div class="textNextToTheListingIconDiv">
-                                        <a href="#" class="bookmarkLinks">' . $adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                        <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                     </div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv">' . $bookLink->show() . '</div>
+                                    <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
                                 </div>
 
                                 <div class="productAdaptationViewDiv">
                                     <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                    <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
+                                    <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
                                 </div>
                             </div>
-                       
-                        </td>
+                        </div>
                         ';
         } else {
             $this->_institutionGUI->getInstitution($instutionID);
@@ -606,39 +595,31 @@ class productutil extends object {
             $institutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $instutionID)));
             $institutionLink->link = $name;
 
-            $content .='<td width="33%"  align="left" valign="top">
-                  <div class="productAdaptationListViewMiddleColumn">
+            $content .='<div class="productAdaptationListViewMiddleColumn">
                             <img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
                             <span class="pinkText centerAlign">Adapted by</span>
                         </div>
-                        </td>
-                        <td width="33%">
                         <div class="productAdaptationListViewRightColumn">
                             <h2 class="darkGreyColour">' . $institutionLink->show() . '</h2>
                             <br>
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/icon-languages.png" alt="Languages search" width="24" height="24"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv">
-                                    <a href="#" class="bookmarkLinks">' . $adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
+                                    <a href="#" class="bookmarkLinks">' .$adaptedProduct->getLanguageName() . '</a> | <a href="#" class="bookmarkLinks"></a>
                                 </div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">' . $bookLink->show() . '</div>
+                                <div class="textNextToTheListingIconDiv">'. $bookLink->show() .'</div>
                             </div>
 
                             <div class="productAdaptationViewDiv">
                                 <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
+                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>
                             </div>
                         </div>
-
-                    </td> 
-                    </tr>
-                    </table>
-</div>
-               ';
+                        </div>';
         }
         return $content;
     }

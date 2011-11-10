@@ -165,7 +165,7 @@ $this->appendArrayVar('headerParams', $js);
 
 
     <!-- Pagination-->
-    <div class="paginationDiv">
+<!--    <div class="paginationDiv">-->
 <!--                                    <div class="paginationImage"><img src="skins/unesco_oer/images/icon-pagination.png" alt="Pagination" width="17" height="20"></div>-->
 
     <?php
@@ -173,7 +173,7 @@ $this->appendArrayVar('headerParams', $js);
     $Pagination->Pagination('2b_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum, $pageinfo)
     ?>
 
-    </div>
+<!--    </div>-->
 </div>
 
 <!-- Right column DIv -->
