@@ -224,6 +224,8 @@ class productutil extends object {
 
         //  foreach ($data as $products) {
         for ($i = $start; $i < ($end); $i++) {
+            $objProduct = $this->newObject('product', 'unesco_oer');
+            $objProduct->loadProduct($products[$i]);
 
             $temp = str_replace(" ", "", $products[$i]['id']);
             $divheading = $temp . 'Div';
@@ -346,14 +348,31 @@ class productutil extends object {
                     <div class='listingIconsHoldingDiv'>
                       <img src='skins/unesco_oer/images/icon-languages.png' alt='Languages search' width='24' height='24'class='smallLisitngIcons'>
                         <div class='textNextToTheListingIconDiv'>
-                        	<select name='' class='listingsLanguageDropDown'>
+                        	<!-- <select name='' class='listingsLanguageDropDown'> -->
        
                 ";
-            $index = 0;
-            $prodLanguages = $this->objLanguage->getLangs();
-            $prodLanguages['en'] = 'English';
-            $content .= '<option value="">' . $prodLanguages[$product['language']] . '</option>';
-            $content .= "</select>
+
+            $dropdown = new dropdown($objProduct->getIdentifier() . "_dropdown");
+
+            $translations = $objProduct->getTranslationsList();
+            $langs = $this->objLanguage->getLangs();
+            $langs['en'] = 'English';
+            foreach ($translations as $translation) {
+                $prodLanguage = $langs[$translation['language']];
+//              $selected = ($product['id'] == $translation['id']) ? 'selected' : '';
+//              $content .= '<option '. $selected .' value="'. $translation['id'].'">' . $prodLanguage . '</option>';
+                $dropdown->addOption($translation['id'], $prodLanguage);
+            }
+            $dropdown->cssClass = "listingsLanguageDropDown";
+            $dropdown->setSelected($objProduct->getIdentifier());
+            $dropdown->addOnchange("javascript: viewProduct('{$dropdown->cssId}');");
+            $content .= $dropdown->show();
+//
+//            $index = 0;
+//            $prodLanguages = $this->objLanguage->getLangs();
+//            $prodLanguages['en'] = 'English';
+//            $content .= '<option value="">' . $prodLanguages[$product['language']] . '</option>';
+            $content .= "<!-- </select> -->
                         </div>
         
                     </div>
