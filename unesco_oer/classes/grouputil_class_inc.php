@@ -366,9 +366,14 @@ class grouputil extends object {
     }
 
     public function topcontent($groupid , $uri = NULL) {
+        $groupName = $this->objDbGroups->getGroupName($groupid);
+        if (empty($groupid) || empty($groupName)) {
+            return false;
+        }
+
         if (empty($uri)) $uri = $this->uri(array("action" => '8a', 'id' => $groupid, "page" => '10a_tpl.php'));
         $Link = new link($uri);
-        $Link->link = $this->objDbGroups->getGroupName($groupid);
+        $Link->link = $groupName;
         $Link->cssClass="greenTextBoldLink";
 
 
