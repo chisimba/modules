@@ -349,10 +349,9 @@ class productutil extends object {
                         	<select name='' class='listingsLanguageDropDown'>
        
                 ";
-
             $index = 0;
             $prodLanguages = $this->objLanguage->getLangs();
-            $langs['en'] = 'English';
+            $prodLanguages['en'] = 'English';
             $content .= '<option value="">' . $prodLanguages[$product['language']] . '</option>';
             $content .= "</select>
                         </div>

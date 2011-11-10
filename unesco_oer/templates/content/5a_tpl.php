@@ -254,7 +254,7 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                                 echo $editLink->show();
                             }
                             
-                            if ($this->hasMemberPermissions() && $this->ObjDbUserGroups->ismemberOfgroup($this->objUser->userId(), $groupInfo['id'])) {
+                            if (($this->hasMemberPermissions() && $this->ObjDbUserGroups->ismemberOfgroup($this->objUser->userId(), $groupInfo['id'])) || $this->objUser->isAdmin()) {
                                 $uri = $this->uri(array('action' => 'deleteProduct', 'productID' => $productID, 'prevAction' => 'home'));
                                 $deleteLink = new link($uri);
                                 $deleteLink->title = "Delete Product";
