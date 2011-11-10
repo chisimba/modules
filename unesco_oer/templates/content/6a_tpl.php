@@ -116,7 +116,18 @@
             
                 <div class="compareToolsHeading">Compare Tools</div>
                  <div class="compareToolsTextDiv">
-                
+                   <div class="leftFloat">Select/unselect item(s) from the list below or use the search to find section (courses):</div>
+                      <div class="compareSearchBoxHolder">
+                          <?php
+                           $textinput = new textinput('SearchInput');
+                             $textinput->cssClass = "compareSearchBox";
+                             $textinput->cssId = 'search';
+                          
+                          ?>
+                          
+                          
+                         </div> <?php echo $textinput->show()?>  <a href="#" id="searchlink" onclick= javascript:test()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   <br>
+                         
                       <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" id="adaptsection" class="adaptationLinks">Add to adaptation</a></div><!--
                         
@@ -128,18 +139,10 @@
                         
                         <img src="skins/unesco_oer/images/icon-clear-selection-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                       <div class="textNextToTheListingIconDiv"><a href="#" id ="clearselection" onclick =javascript:Clear()   class="adaptationLinks">Clear selection</a></div>
-                        
-                      <div class="compareSearchBoxHolder">
-                          <?php
-                           $textinput = new textinput('SearchInput');
-                             $textinput->cssClass = "compareSearchBox";
-                             $textinput->cssId = 'search';
-                          
-                          ?>
-                          
-                          
-                         </div><?php echo $textinput->show()?>
-                      <a href="#" id="searchlink" onclick= javascript:test()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>                   
+                      <br>
+                      <br>
+                
+                                    
            	  </div>
             	</div>
             </div>
