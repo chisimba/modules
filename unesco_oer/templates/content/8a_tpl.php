@@ -40,8 +40,8 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
 
                     <div class="greyDivider"></div>
                     <div class="groupSubLinksList">
-                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="Feed" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greyTextBoldLink">Subscribe to feed</a></div>
+<!--                        <img src="skins/unesco_oer/images/small-icon-rss-feed.png" alt="Feed" width="18" height="18" class="smallLisitngIcons">
+                        <div class="linksTextNextToSubIcons"><a href="#" class="greyTextBoldLink">Subscribe to feed</a></div>-->
                     </div>
                     <div class="groupSubLinksList">
                        
@@ -104,8 +104,8 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                                 ?></a></div>
                     </div>
                     <div class="groupSubLinksList">
-                        <img src="skins/unesco_oer/images/icon-group-email-alerts.png" alt="Email Alerts" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Email alerts</a></div>
+<!--                        <img src="skins/unesco_oer/images/icon-group-email-alerts.png" alt="Email Alerts" width="18" height="18" class="smallLisitngIcons">
+                        <div class="linksTextNextToSubIcons"><a href="#" class="greenTextBoldLink">Email alerts</a></div>-->
                     </div>
                     <div class="groupSubLinksList">
 <?php
