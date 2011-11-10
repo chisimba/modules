@@ -186,9 +186,16 @@
                             
                                $editLink = new link("javascript:void(0)");
                                $editLink->cssId = 'treelink';
-                               $editLink->link =  'Show Product Tree';
-                           echo   $editLink->show();
                                
+                               $editLink->link =  'Show Product Tree';
+                               
+                          echo'     <img  id = "expandlink" src= "skins/unesco_oer/images/tree/icon-product-closed-folder.png">  ';
+                           echo'     <img  id = "collapselink" src= "skins/unesco_oer/images/tree/icon-product-opened-folder.png">  ';
+                      
+                          
+                     
+                             echo   $editLink->show();
+                       
                            
     ?>     
                            <div id ="tree">
@@ -212,10 +219,14 @@
                         <script>
 
                                      $('#tree').hide();
-                                    
+                                    $('#expandlink').show();
+                                                  $('#collapselink').hide();
                                          $('#treelink').click(function(){
 
                                                   $('#tree').slideToggle();
+                                                  $('#expandlink').toggle();
+                                                  $('#collapselink').toggle();
+                                                  
             
                                             });
                                     </script>
@@ -235,8 +246,12 @@
                                     
                                     $productID = $selectedproduct;
                                     $divheading =   $productID .'Div';
+                                    $expandimg =   $productID .'expand';
+                                    $collapseimg =   $productID .'collapse';
                                     $linkheading =   $productID. 'Link';
                                     $div = '#' . $productID . 'Div';
+                                    $collapse = '#' . $productID . 'collapse';
+                                    $expand = '#' . $productID . 'expand';
                                     $link = '#' .  $productID . 'Link';
                                 
 
@@ -289,7 +304,8 @@
                                   <div class = "remarks">
                                   <font size="2">  Comments History :</font>                
                                         </P>
-                                 '. $product->getRemark() .'<br><br> ' . $editLink->show() .'
+                                 '. $product->getRemark() .'<br><br> <img  id = "'.$expandimg.'" src= "skins/unesco_oer/images/tree/icon-product-opened-folder.png"> 
+                           <img  id = "'.$collapseimg.'" src= "skins/unesco_oer/images/tree/icon-product-closed-folder.png">'    . $editLink->show() .'
                                         </div>
                                 </div>
                              
@@ -311,10 +327,14 @@
                                       <script>
 
                                      $('$div').hide();
+                                       $('$expand').hide();
+                                       $('$collapse').show();
                                     
                                          $('$link').click(function(){
 
                                                   $('$div').slideToggle();
+                                     $('$expand').toggle();
+                                     $('$collapse').toggle();
             
                                             });
                                     </script>"
