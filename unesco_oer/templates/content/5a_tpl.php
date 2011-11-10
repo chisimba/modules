@@ -112,10 +112,10 @@ Donec id orci ut justo aliquam pulvinar. Aliquam molestie, risus sed consequat s
                             echo $product->getDescription();
                         ?>
 <br><br>
-	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
+<!--	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
         <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
-	</div>
+	</div>-->
 <!--	<div class="listingAdaptationsLinkAndIcon ExtraWidthDiv">
         <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Make Adaptation" width="18" height="18"class="smallLisitngIcons">
         <div class="textNextToTheListingIconDiv wideTextNextTiListingIconDiv"><a href="#" class="adaptationLinks">Make a new adaptation using this UNESCO Product</a></div>
