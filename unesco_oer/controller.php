@@ -2539,13 +2539,10 @@ class unesco_oer extends controller {
 
                 case 'insertedit':
                     $originalID = $this->getParam('originalproductid');
-                    echo "OrigProdID: $originalID ";
                     $originalProduct = $this->newObject('product');
                     $originalProduct->loadProduct($originalID);
-                    echo "ProdName: {$originalProduct->getTitle()} ";
                     $originalContentManager = $originalProduct->getContentManager();
                     $originalPairArray = $originalContentManager->getPairArray($this->getParam('originalpair'));
-                    var_dump($originalPairArray);
                     $existingContent = $originalContentManager->getContentByContentID($originalPairArray[1]);
                     $existingContent->prepareForCopy($this->getParam('newParent'), $originalPairArray[1]);
                     echo $existingContent->showInput($productID);
