@@ -48,12 +48,9 @@ class featuredproductutil extends object
             <img src="' . $product['thumbnail'] . '" alt="Featured" width="136" height="176"><br>
                 <div class="greyListingHeading">' . $product['title'] . '</div>
                     <br>
-                    <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="imgFloatRight">
-                     <div class="listingAdaptationLinkDiv">
-
-                    <a href="#" class="adaptationLinks">
+                    <img src="skins/unesco_oer/images/small-icon-adaptations.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                     <div class="textNextToTheListingIconDiv">
                     '. $adaplink->show().'
-                     </a>
                 </div>
                     ';
         }
