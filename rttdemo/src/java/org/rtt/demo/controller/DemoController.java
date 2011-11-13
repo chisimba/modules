@@ -112,7 +112,7 @@ public class DemoController {
         boolean debug = true;
         String jnlpPath = config.getProperty("jnlp.path");
         String baseUrl = config.getProperty("baseurl");
-        String paramsBaseUrl = "/rttdemo/restservices";
+        String paramsBaseUrl = "/rttdemo/restservices/";
         boolean demo = false;
 
         String username = GeneralUtil.generateRandomStr(12);
