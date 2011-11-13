@@ -95,10 +95,10 @@ public class DemoController {
         String vendor = "RTT";
         String desc = "RTT";
         String ref = "rtt";
-        String openfireXMPPHost = "127.0.0.1";
-        String openfireHTTPHost = "127.0.0.1";
-        int openfireXMPPPort = 5222;
-        int openfireHTTPPort = 80;
+        String openfireXMPPHost = config.getProperty("xmpp.host");
+        String openfireHTTPHost = config.getProperty("http.host");
+        int openfireXMPPPort =Integer.parseInt( config.getProperty("xmpp.port"));
+        int openfireHTTPPort = Integer.parseInt( config.getProperty("http.port"));;
         boolean enableDraw = true;
         String skinClass = "null";
         String plugins = "org.avoir.rtt.ruc.RucManager#org.avoir.rtt.whiteboard.WhiteboardManager";
