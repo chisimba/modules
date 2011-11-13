@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+
+
+<project name="rttdemo" default="all" basedir="..">
+    <import file="testcases.xml"/>
+ 
+
+    <!-- PROPERTIES -->
+    <!-- ======================================================================================= -->
+
+    <!-- Smack Version -->
+    <property name="version.major" value="0" />
+    <property name="version.minor" value="3" />
+    <property name="version.revision" value="0" />
+    <property name="version.extra" value="" />
+    <property name="version.filename"
+                      value="${version.major}.${version.minor}.${version.revision}"/>
+  
+   
+    <property file="${basedir}/deploy/build.properties" />
+    <property name="compile.dir" value="deploy/classes" />
+
+    <property name="jar.dest.dir" value="deploy" />
+
+    <property name="lib.dir" value="${basedir}/lib" />
+  
+    <property name="src.dir" value="${basedir}/src" />
+   
+    <property name="web.dir" value="resources" />
+
+      <!--
+    Dependencies
+    -->
+    <path id="compile.dependencies">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${tomcat.home}/lib" includes="*.jar"/>
+  
+    </path>
+
+    <!-- TARGETS -->
+    <!-- ======================================================================================= -->
+
+    <!-- all -->
+    <!-- ======================================================================================= -->
+    <target name="all" depends="war" description="Calls 'war' target by default">
+    </target>
+
+
+    <!-- init -->
+    <target name="init" description="Prepare build environment">
+        
+    </target>
+
+
+
+    <!-- compile -->
+
+
+    <!-- ======================================================================================= -->
+
+    <target name="compile"
+          description="Compiles all source." depends="compile-rttdemo">
+        <echo>Compiliation finished!</echo>
+    </target>
+
+    <target name="compile-rttdemo" depends="init" description="Compiles all source.">
+        <!-- prepare output directory -->
+        <mkdir dir="${compile.dir}" />
+
+       
+        <!-- compile java sources -->
+        <javac
+                destdir="${compile.dir}"
+                includeAntRuntime="no"
+                debug="on"
+                source="1.5"
+                target="1.5" >
+            <src path="${src.dir}" />
+            <classpath>
+                <path refid="compile.dependencies"/>
+            </classpath>
+        </javac>
+        <copy file="${basedir}/applicationContext-db.xml" todir="${compile.dir}" overwrite="true" />
+         <copy file="${basedir}/messages.properties" todir="${compile.dir}" overwrite="true" />
+    </target>
+
+
+    <!-- jar -->
+    <!-- ======================================================================================= -->
+    <target name="jar-rttdemo" depends="compile-rttdemo" description="Produces rttdemo.jar">
+        <!-- prepare output directory -->
+        <mkdir dir="${jar.dest.dir}" />
+
+        <jar destfile="${jar.dest.dir}/rttdemo-${version.filename}.jar"
+                basedir="${compile.dir}"
+                includes="**/*.*">
+           
+        </jar>
+        <copy file="${jar.dest.dir}/rttdemo-${version.filename}.jar" todir="${basedir}/lib" overwrite="true" />
+    </target>
+
+    <target name="war" depends="jar-rttdemo" >
+     
+ 
+        <war destfile="${jar.dest.dir}/rttdemo.war" webxml="${basedir}/web/WEB-INF/web.xml">
+            
+            <webinf dir="${basedir}/web/WEB-INF"/>
+            <metainf dir="${basedir}/web/META-INF"/>
+            <zipfileset dir="${basedir}/web/resources" prefix="resources"/>
+            <fileset dir="${basedir}/web/"  includes="**/*.jsp"/>
+            <zipfileset dir="${basedir}/client" prefix="client"/>
+            <lib dir="${basedir}/lib">
+               <!-- <exclude name="jdbc1.jar"/> -->
+            </lib>
+            <!--<classes dir="${compile.dir}"/>-->
+            
+        </war>
+ 
+        <copy todir="${tomcat.home}/webapps">
+            <fileset dir="${jar.dest.dir}" includes="rttdemo.war"/>
+        </copy>
+    </target>
+    
+    <target name="clean" description="Deletes all generated content.">
+       
+        <delete dir="${compile.dir}" />
+        <delete dir="${basedir}/target" />
+        <delete>
+           <fileset dir="${basedir}"  includes="**/*.war"/> 
+            <fileset dir="${basedir}"  includes="**/*.jar"/> 
+        </delete>
+        
+    </target>
+
+</project>

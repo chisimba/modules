@@ -1,0 +1,38 @@
+/* 
+    Document   : admin.css
+    Created on : 02 Jun 2011, 10:50:57 AM
+    Author     : nguni
+    Description:
+        This stylesheet is for the admin section of the site.
+*/
+div.userlist {
+    text-align: left;
+    min-height: 500px;
+}
+
+div.userlist table {
+    margin: 1em;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    width: 90%;
+}
+
+div.userlist table tr {
+    border: 1px solid #000;
+}
+
+div.userlist table th {
+    background-color: #3B5998;
+    color: #FFF;
+    text-align:  left;
+    border-left: 1px solid #FFF;
+}
+
+div.userlist table td {
+    border: 1px solid #000;
+}
+
+div.userlist span#rolechanged {
+    color: #fff;
+    background-color: #ff0000;
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+    <global-method-security pre-post-annotations="enabled">
+        <!-- AspectJ pointcut expression that locates our "post" method and applies security that way
+        <protect-pointcut expression="execution(* bigbank.*Service.post*(..))" access="ROLE_TELLER"/>
+        -->
+    </global-method-security>
+    <http pattern="/" security="none"/>
+
+    <http auto-config="false" use-expressions="true" access-denied-page="/accessdenied" entry-point-ref="authenticationEntryPoint">
+        <!--intercept-url pattern="/assignments/admin/**" access="hasRole('ROLE_ADMIN')"/-->
+        <intercept-url pattern="/assignments/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+        <intercept-url pattern="/classlist/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        
+        <logout invalidate-session="true" logout-success-url="/login" logout-url="/j_spring_security_logout" />
+
+        <custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+        <custom-filter ref="concurrencyFilter" position="CONCURRENT_SESSION_FILTER"/>
+        <session-management session-authentication-strategy-ref="sas"/>
+    </http>
+
+    <beans:bean name="rttDemoService" class="org.rtt.demo.service.RttDemoServiceImpl"/>
+    <beans:bean name="userService" class="org.rtt.demo.service.UserServiceImpl"/>
+    <beans:bean name="jnlpService" class="org.rtt.demo.jnlp.JnlpServiceImpl"/>
+    
+  <!--  <beans:bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+    -->
+    
+    <beans:bean id="authenticationFilter" class="org.rtt.demo.security.MyUsernamePasswordAuthenticationFilter">
+        <beans:property name="sessionAuthenticationStrategy" ref="sas" />
+        <beans:property name="authenticationManager" ref="authenticationManager" />
+        <beans:property name="authenticationFailureHandler" ref="customAuthenticationFailureHandler" />
+        <beans:property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler" />
+    </beans:bean>
+
+ 	<!-- We just actually need to set the default failure url here -->
+    <beans:bean id="customAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+        <beans:property name="defaultFailureUrl" value="/login?error=true" />
+    </beans:bean>
+
+
+ 	 <!-- We just actually need to set the default target url here -->
+    <beans:bean id="customAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/?query=none" />
+    </beans:bean>
+
+
+	<!-- The AuthenticationEntryPoint is responsible for redirecting the user to a particular page, like a login page,
+ 			whenever the server sends back a response requiring authentication -->
+ 	<!-- See Spring-Security Reference 5.4.1 for more info -->
+    <beans:bean id="authenticationEntryPoint"  class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <beans:property name="loginFormUrl" value="/login" />
+    </beans:bean>
+
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider>
+            <password-encoder hash="md5"/>
+            <jdbc-user-service data-source-ref="dataSource"/>
+        </authentication-provider>
+    </authentication-manager>
+
+
+
+	<!-- Filter required by concurrent session handling package
+			The ConcurrentSessionFilter requires two properties, sessionRegistry, which generally points to an
+			instance of SessionRegistryImpl, and expiredUrl, which points to the page to display when a session has expired.
+			See: http://static.springsource.org/spring-security/site/docs/3.1.x/reference/session-mgmt.html#list-authenticated-principals -->
+    <beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <beans:property name="expiredUrl" value="/timeout" />
+        <beans:property name="sessionRegistry" ref="sessionRegistry" />
+    </beans:bean>
+
+	<!--  Defines a concrete concurrent control strategy
+			 Checks whether the user in question should be allowed to proceed, by comparing the number of
+			 sessions they already have active with the configured maximumSessions value. The SessionRegistry
+			 is used as the source of data on authenticated users and session data.
+			 See: http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/session/ConcurrentSessionControlStrategy.html-->
+    <beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy" >
+        <beans:property name="maximumSessions" value="1" />
+        <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+    </beans:bean>
+
+	<!-- Maintains a registry of SessionInformation instances
+		   See: http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/session/SessionRegistry.html -->
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+</beans:beans>

@@ -1,0 +1,105 @@
+table.courses
+{ 
+    background-color: #fafafa;
+    width: 100%;
+    margin: auto;
+
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+table.assignments
+{ 
+    background-color: #fafafa;
+    width: 100%;
+    margin: auto;
+
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+
+table.submissions
+{
+    background-color: #fafafa;
+    width: 100%;
+    margin: auto;
+
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+td.courselistheading
+{
+    /*background-color: #49494a;*/
+
+    background-color: #1b6885;
+    color: #ffffff;
+
+    font-family: Verdana;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+td.assignmentlistheading
+{
+    /*background-color: #49494a;*/
+
+    background-color: #1b6885;
+    color: #ffffff;
+
+    font-family: Verdana;
+    font-weight: bold;
+    font-size: 100%;
+}
+td.submissionlistheading
+{
+    /*background-color: #49494a;*/
+
+    background-color: #1b6885;
+    color: #ffffff;
+
+    font-family: Verdana;
+    font-weight: bold;
+    font-size: 100%;
+}
+td.course
+{ border-bottom: 1px #6699CC dotted;
+  text-align: left;
+  font-family: Verdana, sans-serif, Arial;
+  font-weight: normal;
+  font-size: 90%;
+  color: #404040;
+  background-color: #fafafa;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 0px;
+}
+
+td.assignment
+{ border-bottom: 1px #6699CC dotted;
+  text-align: left;
+  font-family: Verdana, sans-serif, Arial;
+  font-weight: normal;
+  font-size:90%;
+  color: #404040;
+  background-color: #fafafa;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 0px;
+}
+td.submission
+{ border-bottom: 1px #6699CC dotted;
+  text-align: left;
+  font-family: Verdana, sans-serif, Arial;
+  font-weight: normal;
+  font-size:90%;
+  color: #404040;
+  background-color: #fafafa;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 0px;
+}
