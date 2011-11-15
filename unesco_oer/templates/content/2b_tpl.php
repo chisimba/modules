@@ -294,6 +294,7 @@ echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
     });
 
                 </script>
+                <br/>
                 <div id="map_canvas" ></div>
 <?php
 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
