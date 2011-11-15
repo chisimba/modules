@@ -201,7 +201,7 @@ $this->appendArrayVar('headerParams', $js);
 
     <!-- Right column DIv -->
     <div class="rightColumnDiv">
-        <div class="rightColumnDiv">
+      
             <div class="featuredHeader" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
             <div class="rightColumnBorderedDiv">
                 <?php
@@ -305,7 +305,7 @@ $this->appendArrayVar('headerParams', $js);
 
                 </div>
             </div>
-        </div>
+      
     </div>
 </div>
 
