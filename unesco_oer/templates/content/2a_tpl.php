@@ -233,28 +233,28 @@ $this->appendArrayVar('headerParams', $js);
                         $(document).ready(function(){ 
                             myLatlng = [
 
-<?php
-foreach ($coords as $coord) {
-    ?>
-                                      new google.maps.LatLng(
-    <?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>
-                                      ),
+                            <?php
+                            foreach ($coords as $coord) {
+                                ?>
+                                                                  new google.maps.LatLng(
+                                <?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>
+                                                                  ),
 
-<?php } ?>
+                            <?php } ?>
 
                                ];
 
 
                                title = [
 
-<?php
-foreach ($title as $titles) {
-    ?>
-                                         "<?php echo $titles['name'] ?>",
+                            <?php
+                            foreach ($title as $titles) {
+                                ?>
+                                                                     "<?php echo $titles['name'] ?>",
 
-<?php } ?>
+                            <?php } ?>
 
-                               ];
+                                                           ];
 
                                var myOptions = {
                                    zoom: 0,
@@ -297,11 +297,11 @@ foreach ($title as $titles) {
 
                     <br/>
                     <div id="map_canvas" style="width:190; height:110"></div>
-<?php
-$form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
+                        <?php
+                        $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
 
-echo $form->show();
-?>
+                        echo $form->show();
+                        ?>
 
                 </div>
             </div>

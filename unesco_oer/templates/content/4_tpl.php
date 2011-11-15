@@ -87,8 +87,8 @@ $institutionGUI->getInstitution($institutionId);
 //                                    $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
 //                                    echo $button->show();
 
-                                    echo "<a onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
+                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
 
                                     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                     $abLink->cssClass = "resetLink";
@@ -188,7 +188,7 @@ $institutionGUI->getInstitution($institutionId);
     </div>
 
     <div class="rightColumnDiv">
-        <div class="rightColumnDiv">
+       
             <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
             <div class="rightColumnBorderedDiv">
                 <div class="rightColumnContentPadding">
@@ -205,10 +205,89 @@ $institutionGUI->getInstitution($institutionId);
 
                 </div>
             </div>
-           
+
+
+        <div class="spaceBetweenRightBorderedDivs">
+            <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
+       
+     
+            <script type="text/javascript">
+                var marker = new Array();
+                $(document).ready(function(){ 
+                    myLatlng = [
+
+<?php
+foreach ($coords as $coord) {
+    ?>
+                                        new google.maps.LatLng(
+    <?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>
+                                    ),
+
+<?php } ?>
+
+                            ];
+
+
+                            title = [
+
+<?php
+foreach ($title as $titles) {
+    ?>
+                                        "<?php echo $titles['name'] ?>",
+
+<?php } ?>
+
+                            ];
+
+                            var myOptions = {
+                                zoom: 0,
+                                center: new google.maps.LatLng(0, 0),
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+                            var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+                            var oldAction = document.forms["maps"].action;
+
+                            for(i=0;i<myLatlng.length;i++)
+                            {
+                                marker[i] = new google.maps.Marker(
+                                { position: myLatlng[i],
+                                    title: title[i]
+
+                                } );
+
+                                var pos = marker[i].getPosition();
+                                google.maps.event.addListener(marker[i], 'click',
+                                (function(pos)
+                                { return function()
+                                    {
+                                        //alert(i);
+                                        document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                                        document.forms["maps"].submit();
+                                    };
+                                }
+                            )(pos)
+                            );
+
+                                marker[i].setMap(map);
+
+                            }
+
+
+                        });
+
+            </script>
+
             
-            <br>
-        </div>
+            
+            <div id="map_canvas" style="width:190; height:110"></div>
+            <?php
+            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
+
+            echo $form->show();
+            ?>
+
+</div>
     </div>
 
 
