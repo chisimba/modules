@@ -381,7 +381,7 @@ echo $this->objGroupUtil->groupPerPage();
                                             </script>
                                         </head>
                          
-                                            <div id="map_canvas" style="width:210; height:110"></div>
+                                            <div id="map_canvas" ></div>
 <?php
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 

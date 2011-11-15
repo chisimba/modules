@@ -296,7 +296,7 @@ foreach ($title as $titles) {
                     </script>
 
                     <br/>
-                    <div id="map_canvas" style="width:210; height:110"></div>
+                    <div id="map_canvas" style="width:190; height:110"></div>
 <?php
 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
 
