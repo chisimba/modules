@@ -109,7 +109,7 @@ public class DemoController {
         int sipPort = 5060;
         int rtpPort = 8000;
         String chatWelcomeMessage = "Welcome to RTT";
-        boolean debug = true;
+        boolean debug = false;
         String jnlpPath = config.getProperty("jnlp.path");
         String baseUrl = config.getProperty("baseurl");
         String paramsBaseUrl = "/rttdemo/restservice/";
