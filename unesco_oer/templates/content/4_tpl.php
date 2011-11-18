@@ -68,8 +68,8 @@ $institutionGUI->getInstitution($institutionId);
                     </div>
 
                     <br><br>
-                    <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3>
-
+                    <div class="adaptationInnerPageHeding"><h3 class="pinkText">Adaptations</h3></div>
+                    <br>
                         <div class="leftColumnDiv">
 
                             <?php
@@ -107,11 +107,9 @@ $institutionGUI->getInstitution($institutionId);
                             </div>
 
                         </div>
+<!--                    <div class="leftColumnDiv">
 
-                    </div>
-                    <div class="leftColumnDiv">
-
-                    </div>
+                    </div>-->
                     <div class="innerRightColumn4">
 
 
