@@ -18,8 +18,8 @@ $onestepid = $this->getParam('onestepid');
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
-        <ul><li class="first">Home</li>
-            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'>Groups</a></li>
+        <ul><li class="first"><?php echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
+            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer') ?></a></li>
 <!--            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'>Groups Grid</a></li>-->
            <li><?php
                  echo $this->objDbGroups->getGroupName($this->getParam('id'));
@@ -44,7 +44,7 @@ $onestepid = $this->getParam('onestepid');
             	<div class="tenPixelLeftPadding tenPixelBottomPadding">
                 	<a href="#" class="groupsBreadCrumbColor">                                                         <?php
                              $GroupLink=new link($this->uri(array("action" =>'10',"page"=>'10a_tpl.php')));
-                             $GroupLink->link="Groups";
+                             $GroupLink->link=$this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer');
                              $GroupLink->cssClass="greenTextBoldLink";
                              echo $GroupLink->show();
                              ?></a> |
@@ -73,7 +73,7 @@ $onestepid = $this->getParam('onestepid');
                       <div class="saveCancelButtonHolder">
                          
                             <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
-                                    Link to institution</a></div>
+                                  <?php echo $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer') ?></a></div>
                         </div>
                            <div id="showhide" style="display: none;">
 <!--                              <ul>
@@ -142,7 +142,7 @@ function SubmitProduct()
      
   
     $addInstitutionLink = new link($this->uri(array('action' => 'institutionEditor' , 'onestepid' => $onestepid , 'groupid' => $this->getParam('id'))));
-    $addInstitutionLink->link = 'Create Institution';
+    $addInstitutionLink->link = $this->objLanguage->languageText(' mod_unesco_oer_add_data_createinstitution', 'unesco_oer') ;
     $addInstitutionLink->cssClass = 'greenTextBoldLink';
        echo  $addInstitutionLink->show()
                                     
@@ -162,7 +162,7 @@ function SubmitProduct()
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
-                             $memberLink->link="Members(".$No_Of_Members.")";
+                             $memberLink->link= $this->objLanguage->languageText('mod_unesco_oer_users_group_member', 'unesco_oer') ."(".$No_Of_Members.")";
                              echo $memberLink->show();
                              ?>
 
@@ -171,21 +171,21 @@ function SubmitProduct()
                              <?php
                              $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                             $groupadaptationLink->link=" ADAPTATIONS(".$No_Of_adaptation.")";
+                             $groupadaptationLink->link=  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer'). "(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
                              ?></a></li>
                      <li><a href="#">
                                                           <?php
                              $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                             $discussionLink->link=" DISCUSSIONS($topicsNum)";
+                             $discussionLink->link=$this->objLanguage->languageText('mod_unesco_oer_discussion', 'unesco_oer'). " ($topicsNum)";
                              echo $discussionLink->show();
                              ?></a></li>
                      <li><a href="#">
                               <?php
                              $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
-                             $InstitutionLink->link="INSTITUTIONS(".$No_Of_instutions.")";
+                             $InstitutionLink->link= $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer'). "(".$No_Of_instutions.")";
                              echo $InstitutionLink->show();
                              ?>
                              </a></li>
@@ -240,7 +240,7 @@ function SubmitProduct()
             <div class="rightColumnDiv">
             	<div class="rightColumnDiv">
 
-            	<div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
+            	<div class="featuredHeader pinkText"><?php  echo $this->objLanguage->languageText('mod_unesco_oer_featured_adaptation', 'unesco_oer') ?></div>
                 <div class="rightColumnBorderedDiv">
                    <?php
 

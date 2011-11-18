@@ -17,8 +17,8 @@ $topicsNum = count($topics);
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
-        <ul><li class="first">Home</li>
-            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'>Groups</a></li>
+        <ul><li class="first"><?php echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
+            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer') ?></a></li>
             <li><a href='?module=unesco_oer&action=11a' alt='groupview' title='groupGridView'><?php echo $this->objDbGroups->getGroupName($this->getParam('id')) ?></a></li>
             <li><?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . " " . "discussion" ?> </li>
             <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
@@ -39,7 +39,7 @@ $topicsNum = count($topics);
         <a href="#" class="groupsBreadCrumbColor">
             <?php
             $GroupLink = new link($this->uri(array("action" => '10', "page" => '10a_tpl.php')));
-            $GroupLink->link = "Groups";
+            $GroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer');
             echo $GroupLink->show();
             ?></a> |
         <span class="groupsBreadCrumbColor noUnderline"> <?php echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id'))); ?></span>
@@ -130,38 +130,37 @@ $topicsNum = count($topics);
         </div>
     </div>
     <div class="innerMenuTabsDiv">
-        <ul id="innerMenuTabs">
-            <li><a href="#">
-                    <?php
-                    $memberLink =new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
-                    $No_Of_Members = $this->ObjDbUserGroups->groupMembers($this->getParam('id'));
-                    $memberLink->link = "Members(" . $No_Of_Members . ")";
-                    echo $memberLink->show();
-                    ?></a></li>
-            <li><a href="#">
-                    <?php
-                    $groupadaptationLink = new link($this->uri(array("action" => '11c', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
-                    $No_Of_adaptation = count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                    $groupadaptationLink->link = " ADAPTATIONS(" . $No_Of_adaptation . ")";
-                    echo $groupadaptationLink->show();
-                    ?>
-                </a></li>
-            <li class="onState"><a href="#">
-                    <?php
-                    $discussionLink = new link($this->uri(array("action" => '11b', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
-                    $No_Of_discussion = count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
-                    $discussionLink->link = "  DISCUSSIONS($topicsNum)"; //DISCUSSIONS(".$No_Of_discussion.")";
-                    echo $discussionLink->show();
-                    ?></a></li>
-            <li><a href="#">
-                    <?php
-                    $InstitutionLink = new link($this->uri(array("action" => '11d', 'id' => $this->getParam('id'), "page" => '10a_tpl.php')));
-                    $No_Of_instutions = $this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
-                    $InstitutionLink->link = "INSTITUTIONS(" . $No_Of_instutions . ")";
-                    echo $InstitutionLink->show();
-                    ?>
-                </a></li>
+         <li class="onState"><a href="#">
+                             <?php
+                             $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
+                             $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
+                             $memberLink->link= $this->objLanguage->languageText('mod_unesco_oer_users_group_member', 'unesco_oer') ."(".$No_Of_Members.")";
+                             echo $memberLink->show();
+                             ?>
 
+                            </a></li>
+                     <li><a href="#">
+                             <?php
+                             $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $groupadaptationLink->link=  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer'). "(".$No_Of_adaptation.")";
+                             echo $groupadaptationLink->show();
+                             ?></a></li>
+                     <li><a href="#">
+                                                          <?php
+                             $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
+                             $discussionLink->link=$this->objLanguage->languageText('mod_unesco_oer_discussion', 'unesco_oer'). " ($topicsNum)";
+                             echo $discussionLink->show();
+                             ?></a></li>
+                     <li><a href="#">
+                              <?php
+                             $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
+                             $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
+                             $InstitutionLink->link= $this->objLanguage->languageText('mod_unesco_oer_institution', 'unesco_oer'). "(".$No_Of_instutions.")";
+                             echo $InstitutionLink->show();
+                             ?>
+                             </a></li>
         </ul>
     </div>
     <div class="tenPixelPaddingLeft">
@@ -191,7 +190,7 @@ $topicsNum = count($topics);
 <!-- Right column DIv -->
 <div class="rightColumnDiv">
     <div class="rightColumnDiv">
-        <div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
+        <div class="featuredHeader pinkText"><?php  echo $this->objLanguage->languageText('mod_unesco_oer_featured_adaptation', 'unesco_oer') ?></div>
         <div class="rightColumnBorderedDiv">
 <?php
 $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();

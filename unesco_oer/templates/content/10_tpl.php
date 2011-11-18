@@ -12,9 +12,9 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 <div style="clear:both;"></div>
 <div class="breadCrumb module">
     <div id='breadcrumb'>
-        <ul><li class="first">Home</li>
-            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'>Groups</a></li>
-            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'>Groups Grid</a></li>
+        <ul><li class="first"><?php echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
+            <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer') ?></a></li>
+            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'><?php echo $this->objLanguage->languageText('TEXT: mod_unesco_oer_group_groups_grid', 'unesco_oer') ?></a></li>
             <!--           <li>Edit Group</li>-->
             <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
             <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
@@ -44,7 +44,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 if ($onestepid != null){
                 $link = new link('#');
                 $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
-                            Create Group';
+                            '. $this->objLanguage->languageText('mod_unesco_oer_add_data_newGroupBtn', 'unesco_oer');
                 $link->cssId = 'creategroup';
                 $link->cssClass="greenTextBoldLink";
               //  if($this->objUser->isLoggedIn() && $this->objUser->isAdmin()){
@@ -52,7 +52,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 }else{
                       $link = new link($this->uri(array("action" => 'groupRegistationForm', "page" => '10a_tpl.php', 'onestepid' => $onestepid)));
                 $link->link = '<img src="skins/unesco_oer/images/icon-group-new-sub-group.png" alt="Group" width="18" height="18" class="smallLisitngIcons">
-                            Create Group';             
+                           '. $this->objLanguage->languageText('mod_unesco_oer_add_data_newGroupBtn', 'unesco_oer');             
                 $link->cssClass="greenTextBoldLink";
                    
                 }
@@ -87,7 +87,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
 
                 <div class="GridListViewDiv">
-                    <div class="sortBy">
+<!--                    <div class="sortBy">
                         Sort By:
                         <select name="" class="contentDropDown">
                             <option value="">Date Added</option>
@@ -96,9 +96,9 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                             <option value="">DESC</option>
 
                         </select>
-                    </div>
+                    </div>-->
                     <div class="viewGrid">
-                        <div class="viewAsDiv">View as: </div>
+                        <div class="viewAsDiv"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_view_as', 'unesco_oer') ?> </div>
 
 
 
@@ -123,7 +123,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupGrid', "page" => '10a_tpl.php')));
-                $abLink->link = 'GRID';
+                $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_grid', 'unesco_oer');
                 echo $abLink->show();
                 ?>
             </div>
@@ -140,7 +140,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
-                $abLink->link = 'LIST';
+                $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_List', 'unesco_oer');
                 echo $abLink->show();
                 ?>
 
@@ -283,7 +283,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 <!-- Right column DIv -->
 <div class="rightColumnDiv">
     <div class="rightColumnDiv">
-        <div class="featuredHeader pinkText">FEATURED ADAPTATION</div>
+        <div class="featuredHeader pinkText"> <?php  echo $this->objLanguage->languageText('mod_unesco_oer_featured_adaptation', 'unesco_oer') ?> </div>
         <div class="rightColumnBorderedDiv">
             <?php
                     $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
