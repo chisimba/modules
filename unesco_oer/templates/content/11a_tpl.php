@@ -142,7 +142,7 @@ function SubmitProduct()
      
   
     $addInstitutionLink = new link($this->uri(array('action' => 'institutionEditor' , 'onestepid' => $onestepid , 'groupid' => $this->getParam('id'))));
-    $addInstitutionLink->link = $this->objLanguage->languageText(' mod_unesco_oer_add_data_createinstitution', 'unesco_oer') ;
+    $addInstitutionLink->link = $this->objLanguage->languageText('mod_unesco_oer_add_data_createinstitution', 'unesco_oer') ;
     $addInstitutionLink->cssClass = 'greenTextBoldLink';
        echo  $addInstitutionLink->show()
                                     

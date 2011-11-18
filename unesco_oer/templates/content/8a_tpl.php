@@ -21,7 +21,7 @@ $this->appendArrayVar('headerParams', $js);
 
 <div class="subNavigation"></div>
 <div class="breadCrumb tenPixelLeftPadding">
-    <a href="#" class="groupsBreadCrumbColor">Groups</a> |
+    <a href="#" class="groupsBreadCrumbColor"><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer') ?></a> |
     <span class="groupsBreadCrumbColor noUnderline"><?php
 echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->objLanguagecode->getName($this->objDbGroups->getGroupCountry($this->getParam('id')));
 ?>   </span>
@@ -75,7 +75,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <div class="linksTextNextToSubIcons"><a href="?module=forum&action=forum&id=<?php
                         $groupid = $this->getParam('id');
                         echo $this->objDbGroups->getGroup_pkid_in_forum($groupid);
-                        ?>&page=10a_tpl.php   " class="greenTextBoldLink">Group discussion</a></div>
+                        ?>&page=10a_tpl.php   " class="greenTextBoldLink"><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_discussion', 'unesco_oer') ?></a></div>
                     </div>
                     <div class="groupSubLinksList">
                         <img src="skins/unesco_oer/images/icon-group-subgroups.png" alt="Sub Groups" width="18" height="18" class="smallLisitngIcons">
@@ -261,7 +261,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <?php
                             $forumId = $this->objDbGroups->getGroupForumId($groupid);
                             $addDiscussionLink = new link('/unesco_oer/index.php?module=forum&action=newtopic&id='.$forumId.'&type=context&page=10a_tpl.php');
-                            $addDiscussionLink->link = 'add a discussion';
+                            $addDiscussionLink->link = $this->objLanguage->languageText('mod_unesco_oer_add_discussion', 'unesco_oer');
                             $addDiscussionLink->cssClass = 'greenTextBoldLink';
                                if ($this->hasMemberPermissions()){
                             echo $addDiscussionLink->show();

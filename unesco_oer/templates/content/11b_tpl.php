@@ -60,7 +60,7 @@ $topicsNum = count($topics);
                     <div class="saveCancelButtonHolder">
 
                         <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
-                                Link to institution
+                                     <?php echo $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer') ?>
                             </a>
                         </div>
                         <div id="showhide" style="display: none;">
@@ -129,8 +129,9 @@ $topicsNum = count($topics);
 
         </div>
     </div>
-    <div class="innerMenuTabsDiv">
-         <li class="onState"><a href="#">
+       <div class="innerMenuTabsDiv">
+                <ul id="innerMenuTabs">
+                     <li class="onState"><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
@@ -161,8 +162,9 @@ $topicsNum = count($topics);
                              echo $InstitutionLink->show();
                              ?>
                              </a></li>
-        </ul>
-    </div>
+
+                </ul>
+                </div>
     <div class="tenPixelPaddingLeft">
         <div class="topGroupDiv">
             <div class="paddingContentTopLeftRightBottom">

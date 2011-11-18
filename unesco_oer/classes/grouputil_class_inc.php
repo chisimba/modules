@@ -76,7 +76,7 @@ class grouputil extends object {
         $joinGroupLink = new link($this->uri(array('action' => "10")));
         
 
-            $joinGroupLink->link = 'Join';
+            $joinGroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_join', 'unesco_oer');
             $joinGroupLink->cssId = 'memberofgroup';
         } else {
             
@@ -84,13 +84,13 @@ class grouputil extends object {
             
              //  $joinGroupLink = new link($this->uri(array('action' => "onestepjoingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php','productID' => $onestep)));
                    $joinGroupLink = new link('#');
-                    $joinGroupLink->link = 'Join';
+                    $joinGroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_join', 'unesco_oer');;
                   $joinGroupLink->cssId = $group['id'];
                   
         } else  {   $joinGroupLink = new link($this->uri(array('action' => "joingroup", 'groupid' => $group['id'], 'userid' => $this->objUser->userId(), "page" => '10a_tpl.php')));
 
          
-            $joinGroupLink->link = 'Join';
+            $joinGroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_join', 'unesco_oer');
             $joinGroupLink->cssId = 'joingroup';
         }
         }
@@ -323,7 +323,7 @@ class grouputil extends object {
             $institutionThumbnail = $this->objDbGroups->getInstitutionThumbnail($institutionid);
             $institutionname = $this->objDbGroups->getInstitutionName($institutionid);
               $groupnameLink= new link($this->uri(array("action" => 'DelinkGroup', 'id' => $groupid, 'instid' => $institutionid, "page" => '10a_tpl.php')));
-              $groupnameLink->link= "Remove Institution";
+              $groupnameLink->link= $this->objLanguage->languageText('mod_unesco_oer_remove_institution', 'unesco_oer');
                  $groupnameLink->cssClass="groupGridViewHeading greenText";  
                  
                  $userid = $this->objUser->userId();      
@@ -396,7 +396,7 @@ class grouputil extends object {
 
         if ($this->ObjDbUserGroups->ismemberOfgroup($id, $groupid)) {
             $LeavegroupLink = new link($this->uri(array('action' => "leaveGroup", 'id' => $id, 'groupid' => $groupid, "page" => '10a_tpl.php')));
-            $LeavegroupLink->link = 'Leave group';
+            $LeavegroupLink->link = $this->objLanguage->languageText('mod_unesco_oer_group_leave', 'unesco_oer');
             $LeavegroupLink->cssId = 'leavegroup';
               $LeavegroupLink->cssClass = "greenTextBoldLink";
         $content.='<img src="skins/unesco_oer/images/icon-group-leave-group.png" alt="Leaave Group" width="18" height="18" class="smallLisitngIcons">
@@ -572,7 +572,7 @@ class grouputil extends object {
         $Thumbnail = $product->getThumbnailPath();
 
         $AdaptProductLink= $Link = new link($this->uri(array("action" =>'adaptProduct', 'productID' => $productID, "page" => '10a_tpl.php')));
-        $AdaptProductLink="make adaptation";
+        $AdaptProductLink= $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
         $AdaptProductLink->cssClass = "adaptationLinks";
 
         $content;

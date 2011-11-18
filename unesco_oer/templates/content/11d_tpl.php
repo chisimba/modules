@@ -52,7 +52,7 @@ $this->loadClass('textinput', 'htmlelements');
                       <div class="memberList rightAlign">
                       <div class="saveCancelButtonHolder">
                 <div class="textNextoSubmitButton"><a id="instLink" href="#" class="greenTextBoldLink">
-                                    Link to institution</a></div>
+                                          <?php echo $this->objLanguage->languageText('mod_unesco_oer_group_link_institution', 'unesco_oer') ?></a></div>
                           
 
                         </div>
@@ -98,8 +98,9 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
 
                 </div>
                 </div>
-                <div class="innerMenuTabsDiv">
-                <li class="onState"><a href="#">
+                 <div class="innerMenuTabsDiv">
+                <ul id="innerMenuTabs">
+                     <li class="onState"><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
@@ -130,6 +131,7 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                              echo $InstitutionLink->show();
                              ?>
                              </a></li>
+
                 </ul>
                 </div>
                 <div class="tenPixelPaddingLeft">

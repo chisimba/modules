@@ -14,7 +14,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
     <div id='breadcrumb'>
         <ul><li class="first"><?php echo $this->objLanguage->languageText('mod_unesco_oer_add_data_homeBtn', 'unesco_oer') ?></li>
             <li><a href='?module=unesco_oer&action=10' alt='Groups' title='Groups'><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_legend_groups', 'unesco_oer') ?></a></li>
-            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'><?php echo $this->objLanguage->languageText('TEXT: mod_unesco_oer_group_groups_grid', 'unesco_oer') ?></a></li>
+            <li><a href='?module=unesco_oer&action=groupGrid' alt='groupview' title='groupGridView'><?php echo $this->objLanguage->languageText('mod_unesco_oer_group_groups_grid', 'unesco_oer') ?></a></li>
             <!--           <li>Edit Group</li>-->
             <!--<li><a href='/newsroom/2430/newsitems.html' alt='Click here to view NewsItems' title='Click here to view NewsItems'>NewsItems</a></li>
             <li><a href='#' alt='Click here to view 2011-07' title='Click here to view 2011-07'>2011-07</a></li>
