@@ -128,8 +128,8 @@ $this->appendArrayVar('headerParams', $js);
 
 
 
-                    <div  id='filterDiv' title = "3b" float ="left">
-
+                    <div  id='filterDiv'  float ="left">
+                               <div id='searchpage' title = "3b"> <p></p></div>
                         <?php
                         $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
 
