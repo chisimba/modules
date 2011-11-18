@@ -229,7 +229,7 @@ if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');
     ;
-    $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
+    $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="'.$editLink->title.'" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
 
@@ -238,7 +238,7 @@ if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
     $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');
     ;
     $deleteLink->cssId = "deleteProduct";
-    $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
+    $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="'.$deleteLink->title.'" width="19" height="15">';
     $deleteLink->link = $linkText;
     echo $deleteLink->show();
 
@@ -251,7 +251,7 @@ if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
     $editLink = new link($uri);
     $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_make_featured', 'unesco_oer');
     ;
-    $linkText = '<img src="skins/unesco_oer/images/icon_featured.png" alt="Print" width="19" height="15">';
+    $linkText = '<img src="skins/unesco_oer/images/icon_featured.png" alt="'.$editLink->title.'" width="19" height="15">';
     $editLink->link = $linkText;
     echo $editLink->show();
 
@@ -267,8 +267,8 @@ if ($this->objUser->isAdmin() || $this->hasEditorPermissions()) {
 
 $uri = $this->uri(array('action' => "testPDF", 'id' => $productID));
 $printLink = new link($uri);
-$printLink->title = 'print';
-$linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="Print" width="19" height="15">';
+$printLink->title = $this->objLanguage->languageText('mod_unesco_oer_print', 'unesco_oer');
+$linkText = '<img src="skins/unesco_oer/images/icon-content-top-print.png" alt="'.$printLink->title.'" width="19" height="15">';
 $printLink->link = $linkText;
 echo $printLink->show();
 

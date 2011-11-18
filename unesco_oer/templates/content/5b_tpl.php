@@ -197,24 +197,24 @@ $product = $this->getObject('product');
                                     'option' => 'delete')
                                 );
                                 $deleteLink = new link($uri2);
-                                $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');;
+                                $deleteLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_delete', 'unesco_oer');
                                 $deleteLink->cssId = "deleteSection";
-                                $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="Print" width="19" height="15">';
+                                $linkText = '<img src="skins/unesco_oer/images/icon-delete.png" alt="'.$deleteLink->title.'" width="19" height="15">';
                                 $deleteLink->link = $linkText;
                                 echo $deleteLink->show();
                      
                                 $uri = $this->uri(array('action' => 'saveContent', 'productID' => $productID, 'option' => 'edit', 'pair'=>$existingContent->getPairString(), 'reload'=>TRUE ));
                                 $editLink = new link($uri);
-                                $editLink->title = "Edit Metadata";
-                                $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="Print" width="19" height="15">';
+                                $editLink->title = $this->objLanguage->languageText('mod_unesco_oer_products_edit_metadata', 'unesco_oer');
+                                $linkText = '<img src="skins/unesco_oer/images/icon-edit-section.png" alt="'.$editLink->title.'" width="19" height="15">';
                                 $editLink->link = $linkText;
                                 echo $editLink->show();
 
                                 if ($existingContent->getType() == 'module') {
                                     $uri = $this->uri(array('action' => 'selectGroup', 'originalproductid' => $productID, 'originalpair'=>$existingContent->getPairString()));
                                     $adaptLink = new link($uri);
-                                    $adaptLink->title = "Adapt Section";
-                                    $linkText = '<img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Print" width="19" height="15">';
+                                    $adaptLink->title = $this->objLanguage->languageText('mod_unesco_oer_adapt_section', 'unesco_oer');
+                                    $linkText = '<img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="'.$adaptLink->title.'" width="19" height="15">';
                                     $adaptLink->link = $linkText;
                                     echo $adaptLink->show();
                                 }

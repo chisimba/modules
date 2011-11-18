@@ -135,7 +135,7 @@ if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {// $objGroupOps-
     $abLink->link = '<img src="skins/unesco_oer/images/icon-new-product.png" alt="New Product" width="20" height="20" class="imgFloatRight">';
 
     $newProductLink = new link($uri);
-    $newProductLink->link = "New product";
+    $newProductLink->link = $this->objLanguage->languageText('mod_unesco_oer_add_data_product_heading', 'unesco_oer');
 
     echo $divOpen;
     echo $abLink->show();

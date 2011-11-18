@@ -599,8 +599,8 @@ class product extends object {
         echo '<div id="productmetaheading">';
         echo $header->show();
         if ($this->isAdaptation())
-            echo '<font face="Arial" color="#FF2222">This is an ADAPTATION</font><br>';
-        echo '<font face="Arial" color="#FF2222">(*) indicates fields that are required. </font>';
+            echo '<font face="Arial" color="#FF2222">'.$this->objLanguage->languageText('mod_unesco_oer_adaptation_notification', 'unesco_oer').'</font><br>';
+        echo '<font face="Arial" color="#FF2222">(*) '.$this->objLanguage->languageText('mod_unesco_oer_required_notification', 'unesco_oer').' </font>';
         echo '</div>';
 
 
