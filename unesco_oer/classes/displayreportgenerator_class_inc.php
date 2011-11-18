@@ -14,6 +14,7 @@ class displayreportgenerator extends object
         $this->loadClass('selectbox', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->objDbReporting = $this->getObject('dbreporting', 'unesco_oer');
+        $this->objLanguage = $this->getObject("language", "language");
 
     }
 
@@ -49,13 +50,17 @@ class displayreportgenerator extends object
         $content .= ' 
                 <div class="topReportingDiv">
                 	<fieldset>
-                            <legend>Country and region</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_country_region', 'unesco_oer')
+                                    .'</legend>
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                   Select country<br>.'
-                                   .$countrySelect->show().'<br>
-                                    Use CTRL button to select more than one country
-                                    <br><br> 
+                                   '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_select', 'unesco_oer')
+                                    .'<br>'
+                                   .$countrySelect->show().'<br>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctrl', 'unesco_oer')
+                                    .'<br><br> 
                                 </div>
                                 <div class="rightLegendContentHolder">
                                      ';
@@ -67,9 +72,13 @@ class displayreportgenerator extends object
         $regionSelect->addOption('Asia and the Pacific');
         $regionSelect->addOption('Europe and North America');
 
-        $content .= ' Select region<br>'.$regionSelect->show().'
+        $content .= ' '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_select1', 'unesco_oer')
+                                    .'<br>'.$regionSelect->show().'
                                 	<br>
-                                    Use CTRL button to select more than one region
+                                    '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctrl1', 'unesco_oer')
+                                    .'
                                     </div>
                                 </div>
                                 </fieldset>
@@ -78,10 +87,14 @@ class displayreportgenerator extends object
 
                         <br>
                         <fieldset>
-                            <legend>Theme/keywords</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_title', 'unesco_oer')
+                                    .'</legend>
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                	UNESCO theme:<br>';
+                                	'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_select2', 'unesco_oer')
+                                    .'<br>';
 
         $themeSelect = new dropdown('themeDropdown[]');
         $themeSelect->extra = ' multiple="1" size="4" style="width:200pt;" ';
@@ -123,19 +136,27 @@ class displayreportgenerator extends object
 
         $content .= $themeSelect->show().'
                                 	<br>
-                                    Use CTRL button to select more than one theme
+                                    '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctr2', 'unesco_oer')
+                                    .'
                                 </div>
                                 <div class="rightLegendContentHolder">
 
-                                	UNESCO keyword:<br>'.$keywordSelect->show().'
+                                	'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_select3', 'unesco_oer')
+                                    .'<br>'.$keywordSelect->show().'
                                             <br>
-                                    Use CTRL button to select more than one keyword                                    
+                                    '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctrl3', 'unesco_oer')
+                                    .'                                    
                                 </div>
                             </div>
                         </fieldset>
                         <br>
                         <fieldset>
-                            <legend>Adaptation type</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_title1', 'unesco_oer')
+                                    .'</legend>
 
                             <div class="legendContent">
                                 <div class="legendWideContentHolder">';
@@ -164,7 +185,9 @@ class displayreportgenerator extends object
                         </fieldset>
                         <br>
                         <fieldset>
-                            <legend>Adapted by institution type</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_title2', 'unesco_oer')
+                                    .'</legend>
                             <div class="legendContent">
                                  <div class="legendWideContentHolder">';
 
@@ -194,7 +217,9 @@ class displayreportgenerator extends object
                         </fieldset>
                         <br>
                         <fieldset>
-                            <legend>Languages</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer')
+                                    .'</legend>
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">';
 
@@ -219,16 +244,20 @@ class displayreportgenerator extends object
           }
 
         $buttonGenerate = new button('generate');
-        $buttonGenerate->setValue('Generate Report');
+        $ButtonTitle = $this->objLanguage->languageText('mod_unesco_oer_reporting_button', 'unesco_oer');
+        $buttonGenerate->setValue($ButtonTitle);
         $buttonGenerate->setToSubmit();
         
+        $ButtonTitle1 = $this->objLanguage->languageText('mod_unesco_oer_reporting_button1', 'unesco_oer');
         $buttonReset = new button('reset');
-        $buttonReset->setValue('Reset');
+        $buttonReset->setValue($ButtonTitle1);
         $buttonReset->setToReset();
         
 
         $content .= $langSelect->show().'<br>
-                                    Use CTRL button to select more than one language
+                                    '.
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctr4', 'unesco_oer')
+                                    .'
                                 </div>
                                 <div class="rightLegendContentHolder">&nbsp;</div>
 
@@ -236,22 +265,19 @@ class displayreportgenerator extends object
                         </fieldset>
                         <br>
                         <fieldset>
-                            <legend>Output</legend>
+                            <legend>'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_title3', 'unesco_oer')
+                                    .'</legend>
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                	Report format<br>
+                                	'.
+                                    $this->objLanguage->languageText('mod_unesco_oer_reporting_title4', 'unesco_oer')
+                                    .'<br>
 
                                     <input type="radio" name="radio" id=""> PDF<br>
-                                    <input type="radio" name="radio" id=""> CSV<br>
-                                    <input type="radio" name="radio" id=""> html<br>
-                                </div>
-                                <div class="rightLegendContentHolder">
-                                	Number of results per page (HTML only):<br>
 
-                                    <select name="theme" id="theme" class="countryRegionSelectBox">
-                                    <option value="">15</option>
-                                    </select>
                                 </div>
+
                             </div>
                         </fieldset>
 
