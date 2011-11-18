@@ -126,7 +126,7 @@ if ($this->hasMemberPermissions()) {
     $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
     $adaptLink = new link($uri);
     $adaptLink->cssClass = "adaptationLinks";
-    $linkText = $this->objLanguage->languageText('mod_unesco_oer_make_new_adaptation', 'unesco_oer');
+    $linkText = $this->objLanguage->languageText('mod_unesco_oer_make_new_adaptation2', 'unesco_oer');
     $adaptLink->link = $linkText;
 
     echo $adaptationDivStart;
