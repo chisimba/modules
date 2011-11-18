@@ -283,8 +283,12 @@ class grouputil extends object {
                 $Title = $this->objDbGroups->getAdaptedProductTitle($productID);
                 $TittleLink = new link($uri);
                 $TittleLink->link = $Title;
+                
+                if ($institution == "No Institution Linked"){
+                     $InstitutionLink = new link('#');
+                }else  $InstitutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $institutionId, "page" => '10a_tpl.php')));
 
-                $InstitutionLink = new link($this->uri(array("action" => '4', 'institutionId' => $institutionId, "page" => '10a_tpl.php')));
+               
                 $InstitutionLink->link = $institution;
 
 
@@ -572,7 +576,7 @@ class grouputil extends object {
         $Thumbnail = $product->getThumbnailPath();
 
         $AdaptProductLink= $Link = new link($this->uri(array("action" =>'adaptProduct', 'productID' => $productID, "page" => '10a_tpl.php')));
-        $AdaptProductLink= $this->objLanguage->languageText('mod_unesco_oer_product_make_adaptation', 'unesco_oer');
+        $AdaptProductLink= $this->objLanguage->languageText('mod_unesco_oer_remove_institution', 'unesco_oer');
         $AdaptProductLink->cssClass = "adaptationLinks";
 
         $content;
