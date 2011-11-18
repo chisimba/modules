@@ -67,7 +67,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
     <br><br>
 
     <?php
-                echo $this->objGroupUtil->groupPerPage();
+          //      echo $this->objGroupUtil->groupPerPage();
                 //$this->objGroupUtil->populateListView();
     ?>
 
