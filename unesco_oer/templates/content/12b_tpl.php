@@ -72,9 +72,8 @@
 ?>
                                 <div class="spaceBetweenRightBorderedDivs">
                                     <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
-                                </div>
-                                <div class="rightColumnBorderedDiv">
-                                    <div class="rightColumnContentPadding">
+                                
+                                <div id="browseByMap">
 
                                         <!DOCTYPE html>
 
@@ -189,6 +188,8 @@
 
 ?>
                                     </div>
+                                    
+                                    
                                 </div>
         </div>
 <!--        </div>-->
