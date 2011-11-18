@@ -113,7 +113,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
        
        echo ' <img src="skins/unesco_oer/images/icon-group-calendar.png" alt="Group Calendar" width="18" height="18" class="smallLisitngIcons">
                         
-                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid='.$groupid.' &page=10a_tpl.php" class="greenTextBoldLink">Group calendar</a></div>';
+                        <div class="linksTextNextToSubIcons"><a href="?module=calendar&groupid='.$groupid.' &page=10a_tpl.php" class="greenTextBoldLink">'.$this->objLanguage->languageText('mod_unesco_oer_group_calendar', 'unesco_oer').'</a></div>';
        
    }
 
@@ -125,7 +125,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
    if ($this->hasMemberPermissions()){
        
       echo '   <img src="skins/unesco_oer/images/icon-group-files.png" alt="Group Files" width="18" height="18" class="smallLisitngIcons">
-                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid='. $groupid.'&page=10a_tpl.php" class="greenTextBoldLink">Group files</a></div>';
+                        <div class="linksTextNextToSubIcons"><a href="?module=filemanager&groupid='. $groupid.'&page=10a_tpl.php" class="greenTextBoldLink">'.$this->objLanguage->languageText('mod_unesco_oer_group_files', 'unesco_oer').'</a></div>';
        
    }
 
@@ -305,7 +305,7 @@ echo $this->objDbGroups->getGroupName($this->getParam('id')) . ", " . $this->obj
                         <?php
                             $groupid = $this->getParam('id');
                             $addresourceLink = new link($this->uri(array("action" => "addOERform", "groupid" => $groupid, "page" => "10a_tpl.php")));
-                            $addresourceLink->link = 'add resource';
+                            $addresourceLink->link = $this->objLanguage->languageText('mod_unesco_oer_Add_resource', 'unesco_oer');
                             $addresourceLink->cssClass = 'greyTextBoldLink';
                                if ($this->hasMemberPermissions()){
                            echo $addresourceLink->show();

@@ -56,7 +56,7 @@ function ajaxFunction23(id,ProdID,browsecheck){
     var institution = document.getElementById('input_InstitutionFilter').value
       var region = document.getElementById('input_RegionFilter').value
         var country = document.getElementById('input_CountryFilter').value
-    var adaptation = document.getElementById('filterDiv').title;
+    var adaptation = document.getElementById('searchpage').title;
     
    
 
@@ -138,7 +138,7 @@ function ajaxFunction(id,ProdID,browsecheck){
     var institution = document.getElementById('input_InstitutionFilter').value
     var region = document.getElementById('input_RegionFilter').value
     var country = document.getElementById('input_CountryFilter').value
-    var adaptation = document.getElementById('filterDiv').title;
+    var adaptation = document.getElementById('searchpage').title;
 
 
 

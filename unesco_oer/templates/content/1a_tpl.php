@@ -147,8 +147,11 @@ if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {// $objGroupOps-
 
             </div>
         </div>
-        <div id='filterDiv' title ="1a" >
+        <div id='filterDiv'  >
+            <div id='searchpage' title ="1a"> <p></p></div>
 <?php
+
+
 $objTable = $this->getObject('htmltable', 'htmlelements');
 $objTable->cssClass = "gridListingTable";
 $objTable->width = NULL;
