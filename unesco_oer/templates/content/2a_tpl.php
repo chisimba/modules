@@ -136,7 +136,7 @@ $this->appendArrayVar('headerParams', $js);
             </div>
         </div>
         <div id='filterDiv'  >
-             <div id='searchpage' title ="2a"> <p></p></div>
+            <div id='searchpage' title ="2a"> <p></p></div>
             <?php
             $objTable = $this->getObject('htmltable', 'htmlelements');
             $objTable->cssClass = "gridListingTable";
@@ -202,111 +202,111 @@ $this->appendArrayVar('headerParams', $js);
 
     <!-- Right column DIv -->
     <div class="rightColumnDiv">
-      
-            <div class="featuredHeader" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
-            <div class="rightColumnBorderedDiv">
-                <?php
-                $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
-                foreach ($featuredProducts as $featuredProduct) {
 
-                    //Check if it's an adapted product
-                    $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+        <div class="featuredHeader" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured', 'unesco_oer') ?></div>
+        <div class="rightColumnBorderedDiv">
+            <?php
+            $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
+            foreach ($featuredProducts as $featuredProduct) {
 
-                    //If the product is an adaptation
-                    if ($product['parent_id'] != NULL) {
-                        $featuredAdaptedProduct = $product;
-                    }
+                //Check if it's an adapted product
+                $product = $this->objDbProducts->getProductByID($featuredProduct['product_id']);
+
+                //If the product is an adaptation
+                if ($product['parent_id'] != NULL) {
+                    $featuredAdaptedProduct = $product;
                 }
+            }
 
-                $objProduct = $this->getObject('product');
-                $objProduct->loadProduct($featuredAdaptedProduct['id']);
+            $objProduct = $this->getObject('product');
+            $objProduct->loadProduct($featuredAdaptedProduct['id']);
 
-                echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
-                $coords = $this->objDbGroups->getAllgroups();
-                $title = $this->objDbGroups->getAllgroups();
-                ?>
-                <div class="spaceBetweenRightBorderedDivs">
-                    <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
-                </div>
-                <div id="browseByMap">
-                    <script type="text/javascript">
-                        var marker = new Array();
-                        $(document).ready(function(){ 
-                            myLatlng = [
-
-                            <?php
-                            foreach ($coords as $coord) {
-                                ?>
-                                                                  new google.maps.LatLng(
-                                <?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>
-                                                                  ),
-
-                            <?php } ?>
-
-                               ];
-
-
-                               title = [
-
-                            <?php
-                            foreach ($title as $titles) {
-                                ?>
-                                                                     "<?php echo $titles['name'] ?>",
-
-                            <?php } ?>
-
-                                                           ];
-
-                               var myOptions = {
-                                   zoom: 0,
-                                   center: new google.maps.LatLng(0, 0),
-                                   mapTypeId: google.maps.MapTypeId.ROADMAP
-                               }
-                               var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-                               var oldAction = document.forms["maps"].action;
-
-                               for(i=0;i<myLatlng.length;i++)
-                               {
-                                   marker[i] = new google.maps.Marker(
-                                   { position: myLatlng[i],
-                                       title: title[i]
-
-                                   } );
-
-                                   var pos = marker[i].getPosition();
-                                   google.maps.event.addListener(marker[i], 'click',
-                                   (function(pos)
-                                   { return function()
-                                       {
-                                           //alert(i);
-                                           document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
-                                           document.forms["maps"].submit();
-                                       };
-                                   }
-                               )(pos)
-                               );
-
-                                   marker[i].setMap(map);
-
-                               }
-
-
-                           });
-
-                    </script>
-
-                    <br/>
-                    <div id="map_canvas" style="width:190; height:110"></div>
-                        <?php
-                        $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
-
-                        echo $form->show();
-                        ?>
-
-                </div>
+            echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
+            $coords = $this->objDbGroups->getAllgroups();
+            $title = $this->objDbGroups->getAllgroups();
+            ?>
+            <div class="spaceBetweenRightBorderedDivs">
+                <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
             </div>
-      
+            <div id="browseByMap">
+                <script type="text/javascript">
+                    var marker = new Array();
+                    $(document).ready(function(){ 
+                        myLatlng = [
+
+<?php
+foreach ($coords as $coord) {
+    ?>
+                    new google.maps.LatLng(
+    <?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>
+                ),
+
+<?php } ?>
+
+        ];
+
+
+        title = [
+
+<?php
+foreach ($title as $titles) {
+    ?>
+                    "<?php echo $titles['name'] ?>",
+
+<?php } ?>
+
+        ];
+
+        var myOptions = {
+            zoom: 0,
+            center: new google.maps.LatLng(0, 0),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+        var oldAction = document.forms["maps"].action;
+
+        for(i=0;i<myLatlng.length;i++)
+        {
+            marker[i] = new google.maps.Marker(
+            { position: myLatlng[i],
+                title: title[i]
+
+            } );
+
+            var pos = marker[i].getPosition();
+            google.maps.event.addListener(marker[i], 'click',
+            (function(pos)
+            { return function()
+                {
+                    //alert(i);
+                    document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                    document.forms["maps"].submit();
+                };
+            }
+        )(pos)
+        );
+
+            marker[i].setMap(map);
+
+        }
+
+
+    });
+
+                </script>
+
+                <br/>
+                <div id="map_canvas" style="width:190; height:110"></div>
+                <?php
+                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
+
+                echo $form->show();
+                ?>
+
+            </div>
+        </div>
+
     </div>
 </div>
 

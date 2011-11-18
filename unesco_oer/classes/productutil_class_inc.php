@@ -471,9 +471,9 @@ class productutil extends object {
             $institutionLink->cssClass = 'darkGreyColour';
             $institutionLink->link = $name;
 
-            $content .='<div class="adaptedByDiv">Adapted by:</div>
+            $content .='<br/><div class="adaptedByDiv">Adapted by:</div>
                 <div class="gridSmallImageAdaptation">
-                    <img src="' . $thumbnail . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
+                    <img src="' . $thumbnail . '" alt="Adaptation placeholder" align="left" width="45" height="49" class="smallAdaptationImageGrid">
                     <span class="greyListingHeading">' . $institutionLink->show() . '</span>
                 </div>
                 <div class="gridAdaptationLinksDiv">
