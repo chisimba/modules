@@ -1,5 +1,5 @@
 
-        <div class="mainContentHolder">
+        
         	<div class="subNavigation"></div>
         	<!-- Left Wide column DIv -->
             <div class="groupWideLeftColumn">
@@ -10,7 +10,7 @@
                      <div class="memberList">
                      
                       <div class="textNextToGroupIcon">
-                      	<h2 class="greyText">Reporting Tool</h2>
+                      	<h2 class="greyText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_reporting_tool', 'unesco_oer') ?></h2>
                        	
                        </div>
 
@@ -20,11 +20,11 @@
                 </div>
                 <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabsReporting">
-                     <li class="onState"><a href="#">GENERAL</a></li>
+                     <li class="onState"><a href="#"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_reporting_tool', 'unesco_oer') ?></a></li>
                      <li>
                       <?php
                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12b_tpl.php')));
-                        $abLink->link = 'ADAPTATIONS BY MULTIPLE CRITERIA';
+                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reporting_multiple_criteria', 'unesco_oer');
                         echo $abLink->show();
                        ?>
                      </li>
@@ -32,7 +32,7 @@
                      <li>
                        <?php
                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12c_tpl.php')));
-                        $abLink->link = 'CHARTS';
+                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reporting_charts', 'unesco_oer');
                         echo $abLink->show();
                        ?>
 
@@ -46,15 +46,15 @@
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
 
-                                    <div class="generalResourcesTableHeading">General:</div>
+                                    <div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_general', 'unesco_oer') ?></div>
                                     <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Propery</th>
-                                            <th>value</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_property', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_value', 'unesco_oer') ?></th>
                                         </tr>
                                         <tr>
 
-                                        	<td>Number of UNESCO Originals</td>
+                                        	<td><?php   echo $this->objLanguage->languageText('mod_unesco_oer_unesco_ori', 'unesco_oer') ?></td>
                                             <td>
                                                 <?php
 
@@ -65,7 +65,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                        	<td>Number of adaptations</td>
+                                        	<td><?php   echo $this->objLanguage->languageText('mod_unesco_oer_unesco_adapt', 'unesco_oer') ?></td>
                                             <td>
                                                 <?php
 
@@ -78,7 +78,7 @@
                                         </tr>
 
                                         <tr>
-                                        	<td>Number of languages in UNESCO Originals</td>
+                                        	<td><?php   echo $this->objLanguage->languageText('mod_unesco_oer_unesco_ori1', 'unesco_oer') ?></td>
                                             <td>
                                                 <?php
 
@@ -89,7 +89,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                        	<td>Number of languages in adaptations</td>
+                                        	<td><?php   echo $this->objLanguage->languageText('mod_unesco_oer_unesco_adapt1', 'unesco_oer') ?></td>
                                             <td>
                                                 <?php
                                                 
@@ -110,12 +110,12 @@
 
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                    <div class="generalResourcesTableHeading">Language breakdown - originals:</div>
+                                    <div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_lang_breakdown', 'unesco_oer') ?></div>
 
                                     <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Language</th>
-                                            <th>total</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
                                         </tr>
                                         <td>
                                             <?php
@@ -147,11 +147,11 @@
                                     </table>
                                 </div>
                                 <div class="rightLegendContentHolder">
-                                	<div class="generalResourcesTableHeading">Breakdown by type - originals:</div>
+                                	<div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_ori', 'unesco_oer') ?></div>
                                    <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Type of original</th>
-                                            <th>total</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_ori', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
 
                                         </tr>
                                         <td>
@@ -189,12 +189,12 @@
 
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                    <div class="generalResourcesTableHeading">Language breakdown - adaptations:</div>
+                                    <div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_lang_adapt', 'unesco_oer') ?></div>
                                     <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Language</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_language', 'unesco_oer') ?></th>
 
-                                            <th>total</th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
                                         </tr>
                                     <td>
                                             <?php
@@ -229,11 +229,11 @@
                        
                                 </div>
                                 <div class="rightLegendContentHolder">
-                                	<div class="generalResourcesTableHeading">Breakdown by type - adaptations:</div>
+                                	<div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt1', 'unesco_oer') ?></div>
                                    <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Type of adaptation</th>
-                                            <th>total</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
 
                                         </tr>
                                         <td>
@@ -271,12 +271,12 @@
 
                             <div class="legendContent">
                                 <div class="leftLegendContentHolder">
-                                    <div class="generalResourcesTableHeading">Breakdown by type - institutions:</div>
+                                    <div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt2', 'unesco_oer') ?></div>
                                     <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Type of adaptation</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt', 'unesco_oer') ?></th>
 
-                                            <th>total</th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
                                         </tr>
                                     <td>
                                             <?php
@@ -313,11 +313,11 @@
 
                                 </div>
                                 <div class="rightLegendContentHolder">
-                                	<div class="generalResourcesTableHeading">Breakdown by region - adaptations:</div>
+                                	<div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt3', 'unesco_oer') ?></div>
                                    <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Type of adaptation</th>
-                                            <th>total</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
 
                                         </tr>
                                         <td>
@@ -358,12 +358,12 @@
                                     &nbsp;
                                 </div>
                                 <div class="rightLegendContentHolder">
-                                	<div class="generalResourcesTableHeading">Breakdown by country - adaptations:</div>
+                                	<div class="generalResourcesTableHeading"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_type_adapt4', 'unesco_oer') ?></div>
 
                                    <table class="generalReportingTable" cellpadding="0" cellspacing="0">
                                     	<tr>
-                                        	<th>Country of adaptation</th>
-                                            <th>total</th>
+                                        	<th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_county_adapt', 'unesco_oer') ?></th>
+                                            <th><?php   echo $this->objLanguage->languageText('mod_unesco_oer_total', 'unesco_oer') ?></th>
                                         </tr>
 
                                         <td>
@@ -560,6 +560,7 @@
                                             
                                     </div>
                                 </div>
+                                    </div>
                                         
         <!-- Footer-->
 

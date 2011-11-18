@@ -11,7 +11,7 @@
                      <div class="memberList">
                      
                       <div class="textNextToGroupIcon">
-                      	<h2 class="greyText">Reporting Tool</h2>
+                      	<h2 class="greyText"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_reporting_tool', 'unesco_oer') ?></h2>
                        	
                        </div>
 
@@ -24,17 +24,17 @@
                      <li>
                        <?php
                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12a_tpl.php')));
-                        $abLink->link = 'GENERAL';
+                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reporting_general', 'unesco_oer');
                         echo $abLink->show();
                        ?>
 
                      </li>
-                     <li class="onState"><a href="#">ADAPTATIONS BY MULTIPLE CRITERIA</a></li>
+                     <li class="onState"><a href="#"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_reporting_multiple_criteria', 'unesco_oer') ?></a></li>
 
                      <li>
                        <?php
                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptation, "page" => '12c_tpl.php')));
-                        $abLink->link = 'CHARTS';
+                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reporting_charts', 'unesco_oer');
                         echo $abLink->show();
                        ?>                            
                      </li>
