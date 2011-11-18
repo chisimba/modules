@@ -951,11 +951,12 @@ class productutil extends object {
           } */
 
 //This so
+        $bookmarkPop = $this->objLanguage->languageText('mod_unesco_oer_bookmark','unesco_oer');
         $content.="
                   
            
                     
-                <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='Email' width='19' height='15'></a>
+                <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='$bookmarkPop' width='19' height='15'></a>
    
                 
                 ";
