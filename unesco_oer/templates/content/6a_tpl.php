@@ -380,11 +380,18 @@
                       
                      //var ourArray = new Array();
                     var temp = $('#search').attr('value');
-                     $('.highlight').toggleClass('highlight');
+                    $('#search').val(''); 
+                   $('.highlight').toggleClass('highlight');
+                   
+                   if (temp != ''){
+
                   $('input[value="' +temp+'"]').parent().toggleClass('highlight');
-//                      $('input[value="' +temp+'"]').parent().toggleClass('highlight');
-//               
-       
+                 
+                }
+                 $('#search').val(temp); 
+
+               
+      
                   }
                   
                   function Clear(){
