@@ -137,7 +137,7 @@ class displayreportgenerator extends object
         $content .= $themeSelect->show().'
                                 	<br>
                                     '.
-                                    $this->objLanguage->languageText('mod_unesco_oer_ctr2', 'unesco_oer')
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctrl2', 'unesco_oer')
                                     .'
                                 </div>
                                 <div class="rightLegendContentHolder">
@@ -256,7 +256,7 @@ class displayreportgenerator extends object
 
         $content .= $langSelect->show().'<br>
                                     '.
-                                    $this->objLanguage->languageText('mod_unesco_oer_ctr4', 'unesco_oer')
+                                    $this->objLanguage->languageText('mod_unesco_oer_ctrl4', 'unesco_oer')
                                     .'
                                 </div>
                                 <div class="rightLegendContentHolder">&nbsp;</div>
