@@ -28,19 +28,19 @@ $homelink = new link('home');
 $homelink->href = $this->uri(array("action" => "home"));
 $homelink->link = 'Home';
 
-$productNavCap = 'New Product';
+$productNavCap = $this->objLanguage->languageText('mod_unesco_oer_new_product', 'unesco_oer');
 if ($product->isAdaptation()) {
     $homelink->href = "?module=unesco_oer&action=FilterProducts&adaptationstring=parent_id+is+not+null+and+deleted+%3D+0&page=2a_tpl.php";
     $homelink->link = 'Product Adaptations';
     $productID = $product->getIdentifier();
     if (empty($productID)) {
-        $productNavCap = 'New Adaptation';
+        $productNavCap = $this->objLanguage->languageText('mod_unesco_oer_add_data_newAdaptation', 'unesco_oer');
     } else {
-        $productNavCap = 'Edit Adaptation';
+        $productNavCap = $this->objLanguage->languageText('mod_unesco_oer_edit_adaptation', 'unesco_oer');
     }
 } else {
     if (!$product->isDeleted())
-        $productNavCap = 'Edit Product';
+        $productNavCap = $this->objLanguage->languageText('mod_unesco_oer_edit_product', 'unesco_oer');
 }
 ?>
 <div style="clear:both;"></div>

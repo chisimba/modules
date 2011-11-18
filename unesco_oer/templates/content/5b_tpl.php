@@ -118,7 +118,7 @@ $product = $this->getObject('product');
                         ?>
                         <div class="middleAdaptedByIcon">
                         	<img src="skins/unesco_oer/images/icon-managed-by.png" alt="Adapted by" width="24" height="24"><br>
-                        	<span class="greenText">Managed By</span>
+                        	<span class="greenText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer'); ?></span>
                         </div>
                         
                         <div class="productAdaptationViewLeftColumnTop">
@@ -136,7 +136,7 @@ $product = $this->getObject('product');
                                 <div class="textNextToTheListingIconDiv">
                                  <?php
                                   $groupLink= new link($this->uri(array("action" => '11a','id'=>$groupInfo['id'],"page"=>'10a_tpl.php')));
-                                  $groupLink->link = 'View Group';
+                                  $groupLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_group', 'unesco_oer');
                                   $groupLink->cssClass = "greenTextLink";
                                       echo $groupLink->show();
                                  ?>

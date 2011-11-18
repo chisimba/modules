@@ -130,7 +130,7 @@ class featuredproductutil extends object
         if ($featuredAdaptedProduct->getInstitutionID()) {
             $objInstitutionManager = $this->getObject('institutionmanager');
             $objInstitutionManager->getInstitution($featuredAdaptedProduct->getInstitutionID());
-                       $content .= '<div class="adaptedByDiv">Managed by:</div>
+                       $content .= '<div class="adaptedByDiv">'.$this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer').':</div>
                                         <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= "' . $objInstitutionManager->getInstitutionName() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $objInstitutionManager->getInstitutionName() . '</span>
                                     </div>

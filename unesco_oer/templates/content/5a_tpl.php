@@ -126,7 +126,7 @@ if ($this->hasMemberPermissions()) {
     $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
     $adaptLink = new link($uri);
     $adaptLink->cssClass = "adaptationLinks";
-    $linkText = 'Make a new adaptation using this UNESCO Product';
+    $linkText = $this->objLanguage->languageText('mod_unesco_oer_make_new_adaptation', 'unesco_oer');
     $adaptLink->link = $linkText;
 
     echo $adaptationDivStart;
@@ -144,7 +144,7 @@ if ($this->hasMemberPermissions()) {
                 <?php
                 $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
                 $CommentLink->cssClass = 'adaptationLinks';
-                $CommentLink->link = ' See existing Adaptaions (' . $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+                $CommentLink->link = $this->objLanguage->languageText('mod_unesco_oer_products_see_existing', 'unesco_oer') . ' (' . $this->objDbProducts->getNoOfAdaptations($productID) . ')';
                 echo $CommentLink->show();
                 ?>
 
@@ -357,7 +357,7 @@ echo $content->getContentTree(FALSE);
         <div class="managedByDivWidth">
             <img src="skins/unesco_oer/images/icon-managed-by.png" width="24" height="24" class="floaLeft">
             <div class="managedByTextPadding">
-                <span class="greenColor">Managed By<br><br>
+                <span class="greenColor"><?php echo $this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer'); ?><br><br>
                     <!--                            Polithecnich of Namibia journalism department-->
                     <?php
                     echo $groupInfo['name'];
@@ -366,7 +366,7 @@ echo $content->getContentTree(FALSE);
                 <br /><br />
                 <!--                            <a href="#" class="greenTextLink">View group</a>-->
 <?php
-$groupLink->link = 'View group';
+$groupLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_group', 'unesco_oer');
 $groupLink->cssClass = "greenTextLink";
 echo $groupLink->show();
 ?>
@@ -548,7 +548,7 @@ echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 
             </div>
             <div class="spaceBetweenRightBorderedDivs">
-                <div class="featuredHeader pinkText"> Browse Adaptation By Map
+                <div class="featuredHeader pinkText"> <?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer'); ?>
 
                 </div>
 

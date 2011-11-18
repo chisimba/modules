@@ -112,7 +112,7 @@ echo $abLink->show();
 ?>
 
                 </a> |
-                Compare Selected
+                <?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_selected', 'unesco_oer'); ?>
             </div>
 
             <div class="wideTopContentHolderDiv">
@@ -134,7 +134,7 @@ echo $product->getTitle();
 
 <?php
 $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $origionalproduct)));
-$abLink->link = 'View Full Product';
+$abLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product', 'unesco_oer');
 $abLink->cssClass = "textNextToTheListingIconDiv";
 
 

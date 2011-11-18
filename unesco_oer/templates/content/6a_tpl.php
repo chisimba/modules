@@ -65,7 +65,7 @@
     ?>
                 
               </a> |
-                Compare
+               <?php $this->objLanguage->languageText('mod_unesco_oer_compare', 'unesco_oer'); ?>
             </div>
                 
             <div class="wideTopContentHolderDiv">
@@ -91,7 +91,7 @@
        <?php                     
                             
     $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $temp)));
-    $abLink->link = 'View Full Product';
+    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product', 'unesco_oer');
     $abLink->cssClass = "textNextToTheListingIconDiv";
     
 
@@ -114,9 +114,9 @@
             	
             <div class="compareTools">
             
-                <div class="compareToolsHeading">Compare Tools</div>
+                <div class="compareToolsHeading"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_tools', 'unesco_oer'); ?></div>
                  <div class="compareToolsTextDiv">
-                   <div class="leftFloat">Select/unselect item(s) from the list below or use the search to find section (courses):</div>
+                   <div class="leftFloat"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_select_instruction', 'unesco_oer'); ?></div>
                       <div class="compareSearchBoxHolder">
                           <?php
                            $textinput = new textinput('SearchInput');
@@ -129,16 +129,16 @@
                          </div> <?php echo $textinput->show()?>  <a href="#" id="searchlink" onclick= javascript:highlight()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   <br>
                          
                       <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                        <div class="textNextToTheListingIconDiv"><a href="#" id="adaptsection" class="adaptationLinks">Add to adaptation</a></div><!--
+                        <div class="textNextToTheListingIconDiv"><a href="#" id="adaptsection" class="adaptationLinks"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_add_adaptation', 'unesco_oer'); ?></a></div><!--
                         
                       <a href="#"><img src="images/icon-find-related.png" alt="Find Related" width="18" height="18"class="smallLisitngIcons"></a>
                         <div class="textNextToTheListingIconDiv"><a href="#" class="greySmallLink">Find related</a></div>
                         -->
                       <img src="skins/unesco_oer/images/icon-compare-adaptations-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                      <div class="textNextToTheListingIconDiv"><a href="#"  id="compare" class="adaptationLinks">Compare Selected</a></div>
+                      <div class="textNextToTheListingIconDiv"><a href="#"  id="compare" class="adaptationLinks"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_selected', 'unesco_oer'); ?></a></div>
                         
                         <img src="skins/unesco_oer/images/icon-clear-selection-off.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                      <div class="textNextToTheListingIconDiv"><a href="#" id ="clearselection" onclick =javascript:Clear()   class="adaptationLinks">Clear selection</a></div>
+                      <div class="textNextToTheListingIconDiv"><a href="#" id ="clearselection" onclick =javascript:Clear()   class="adaptationLinks"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_clear', 'unesco_oer'); ?></a></div>
                       <br>
                       <br>
                 

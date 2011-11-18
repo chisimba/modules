@@ -200,7 +200,7 @@
 
                 </div>
                 <div class="spaceBetweenRightBorderedDivs">
-                	<div class="featuredHeader pinkText"> Browse Adaptation By Map
+                	<div class="featuredHeader pinkText"> <?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer'); ?>
                  
                         </div>
                     

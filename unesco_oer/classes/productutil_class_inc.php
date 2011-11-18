@@ -492,7 +492,7 @@ class productutil extends object {
             $groupLink->link = $groupInfo['name'];
 
             $content .='
-                <div class="adaptedByDiv greenColor">Managed by:</div>
+                <div class="adaptedByDiv greenColor">'.$this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer').':</div>
                 <div class="gridSmallImageAdaptation">
                     <img src="' . $groupInfo['thumbnail'] . '" alt="Adaptation placeholder" width="45" height="49" class="smallAdaptationImageGrid">
                     <span class="greyListingHeading">' . $groupLink->show() . '</span>
@@ -562,8 +562,8 @@ class productutil extends object {
             $groupLink->cssClass = "greenText";
             $groupLink->link = $adaptedProduct->getGroupName();
             $content .= '<div class="productAdaptationListViewMiddleColumn">
-                                <img src="skins/unesco_oer/images/icon-managed-by.png" alt="Managed by" width="24" height="24"><br>
-                                <span class="greenText">Managed by</span>
+                                <img src="skins/unesco_oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer').'" width="24" height="24"><br>
+                                <span class="greenText">'.$this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer').'</span>
                             </div>
                             <div class="productAdaptationListViewRightColumn">
                                 <h2 class="greenText">' . $groupLink->show() . '</h2>

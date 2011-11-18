@@ -138,7 +138,7 @@ if ($this->hasMemberPermissions()) {
 <?php
 $CommentLink = new link($this->uri(array("action" => 'FilterAdaptations', 'parentid' => $productID)));
 $CommentLink->cssClass = 'adaptationLinks';
-$CommentLink->link = ' See existing Adaptations (' . $this->objDbProducts->getNoOfAdaptations($productID) . ')';
+$CommentLink->link = $this->objLanguage->languageText('mod_unesco_oer_products_see_existing', 'unesco_oer') . ' (' . $this->objDbProducts->getNoOfAdaptations($productID) . ')';
 echo $CommentLink->show();
 ?>
 

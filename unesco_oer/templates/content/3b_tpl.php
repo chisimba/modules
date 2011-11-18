@@ -101,7 +101,7 @@ $this->appendArrayVar('headerParams', $js);
                     $abLink = new link('#');
                     $abLink->cssClass = 'pinkTextLink';
                     $abLink->cssId = 'compareproduct';
-                    $abLink->link = 'Compare';
+                    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_compare', 'unesco_oer');
                     echo $abLink->show();
                     ?>
 

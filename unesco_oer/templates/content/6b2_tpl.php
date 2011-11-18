@@ -75,7 +75,7 @@ $product->LoadProduct($chosenid);
   ?>
                 
               </a> |
-                Compare Selected
+                <?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_selected', 'unesco_oer'); ?>
             </div>
                 
             <div class="wideTopContentHolderDiv">
@@ -97,7 +97,7 @@ $product->LoadProduct($chosenid);
                                     <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
  <?php
                         $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $chosenid)));
-                        $abLink->link = 'View Full Product';
+                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product', 'unesco_oer');
                         $abLink->cssClass = "textNextToTheListingIconDiv";
                         echo $abLink->show();
 ?>
