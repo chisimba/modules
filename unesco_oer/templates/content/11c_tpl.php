@@ -114,7 +114,7 @@ function SubmitProduct()
                 </div>
                <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabs">
-                     <li class="onState"><a href="#">
+                     <li ><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
@@ -123,7 +123,7 @@ function SubmitProduct()
                              ?>
 
                             </a></li>
-                     <li><a href="#">
+                     <li class="onState"><a href="#">
                              <?php
                              $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));

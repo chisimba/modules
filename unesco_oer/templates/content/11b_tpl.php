@@ -131,7 +131,7 @@ $topicsNum = count($topics);
     </div>
        <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabs">
-                     <li class="onState"><a href="#">
+                     <li ><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
@@ -140,14 +140,14 @@ $topicsNum = count($topics);
                              ?>
 
                             </a></li>
-                     <li><a href="#">
+                     <li ><a href="#">
                              <?php
                              $groupadaptationLink=new link($this->uri(array("action" =>'11c','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_adaptation=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));
                              $groupadaptationLink->link=  $this->objLanguage->languageText('mod_unesco_oer_adaptations', 'unesco_oer'). "(".$No_Of_adaptation.")";
                              echo $groupadaptationLink->show();
                              ?></a></li>
-                     <li><a href="#">
+                     <li class="onState"><a href="#">
                                                           <?php
                              $discussionLink=new link($this->uri(array("action" =>'11b','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_discussion=count($this->objDbGroups->getGroupProductadaptation($this->getParam('id')));

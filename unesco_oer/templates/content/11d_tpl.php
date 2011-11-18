@@ -100,7 +100,7 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                 </div>
                  <div class="innerMenuTabsDiv">
                 <ul id="innerMenuTabs">
-                     <li class="onState"><a href="#">
+                     <li ><a href="#">
                              <?php
                              $memberLink=new link($this->uri(array("action" => '11a', 'id' =>$this->getParam('id'), "page" => '10a_tpl.php')));
                              $No_Of_Members=$this->ObjDbUserGroups->groupMembers($this->getParam('id'));
@@ -123,7 +123,7 @@ $content = $this->objGroupUtil->Linkinstitution($this->getParam('id'));
                              $discussionLink->link=$this->objLanguage->languageText('mod_unesco_oer_discussion', 'unesco_oer'). " ($topicsNum)";
                              echo $discussionLink->show();
                              ?></a></li>
-                     <li><a href="#">
+                     <li class="onState"><a href="#">
                               <?php
                              $InstitutionLink=new link($this->uri(array("action" =>'11d','id'=>$this->getParam('id'),"page"=>'10a_tpl.php')));
                              $No_Of_instutions=$this->objDbGroups->getNoOfInstitutions($this->getParam('id'));
