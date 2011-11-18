@@ -126,7 +126,7 @@
                           ?>
                           
                           
-                         </div> <?php echo $textinput->show()?>  <a href="#" id="searchlink" onclick= javascript:highlight()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   <br>
+                         </div> <?php echo $textinput->show()?>  <a href="#" id="searchlink" onclick= javascript:searchproduct()><img src="skins/unesco_oer/images/icon-search.png" width="18" height="18"></a>   <br>
                          
                       <img src="skins/unesco_oer/images/icon-add-to-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
                         <div class="textNextToTheListingIconDiv"><a href="#" id="adaptsection" class="adaptationLinks"><?php echo $this->objLanguage->languageText('mod_unesco_oer_compare_add_adaptation', 'unesco_oer'); ?></a></div><!--
@@ -376,7 +376,7 @@
                   }
                   
                   
-                  function test(){
+                  function searchproduct(){
                       
                      //var ourArray = new Array();
                     var temp = $('#search').attr('value');
