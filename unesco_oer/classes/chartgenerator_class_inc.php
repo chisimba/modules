@@ -30,8 +30,9 @@ class chartgenerator extends object
     
     function drawPieChart($ProdOriginals, $ProdAdaptations)
     {
-
-        $title = new title( 'Originals vs Adaptations' );
+        $this->objLanguage = $this->getObject("language", "language");
+        $barTitle = $this->objLanguage->languageText('mod_unesco_ori_adapt', 'unesco_oer');
+        $title = new title($barTitle);
         $title->set_style('color: #FF0000; font-size: 14px');
 
         $d = array(

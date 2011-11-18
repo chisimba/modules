@@ -111,7 +111,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getLanguageBreakdownAdaptations();
-                    $title = "Language Breakdown By Adaptations";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_lang_adapt', 'unesco_oer');
                     $filter = "language";
                     $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -122,7 +122,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getLanguageBreakdownOriginals();
-                    $title = "Language Breakdown By Originals";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_lang_breakdown', 'unesco_oer');
                     $filter = "language";
                     $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -133,7 +133,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getBreakdownTypeAdaptation();
-                    $title = "Breakdown By Type - Adaptations";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_type_adapt1', 'unesco_oer');
                     $filter = "description";
                     $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -144,7 +144,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getBreakdownTypeOriginal();
-                    $title = "Breakdown By Type - Originals";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_type_ori', 'unesco_oer');
                     $filter = "description";
                     $chart = $this->objchartgenerator->drawVerticleBarChart($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -155,7 +155,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getBreakdownCountryAdaptations();
-                    $title = "Breakdown By Country - Adaptations";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_type_adapt4', 'unesco_oer');
                     $filter = "country";
                     $chart = $this->objchartgenerator->drawHorizontalBarChart($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -165,7 +165,7 @@
                 {
                    <?php
                     $data = $this->objDbreporting->getRegionBreakdownAdaptation();
-                    $title = "Breakdown By Region - Adaptations";
+                    $title = $this->objLanguage->languageText('mod_unesco_oer_type_adapt3', 'unesco_oer');
                     $filter = "region";
                     $chart = $this->objchartgenerator->drawHorizontalBarChart1($title, $data,$filter);
                     echo "return JSON.stringify($chart);";
@@ -177,7 +177,7 @@
                    <?php
                     $data2 = $this->objDbreporting->getEvolutionByAdaptation();
                     $data1 = $this->objDbreporting->getEvolutionByOriginal();
-                    $title = "Originals & Adaptations - Evolution";
+                    $title = $this->objLanguage->languageText('mod_unesco_ori_adapt1', 'unesco_oer');
 
                     $chart = $this->objchartgenerator->drawLineChart($title,$data1, $data2);
                     echo "return JSON.stringify($chart);";
