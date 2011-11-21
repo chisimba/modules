@@ -471,7 +471,7 @@ class productutil extends object {
             $institutionLink->cssClass = 'darkGreyColour';
             $institutionLink->link = $name;
 
-            $content .='<br/><div class="adaptedByDiv">Adapted by:</div>
+            $content .='<br/><div class="adaptedByDiv">'.$this->objLanguage->languageText('mod_unesco_oer_adapted_by','unesco_oer').':</div>
                 <div class="gridSmallImageAdaptation">
                     <img src="' . $thumbnail . '" alt="Adaptation placeholder" align="left" width="45" height="49" class="smallAdaptationImageGrid">
                     <span class="greyListingHeading">' . $institutionLink->show() . '</span>
@@ -749,7 +749,7 @@ class productutil extends object {
         if ($origprouct['deleted'] == '0') {
             $ratedLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $product['id'])));
             $ratedLink->cssClass = 'adaptationLinks';
-            $ratedLink->link = "Rating = " . $product['rating'];
+            $ratedLink->link = "{$this->objLanguage->languageText('mod_unesco_oer_rating', 'unesco_oer')} = " . $product['rating'];
 
             $content = '';
 

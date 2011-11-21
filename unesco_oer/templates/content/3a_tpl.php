@@ -90,7 +90,7 @@ $this->appendArrayVar('headerParams', $js);
                             <?php
                             $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));
                             $addlink->cssClass = "greyTextLink";
-                            $addlink->link = $this->objDbComments->getTotalcomments($productID) . " Comments";
+                            $addlink->link = $this->objDbComments->getTotalcomments($productID) . " ". $this->objLanguage->languageText('mod_unesco_oer_comments2','unesco_oer');
                             echo $addlink->show();
                             ?>
                         </div>
@@ -147,7 +147,7 @@ echo $CommentLink->show();
 
 
             <div class="sectionsHead">
-                <h3 class="floaLeft greyText">Sections:</h3>
+                <h3 class="floaLeft greyText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_sections', 'unesco_oer'); ?>:</h3>
                 <div class="addNewMode">
 <?php if ($this->objUser->isLoggedIn()) { ?>
                         <img src="skins/unesco_oer/images/icon-product-add-node.png" alt="New mode" width="18" height="18"class="smallLisitngIcons">

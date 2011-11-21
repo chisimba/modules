@@ -94,6 +94,10 @@ class featuredproductutil extends object {
         $adaplink->cssClass = 'adaptationLinks';
         $adaplink->link = $this->objLanguage->languageText('mod_unesco_oer_see_all_adaptations', 'unesco_oer') . ' (' . $featuredAdaptedProduct->getNoOfAdaptations() . ')';
 
+        $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $featuredAdaptedProduct->getparentID())));
+        $abLink->cssClass = "adaptationLinks";
+        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_original', 'unesco_oer');
+
         if (!$featuredAdaptedProduct->isDeleted() && !empty($featuredAdaptedProduct)) {
 
             $content = '';
@@ -105,7 +109,7 @@ class featuredproductutil extends object {
                                           
                                            ' . $adaplink->show() . '
                                             <br/>
-                                            <a href="#" class="adaptationLinks">See UNSECO orginals</a>
+                                            '.$abLink->show().'
                                              <br/><br/>
                                         </div>
 <br/>  <br/>                                        
