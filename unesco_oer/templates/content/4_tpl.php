@@ -80,7 +80,8 @@ $this->appendArrayVar('headerParams', $js);
 
                             <?php
                             $filtering = $this->getobject('filterdisplay', 'unesco_oer');
-                            echo $filtering->SideFilter('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum,$institutionId);
+                             $productsByID = $institutionDB->getProductIdbyInstid($institutionId);
+                            echo $filtering->SideFilter('1a_tpl.php', $SortFilter, $TotalPages,$productsByID, $browsemapstring, $NumFilter, $PageNum);
                             ?>
 
                             <br/><br/>
