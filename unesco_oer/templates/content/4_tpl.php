@@ -23,7 +23,7 @@ $institutionGUI->getInstitution($institutionId);
     <!-- Left Wide column DIv -->
     <div class="LeftWideColumnDiv">
         <div class="breadCrumb">
-            <a href="#" class="orangeListingHeading">Product adaptation</a> |
+            <a href="#" class="orangeListingHeading"><?php echo $this->objLanguage->languageText('mod_unesco_oer_productadaptationstitle', 'unesco_oer'); ?></a> |
             <a class="greyTextTwelveSize noUnderline"><?php echo $institutionGUI->showInstitutionName() ?></a>
         </div>
         <div class="adaptationsBackgroundColor">
