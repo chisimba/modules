@@ -825,7 +825,7 @@ class productutil extends object {
         return $moreAdaptedProductsLink;
     }
 
-    public function populatebookmark($product) {
+    public function populatebookmark($product,$classLink = NULL) {
 
         $content = '     
                            <script src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
@@ -956,7 +956,7 @@ class productutil extends object {
                   
            
                     
-                <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='$bookmarkPop' width='19' height='15'></a>
+                <a href='javascript:void(0)'   class='$linkheading'> <img src='skins/unesco_oer/images/small-icon-bookmark.png' alt='$bookmarkPop' width='19' height='15' class='$classLink'></a>
    
                 
                 ";

@@ -113,26 +113,55 @@ $institutionGUI->getInstitution($institutionId);
                     <div class="innerRightColumn4">
 
 
-                        <div class="rightColumInnerDiv">
+                        
                             <?php
                             $productsByID = $institutionDB->getProductIdbyInstid($institutionId);
-                            foreach ($productsByID as $productsByInst) {
-                                $products[] = $productsDB->getOERbyProductID($productsByInst["product_id"]);
-                            }
-                            ?>
-                            <div class="blueListingHeading">Model Curricula for Journalism Education</div>
-                            Adapted in <a href="#" class="productAdaptationGridViewLinks">English</a>
-                            <br>
-                            <div class="listingAdaptationsLinkAndIcon">
-                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">make adaptation</a></div>
-                            </div>
 
-                            <div class="listingAdaptationsLinkAndIcon">
-                                <img src="skins/unesco_oer/images/small-icon-bookmark.png" alt="Bookmark" width="18" height="18" class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">bookmark</a></div>
-                            </div>
-                        </div>
+                            foreach ($productsByID as $productsByInst) {
+                                $product =  $this->getObject('product','unesco_oer');
+                                $products = $product->loadProduct($productsByInst['product_id']);
+                                
+                                $productID = $productsByInst['product_id'];
+
+                                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
+                                $adaptLink = new link($uri);
+                                $adaptLink->cssClass = "adaptationLinks";
+                                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                                $adaptLink->link = $linkText;
+                                
+                                $bookmarkText = $this->objLanguage->languageText('mod_unesco_oer_bookmark', 'unesco_oer');
+                                $adaptedText = $this->objLanguage->languageText('mod_unesco_oer_adapted_in', 'unesco_oer');
+                                
+                                $bookmark =  $this->objProductUtil->populatebookmark($productID,'smallLisitngIcons');
+
+                            
+                                $productData = '
+                                <div class="listAdaptations">
+                                <div class="floaLeftDiv">
+                                    <img width="45" height="49" alt="Adaptation placeholder" src="'.$product->getThumbnailPath().'">
+                                </div>
+                                <div class="rightColumInnerDiv">
+                                <div class="blueListingHeading">'.$product->getTitle().'</div>
+                                '.$adaptedText.' <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                <br>
+                                <div class="listingAdaptationsLinkAndIcon">
+                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">'.$adaptLink->show().'</a></div>
+                                </div>
+
+                                <div class="listingAdaptationsLinkAndIcon">
+                                    '.$bookmark.'
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="bookmarkLinks">'.$bookmarkText.'</a></div>
+                                </div>
+                                </div>
+                                </div>';
+                            
+                             echo $productData;
+                            }
+                            
+                            ?>
+                        
+                        
                     </div>
                     <br>
 
