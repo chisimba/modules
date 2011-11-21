@@ -439,12 +439,12 @@ $parentid = $temp[0]['parentid'];
 if (!(($parentid == null) or ($parentid == 'NULL'))) {                                              //check if origional product was selected
     $modules = $this->objDbmodules->getmodulebyparent($parentid);
 } else {
- echo ' gggggggggggggg';
+
  
-    $modules = $this->objDbmodules->getmodulebyparent($moduleid);   var_dump($modules);
+    $modules = $this->objDbmodules->getmodulebyparent($moduleid);  
 }
 
-if ($parentid == '') {
+if ($parentid == '' && empty($modules)) {
     $temp = $this->objDbcurricula->getCurriculaparent($moduleid);
     $parentid = $temp[0]['parentid'];
 

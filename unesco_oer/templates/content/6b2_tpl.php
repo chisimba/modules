@@ -280,12 +280,11 @@ $product->LoadProduct($chosenid);
 
                 $modules = $this->objDbmodules->getmodulebyparent($parentid);
 
- var_dump($modules);
+
            }else{
-              echo 'ffffffffff';
+        
            
-               $modules = $this->objDbmodules->getmodulebyparent($moduleid);   
-               var_dump($modules);
+   
 
            } 
 
@@ -310,12 +309,12 @@ $product->LoadProduct($chosenid);
      
                            // var_dump($modules);
                
-        $check = FALSE;     var_dump($modules);
+        $check = FALSE;    
         foreach ( $modules as $module){  // run through modules till matching module and product are selected
            
             $existingContent = $content->getContentByContentID($module['id']);
             
-            echo 'TTTTTTTTTTTTTT '.$module['title']. 'TTTTTTTTTTTTTT ';
+         
                 
         if   ($existingContent != FALSE){
             
