@@ -78,12 +78,14 @@ function toggle() {
             </style>
         <![endif]-->
 
-    </head> <div id="bubble_tooltip">
-    <div class="bubble_top"><span></span></div>
-    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
-    <div class="bubble_bottom"></div>
-</div>
-
+    </head> 
+    <?php if ($product->isAdaptation()) { ?>
+    <div id="bubble_tooltip">
+        <div class="bubble_top"><span></span></div>
+        <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+        <div class="bubble_bottom"></div>
+    </div>
+    <?php } ?>
 
     <body>
 
@@ -453,7 +455,7 @@ foreach ($modules as $module) {  // run through modules till matching module and
 
         $check = TRUE;
         $existingContent = $content->getContentByContentID($module['id']);
-        echo '<div class="heading2"><h2 class="greyText">' . $existingContent->getTitle() . ' </div><br>';
+        echo '<div class="heading2"><h2 class="greyText">' . $existingContent->getTitle() . ' </h2></div><br>';
         echo $existingContent->showReadOnlyInput();
     }
 }
@@ -467,12 +469,12 @@ if ($check == FALSE) {
     }
    if ($existingContent != FALSE){
                      
-                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div><br>';      
+                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </h2></div><br>';
                      echo  $existingContent->showReadOnlyInput();
           
                  }
                  else 
-                     echo '<div class="heading2"><h2 class="greyText">Module/Curriculum Not Available </div><br>'; 
+                     echo '<div class="heading2"><h2 class="greyText">Module/Curriculum Not Available </h2></div><br>';
 }
 ?>           
 
