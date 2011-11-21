@@ -176,11 +176,11 @@ $institutionGUI->getInstitution($institutionId);
                         <a href="#"><img src="skins/unesco_oer/images/icon-content-top-email.png" width="19" height="15"></a>
                     </div>
                     <br><br>
-                    <span class="greyText fontBold"><b>Type of institution:</b></span> <a class="greyText fontBold"> <?php echo $institutionGUI->showInstitutionType(); ?></a>
+                    <span class="greyText fontBold"><b><?php echo $this->objLanguage->languageText('mod_unesco_oer_institution_adapted', 'unesco_oer'); ?></b></span> <a class="greyText fontBold"> <?php echo $institutionGUI->showInstitutionType(); ?></a>
                     <br><br>
-                    <span class="greyText fontBold"><b>Country:</b></span> <a class="greyText fontBold"> <?php echo $institutionGUI->showInstitutionCountry(); ?> </a>
+                    <span class="greyText fontBold"><b><?php echo $this->objLanguage->languageText('mod_unesco_oer_institution_adapted1', 'unesco_oer'); ?></b></span> <a class="greyText fontBold"> <?php echo $institutionGUI->showInstitutionCountry(); ?> </a>
                     <br><br>
-                    <span class="greyText fontBold"><b>Address:</b></span><?php
+                    <span class="greyText fontBold"><b><?php echo $this->objLanguage->languageText('mod_unesco_oer_institution_adapted2', 'unesco_oer'); ?></b></span><?php
                             $address = $institutionGUI->showInstitutionAddress();
                             echo $address['address1'];
 
@@ -193,9 +193,9 @@ $institutionGUI->getInstitution($institutionId);
                             }
                             ?>
                     <br><br>
-                    <span class="greyText fontBold"><b>Institution website:</b></span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
+                    <span class="greyText fontBold"><b><?php echo $this->objLanguage->languageText('mod_unesco_oer_institution_adapted3', 'unesco_oer'); ?></b></span> <a href="#" class="greyTextLink"><?php echo $institutionGUI->showInstitutionWebsiteLink(); ?></a>
                     <br><br>
-                    <span class="greyText fontBold"><b>Keywords:</b></span> <a>
+                    <span class="greyText fontBold"><b><?php echo $this->objLanguage->languageText('mod_unesco_oer_institution_adapted4', 'unesco_oer'); ?></b></span> <a>
                         <?php
                         $keywords = $institutionGUI->showInstitutionKeywords();
                         echo $keywords['keyword1'];
