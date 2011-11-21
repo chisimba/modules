@@ -193,8 +193,11 @@ echo $abLink->show();
          echo '<td> 
                                
                                 
-                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
-                                <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
+                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101">  ';
+         if ($this->objUser->isLoggedIn()) {
+            echo '<div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> ';
+         }
+         echo '
                                 <br> 
                                 <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $origionalproduct . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
                    
@@ -223,9 +226,11 @@ echo $abLink->show();
                             echo '<td> 
                                
                               
-                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101"> 
-                                <div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> 
-                                <br> 
+                                <img src=' . $product->getThumbnailPath() . ' alt="Grid placeholder" width="79" height="101">';
+                            if ($this->objUser->isLoggedIn()) {
+                                echo '<div class="imageBotomFlag cursor">' . $adaptLink->show() . '</div> ';
+                            }
+                                echo '<br>
                                   <div class="orangeListingHeading center"><a href="/unesco_oer/index.php?module=unesco_oer&action=Comparechosen&id=' . $moduleid . '&productid=' . $productid . '&chosenid=' . $selectedproducts[$k] . '" id="treelink"  class="orangeListingHeading">' . $product->getTitle() . '
                    
                                   </a></div>
@@ -317,10 +322,12 @@ echo $abLink->show();
 
                 echo $content = '<div class="slideBoxProduct">
 							<div class="leftTopImage"><img src="' . "skins/unesco_oer/images/unesco-logo-2.jpg" . '" width="39" height="29" ></div>
-                                <h4>'.$compLink->show() .'</h4>
-                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>
-						</div> ';
+                                <h4>'.$compLink->show() .'</h4>';
+                if ($this->objUser->isLoggedIn()) {
+                    echo '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                          <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>';
+                }
+						echo '</div> ';
 
 //                                                
 //                                                
@@ -371,9 +378,12 @@ echo $abLink->show();
 
                     $content .= '<div class="slideBoxAdaptation">
 							<div class="leftTopImage"><img src="' . $creatorThumb . '" width="27" height="29" ></div>
-                            <h4>'. $compLink->show().'</h4>
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                               <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>						</div> ';
+                            <h4>'. $compLink->show().'</h4>';
+                    if ($this->objUser->isLoggedIn()) {
+                               $content .= '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                   <div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>';
+                    }
+                    $content .= '</div> ';
                 }
                 echo $content;
                 ?>

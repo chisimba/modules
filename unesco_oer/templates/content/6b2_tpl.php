@@ -155,12 +155,15 @@ $product->LoadProduct($chosenid);
                     $compLink->link = 'UNESCO';
 
 
-                echo $content = '<div '. $class .'>
+                $content = '<div '. $class .'>
 							<div class="leftTopImage"><img src="'. "skins/unesco_oer/images/unesco-logo-2.jpg" .'" width="39" height="29" ></div>
-                                <h4> '. $compLink->show() .'</h4>
-                                <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>
-						</div> ';
+                                <h4> '. $compLink->show() .'</h4>';
+                if ($this->objUser->isLoggedIn()) {
+                    $content .= '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv">'. $adaptLink->show() .'</div>';
+                }
+                $content .= '	</div> ';
+                echo $content;
 
 //                                                $content= '';
 //                                                
@@ -213,9 +216,12 @@ $product->LoadProduct($chosenid);
 
                     $content .= '<div '. $class .'>
 							<div class="leftTopImage"><img src="'. $creatorThumb .'" width="27" height="29" ></div>
-                            <h4> ' .$compLink->show() .'</h4>
-                            <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
-                               <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>						</div> ';
+                            <h4> ' .$compLink->show() .'</h4>';
+                    if ($this->objUser->isLoggedIn()) {
+                            $content .= '<img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="Adaptation" width="18" height="18"class="smallLisitngIcons">
+                               <div class="textNextToTheListingIconDiv">'. $adaptLink->show().'</div>';
+                    }
+                    $content .= '</div> ';
                 }
                 echo $content;
                 ?>
