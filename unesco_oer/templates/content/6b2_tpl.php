@@ -284,7 +284,8 @@ $product->LoadProduct($chosenid);
            }else{
         
            
-   
+               $modules = $this->objDbmodules->getmodulebyparent($moduleid);   
+     
 
            } 
 
@@ -314,7 +315,7 @@ $product->LoadProduct($chosenid);
            
             $existingContent = $content->getContentByContentID($module['id']);
             
-         
+    
                 
         if   ($existingContent != FALSE){
             
