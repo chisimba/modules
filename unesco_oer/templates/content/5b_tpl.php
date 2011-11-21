@@ -181,7 +181,7 @@ $product = $this->getObject('product');
                 <div class="headingHolder">
                     <?php
                     
-                    echo ' <br><div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </div>';   
+                    echo ' <br><div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </h2></div>';
                     
                     ?>
                     <div class="icons2">
