@@ -131,8 +131,12 @@ $this->appendArrayVar('headerParams', $js);
                     <div  id='filterDiv'  float ="left">
                                <div id='searchpage' title = "3b"> <p></p></div>
                         <?php
-                        $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts')));
-
+                        $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts', 'original_id'=>$productID)));
+                         if ( $this->getParam('error')){
+                             echo "<script> alert('Please select a product to compare');</script>";
+                         }
+                        
+                        
                         $objTable = $this->getObject('htmltable', 'htmlelements');
                         $objTable->cssClass = "threeAListingTable";
                         $objTable->width = NULL;

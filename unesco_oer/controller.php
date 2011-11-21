@@ -223,8 +223,12 @@ class unesco_oer extends controller {
         $users = $this->getParam("selectedusers");
         $this->setVarByRef('selectedproducts', $users);
 
-
-        return "6a_tpl.php";
+          if (empty($users)){
+              
+            $this->nextAction('FilterAdaptations', array('parentid'=> $this->getParam('original_id'), 'error'=>TRUE));  
+          }else{
+            return "6a_tpl.php";
+          }
     }
 
     public function __CompareSelected() {
