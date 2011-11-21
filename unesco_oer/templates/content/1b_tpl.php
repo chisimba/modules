@@ -107,7 +107,7 @@ $this->appendArrayVar('headerParams', $js);
                                         <div class="gridListDivView">
                                 <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
-                                        $abLink->link = 'GRID';
+                                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_grid', 'unesco_oer');
                                         echo $abLink->show();
                                 ?>
                                     </div>
@@ -124,7 +124,7 @@ $this->appendArrayVar('headerParams', $js);
 
                                 <?php
                                         $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
-                                        $abLink->link = 'LIST';
+                                        $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_List', 'unesco_oer');
                                         echo $abLink->show();
                                 ?>
 
