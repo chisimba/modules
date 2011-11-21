@@ -280,14 +280,16 @@ $product->LoadProduct($chosenid);
 
                 $modules = $this->objDbmodules->getmodulebyparent($parentid);
 
-
+ var_dump($modules);
            }else{
-
-               $modules = $this->objDbmodules->getmodulebyparent($moduleid);
+              echo 'ffffffffff';
+           
+               $modules = $this->objDbmodules->getmodulebyparent($moduleid);   
+               var_dump($modules);
 
            } 
 
-           if ($parentid == ''){
+           if ($parentid == '' && empty($modules)){
                      $temp = $this->objDbcurricula->getCurriculaparent($moduleid);
                       $parentid =  $temp[0]['parentid'];
                      
@@ -308,10 +310,12 @@ $product->LoadProduct($chosenid);
      
                            // var_dump($modules);
                
-        $check = FAlSE;     
+        $check = FALSE;     var_dump($modules);
         foreach ( $modules as $module){  // run through modules till matching module and product are selected
            
             $existingContent = $content->getContentByContentID($module['id']);
+            
+            echo 'TTTTTTTTTTTTTT '.$module['title']. 'TTTTTTTTTTTTTT ';
                 
         if   ($existingContent != FALSE){
             

@@ -439,8 +439,9 @@ $parentid = $temp[0]['parentid'];
 if (!(($parentid == null) or ($parentid == 'NULL'))) {                                              //check if origional product was selected
     $modules = $this->objDbmodules->getmodulebyparent($parentid);
 } else {
-
-    $modules = $this->objDbmodules->getmodulebyparent($moduleid);
+ echo ' gggggggggggggg';
+ 
+    $modules = $this->objDbmodules->getmodulebyparent($moduleid);   var_dump($modules);
 }
 
 if ($parentid == '') {
