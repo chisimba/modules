@@ -75,7 +75,7 @@ $product = $this->getObject('product');
                                  ?> 
                                     </h3><br>
                                 <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink"><?php echo $this->objLanguage->languageText('mod_unesco_oer_view_product', 'unesco_oer'); ?></a></div>
                             </div>
                     	</div>
                            <?php
@@ -84,7 +84,7 @@ $product = $this->getObject('product');
                     ?>
                         <div class="middleAdaptedByIcon">
                         	<img src="skins/unesco_oer/images/icon-adapted-by.png" alt="Adapted by" width="24" height="24"><br>
-                        	<span class="pinkText">Adapted By</span>
+                        	<span class="pinkText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_adapted_by', 'unesco_oer'); ?></span>
                         </div>
                         
                         
