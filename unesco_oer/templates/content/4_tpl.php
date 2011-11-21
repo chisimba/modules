@@ -14,8 +14,14 @@ $institutionGUI = $this->getObject('institutiongui', 'unesco_oer');
 $institutionDB = $this->getObject('dbinstitution', 'unesco_oer');
 $productsDB = $this->getObject('dbproducts', 'unesco_oer');
 $institutionGUI->getInstitution($institutionId);
-?>
 
+$js = '<script language="JavaScript" src="' . $this->getResourceUri('filterproducts.js') . '" type="text/javascript"></script>';
+$this->appendArrayVar('headerParams', $js);
+?>
+<script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
 <div class="mainContentHolder">
     <div class="subNavigation"></div>
 
@@ -74,7 +80,7 @@ $institutionGUI->getInstitution($institutionId);
 
                             <?php
                             $filtering = $this->getobject('filterdisplay', 'unesco_oer');
-                            echo $filtering->SideFilter('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum);
+                            echo $filtering->SideFilter('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum,$institutionId);
                             ?>
 
                             <br/><br/>
@@ -87,8 +93,8 @@ $institutionGUI->getInstitution($institutionId);
 //                                    $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
 //                                    echo $button->show();
 
-                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction(0," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
+                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction(0," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
 
                                     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                     $abLink->cssClass = "resetLink";
@@ -108,11 +114,18 @@ $institutionGUI->getInstitution($institutionId);
 
                         </div>
 <!--                    <div class="leftColumnDiv">
-
+            
                     </div>-->
+
+<?php
+$sort = $this->getobject('filterdisplay', 'unesco_oer');
+echo $sort->SortDisp('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum,$institutionId);
+
+?>
                     <div class="innerRightColumn4">
-
-
+                          <div id='searchpage' title ="4"> <p></p></div>
+               <div id='filterDiv'  >
+          
                         
                             <?php
                             $productsByID = $institutionDB->getProductIdbyInstid($institutionId);
@@ -163,6 +176,7 @@ $institutionGUI->getInstitution($institutionId);
                         
                         
                     </div>
+</div>
                     <br>
 
 
@@ -230,6 +244,7 @@ $institutionGUI->getInstitution($institutionId);
                 echo"See all adaptations ($NOofAdaptation)"; // This must be a link;
                 $coords = $this->objDbGroups->getAllgroups();
                 $title = $this->objDbGroups->getAllgroups();
+            
                 ?>
 
             </div>
@@ -239,11 +254,11 @@ $institutionGUI->getInstitution($institutionId);
         <div class="spaceBetweenRightBorderedDivs">
             <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
 
-
-            <script type="text/javascript">
-                var marker = new Array();
-                $(document).ready(function(){ 
-                    myLatlng = [
+         <div id="browseByMap">
+                <script type="text/javascript">
+                    var marker = new Array();
+                    $(document).ready(function(){ 
+                        myLatlng = [
 
 <?php
 foreach ($coords as $coord) {
@@ -305,17 +320,18 @@ foreach ($title as $titles) {
 
     });
 
-            </script>
+                </script>
 
+                <br/>
+                <div id="map_canvas" style="width:190; height:110"></div>
+                <?php
+                $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
 
+                echo $form->show();
+                ?>
 
-            <div id="map_canvas" style="width:190; height:110"></div>
-            <?php
-            $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
-
-            echo $form->show();
-            ?>
-
+            </div>
+            
         </div>
     </div>
 

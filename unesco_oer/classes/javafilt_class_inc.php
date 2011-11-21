@@ -54,6 +54,7 @@ class javafilt extends object {
         $institutionFilter = $this->getParam('inst');
         $regionFilter = $this->getParam('Reg');
          $CountryFilter = $this->getParam('Country');
+         $institutionid = $this->getParam('institutionid');
 
 
 
@@ -132,31 +133,37 @@ class javafilt extends object {
                 }
         }
 
-
-
-
+   
         if ($browsecheck == '1') {
 
             $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
         } else if ($pagelayout == '3b')
             $adaptations = $this->objDbProducts->getadapted($prod);
-        else
-            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+       else if ($institutionid != 'undefined') {
+               $adaptations= $this->objDbInstitution->getProductIdbyInstid($institutionid); 
+         
+        }else{
+            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring); 
+       
+            
+        }
 
 
-
+ //echo 'hhhhhhhhhhhhhhhhhhhh' .$institutionid;
 
         $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-            if ($browsecheck == '1') {
+            if (($browsecheck == '1') || ($institutionid != 'undefined')) {
                 $tempadap[$i] = $adap['product_id'];
             }
-            else
+            else 
                 $tempadap[$i] = $adap['id'];
             $i++;
         }
+//var_dump($adaptations);
 
+        //  var_dump($tempadap);   
 
 
 
@@ -308,15 +315,20 @@ class javafilt extends object {
                         $temp = $this->objDbGroups->getGroupProductadaptation($prod);
                     } else if ($pagelayout == '3b')
                         $temp = $this->objDbProducts->getadapted($prod);
-                    else
-                        $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
+                    else if ($institutionid != 'undefined')  {
+               $temp= $this->objDbInstitution->getProductIdbyInstid($institutionid);
+         
+        }else{
+            $temp = $this->objDbProducts->getFilteredProducts($adaptationstring); 
 
+            
+        }
 
 
                     $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-                        if ($browsecheck == '1') {
+                     if (($browsecheck == '1') || ($institutionid != 'undefined')) {
 
                             $result[$i] = $temps['product_id'];
                         }
@@ -374,6 +386,7 @@ class javafilt extends object {
         $pagelayout = $this->getParam('adaptation');
         $prod = $this->getParam('ProdID');
         $browsecheck = $this->getParam('browsecheck');
+        $institutionid = $this->getParam('institutionid');
 
 
 
@@ -410,24 +423,32 @@ class javafilt extends object {
             $adaptations = $this->objDbGroups->getGroupProductadaptation($prod);
         } else if ($pagelayout == '3b')
             $adaptations = $this->objDbProducts->getadapted($prod);
-        else
-            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
+       else  if ($institutionid != 'undefined'){
+               $adaptations= $this->objDbInstitution->getProductIdbyInstid($institutionid);
+         
+        }else{
+            $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring); 
+   
+            
+        }
 
 
 
 
-        // $adaptations = $this->objDbProducts->getFilteredProducts($adaptationstring);
         $tempadap = array(); //convert to 1d array
         $i = 0;
         foreach ($adaptations as $adap) {
-            if ($browsecheck == '1') {
+            if (($browsecheck == '1') || ($institutionid != 'undefined')){
                 $tempadap[$i] = $adap['product_id'];
             }
-            else
+            else 
                 $tempadap[$i] = $adap['id'];
             $i++;
         }
 
+//var_dump($adaptations);
+
+         // var_dump($tempadap);   
 
 
         if (!($AuthFilter == Null or $AuthFilter == 'All')) {
@@ -573,16 +594,20 @@ class javafilt extends object {
                         $temp = $this->objDbGroups->getGroupProductadaptation($prod);
                     } else if ($pagelayout == '3b')
                         $temp = $this->objDbProducts->getadapted($prod);
-                    else
-                        $temp = $this->objDbProducts->getFilteredProducts($adaptationstring);
-
-
+                      else if ($institutionid != 'undefined') {
+               $temp= $this->objDbInstitution->getProductIdbyInstid($institutionid);
+         
+        }else{
+            $temp = $this->objDbProducts->getFilteredProducts($adaptationstring); 
+  
+            
+        }
 
 
                     $result = array(); //convert to 1d array
                     $i = 0;
                     foreach ($temp as $temps) {
-                        if ($browsecheck == '1') {
+                     if (($browsecheck == '1') || ($institutionid != 'undefined')) {
 
                             $result[$i] = $temps['product_id'];
                         }
@@ -591,6 +616,7 @@ class javafilt extends object {
 
                         $i++;
                     }
+                    
                 };
 
 
@@ -986,6 +1012,61 @@ class javafilt extends object {
 
                     break;
                 }
+                
+            case "4" :   {       for ($i = $start; $i < ($end); $i++) {
+                                $product =  $this->getObject('product','unesco_oer');
+                                $productobject = $product->loadProduct($products[$i]['id']);
+                                
+                                $productID = $products[$i]['id'];
+                                
+
+                                $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $productID, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$productID"));
+                                $adaptLink = new link($uri);
+                                $adaptLink->cssClass = "adaptationLinks";
+                                $linkText = $this->objLanguage->languageText('mod_unesco_oer_product_new_adaptation', 'unesco_oer');
+                                $adaptLink->link = $linkText;
+                                
+                                $bookmarkText = $this->objLanguage->languageText('mod_unesco_oer_bookmark', 'unesco_oer');
+                                $adaptedText = $this->objLanguage->languageText('mod_unesco_oer_adapted_in', 'unesco_oer');
+                                
+                                $bookmark =  $this->objProductUtil->populatebookmark($productID,'smallLisitngIcons');
+
+                            
+                                $productData = '
+                                <div class="listAdaptations">
+                                <div class="floaLeftDiv">
+                                    <img width="45" height="49" alt="Adaptation placeholder" src="'.$product->getThumbnailPath().'">
+                                </div>
+                                <div class="rightColumInnerDiv">
+                                <div class="blueListingHeading">'.$product->getTitle().'</div>
+                                '.$adaptedText.' <a href="#" class="productAdaptationGridViewLinks">English</a>
+                                <br>
+                                <div class="listingAdaptationsLinkAndIcon">
+                                    <img src="skins/unesco_oer/images/small-icon-make-adaptation.png" alt="New mode" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="adaptationLinks">'.$adaptLink->show().'</a></div>
+                                </div>
+
+                             
+                               
+                                </div>
+                                </div>
+                                </div>';
+                            
+                             echo $productData;
+                            }    
+                
+                
+                
+            }
+                
+                
+                
+                
+                
+                
+                
+                
+                
         }
 
 

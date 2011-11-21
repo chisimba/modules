@@ -147,8 +147,9 @@ if ($this->objUser->isLoggedIn() && $this->objUser->isAdmin()) {// $objGroupOps-
 
             </div>
         </div>
+          <div id='searchpage' title ="1a"> <p></p></div>
         <div id='filterDiv'  >
-            <div id='searchpage' title ="1a"> <p></p></div>
+          
 <?php
 
 

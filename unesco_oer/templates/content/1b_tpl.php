@@ -132,8 +132,9 @@ $this->appendArrayVar('headerParams', $js);
                                 </div>
                             </div>
                             <!--Display the products in a list view-->
+                             <div id='searchpage' title ="1b"> <p></p></div>
                               <div id='filterDiv'  >
-                         <div id='searchpage' title ="1b"> <p></p></div>
+                        
                                   
 
                     <?php

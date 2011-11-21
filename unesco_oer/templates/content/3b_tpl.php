@@ -127,9 +127,9 @@ $this->appendArrayVar('headerParams', $js);
 
 
 
-
+                    <div id='searchpage' title = "3b"> <p></p></div>
                     <div  id='filterDiv'  float ="left">
-                               <div id='searchpage' title = "3b"> <p></p></div>
+                              
                         <?php
                         $form = new form("compareprods", $this->uri(array('action' => 'CompareProducts', 'original_id'=>$productID)));
                          if ( $this->getParam('error')){

@@ -135,8 +135,9 @@ $this->appendArrayVar('headerParams', $js);
             </div>
         </div>
     </div>
+      <div id='searchpage' title ="2b"> <p></p></div>
     <div id='filterDiv' >
-           <div id='searchpage' title ="2b"> <p></p></div>
+         
         <?php
 //$objTable = $this->getObject('htmltable', 'htmlelements');
 

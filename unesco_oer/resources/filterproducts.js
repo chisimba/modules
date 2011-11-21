@@ -14,7 +14,7 @@
  */
 
 
-function ajaxFunction23(id,ProdID,browsecheck){
+function ajaxFunction23(id,ProdID,browsecheck,institutionId){
     
     var ajaxRequest;
 
@@ -65,7 +65,7 @@ function ajaxFunction23(id,ProdID,browsecheck){
 
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID + "&inst=" + institution + "&Reg=" + region + "&Country=" + country ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&models=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac + "&id=" + id + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID + "&inst=" + institution + "&Reg=" + region + "&Country=" + country + "&institutionid=" + institutionId;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilternum&" + queryString, true);
     ajaxRequest.send(null);
@@ -97,7 +97,7 @@ function ajaxFunction23(id,ProdID,browsecheck){
 
 
 
-function ajaxFunction(id,ProdID,browsecheck){
+function ajaxFunction(id,ProdID,browsecheck,institutionId){
     var ajaxRequest;
 
     try{
@@ -145,7 +145,7 @@ function ajaxFunction(id,ProdID,browsecheck){
      
               
 
-    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac  + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID   +"&id=" + id + "&inst=" + institution + "&Reg=" + region + "&Country=" + country ;
+    var queryString = "theme=" + theme + "&lang=" + lang + "&auth=" + auth  + "&numperpage=" + numperpage + "&model=" + model + "&guide=" + guide + "&handbook=" + handbook + "&manual=" + manual + "&bestprac=" + bestprac  + "&sort=" + sort +"&adaptation=" + adaptation  +"&browsecheck=" + browsecheck +"&ProdID=" + ProdID   +"&id=" + id + "&inst=" + institution + "&Reg=" + region + "&Country=" + country + "&institutionid=" + institutionId ;
      
     ajaxRequest.open("GET", "index.php?module=unesco_oer&action=JavaFilter&" + queryString, true);
     ajaxRequest.send(null);

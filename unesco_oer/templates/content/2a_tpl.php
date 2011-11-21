@@ -135,8 +135,9 @@ $this->appendArrayVar('headerParams', $js);
                 </div>
             </div>
         </div>
+          <div id='searchpage' title ="2a"> <p></p></div>
         <div id='filterDiv'  >
-            <div id='searchpage' title ="2a"> <p></p></div>
+          
             <?php
             $objTable = $this->getObject('htmltable', 'htmlelements');
             $objTable->cssClass = "gridListingTable";
@@ -305,6 +306,9 @@ foreach ($title as $titles) {
                 ?>
 
             </div>
+            
+            
+            
         </div>
 
     </div>
