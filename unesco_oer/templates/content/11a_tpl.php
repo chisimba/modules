@@ -390,7 +390,7 @@ function SubmitProduct()
                                             </script>
                                         </head>
                          
-                                            <div id="map_canvas" ></div>
+                                         <div id="map_canvas" style="width:190; height:110"></div>
 <?php
                                                 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php',  'MapEntries' => $MapEntries)));
 
