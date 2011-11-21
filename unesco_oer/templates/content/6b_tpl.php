@@ -466,7 +466,7 @@ foreach ($modules as $module) {  // run through modules till matching module and
 
         $check = TRUE;
         $existingContent = $content->getContentByContentID($module['id']);
-        echo '<div class="heading2"><h2 class="greyText">' . $existingContent->getTitle() . ' </h2></div><br>';
+        echo '<div class="heading2"><h2 class="greyText">' . $existingContent->getTitle() . ' </h2></div><br><br>';
         echo $existingContent->showReadOnlyInput();
     }
 }
@@ -480,7 +480,7 @@ if ($check == FALSE) {
     }
    if ($existingContent != FALSE){
                      
-                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </h2></div><br>';
+                     echo '<div class="heading2"><h2 class="greyText">' .$existingContent->getTitle() . ' </h2></div><br><br>';
                      echo  $existingContent->showReadOnlyInput();
           
                  }
