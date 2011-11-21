@@ -93,9 +93,13 @@ $this->appendArrayVar('headerParams', $js);
 //
 //                                    $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
 //                                    echo $button->show();
+                                    
+                                     if ($i == null) {
+                                               $i = 1;
+                                          }
 
-                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction(0," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction(0," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
+                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
 
                                     $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                                     $abLink->cssClass = "resetLink";
