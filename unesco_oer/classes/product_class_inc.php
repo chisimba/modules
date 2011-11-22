@@ -919,12 +919,21 @@ class product extends object {
         $title = $this->objLanguage->languageText('mod_unesco_oer_rights_holder', 'unesco_oer');
         $this->_objAddDataUtil->addContentAsRowToTable($objLicenseChooser->show(), $table
         );
+        
         //field for provenance
         $fieldName = 'provenance';
         $title = $this->objLanguage->languageText('mod_unesco_oer_provenance', 'unesco_oer');
-        $this->_objAddDataUtil->addTextInputToTable(
-                $title, 4, $fieldName, '90%', $this->getProvenance(), $table
-        );
+        $editor = $this->newObject('htmlarea', 'htmlelements');
+        $editor->name = $fieldName;
+        $editor->height = '450px';
+        $editor->width = '98%';
+        $editor->setContent($this->getProvenance());
+        $table->startRow();
+        $this->_objAddDataUtil->addTitleToRow($title, 4, $table);
+        $table->endRow();
+        $table->startRow();
+        $table->addCell($editor->show());
+        $table->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend($this->objLanguage->languageText('mod_unesco_oer_legal_info', 'unesco_oer'));
