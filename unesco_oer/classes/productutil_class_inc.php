@@ -403,13 +403,6 @@ class productutil extends object {
      */
     public function populateAdaptedGridView($adaptedProduct) {
 
-
-
-
-
-
-
-
         $uri = $this->uri(array("action" => 'ViewProduct', "id" => $adaptedProduct->getIdentifier()));
         $abLink = new link($uri);
         $abLink->cssClass = "listingLanguageLinkAndIcon";
@@ -449,7 +442,7 @@ class productutil extends object {
         $imageBottomFlag = $adaptLink->show();
 
         $content.='
-                   <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>
+                   <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new-product.png" alt="New" width="22" height="18"></div>
                    <div class="imageGridListing">' . $bookLink->show() . '
                      
                        ' . $thumbLink->show() . '

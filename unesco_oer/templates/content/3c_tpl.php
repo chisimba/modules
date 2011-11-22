@@ -82,7 +82,7 @@ $existingContent = $content->getContentByContentID($path);
                     <?php
                     $productLink = new link($this->uri(array("action" => 'ViewProduct', 'id' => $productID)));
                     $productLink->cssClass = 'productsLink';
-                    $productLink->link = 'Full view of product';
+                    $productLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product','unesco_oer');
                     echo $productLink->show();
                     ?>
                     </div>

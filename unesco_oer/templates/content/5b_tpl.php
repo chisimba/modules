@@ -77,7 +77,7 @@ $product = $this->getObject('product');
                                 <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">                <?php
                 $abLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
-                $abLink->link = $product->getTitle();
+                $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product','unesco_oer');
                 $abLink->cssClass = "blueText noUnderline";
 
 
