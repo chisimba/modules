@@ -33,8 +33,8 @@ class helplink extends object {
 
         $this->objPop= $this->getObject('windowpop','htmlelements');
         $this->objPop->set('window_name','help');
-        $this->objPop->set('width','400');
-        $this->objPop->set('height','400');
+        $this->objPop->set('width','1000');
+        $this->objPop->set('height','750');
         $this->objPop->set('resizable','yes');
         $this->objPop->set('left','300');
         $this->objPop->set('top','300');

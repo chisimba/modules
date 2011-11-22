@@ -25,21 +25,5 @@
     echo $header->show();
 
     echo "<p>".$this->objLanguage->languageText($this->getParam('helpcode'),$this->getParam('helpmodule'))."</p>";
-
-    //            $objJquery = $this->getObject('jquery','jquery');
-    //            $objJquery->loadCluetipPlugin();
     ?>
 </div>
-<!--<div class="ttip" title="Hello Worlds">TOOLTIP JS TEST</div>
-<script type="text/javascript">
-    jQuery.noConflict();
-    jQuery(document).ready(function(){
-        jQuery(".ttip").cluetip();
-    });
-//
-//    var $ = jQuery.noConflict();
-//    $(function){
-//
-//    }
-
-</script>-->
