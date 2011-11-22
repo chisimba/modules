@@ -912,7 +912,7 @@ class product extends object {
         $table->endRow();
 
         $objLicenseChooser = $this->newObject('licensechooser', 'creativecommons');
-        $objLicenseChooser->icontype = 'small';
+//        $objLicenseChooser->icontype = 'small';
         $objLicenseChooser->defaultValue = $this->getRightsHolder();
         //field for rights holder
 
