@@ -466,6 +466,8 @@ class unesco_oer extends controller {
         $this->setVarByRef('productID', $id);
 
         if ($this->objDbProducts->isAdaptation($id)) {
+            $page = "5a_tpl.php";
+            $this->setVarByRef('page', $page);
             return "5a_tpl.php";
         } else {
             return "3a_tpl.php";

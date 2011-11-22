@@ -280,6 +280,69 @@ echo $content->getContentTree(FALSE);
             ?>
         </div>
         <br><br>
+            <span class="greyText fontBold">
+<?php
+echo $this->objLanguage->languageText('mod_unesco_oer_products_author', 'unesco_oer')
+?>
+            </span>
+<?php
+echo $product->getAuthors();
+?>
+            <br><br><br>
+            <span class="greyText fontBold">
+
+                <?php
+                echo $this->objLanguage->languageText('mod_unesco_oer_products_contacts', 'unesco_oer')
+                ?>
+            </span>
+            <!--                    Harra Padhy | Abel Caine | Igor Nuk-->
+            <?php
+            echo $product->getContacts();
+            ?>
+            <br><br><br>
+            <span class="greyText fontBold">
+                <?php
+                echo $this->objLanguage->languageText('mod_unesco_oer_products_published', 'unesco_oer')
+                ?>
+            </span>
+            <!--                    UNESCO-->
+            <?php
+            echo $product->getPublisher();
+            ?>
+            <br><br><br>
+            <span class="greyText fontBold">
+                <?php
+                echo $this->objLanguage->languageText('mod_unesco_oer_products_category', 'unesco_oer')
+                ?>
+            </span>
+            <!--                    <a href="#" class="greyTextLink">Journalism Education</a>-->
+            <?php
+            $themes = $product->getThemeNames();
+            foreach ($themes as $theme) {
+                $themeTag = "<a href='#' class='greyTextLink'>$theme</a>";
+                echo $themeTag . " ";
+            }
+            ?>
+            <br><br><br>
+            <span class="greyText fontBold">
+            <?php
+            echo $this->objLanguage->languageText('mod_unesco_oer_products_keywords', 'unesco_oer')
+            ?>
+            </span>
+            <!--                    <a href="#" class="greyTextLink">Journalism</a> | <a href="#" class="greyTextLink">Education</a>-->
+            <?php
+            $keywords = $product->getKeyWords();
+            $keywordsSize = count($keywords);
+            for ($index = 0; $index < $keywordsSize; $index++) {
+                $keywordText = $keywords[$index]['keyword'];
+                $keywordTag = "<a href='#' class='greyTextLink'>$keywordText</a>";
+                echo $keywordTag;
+                if ($index < $keywordsSize - 1)
+                    echo " | ";
+            }
+            ?>
+            <br><br>
+                    <br><br>
             <?php
             $institutionID = $product->getInstitutionID();
             if (!empty($institutionID)) {
