@@ -58,7 +58,7 @@ class commentmanager extends object {
         $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'ViewProduct'));
         $commentLink = new link($uri);
         $commentLink->cssClass = "searchGoLink";
-        $linkText = 'Add Commet';
+        $linkText = $this->objLanguage->languageText('mod_unesco_oer_add_data_newcommentBtn', 'unesco_oer');
         $commentLink->link = $linkText;
 
         $commentSubmitDiv = '<div class="commentSubmit">';

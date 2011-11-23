@@ -53,26 +53,27 @@ $this->appendArrayVar('headerParams', $js);
 
 
         <div class="blueBackground rightAlign">
-            <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
+          
             <a href="#" class="resetLink"> 
                 <?php
-                $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+               
 
                 if ($browsecheck) {
                     if ($i == null) {
                         $i = 1;
                     }
                     echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "$ProdID" . '"' . ",$browsecheck);ajaxFunction($i," . '"' . "$ProdID" . '"' . ",$browsecheck)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "$ProdID" . '"' . ",$browsecheck);ajaxFunction($i," . '"' . "$ProdID" . '"' . ",$browsecheck)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                    echo $imgButton = "<a  href='#' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "$ProdID" . '"' . ",$browsecheck);ajaxFunction($i," . '"' . "$ProdID" . '"' . ",$browsecheck)' ".  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
                 } else {
                     echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                    echo $imgButton = "<a  href='#' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
                 }
 
                 $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
                 $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
                 $abLink->cssClass = "resetLink";
                 echo $abLink->show();
+                
                 ?>
 
             </a>
