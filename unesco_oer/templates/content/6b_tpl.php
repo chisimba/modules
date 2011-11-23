@@ -320,7 +320,7 @@ echo $abLink->show();
                     $compLink->cssClass = "adaptationListingLink";
                     $compLink->link = 'UNESCO';
 
-                echo $content = '<div class="slideBoxProduct">
+                echo $content = '<div class="slideBoxSelect">
 							<div class="leftTopImage"><img src="' . "skins/unesco_oer/images/unesco-logo-2.jpg" . '" width="39" height="29" ></div>
                                 <h4>'.$compLink->show() .'</h4>';
                 if ($this->objUser->isLoggedIn()) {
@@ -498,8 +498,8 @@ if ($check == FALSE) {
 
             <div class="rightColumnDivWide rightColumnPadding">
 
-                <div id="treeunesco" class="greyText">
-                    <fieldset class="unescotree"> <legend class ="GreyText" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_product_tree', 'unesco_oer') ?></legend>
+                <div id="treeunesco" class="unescotree">
+                   
 
                     <?php
                     $product = $this->getObject('product');
@@ -511,7 +511,7 @@ if ($check == FALSE) {
                     ?>
 
 
-                    </fieldset>      
+                    
                 </div>
 
 

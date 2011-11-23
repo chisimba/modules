@@ -138,9 +138,12 @@ $product->LoadProduct($chosenid);
                 $origionalproduct = $product->getParentID();
                 $product->LoadProduct($origionalproduct);
                 
-                if ($origionalproduct == $chosenid){
-                    $class =  'class="slideBoxProduct"';
-                } else $class = 'class="slideBoxAdaptation"';
+                 if ($origionalproduct == $chosenid){
+                    $class =  'class="slideBoxSelect"';
+                }
+                else  $class =  'class="slideBoxProduct"';
+                
+              
                 
                  if ($this->objUser->isLoggedIn()) {
                     $uri = $this->uri(array('action' => 'adaptProduct', 'productID' => $origionalproduct, 'nextAction' => 'ViewProduct', 'cancelAction' => 'ViewProduct', 'cancelParams' => "id=$origionalproduct"));
@@ -189,8 +192,12 @@ $product->LoadProduct($chosenid);
                 foreach ($selectedproducts as $selectedproduct) {
                     
                      if ($selectedproduct == $chosenid){
-                    $class =  'class="slideBoxProduct"';
-                } else $class = 'class="slideBoxAdaptation"';
+                    $class =  'class="slideBoxSelect"';
+                } else if ($selectedproduct == $origionalproduct)
+                {
+                    $class = 'class="slideBoxProduct"';
+                }
+                 else $class = 'class="slideBoxAdaptation"';
 
                     $product->loadProduct($selectedproduct);
                     //         $content = $product->getContentManager();
@@ -366,8 +373,8 @@ $product->LoadProduct($chosenid);
 
                 <div class="rightColumnDivWide rightColumnPadding">
                
-                    <div id="treeunesco" class="greyText">
-                    <fieldset class="unescotree"> <legend class ="GreyText" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_product_tree', 'unesco_oer') ?></legend>
+                    <div id="treeunesco" class="unescotree">
+                  
                          
                     <?php
                     $product = $this->getObject('product');
@@ -379,7 +386,7 @@ $product->LoadProduct($chosenid);
        
                     ?>
                          
-                    </fieldset>
+         
 
                 </div>
 
