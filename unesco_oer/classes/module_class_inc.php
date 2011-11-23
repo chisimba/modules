@@ -508,7 +508,7 @@ class module extends content {
     
 
     public function getCompareLink($test, $id) {
-        return $this->uri(array('action' => 'CompareSelected', 'productid' => $test, 'id' => $id));
+        return $this->uri(array('action' => 'Comparechosen', 'id' => $this->getID(), 'productid' => $test, 'chosenid' => $id));
     }
 
     public function delete() {

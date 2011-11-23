@@ -308,7 +308,7 @@ class content extends object {
         }
         if ($compare) {
 
-            $link = $this->getCompareLink($test, $this->getID());
+            $link = $this->getCompareLink($test, $productID);
         }
 
         $title = $this->getTitle();
