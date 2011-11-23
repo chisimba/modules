@@ -57,7 +57,7 @@ $this->appendArrayVar('headerParams', $js);
 
 //            echo $button->show();
 
-            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '2b_tpl.php')));
             $abLink->cssClass = "resetLink";
             $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
             echo $abLink->show();

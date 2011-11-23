@@ -43,7 +43,7 @@ $this->appendArrayVar('headerParams', $js);
        //echo $button->show();
        // echo "<a onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
      echo $imgButton = "<a  href='#' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
-        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+        $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1b_tpl.php')));
         $abLink->cssClass = "resetLink";
         $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
        echo $abLink->show();

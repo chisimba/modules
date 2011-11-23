@@ -396,6 +396,7 @@ class bookmarkmanager extends dbtable {
 
             $commentText = new textarea($commentboxname);
             $commentText->setCssClass("commentTextBox");
+            
 
             //TODO make parameter pagename dynamic
             $uri = $this->uri(array('action' => 'createCommentSubmit', 'id' => $productID, 'pageName' => 'home'));
