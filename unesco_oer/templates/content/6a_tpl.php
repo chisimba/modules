@@ -342,8 +342,7 @@ echo '<div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>'
                 $('#compare').attr('href',link);
                         
                 var link = 'index.php?module=unesco_oer&action=selectGroup&origionalproductid=' + productid + '&origionalpair=' + pairid;
-                $('#adaptsection').attr('href',link);
-                        
+                $('#adaptsection').attr('href',link);                      
                         
              
                       

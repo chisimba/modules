@@ -117,6 +117,37 @@ class dbreporting extends dbtable {
 
         return $Count;
     }
+    
+    function getEnglishLangCountOriginals(){
+        
+        $sql = 'SELECT tbl_unesco_oer_products.language, 
+                Count( tbl_unesco_oer_products.language ) AS count
+                FROM tbl_unesco_oer_products
+                WHERE tbl_unesco_oer_products.parent_id IS NULL
+                AND tbl_unesco_oer_products.deleted =0
+                AND tbl_unesco_oer_products.language = "en"
+                GROUP BY tbl_unesco_oer_products.language';
+        $LanguageOriginal = $this->getArray($sql);
+        $Count = $LanguageOriginal;
+
+        return $Count;        
+        
+    }
+    
+    function getEnglishLangCountAdaptations(){
+        
+        $sql = 'SELECT tbl_unesco_oer_products.language, 
+                Count( tbl_unesco_oer_products.language ) AS count
+                FROM tbl_unesco_oer_products
+                WHERE tbl_unesco_oer_products.parent_id IS NOT NULL
+                AND tbl_unesco_oer_products.deleted =0
+                AND tbl_unesco_oer_products.language = "en"
+                GROUP BY tbl_unesco_oer_products.language';
+        $LanguageOriginal = $this->getArray($sql);
+        $Count = $LanguageOriginal;
+
+        return $Count;           
+    }
 
     function getBreakdownCountryAdaptations() {
 
@@ -133,6 +164,8 @@ class dbreporting extends dbtable {
 
         return $Count;
     }
+    
+    
 
     function getBreakdownTypeOriginal() {
         $sql = 'SELECT tbl_unesco_oer_resource_types.description AS Description,
@@ -395,6 +428,7 @@ class dbreporting extends dbtable {
         $arrayCount = sizeof($langNames);
         $allSql = array();
         for ($x = 0; $x < $arrayCount; $x++) {
+           
             $query = "'$langNames[$x]'";
             $sql = "SELECT tbl_langs_avail.id
                 FROM tbl_langs_avail
@@ -415,7 +449,9 @@ class dbreporting extends dbtable {
             $lang = "'" . $langID[$x][0]["id"] . "'";
             $sql = "SELECT tbl_unesco_oer_products.title, tbl_unesco_oer_products.creator
                 FROM tbl_unesco_oer_products
-                WHERE tbl_unesco_oer_products.language = $lang AND tbl_unesco_oer_products.parent_id IS NOT NULL
+                WHERE tbl_unesco_oer_products.language = $lang
+
+                AND tbl_unesco_oer_products.parent_id IS NOT NULL
                 AND tbl_unesco_oer_products.deleted = 0";
             $allSql[] = $this->getArray($sql);
         }

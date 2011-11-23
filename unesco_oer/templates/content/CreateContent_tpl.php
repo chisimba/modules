@@ -186,3 +186,35 @@ $link = '<link href="' . $this->getResourceUri('bubble-tooltip.css') . '" rel="s
 <!--        </div>
     </div>-->
 <!--<link href="chapter3.html" type="text/html" />-->
+
+<script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script> 
+        <script>
+            function highlight(id,productid,pairid)
+            {
+                //                      $('#' + id).parent().css('background-color', 'red');  
+                //$('#' + id).parent().toggleClass('highlight');
+                        
+                var hiddenclass = $('#' + id).attr('class');
+                $('.highlight').toggleClass('highlight');
+                $('.' + hiddenclass).parent().toggleClass('highlight');
+                        
+                var link = 'index.php?module=unesco_oer&action=CompareSelected&id=' + id + '&productid=' + productid;
+                $('#compare').attr('href',link);
+                        
+                var link = 'index.php?module=unesco_oer&action=selectGroup&origionalproductid=' + productid + '&origionalpair=' + pairid;
+                $('#adaptsection').attr('href',link);                      
+                        
+             
+                      
+            }                
+                
+
+                  
+
+                  
+             
+                  
+        </script>
+        <style type="text/css">
+            .highlight { background:yellow; }
+        </style>

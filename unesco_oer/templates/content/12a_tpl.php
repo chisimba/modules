@@ -123,7 +123,7 @@
                                                 $temp = $this->objDbreporting->getLanguageBreakdownOriginals();
                                                 $ArrayCount = sizeof($temp);
                                                 
-
+                                                echo "English".'<br>';
                                                 for ($i=0; $i < $ArrayCount; $i++)
                                                     {
                                                         echo $temp[$i]["language"].'<br>';
@@ -136,8 +136,10 @@
                                             <?php
 
                                                 $temp = $this->objDbreporting->getLanguageBreakdownOriginals();
+                                                $temp1 = $this->objDbreporting->getEnglishLangCountOriginals();
                                                 $ArrayCount = sizeof($temp);
-
+                                                
+                                                echo $temp1[0]["count"].'<br>';     
                                                 for ($i=0; $i < $ArrayCount; $i++)
                                                     {
                                                         echo $temp[$i]["count"].'<br>';
@@ -202,7 +204,7 @@
                                                 $temp = $this->objDbreporting->getLanguageBreakdownAdaptations();
                                                 $ArrayCount = sizeof($temp);
 
-
+                                                echo "English".'<br>';    
                                                 for ($i=0; $i < $ArrayCount; $i++)
                                                     {
                                                         echo $temp[$i]["language"].'<br>';
@@ -213,8 +215,10 @@
                                     <td>
                                             <?php
                                                 $temp = $this->objDbreporting->getLanguageBreakdownAdaptations();
+                                                $temp1 = $this->objDbreporting->getEnglishLangCountAdaptations();
                                                 $ArrayCount = sizeof($temp);
-
+                                                
+                                                echo $temp1[0]["count"].'<br>'; 
 
                                                 for ($i=0; $i < $ArrayCount; $i++)
                                                     {
