@@ -498,7 +498,8 @@ if ($check == FALSE) {
 
             <div class="rightColumnDivWide rightColumnPadding">
 
-                <div id="treeunesco">
+                <div id="treeunesco" class="greyText">
+                    <fieldset class="unescotree"> <legend class ="GreyText" ><?php echo $this->objLanguage->languageText('mod_unesco_oer_product_tree', 'unesco_oer') ?></legend>
 
                     <?php
                     $product = $this->getObject('product');
@@ -510,7 +511,7 @@ if ($check == FALSE) {
                     ?>
 
 
-
+                    </fieldset>      
                 </div>
 
 

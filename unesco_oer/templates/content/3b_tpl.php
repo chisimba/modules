@@ -93,7 +93,7 @@ $this->appendArrayVar('headerParams', $js);
 
             <!-- Center column DIv -->
             <div class="rightWideColumnDiv">
-                <div class=""><input type="checkbox"> Toggle
+                <div class="">
                     <img src="skins/unesco_oer/images/icon-compare-adaptations.png" class="toogleImagePadding">
                     <!--              <a href="#" class="pinkTextLink">Compare
                                   selected adaptations</a></div>-->
