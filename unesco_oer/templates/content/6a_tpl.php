@@ -356,11 +356,30 @@ echo '<div class="textNextToTheListingIconDiv">' . $adaptLink->show() . '</div>'
                 $('#search').val(''); 
                 $('.highlight').toggleClass('highlight');
                    
-                if (temp != ''){
-
-                    $('input[value="' +temp+'"]').parent().toggleClass('highlight');
-                 
+//                if (temp != ''){
+//
+//                    $('input[value~="' +temp+'"]').parent().toggleClass('highlight');
+//                     
+//                 
+//                }
+                
+             
+                // Check for white space
+                if (/\s/g.test(temp)) {
+                    
+                     $('input[value="' +temp+'"]').parent().toggleClass('highlight'); 
+                    
+                }else  {
+               
+                      $('input[value~="' +temp+'"]').parent().toggleClass('highlight');
+                    
                 }
+              
+           
+
+                  
+                 
+                
                 $('#search').val(temp); 
 
                
