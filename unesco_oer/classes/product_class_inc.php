@@ -1064,7 +1064,7 @@ class product extends object {
             $table->startRow();
             $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
             $title = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
-            $table->addCell( $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer'). $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
+            $table->addCell( $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer').'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>'. $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
             $table->endRow();
             $table->startRow();
             $table->addCell($editor->show());
@@ -1076,7 +1076,7 @@ class product extends object {
 
             //Field for Region
             $fieldName = 'region';
-            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_region', 'unesco_oer');
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_region', 'unesco_oer').'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
             $regions = $this->objDbRegions->getAll();
             $this->_objAddDataUtil->addDropDownToTable(
                     $title, 4, $fieldName, $regions, $this->getRegion(), 'region', $table, 'id'
@@ -1085,7 +1085,7 @@ class product extends object {
             //field for country
             $fieldName = 'country';
             $table->startRow();
-            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_country', 'unesco_oer');
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_country', 'unesco_oer').'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
             $table->addCell($title);
             $table->endRow();
             //$title .= '<font color="#FF2222"> '. $this->validationArray[$fieldName]['message']. '</font>';
@@ -1116,7 +1116,7 @@ class product extends object {
 
             //field for groups
             $fieldName = 'group';
-            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer');
+            $title = $this->objLanguage->languageText('mod_unesco_oer_adaptation_group', 'unesco_oer').'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>';
             $title .= '<font color="#FF2222"> ' . $this->validationArray[$fieldName]['message'] . '</font>';
             $this->_objAddDataUtil->addDropDownToTable(
                     $title, 4, $fieldName, $groups, $this->getGroupID(), 'name', $table, 'id', "javascript: toggleInstitutionDropDown(this.value, 'institution_div', '{$this->getIdentifier()}');"
@@ -1326,6 +1326,11 @@ class product extends object {
 
     function setRemark($Remark) {
         $this->_remark = $Remark;
+        if (empty($Remark)) {
+            $this->addValidationMessage('remark', FALSE, 'Product must have a comment');
+        } else {
+            $this->addValidationMessage('remark', TRUE, NULL);
+        }
     }
 
     function setOtherContributers($contributors) {
@@ -1428,10 +1433,22 @@ class product extends object {
 
     private function setRegion($region) {
         $this->_region = $region;
+        
+        if (empty($region)) {
+            $this->addValidationMessage('region', FALSE, 'Product must have a Region');
+        } else {
+            $this->addValidationMessage('region', TRUE, NULL);
+        }
     }
 
     private function setCountryCode($countryCode) {
         $this->_country = $countryCode;
+        
+        if (empty($countryCode)) {
+            $this->addValidationMessage('country', FALSE, 'Product must have a Country');
+        } else {
+            $this->addValidationMessage('country', TRUE, NULL);
+        }
     }
 
     private function setGroupID($groupID) {
@@ -1520,6 +1537,8 @@ class product extends object {
     }
 
     function getRemark() {
+        
+        
         return $this->_remark;
     }
 
