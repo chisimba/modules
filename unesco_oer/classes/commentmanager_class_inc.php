@@ -63,7 +63,7 @@ class commentmanager extends object {
 
         $commentSubmitDiv = '<div class="commentSubmit">';
         $submiTextDiv = '<div class="submiText">';
-        $submitCommentImage = '<img src="skins/unesco_oer/images/button-search.png" alt="'.$this->objLanguage->languageText('mod_unesco_oer_add_data_newcommentBtn', 'unesco_oer').'" width="17" height="17" class="submitCommentImage">';
+     
         $closeDiv = '</div>';
 
         $button = new button('submitComment', $linkText);
@@ -282,6 +282,7 @@ class commentmanager extends object {
                 $button = new button('submitComment', $this->objLanguage->languageText('mod_unesco_oer_bookmark_add', 'unesco_oer'));
                 $button->cssId =  $btnheading;
                 $button->onclick = "  javascript:bookmarkupdate('$time','$textname','$commentboxname','$bookmarkid','$productID')  ";
+                
 
 
               $content2 ='';

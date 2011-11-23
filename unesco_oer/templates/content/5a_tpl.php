@@ -448,7 +448,7 @@ echo $groupLink->show();
                 <div class="listCommunityRelatedInfoDiv">
                     <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                     <div class="communityRelatedInfoText">
-                        <a href="#" class="greyTextLink">
+                       
 
     <?php
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
@@ -457,19 +457,19 @@ echo $groupLink->show();
     ?>
 
 
-                        </a>
+                   
                     </div>
                 </div>
                 <div class="listCommunityRelatedInfoDiv">
                     <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                     <div class="communityRelatedInfoText">
-                        <a href="#" class="greyTextLink">
+                       
     <?php
     $Comment = $this->getobject('commentmanager', 'unesco_oer');
     $comments = $Comment->recentcomment($productID);
     echo $this->objProductUtil->smart_trim($comments[1], 50);
     ?>
-                        </a>
+                   
                     </div>
                 </div>
 
@@ -502,7 +502,7 @@ echo $groupLink->show();
 
                     <!--                           <a href="javascript:void(0)" class="greyTextLink">Show all comments</a>-->
                     <?php
-                    $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID)));
+                    $addlink = new link($this->uri(array("action" => 'commentmanager', 'productid' => $productID, 'page' => '5a')));
                     $addlink->cssClass = "greyTextLink";
                     $addlink->link = 'Show Comments';
                     echo $addlink->show();
@@ -524,8 +524,8 @@ echo $groupLink->show();
             $content .= '        <div class="listCommunityRelatedInfoDiv">
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
-                        	<a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] .
-                    ' </a>
+                        	' . $comments[$i]['product_comment'] .
+                    ' 
                         </div>
                     </div>';
         }
@@ -563,7 +563,7 @@ echo $groupLink->show();
                     <div class="listCommunityRelatedInfoDiv">
                     	<div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                         <div class="communityRelatedInfoText">
-                        	<a href="#" class="greyTextLink">';
+                        	';
 
 
 
@@ -573,7 +573,7 @@ echo $groupLink->show();
 
 
 
-                    echo'   </a>
+                    echo'   
                         </div>
                     </div>';
                 }

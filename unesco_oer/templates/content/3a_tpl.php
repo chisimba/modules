@@ -403,26 +403,26 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                         <div class="commentsDiv">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                             <div class="comments">
-                                <a href="#" class="greyTextLink">
+                               
                                 <?php
                                 $Comment = $this->getobject('commentmanager', 'unesco_oer');
                                 $comments = $Comment->recentcomment($productID);
                                 echo   $this->objProductUtil->smart_trim($comments[2],50);
                                 ?>
-                                </a>
+                                
                             </div>
                         </div>
                         <br />
                         <div class="commentsDiv">
                             <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                             <div class="comments">
-                                <a href="#" class="greyTextLink">
+                              
                                 <?php
                                 $Comment = $this->getobject('commentmanager', 'unesco_oer');
                                 $comments = $Comment->recentcomment($productID);
                                 echo  $this->objProductUtil->smart_trim($comments[1],50);
                                 ?>
-                                </a>
+                             
                             </div>
                         </div>
                         <?php
@@ -441,7 +441,7 @@ if (($this->objDbComments->getTotalcomments($productID) >= 2)) {
                           $content .= '        <div class="commentsDiv">
                                                         <div class="communityRelatedInfoIcon"><img src="skins/unesco_oer/images/icon-comment-post.png"></div>
                                                           <div class="comments">
-                                                            <a href="#" class="greyTextLink">' . $comments[$i]['product_comment'] . ' </a>
+                                                            ' . $comments[$i]['product_comment'] . ' 
                                                           </div>
                                                         </div>
                                                </div>';
