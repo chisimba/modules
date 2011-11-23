@@ -86,8 +86,8 @@ $this->appendArrayVar('headerParams', $js);
 
                             <br/><br/>
                             <div class="blueBackground rightAlign">
-                                <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
-                                <a href="#" class="resetLink"> 
+                             
+                             
                                     <?php
 //                                    $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
 //
@@ -98,16 +98,16 @@ $this->appendArrayVar('headerParams', $js);
                                                $i = 1;
                                           }
 
-                                    echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                                    echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
+                                 //   echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
+                                    echo $imgButton = "<a href='#' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
 
-                                    $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+                                    $abLink = new link($this->uri(array("action" => '4', "institutionId" => $institutionId)));
                                     $abLink->cssClass = "resetLink";
                                     $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
                                     echo $abLink->show();
                                     ?>
 
-                                </a>
+                              
                             </div>
                             <div class="filterheader">
 
@@ -126,7 +126,7 @@ $this->appendArrayVar('headerParams', $js);
 $sort = $this->getobject('filterdisplay', 'unesco_oer');
 echo $sort->SortDisp('1a_tpl.php', $SortFilter, $TotalPages, $adaptationstring, $browsemapstring, $NumFilter, $PageNum,$institutionId);
 
-?>
+?></div>
                     <div class="innerRightColumn4">
                           <div id='searchpage' title ="4"> <p></p></div>
                <div id='filterDiv'  >
