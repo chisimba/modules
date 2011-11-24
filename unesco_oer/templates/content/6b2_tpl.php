@@ -139,7 +139,7 @@ $product->LoadProduct($chosenid);
                 $product->LoadProduct($origionalproduct);
                 
                  if ($origionalproduct == $chosenid){
-                    $class =  'class="slideBoxSelect"';
+                    $class =  'class="slideBoxSelectorigional"';
                 }
                 else  $class =  'class="slideBoxProduct"';
                 
@@ -192,7 +192,7 @@ $product->LoadProduct($chosenid);
                 foreach ($selectedproducts as $selectedproduct) {
                     
                      if ($selectedproduct == $chosenid){
-                    $class =  'class="slideBoxSelect"';
+                    $class =  'class="slideBoxSelectadaptation"';
                 } else if ($selectedproduct == $origionalproduct)
                 {
                     $class = 'class="slideBoxProduct"';

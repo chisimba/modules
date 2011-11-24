@@ -320,7 +320,7 @@ echo $abLink->show();
                     $compLink->cssClass = "adaptationListingLink";
                     $compLink->link = 'UNESCO';
 
-                echo $content = '<div class="slideBoxSelect">
+                echo $content = '<div class="slideBoxSelectorigional">
 							<div class="leftTopImage"><img src="' . "skins/unesco_oer/images/unesco-logo-2.jpg" . '" width="39" height="29" ></div>
                                 <h4>'.$compLink->show() .'</h4>';
                 if ($this->objUser->isLoggedIn()) {
