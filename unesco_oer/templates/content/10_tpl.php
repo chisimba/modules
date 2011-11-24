@@ -97,8 +97,8 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
                         </select>
                     </div>-->
-                    <div class="viewGrid">
-                        <div class="viewAsDiv"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_view_as', 'unesco_oer') ?> </div>
+<!--                    <div class="viewGrid">
+                        <div class="viewAsDiv"><?php   //echo $this->objLanguage->languageText('mod_unesco_oer_view_as', 'unesco_oer') ?> </div>-->
 
 
 
@@ -113,18 +113,18 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
 
 
-                        <div class="gridListDivView">
+<!--                        <div class="gridListDivView">
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupGrid', "page" => '10a_tpl.php')));
                 $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-grid.png" alt="Grid" width="19" height="15" class="imgFloatRight">';
-                echo $abLink->show();
+          //      echo $abLink->show();
                 ?>
 
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupGrid', "page" => '10a_tpl.php')));
                 $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_grid', 'unesco_oer');
-                echo $abLink->show();
+           //     echo $abLink->show();
                 ?>
             </div>
 
@@ -133,7 +133,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
             <?php
                 $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
                 $abLink->link = '<img src="skins/unesco_oer/images/icon-sort-by-list.png" alt="List" width="19" height="15" class="imgFloatRight">';
-                echo $abLink->show();
+           //     echo $abLink->show();
             ?>
 
                 <div class="gridListDivView">
@@ -141,10 +141,10 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
                 <?php
                 $abLink = new link($this->uri(array("action" => 'groupList', "page" => '10a_tpl.php')));
                 $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_List', 'unesco_oer');
-                echo $abLink->show();
+           //     echo $abLink->show();
                 ?>
 
-            </div>
+            </div>-->
 
 
 
@@ -154,7 +154,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 
 
             <!--                        <div class="gridListDivView"><a href="#" class="gridListViewLinks">LIST</a></div>-->
-        </div>
+<!--        </div>-->
 
     </div>
     <div class="gridViewGroupBackgroundColor">
