@@ -51,18 +51,23 @@
             <img src="skins/unesco_oer/images/button-reset.png" alt="Reset" width="17" height="17" class="imgFloatLeft">
             <a href="#" class="resetLink"> 
                 <?php
-//                $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+                $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+
+                $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+                echo $button->show();
+
+                $button = new button('Reset', $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer'));
+
+                $button->onclick = "javascript:window.location='{$this->uri(array("action" => 'viewInstitutions'))}';";
+                echo $button->show();
+
+//                echo "<a onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
+//                echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
 //
-//                $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
-//                echo $button->show();
-
-                echo "<a onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                echo $imgButton = "<input name='Go' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' type='image' src='skins/unesco_oer/images/button-search.png' value='Find'> </input>";
-
-                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
-                $abLink->cssClass = "resetLink";
-                $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
-                echo $abLink->show();
+//                $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+//                $abLink->cssClass = "resetLink";
+//                $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
+//                echo $abLink->show();
                 ?>
 
             </a>

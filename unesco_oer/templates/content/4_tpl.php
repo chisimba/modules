@@ -89,22 +89,27 @@ $this->appendArrayVar('headerParams', $js);
                              
                              
                                     <?php
-//                                    $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
-//
-//                                    $button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
-//                                    echo $button->show();
+                                    $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
+
+                                    $button->onclick = "javascript:ajaxFunction23('$adaptationstring','t',5,'$institutionId');ajaxFunction($i)";
+                                    echo $button->show();
                                     
                                      if ($i == null) {
                                                $i = 1;
                                           }
 
                                  //   echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .")' class='resetLink' >{$this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')}</a>";
-                                    echo $imgButton = "<a href='#' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
+//                                    echo $imgButton = "<a href='#' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . "," . '"' . "t" . '"' . ",5,". '"' .$institutionId. '"' .");ajaxFunction($i," . '"' . "null" . '"' . ",5,". '"' .$institutionId. '"' .")' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
 
-                                    $abLink = new link($this->uri(array("action" => '4', "institutionId" => $institutionId)));
-                                    $abLink->cssClass = "resetLink";
-                                    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
-                                    echo $abLink->show();
+                                    $button = new button('Reset', $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer'));
+
+                                    $button->onclick = "javascript:window.location='{$this->uri(array("action" => '4', "institutionId" => $institutionId))}';";
+                                    echo $button->show();
+
+//                                    $abLink = new link($this->uri(array("action" => '4', "institutionId" => $institutionId)));
+//                                    $abLink->cssClass = "resetLink";
+//                                    $abLink->link = $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
+//                                    echo $abLink->show();
                                     ?>
 
                               
