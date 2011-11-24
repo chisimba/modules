@@ -218,7 +218,8 @@ $product->LoadProduct($chosenid);
                     $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' => $selectedproduct));
                     $compLink = new link($uri);
                     $compLink->cssClass = "adaptationListingLink";
-                    $compLink->link = $creatorName;
+                    $compLink->link = $this->objProductUtil->smart_trim($creatorName,60);
+                    $compLink->title = $creatorName;
 
 
                     $content .= '<div '. $class .'>
