@@ -249,16 +249,17 @@ echo $this->objFeaturedProducUtil->featuredProductView($featuredProduct);
         <div class="rightColumnContentPadding">
 <?php
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
-$objTabs->setWidth(180);
+$objTabs->setWidth(165);
 
 $mostAdapted = $this->objProductUtil->displayMostAdapted($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $displayAllMostAdaptedProducts);
 $mostCommented = $this->objProductUtil->displayMostCommented($this->objDbProducts, $this->objDbComments);
 $mostRated = $this->objProductUtil->displayMostRated($this->objDbProducts, $this->objDbGroups, $this->objDbInstitution, $this->objDbProductRatings);
-$objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'), $mostAdapted);
+$objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_adapted', 'unesco_oer'),$mostAdapted);
 $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_rated', 'unesco_oer'), $mostRated);
 $objTabs->addTab($this->objLanguage->languageText('mod_unesco_oer_Comments', 'unesco_oer'), $mostCommented);
-echo $objTabs->show()
+echo "<div id='most'>". $objTabs->show()."</div>";
 ?>
+         
         </div>
     </div>
 </div>
