@@ -1063,8 +1063,8 @@ class product extends object {
             $editor->setContent($this->getRemark());
             $table->startRow();
             $tooltip = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
-            $title = $this->objLanguage->languageText('mod_unesco_oer_tooltip_remark','unesco_oer');
-            $table->addCell( $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer').'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>'. $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
+            $title = $this->objLanguage->languageText('mod_unesco_oer_module_remark', 'unesco_oer');
+            $table->addCell( $title.'<font color="#FF2222">* ' . $this->validationArray[$fieldName]['message'] . '</font>'. $productUtil->getToolTip($tooltip,$objHelpLink->show('mod_unesco_oer_tooltip_remark',$title)));
             $table->endRow();
             $table->startRow();
             $table->addCell($editor->show());
@@ -1326,6 +1326,7 @@ class product extends object {
 
     function setRemark($Remark) {
         $this->_remark = $Remark;
+        $Remark = strip_tags($Remark);
         if (empty($Remark)) {
             $this->addValidationMessage('remark', FALSE, 'Product must have a comment');
         } else {
