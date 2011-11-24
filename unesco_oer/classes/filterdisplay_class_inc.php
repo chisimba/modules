@@ -107,9 +107,9 @@ class filterdisplay extends object {
         $form->addToForm($checkbox2->show());
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_handbook', 'unesco_oer') . '<br>');
         $form->addToForm($checkbox3->show());
-        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_guide', 'unesco_oer') . 'Guide<br>');
+        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_guide', 'unesco_oer') . '<br>');
         $form->addToForm($checkbox4->show());
-        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_manual', 'unesco_oer') . 'Manual<br>');
+        $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_manual', 'unesco_oer') . '<br>');
         $form->addToForm($checkbox5->show());
         $form->addToForm($this->objLanguage->languageText('mod_unesco_oer_best_practices', 'unesco_oer') . '<br>');
 

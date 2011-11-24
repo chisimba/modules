@@ -1088,11 +1088,7 @@ class javafilt extends object {
 
                 $abLink = new link("javascript:void(0);");
                 $abLink->extra = "onclick = javascript:ajaxFunction($i,'$prod',$browsecheck,'$institutionid')";
-
-
-
-
-                $abLink->link = $i;
+                 $abLink->link = $i;
 
                 echo $abLink->show();
                 

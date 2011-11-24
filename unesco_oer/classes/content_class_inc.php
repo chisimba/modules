@@ -262,16 +262,33 @@ class content extends object {
 
     function getTreeNodes($editable = FALSE, $highlighted = FALSE, $origional = FALSE, $compare = FALSE, $selectedID = NULL, $productID = NULL, $insertInfo = NULL) {
         $productUtil = $this->getObject('productutil', 'unesco_oer');
-
+       $objLanguage = $this->getObject("language", "language");
         $this->loadClass('treenode', 'tree');
 
         $test = implode(',', $selectedID);
         $product = $this->getObject('product');
         $product->loadProduct($productID);
         $content = $product->getContentManager();
+        
+       
+        
 
 
         $existingContent = $content->getContentByContentID($this->getID());
+        
+        
+         $remarkstring = $existingContent->showRemark();
+        
+        if ( empty($remarkstring))
+            
+           $remarkstring = $objLanguage->languageText('mod_unesco_oer_no_history', 'unesco_oer');
+        else
+            $remarkstring = $existingContent->showRemark();
+            
+        
+        
+        
+        
 
         // $tooltip = $existingContent->showRemark();
         // echo $tooltip;
@@ -330,7 +347,7 @@ class content extends object {
         } else {
             $node = new treenode(array(
 //                                                        'text' => $title . $hiddenInput->show()."<div class='treetrunc'></div>",
-                        'text' => (($highlighted && $product->isAdaptation())  ? $title . $hiddenInput->show() . $productUtil->getToolTip(trim(strip_tags($existingContent->showRemark())), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>") : $title . $hiddenInput->show()),
+                        'text' => (($highlighted && $product->isAdaptation())  ? $title . $hiddenInput->show() . $productUtil->getToolTip(trim(strip_tags($remarkstring)), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>") : $title . $hiddenInput->show()),
                         //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
                         'link' => $link,
                         'icon' => $icon,

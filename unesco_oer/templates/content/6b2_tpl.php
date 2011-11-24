@@ -45,7 +45,7 @@ $product->LoadProduct($chosenid);
     </head>
  <div id="bubble_tooltip">
     <div class="bubble_top"><span></span></div>
-    <div class="bubble_middle"><span id="bubble_tooltip_content">Content is comming here as you probably can see.Content is comming here as you probably can see.</span></div>
+    <div class="bubble_middle"><span id="bubble_tooltip_content"></span></div>
     <div class="bubble_bottom"></div>
 </div>
 
