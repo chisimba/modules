@@ -595,11 +595,12 @@ class unesco_oer extends controller {
 
     public function requiresLogin($action) {
 
+        
         if ($action == null) {
 
             return FALSE;
         }
-        $notrequired = array('FilterAdaptations', 'compareproducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations','compareselected','comparechosen');
+        $notrequired = array('compareproducts', 'FilterAdaptations', 'CompareProducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
