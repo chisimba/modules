@@ -75,9 +75,7 @@ class reportmanager extends object {
 
             if ($sapi_type == "cgi" || $sapi_type == "cgi-fcgi" || $sapi_type == "cli") {
                 if (!(PHP_SHLIB_SUFFIX == "so" && @dl('java.so')) && !(PHP_SHLIB_SUFFIX == "dll" && @dl('php_java.dll')) && !(@include_once("java/Java.inc")) && !(require_once("http://127.0.0.1:$port/java/Java.inc"))) {
-                    echo 'test';
-                    die();
-                    return "java extension not installed.";
+                    echo "java extension not installed.";
                 }
             } else {
 
