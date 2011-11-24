@@ -324,7 +324,7 @@ class content extends object {
                         //'expanded' => $this->hasContents()),
                         'expanded' => TRUE),
                             array(
-                                'onclick' => "javascript: edit('{$this->getPairString()}');return false;",
+                                'onclick' => "javascript: edit('{$this->getPairString()}',this);return false;",
                                 'onexpand' => ""
                     ));
         } else {

@@ -9,8 +9,10 @@
         echo $baseajax;
         ?>
         <script  language="JavaScript" type="text/javascript">
-            function edit(section_id){
+            function edit(section_id,selectedLink){
                 //$('.root').hide();
+                $('.highlight').toggleClass('highlight');
+                $(selectedLink).toggleClass('highlight');
     
                 $('.root').load('index.php?module=unesco_oer&action=saveContent&option=edit&pair=' + section_id + '&productID=' + $('.product_id').attr('id'));
 
