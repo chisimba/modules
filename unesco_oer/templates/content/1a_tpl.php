@@ -51,17 +51,22 @@ $this->appendArrayVar('headerParams', $js);
             <?php
 $button = new button('Search', $this->objLanguage->languageText('mod_unesco_oer_filter_search', 'unesco_oer'));
 
-            echo "<a onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' class='resetLink' ></a>";
-            echo $imgButton = "<a  href='#' onclick='javascript:ajaxFunction23(" . '"' . $adaptationstring . '"' . ");ajaxFunction($i)' >" . $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer') . " </a>";
+$button->onclick = "javascript:ajaxFunction23('$adaptationstring');ajaxFunction($i)";
+echo $button->show();
 
 //echo "<a onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' class='resetLink' ></a>";
 //echo $imgButton = "<a  href='#' onclick='javascript:ajaxFunction23(".'"'.$adaptationstring.'"'.");ajaxFunction($i)' >" .  $this->objLanguage->languageText('mod_unesco_oer_search_2', 'unesco_oer')." </a>";
 
 
-            $abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
-            $abLink->cssClass = "resetLink";
-            $abLink->link = '   ' . $this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
-            echo $abLink->show();
+$button = new button('Reset', $this->objLanguage->languageText('mod_unesco_oer_reset', 'unesco_oer'));
+
+$button->onclick = "javascript:window.location='{$this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php'))}';";
+echo $button->show();
+
+//$abLink = new link($this->uri(array("action" => 'FilterProducts', "adaptationstring" => $adaptationstring, "page" => '1a_tpl.php')));
+//$abLink->cssClass = "resetLink";
+//$abLink->link = '   ' .$this->objLanguage->languageText('mod_unesco_oer_reset_2', 'unesco_oer');
+//echo $abLink->show();
             ?>
 
             <!--            </a>-->
