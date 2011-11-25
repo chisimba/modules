@@ -128,6 +128,7 @@ class unesco_oer extends controller {
      * @return <type>
      */
     public function dispatch($action) {
+     
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -600,7 +601,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('compareproducts', 'FilterAdaptations', 'CompareProducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
+        $notrequired = array('commentmanager', 'compareproducts', 'FilterAdaptations', 'CompareProducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
@@ -1239,8 +1240,6 @@ class unesco_oer extends controller {
     }
 
     public function __commentmanager() {
-
-
         return 'comments_tpl.php';
     }
 
