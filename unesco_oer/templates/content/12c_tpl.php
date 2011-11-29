@@ -55,6 +55,7 @@
             
                 $resource = $this->getResourceUri('open-flash-chart.swf');
                 $expressInst = $this->getResourceUri('expressInstall.swf');
+                $flashError = $this->objLanguage->languageText('mod_unesco_oer_no_flash_found', 'unesco_oer');
               
             ?>
             <script type="text/javascript">
@@ -63,8 +64,8 @@
 		
 
                 if (!e.success){
-                    var noflashdiv = document.getElementById('noflash');
-                    noflashdiv.innerHTML = '<a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>';
+                    var noflashdiv = document.getElementById('noflash');                   
+                    noflashdiv.innerHTML = '<?php echo "<h3>$flashError</h3>"; ?><br /> <a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>';
                 }  
 
 		
