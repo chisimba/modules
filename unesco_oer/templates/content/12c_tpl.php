@@ -60,19 +60,21 @@
             <script type="text/javascript">
                 
             function outputStatus(e) {
-		if (!e.success){
+		
+
+                if (!e.success){
                     var noflashdiv = document.getElementById('noflash');
                     noflashdiv.innerHTML = '<a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>';
                 }  
-		}
 
-            
+		
+            }           
             
             
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "pie_chart",
                 "300", "300", "9.0.0", "<?php echo $expressInst ?>",
-                {"get-data":"get_pie"},outputStatus );
+                {"get-data":"get_pie"},false,false,outputStatus );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar_chart",
