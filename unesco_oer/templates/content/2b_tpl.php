@@ -209,6 +209,7 @@ $objProduct->loadProduct($featuredAdaptedProduct['id']);
 
 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
+             </div>
             <div class="spaceBetweenRightBorderedDivs">
                 <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
             </div>
@@ -308,7 +309,7 @@ echo $form->show();
 
             </div>
         </div>
-    </div>
+   
 
 </div>
 
