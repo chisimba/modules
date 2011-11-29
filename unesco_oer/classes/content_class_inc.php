@@ -329,6 +329,18 @@ class content extends object {
         }
 
         $title = $this->getTitle();
+        
+        
+        switch ($this->_content_type) {
+            case 'year':
+            case 'calendar':
+                $hasCommentHistory = FALSE;
+                break;
+
+            default:
+                $hasCommentHistory = TRUE;
+                break;
+        }
 //        if (strlen($title) > 15) {
 //            $title = substr($title, 0, 12) . '...';
 //        }
@@ -347,7 +359,7 @@ class content extends object {
         } else {
             $node = new treenode(array(
 //                                                        'text' => $title . $hiddenInput->show()."<div class='treetrunc'></div>",
-                        'text' => (($highlighted && $product->isAdaptation())  ? $title . $hiddenInput->show() . $productUtil->getToolTip(trim(strip_tags($remarkstring)), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>") : $title . $hiddenInput->show()),
+                        'text' => (($highlighted && $product->isAdaptation() && $hasCommentHistory)  ? $title . $hiddenInput->show() . $productUtil->getToolTip(trim(strip_tags($remarkstring)), "<img src='skins/unesco_oer/images/InfoBox.png' alt='help' width='12' height='12'>") : $title . $hiddenInput->show()),
                         //     'cssClass' => ($highlighted ? 'HL' : ''),                                                       
                         'link' => $link,
                         'icon' => $icon,
