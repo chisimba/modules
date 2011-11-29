@@ -601,7 +601,7 @@ class unesco_oer extends controller {
 
             return FALSE;
         }
-        $notrequired = array('commentmanager', 'compareproducts', 'FilterAdaptations', 'CompareProducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations');
+        $notrequired = array('commentmanager', 'compareproducts', 'FilterAdaptations', 'CompareProducts','4', 'userregistrationform', 'aboutus', 'contactus', 'openidloginresult', 'openidauth', 'backopenid', 'restricted', 'oidauth', 'oidreturn', 'showopenidlogin', 'filterproducts', 'viewproduct', 'login', 'changelang', 'home', 'viewproductsection', 'testpdf', 'javafilternum', 'javafilter', 'filteradaptations','savenewuser');
 
         if (in_array($action, $notrequired)) {
             return FALSE;
