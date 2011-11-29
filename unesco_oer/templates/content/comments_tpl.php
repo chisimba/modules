@@ -81,7 +81,17 @@ echo $baseajax;
 
 
                     <img src="skins/unesco_oer/images/icon-product.png" alt="Bookmark" width="18" height="18"class="smallLisitngIcons">
-                    <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+<!--                    <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>-->
+                    
+                    <?php 
+                    
+                       $CommentLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
+                       $CommentLink->cssClass = 'productsLink';
+                       $CommentLink->link = $this->objLanguage->languageText('mod_unesco_oer_view_product', 'unesco_oer') ;
+                       echo $CommentLink->show();
+                    
+                    
+                    ?>
                 </div>
             </div>
 
