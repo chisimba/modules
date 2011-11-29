@@ -53,48 +53,50 @@
             <?php
             
                 $resource = $this->getResourceUri('open-flash-chart.swf');
+                $expressInst = $this->getResourceUri('expressInstall.swf');
               
             ?>
             <script type="text/javascript">
 
+            
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "pie_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_pie"} );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar"} );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar1_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar1"} );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar2_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar2"} );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar3_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar3"} );
 
              swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar4_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar4"} );
 
              swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar5_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_bar5"} );
                 
              swfobject.embedSWF(
                 "<?php echo $resource ?>", "line_chart",
-                "300", "300", "9.0.0", "expressInstall.swf",
+                "300", "300", "9.0.0", "<?php echo $expressInst ?>",
                 {"get-data":"get_line"} );
 
             function get_pie()
