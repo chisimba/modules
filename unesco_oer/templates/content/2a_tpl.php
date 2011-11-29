@@ -233,6 +233,7 @@ $this->appendArrayVar('headerParams', $js);
             $coords = $this->objDbGroups->getAllgroups();
             $title = $this->objDbGroups->getAllgroups();
             ?>
+        </div>
             <div class="spaceBetweenRightBorderedDivs">
                 <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
             </div>
@@ -314,10 +315,7 @@ foreach ($title as $titles) {
 
             </div>
             
-            
-            
-        </div>
-
+       
     </div>
 </div>
 

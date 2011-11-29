@@ -103,7 +103,7 @@ class featuredproductutil extends object {
             $content = '';
 
             $content .= '<div class="rightColumnContentPadding">
-                                        <img src="' . $featuredAdaptedProduct->getThumbnailPath() . '" align="left" alt="' . $featuredAdaptedProduct->getTitle() . '" width="45" height="49" class="smallAdaptationImageGrid">
+                           <img src="' . $featuredAdaptedProduct->getThumbnailPath() . '" align="left" alt="' . $featuredAdaptedProduct->getTitle() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                          <span class="greyListingHeading">' . $featuredAdaptedProduct->getTitle() . '</span> <br/>  <br/>                                    
                                           <div class="featuredAdaptationRightContentDiv">
                                           
@@ -112,8 +112,8 @@ class featuredproductutil extends object {
                                             '.$abLink->show().'
                                              <br/><br/>
                                         </div>
-<br/>  <br/>                                        
-';
+                    <br/>  <br/>                                        
+                    ';
 
 
             //If the adaptation was created by an institution
@@ -123,20 +123,21 @@ class featuredproductutil extends object {
                 $content .= '<div class="adaptedByDiv2a">' . $this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer') . ':</div>
                                         <img src="' . $objInstitutionManager->getInstitutionThumbnail() . '" alt= "' . $objInstitutionManager->getInstitutionName() . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $objInstitutionManager->getInstitutionName() . '</span>
-                                    </div>
-                                </div>';
+                            </div>';
+                
             } else {  //If the adaptation was created by a group
                 $groupInfo = $featuredAdaptedProduct->getGroupInfo();
                 $content .= '<div class="adaptedByDiv2a">' . $this->objLanguage->languageText('mod_unesco_oer_managed_by', 'unesco_oer') . '</div>
                                         <img src="' . $groupInfo['thumbnail'] . '" alt= "' . $groupInfo['name'] . '" width="45" height="49" class="smallAdaptationImageGrid">
                                         <span class="greyListingHeading">' . $groupInfo['name'] . '</span>
-                                    </div>
+                             
                                 </div>';
+             
             }
         } else {
             $content = '';
 
-            $content .= '<div class="rightColumnContentPadding">
+            $content  .= '<div class="rightColumnContentPadding">
                                         <img src="' . "skins/unesco_oer/images/icon-nofeature.png" . '" alt=' . "No Featured Product Selected" . ' width="45" height="49"class="smallAdaptationImageGrid">
                                         <div class="featuredAdaptationRightContentDiv">
                                             <span class="greyListingHeading">' . $this->objLanguage->languageText('mod_unesco_oer_no_featured', 'unesco_oer') . '</span>
@@ -146,9 +147,8 @@ class featuredproductutil extends object {
                                           
                                         </div>
 
-      
-                                    </div>
                                 </div>';
+          
         }
 
         return $content;
