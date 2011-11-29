@@ -374,7 +374,7 @@ echo $abLink->show();
                      $uri = $this->uri(array('action' => 'Comparechosen', 'id' => $moduleid, 'productid' => $productid, 'chosenid' =>$selectedproduct));
                     $compLink = new link($uri);
                     $compLink->cssClass = "adaptationListingLink";
-                      $compLink->link = $this->objProductUtil->smart_trim($creatorName,60);
+                      $compLink->link = $this->objProductUtil->smart_trim($creatorName,50);
                     $compLink->title = $creatorName;
 
                     $content .= '<div class="slideBoxAdaptation">
