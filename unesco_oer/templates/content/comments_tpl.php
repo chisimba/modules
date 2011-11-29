@@ -175,16 +175,19 @@ echo $baseajax;
                     $form = new form('3a_comments_ui', $this->uri(array("action" => 'savecomment', 'productid' => $productID, 'user_id' => $userid)));
 
                     $Cancelbutton = new button('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
-                    $Cancelbutton->setToSubmit();
-                    $CancelLink = new link($this->uri(array("action" => 'ViewProduct', "id" => $productID)));
-                    $CancelLink->link = $Cancelbutton->show();
+                    $uri = $this->uri(array("action" => 'ViewProduct', "id" => $productID));
+                    $Cancelbutton->setOnClick("javascript: window.location='$uri'");
+                  
+                    
+                    
+               
 
                     $form->addToForm("<br>Add your Comment <br><br> ");
                     $form->addToForm($editor->show());
                     $form->addToForm("<br>");
                     $form->addToForm($button->show());
 
-                    $form->addToForm($CancelLink->show());
+                    $form->addToForm($Cancelbutton->show());
                     if ($this->objUser->isLoggedIn()) {
                         echo $form->show();
                     }
