@@ -535,7 +535,7 @@ $NOofAdaptation = $this->objDbProducts->getNoOfAdaptations($featuredProduct['id'
                 <script type="text/javascript">
 
                     var countries=new ddtabcontent("mosttabs")
-                    countries.setpersist(true)
+                    countries.setpersist(false)
                     countries.setselectedClassTarget("link") //"link" or "linkparent"
                     countries.init()
 
