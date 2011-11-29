@@ -47,6 +47,7 @@
                 <div class="tenPixelPaddingLeft">
                 <div class="topReportingDiv">
                 	<div class="paddingContentTopLeftRightBottom">
+                            <div id="noflash"></div>
 
             <script type="text/javascript" src="packages/unesco_oer/resources/js/json/json2.js"></script>
             <script type="text/javascript" src="packages/unesco_oer/resources/js/swfobject.js"></script>
@@ -57,12 +58,21 @@
               
             ?>
             <script type="text/javascript">
+                
+            function outputStatus(e) {
+		if (!e.success){
+                    var noflashdiv = document.getElementById('noflash');
+                    noflashdiv.innerHTML = '<a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>';
+                }  
+		}
 
+            
+            
             
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "pie_chart",
                 "300", "300", "9.0.0", "<?php echo $expressInst ?>",
-                {"get-data":"get_pie"} );
+                {"get-data":"get_pie"},outputStatus );
 
             swfobject.embedSWF(
                 "<?php echo $resource ?>", "bar_chart",
