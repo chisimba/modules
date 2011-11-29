@@ -585,10 +585,14 @@ echo $groupLink->show();
                 ?>
         </div>
     </div>
+    
+    
+<!-- Right column DIv -->
+<div class="rightColumnDiv">
     <div class="rightColumnDiv">
-        <div class="rightColumnDiv">
-            <div class="featuredHeader pinkText"><?php echo $this->objLanguage->languageText('mod_unesco_oer_featured_adaptation','unesco_oer'); ?></div>
-            <div class="rightColumnBorderedDiv">
+        <div class="featuredHeader">FEATURED ADAPTATION</div>
+        <div class="rightColumnBorderedDiv">
+
 <?php
 $featuredProducts = $this->objDbFeaturedProduct->getCurrentFeaturedAdaptedProduct();
 foreach ($featuredProducts as $featuredProduct) {
@@ -607,155 +611,113 @@ $objProduct->loadProduct($featuredAdaptedProduct['id']);
 
 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
-
-
-            </div>
+             </div>
             <div class="spaceBetweenRightBorderedDivs">
-                <div class="featuredHeader pinkText"> <?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer'); ?>
-
-                </div>
-
-
+                <div class="featuredHeader"><?php echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
             </div>
             <div class="rightColumnBorderedmap">
-                <div >
+
+            <?php
+            $coords = $this->objDbGroups->getAllgroups();
+            ?>
+
+                <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+                <style type="text/css">
+                    html { height: 100% }
+                    body { height: 100%; margin: 0px; padding: 0px }
+                    #map_canvas { height: 100% }
+                </style>
+                <script type="text/javascript" src="packages/unesco_oer/resources/js/jquery-1.6.2.min.js"></script>
+                <script type="text/javascript"
+                        src="http://maps.google.com/maps/api/js?sensor=true">
+                </script>
+                <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
+                <script type="text/javascript">
+
+                    var marker = new Array();
+                    $(document).ready(function(){ 
+                        myLatlng = [
+
+                          <?php
+                          foreach ($coords as $coord) {
+                           ?>
+                         new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
 
 
-                    <!DOCTYPE html>
-
-                    <head>
-                        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-                        <style type="text/css">
-                            html { height: 100% }
-                            body { height: 100%; margin: 0px; padding: 0px }
-                            #map_canvas { height: 100% }
-                        </style>
-                        <script type="text/javascript"
-                                src="http://maps.google.com/maps/api/js?sensor=true">
-                        </script>
-                        <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>
-                        <script type="text/javascript">
-                                                    
-              
-                   
-                   
-                   
-                   
-                   
-                            var marker = new Array();
-
-
-                            $(document).ready(function(){ 
-
-                                myLatlng = [
-
-                <?php
-                $coords = $this->objDbGroups->getAllgroups();
-//                                            $objDbGroups = $this->getObject('dbgroups','unesco_oer');
-//                                            $array_of_AdaptedProduct_COordinates=array();
-//                                            $adaptedproduct;//Todo get an array of adapted product in the page
-//                                            foreach($adaptedProduct as $product){
-//                                                $productid; //TODO get product id of each adapted product
-//                                               array_push($array_of_AdaptedProduct_COordinates,$objDbGroups->getAdaptedProductLat($productid));
-//                                            }
-//
-//
-//                                               $coords=$this->$array_of_AdaptedProduct_COordinates;
-
-
-                foreach ($coords as $coord) {
-                    ?>
-
-                                        new google.maps.LatLng(<?php echo $coord['loclat'] . ',' . $coord['loclong']; ?>),
-
-
-<?php } ?>
+                        <?php } ?>
 
                             ];
-
 
                             title = [
 
-<?php
-$title = $this->objDbGroups->getAllgroups();
+                              <?php
+                        $title = $this->objDbGroups->getAllgroups();
 
-foreach ($title as $titles) {
-    ?>
-                                        "<?php echo $titles['name'] ?>",
-
-
-
-<?php } ?>
-
-                            ];
+                        foreach ($title as $titles) {
+                            ?>
+                        "<?php echo $titles['name'] ?>",
 
 
+                      <?php } ?>
+
+                      ];
+
+        var myOptions = {
+            zoom: 0,
+            center: new google.maps.LatLng(0, 0),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+        var oldAction = document.forms["maps"].action;
+
+        for(i=0;i<myLatlng.length;i++)
+        {
+            marker[i] = new google.maps.Marker(
+            { position: myLatlng[i],
+                title: title[i]
+
+            } );
+
+            var pos = marker[i].getPosition();
+
+            google.maps.event.addListener(marker[i], 'click',
+            (function(pos)
+            { return function()
+                {
+                    //alert(i);
+                    document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
+                    document.forms["maps"].submit();
+                };
+            }
+        )(pos)
+        );
+
+            marker[i].setMap(map);
+
+        }
 
 
+    });
 
-                            var myOptions = {
-                                zoom: 0,
-                                center: new google.maps.LatLng(0, 0),
-                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                            }
-                            var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-
-                            var oldAction = document.forms["maps"].action;
-
-                            for(i=0;i<myLatlng.length;i++)
-                            {
-                                marker[i] = new google.maps.Marker(
-                                { position: myLatlng[i],
-                                    title: title[i]
-
-                                } );
-
-                                var pos = marker[i].getPosition();
-
-
-
-
-
-                                google.maps.event.addListener(marker[i], 'click',
-                                (function(pos)
-                                { return function()
-                                    {
-                                        //alert(i);
-                                        document.forms["maps"].action = oldAction + "&lat=" + pos.lat() + "&Lng=" + pos.lng();
-                                        document.forms["maps"].submit();
-                                    };
-                                }
-                            )(pos)
-                            );
-
-                                marker[i].setMap(map);
-
-                            }
-
-
-                        });
-
-                        </script>
-
-<br/>
-                       <div id="map_canvas" style="width:190; height:110"></div>
+                </script>
+                <br/>
+                <div id="map_canvas" style="width:190; height:110"></div>
 <?php
 $form = new form('maps', $this->uri(array("action" => 'BrowseAdaptation', "page" => '2a_tpl.php', "page" => '2a_tpl.php', 'MapEntries' => $MapEntries)));
 
 echo $form->show();
 ?>
 
-
-
-
-
-
-
-                </div>
             </div>
-
         </div>
-    </div>
+   
+
+</div>
+
+
+
+    
     <script type="text/javascript">
 
         jQuery(document).ready(function(){
