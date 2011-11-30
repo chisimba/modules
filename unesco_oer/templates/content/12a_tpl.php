@@ -440,7 +440,7 @@
                                     <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                                 
                                 
-                                    <div id="browseByMap">
+<!--                                    <div id="browseByMap">-->
 
 
 
@@ -576,6 +576,7 @@
                                     </div>
                                 
                                     </div>
+                                </div>
                                         
         <!-- Footer-->
 
