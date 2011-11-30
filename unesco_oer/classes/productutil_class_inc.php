@@ -81,7 +81,7 @@ class productutil extends object {
 
 //TODO Ntsako find out what makes a product new
         if ($product['new'] == 'true') {
-            $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new.png" alt="New" width="18" height="18"></div>';
+            $content.=' <div class="newImageIcon"><img src="skins/unesco_oer/images/icon-new-product.png" alt="New" width="18" height="18"></div>';
         } else {
             $content.= '<div class="newImageIcon"></div>';
         }
@@ -318,7 +318,7 @@ class productutil extends object {
                     <tr>
                     <td>
                     <div class='productlistViewLeftFloat'>
-                        <img src='skins/unesco_oer/images/icon-new.png' alt='New' width='18' height='18'class='imgFloatRight'>
+                        <img src='skins/unesco_oer/images/icon-new-product.png' alt='New' width='18' height='18'class='imgFloatRight'>
                         <div class='listingAdaptationLinkDiv'>new</div>
                     </div>
                     </td>
