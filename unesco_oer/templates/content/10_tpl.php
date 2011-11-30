@@ -443,7 +443,7 @@ $this->objLanguagecode = $this->getObject('languagecode', 'language');
 ?>
                         </body>
                     </html>
-
+                        </div>
                 </div>
             </div>
         </div>
