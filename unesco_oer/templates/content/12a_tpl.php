@@ -436,6 +436,7 @@
 
                                 echo $this->objFeaturedProducUtil->displayFeaturedAdaptedProduct($objProduct);
 ?>
+                                    </div>
                                 <div class="spaceBetweenRightBorderedDivs">
                                     <div class="featuredHeader"><?php   echo $this->objLanguage->languageText('mod_unesco_oer_browse_map', 'unesco_oer') ?></div>
                                 
@@ -563,6 +564,7 @@
 
                                             </script>
                                         </head>
+                            
                          
                                          <div id="map_canvas" style="width:178; height:130"></div>
 <?php
@@ -572,8 +574,8 @@
                                                 
                                            
 ?>
-                                            </div>
-                                    </div>
+                                        
+                                
                                 
                                     </div>
                                 </div>
