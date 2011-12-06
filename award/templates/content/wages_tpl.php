@@ -34,12 +34,11 @@ $indTab = "<div id='industryAggregates'>".
 		  "</div>";
 $timer = round(microtime(true) - $start,3);
 
-
 /******************* COMPARE OCCUPATIONS TAB ************************/
 
 $start = microtime(true);
 $socTab = "<div id='socAggregates'>".
-			$this->objTemplates->getSocWageAggregates('avg','all',date('Y')).
+			$this->objTemplates->getSocWageAggregates('avg',$wageTypeId, date('Y')).
 			"</div>";
 $timer2 = round(microtime(true) - $start,3);
 
