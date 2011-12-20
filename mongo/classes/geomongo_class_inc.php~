@@ -278,14 +278,14 @@ class geomongo extends object
     	return $cursor;
     }
     
-    public function isWithinPolygon($lon, $lat, $polygon, $limit = 10) {
+    public function isWithinPolygon($pt, $polygon, $limit = 10) {
         $cursor = $this->collection->find(
             array('loc' =>
                 array('$within' =>
-                    array('$box' => $polygon
-                        //array(
-                        //    array(floatval($lon), floatval($lat))
-                        //)
+                    array('$box' =>
+                        array(
+                            array(floatval($lon), floatval($lat))
+                        )
                     )
                 )
             )
