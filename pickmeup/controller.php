@@ -211,12 +211,12 @@ class pickmeup extends controller
             	if ($this->objUser->authenticateUser($username, $shaPass, TRUE)) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode("status" => true, "message" => "logged in");
+            		echo json_encode(array("status" => true, "message" => "logged in"));
             	}
             	else { 
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array("status" => false, "message" => "bad password");
+            		echo json_encode(array("status" => false, "message" => "bad password"));
             	}
             	break;
             	
