@@ -211,12 +211,12 @@ class pickmeup extends controller
             	if ($this->objUser->authenticateUser($username, $shaPass, TRUE)) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array("status" => true, "message" => "logged in"));
+            		echo json_encode(array("status" => true, "message" => "logged in", "call" => "signin"));
             	}
             	else { 
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array("status" => false, "message" => "bad password"));
+            		echo json_encode(array("status" => false, "message" => "bad password", "call" => "signin"));
             	}
             	break;
             	
@@ -233,21 +233,21 @@ class pickmeup extends controller
             	if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array('status' => false, "message" => "username taken"));
+            		echo json_encode(array('status' => false, "message" => "username taken", "call" => "signup"));
             		break;
             	}
             	
             	if ($this->objUserAdmin->emailAvailable($email) == FALSE) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array('status' => false, "message" => 'email taken'));
+            		echo json_encode(array('status' => false, "message" => 'email taken', "call" => "signup"));
             		break;
             	}
             	// Check for any problems with password
             	if ($password == '') {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array('status' => false, "message" => 'no password entered'));
+            		echo json_encode(array('status' => false, "message" => 'no password entered', "call" => "signup"));
             		break;
             	}
             	
@@ -255,7 +255,7 @@ class pickmeup extends controller
             	if (!$this->objUrl->isValidFormedEmailAddress($email)) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo  json_encode(array('status' => false, "message" => 'email not valid'));
+            		echo  json_encode(array('status' => false, "message" => 'email not valid', "call" => "signup"));
             		break;
             	}
             	
@@ -265,7 +265,7 @@ class pickmeup extends controller
             	$this->objUserAdmin->sendRegistrationMessage($pkid, $password);
             	header('Cache-Control: no-cache, must-revalidate');
             	header('Content-type: application/json');
-            	echo json_encode(array('status' => true, "message" => 'User registered, email sent'));
+            	echo json_encode(array('status' => true, "message" => 'User registered, email sent', "call" => "signup"));
             	break;
 
             case 'invitefriend' :
