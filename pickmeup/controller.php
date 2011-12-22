@@ -221,9 +221,10 @@ class pickmeup extends controller
             	break;
             	
             case 'signup':
-            	$username = $this->getParam('user');
+            	// $username = $this->getParam('user');
             	$password = $this->getParam('pass');
             	$email = $this->getParam('email');
+            	$username = $email;
             	$cellnumber =  $this->getParam('phone');
             	$firstname = $this->getParam('firstname');
             	$surname = $this->getParam('surname');
@@ -303,7 +304,9 @@ class pickmeup extends controller
             		header('Content-type: application/json');
             		echo $placesnear;
             	}
-            	
+            	else {
+            		echo json_encode(array('status' => false, "message" => "Incorrect username or password", "call" => "req"));
+            	}
             	break;
             
             default:
