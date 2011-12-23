@@ -76,6 +76,7 @@ class pickmeup extends controller
             $this->objOps           = $this->getObject('geoops', 'geo');
             $this->objCookie        = $this->getObject('cookie', 'utilities');
             $this->objUrl           = $this->getObject('url', 'strings');
+            $this->objUserAdmin     = $this->getObject('useradmin_model2', 'security');
         }
         catch ( customException $e ) {
             customException::cleanUp ();
@@ -229,7 +230,7 @@ class pickmeup extends controller
             	$firstname = $this->getParam('firstname');
             	$surname = $this->getParam('surname');
             	
-            	$this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
+            	
             	
             	if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             		header('Cache-Control: no-cache, must-revalidate');
@@ -269,6 +270,29 @@ class pickmeup extends controller
             	echo json_encode(array('status' => true, "message" => 'User registered, email sent', "call" => "signup"));
             	break;
 
+            case 'forgotpass':
+            	$email = $this->getParam('email');
+            	$username = $email;
+            	$userDetails = $this->objUserAdmin->getUserNeedPassword($username, $email);
+            	
+            	$usernameAvailable = $this->objUserAdmin->usernameAvailable($username);
+            	
+            	if ($userDetails == FALSE) {
+            		header('Cache-Control: no-cache, must-revalidate');
+            		header('Content-type: application/json');
+            		echo json_encode(array('status' => false, 'message' => 'User not found', 'call' => 'forgotpass'));
+            		break;
+            	}
+            	
+            	$this->objUserAdmin->newPasswordRequest($userDetails['id']);
+            	$this->setSession('passwordrequest', $userDetails['id']);
+            	
+            	
+            	header('Cache-Control: no-cache, must-revalidate');
+            	header('Content-type: application/json');
+            	echo json_encode(array('status' => true, 'message' => 'Password reset', 'call' => 'forgotpass'));
+            	break;
+            
             case 'invitefriend' :
                 echo $this->objOps->showInviteForm();
                 break;
@@ -324,7 +348,7 @@ class pickmeup extends controller
      */
     function requiresLogin($action='') {
         $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 
-                                'getwikipedia', 'setloc', 'placesearch', 'changelocation', 'signin', 'signup', NULL);
+                                'getwikipedia', 'setloc', 'placesearch', 'changelocation', 'signin', 'signup', 'forgotpass', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
