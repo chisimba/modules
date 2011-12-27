@@ -6,11 +6,12 @@
 
 class oer extends controller {
 
+    private $objProductManager;
     /**
      * Constructor for the Module
      */
     public function init() {
-        
+        $this->objProductManager=$this->getObject('productmanager','oer');
     }
 
     /**
@@ -60,6 +61,7 @@ class oer extends controller {
      *
      */
     function getMethod(& $action) {
+        $this->setLayoutTemplate('layout_tpl.php');
         if ($this->validAction($action)) {
             return '__' . $action;
         } else {
@@ -94,8 +96,24 @@ class oer extends controller {
      * This is the default function
      */
     private function __home() {
-       //  $this->setLayoutTemplate('threecol_layout_tpl.php');
+      
         return "1a_tpl.php";
+    }
+    
+    
+    /**
+     * this returns a template for creating a new product
+     */
+    private function __newproduct(){
+       
+        return "newproduct_tpl.php";
+    }
+    
+    /**
+     * Saves the original product
+     */
+    private function __saveoriginalproduct(){
+         return $this->objProductManager->saveNewProduct();
     }
 
 }
