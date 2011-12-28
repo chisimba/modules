@@ -7,11 +7,14 @@
 class oer extends controller {
 
     private $objProductManager;
+    private $objThemeManager;
+
     /**
      * Constructor for the Module
      */
     public function init() {
-        $this->objProductManager=$this->getObject('productmanager','oer');
+        $this->objProductManager = $this->getObject('productmanager', 'oer');
+        $this->objThemeManager = $this->getObject('thememanager', 'oer');
     }
 
     /**
@@ -37,7 +40,7 @@ class oer extends controller {
      * @return string Filename of template to be displayed
      */
     public function dispatch($action) {
-     
+
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -96,24 +99,103 @@ class oer extends controller {
      * This is the default function
      */
     private function __home() {
-      
+
         return "1a_tpl.php";
     }
-    
-    
+
     /**
      * this returns a template for creating a new product
      */
-    private function __newproduct(){
-       
+    private function __newproduct() {
+
         return "newproduct_tpl.php";
     }
-    
+
+    /**
+     * this launches control panel
+     * @return type 
+     */
+    private function __cpanel() {
+
+        return "cpanel_tpl.php";
+    }
+
+    private function __viewthemes() {
+        return "themes_tpl.php";
+    }
+
     /**
      * Saves the original product
      */
-    private function __saveoriginalproduct(){
-         return $this->objProductManager->saveNewProduct();
+    private function __saveoriginalproduct() {
+        return $this->objProductManager->saveNewProduct();
+    }
+
+    /**
+     * Used to do the actual upload
+     *
+     */
+    function __doajaxupload() {
+        $params = $this->objProductManager->doajaxupload();
+        return $this->nextAction('ajaxuploadresults', $params);
+    }
+
+    ///////////////////////////////////////////////////////////////
+    /*
+    
+      The themes functionss
+     
+     */
+    ///////////////////////////////////////////////////////////////
+    /**
+     * returns form for creating new umbrella theme
+     * @return type 
+     */
+    function __newumbrellatheme() {
+        return "addeditumbrellatheme_tpl.php";
+    }
+
+    /**
+     *Save a new umbrella theme
+     * @return type 
+     */
+    function __saveumbrellatheme() {
+        $this->objThemeManager->addNewUmbrellaTheme();
+        return $this->nextAction('viewthemes', array());
+    }
+
+    /**
+     * returns form for creating new theme
+     */
+    function __newtheme(){
+        return "addedittheme_tpl.php";
+    }
+    
+    /**
+     * Saves the new theme
+     */
+    function  __savetheme(){
+        $this->objThemeManager->addNewTheme();
+        return $this->nextAction('viewthemes', array());
+    }
+    /**
+     * Used to push through upload results for AJAX
+     */
+    function __ajaxuploadresults() {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+
+        $fileid = $this->getParam('fileid');
+        $this->setVarByRef('fileid', $fileid);
+
+        $filename = $this->getParam('filename');
+        $this->setVarByRef('filename', $filename);
+
+        return 'ajaxuploadresults_tpl.php';
     }
 
 }

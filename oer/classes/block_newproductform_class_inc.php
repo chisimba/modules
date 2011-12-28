@@ -85,14 +85,7 @@ class block_newproductform extends object {
         $objTable->addCell($textinput->show());
         $objTable->endRow();
 
-        $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_thumbnail', 'oer'));
-        $objTable->endRow();
-
-        $objUpload = $this->getObject('uploadinput', 'filemanager');
-        $objTable->startRow();
-        $objTable->addCell($objUpload->show());
-        $objTable->endRow();
+ 
 
         //author
         $objTable->startRow();

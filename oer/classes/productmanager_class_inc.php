@@ -29,20 +29,15 @@ class productmanager extends object {
             $errors[] = $this->objLanguage->languageText('mod_oer_title', 'oer');
         }
 
-        $thumbnailPath = '';
-        $results = FALSE;
-        $path = 'oer/products/' . $this->getParam('title') . '/thumbnail/';
-        
-        if ($title != '' && $this->getParam('fileupload') != '') {
-            $results = $this->uploadFile($path);
-
-            if ($results) {
-                $thumbnailPath = 'usrfiles/' . $results['path'];
-            }
-        } else {
-            $errors[] = $this->objLanguage->languageText('mod_oer_thumbnail', 'oer');
+        $author = $this->getParam('author');
+        if ($author == '') {
+            $errors[] = $this->objLanguage->languageText('mod_oer_author', 'oer');
         }
-
+        $publisher = $this->getParam('publisher');
+        if ($publisher == '') {
+            $errors[] = $this->objLanguage->languageText('mod_oer_publisher', 'oer');
+        }
+       
         if (count($errors) > 0) {
             $this->setVar('fieldsrequired', 'true');
             $this->setVar('errors', $errors);
@@ -50,46 +45,53 @@ class productmanager extends object {
             $this->setVar('mode', "fixup");
 
             return "newproduct_tpl.php";
+        } else {
+            //add lucene for the search
+            return "upload_tpl.php";
         }
-
-        //add lucene for the search
     }
 
     /**
-     * uploads a file 
-     * @param type $path
-     * @return type 
+     * Used to do the actual upload
+     *
      */
-    private function uploadFile($path) {
+    function doajaxupload() {
+        $dir = $this->objConfig->getcontentBasePath();
+
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
 
         $objMkDir = $this->getObject('mkdir', 'files');
 
-        $destinationDir = $this->objConfig->getcontentBasePath() . '/'.$path;
+        $productid = $this->getParam('productid');
+        $destinationDir = $dir . '/oer/products/' . $productid;
+
         $objMkDir->mkdirs($destinationDir);
+        // @chmod($destinationDir, 0777);
 
-        @chmod($destinationDir, 0777);
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array(
+            'all'
+        );
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir . '/';
 
-        $uploadedFile = $this->getObject('uploadinput', 'filemanager');
-        $uploadedFile->enableOverwriteIncrement = TRUE;
-        $uploadedFile->customuploadpath = $path;
+        $result = $objUpload->doUpload(TRUE, "nametesr");
 
-        $results = $uploadedFile->handleUpload($this->getParam('fileupload'));
-        //Test if file was successfully uploaded
-        // Technically, FALSE can never be returned, this is just a precaution
-        // FALSE means there is no fileinput with that name
-        if ($results == FALSE) {
-            //TODO return proper error page
-            throw new customException('Upload failed: FATAL');
+
+        if ($result['success'] == FALSE) {
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+            $error = $this->objLanguage->languageText('mod_oer_uploaderror', 'oer');
+            return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
         } else {
-            if (!$results['success']) { // upload was unsuccessful
-                if ($results['reason'] != 'nouploadedfileprovided') {
-                    throw new customException('Upload failed: ' . $results['reason']); //TODO return proper error page containing error
-                } else {
-                    return FALSE;
-                }
-            }
+
+            $filename = $result['filename'];
+
+            $params = array('action' => 'ajaxuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
+
+            return $params;
         }
-        return $results;
     }
 
 }
