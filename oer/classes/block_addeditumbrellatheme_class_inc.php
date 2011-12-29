@@ -64,7 +64,7 @@ class block_addeditumbrellatheme extends object {
 
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array());
+        $uri = $this->uri(array("action"=>"viewthemes"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $newumbrellatheme->addToForm('&nbsp;&nbsp;' . $button->show());
 

@@ -29,6 +29,7 @@ class block_newproductform extends object {
     }
 
     function show() {
+
         return $this->createForm();
     }
 
@@ -85,7 +86,7 @@ class block_newproductform extends object {
         $objTable->addCell($textinput->show());
         $objTable->endRow();
 
- 
+
 
         //author
         $objTable->startRow();
@@ -151,25 +152,20 @@ class block_newproductform extends object {
 
         //theme
         $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_theme', 'oer'));
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_productthemes', 'oer'));
         $objTable->endRow();
 
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        $leftHeader = $this->objLanguage->languageText('mod_oer_availablethemes', 'oer');
+        $rightHeader = $this->objLanguage->languageText('mod_oer_selectedthemes', 'oer');
+        $objSelectBox->create($newproductform, 'themesLeftList[]', $leftHeader, 'themesRightList[]', $rightHeader);
+        $objDbThemes = $this->getObject('dbthemes', 'oer');
+        $themes = $objDbThemes->getThemesFormatted();
+        $objSelectBox->insertLeftOptions($themes, 'id', 'theme');
+        $objSelectBox->insertRightOptions(array());
         $objTable->startRow();
-
-        $textinput = new textinput('theme');
-        $textinput->size = 60;
-        if ($mode == 'edit') {
-            $textinput->value = $product['theme'];
-        }
-        if ($mode == "fixup") {
-            $textinput->value = $theme;
-        }
-
-        $objTable->addCell($textinput->show());
+        $objTable->addCell($objSelectBox->show());
         $objTable->endRow();
-
-
-
 
 
         //keywords
@@ -177,20 +173,17 @@ class block_newproductform extends object {
         $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
         $objTable->endRow();
 
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        $leftHeader = $this->objLanguage->languageText('mod_oer_availablekeywords', 'oer');
+        $rightHeader = $this->objLanguage->languageText('mod_oer_selectedkeywords', 'oer');
+        $objSelectBox->create($newproductform, 'keywordsLeftList[]', $leftHeader, 'keywordsRightList[]', $rightHeader);
+        $objDbKeyWords = $this->getObject('dbkeywords', 'oer');
+        $keywords = $objDbKeyWords->getKeyWords();
+        $objSelectBox->insertLeftOptions($keywords, 'id', 'keyword');
+        $objSelectBox->insertRightOptions(array());
         $objTable->startRow();
-
-        $textinput = new textinput('keywords');
-        $textinput->size = 60;
-        if ($mode == 'edit') {
-            $textinput->value = $product['keywords'];
-        }
-        if ($mode == "fixup") {
-            $textinput->value = $keywords;
-        }
-
-        $objTable->addCell($textinput->show());
+        $objTable->addCell($objSelectBox->show());
         $objTable->endRow();
-
 
 
         //language

@@ -8,6 +8,7 @@ class oer extends controller {
 
     private $objProductManager;
     private $objThemeManager;
+    private $objKeywordsManager;
 
     /**
      * Constructor for the Module
@@ -15,6 +16,7 @@ class oer extends controller {
     public function init() {
         $this->objProductManager = $this->getObject('productmanager', 'oer');
         $this->objThemeManager = $this->getObject('thememanager', 'oer');
+        $this->objKeywordsManager = $this->getObject('keywordsmanager', 'oer');
     }
 
     /**
@@ -124,6 +126,31 @@ class oer extends controller {
         return "themes_tpl.php";
     }
 
+    /////////////////////////////////////////////////////////////////
+    /*
+
+      KEYWORDS FUNCTIONS
+     */
+    //////////////////////////////////////////////////////////////////
+
+    private function __viewkeywords() {
+        return "keywords_tpl.php";
+    }
+
+    private function __newkeyword() {
+       return "addeditkeywords_tpl.php";
+    }
+
+    private function __savenewkeyword(){
+        return $this->objKeywordsManager->addNewKeyWord();
+    }
+
+    /////////////////////////////////////////////////////////////////
+    /*
+
+      ORIGINAL PRODUCT FUNCTIONS
+     */
+    ///////////////////////////////////////////////////////////////
     /**
      * Saves the original product
      */
@@ -142,9 +169,9 @@ class oer extends controller {
 
     ///////////////////////////////////////////////////////////////
     /*
-    
+
       The themes functionss
-     
+
      */
     ///////////////////////////////////////////////////////////////
     /**
@@ -156,7 +183,7 @@ class oer extends controller {
     }
 
     /**
-     *Save a new umbrella theme
+     * Save a new umbrella theme
      * @return type 
      */
     function __saveumbrellatheme() {
@@ -167,17 +194,18 @@ class oer extends controller {
     /**
      * returns form for creating new theme
      */
-    function __newtheme(){
+    function __newtheme() {
         return "addedittheme_tpl.php";
     }
-    
+
     /**
      * Saves the new theme
      */
-    function  __savetheme(){
+    function __savetheme() {
         $this->objThemeManager->addNewTheme();
         return $this->nextAction('viewthemes', array());
     }
+
     /**
      * Used to push through upload results for AJAX
      */

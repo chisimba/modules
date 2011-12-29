@@ -1,7 +1,7 @@
 <?php
 
 /**
- * creates a gui for a new umbrella theme
+ * formats jey words
  *
  * @author davidwaf
  */
@@ -11,9 +11,8 @@ $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
-$this->loadClass('dropdown', 'htmlelements');
 
-class block_addedittheme extends object {
+class block_addeditkeywords extends object {
 
     //the language object
     private $objLanguage;
@@ -30,13 +29,13 @@ class block_addedittheme extends object {
 
     function createForm() {
         $objTable = $this->getObject('htmltable', 'htmlelements');
-        $newthemeform = new form('newproduct', $this->uri(array('action' => 'savetheme')));
+        $keywordsform = new form('newkeywords', $this->uri(array('action' => 'savenewkeyword')));
 
         $header = new htmlheading();
         $header->type = 2;
-        $header->str = $this->objLanguage->languageText('mod_oer_createtheme', 'oer');
+        $header->str = $this->objLanguage->languageText('mod_oer_createkeyword', 'oer');
 
-        $newthemeform->addToForm($header->show());
+        $keywordsform->addToForm($header->show());
 
         //the title
         $objTable->startRow();
@@ -57,39 +56,21 @@ class block_addedittheme extends object {
         $objTable->addCell($textinput->show());
         $objTable->endRow();
 
-
-        $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_umbrellatheme', 'oer'));
-        $objTable->endRow();
-
-        $objDBThemeManager = $this->getObject('dbumbrellathemes', 'oer');
-
-        $objTable->startRow();
-        $umbrellatheme = new dropdown('umbrellatheme');
-
-        $objDBUmbrellaThemes=  $this->getObject('dbumbrellathemes','oer');
-        $themes = $objDBUmbrellaThemes->getUmbrellaThemes();
-
-        foreach ($themes as $theme) {
-            $umbrellatheme->addOption($theme['id'],$theme['theme']);
-        }
-
-        $objTable->addCell($umbrellatheme->show());
-        $objTable->endRow();
-
-        $newthemeform->addToForm($objTable->show());
+        $keywordsform->addToForm($objTable->show());
 
         $button = new button('save', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         $button->setToSubmit();
-        $newthemeform->addToForm('<br/>' . $button->show());
+        $keywordsform->addToForm('<br/>' . $button->show());
 
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action"=>"viewthemes"));
+        $uri = $this->uri(array("action" => "viewkeywords"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $newthemeform->addToForm('&nbsp;&nbsp;' . $button->show());
+        $keywordsform->addToForm('&nbsp;&nbsp;' . $button->show());
 
-        return $newthemeform->show();
+
+
+        return $keywordsform->show();
     }
 
 }
