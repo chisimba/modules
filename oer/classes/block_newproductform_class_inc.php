@@ -193,8 +193,8 @@ class block_newproductform extends object {
 
         $objTable->startRow();
         $language = new dropdown('language');
-        $language->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
-        $language->addOption($this->objLanguage->languageText('mod_oer_english', 'oer'));
+        $language->addOption('select', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
         $objTable->addCell($language->show());
         $objTable->endRow();
 
@@ -202,12 +202,13 @@ class block_newproductform extends object {
 
         //translation
         $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_translation', 'oer'));
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_translationof', 'oer'));
         $objTable->endRow();
 
         $objTable->startRow();
         $translation = new dropdown('translation');
-        $translation->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $translation->addOption('select', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
         $objTable->addCell($translation->show());
         $objTable->endRow();
 
@@ -247,8 +248,8 @@ class block_newproductform extends object {
 
         $objTable->startRow();
         $oerresource = new dropdown('oerresource');
-        $oerresource->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
-        $oerresource->addOption($this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        $oerresource->addOption('select',$this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $oerresource->addOption('curriculum',$this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
         $objTable->addCell($oerresource->show());
         $objTable->endRow();
 
@@ -259,8 +260,8 @@ class block_newproductform extends object {
 
         $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
         $objDisplayLicense->icontype = 'big';
-        $license = ($product['cclicense'] == '' ? 'copyright' : $file['cclicense']);
-        $rightCell .= '<p>' . $objDisplayLicense->show($license) . '</p>';
+        //$license = ($product['cclicense'] == '' ? 'copyright' : $file['cclicense']);
+        $rightCell .= $objDisplayLicense->show($license);
         $objTable->startRow();
         $objTable->addCell($rightCell);
         $objTable->endRow();
