@@ -4,7 +4,8 @@
  * Entry point of oer module
  */
 
-class oer extends controller {
+class oer extends controller
+{
 
     private $objProductManager;
     private $objThemeManager;
@@ -13,7 +14,8 @@ class oer extends controller {
     /**
      * Constructor for the Module
      */
-    public function init() {
+    public function init()
+    {
         $this->objProductManager = $this->getObject('productmanager', 'oer');
         $this->objThemeManager = $this->getObject('thememanager', 'oer');
         $this->objKeywordsManager = $this->getObject('keywordsmanager', 'oer');
@@ -25,7 +27,8 @@ class oer extends controller {
      * @param type $action
      * @return type 
      */
-    function requiresLogin($action='home') {
+    function requiresLogin($action='home')
+    {
         $allowedActions = array(NULL, 'home');
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -41,7 +44,8 @@ class oer extends controller {
      * @param string $action Action being run
      * @return string Filename of template to be displayed
      */
-    public function dispatch($action) {
+    public function dispatch($action)
+    {
 
         /*
          * Convert the action into a method (alternative to
@@ -65,7 +69,8 @@ class oer extends controller {
      * @return string the name of the method
      *
      */
-    function getMethod(& $action) {
+    function getMethod(& $action)
+    {
         $this->setLayoutTemplate('layout_tpl.php');
         if ($this->validAction($action)) {
             return '__' . $action;
@@ -86,7 +91,8 @@ class oer extends controller {
      * @return boolean TRUE|FALSE
      *
      */
-    function validAction(& $action) {
+    function validAction(& $action)
+    {
         if (method_exists($this, '__' . $action)) {
             return TRUE;
         } else {
@@ -100,7 +106,8 @@ class oer extends controller {
      *
      * This is the default function
      */
-    private function __home() {
+    private function __home()
+    {
 
         return "1a_tpl.php";
     }
@@ -108,7 +115,8 @@ class oer extends controller {
     /**
      * this returns a template for creating a new product
      */
-    private function __newproduct() {
+    private function __newproduct()
+    {
 
         return "newproduct_tpl.php";
     }
@@ -117,12 +125,14 @@ class oer extends controller {
      * this launches control panel
      * @return type 
      */
-    private function __cpanel() {
+    private function __cpanel()
+    {
 
         return "cpanel_tpl.php";
     }
 
-    private function __viewthemes() {
+    private function __viewthemes()
+    {
         return "themes_tpl.php";
     }
 
@@ -133,15 +143,18 @@ class oer extends controller {
      */
     //////////////////////////////////////////////////////////////////
 
-    private function __viewkeywords() {
+    private function __viewkeywords()
+    {
         return "keywords_tpl.php";
     }
 
-    private function __newkeyword() {
+    private function __newkeyword()
+    {
        return "addeditkeywords_tpl.php";
     }
 
-    private function __savenewkeyword(){
+    private function __savenewkeyword()
+    {
         return $this->objKeywordsManager->addNewKeyWord();
     }
 
@@ -154,7 +167,8 @@ class oer extends controller {
     /**
      * Saves the original product
      */
-    private function __saveoriginalproduct() {
+    private function __saveoriginalproduct()
+    {
         return $this->objProductManager->saveNewProduct();
     }
 
@@ -162,7 +176,8 @@ class oer extends controller {
      * Used to do the actual upload
      *
      */
-    function __doajaxupload() {
+    function __doajaxupload()
+    {
         $params = $this->objProductManager->doajaxupload();
         return $this->nextAction('ajaxuploadresults', $params);
     }
@@ -178,7 +193,8 @@ class oer extends controller {
      * returns form for creating new umbrella theme
      * @return type 
      */
-    function __newumbrellatheme() {
+    function __newumbrellatheme()
+    {
         return "addeditumbrellatheme_tpl.php";
     }
 
@@ -186,7 +202,8 @@ class oer extends controller {
      * Save a new umbrella theme
      * @return type 
      */
-    function __saveumbrellatheme() {
+    function __saveumbrellatheme()
+    {
         $this->objThemeManager->addNewUmbrellaTheme();
         return $this->nextAction('viewthemes', array());
     }
@@ -194,22 +211,38 @@ class oer extends controller {
     /**
      * returns form for creating new theme
      */
-    function __newtheme() {
+    function __newtheme()
+    {
         return "addedittheme_tpl.php";
     }
 
     /**
      * Saves the new theme
      */
-    function __savetheme() {
+    function __savetheme()
+    {
         $this->objThemeManager->addNewTheme();
         return $this->nextAction('viewthemes', array());
     }
 
     /**
+     *
+     * Method to open the edit/add form for groups
+     *     Added by DWK to refactor function __groupEditingForm()
+     *     from origional
+     *
+     * @return string Template
+     */
+    function __groupedit()
+    {
+        return 'groupedit_tpl.php';
+    }
+
+    /**
      * Used to push through upload results for AJAX
      */
-    function __ajaxuploadresults() {
+    function __ajaxuploadresults()
+    {
         $this->setVar('pageSuppressToolbar', TRUE);
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('suppressFooter', TRUE);
