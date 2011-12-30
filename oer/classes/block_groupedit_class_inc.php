@@ -71,7 +71,7 @@ class block_groupedit extends object
      */
     public function init() 
     {
-        $this->title = "Working here";
+        $this->title = NULL;//"Working here";
     }
     /**
      *
@@ -84,8 +84,8 @@ class block_groupedit extends object
     public function show() 
     {
         $objGroupEditForm = $this->getObject('groupedit','oer');
-        return "WOrking here me son.";
-        //return $objGroupEditForm->show();
+        //return "WOrking here me son.";
+        return $objGroupEditForm->show();
     }
 }
 ?>
