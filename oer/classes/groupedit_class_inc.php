@@ -152,7 +152,7 @@ public function xxinit(){}
 
             if ($this->getParam('group_name') == '') {
                 $messages[] = $this->objLanguage->languageText(
-                  'mod_unesco_oer_group_message1', 'unesco_oer');
+                  'mod_oer_group_message1', 'oer');
             }
         }
         if (isset($this->userstring[0]) && $mode == 'add') {
@@ -163,8 +163,8 @@ public function xxinit(){}
 
         $table->startRow();
         $table->addCell(
-          $this->objLanguage->languageText('mod_unesco_oer_group_name',
-          'unesco_oer'));
+          $this->objLanguage->languageText('mod_oer_group_name',
+          'oer'));
         $table->addCell($name->show());
         $table->endRow();
         //group website
@@ -177,7 +177,7 @@ public function xxinit(){}
             $website->value = $this->getParam('group_website');
 
             if ($this->getParam('group_website') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message2', 'unesco_oer');
+                $messages[] =$this->objLanguage->languageText('mod_oer_group_message2', 'oer');
             }
         }
         if (isset($userstring[1]) && $mode == 'add')
@@ -187,7 +187,7 @@ public function xxinit(){}
 --------*/
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_website', 'unesco_oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_website', 'oer')); // obj lang
         $table->addCell($website->show());
         $table->endRow();
 
@@ -204,7 +204,7 @@ public function xxinit(){}
           . $this->objThumbUploader->show()); // objLang ====
         $table->endRow();
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset1', 'unesco_oer');
+        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset1', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
@@ -218,7 +218,7 @@ public function xxinit(){}
             $description_one->value = $this->getParam('description_one');
 
             if ($this->getParam('description_one') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_description_line', 'unesco_oer');
+                $messages[] = $this->objLanguage->languageText('mod_oer_group_description_line', 'oer');
             }
         }
         if (isset($userstring[1]) && $mode == 'add')
@@ -226,7 +226,7 @@ public function xxinit(){}
             $description_one->value = $userstring[1];
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_one','unesco_oer').$required); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_one','oer').$required); // obj lang
         $table->addCell($description_one ->show());
         $table->endRow();
         //Descriprion line two
@@ -234,7 +234,7 @@ public function xxinit(){}
         $description_two->size = 80;
         $description_two->value = $group[0]['description_two'];
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_two','unesco_oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_two','oer')); // obj lang
         $table->addCell($description_two->show());
         $table->endRow();
         //Descriprion line three
@@ -242,7 +242,7 @@ public function xxinit(){}
         $description_three->size = 80;
         $description_three->value = $group[0]['description_three'];
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_three','unesco_oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_three','oer')); // obj lang
         $table->addCell($description_three->show());
         $table->endRow();
         //Descriprion line four
@@ -250,7 +250,7 @@ public function xxinit(){}
         $description_four->size = 80;
         $description_four->value = $group[0]['description_four'];
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description_four','unesco_oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_four','oer')); // obj lang
         $table->addCell($description_four->show());
         $table->endRow();
         //group description
@@ -264,7 +264,7 @@ public function xxinit(){}
             $editor->value = $this->getParam('description');
 
             if ($this->getParam('description') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message3', 'unesco_oer');
+                $messages[] = $this->objLanguage->languageText('mod_oer_group_message3', 'oer');
                 }
         }
         if (isset($userstring[2]) && $mode == 'add')
@@ -272,11 +272,11 @@ public function xxinit(){}
            $editor->value = $userstring[2];
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_description', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description', 'oer'));
         $table->addCell($editor->show());
         $table->endRow();
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset5', 'unesco_oer');
+        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset5', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
@@ -296,7 +296,7 @@ public function xxinit(){}
 
         }
 
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_email', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_email', 'oer'));
         $table->addCell($email->show());
         $table->endRow();
 
@@ -308,7 +308,7 @@ public function xxinit(){}
             $address->value = $this->getParam('group_address');
 
             if ($this->getParam('group_address') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message4', 'unesco_oer');
+                $messages[] =$this->objLanguage->languageText('mod_oer_group_message4', 'oer');
             }
         }
         if (isset($userstring[4]) && $mode == 'add')
@@ -317,7 +317,7 @@ public function xxinit(){}
         }
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_address', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_address', 'oer'));
         $table->addCell($address->show());
         $table->endRow();
 
@@ -329,7 +329,7 @@ public function xxinit(){}
             $city->value = $this->getParam('group_city');
 
             if ($this->getParam('group_city') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message5', 'unesco_oer');
+                $messages[] = $this->objLanguage->languageText('mod_oer_group_message5', 'oer');
             }
         }
         if (isset($userstring[5]) && $mode == 'add')
@@ -338,7 +338,7 @@ public function xxinit(){}
         }
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_city', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_city', 'oer'));
         $table->addCell($city->show());
         $table->endRow();
 
@@ -350,7 +350,7 @@ public function xxinit(){}
             $state->value = $this->getParam('group_state');
 
             if ($this->getParam('group_state') == '') {
-                //$messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message6', 'unesco_oer');
+                //$messages[] = $this->objLanguage->languageText('mod_oer_group_message6', 'oer');
             }
         }
         if (isset($userstring[6]) && $mode == 'add')
@@ -359,7 +359,7 @@ public function xxinit(){}
         }
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_state', 'unesco_oer'));// obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_state', 'oer'));// obj lang
         $table->addCell($state->show());
         $table->endRow();
 
@@ -371,7 +371,7 @@ public function xxinit(){}
             $code->value = $this->getParam('group_postalcode');
 
             if ($this->getParam('group_postalcode') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message7', 'unesco_oer');
+                $messages[] =$this->objLanguage->languageText('mod_oer_group_message7', 'oer');
                 }
         }
         if (isset($this->userstring[7]) && $mode == 'add')
@@ -379,11 +379,11 @@ public function xxinit(){}
             $code->value = $this->userstring[7];
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_postalcode', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_postalcode', 'oer'));
         $table->addCell($code->show());
         $table->endRow();
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset2', 'unesco_oer');
+        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset2', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
@@ -397,7 +397,7 @@ public function xxinit(){}
             $latitude->value = $this->getParam('group_loclong');
 
             if ($this->getParam('group_loclong') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_unesco_oer_group_message8', 'unesco_oer');
+                $messages[] =$this->objLanguage->languageText('mod_oer_group_message8', 'oer');
             }
         }
         if (isset($userstring[8]) && $mode == 'add')
@@ -406,7 +406,7 @@ public function xxinit(){}
         }
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_latitude', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_latitude', 'oer'));
         $table->addCell($latitude->show());
         $table->endRow();
         //longitude
@@ -417,7 +417,7 @@ public function xxinit(){}
             $longitude->value = $this->getParam('group_loclong');
 
             if ($this->getParam('group_loclong') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_unesco_oer_group_message9', 'unesco_oer');
+                $messages[] = $this->objLanguage->languageText('mod_oer_group_message9', 'oer');
             }
         }
         if (isset($userstring[9]) && $mode == 'add')
@@ -426,7 +426,7 @@ public function xxinit(){}
         }
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_longitude', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_longitude', 'oer'));
         $table->addCell($longitude->show());
         $table->endRow();
         //country
@@ -441,7 +441,7 @@ public function xxinit(){}
         $table->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset3', 'unesco_oer');
+        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
 
         $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> Please enter Your location if the provided location is incorrect
             <div id="map_edit" style="width:600px; height:300px"></div><br/>' . $table->show();
@@ -458,9 +458,8 @@ public function xxinit(){}
 
         $availablegroups = array();
         $groups = $this->objDbInstitution->getAllInstitutions();
-return "<h1>ssssssssss</h1>";
         foreach ($groups as $group) {
-            if (count($user_current_membership) > 0) {
+            if (count($user_current_membership) > 0) { ///****** undefined
                 foreach ($user_current_membership as $membership) {
                     if($membership['institution_id'] !=NULL){
                     if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
@@ -503,25 +502,25 @@ return "<h1>ssssssssss</h1>";
         $tblSelectBox->endRow();
 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_unesco_oer_group_institution', 'unesco_oer'));
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_institution', 'oer'));
         $table->addCell($tblSelectBox->show());
         $table->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_unesco_oer_group_fieldset4', 'unesco_oer');
+        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset4', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        //$button = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_update_details_button', 'unesco_oer') );
+        //$button = new button ('submitform', $this->objLanguage->languageText('mod_oer_group_update_details_button', 'oer') );
         //$button->setToSubmit();
 
-        $button = new button ('submitform',$this->objLanguage->languageText('mod_unesco_oer_group_save_button', 'unesco_oer'));
+        $button = new button ('submitform',$this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
         //$button->setToSubmit();
         $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
         $button->setOnClick('javascript: ' . $action);
 
-        $Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_unesco_oer_group_cancel_button', 'unesco_oer'));
+        $Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_oer_group_cancel_button', 'oer'));
         $Cancelbutton->setToSubmit();
         $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
         $CancelLink->link =$Cancelbutton->show();
