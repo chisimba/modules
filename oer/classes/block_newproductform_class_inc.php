@@ -49,7 +49,7 @@ class block_newproductform extends object {
 
         //the title
         $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_title', 'oer'));
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_title', 'oer').'<spane>*'.$this->objLanguage->languageText('mod_oer_required', 'oer'));
         $objTable->endRow();
 
         $objTable->startRow();
@@ -248,8 +248,8 @@ class block_newproductform extends object {
 
         $objTable->startRow();
         $oerresource = new dropdown('oerresource');
-        $oerresource->addOption('select',$this->objLanguage->languageText('mod_oer_select', 'oer'));
-        $oerresource->addOption('curriculum',$this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        $oerresource->addOption('select', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
         $objTable->addCell($oerresource->show());
         $objTable->endRow();
 
@@ -258,10 +258,11 @@ class block_newproductform extends object {
         $objTable->addCell($this->objLanguage->languageText('mod_oer_licence', 'oer'));
         $objTable->endRow();
 
-        $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
-        $objDisplayLicense->icontype = 'big';
-        //$license = ($product['cclicense'] == '' ? 'copyright' : $file['cclicense']);
-        $rightCell .= $objDisplayLicense->show($license);
+        $objDisplayLicense = $this->getObject('licensechooser', 'creativecommons');
+        $objDisplayLicense->setIconSize('big');
+        $license = $product['cclicense'] == '' ? 'copyright' : $product['cclicense'];
+        $rightCell = $objDisplayLicense->show($license);
+
         $objTable->startRow();
         $objTable->addCell($rightCell);
         $objTable->endRow();
@@ -339,16 +340,9 @@ class block_newproductform extends object {
 
         $objTable->startRow();
 
-        $textinput = new textinput('contacts');
-        $textinput->size = 60;
-        if ($mode == 'edit') {
-            $textinput->value = $product['contacts'];
-        }
-        if ($mode == "fixup") {
-            $textinput->value = $contacts;
-        }
+        $textarea = new textarea('coverage', '', 15, 55);
 
-        $objTable->addCell($textinput->show());
+        $objTable->addCell($textarea->show());
         $objTable->endRow();
 
 
@@ -359,7 +353,13 @@ class block_newproductform extends object {
 
         $objTable->startRow();
         $relationtype = new dropdown('relationtype');
-        $relationtype->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $relationtype->addOption('select', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $relationtype->addOption('ispartof', $this->objLanguage->languageText('mod_oer_ispartof', 'oer'));
+        $relationtype->addOption('requires', $this->objLanguage->languageText('mod_oer_requires', 'oer'));
+        $relationtype->addOption('isrequiredby', $this->objLanguage->languageText('mod_oer_isrequiredby', 'oer'));
+        $relationtype->addOption('haspartof', $this->objLanguage->languageText('mod_oer_haspartof', 'oer'));
+        $relationtype->addOption('references', $this->objLanguage->languageText('mod_oer_references', 'oer'));
+        $relationtype->addOption('isversionof', $this->objLanguage->languageText('mod_oer_isversionof', 'oer'));
         $objTable->addCell($relationtype->show());
         $objTable->endRow();
 
@@ -369,7 +369,7 @@ class block_newproductform extends object {
         $objTable->endRow();
         $objTable->startRow();
         $relatedproduct = new dropdown('relatedproduct');
-        $relatedproduct->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
         $objTable->addCell($relatedproduct->show());
         $objTable->endRow();
 
@@ -380,17 +380,8 @@ class block_newproductform extends object {
         $objTable->endRow();
 
         $objTable->startRow();
-
-        $textinput = new textinput('contacts');
-        $textinput->size = 60;
-        if ($mode == 'edit') {
-            $textinput->value = $product['contacts'];
-        }
-        if ($mode == "fixup") {
-            $textinput->value = $contacts;
-        }
-
-        $objTable->addCell($textinput->show());
+        $textarea = new textarea('coverage', '', 15, 55);
+        $objTable->addCell($textarea->show());
         $objTable->endRow();
 
         //published
@@ -399,7 +390,9 @@ class block_newproductform extends object {
         $objTable->endRow();
         $objTable->startRow();
         $published = new dropdown('published');
-        $published->addOption($this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $published->addOption($this->objLanguage->languageText('mod_oer_disabled', 'oer'));
+        $published->addOption($this->objLanguage->languageText('mod_oer_draft', 'oer'));
+        $published->addOption($this->objLanguage->languageText('mod_oer_published', 'oer'));
         $objTable->addCell($published->show());
         $objTable->endRow();
 
