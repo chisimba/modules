@@ -8,6 +8,9 @@ NEW FILES
   block_groupedit_class_inc.php
   groupedit_class_inc.php
 
+NEW LAYOUT POSSIBILITIES
+  Added <div class='formwrapper'></div> around forms
+
 NOTES:
   The groups functionality has to be the most convoluted code
   I have ever seen. There is no use of proper validation, and

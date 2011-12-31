@@ -16,6 +16,7 @@ class oer extends controller
      */
     public function init()
     {
+        // @DAVID -- ISN'T IT BETTER TO INSTANTIATE THEM WHERE THEY ARE NEEDED?
         $this->objProductManager = $this->getObject('productmanager', 'oer');
         $this->objThemeManager = $this->getObject('thememanager', 'oer');
         $this->objKeywordsManager = $this->getObject('keywordsmanager', 'oer');
@@ -127,7 +128,6 @@ class oer extends controller
      */
     private function __cpanel()
     {
-
         return "cpanel_tpl.php";
     }
 
@@ -236,6 +236,18 @@ class oer extends controller
     function __groupedit()
     {
         return 'groupedit_tpl.php';
+    }
+
+    /**
+     *
+     * Method to open the edit/add form for insitutions
+     *     Added by DWK to refactor function from origional
+     *
+     * @return string Template
+     */
+    function __institutionedit()
+    {
+        return 'institutionedit_tpl.php';
     }
 
     /**
