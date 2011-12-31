@@ -16,7 +16,10 @@ jQuery(function() {
 
     // Things to do on loading the page.
     jQuery(document).ready(function() {
-
+        // Add jQuery Validation to form
+        jQuery("#form_institutionEditor").validate();
     });
+
+    
 
 });

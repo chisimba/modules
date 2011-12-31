@@ -22,3 +22,39 @@ NOTES:
   1. Get the empty form working with minimum other functionality
   2. Add validations and checks
   3. Add edit / add functionality
+
+
+
+
+
+
+
+        // Institution latitude input options.
+        $title = $this->objLanguage->languageText(
+          'mod_oer_loclat', 'oer');
+        $table->startRow();
+        $table->addCell($title);
+        $textinput = new textinput('loclat');
+        $textinput->size = 60;
+        if ($this->mode == 'edit') {
+            $value = $this->getParam('loclat', NULL);
+            $textinput->setValue($value);
+        }
+        $textinput->cssClass = 'required';
+        $table->addCell($textinput->show());
+        $table->endRow();
+
+        //Institution longitued input options
+        $title = $this->objLanguage->languageText(
+          'mod_oer_loclong', 'oer');
+        $table->startRow();
+        $table->addCell($title);
+        $textinput = new textinput('loclong');
+        $textinput->size = 60;
+        if ($this->mode == 'edit') {
+            $value = $this->getParam('loclong', NULL);
+            $textinput->setValue($value);
+        }
+        $textinput->cssClass = 'required';
+        $table->addCell($textinput->show());
+        $table->endRow();

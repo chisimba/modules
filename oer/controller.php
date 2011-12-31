@@ -20,6 +20,10 @@ class oer extends controller
         $this->objProductManager = $this->getObject('productmanager', 'oer');
         $this->objThemeManager = $this->getObject('thememanager', 'oer');
         $this->objKeywordsManager = $this->getObject('keywordsmanager', 'oer');
+
+        // Set the jQuery version to the one required
+        $this->setVar('JQUERY_VERSION', '1.6.1');
+
     }
 
     /**
@@ -248,6 +252,19 @@ class oer extends controller
     function __institutionedit()
     {
         return 'institutionedit_tpl.php';
+    }
+
+    /**
+     *
+     * Method to open the edit/add form for insitutions
+     *     Added by DWK to refactor function from origional
+     *
+     * @return string Template
+     */
+    function __institutionsave()
+    {
+        die("SUBMITTED");
+        //return 'institutionedit_tpl.php';
     }
 
     /**
