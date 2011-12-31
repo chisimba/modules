@@ -84,6 +84,10 @@ public function xxinit(){}
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbInstitution = $this->getObject('dbinstitution');
+        // Load the helper Javascript
+        $this->appendArrayVar('headerParams',
+          $this->getJavaScriptFile('groupedit.js',
+          'oer'));
         // Configure the userstring
         $this->userstring = $this->getParam('userstring', NULL);
         if($this->userstring !== NULL) {
@@ -130,10 +134,12 @@ public function xxinit(){}
         $uri=$this->uri(array(
             'action'=>'editGroup',
             'id'=>$this->getParam('id')
-        ));
-        $form = new form ('editer',$uri);
-        $messages = array();
+        )); // =========== CHANGE TO SAVEGROUP
 
+        // Create the form
+        $form = new form ('editer',$uri);
+
+        // Create a table to hold the layout
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->width = '100%';
         $table->border = '0';
@@ -144,6 +150,9 @@ public function xxinit(){}
         $name = new textinput('group_name');
         $name->size = 80;
         $name->value = $this->group[0]['name'];
+        $ruleLabel = $this->objLanguage->languageText(
+                'mod_oer_grouprule_namerequired', 'oer')
+        $form->addRule('group_name',$ruleLabel,'required');
 
 
 /*---------------------------
