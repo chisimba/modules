@@ -23,11 +23,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        jQuery("#form_institutionEditor").validate({
-            submitHandler: function(form) {
-                jQuery(form).ajaxSubmit();
-            }
-        });
+        //jQuery("#form_institutionEditor").validate();
     });
 
     // Function for saving the institutional data
@@ -42,7 +38,7 @@ jQuery(function() {
         jQuery.ajax({
             url: 'module=oer&action=institutionsave',
             type: "POST",
-            data: data_string,
+            //data: data_string,
             success: function(msg) {
                 jQuery("#submitInstitution").attr("disabled", NULL);
                 if(msg !== "ERROR_DATA_INSERT_FAIL") {

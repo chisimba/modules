@@ -405,6 +405,8 @@ class institutionedit extends object
           'action' => 'institutionsave',
           'institutionId' => 'fix this up'
         ));
+        
+        $uri = NULL;
 
 
         $formData = new form('institutionEditor', $uri);
