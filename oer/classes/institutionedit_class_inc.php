@@ -393,6 +393,7 @@ class institutionedit extends object
         $buttonTitle = $this->objLanguage->languageText('word_save');
         $button = new button('submitInstitution', $buttonTitle);
         $button->setToSubmit();
+        $button->cssId = "submitInstitution";
         $table->addCell($button->show());
         $table->endRow();
 

@@ -279,9 +279,9 @@ class oer extends controller
         $websiteLink = $this->getParam('websitelink');
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
-        $prevThumbnail = $this->getParam('thumbnail');
+        $thumbnail = $this->getParam('thumbnail'); // ====== Where is this from?
         $onestepid = $this->getParam('productID'); // ====== Where is this from?
-        $groupid = $this->getParam('groupid');
+        $groupid = $this->getParam('groupid'); // ====== Where is this from?
         $id = $objInstitutionManager->addInstitution(
           $name, $description,
           $type, $country, $address1,
