@@ -10,6 +10,7 @@ class oer extends controller
     private $objProductManager;
     private $objThemeManager;
     private $objKeywordsManager;
+    private $objInstitutionManager;
 
     /**
      * Constructor for the Module
@@ -263,8 +264,37 @@ class oer extends controller
      */
     function __institutionsave()
     {
-        die("SUBMITTED");
-        //return 'institutionedit_tpl.php';
+        // Initialise the object that will do the saving.
+        $objInstitutionManager = $this->getObject('institutionmanager');
+        // Get all the params from the form.
+        $name = $this->getParam('name');
+        $description = $this->getParam('description');
+        $type = $this->getParam('type');
+        $country = $this->getParam('country');
+        $address1 = $this->getParam('address1');
+        $address2 = $this->getParam('address2');
+        $address3 = $this->getParam('address3');
+        $zip = $this->getParam('zip');
+        $city = $this->getParam('city');
+        $websiteLink = $this->getParam('websitelink');
+        $keyword1 = $this->getParam('keyword1');
+        $keyword2 = $this->getParam('keyword2');
+        $prevThumbnail = $this->getParam('thumbnail');
+        $onestepid = $this->getParam('productID'); // ====== Where is this from?
+        $groupid = $this->getParam('groupid');
+        $id = $objInstitutionManager->addInstitution(
+          $name, $description,
+          $type, $country, $address1,
+          $address2, $address3, $zip,
+          $city, $websiteLink,
+          $keyword1, $keyword2,
+          $thumbnail);
+        // Note we are not returning a template as this is an AJAX save.
+        if ($id !== NULL && $id !== FALSE) {
+            die($id);
+        } else {
+            die("ERROR_DATA_INSERT_FAIL");
+        }
     }
 
     /**

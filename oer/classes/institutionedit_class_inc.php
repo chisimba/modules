@@ -137,8 +137,7 @@ class institutionedit extends object
               'mod_oer_institution_heading_edit',
               'oer');
             $id = $this->getParam('id');
-            // Retrieve the record corresponding to the id
-            //@todo
+            $this->loadData($id);
         } else {
             $h = $this->objLanguage->languageText(
               'mod_oer_institution_heading_new',
@@ -392,12 +391,13 @@ class institutionedit extends object
         $table->startRow();
         $table->addCell("&nbsp;");
         $buttonTitle = $this->objLanguage->languageText('word_save');
-        $button = new button('submitInstitutionUI', $buttonTitle);
+        $button = new button('submitInstitution', $buttonTitle);
         $button->setToSubmit();
         $table->addCell($button->show());
         $table->endRow();
 
-
+        // Insert a message area for Ajax result to display.
+        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
 
         // Createform, add fields to it and display.
         $uri = $this->uri(array(
@@ -411,8 +411,42 @@ class institutionedit extends object
         $formData->addToForm(
           $fieldsetInstitutionInfo->show()
           . $fieldset2->show()
-          . $table->show());
+          . $table->show()
+          . $msgArea);
         return $formData->show();
+    }
+
+    /**
+     *
+     * For editing, load the data according to the ID provided. It
+     * loads the data into object properties.
+     *
+     * @param string $id The id of the record to load
+     * @return boolean TRUE|FALSE
+     * @access private
+     *
+     */
+    private function loadData($id)
+    {
+
+    }
+
+    /**
+     *
+     * Get a parameter from the object properties as set by loadData()
+     *
+     * @param string $paramName The object property to retrieve
+     * @return string The parameter value
+     * @access private
+     *
+     */
+    private function getValue($paramName)
+    {
+        if (isset ($this->$paramName)) {
+            return $this->$paramName;
+        } else {
+            return NULL;
+        }
     }
 
 }
