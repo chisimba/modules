@@ -403,20 +403,25 @@ class institutionedit extends object
 
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        // Createform, add fields to it and display.
-        $uri = $this->uri(array(
-          'action' => 'institutionsave',
-          'institutionId' => 'fix this up'
-        ));
         
-        $uri = NULL;
-
-
-        $formData = new form('institutionEditor', $uri);
+        // Add hidden fields for use by JS
+        $hiddenFields = "\n\n";
+        $hidMode = new hiddeninput('mode');
+        $hidMode->cssId = "mode";
+        $hidMode->value = $this->mode;
+        $hiddenFields .= $hidMode->show() . "\n";
+        $hidId = new hiddeninput('id');
+        $hidId->cssId = "id";
+        $hidId->value = $this->getParam('id', NULL);
+        $hiddenFields .= $hidId->show() . "\n\n";
+        
+        // Createform, add fields to it and display.
+        $formData = new form('institutionEditor', NULL);
         $formData->addToForm(
           $fieldsetInstitutionInfo->show()
           . $fieldset2->show()
           . $table->show()
+          . $hiddenFields
           . $msgArea);
         return $formData->show();
     }

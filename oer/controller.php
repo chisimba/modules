@@ -282,13 +282,27 @@ class oer extends controller
         $thumbnail = $this->getParam('thumbnail'); // ====== Where is this from?
         $onestepid = $this->getParam('productID'); // ====== Where is this from?
         $groupid = $this->getParam('groupid'); // ====== Where is this from?
-        $id = $objInstitutionManager->addInstitution(
-          $name, $description,
-          $type, $country, $address1,
-          $address2, $address3, $zip,
-          $city, $websiteLink,
-          $keyword1, $keyword2,
-          $thumbnail);
+        // Get the mode (edit or add).
+        $mode = $this->getParam('mode', 'add');
+        $id = $this->getParam('id', NULL);
+        if ($mode == 'edit') {
+            $objInstitutionManager->editInstitution(
+              $id, $name, $description,
+              $type, $country, $address1,
+              $address2, $address3, $zip,
+              $city, $websiteLink,
+              $keyword1, $keyword2,
+              $thumbnail);
+        } else {
+            $id = $objInstitutionManager->addInstitution(
+              $name, $description,
+              $type, $country, $address1,
+              $address2, $address3, $zip,
+              $city, $websiteLink,
+              $keyword1, $keyword2,
+              $thumbnail);
+        }
+        
         // Note we are not returning a template as this is an AJAX save.
         if ($id !== NULL && $id !== FALSE) {
             die($id);
