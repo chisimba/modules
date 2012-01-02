@@ -242,6 +242,49 @@ class oer extends controller
     {
         return 'groupedit_tpl.php';
     }
+    
+    /**
+     *
+     * Method to open the edit/add form for insitution types.
+     *
+     * @return string Template
+     * @access public
+     * 
+     */
+    public function __institutiontypeedit()
+    {
+        return 'institutiontypeedit_tpl.php';
+    }
+    
+    /**
+     *
+     * Method to open the edit/add form for insitution types
+     *
+     * @return string Template
+     * @access public
+     * 
+     */
+    public function __institutiontypesave()
+    {
+        // Initialise the object that will do the saving.
+        $objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
+        // Get the mode (edit or add).
+        $mode = $this->getParam('mode', 'add');
+        $id = $this->getParam('id', NULL);
+        $type = $this->getParam('type');
+        if ($mode == 'edit') {
+            $objDbInstitutionTypes->editType($id, $type);
+        } else {
+            $id = $objDbInstitutionTypes->addType($type);
+            die($id);
+        }
+        // Note we are not returning a template as this is an AJAX save.
+        if ($id !== NULL && $id !== FALSE) {
+            die($id);
+        } else {
+            die("ERROR_DATA_INSERT_FAIL");
+        }
+    }
 
     /**
      *
@@ -249,8 +292,10 @@ class oer extends controller
      *     Added by DWK to refactor function from origional
      *
      * @return string Template
+     * @access public
+     * 
      */
-    function __institutionedit()
+    public function __institutionedit()
     {
         return 'institutionedit_tpl.php';
     }
@@ -261,8 +306,10 @@ class oer extends controller
      *     Added by DWK to refactor function from origional
      *
      * @return string Template
+     * @access public
+     * 
      */
-    function __institutionsave()
+    public function __institutionsave()
     {
         // Initialise the object that will do the saving.
         $objInstitutionManager = $this->getObject('institutionmanager');

@@ -140,7 +140,7 @@ class institutionedit extends object
             $h = $this->objLanguage->languageText(
               'mod_oer_institution_heading_edit',
               'oer');
-            $id = $this->getParam('id');
+            $id = $this->getParam('id', NULL);
             $this->loadData($id);
         } else {
             $h = $this->objLanguage->languageText(
@@ -175,7 +175,7 @@ class institutionedit extends object
         $textinput = new textinput('name');
         $textinput->size = 60;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('name', NULL);
+            $value = $this->name;
             $textinput->setValue($value);
         }
         $textinput->cssClass = 'required';
@@ -184,7 +184,7 @@ class institutionedit extends object
 
         // Field for the description.
         if ($this->mode == 'edit') {
-            $description = $this->getParam('description', NULL);
+            $description = $this->description;
             $textinput->setValue($value);
         } else {
             $description = NULL;
@@ -217,7 +217,7 @@ class institutionedit extends object
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $objInstitutionTypesdd = new dropdown('type');
         if ($this->mode == 'edit') {
-            $value = $this->getParam('type', NULL);
+            $value = $this->type;
         } else  {
             $value=NULL;
         }
@@ -231,7 +231,7 @@ class institutionedit extends object
           'mod_oer_institution_keyword1', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('keyword1', NULL);
+            $value = $this->keyword1;
         } else  {
             $value=NULL;
         }
@@ -248,7 +248,7 @@ class institutionedit extends object
           'mod_oer_institution_keyword2', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('keyword2', NULL);
+            $value = $this->keyword2;
         } else  {
             $value=NULL;
         }
@@ -271,7 +271,7 @@ class institutionedit extends object
         $title = $this->objLanguage->languageText('mod_oer_institution_address1', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('address1', NULL);
+            $value = $this->address1;
         } else  {
             $value=NULL;
         }
@@ -287,7 +287,7 @@ class institutionedit extends object
         $title = $this->objLanguage->languageText('mod_oer_institution_address2', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('address2', NULL);
+            $value = $this->address2;
         } else  {
             $value=NULL;
         }
@@ -303,7 +303,7 @@ class institutionedit extends object
           'mod_oer_institution_address3', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('address3', NULL);
+            $value = $this->address3;
         } else  {
             $value=NULL;
         }
@@ -319,7 +319,7 @@ class institutionedit extends object
           'mod_oer_institution_zip', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('zip', NULL);
+            $value = $this->zip;
         } else  {
             $value=NULL;
         }
@@ -338,7 +338,7 @@ class institutionedit extends object
         // Get the countries
         $objCountries = $this->getObject('languagecode', 'language');
         if ($this->mode == 'edit') {
-            $value = $this->getParam('country', NULL);
+            $value = $this->country;
         } else  {
             $value=NULL;
         }
@@ -355,7 +355,7 @@ class institutionedit extends object
           'mod_oer_institution_city', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('city', NULL);
+            $value = $this->city;
         } else  {
             $value=NULL;
         }
@@ -372,7 +372,7 @@ class institutionedit extends object
           'mod_oer_institution_websitelink', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
-            $value = $this->getParam('websitelink', NULL);
+            $value = $this->websitelink;
         } else  {
             $value=NULL;
         }
@@ -438,7 +438,17 @@ class institutionedit extends object
      */
     private function loadData($id)
     {
-
+        
+        $objDbInstitution = $this->getObject('dbinstitution');
+        $arData = $objDbInstitution->getInstitutionById($id);
+        if (!empty($arData)) {
+            foreach ($arData[0] as $key=>$value) {
+                $this->$key =  $value;
+            }
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     /**

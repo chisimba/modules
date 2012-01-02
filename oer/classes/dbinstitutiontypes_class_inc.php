@@ -30,9 +30,29 @@ class dbinstitutiontypes extends dbtable {
         $data = array(
             'type' => $type,
         );
-
-        $this->insert($data);
+        return $this->insert($data);
     }
+    
+    /**
+     *
+     * Save a type when coming from edit
+     * 
+     * @param string $id The record id
+     * @param string $type The institution type
+     * @access public
+     * @return boolean TRUE|FALSE
+     * 
+     */
+    public function editType($id, $type)
+    {
+        $result = $this->update(
+          'id', $id, array(
+          'type' => $type)
+        );
+        return $result;
+    }
+    
+    
 
    /*
     * This function takes a type Id an returns the type type
