@@ -23,32 +23,30 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        //jQuery("#form_institutionEditor").validate();
+        jQuery("#form_institutionEditor").validate();
     });
 
     // Function for saving the institutional data
-    //jQuery("#submitInstitution").live("click", function(){
     jQuery("#form_institutionEditor").submit(function(e) {
-        alert("SUBMITTED");
-        e.preventDefault();
-        jQuery("#submitInstitution").attr("disabled", "disabled");
-        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
-        status_success = 'Institution data saved.';
-        status_fail = 'Institution data was not saved due to an unknown error.';
-        data_string = jQuery("#form_institutionEditor").serialize();
-        jQuery.ajax({
-            url: 'index.php?module=oer&action=institutionsave',
-            type: "POST",
-            data: data_string,
-            success: function(msg) {
-                jQuery("#submitInstitution").attr("disabled", "");
-                if(msg !== "ERROR_DATA_INSERT_FAIL") {
-                    jQuery("#save_results").html('<span class="success">Record saved with id ' + msg + '</span>');
-                } else {
-                    //alert(msg);
-                    alert("Cannot be posted at the moment! Please try again later.");
+        if(jQuery("#form_institutionEditor").valid()){ 
+            e.preventDefault();
+            jQuery("#submitInstitution").attr("disabled", "disabled");
+            jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
+            data_string = jQuery("#form_institutionEditor").serialize();
+            jQuery.ajax({
+                url: 'index.php?module=oer&action=institutionsave',
+                type: "POST",
+                data: data_string,
+                success: function(msg) {
+                    jQuery("#submitInstitution").attr("disabled", "");
+                    if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                        jQuery("#save_results").html('<span class="success">' + status_success + msg + '</span>');
+                    } else {
+                        //alert(msg);
+                        alert(status_fail);
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 });
