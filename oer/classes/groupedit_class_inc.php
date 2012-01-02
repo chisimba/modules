@@ -150,8 +150,7 @@ public function xxinit(){}
         $name = new textinput('group_name');
         $name->size = 80;
         $name->value = $this->group[0]['name'];
-        $ruleLabel = $this->objLanguage->languageText(
-                'mod_oer_grouprule_namerequired', 'oer')
+        $ruleLabel = $this->objLanguage->languageText('mod_oer_grouprule_namerequired', 'oer');
         $form->addRule('group_name',$ruleLabel,'required');
 
 

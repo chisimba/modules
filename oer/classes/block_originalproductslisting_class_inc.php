@@ -11,17 +11,18 @@ class block_originalproductslisting extends object {
 
     //this references the db layer for getting products
     private $dbProducts;
-    //this constructs the grid
-    private $table;
+   
     private $objUser;
     //for i18n
     private $objLanguage;
 
     public function init() {
-        $this->table = $this->getObject('htmltable', 'htmlelements');
+        $this->loadClass("link", "htmlelements");
+        
         $this->dbProducts = $this->getObject('dbproducts', 'oer');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
+        
     }
 
     public function show() {
@@ -36,11 +37,29 @@ class block_originalproductslisting extends object {
                     . $link->show()
                     . '</div> ';
         }
-        $this->table->startRow();
-
-        $this->table->endRow();
-
-        return $controlBand . $this->table->show();
+        $startNewRow = TRUE;
+        $count = 2;
+        $table = $this->getObject('htmltable', 'htmlelements');
+        foreach ($originalProducts as $originalProduct) {
+            if ($startNewRow) {
+                $startNewRow=FALSE;
+                $table->startRow();
+            }
+            $thumbnail=$originalProduct['thumbnail'];
+            if($thumbnail == NULL){
+                $thumbnail='<img src="skins/oer/images/documentdefault.png" " width="79" height="101" align="bottom">';
+            }
+            $link=new link($this->uri(array("action"=>"vieworiginalproduct","id"=>$originalProduct['id'])));
+            $link->link=$thumbnail.'<br/>'.$originalProduct['title'];
+            $table->addCell($link->show());
+            if($count >3){
+                $table->endRow();
+                 $startNewRow=TRUE;
+                $count=1;
+            }
+            $count++;
+        }
+        return $controlBand . $table->show();
     }
 
 }

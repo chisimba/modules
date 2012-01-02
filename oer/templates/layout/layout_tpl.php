@@ -6,6 +6,7 @@ $pageContent = $objBlocks->parse($pageContent);
 
 $objLanguage = $this->getObject('language', 'language');
 
+
 if (isset($errors)) {
     $errorTitle = "";
     if (isset($fieldsrequired)) {

@@ -20,7 +20,12 @@ $objFix->fixTwo();
         {
             "display" : "block",
             "module" : "oer",
-            "block" : "newproductform"
+            "block" : "neworiginalproductform",
+            
+            <?php
+           echo  '"configData":';
+           echo '"'.$mode.'"';
+            ?>
         }
        
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
@@ -37,6 +42,7 @@ $objFix->fixTwo();
 // Get the contents for the layout template 
 $this->setVar('errors',$errors);
 $this->setVar('mode',$mode);
+//$this->setVar('title',$title);
 $pageContent = ob_get_contents(); 
 ob_end_clean(); 
 $this->setVar('pageContent', $pageContent); 

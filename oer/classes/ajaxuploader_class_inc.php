@@ -85,6 +85,25 @@ class ajaxuploader extends object {
         $this->addJS();
 
         $progress = $objLanguage->languageText("mod_oer_uploadinprogress", "oer");
+
+
+
+        //keywords
+
+        $form->addToForm($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
+
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        $leftHeader = $this->objLanguage->languageText('mod_oer_availablekeywords', 'oer');
+        $rightHeader = $this->objLanguage->languageText('mod_oer_selectedkeywords', 'oer');
+        $objSelectBox->create($newproductform, 'keywordsLeftList[]', $leftHeader, 'selectedKeywords[]', $rightHeader);
+        $objDbKeyWords = $this->getObject('dbkeywords', 'oer');
+        $keywords = $objDbKeyWords->getKeyWords();
+        $objSelectBox->insertLeftOptions($keywords, 'id', 'keyword');
+        $objSelectBox->insertRightOptions(array());
+        $arrFormButtons = $objSelectBox->getFormButtons();
+        $form->addToForm($objSelectBox->show());
+
+        $form->addToForm(implode(' / ', $arrFormButtons));
         return $form->show() . '<div id="div_upload_' . $id . '" style="display:none;">' . $objIcon->show() . ' ' . $progress . '</div><div id="uploadresults"></div><div id="updateform"></div>' . $objIframe->show();
     }
 

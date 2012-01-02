@@ -1,7 +1,7 @@
 <?php
 
 /**
- * formats jey words
+ * formats key words
  *
  * @author davidwaf
  */

@@ -23,31 +23,35 @@ class productmanager extends object {
      * @return type 
      */
     function saveNewProduct() {
-        $errors = array();
-        $title = $this->getParam('title');
-        if ($title == '') {
-            $errors[] = $this->objLanguage->languageText('mod_oer_title', 'oer');
-        }
 
-        $author = $this->getParam('author');
-        if ($author == '') {
-            $errors[] = $this->objLanguage->languageText('mod_oer_author', 'oer');
-        }
-        $publisher = $this->getParam('publisher');
-        if ($publisher == '') {
-            $errors[] = $this->objLanguage->languageText('mod_oer_publisher', 'oer');
-        }
-       
-        if (count($errors) > 0) {
-            $this->setVar('fieldsrequired', 'true');
-            $this->setVar('errors', $errors);
-            $this->setVar('title', $title);
-            $this->setVar('mode', "fixup");
+        $data = array(
+            "title" => $this->getParam("title"),
+            "alternative_title" => $this->getParam("alternative_title"),
+            "author" => $this->getParam("author"),
+            "othercontributors" => $this->getParam("othercontributors"),
+            "publisher" => $this->getParam("publisher"),
+            "language" => $this->getParam("language"),
+            "translation_of" => $this->getParam("translation"),
+            "description" => $this->getParam("description"),
+            "abstract" => $this->getParam("abstract"),
+            "oerresource" => $this->getParam("oerresource"),
+            "provenonce" => $this->getParam("provenonce"),
+            "accredited" => $this->getParam("accredited"),
+            "accreditation_body" => $this->getParam("accreditationbody"),
+            "accreditation_date" => $this->getParam("accreditationdate"),
+            "contacts" => $this->getParam("contacts"),
+            "relation_type" => $this->getParam("relationtype"),
+            "relation" => $this->getParam("relatedproduct"),
+            "coverage" => $this->getParam("coverage"),
+            "status" => $this->getParam("status"),
+        );
 
-            return "newproduct_tpl.php";
+        $id = $this->dbproduct->saveOriginalProduct($data);
+        // Note we are not returning a template as this is an AJAX save.
+        if ($id !== NULL && $id !== FALSE) {
+            die($id);
         } else {
-            //add lucene for the search
-            return "upload_tpl.php";
+            die("ERROR_DATA_INSERT_FAIL");
         }
     }
 

@@ -21,6 +21,14 @@ class dbproducts extends dbtable {
         $sql="select * from $this->productsTableName where parent_id is null";
         return $this->getArray($sql);
     }
+    
+    
+    /**
+     * saves original product into db
+     */
+    function saveOriginalProduct($data){
+        return $this->insert($data);
+    }
 }
 
 ?>

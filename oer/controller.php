@@ -35,7 +35,7 @@ class oer extends controller
      */
     function requiresLogin($action='home')
     {
-        $allowedActions = array(NULL, 'home');
+        $allowedActions = array(NULL, 'home','vieworiginalproduct');
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -174,7 +174,8 @@ class oer extends controller
      */
     private function __saveoriginalproduct()
     {
-        return $this->objProductManager->saveNewProduct();
+         $this->objProductManager->saveNewProduct();
+       
     }
 
     /**
