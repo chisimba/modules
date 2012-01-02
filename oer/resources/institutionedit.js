@@ -28,25 +28,23 @@ jQuery(function() {
 
     // Function for saving the institutional data
     jQuery("#submitInstitution").live("click", function(){
-        alert("CLICKED");
-        //return;
-        //jQuery("#submitInstitution").attr("disabled", "disabled");
+        jQuery("#submitInstitution").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
         status_success = 'Institution data saved.';
         status_fail = 'Institution data was not saved due to an unknown error.';
         data_string = '';
         jQuery.ajax({
-            url: 'module=oer&action=institutionsave',
+            url: 'index.php?module=oer&action=institutionsave',
             type: "POST",
-            //data: data_string,
+            data: data_string,
             success: function(msg) {
-                jQuery("#submitInstitution").attr("disabled", NULL);
+                alert("Done ajax");
+                jQuery("#submitInstitution").attr("disabled", "");
                 if(msg !== "ERROR_DATA_INSERT_FAIL") {
-                    alert('Record saved with id ' + msg);
-                    jQuery("#save_results").html('Record saved with id ' + msg);
+                    jQuery("#save_results").html('<span class="success">Record saved with id ' + msg + '</span>');
                 } else {
-                    alert(msg);
-                    //alert("Cannot be posted at the moment! Please try again later.");
+                    //alert(msg);
+                    alert("Cannot be posted at the moment! Please try again later.");
                 }
             }
         });

@@ -392,14 +392,14 @@ class institutionedit extends object
         $table->addCell("&nbsp;");
         $buttonTitle = $this->objLanguage->languageText('word_save');
         $button = new button('submitInstitution', $buttonTitle);
-        $button->setToSubmit();
+        //$button->setToSubmit();
         $button->cssId = "submitInstitution";
         $table->addCell($button->show());
         $table->endRow();
 
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-
+//<a id='submitInstitution' href='#'>Clickme</a>
         // Createform, add fields to it and display.
         $uri = $this->uri(array(
           'action' => 'institutionsave',
