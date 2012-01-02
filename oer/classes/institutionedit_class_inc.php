@@ -82,6 +82,10 @@ class institutionedit extends object
     public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
+        // Serialize language items to Javascript
+        $arrayVars['status_success'] = "mod_oer_status_success";
+        $arrayVars['status_fail'] = "mod_oer_status_fail";
+        $this->serializeVars($arrayVars);
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         // Load scriptaclous since we can no longer guarantee it is there
@@ -449,6 +453,25 @@ class institutionedit extends object
             return NULL;
         }
     }
-
+    
+    /**
+     *
+     * Serialize language elements so they are available to 
+     * Javascript. It does this by creating an 
+     *  
+     * @param string array $arrayVars an array of key value pairs
+     * @access private
+     * @return void
+     * 
+     */
+    private function serializeVars($arrayVars)
+    {
+        $ret = "\n\n<script type='text/javascript'>\n";
+        foreach ($arrayVars as $key=>$value) {
+            $ret .= $key . " = '" . $this->objLanguage->languageText($value, "oer") . "';\n";
+        }
+        $ret .= "</script>\n\n";
+        $this->appendArrayVar('headerParams', $ret);
+    }
 }
 ?>

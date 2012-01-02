@@ -8,8 +8,6 @@
  */
 
 
-var status_success;
-var status_fail;
 var data_string;
 
 
