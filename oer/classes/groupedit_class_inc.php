@@ -70,8 +70,6 @@ class groupedit extends object
     private $group;
     private $linkedInstitution;
 
-public function xxinit(){}
-
     /**
     *
     * Intialiser for the oerfixer database connector
@@ -109,8 +107,35 @@ public function xxinit(){}
 
     public function show()
     {
-        return $this->makeHeading();
+        return $this->makeHeading()  . $this->buildForm();
     }
+    
+    /**
+     *
+     * For editing, load the data according to the ID provided. It
+     * loads the data into object properties.
+     *
+     * @param string $id The id of the record to load
+     * @return boolean TRUE|FALSE
+     * @access private
+     *
+     */
+    private function loadData($id)
+    {
+        
+        $objDbGroups = $this->getObject('dbgroups');
+        $arData = $objDbGroups->getGroupInfo($id);
+        if (!empty($arData)) {
+            foreach ($arData[0] as $key=>$value) {
+                $this->$key =  $value;
+            }
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    
 
     /**
      *
@@ -125,8 +150,14 @@ public function xxinit(){}
         // setup and show heading
         $header = new htmlheading();
         $header->type = 1;
-        $header->str = $this->group[0]['name'].":"."Profile";  //objLang @ToDo
-        return $header->show() . $this->buildForm();
+        if (isset($this->name)) {
+            $header->str = $this->name;
+        } else {
+            $header->str = $this->objLanguage->languageText(
+                  'mod_oer_group_new', 'oer', "Creating a new group");;
+        }
+        
+        return $header->show();
     }
 
     private function buildForm()

@@ -85,7 +85,8 @@ class institutionedit extends object
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $this->serializeVars($arrayVars);
+        $objSerialize = $this->getObject('serializevars', 'oer');
+        $objSerialize->serializetojs($arrayVars);
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         // Load scriptaclous since we can no longer guarantee it is there
@@ -438,7 +439,6 @@ class institutionedit extends object
      */
     private function loadData($id)
     {
-        
         $objDbInstitution = $this->getObject('dbinstitution');
         $arData = $objDbInstitution->getInstitutionById($id);
         if (!empty($arData)) {
@@ -449,44 +449,6 @@ class institutionedit extends object
         } else {
             return FALSE;
         }
-    }
-
-    /**
-     *
-     * Get a parameter from the object properties as set by loadData()
-     *
-     * @param string $paramName The object property to retrieve
-     * @return string The parameter value
-     * @access private
-     *
-     */
-    private function getValue($paramName)
-    {
-        if (isset ($this->$paramName)) {
-            return $this->$paramName;
-        } else {
-            return NULL;
-        }
-    }
-    
-    /**
-     *
-     * Serialize language elements so they are available to 
-     * Javascript. It does this by creating an 
-     *  
-     * @param string array $arrayVars an array of key value pairs
-     * @access private
-     * @return void
-     * 
-     */
-    private function serializeVars($arrayVars)
-    {
-        $ret = "\n\n<script type='text/javascript'>\n";
-        foreach ($arrayVars as $key=>$value) {
-            $ret .= $key . " = '" . $this->objLanguage->languageText($value, "oer") . "';\n";
-        }
-        $ret .= "</script>\n\n";
-        $this->appendArrayVar('headerParams', $ret);
     }
 }
 ?>

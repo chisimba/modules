@@ -85,7 +85,8 @@ class institutiontypeedit extends object
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $this->serializeVars($arrayVars);
+        $objSerialize = $this->getObject('serializevars', 'oer');
+        $objSerialize->serializetojs($arrayVars);
         $this->objDbInstitutionTypes = $this->getObject('dbinstitutiontypes');
          // Load the jquery validate plugin
         $this->appendArrayVar('headerParams',
@@ -239,26 +240,6 @@ class institutiontypeedit extends object
         } else {
             return NULL;
         }
-    }
-    
-    /**
-     *
-     * Serialize language elements so they are available to 
-     * Javascript. It does this by creating an 
-     *  
-     * @param string array $arrayVars an array of key value pairs
-     * @access private
-     * @return void
-     * 
-     */
-    private function serializeVars($arrayVars)
-    {
-        $ret = "\n\n<script type='text/javascript'>\n";
-        foreach ($arrayVars as $key=>$value) {
-            $ret .= $key . " = '" . $this->objLanguage->languageText($value, "oer") . "';\n";
-        }
-        $ret .= "</script>\n\n";
-        $this->appendArrayVar('headerParams', $ret);
     }
 }
 ?>
