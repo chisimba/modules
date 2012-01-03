@@ -71,7 +71,7 @@ class serializevars extends dbtable
     */
     public function init()
     {
-
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     
     /**
@@ -84,7 +84,7 @@ class serializevars extends dbtable
      * @return TRUE
      * 
      */
-    private function serializetojs($arrayVars)
+    public function serializetojs($arrayVars)
     {
         $ret = "\n\n<script type='text/javascript'>\n";
         foreach ($arrayVars as $key=>$value) {

@@ -80,29 +80,33 @@ class groupedit extends object
     public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
+        // Serialize language items to Javascript
+        $arrayVars['status_success'] = "mod_oer_status_success";
+        $arrayVars['status_fail'] = "mod_oer_status_fail";
+        $objSerialize = $this->getObject('serializevars', 'oer');
+        $objSerialize->serializetojs($arrayVars);
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbInstitution = $this->getObject('dbinstitution');
-        // Load the helper Javascript
+        // Load the jquery validate plugin
+        $this->appendArrayVar('headerParams',
+        $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
+          'jquery'));
+        // Load the helper Javascript.
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('groupedit.js',
           'oer'));
-        // Configure the userstring
-        $this->userstring = $this->getParam('userstring', NULL);
-        if($this->userstring !== NULL) {
-            $this->userstring = base64_decode($this->userstring);
-            $this->userstring = explode(',', $this->userstring);
-        }
-        // Load all the required HTML classes from HTMLElements module
+        // Load all the required HTML classes from HTMLElements module.
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable','htmlelements');
         $this->loadClass('textinput','htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('fieldset','htmlelements');
-        //Get Group details
+        // Get Group details.
         $this->objDbGroups = $this->getObject('dbgroups');
         $this->group=$this->objDbGroups->getGroupInfo($this->getParam('id', NULL));
-        //$this->linkedInstitution=$this->objDbGroups->getLinkedInstitution($this->getParam('id'));
+        // Get edit or add mode from querystring.
+        $this->mode = $this->getParam('mode', 'add');
     }
 
     public function show()
@@ -167,8 +171,8 @@ class groupedit extends object
             'id'=>$this->getParam('id')
         )); // =========== CHANGE TO SAVEGROUP
 
-        // Create the form
-        $form = new form ('editer',$uri);
+        // Create the form.
+        $form = new form ('groupEditor',$uri);
 
         // Create a table to hold the layout
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -177,320 +181,258 @@ class groupedit extends object
         $tableable->cellspacing = '0';
         $table->cellpadding = '2';
 
-        // Group name
+        // Group name.
         $name = new textinput('group_name');
         $name->size = 80;
-        $name->value = $this->group[0]['name'];
-        $ruleLabel = $this->objLanguage->languageText('mod_oer_grouprule_namerequired', 'oer');
-        $form->addRule('group_name',$ruleLabel,'required');
-
-
-/*---------------------------
-        if ($mode == 'addfixup') {
-            $name->value = $this->getParam('group_name');
-
-            if ($this->getParam('group_name') == '') {
-                $messages[] = $this->objLanguage->languageText(
-                  'mod_oer_group_message1', 'oer');
-            }
+        $name->cssClass = 'required';
+        if ($this->mode == 'edit') {
+            $name->value = $this->name;
+        } else {
+            $name->value = NULL;
         }
-        if (isset($this->userstring[0]) && $mode == 'add') {
-            $name->value = $userstring[0];
-        }
- --------*/
-
-
         $table->startRow();
         $table->addCell(
           $this->objLanguage->languageText('mod_oer_group_name',
           'oer'));
         $table->addCell($name->show());
         $table->endRow();
-        //group website
+        
+        // Group website.
         $website = new textinput('group_website');
         $website->size = 80;
-        $website->value = $this->group[0]['website'];
-
-/*-----------------
-        if ($mode == 'addfixup') {
-            $website->value = $this->getParam('group_website');
-
-            if ($this->getParam('group_website') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_oer_group_message2', 'oer');
-            }
+        $website->cssClass = 'required';
+        if ($this->mode == 'edit') {
+            $website->value = $this->website;
+        } else {
+            $website->value = NULL;
         }
-        if (isset($userstring[1]) && $mode == 'add')
-        {
-            $website->value = $userstring[1];
-        }
---------*/
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_website', 'oer')); // obj lang
         $table->addCell($website->show());
         $table->endRow();
 
-
-        $content.='
-                  <img src="' . $group[0]['thumbnail']
-        . '" alt"="Featured" width="30" height="30"><br>
-
-                          '; // objLang ====
-
+        // Group avatar or thumbnail.
+        if ($this->mode == 'edit') {
+            $content ="\n<img src='" 
+              . $this->thumbnail
+              . "' alt'='Featured' width='30' height='30'><br>\n\n"; // objLang ====
+        } else {
+            $content = NULL;
+        }
         $table->startRow();
         $table->addCell($content);
         $table->addCell("Change Avatar" .'&nbsp;'
           . $this->objThumbUploader->show()); // objLang ====
         $table->endRow();
+        
+        // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset1', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        //Descriprion line one
+        // Descriprion line one.
         $table = $this->newObject('htmltable', 'htmlelements');
         $description_one = new textinput('description_one');
         $description_one ->size = 80;
-        $description_one->value = $group[0]['description_one'];
-        if ($mode == 'addfixup') {
-            $description_one->value = $this->getParam('description_one');
-
-            if ($this->getParam('description_one') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_oer_group_description_line', 'oer');
-            }
-        }
-        if (isset($userstring[1]) && $mode == 'add')
-        {
-            $description_one->value = $userstring[1];
+        $description_one->cssClass = "required";
+        if ($this->mode == 'edit') {
+            $description_one->value = $this->description_one;
+        } else {
+            $description_one->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_one','oer').$required); // obj lang
+        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_one','oer')); // obj lang
         $table->addCell($description_one ->show());
         $table->endRow();
-        //Descriprion line two
+        
+        // Description line two.
         $description_two = new textinput('description_two');
         $description_two->size = 80;
-        $description_two->value = $group[0]['description_two'];
+        if ($this->mode == 'edit') {
+            $description_two->value = $this->description_two;
+        } else {
+            $description_two->value = NULL;
+        }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_description_two','oer')); // obj lang
         $table->addCell($description_two->show());
         $table->endRow();
+        
         //Descriprion line three
         $description_three = new textinput('description_three');
         $description_three->size = 80;
-        $description_three->value = $group[0]['description_three'];
+        if ($this->mode == 'edit') {
+            $description_three->value = $this->description_two;
+        } else {
+            $description_three->value = NULL;
+        }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_description_three','oer')); // obj lang
         $table->addCell($description_three->show());
         $table->endRow();
-        //Descriprion line four
+        
+        //Description line four.
         $description_four= new textinput('description_four');
         $description_four->size = 80;
-        $description_four->value = $group[0]['description_four'];
+        if ($this->mode == 'edit') {
+            $description_four->value = $this->description_two;
+        } else {
+            $description_four->value = NULL;
+        }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_description_four','oer')); // obj lang
         $table->addCell($description_four->show());
         $table->endRow();
-        //group description
+        
+        // Group description.
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'description';
         $editor->height = '150px';
         $editor->width = '85%';
         $editor->setBasicToolBar();
-        $editor->setContent($group[0]['description']);
-        if ($mode == 'addfixup') {
-            $editor->value = $this->getParam('description');
-
-            if ($this->getParam('description') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_oer_group_message3', 'oer');
-                }
-        }
-        if (isset($userstring[2]) && $mode == 'add')
-        {
-           $editor->value = $userstring[2];
-        }
+        if ($this->mode == 'edit') {
+            $editor->setContent($this->description);
+        } 
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_description', 'oer'));
         $table->addCell($editor->show());
         $table->endRow();
+        
+        // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset5', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        //group contact details
+        // Group contact details.
         $table = $this->newObject('htmltable', 'htmlelements');
-
         $email = new textinput('register_email');
         $email->size = 80;
-        $email->value = $group[0]['email'];
-        if ($mode == 'addfixup') {
-            $email->value = $this->getParam('register_email');
-           }
-        if (isset($userstring[3]) && $mode == 'add')
-        {
-            $email->value = $userstring[3];
-
+        $email->cssClass = "requried";
+        if ($this->mode == 'edit') {
+            $email->value = $this->email;
+        } else {
+            $email->value = NULL;
         }
-
         $table->addCell($this->objLanguage->languageText('mod_oer_group_email', 'oer'));
         $table->addCell($email->show());
         $table->endRow();
 
-        //address
+        // Group address.
         $address = new textinput('group_address');
         $address->size = 80;
-        $address->value = $this->group[0]['address'];
-        if ($mode == 'addfixup') {
-            $address->value = $this->getParam('group_address');
-
-            if ($this->getParam('group_address') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_oer_group_message4', 'oer');
-            }
+        $address->cssClass = 'required';
+        if ($this->mode == 'edit') {
+            $address->value = $this->address;
+        } else {
+            $address->value = NULL;
         }
-        if (isset($userstring[4]) && $mode == 'add')
-        {
-            $address->value = $userstring[4];
-        }
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_address', 'oer'));
         $table->addCell($address->show());
         $table->endRow();
 
-        //CITY
+        // Group city.
         $city = new textinput('group_city');
         $city->size = 80;
-        $city->value = $group[0]['city'];
-        if ($mode == 'addfixup') {
-            $city->value = $this->getParam('group_city');
-
-            if ($this->getParam('group_city') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_oer_group_message5', 'oer');
-            }
+        $city->cssClass='required';
+        if ($this->mode == 'edit') {
+            $city->value = $this->city;
+        } else {
+            $city->value = NULL;
         }
-        if (isset($userstring[5]) && $mode == 'add')
-        {
-            $city->value = $userstring[5];
-        }
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_city', 'oer'));
         $table->addCell($city->show());
         $table->endRow();
 
-        //STATE
+        // Group state/province.
         $state = new textinput('group_state');
         $state->size = 80;
-        $state->value = $group[0]['state'];
-        if ($mode == 'addfixup') {
-            $state->value = $this->getParam('group_state');
-
-            if ($this->getParam('group_state') == '') {
-                //$messages[] = $this->objLanguage->languageText('mod_oer_group_message6', 'oer');
-            }
+        $state->cssClass = 'required';
+        if ($this->mode == 'edit') {
+            $state->value = $this->state;
+        } else {
+            $state->value = NULL;
         }
-        if (isset($userstring[6]) && $mode == 'add')
-        {
-            $state->value = $userstring[6];
-        }
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_state', 'oer'));// obj lang
         $table->addCell($state->show());
         $table->endRow();
 
-        //postal code
+        // Group postal code.
         $code = new textinput('group_postalcode');
         $code->size = 80;
-        $code->value = $this->group[0]['postalcode'];
-        if ($mode == 'addfixup') {
-            $code->value = $this->getParam('group_postalcode');
-
-            if ($this->getParam('group_postalcode') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_oer_group_message7', 'oer');
-                }
-        }
-        if (isset($this->userstring[7]) && $mode == 'add')
-        {
-            $code->value = $this->userstring[7];
+        $code->cssClass = 'required';
+        if ($this->mode == 'edit') {
+            $code->value = $this->postalcode;
+        } else {
+            $code->value = NULL;
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_postalcode', 'oer'));
         $table->addCell($code->show());
         $table->endRow();
+        
+        // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset2', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        //latitude
+        // Group latitude.
         $table = $this->newObject('htmltable', 'htmlelements');
         $latitude = new textinput('group_loclat');
         $latitude->size = 38;
-        $latitude->value = $this->group[0]['loclat'];
-        if ($mode == 'addfixup') {
-            $latitude->value = $this->getParam('group_loclong');
-
-            if ($this->getParam('group_loclong') == '') {
-                $messages[] =$this->objLanguage->languageText('mod_oer_group_message8', 'oer');
-            }
+        if ($this->mode == 'edit') {
+            $latitude->value = $this->loclat;
+        } else {
+            $latitude->value = NULL;
         }
-        if (isset($userstring[8]) && $mode == 'add')
-        {
-            $latitude->value = $this->userstring[8];
-        }
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_latitude', 'oer'));
         $table->addCell($latitude->show());
         $table->endRow();
-        //longitude
+        
+        // Group longitude.
         $longitude = new textinput('group_loclong');
         $longitude->size = 38;
-        $longitude->value = $group[0]['loclong'];
-        if ($mode == 'addfixup') {
-            $longitude->value = $this->getParam('group_loclong');
-
-            if ($this->getParam('group_loclong') == '') {
-                $messages[] = $this->objLanguage->languageText('mod_oer_group_message9', 'oer');
-            }
+        if ($this->mode == 'edit') {
+            $longitude->value = $this->loclong;
+        } else {
+            $longitude->value = NULL;
         }
-        if (isset($userstring[9]) && $mode == 'add')
-        {
-            $longitude->value = $userstring[9];
-        }
-
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('mod_oer_group_longitude', 'oer'));
         $table->addCell($longitude->show());
         $table->endRow();
-        //country
+        
+        // Group country.
         $table->startRow();
         $objCountries = &$this->getObject('languagecode', 'language');
         $table->addCell($this->objLanguage->languageText('word_country', 'system'));
-        if ($mode == 'addfixup') {
-            $table->addCell($objCountries->countryAlpha($this->getParam('country')));
+        if ($this->mode == 'edit') {
+            $table->addCell($objCountries->countryAlpha($this->country));
         } else {
             $table->addCell($objCountries->countryAlpha());
         }
         $table->endRow();
 
+        // Put it in a fieldset with a google map.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
-
         $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> Please enter Your location if the provided location is incorrect
             <div id="map_edit" style="width:600px; height:300px"></div><br/>' . $table->show();
-
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
+// DONE TO HERE----------------------
+        
         $table = $this->newObject('htmltable', 'htmlelements');
-
-
         $user_current_membership = $this->objDbGroups->getGroupInstitutions(
           $this->getParam('id'));
         $currentMembership = array();
@@ -554,19 +496,29 @@ class groupedit extends object
         //$button = new button ('submitform', $this->objLanguage->languageText('mod_oer_group_update_details_button', 'oer') );
         //$button->setToSubmit();
 
-        $button = new button ('submitform',$this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
-        //$button->setToSubmit();
-        $action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
-        $button->setOnClick('javascript: ' . $action);
+        $button = new button ('submitGroup',$this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
+        $button->setToSubmit();
+        //$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
+        //$button->setOnClick('javascript: ' . $action);
+        $form->addToForm($button->show());
+        
+        // Insert a message area for Ajax result to display.
+        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
+        
+        // Add hidden fields for use by JS
+        $hiddenFields = "\n\n";
+        $hidMode = new hiddeninput('mode');
+        $hidMode->cssId = "mode";
+        $hidMode->value = $this->mode;
+        $hiddenFields .= $hidMode->show() . "\n";
+        $hidId = new hiddeninput('id');
+        $hidId->cssId = "id";
+        $hidId->value = $this->getParam('id', NULL);
+        $hiddenFields .= $hidId->show() . "\n\n";
 
-        $Cancelbutton = new button ('submitform', $this->objLanguage->languageText('mod_oer_group_cancel_button', 'oer'));
-        $Cancelbutton->setToSubmit();
-        $CancelLink = new link($this->uri(array('action' => "groupListingForm")));
-        $CancelLink->link =$Cancelbutton->show();
-
-        $form->extra = 'enctype="multipart/form-data"';
-        $form->addToForm('<p align="right">'.$button->show().$CancelLink->show().'</p>');
-
+        $form->addToForm($msgArea);
+        $form->addToForm($hiddenFields);
+                
         // Send the form
         return $form->show();
     }

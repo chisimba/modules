@@ -234,14 +234,23 @@ class oer extends controller
     /**
      *
      * Method to open the edit/add form for groups
-     *     Added by DWK to refactor function __groupEditingForm()
-     *     from origional
      *
      * @return string Template
      */
     function __groupedit()
     {
         return 'groupedit_tpl.php';
+    }
+    
+    /**
+     *
+     * Method to do ajax save for groups
+     *
+     * @return string Template
+     */
+    function __groupsave()
+    {
+        die("WORKING_HERE");
     }
     
     /**
