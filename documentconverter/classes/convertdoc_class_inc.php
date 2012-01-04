@@ -90,10 +90,10 @@ class convertdoc extends object {
         //return $path;
         return escapeshellarg($path);
         /*
-          $isWindowsOS = strtoupper(substr(php_uname('s'), 0, 7)) === 'WINDOWS';
-          //return $isWindowsOS?('"'.str_replace('/', '\\', $path).'"'):$path;
-          return $isWindowsOS?escapeshellarg($path):$path;
-         */
+        $isWindowsOS = strtoupper(substr(php_uname('s'), 0, 7)) === 'WINDOWS';
+        //return $isWindowsOS?('"'.str_replace('/', '\\', $path).'"'):$path;
+        return $isWindowsOS?escapeshellarg($path):$path;
+        */
     }
 
     /**
@@ -109,7 +109,7 @@ class convertdoc extends object {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $oolocation = $objSysConfig->getValue('OO_LOCATION', 'documentconverter');
 
-        $command = 'java  -jar "' . $this->getResourcePath('jodconverter-core-3.0-beta-3/lib/jodconverter-core-3.0-beta-3.jar') . '"  "' . $inputFilename . '" "' . $destination .'"';
+        $command = 'java  -jar ' . escapeshellarg($this->getResourcePath('jodconverter-core-3.0-beta-3/lib/jodconverter-core-3.0-beta-3.jar')) . ' ' . escapeshellarg($inputFilename) . ' ' . escapeshellarg($destination);
         log_debug($command);
         $results = shell_exec($command);
         log_debug($results);
