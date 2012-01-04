@@ -250,7 +250,57 @@ class oer extends controller
      */
     function __groupsave()
     {
-        die("WORKING_HERE");
+        $name = $this->getParam('name');
+        $email = $this->getParam('email');
+        $onestepid = $this->getParam('productID', NULL);
+        $address = $this->getParam('address');
+        $city = $this->getParam('city');
+        $state = $this->getParam('state');
+        $country = $this->getParam('country');
+        $postalcode = $this->getParam('postalcode');
+        $website = $this->getParam('website');
+        $institution = $this->getParam('institutionlink');
+        $description = $this->getParam('description');
+        $loclat = $this->getParam('group_loclat');
+        $loclong = $this->getParam('group_loclong');
+        $admin = $this->objUser->userId();
+        $rightList = $this->getParam('rightList');
+        $description_one = $this->getParam('description_one');
+        $description_two = $this->getParam('description_two');
+        $description_three = $this->getParam('description_three');
+        $description_four = $this->getParam('description_four');
+        $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
+        $objThumbUploader = $this->getObject('thumbnailuploader');
+        $results = $objThumbUploader->uploadThumbnail($path);
+        $thumbnail = 'usrfiles/' . $results['path'];
+        // Get the mode (edit or add).
+        $mode = $this->getParam('mode', 'add');
+        $id = $this->getParam('id', NULL);
+        $objDbGroups = $this->getObject('dbgroups', 'oer');
+        if ($mode == 'edit') {
+            $id = $objDbGroups->saveNewGroup(
+              $name, $email, $address, $city, 
+              $state, $country, $postalcode, 
+              $website, $institution, $loclat, 
+              $loclong, $description, $admin, 
+              $thumbnail, $description_one, 
+              $description_two, $description_three, 
+              $description_four);
+        } else {
+            $objDbGroups->updategroup(
+              $id, $name, $email, $address, 
+              $city, $state, $country, $postalcode, 
+              $website, $institution, $loclat, 
+              $loclong, $description, $thumbnail, 
+              $description_one, $description_two, 
+              $description_three, $description_four);
+        }
+        // Note we are not returning a template as this is an AJAX save.
+        if ($id !== NULL && $id !== FALSE) {
+            die($id);
+        } else {
+            die("ERROR_DATA_INSERT_FAIL");
+        }
     }
     
     /**
@@ -370,6 +420,10 @@ class oer extends controller
 
     /**
      * Used to push through upload results for AJAX
+     * 
+     * WHAT ON EARTH IS THIS? @TODO obliterate this nonsense!!!!dwk
+     * 
+     * 
      */
     function __ajaxuploadresults()
     {

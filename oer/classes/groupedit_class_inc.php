@@ -111,7 +111,8 @@ class groupedit extends object
 
     public function show()
     {
-        return $this->makeHeading()  . $this->buildForm();
+        return $this->makeHeading()  
+          . $this->buildForm();
     }
     
     /**
@@ -166,13 +167,8 @@ class groupedit extends object
 
     private function buildForm()
     {
-        $uri=$this->uri(array(
-            'action'=>'editGroup',
-            'id'=>$this->getParam('id')
-        )); // =========== CHANGE TO SAVEGROUP
-
         // Create the form.
-        $form = new form ('groupEditor',$uri);
+        $form = new form ('groupEditor');
 
         // Create a table to hold the layout
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -182,7 +178,7 @@ class groupedit extends object
         $table->cellpadding = '2';
 
         // Group name.
-        $name = new textinput('group_name');
+        $name = new textinput('name');
         $name->size = 80;
         $name->cssClass = 'required';
         if ($this->mode == 'edit') {
@@ -198,7 +194,7 @@ class groupedit extends object
         $table->endRow();
         
         // Group website.
-        $website = new textinput('group_website');
+        $website = new textinput('website');
         $website->size = 80;
         $website->cssClass = 'required';
         if ($this->mode == 'edit') {
@@ -215,19 +211,23 @@ class groupedit extends object
         if ($this->mode == 'edit') {
             $content ="\n<img src='" 
               . $this->thumbnail
-              . "' alt'='Featured' width='30' height='30'><br>\n\n"; // objLang ====
+              . "' alt'='"
+              . $this->objLanguage->languageText('mod_oer_featured','oer')
+              . "' width='30' height='30'><br>\n\n";
         } else {
             $content = NULL;
         }
         $table->startRow();
         $table->addCell($content);
-        $table->addCell("Change Avatar" .'&nbsp;'
-          . $this->objThumbUploader->show()); // objLang ====
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_changeavatar','oer') .'&nbsp;'
+          . $this->objThumbUploader->show());
         $table->endRow();
         
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset1', 'oer');
+        $fieldset->legend =$this->objLanguage->languageText(
+          'mod_oer_group_fieldset1', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
@@ -243,7 +243,8 @@ class groupedit extends object
             $description_one->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_one','oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_description_one','oer')); // obj lang
         $table->addCell($description_one ->show());
         $table->endRow();
         
@@ -256,7 +257,8 @@ class groupedit extends object
             $description_two->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_two','oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_description_two','oer')); // obj lang
         $table->addCell($description_two->show());
         $table->endRow();
         
@@ -269,7 +271,8 @@ class groupedit extends object
             $description_three->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_three','oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_description_three','oer')); // obj lang
         $table->addCell($description_three->show());
         $table->endRow();
         
@@ -282,7 +285,8 @@ class groupedit extends object
             $description_four->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description_four','oer')); // obj lang
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_description_four','oer')); // obj lang
         $table->addCell($description_four->show());
         $table->endRow();
         
@@ -296,20 +300,22 @@ class groupedit extends object
             $editor->setContent($this->description);
         } 
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_description', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_description', 'oer'));
         $table->addCell($editor->show());
         $table->endRow();
         
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset5', 'oer');
+        $fieldset->legend =$this->objLanguage->languageText(
+          'mod_oer_group_fieldset5', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
         // Group contact details.
         $table = $this->newObject('htmltable', 'htmlelements');
-        $email = new textinput('register_email');
+        $email = new textinput('email');
         $email->size = 80;
         $email->cssClass = "requried";
         if ($this->mode == 'edit') {
@@ -317,12 +323,13 @@ class groupedit extends object
         } else {
             $email->value = NULL;
         }
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_email', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_email', 'oer'));
         $table->addCell($email->show());
         $table->endRow();
 
         // Group address.
-        $address = new textinput('group_address');
+        $address = new textinput('address');
         $address->size = 80;
         $address->cssClass = 'required';
         if ($this->mode == 'edit') {
@@ -331,12 +338,13 @@ class groupedit extends object
             $address->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_address', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_address', 'oer'));
         $table->addCell($address->show());
         $table->endRow();
 
         // Group city.
-        $city = new textinput('group_city');
+        $city = new textinput('city');
         $city->size = 80;
         $city->cssClass='required';
         if ($this->mode == 'edit') {
@@ -345,12 +353,13 @@ class groupedit extends object
             $city->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_city', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_city', 'oer'));
         $table->addCell($city->show());
         $table->endRow();
 
         // Group state/province.
-        $state = new textinput('group_state');
+        $state = new textinput('state');
         $state->size = 80;
         $state->cssClass = 'required';
         if ($this->mode == 'edit') {
@@ -359,12 +368,13 @@ class groupedit extends object
             $state->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_state', 'oer'));// obj lang
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_state', 'oer'));// obj lang
         $table->addCell($state->show());
         $table->endRow();
 
         // Group postal code.
-        $code = new textinput('group_postalcode');
+        $code = new textinput('postalcode');
         $code->size = 80;
         $code->cssClass = 'required';
         if ($this->mode == 'edit') {
@@ -373,20 +383,22 @@ class groupedit extends object
             $code->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_postalcode', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_postalcode', 'oer'));
         $table->addCell($code->show());
         $table->endRow();
         
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset2', 'oer');
+        $fieldset->legend =$this->objLanguage->languageText(
+          'mod_oer_group_fieldset2', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
         // Group latitude.
         $table = $this->newObject('htmltable', 'htmlelements');
-        $latitude = new textinput('group_loclat');
+        $latitude = new textinput('loclat');
         $latitude->size = 38;
         if ($this->mode == 'edit') {
             $latitude->value = $this->loclat;
@@ -394,12 +406,13 @@ class groupedit extends object
             $latitude->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_latitude', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_latitude', 'oer'));
         $table->addCell($latitude->show());
         $table->endRow();
         
         // Group longitude.
-        $longitude = new textinput('group_loclong');
+        $longitude = new textinput('loclong');
         $longitude->size = 38;
         if ($this->mode == 'edit') {
             $longitude->value = $this->loclong;
@@ -407,14 +420,16 @@ class groupedit extends object
             $longitude->value = NULL;
         }
         $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_group_longitude', 'oer'));
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_group_longitude', 'oer'));
         $table->addCell($longitude->show());
         $table->endRow();
         
         // Group country.
         $table->startRow();
         $objCountries = &$this->getObject('languagecode', 'language');
-        $table->addCell($this->objLanguage->languageText('word_country', 'system'));
+        $table->addCell($this->objLanguage->languageText(
+          'word_country', 'system'));
         if ($this->mode == 'edit') {
             $table->addCell($objCountries->countryAlpha($this->country));
         } else {
@@ -425,8 +440,10 @@ class groupedit extends object
         // Put it in a fieldset with a google map.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
-        $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> Please enter Your location if the provided location is incorrect
-            <div id="map_edit" style="width:600px; height:300px"></div><br/>' . $table->show();
+        $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> 
+            ' . $this->objLanguage->languageText('mod_oer_group_locincorrect', 'oer') . '
+            <div id="map_edit" style="width:600px; height:300px"></div><br/>' 
+            . $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
@@ -457,13 +474,13 @@ class groupedit extends object
         $objSelectBox = $this->newObject('selectbox','htmlelements');
         $objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
         $objSelectBox->insertLeftOptions(
-                                $availablegroups,
-                                'id',
-                                'name' );
+            $availablegroups,
+            'id',
+            'name' );
         $objSelectBox->insertRightOptions(
-                                       $currentMembership,
-                                       'id',
-                                       'name');
+           $currentMembership,
+           'id',
+           'name');
 
         $tblLeft = $this->newObject( 'htmltable','htmlelements');
         $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
