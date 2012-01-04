@@ -44,6 +44,7 @@ jQuery(function() {
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');
+                        jQuery(".conditional_add").css('visibility', 'visible');
                     } else {
                         //alert(msg);
                         alert(status_fail);

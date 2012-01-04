@@ -124,6 +124,37 @@ class institutionedit extends object
             . $this->buildForm()
             . "</div>";
     }
+    
+    /**
+     *
+     * Insert an add icon for use by javacript. It will be visitble
+     * when you are in edit mode, but invisible when you are in add 
+     * mode. After a save, it will be toggled to visible.
+     * 
+     * @param string $mode The edit|add mode
+     * @return string The rendered icon
+     * @access private
+     *  
+     */
+    private function insertAddIcon($mode)
+    {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $link =  $this->uri(
+           array("action" => "institutionedit"),
+           'oer');
+        $addlink = new link($link);
+        $objIcon->setIcon('add');
+        
+        $addlink->link = $objIcon->show();
+        if ($mode == 'add') { 
+            $showCss = "style='visibility:hidden'";
+        } else {
+            $showCss = " style='visibility:show' ";
+        }
+        return "&nbsp; <span class='conditional_add' " 
+          . $showCss . ">" . $addlink->show() 
+          . "</span>";
+    }
 
     /**
      *
@@ -150,7 +181,7 @@ class institutionedit extends object
         }
         // Setup and show heading.
         $header = new htmlHeading();
-        $header->str = $h;
+        $header->str = $h . $this->insertAddIcon($this->mode);
         $header->type = 2;
         return $header->show();
     }
