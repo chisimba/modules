@@ -109,7 +109,7 @@ class convertdoc extends object {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $oolocation = $objSysConfig->getValue('OO_LOCATION', 'documentconverter');
 
-        $command = 'java  -jar ' . $this->getResourcePath('jodconverter-core-3.0-beta-3/lib/jodconverter-core-3.0-beta-3.jar') . '  ' . $inputFilename . ' ' . $destination;
+        $command = 'java  -jar "' . $this->getResourcePath('jodconverter-core-3.0-beta-3/lib/jodconverter-core-3.0-beta-3.jar') . '"  "' . $inputFilename . '" "' . $destination .'"';
         log_debug($command);
         $results = shell_exec($command);
         log_debug($results);
