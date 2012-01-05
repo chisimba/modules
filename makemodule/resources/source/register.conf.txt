@@ -11,9 +11,26 @@ MODULE_HASADMINPAGE: 0
 MODULE_LANGTERMS: _MODULECODE
 MODULE_CATEGORY: _MODULECODE
 
+
 TABLE: tbl__MODULECODE_text
 
 MENU_CATEGORY: Developer
 WIDEBLOCK: _MODULECODEmiddle
 BLOCK: _MODULECODEleft
 BLOCK: _MODULECODEright
+
+UPDATE_DESCRIPTION: Initial code created by Module builder
+
+COMMENT: Never use the word SUBMIT for buttons. It is so 1990s!
+COMMENT: Generally avoid RESET buttons
+
+
+COMMENT: --------------- PUT COMMON STRINGS HERE ---------------------
+USES: word_save|The word save|Save
+USES: word_edit|The word edit|Edit
+USES: word_add|The word add|Add
+USES: word_delete|The word delete|Delete
+
+COMMENT: -------- PUT ONLY MODULE SPECIFIC STRINGS HERE --------------
+TEXT: mod__MODULECODE_title|The title for the _MODULECODE module|_SHORTDESCRIPTION
+TEXT: mod__MODULECODE_description|The description of the _MODULECODE module|_LONGDESCRIPTION
