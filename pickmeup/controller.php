@@ -314,14 +314,19 @@ class pickmeup extends controller
             	$username = $this->getParam('username');
             	$password = $this->getParam('pass');
             	
+            	$token = $cellnumber."_".sha1($password)."_".time();
+            	
             	// authenticate the user
             	if ($this->objUser->authenticateUser($username, $password, TRUE)) 
             	{
             		// get nearby places for ref
             		$limit = 10;
             		$placesnear  = $this->objMongo->getByLonLat(floatval($lon), floatval($lat), $limit);
-            		
-            		// check if in taxi bounding box
+            		// store the request
+            		//$this->objMongo->setCollection('pickups');
+            		$data = array('type' => 'request', 'lat' => $lat, 'lon' => $lon, 'alt' => $alt, 'token' => $token, 'cellnumber' => $cellnumber, 'message' => $message, 'username' => $username);
+            		$cursor = $this->objMongo->insert($data, 'pickups', NULL);
+            		// @TODO check if in taxi bounding box
             		
             		// send the mail with map to taxi people
             		
