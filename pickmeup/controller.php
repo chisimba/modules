@@ -309,6 +309,7 @@ class pickmeup extends controller
             	$lon = $this->getParam('lon');
             	$alt = $this->getParam('alt', NULL);
             	$cellnumber = $this->getParam('phone');
+            	$message = $this->getParam('msg');
             	
             	$username = $this->getParam('username');
             	$password = $this->getParam('pass');
