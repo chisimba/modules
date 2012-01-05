@@ -330,7 +330,7 @@ class pickmeup extends controller
             		
             		// send the mail with map to taxi people
             		
-            		$return = array('token' => $token, 'username' => $username, 'phone' => $cellnumber, 'datetime' => date('Y-m-d h:m:s', time()), 'pickup' => FALSE);
+            		$return = array('token' => $token, 'username' => $username, 'phone' => $cellnumber, 'datetime' => date('Y-m-d h:m:s', time()), 'status' => false, 'call' => 'req');
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
             		echo json_encode($return); //$placesnear;
