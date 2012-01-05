@@ -27,7 +27,7 @@ class dbumbrellathemes extends dbtable {
      * @param type $title
      * @return type 
      */
-    function addTheme($title) {
+    function addUmbrellaTheme($title) {
         $data = array("theme" => $title);
         return $this->insert($data);
     }

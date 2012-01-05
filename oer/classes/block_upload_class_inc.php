@@ -12,6 +12,7 @@ class block_upload extends object {
     }
 
     function show() {
+        $id=  $this->configData;
         $this->addJS();
         $this->loadClass('link', 'htmlelements');
         $objLanguage = $this->getObject('language', 'language');
@@ -19,7 +20,7 @@ class block_upload extends object {
         $this->loadClass('iframe', 'htmlelements');
         $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
 
-        $content.= $objAjaxUpload->show("idtest");
+        $content.= $objAjaxUpload->show($id);
         $link = new link($this->uri(array("")));
         $link->link = $objLanguage->languageText('word_home', 'system');
         $content.= $link->show();

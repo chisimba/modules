@@ -7,14 +7,31 @@
  */
 class productmanager extends object {
 
-    private $dbproduct;
+    private $dbproducts;
     private $objLanguage;
     public $objConfig;
+    private $objUser;
 
     function init() {
-        $this->dbproduct = $this->getObject('dbproducts', 'oer');
+        $this->dbproducts = $this->getObject('dbproducts', 'oer');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject("user", "security");
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('fieldset', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('radio', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('fieldset', 'htmlelements');
+        $this->addJS();
+        $this->setupLanguageItems();
     }
 
     /**
@@ -22,7 +39,7 @@ class productmanager extends object {
      * are save, else the form is returned with the errors highlighted
      * @return type 
      */
-    function saveNewProduct() {
+    function saveNewProductStep1() {
 
         $data = array(
             "title" => $this->getParam("title"),
@@ -31,32 +48,86 @@ class productmanager extends object {
             "othercontributors" => $this->getParam("othercontributors"),
             "publisher" => $this->getParam("publisher"),
             "language" => $this->getParam("language"),
-            "translation_of" => $this->getParam("translation"),
+            "translation_of" => "",
+            "description" => "",
+            "abstract" => "",
+            "oerresource" => "",
+            "provenonce" => "",
+            "accredited" => "",
+            "accreditation_body" => "",
+            "accreditation_date" => "",
+            "contacts" => "",
+            "relation_type" => "",
+            "relation" => "",
+            "coverage" => "",
+            "status" => "",
+        );
+
+        return $this->dbproducts->saveOriginalProduct($data);
+    }
+
+    /**
+     * updates products step 1 details
+     * @return type 
+     */
+    function updateProductStep1() {
+        $id = $this->getParam("id");
+        $data = array(
+            "title" => $this->getParam("title"),
+            "alternative_title" => $this->getParam("alternative_title"),
+            "author" => $this->getParam("author"),
+            "othercontributors" => $this->getParam("othercontributors"),
+            "publisher" => $this->getParam("publisher"),
+            "language" => $this->getParam("language"),
+        );
+
+        $this->dbproducts->updateOriginalProduct($data, $id);
+        return $id;
+    }
+
+    function deleteOriginalProduct() {
+        $id = $this->getParam("id");
+        $this->dbproducts->deleteOriginalProduct($id);
+    }
+
+    /**
+     * Updates the product's step 2 details
+     * @return type 
+     */
+    function updateProductStep2() {
+        $id = $this->getParam("id");
+        $data = array(
             "description" => $this->getParam("description"),
             "abstract" => $this->getParam("abstract"),
-            "oerresource" => $this->getParam("oerresource"),
             "provenonce" => $this->getParam("provenonce"),
-            "accredited" => $this->getParam("accredited"),
-            "accreditation_body" => $this->getParam("accreditationbody"),
+        );
+
+        $this->dbproducts->updateOriginalProduct($data, $id);
+        return $id;
+    }
+
+    /**
+     * Updates the product's step 3 details
+     * @return type 
+     */
+    function updateProductStep3() {
+        $id = $this->getParam("id");
+        $data = array(
             "accreditation_date" => $this->getParam("accreditationdate"),
             "contacts" => $this->getParam("contacts"),
             "relation_type" => $this->getParam("relationtype"),
             "relation" => $this->getParam("relatedproduct"),
             "coverage" => $this->getParam("coverage"),
             "status" => $this->getParam("status"),
+            "rights" => $this->getParam("creativecommons")
         );
 
-        $id = $this->dbproduct->saveOriginalProduct($data);
-        // Note we are not returning a template as this is an AJAX save.
-        if ($id !== NULL && $id !== FALSE) {
-            die($id);
-        } else {
-            die("ERROR_DATA_INSERT_FAIL");
-        }
+        $this->dbproducts->updateOriginalProduct($data, $id);
+        return $id;
     }
 
     /**
-     * Used to do the actual upload
+     * Used fo uploading product thumbnail
      *
      */
     function doajaxupload() {
@@ -80,7 +151,7 @@ class productmanager extends object {
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir . '/';
 
-        $result = $objUpload->doUpload(TRUE, "nametesr");
+        $result = $objUpload->doUpload(TRUE, "thumbnail");
 
 
         if ($result['success'] == FALSE) {
@@ -89,13 +160,534 @@ class productmanager extends object {
             $error = $this->objLanguage->languageText('mod_oer_uploaderror', 'oer');
             return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
         } else {
-
+            $data = array("thumbnail" => "/oer/products/" . $productid . "/thumbnail.png");
+            $this->dbproducts->updateOriginalProduct($data, $productid);
             $filename = $result['filename'];
 
             $params = array('action' => 'ajaxuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 
             return $params;
         }
+    }
+
+    /**
+     * adds essential js
+     */
+    function addJS() {
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('originalproduct.js', 'oer'));
+    }
+
+    /**
+     * sets up necessary lang items for use in js
+     */
+    function setupLanguageItems() {
+        // Serialize language items to Javascript
+        $arrayVars['status_success'] = "mod_oer_status_success";
+        $arrayVars['status_fail'] = "mod_oer_status_fail";
+        $arrayVars['confirm_delete_original_product'] = "mod_oer_confirm_delete_original_product";
+
+        $objSerialize = $this->getObject('serializevars', 'oer');
+        $objSerialize->serializetojs($arrayVars);
+    }
+
+    /**
+     * this constructs the  form for creating a new produc
+     * @return type FORM
+     */
+    public function buildProductFormStep1($id) {
+
+
+        $objTable = $this->getObject('htmltable', 'htmlelements');
+        if ($id != null) {
+            $product = $this->dbproducts->getProduct($id);
+            $hidId = new hiddeninput('id');
+            $hidId->cssId = "id";
+            $hidId->value = $id;
+            $objTable->startRow();
+            $objTable->addCell($hidId->show());
+            $objTable->endRow();
+        }
+        //the title
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_title', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('title');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($product != null) {
+            $textinput->value = $product['title'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+
+        //alternative title
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_alttitle', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('alternative_title');
+        $textinput->size = 60;
+        if ($product != null) {
+            $textinput->value = $product['alternative_title'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+
+
+        //author
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_author', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('author');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($product != null) {
+            $textinput->value = $product['author'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+
+
+        //other contributors
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_othercontributors', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textarea = new textarea('othercontributors', '', 5, 55);
+        $textarea->cssClass = 'required';
+        if ($product != null) {
+            $textarea->value = $product['othercontributors'];
+        }
+        $objTable->addCell($textarea->show());
+        $objTable->endRow();
+
+
+        //publisher
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_publisher', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('publisher');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($product != null) {
+            $textinput->value = $product['publisher'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+
+        //language
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_language', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $language = new dropdown('language');
+        $language->cssClass = 'required';
+        if ($product != null) {
+            $language->setSelected($product['language']);
+        }
+        $language->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+        $objTable->addCell($language->show());
+        $objTable->endRow();
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step1', 'oer'));
+        $fieldset->addContent($objTable->show());
+
+
+        $action = "saveoriginalproductstep1";
+        if ($product != null) {
+            $action = "updateoriginalproductstep1";
+        }
+        $formData = new form('originalProductForm1', $this->uri(array("action" => $action, "id" => $id)));
+        $formData->addToForm($fieldset);
+
+        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $button->setToSubmit();
+        $formData->addToForm('<br/>' . $button->show());
+
+
+        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "home"));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+        return $formData->show();
+    }
+
+    public function buildProductFormStep2($id) {
+
+        $objTable = $this->getObject('htmltable', 'htmlelements');
+        if ($id != null) {
+            $product = $this->dbproducts->getProduct($id);
+            $hidId = new hiddeninput('id');
+            $hidId->cssId = "id";
+            $hidId->value = $id;
+            $objTable->startRow();
+            $objTable->addCell($hidId->show());
+            $objTable->endRow();
+        }
+        //translation
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_translationof', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $translation = new dropdown('translation');
+        $translation->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+        if ($product != null) {
+            $translation->setSelected($product['translation']);
+        }
+        $objTable->addCell($translation->show());
+        $objTable->endRow();
+
+
+        //description
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_description', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $description = $this->newObject('htmlarea', 'htmlelements');
+        $description->name = 'description';
+        if ($product != null) {
+            $description->value = $product['description'];
+        }
+        $description->height = '150px';
+        $description->setBasicToolBar();
+        $objTable->addCell($description->show());
+        $objTable->endRow();
+
+
+        //abstract
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_abstract', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $abstract = $this->newObject('htmlarea', 'htmlelements');
+        $abstract->name = 'abstract';
+        $abstract->height = '150px';
+        if ($product != null) {
+            $abstract->value = $product['abstract'];
+        }
+        $abstract->setBasicToolBar();
+        $objTable->addCell($abstract->show());
+        $objTable->endRow();
+
+
+        //provenonce
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_provenonce', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $provenonce = $this->newObject('htmlarea', 'htmlelements');
+        $provenonce->name = 'provenonce';
+        $provenonce->height = '150px';
+        if ($product != null) {
+            $provenonce->value = $product['provenonce'];
+        }
+        $provenonce->setBasicToolBar();
+        $objTable->addCell($provenonce->show());
+        $objTable->endRow();
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step2', 'oer'));
+        $fieldset->addContent($objTable->show());
+
+        $formData = new form('originalProductForm2', $this->uri(array("action" => "saveoriginalproductstep2")));
+        $formData->addToForm($fieldset);
+
+        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $button->setToSubmit();
+        $formData->addToForm('<br/>' . $button->show());
+
+
+        $button = new button('back', $this->objLanguage->languageText('word_back'));
+        $uri = $this->uri(array("action" => "editoriginalproductstep1", "id" => $id));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "home"));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+
+        return $formData->show();
+    }
+
+    /**
+     * Builds the step 3 original product form
+     * @param type $id 
+     */
+    public function buildProductFormStep3($id) {
+
+        $objTable = $this->getObject('htmltable', 'htmlelements');
+        if ($id != null) {
+            $product = $this->dbproducts->getProduct($id);
+            $hidId = new hiddeninput('id');
+            $hidId->cssId = "id";
+            $hidId->value = $id;
+            $objTable->startRow();
+            $objTable->addCell($hidId->show());
+            $objTable->endRow();
+        }
+
+        //resource type
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_oerresource', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $oerresource = new dropdown('oerresource');
+        $oerresource->cssClass = 'required';
+        $oerresource->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        $objTable->addCell($oerresource->show());
+        $objTable->endRow();
+
+        //licence
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_licence', 'oer'));
+        $objTable->endRow();
+
+        $objDisplayLicense = $this->getObject('licensechooserdropdown', 'creativecommons');
+
+        $license = $product['rights'] == '' ? 'copyright' : $product['rights'];
+        $rightCell = $objDisplayLicense->show($license);
+
+        $objTable->startRow();
+        $objTable->addCell($rightCell);
+        $objTable->endRow();
+
+
+
+        //needs accredited
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_accredited', 'oer') . '?');
+        $objTable->endRow();
+
+        $radio = new radio('accredited');
+        $radio->addOption('yes', $this->objLanguage->languageText('word_yes', 'system'));
+        $radio->addOption('no', $this->objLanguage->languageText('word_no', 'system'));
+        if ($product != null) {
+            $radio->setSelected($product['accredited']);
+        }
+        $objTable->startRow();
+        $objTable->addCell($radio->show());
+        $objTable->endRow();
+
+        //accreditationbody
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_accreditationbody', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+
+        $textinput = new textinput('accreditationbody');
+        $textinput->size = 60;
+        if ($product != null) {
+            $textinput->value = $product['accreditation_body'];
+        }
+
+
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+        //accreditationdate
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_accreditationdate', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+
+        $textinput = new textinput('accreditationdate');
+        $textinput->size = 60;
+        if ($product != null) {
+            $textinput->value = $product['accreditation_date'];
+        }
+
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+        //contacts
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_contacts', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+
+        $textarea = new textarea('contacts', '', 5, 55);
+        if ($product != null) {
+            $textarea->value = $product['contacts'];
+        }
+        $objTable->addCell($textarea->show());
+        $objTable->endRow();
+
+
+        //relationtype
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_relationtype', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $relationtype = new dropdown('relationtype');
+        $relationtype->addOption('select', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $relationtype->addOption('ispartof', $this->objLanguage->languageText('mod_oer_ispartof', 'oer'));
+        $relationtype->addOption('requires', $this->objLanguage->languageText('mod_oer_requires', 'oer'));
+        $relationtype->addOption('isrequiredby', $this->objLanguage->languageText('mod_oer_isrequiredby', 'oer'));
+        $relationtype->addOption('haspartof', $this->objLanguage->languageText('mod_oer_haspartof', 'oer'));
+        $relationtype->addOption('references', $this->objLanguage->languageText('mod_oer_references', 'oer'));
+        $relationtype->addOption('isversionof', $this->objLanguage->languageText('mod_oer_isversionof', 'oer'));
+        $objTable->addCell($relationtype->show());
+        $objTable->endRow();
+
+        //relatedproduct
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_relatedproduct', 'oer'));
+        $objTable->endRow();
+        $objTable->startRow();
+        $relatedproduct = new dropdown('relatedproduct');
+        $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+        $objTable->addCell($relatedproduct->show());
+        $objTable->endRow();
+
+
+        //coverage
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_coverage', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textarea = new textarea('coverage', '', 5, 55);
+        if ($product != null) {
+            $textarea->value = $product['coverage'];
+        }
+        $objTable->addCell($textarea->show());
+        $objTable->endRow();
+
+        //published status
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_published', 'oer'));
+        $objTable->endRow();
+        $objTable->startRow();
+        $published = new dropdown('status');
+        $published->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $published->cssClass = "required";
+        $published->addOption('disabled', $this->objLanguage->languageText('mod_oer_disabled', 'oer'));
+        $published->addOption('draft', $this->objLanguage->languageText('mod_oer_draft', 'oer'));
+        $published->addOption('published', $this->objLanguage->languageText('mod_oer_published', 'oer'));
+        if ($product != null) {
+            $published->setSelected($product['status']);
+        }
+        $objTable->addCell($published->show());
+        $objTable->endRow();
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step3', 'oer'));
+        $fieldset->addContent($objTable->show());
+
+        $formData = new form('originalProductForm2', $this->uri(array("action" => "saveoriginalproductstep3")));
+        $formData->addToForm($fieldset);
+
+        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $button->setToSubmit();
+        $formData->addToForm('<br/>' . $button->show());
+
+
+        $button = new button('back', $this->objLanguage->languageText('word_back'));
+        $uri = $this->uri(array("action" => "editoriginalproductstep2", "id" => $id));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "home"));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+
+        return $formData->show();
+    }
+
+    /**
+     * creates a table and returns the list of current products
+     * @return type 
+     */
+    public function getOriginalProductListingAsGrid() {
+        $originalProducts = $this->dbproducts->getOriginalProducts();
+        $link = new link($this->uri(array("action" => "newproductstep1")));
+        $link->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
+
+        $controlBand = '';
+        if ($this->objUser->isLoggedIn()) {
+            $controlBand.=
+                    '<div id="originalproducts_controlband">'
+                    . $link->show()
+                    . '</div> ';
+        }
+        $startNewRow = TRUE;
+        $count = 2;
+        $table = $this->getObject('htmltable', 'htmlelements');
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("ProductCreators");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+
+        foreach ($originalProducts as $originalProduct) {
+            if ($startNewRow) {
+                $startNewRow = FALSE;
+                $table->startRow();
+            }
+            $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+            if ($originalProduct['thumbnail']  == '') {
+                $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
+            }
+            $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+            $link->link = $thumbnail . '<br/>';
+            $product = $link->show();
+
+            $link->link = $originalProduct['title'];
+            $product.= $link->show();
+            if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                $editImg = '<img src="skins/oer/images/icons/edit.png">';
+                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+
+                $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $originalProduct['id'])));
+                $editLink->link = $editImg;
+                $product.=$editLink->show();
+
+                $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $originalProduct['id'])));
+                $deleteLink->link = $deleteImg;
+                $deleteLink->cssClass = "deleteoriginalproduct";
+                $product.=$deleteLink->show();
+            }
+
+            $table->addCell($product);
+            if ($count > 3) {
+                $table->endRow();
+                $startNewRow = TRUE;
+                $count = 1;
+            }
+            $count++;
+        }
+        return $controlBand . $table->show();
     }
 
 }

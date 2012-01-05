@@ -20,6 +20,7 @@ class ajaxuploader extends object {
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     public function genRandomString() {
@@ -90,7 +91,7 @@ class ajaxuploader extends object {
 
         //keywords
 
-        $form->addToForm($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
+        /*$form->addToForm($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
 
         $objSelectBox = $this->newObject('selectbox', 'htmlelements');
         $leftHeader = $this->objLanguage->languageText('mod_oer_availablekeywords', 'oer');
@@ -104,6 +105,8 @@ class ajaxuploader extends object {
         $form->addToForm($objSelectBox->show());
 
         $form->addToForm(implode(' / ', $arrFormButtons));
+         * 
+         */
         return $form->show() . '<div id="div_upload_' . $id . '" style="display:none;">' . $objIcon->show() . ' ' . $progress . '</div><div id="uploadresults"></div><div id="updateform"></div>' . $objIframe->show();
     }
 
