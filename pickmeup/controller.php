@@ -307,7 +307,7 @@ class pickmeup extends controller
             case 'req':
             	$lat = $this->getParam('lat');
             	$lon = $this->getParam('lon');
-            	$alt = $this->getParam('alt');
+            	$alt = $this->getParam('alt', NULL);
             	$cellnumber = $this->getParam('phone');
             	
             	$username = $this->getParam('username');
@@ -332,6 +332,10 @@ class pickmeup extends controller
             		echo json_encode(array('status' => false, "message" => "Incorrect username or password", "call" => "req"));
             	}
             	break;
+            	
+            case 'viewpickup':
+            	
+            	break;
             
             default:
                 $this->nextAction('');
@@ -348,7 +352,7 @@ class pickmeup extends controller
      */
     function requiresLogin($action='') {
         $allowedActions = array('', 'getdata', 'getbylonlat', 'getbyplacename', 'getradiuskm', 'getradiusmi', 'getbycountrycode', 
-                                'getwikipedia', 'setloc', 'placesearch', 'changelocation', 'signin', 'signup', 'forgotpass', NULL);
+                                'getwikipedia', 'setloc', 'placesearch', 'changelocation', 'signin', 'signup', 'forgotpass', 'req', NULL);
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
