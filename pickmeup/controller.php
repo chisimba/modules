@@ -336,6 +336,8 @@ class pickmeup extends controller
             		echo json_encode($return); //$placesnear;
             	}
             	else {
+            		header('Cache-Control: no-cache, must-revalidate');
+            		header('Content-type: application/json');
             		echo json_encode(array('status' => false, "message" => "Incorrect username or password", "call" => "req"));
             	}
             	break;
