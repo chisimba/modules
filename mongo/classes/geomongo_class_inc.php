@@ -88,7 +88,7 @@ class geomongo extends object
      * @access private
      * @var    array
      */
-    private $databaseCache;
+    private $databaseCache = array();
 
     /**
      * Instance of the Mongo class.
@@ -117,6 +117,7 @@ class geomongo extends object
         $this->objSysConfig    = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objMongo        = new Mongo($this->objSysConfig->getValue('server', 'mongo'));
         $database              = $this->objSysConfig->getValue('database', 'mongo');
+        $this->dbname          = $database;
         $this->db              = $this->objMongo->$database;
         $this->collection      = new MongoCollection($this->db, $this->objSysConfig->getValue('collection', 'mongo'));
         $this->objProxy        = $this->getObject('proxyparser', 'utilities');
@@ -352,7 +353,7 @@ class geomongo extends object
      */
     public function setDatabase($database)
     {
-        $this->database = $database;
+        $this->dbname = $database;
     }
     
     /**
@@ -372,7 +373,7 @@ class geomongo extends object
 
         // Use the default if the database name has not been specified.
         if ($database === NULL) {
-            $database = $this->database;
+            $database = $this->dbname;
         }
 
         // Retrieve the MongoDB object.
@@ -400,9 +401,8 @@ class geomongo extends object
     {
         // Use the default if the database name has not been specified.
         if ($database === NULL) {
-            $database = $this->database;
+            $database = $this->dbname;
         }
-
         // Retrieve the MongoDB object from cache or create it.
         if (array_key_exists($database, $this->databaseCache)) {
             $objDatabase = $this->databaseCache[$database];
