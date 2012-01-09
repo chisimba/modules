@@ -235,7 +235,7 @@ class pickmeup extends controller
             	if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array('status' => false, "message" => "username taken", "call" => "signup"));
+            		echo json_encode(array('status' => false, "message" => "email address taken", "call" => "signup"));
             		break;
             	}
             	
@@ -338,7 +338,7 @@ class pickmeup extends controller
             	else {
             		header('Cache-Control: no-cache, must-revalidate');
             		header('Content-type: application/json');
-            		echo json_encode(array('status' => false, "message" => "Incorrect username or password", "call" => "req"));
+            		echo json_encode(array('status' => false, "message" => "Incorrect email address or password", "call" => "req"));
             	}
             	break;
             	
