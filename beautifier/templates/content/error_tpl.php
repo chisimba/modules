@@ -37,7 +37,12 @@ $modarr = array();
 $this->objConfig = $this->getObject('altconfig', 'config');
 if ($handle = opendir($this->objConfig->getModulePath())) {
    while (false !== ($file = readdir($handle))) {
-       if ($file != "." && $file != ".." && $file != "CVS" && $file != "CVSROOT") {
+       if ($file != "." 
+           && $file != ".." 
+           && $file != "CVS" 
+           && $file != "CVSROOT"
+           && $file != ".svn"
+           && $file != "COPYING") {
            $modarr[] = $file;
        }
    }
@@ -45,6 +50,7 @@ if ($handle = opendir($this->objConfig->getModulePath())) {
 }
 
 $dd = new dropdown('mod');
+sort($modarr);
 foreach($modarr as $options)
 {
 	$dd->addOption($options, $options);

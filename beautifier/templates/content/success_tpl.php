@@ -1,9 +1,9 @@
 <?php
-$userMenu  = &$this->newObject('usermenu','toolbar');
+$userMenu  = $this->newObject('usermenu','toolbar');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 // Create an instance of the css layout class
-$cssLayout =& $this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 // Set columns to 2
 $cssLayout->setNumColumns(2);
 
