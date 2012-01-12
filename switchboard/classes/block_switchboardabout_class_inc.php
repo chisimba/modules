@@ -60,6 +60,14 @@ class block_switchboardabout extends object
      */
     public $title;
     /**
+    * 
+    * @var string $objLanguage String object property for holding the 
+    * language object
+    * @access public
+    * 
+    */
+    public $objLanguage;
+    /**
      * Standard init function
      *
      * Create title
@@ -68,7 +76,10 @@ class block_switchboardabout extends object
      */
     public function init() 
     {
-        $this->title = "About switchboard";
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText(
+          'mod_switchboard_blocktitle',
+          'switchboard');
     }
     /**
      * Standard block show method.
@@ -77,7 +88,9 @@ class block_switchboardabout extends object
      */
     public function show() 
     {
-        return "Change this to a language text item.";
+        return $this->objLanguage->languageText(
+          'mod_switchboard_blockoverview',
+          'switchboard');
     }
 }
 ?>
