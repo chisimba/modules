@@ -84,11 +84,11 @@ class serializevars extends dbtable
      * @return TRUE
      * 
      */
-    public function serializetojs($arrayVars)
+    public function serializetojs($arrayVars, $callingModule="oer")
     {
         $ret = "\n\n<script type='text/javascript'>\n";
         foreach ($arrayVars as $key=>$value) {
-            $ret .= $key . " = '" . $this->objLanguage->languageText($value, "oer") . "';\n";
+            $ret .= $key . " = '" . $this->objLanguage->languageText($value, $callingModule) . "';\n";
         }
         $ret .= "</script>\n\n";
         $this->appendArrayVar('headerParams', $ret);
