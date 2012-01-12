@@ -21,7 +21,7 @@ class oer extends controller {
      * @param type $action
      * @return type 
      */
-    function requiresLogin($action='home') {
+    function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct');
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -147,10 +147,7 @@ class oer extends controller {
         return "product_tpl.php";
     }
 
-    function __showuploadproductthumbnail() {
-        return "upload_tpl.php";
-    }
-
+    
     /**
      * Saves the original product in step 1
      */
@@ -190,6 +187,37 @@ class oer extends controller {
         $this->setVarByRef("id", $id);
         $this->setVar("step", "1");
         return "product_tpl.php";
+    }
+
+    function __editoriginalproductstep2() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "2");
+        return "product_tpl.php";
+    }
+
+    function __editoriginalproductstep3() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "3");
+        return "product_tpl.php";
+    }
+
+    function __editoriginalproductstep4() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "3");
+        return "upload_tpl.php";
+    }
+
+    /**
+     * displays the form for uploading product theme
+     * @return string 
+     */
+    function __editoriginalproductstep5() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "upload_tpl.php";
     }
 
     /**
@@ -426,7 +454,8 @@ class oer extends controller {
     }
 
     /**
-     * Used to push through upload results for AJAX
+     * This method is used to display the results of uploading product thumbnail
+     * @todo Rename it to meaningfull name
      * 
      * WHAT ON EARTH IS THIS? @TODO obliterate this nonsense!!!!dwk
      * 

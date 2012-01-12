@@ -35,7 +35,7 @@ class productmanager extends object {
     }
 
     /**
-     * Validates the contents of new product field values. If all are valid, these
+     * Validates the contents of new product field values in step 1. If all are valid, these
      * are save, else the form is returned with the errors highlighted
      * @return type 
      */
@@ -85,6 +85,9 @@ class productmanager extends object {
         return $id;
     }
 
+    /**
+     * used for deleting an original product 
+     */
     function deleteOriginalProduct() {
         $id = $this->getParam("id");
         $this->dbproducts->deleteOriginalProduct($id);
@@ -128,7 +131,7 @@ class productmanager extends object {
 
     /**
      * Used fo uploading product thumbnail
-     *
+     * @todo this will be renamed to a meaningful name
      */
     function doajaxupload() {
         $dir = $this->objConfig->getcontentBasePath();
@@ -199,6 +202,8 @@ class productmanager extends object {
 
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
+
+
         if ($id != null) {
             $product = $this->dbproducts->getProduct($id);
             $hidId = new hiddeninput('id');
@@ -326,7 +331,13 @@ class productmanager extends object {
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
-        return $formData->show();
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'];
+
+
+        return $header->show() . $formData->show();
     }
 
     public function buildProductFormStep2($id) {
@@ -350,6 +361,14 @@ class productmanager extends object {
         $translation = new dropdown('translation');
         $translation->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+
+        $originalProducts = $this->dbproducts->getOriginalProducts();
+        foreach ($originalProducts as $originalProduct) {
+            if ($originalProduct['id'] != $id) {
+                $translation->addOption($originalProduct['id'], $originalProduct['title']);
+            }
+        }
+
         if ($product != null) {
             $translation->setSelected($product['translation']);
         }
@@ -429,8 +448,13 @@ class productmanager extends object {
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'];
 
-        return $formData->show();
+
+        return $header->show() . $formData->show();
     }
 
     /**
@@ -566,6 +590,14 @@ class productmanager extends object {
         $objTable->startRow();
         $relatedproduct = new dropdown('relatedproduct');
         $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+
+        $originalProducts = $this->dbproducts->getOriginalProducts();
+        foreach ($originalProducts as $originalProduct) {
+            if ($originalProduct['id'] != $id) {
+                $relatedproduct->addOption($originalProduct['id'], $originalProduct['title']);
+            }
+        }
+
         $objTable->addCell($relatedproduct->show());
         $objTable->endRow();
 
@@ -622,8 +654,13 @@ class productmanager extends object {
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'];
 
-        return $formData->show();
+
+        return $header->show() . $formData->show();
     }
 
     /**
@@ -632,16 +669,39 @@ class productmanager extends object {
      */
     public function getOriginalProductListingAsGrid() {
         $originalProducts = $this->dbproducts->getOriginalProducts();
-        $link = new link($this->uri(array("action" => "newproductstep1")));
-        $link->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
+        $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
+        $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
 
-        $controlBand = '';
+
+        $controlBand.=
+                '<div id="originalproducts_controlband">';
+
+        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
+        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+        $gridlink = new link($this->uri(array("action" => "home")));
+        $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+        $controlBand.=$gridlink->show();
+
+        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+        $listlink = new link($this->uri(array("action" => "1a")));
+        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
+        $controlBand.=$listlink->show();
+
         if ($this->objUser->isLoggedIn()) {
-            $controlBand.=
-                    '<div id="originalproducts_controlband">'
-                    . $link->show()
-                    . '</div> ';
+            $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
+            $controlBand.= '&nbsp;' . $newthumbnail . $newproductlink->show();
         }
+
+
+        $sortbydropdown = new dropdown('sortby');
+        $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+
+        $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
+        $controlBand.=$sortbydropdown->show();
+
+
+
+        $controlBand.= '</div> ';
         $startNewRow = TRUE;
         $count = 2;
         $table = $this->getObject('htmltable', 'htmlelements');
@@ -656,7 +716,7 @@ class productmanager extends object {
                 $table->startRow();
             }
             $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
-            if ($originalProduct['thumbnail']  == '') {
+            if ($originalProduct['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
             $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
@@ -679,7 +739,21 @@ class productmanager extends object {
                 $product.=$deleteLink->show();
             }
 
-            $table->addCell($product);
+            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
+            
+            $languageField = new dropdown('language');
+            $languageField->cssClass = 'original_product_languageField';
+            $languageField->setSelected($product['language']);
+            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+            $product.='<br/><br/>' . $commentsThumbnail.'&nbsp;'.$languageField->show();
+            
+            $adaptionsCount=0;
+            $adaptationsLink=new link($this->uri(array("action"=>"viewproductadaptions","id"=>$originalProduct['id'])));
+            $adaptationsLink->link=$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $product.="<br/>".$adaptionsCount.'&nbsp;'. $adaptationsLink->show();
+
+            //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+            $table->addCell($product,null,null,null,"view_original_product");
             if ($count > 3) {
                 $table->endRow();
                 $startNewRow = TRUE;
@@ -688,6 +762,46 @@ class productmanager extends object {
             $count++;
         }
         return $controlBand . $table->show();
+    }
+
+    /**
+     * Creates side navigation links for moving in between forms when creating
+     * a product 
+     */
+    function buildProductStepsNav($id) {
+
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "build_product_steps_nav";
+        $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
+
+        $content = $header->show();
+
+        $content.='<ul id="nav-secondary">';
+
+        $link = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $id)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
+        $content.='<li>' . $link->show() . '</li>';
+
+
+        $link = new link($this->uri(array("action" => "editoriginalproductstep2", "id" => $id)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
+        $content.='<li>' . $link->show() . '</li>';
+
+
+        $link = new link($this->uri(array("action" => "editoriginalproductstep3", "id" => $id)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
+        $content.='<li>' . $link->show() . '</li>';
+
+        $link = new link($this->uri(array("action" => "editoriginalproductstep4", "id" => $id)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step4', 'oer');
+        $content.='<li>' . $link->show() . '</li>';
+
+
+        $content.="</ul>";
+
+
+        return $content;
     }
 
 }

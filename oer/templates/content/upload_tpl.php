@@ -5,10 +5,15 @@ $objFix->fixTwo();
 ?>
 <div id="twocolumn">
     <div id="Canvas_Content_Body_Region1">
-        {
+         {
         "display" : "block",
-        "module" : "language",
-        "block" : "language"
+        "module" : "oer",
+        "block" : "originalproductformnav",
+        <?php
+
+        echo '"configData":';
+        echo '"' . $id . '"';
+        ?>
         }
 
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>

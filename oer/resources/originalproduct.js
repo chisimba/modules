@@ -58,7 +58,7 @@ jQuery(function() {
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');
                         alert("relocating....");
-                        window.location="?module=oer&action=showuploadproductthumbnail";
+                        window.location="?module=oer&action=editoriginalproductstep5";
                     } else {
                         //alert(msg);
                         alert(status_fail);
