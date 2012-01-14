@@ -100,7 +100,14 @@ class oer extends controller {
 
         return "1a_tpl.php";
     }
+    /**
+     *
+     * This is loads adaptation home
+     */
+    private function __1b() {
 
+        return "1b_tpl.php";
+    }
     /**
      * this launches control panel
      * @return type 
@@ -210,12 +217,75 @@ class oer extends controller {
         return "upload_tpl.php";
     }
 
+    // Adaptations home
+
+    // Manage adaptations
+    function __editadaptationstep1() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "1");
+        return "adaptation_tpl.php";
+    }
+
+    function __editadaptationstep2() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "2");
+        return "adaptation_tpl.php";
+    }
+
+    function __editadaptationstep3() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "3");
+        return "adaptation_tpl.php";
+    }
+
+    function __editadaptationstep4() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "3");
+        return "upload_tpl.php";
+    }
+
     /**
      * displays the form for uploading product theme
      * @return string 
      */
     function __editoriginalproductstep5() {
         $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "upload_tpl.php";
+    }
+
+    /**
+     * Saves the adaptation in step 1
+     */
+    function __saveadaptationstep1() {
+        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $id = $objAdaptationManager->saveNewProductStep1();
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "2");
+        return "adaptation_tpl.php";
+    }
+
+    /**
+     * Saves the adaptation in step 2
+     */
+    function __saveadaptationstep2() {
+        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $id = $objProductManager->updateProductStep2();
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "3");
+        return "adaptation_tpl.php";
+    }
+
+    /**
+     * Saves the adaptation in step 3
+     */
+    function __saveadaptationstep3() {
+        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $id = $objProductManager->updateProductStep3();
         $this->setVarByRef("id", $id);
         return "upload_tpl.php";
     }
