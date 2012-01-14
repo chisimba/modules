@@ -17,7 +17,7 @@ class block_adaptationform extends object {
      * @return type 
      */
     public function show() {
-        $objProductManager = $this->getObject("adaptationmanager", "oer");
+        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $data = explode("|", $this->configData);
         $id = NULL;
         $step = '1';
@@ -27,13 +27,13 @@ class block_adaptationform extends object {
         }
         switch ($step) {
             case '1':
-                return $objProductManager->buildAdaptationFormStep1($id);
+                return $objAdaptationManager->buildAdaptationFormStep1($id);
                 break;
             case '2':
-                return $objProductManager->buildAdaptationFormStep2($id);
+                return $objAdaptationManager->buildAdaptationFormStep2($id);
                 break;
             case '3':
-                return $objProductManager->buildAdaptationFormStep3($id);
+                return $objAdaptationManager->buildAdaptationFormStep3($id);
                 break;
         }
     }

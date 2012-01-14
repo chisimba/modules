@@ -343,7 +343,13 @@ class adaptationmanager extends object {
         $objTable = $this->getObject('htmltable', 'htmlelements');
         
         if ($id != null) {
-            $product = $this->dbproducts->getParentData($id);
+            //Check if adaptation has data
+            $adaptation = $this->dbproducts->getProduct($id);
+            if(empty($adaptation['description']) && empty($adaptation['abstract']) && empty($adaptation['provenonce'])){
+                $product = $this->dbproducts->getParentData($id);
+            } else {
+                $product = $adaptation;
+            }
             
             $hidId = new hiddeninput('id');
             $hidId->cssId = "id";
@@ -465,7 +471,19 @@ class adaptationmanager extends object {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
         if ($id != null) {
+            //Check if adaptation has data
+            $adaptation = $this->dbproducts->getProduct($id);
+            if(empty($adaptation['accreditation_date']) && 
+                    empty($adaptation['contacts']) &&
+                    empty($adaptation['relation_type']) &&
+                    empty($adaptation['relation']) &&
+                    empty($adaptation['coverage']) &&
+                    empty($adaptation['status']) &&
+                    empty($adaptation['rights'])){            
             $product = $this->dbproducts->getParentData($id);
+            } else {
+                $product = $adaptation;
+            }
 
             $hidId = new hiddeninput('id');
             $hidId->cssId = "id";
