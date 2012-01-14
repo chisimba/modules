@@ -28,6 +28,11 @@ jQuery(function() {
         var dId = jQuery(this).attr("id");
         //alert('clicked ' + dId);
         jQuery.ajax({
+           beforeSend: function (request) {
+                if (!confirm("You really want to delete?")) {
+                    return FALSE;
+                }
+           },
            type: "POST",
            url: "index.php?module=switchboard&action=delete&id=" + dId,
            cache: false,
