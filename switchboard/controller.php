@@ -143,6 +143,23 @@ class switchboard extends controller
         return "main_tpl.php";
     }
     
+    private function __delete()
+    {
+        if ($this->objUser->isAdmin()) {
+            // Initialise the object that will do the saving.
+            $objDb = $this->getObject('dbswitchboardlinks', 'switchboard');
+            // retrieve the confirmation code from the querystring
+            $id=$this->getParam("id", FALSE);
+            $ret = FALSE;
+            if ($id) {
+                $ret = $objDb->delete('id', $id);
+            }
+            die("RECORD_DELETED");
+        } else {
+            die("ILLEGAL_DELETE_NOTADMIN");
+        }
+    }
+    
     /**
      *
      * Render a template for editing or adding a link

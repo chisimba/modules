@@ -205,7 +205,7 @@ class switchboardui extends object
             $activeLink->link = "<img src='$iconUrl' class='switchboard_icon' />";
 
             $description =  $linkItem['description'];
-            $table->startRow();
+            $table->startRow(NULL, "ROW_" . $id);
             $table->addCell($activeLink->show());
             $table->addCell($title . '<br />' . $description);
             if ($this->objUser->isAdmin()) {
@@ -215,15 +215,12 @@ class switchboardui extends object
                     'id' => $id
                     )
                 );
-                $delUrl = $this->uri(array(
-                    'action' => 'linkdel',
-                    'mode' => 'delete',
-                    'id' => $id
-                    )
-                );
+                $delUrl = 'javascript:void(0);';
                 $edLink = new link($edUrl);
                 $edLink->link = $edIcon->show();
                 $delLink = new link($delUrl);
+                $delLink->cssId = $id;
+                $delLink->cssClass = "dellink";
                 $delLink->link = $delIcon->show();
                 $table->addCell($edLink->show());
                 $table->addCell($delLink->show());
