@@ -97,8 +97,13 @@ class oer extends controller {
      * This is the default function
      */
     private function __home() {
+        $this->setVar("mode", "grid");
+        return "productlisting_tpl.php";
+    }
 
-        return "1a_tpl.php";
+    private function __showproductlistingaslist() {
+        $this->setVar("mode", "list");
+        return "productlisting_tpl.php";
     }
 
     /**
@@ -161,6 +166,7 @@ class oer extends controller {
      */
     function __newproductstep1() {
         $this->setVar("step", "1");
+
         return "product_tpl.php";
     }
 
@@ -196,6 +202,15 @@ class oer extends controller {
         return "upload_tpl.php";
     }
 
+    /**
+     * Saves the original product in step 4
+     */
+    function __saveoriginalproductstep4() {
+        $objProductManager = $this->getObject("productmanager", "oer");
+        $id = $objProductManager->updateProductStep4();
+        return $this->nextAction('home', null);
+    }
+
     //EDIT Functions
 
     function __editoriginalproductstep1() {
@@ -222,8 +237,8 @@ class oer extends controller {
     function __editoriginalproductstep4() {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
-        $this->setVar("step", "3");
-        return "upload_tpl.php";
+        $this->setVar("step", "4");
+        return "productstep4_tpl.php";
     }
 
     // Adaptations home
@@ -326,10 +341,10 @@ class oer extends controller {
      * Used to do the actual upload of product thumbnail
      *
      */
-    function __doajaxupload() {
+    function __uploadproductthumbnail() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $params = $objProductManager->doajaxupload();
-        return $this->nextAction('ajaxuploadresults', $params);
+        return $this->nextAction('showProductthumbnailuploadresults', $params);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -417,7 +432,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -520,7 +535,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.
@@ -533,13 +548,9 @@ class oer extends controller {
 
     /**
      * This method is used to display the results of uploading product thumbnail
-     * @todo Rename it to meaningfull name
-     * 
-     * WHAT ON EARTH IS THIS? @TODO obliterate this nonsense!!!!dwk
-     * 
      * 
      */
-    function __ajaxuploadresults() {
+    function __showproductthumbnailuploadresults() {
         $this->setVar('pageSuppressToolbar', TRUE);
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('suppressFooter', TRUE);
@@ -553,7 +564,7 @@ class oer extends controller {
         $filename = $this->getParam('filename');
         $this->setVarByRef('filename', $filename);
 
-        return 'ajaxuploadresults_tpl.php';
+        return 'thumbnailuploadresults_tpl.php';
     }
 
 }

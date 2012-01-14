@@ -59,7 +59,7 @@ class ajaxuploader extends object {
         $objIcon->setIcon('loading_bar');
 
         // Create Form
-        $form = new form('uploadfile_' . $id, $this->uri(array('action' => 'doajaxupload',
+        $form = new form('uploadfile_' . $id, $this->uri(array('action' => 'uploadproductthumbnail',
                             'productid' => $productid)));
         $form->extra = 'enctype="multipart/form-data" target="iframe_upload_' . $id . '"';
         ;

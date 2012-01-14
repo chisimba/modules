@@ -48,6 +48,7 @@ class productmanager extends object {
             "othercontributors" => $this->getParam("othercontributors"),
             "publisher" => $this->getParam("publisher"),
             "language" => $this->getParam("language"),
+            "keywords" => $this->getParam("keywords"),
             "translation_of" => "",
             "description" => "",
             "abstract" => "",
@@ -79,6 +80,7 @@ class productmanager extends object {
             "othercontributors" => $this->getParam("othercontributors"),
             "publisher" => $this->getParam("publisher"),
             "language" => $this->getParam("language"),
+            "keywords" => $this->getParam("keywords")
         );
 
         $this->dbproducts->updateOriginalProduct($data, $id);
@@ -130,6 +132,28 @@ class productmanager extends object {
     }
 
     /**
+     * Updates the product's step 4 details
+     * @return type 
+     */
+    function updateProductStep4() {
+        $id = $this->getParam("id");
+        $selectedThemes = $this->getParam("selectedThemes");
+        $themesStr = '';
+        foreach ($selectedThemes as $theme) {
+            $themesStr.=$theme . ',';
+        }
+
+        $data = array(
+            "themes" => $themesStr,
+        );
+
+        $this->dbproducts->updateOriginalProduct($data, $id);
+
+
+        return $id;
+    }
+
+    /**
      * Used fo uploading product thumbnail
      * @todo this will be renamed to a meaningful name
      */
@@ -154,7 +178,7 @@ class productmanager extends object {
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir . '/';
 
-        $result = $objUpload->doUpload(TRUE, "thumbnail");
+        $result = $objUpload->doUpload(TRUE, $filename);
 
 
         if ($result['success'] == FALSE) {
@@ -163,11 +187,12 @@ class productmanager extends object {
             $error = $this->objLanguage->languageText('mod_oer_uploaderror', 'oer');
             return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
         } else {
-            $data = array("thumbnail" => "/oer/products/" . $productid . "/thumbnail.png");
-            $this->dbproducts->updateOriginalProduct($data, $productid);
             $filename = $result['filename'];
+            $data = array("thumbnail" => "/oer/products/" . $productid . "/" . $filename);
+            $this->dbproducts->updateOriginalProduct($data, $productid);
 
-            $params = array('action' => 'ajaxuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
+
+            $params = array('action' => 'showproductthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 
             return $params;
         }
@@ -309,6 +334,22 @@ class productmanager extends object {
         $objTable->addCell($language->show());
         $objTable->endRow();
 
+
+
+        //keywords
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textarea = new textarea('keywords', '', 5, 55);
+        if ($product != null) {
+            $textarea->value = $product['keywords'];
+        }
+        $objTable->addCell($textarea->show());
+        $objTable->endRow();
+
+
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step1', 'oer'));
         $fieldset->addContent($objTable->show());
@@ -334,7 +375,7 @@ class productmanager extends object {
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_title";
-        $header->str = $product['title'];
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step1', 'oer');
 
 
         return $header->show() . $formData->show();
@@ -451,7 +492,7 @@ class productmanager extends object {
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_title";
-        $header->str = $product['title'];
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step2', 'oer');
 
 
         return $header->show() . $formData->show();
@@ -657,17 +698,130 @@ class productmanager extends object {
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_title";
-        $header->str = $product['title'];
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step3', 'oer');
 
 
         return $header->show() . $formData->show();
     }
 
     /**
+     * Builds the step 4 original product form
+     * @param type $id 
+     */
+    public function buildProductFormStep4($id) {
+        $this->addStep4JS();
+        $this->loadClass('link', 'htmlelements');
+        $objLanguage = $this->getObject('language', 'language');
+        $content = $objLanguage->languageText('mod_oer_updateproductpicture', 'oer');
+        $this->loadClass('iframe', 'htmlelements');
+        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
+
+
+        $objForm = $this->newObject('form', 'htmlelements');
+        $objForm->name = "form1";
+        $objForm->action = $this->uri(array('action' => 'saveoriginalproductstep4', "id" => $id));
+
+        // Create the selectbox object
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        // Initialise the selectbox.
+        $objSelectBox->create($objForm, 'availableThemes[]', $this->objLanguage->languageText('mod_oer_availablethemes', 'oer'), 'selectedThemes[]', $this->objLanguage->languageText('mod_oer_selectedthemes', 'oer'));
+
+        // Populate the selectboxes
+        $objDbTheme = $this->getObject("dbthemes", "oer");
+        $objData = $objDbTheme->getThemesFormatted();
+        $objSelectBox->insertLeftOptions($objData, 'id', 'theme');
+
+        $product = $this->dbproducts->getProduct($id);
+
+        $selectedThemes = array();
+        $existingThemesIds = explode(",", $product['themes']);
+        foreach ($existingThemesIds as $existingThemesId) {
+            $selectedThemes[] = $objDbTheme->getTheme($existingThemesId);
+        }
+
+        $objSelectBox->insertRightOptions($selectedThemes, 'id', 'theme');
+
+        // Insert the selectbox into the form object.
+        $objForm->addToForm($objSelectBox->show());
+
+        // Get and insert the save and cancel form buttons
+        $arrFormButtons = $objSelectBox->getFormButtons();
+        $objForm->addToForm(implode(' / ', $arrFormButtons));
+
+        $content.= $objAjaxUpload->show($id);
+        $link = new link($this->uri(array("")));
+        $link->link = $objLanguage->languageText('word_home', 'system');
+
+
+
+
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step4', 'oer');
+
+        return $header->show() . $content . '<br/>' . $objForm->show();
+    }
+
+    /**
+     * This includes necessary js for product 4 creation
+     */
+    function addStep4JS() {
+        $this->appendArrayVar('headerParams', "
+
+<script type=\"text/javascript\">
+    //<![CDATA[
+
+    function loadAjaxForm(fileid) {
+        window.setTimeout('loadForm(\"'+fileid+'\");', 1000);
+    }
+
+    function loadForm(fileid) {
+        var pars = \"module=oer&action=ajaxprocess&id=\"+fileid;
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                $('updateform').innerHTML = response;
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+
+    function processConversions() {
+        window.setTimeout('doConversion();', 2000);
+    }
+
+    function doConversion() {
+
+        var pars = \"module=oer&action=ajaxprocessconversions\";
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert(response);
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+    //]]>
+</script>            
+");
+    }
+
+    /**
      * creates a table and returns the list of current products
      * @return type 
      */
-    public function getOriginalProductListingAsGrid() {
+    public function getOriginalProductListing($mode) {
         $originalProducts = $this->dbproducts->getOriginalProducts();
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
@@ -683,7 +837,7 @@ class productmanager extends object {
         $controlBand.=$gridlink->show();
 
         $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
-        $listlink = new link($this->uri(array("action" => "1a")));
+        $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
         $controlBand.=$listlink->show();
 
@@ -705,6 +859,7 @@ class productmanager extends object {
         $startNewRow = TRUE;
         $count = 2;
         $table = $this->getObject('htmltable', 'htmlelements');
+
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -715,16 +870,24 @@ class productmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
-            $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
-            if ($originalProduct['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
-            }
-            $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . '<br/>';
-            $product = $link->show();
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+            $titleLink->link = $thumbnail . '<br/>';
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $originalProduct['title'];
+            $product= $titleLink->show();
 
-            $link->link = $originalProduct['title'];
-            $product.= $link->show();
+            if ($mode == 'grid') {
+                $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+                if ($originalProduct['thumbnail'] == '') {
+                    $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+                }
+
+                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+                $thumbnailLink->link = $thumbnail . '<br/>';
+                $thumbnailLink->cssClass = 'original_product_listing_thumbail';
+                $product = $thumbnailLink->show().'<br/>'.$titleLink->show();;
+            }
+           
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
                 $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
@@ -740,20 +903,21 @@ class productmanager extends object {
             }
 
             $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
-            
+
             $languageField = new dropdown('language');
             $languageField->cssClass = 'original_product_languageField';
             $languageField->setSelected($product['language']);
             $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $product.='<br/><br/>' . $commentsThumbnail.'&nbsp;'.$languageField->show();
-            
-            $adaptionsCount=0;
-            $adaptationsLink=new link($this->uri(array("action"=>"viewproductadaptions","id"=>$originalProduct['id'])));
-            $adaptationsLink->link=$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
-            $product.="<br/>".$adaptionsCount.'&nbsp;'. $adaptationsLink->show();
+            $product.='<br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
+
+            $adaptionsCount = 0;
+            $adaptationsLink = new link($this->uri(array("action" => "viewproductadaptions", "id" => $originalProduct['id'])));
+            $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+            $product.="<br/>" . $adaptationsLink->show();
 
             //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-            $table->addCell($product,null,null,null,"view_original_product");
+            $table->addCell($product, null, null, null, "view_original_product");
             if ($count > 3) {
                 $table->endRow();
                 $startNewRow = TRUE;
@@ -768,35 +932,64 @@ class productmanager extends object {
      * Creates side navigation links for moving in between forms when creating
      * a product 
      */
-    function buildProductStepsNav($id) {
+    function buildProductStepsNav($id, $step) {
 
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "build_product_steps_nav";
         $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
 
-        $content = $header->show();
 
+        $product = $this->dbproducts->getProduct($id);
+        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+        if ($product['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+        }
+
+        $content = $thumbnail;
+        $content .= $header->show();
         $content.='<ul id="nav-secondary">';
 
+        $class = "";
         $link = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
+
+        if ($step == '1') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
 
         $link = new link($this->uri(array("action" => "editoriginalproductstep2", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
+        if ($step == '2') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
         $link = new link($this->uri(array("action" => "editoriginalproductstep3", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
+        if ($step == '3') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
         $link = new link($this->uri(array("action" => "editoriginalproductstep4", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step4', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
+        if ($step == '4') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
         $content.="</ul>";
 

@@ -10,9 +10,8 @@ $objFix->fixTwo();
         "module" : "oer",
         "block" : "originalproductformnav",
         <?php
-
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $id . '|' . $step . '"';
         ?>
         }
 
@@ -27,9 +26,8 @@ $objFix->fixTwo();
         "block" : "originalproductform",
 
         <?php
-
         echo '"configData":';
-        echo '"' . $id . '|'.$step.'"';
+        echo '"' . $id . '|' . $step . '"';
         ?>
         }
 

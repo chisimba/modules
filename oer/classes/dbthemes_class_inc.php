@@ -47,6 +47,21 @@ class dbthemes extends dbtable {
         $data = array("theme" => $title, 'umbrellatheme' => $umbrellaTheme);
         return $this->insert($data);
     }
+    
+    /**
+     * Returns theme data for a supplied id
+     * @param type $id
+     * @return type 
+     */
+    function getTheme($id){
+        $sql="select * from tbl_oer_themes where id = '".$id."'";
+        $data= $this->getArray($sql);
+        if(count($data) > 0){
+            return $data[0];
+        }else{
+            return null;
+        }
+    }
 
 }
 

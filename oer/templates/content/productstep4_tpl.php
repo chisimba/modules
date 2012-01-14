@@ -5,14 +5,13 @@ $objFix->fixTwo();
 ?>
 <div id="twocolumn">
     <div id="Canvas_Content_Body_Region1">
-         {
+        {
         "display" : "block",
         "module" : "oer",
         "block" : "originalproductformnav",
         <?php
-
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $id . '|' . $step . '"';
         ?>
         }
 
@@ -24,10 +23,10 @@ $objFix->fixTwo();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "upload",
+        "block" : "productstep4",
         <?php
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $id . '|' . $step . '"';
         ?>
         }
 

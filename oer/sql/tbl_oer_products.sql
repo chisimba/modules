@@ -32,6 +32,8 @@ $options = array('comment'=>'Table to store Products','collate'=>'utf8_general_c
             'relation_type' => array('type' => 'text', 'length' => 32),
             'status' => array('type' => 'text', 'length' => 255),
             'thumbnail' => array('type' => 'text', 'length' => 512),
-            'deleted' => array('type' => 'integer', 'length' => 1, 'default' => '0'),
+             'themes'=>array('type' => 'text'),
+             'keywords'=>array('type' => 'text'),
+             'deleted' => array('type' => 'integer', 'length' => 1, 'default' => '0'),
         );
 ?>

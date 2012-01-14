@@ -14,9 +14,9 @@ class block_originalproductslisting extends object {
     }
 
     public function show() {
-
+       $mode=  $this->configData;
         $objProductManager = $this->getObject("productmanager", "oer");
-        return $objProductManager->getOriginalProductListingAsGrid();
+        return $objProductManager->getOriginalProductListing($mode);
     }
 
 }

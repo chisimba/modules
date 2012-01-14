@@ -1,19 +1,18 @@
 <?php
 
 /**
- * This creates a navigation for quick moving in between forms when creating
- * a new orginal product
+ * Handles product creation step 4, which invololves thimbnail upload
  *
  * @author davidwaf
  */
-class block_originalproductformnav extends object {
+class block_productstep4 extends object {
 
     function init() {
         
     }
 
-    public function show() {
-       $data = explode("|", $this->configData);
+    function show() {
+        $data = explode("|", $this->configData);
         $id = NULL;
         $step = '1';
         if (count($data == 2)) {
@@ -21,7 +20,7 @@ class block_originalproductformnav extends object {
             $step = $data[1];
         }
         $objProductManager = $this->getObject('productmanager', 'oer');
-        return $objProductManager->buildProductStepsNav($id,$step);
+        return $objProductManager->buildProductFormStep4($id);
     }
 
 }

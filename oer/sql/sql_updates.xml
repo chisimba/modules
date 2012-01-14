@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.090</version>
+        <description><br/>Added new column for themes</description>
+        <data>
+            <add>
+                <name>themes</name>
+                <type>text</type>
+       
+            </add>
+        </data>
+    </update>
+
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.091</version>
+        <description><br/>Added new column for keywords</description>
+        <data>
+            <add>
+                <name>keywords</name>
+                <type>text</type>
+       
+            </add>
+        </data>
+    </update>
+</updates>

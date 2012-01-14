@@ -132,9 +132,9 @@ class adaptationmanager extends object {
 
     /**
      * Used fo uploading product thumbnail
-     * @todo this will be renamed to a meaningful name
+     *
      */
-    function doajaxupload() {
+    function uploadProductThumbnail() {
         $dir = $this->objConfig->getcontentBasePath();
 
         $generatedid = $this->getParam('id');
@@ -168,7 +168,7 @@ class adaptationmanager extends object {
             $this->dbproducts->updateOriginalProduct($data, $productid);
             $filename = $result['filename'];
 
-            $params = array('action' => 'ajaxuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
+            $params = array('action' => 'showproductthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 
             return $params;
         }
