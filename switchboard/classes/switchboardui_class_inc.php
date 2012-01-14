@@ -96,25 +96,7 @@ class switchboardui extends object
         }
     }
     
-    /**
-     *
-     * Show the contents of the single text field that this
-     * module uses to add descriptive overview to the content
-     * page.
-     * 
-     * @return string The rendered text
-     * @access public
-     *  
-     */
-    public function showTxt()
-    {
-        $objData = $this->getObject("dbswitchboardtxt", "switchboard");
-        $arData = $objData->getOverview();
-        $ret = $arData[0]['content'];
-        return $ret;
-    }
-    
-   
+  
     /**
      *
      * Insert an add icon for use by javacript. It will be visitble
