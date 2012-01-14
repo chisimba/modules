@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <defaultdata>
 
-  <!-- MODULE: switchboard, Table tbl_switchboard_txt create data used by this module -->
-    <tbl_switchboard_text>
-        <id>init_overview</id>
-        <datecreated>January 4, 2012, 3:53 pm</datecreated>
-        <title>Switchboard</title>
-        <content>
-            Replace this with the content of your main switchboard.
-        </content>
-    </tbl_switchboard_text>
   <!-- MODULE: switchboard, Table tbl_switchboard_links create data used by this module -->
     <tbl_switchboard_links>
         <id>init_1</id>
