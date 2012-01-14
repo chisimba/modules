@@ -22,6 +22,14 @@ class dbproducts extends dbtable {
     }
 
     /**
+     * this selects original products
+     */
+    function getAdaptedProducts() {
+        $sql = "select * from $this->productsTableName where parent_id is not null";
+        return $this->getArray($sql);
+    }
+
+    /**
      * saves original product into db
      */
     function saveOriginalProduct($data) {
@@ -37,19 +45,41 @@ class dbproducts extends dbtable {
     function updateOriginalProduct($data, $id) {
         return $this->update("id", $id, $data);
     }
-    
+
+    /**
+     * Get parent product data
+     * @param  $id ID of the product
+     * @return array
+     */
+    function getParentData($id) {        
+        //Fetch parent id of the adaptation
+        $sql = "select * from $this->productsTableName where id = '$id'";
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {            
+            $sql = "select * from $this->productsTableName where id = '".$data[0]["parent_id"]."'";
+            $data = $this->getArray($sql);
+            if (count($data) > 0) {
+                return $data[0];
+            } else {
+                return NULL;
+            }
+        } else {
+            return NULL;
+        }
+    }
+
     /**
      * returns product details for a specific id
      * @param  $id the product id 
      * @return NULL if product not found, else an array with product details
      */
-    function getProduct($id){
-        $sql=
-        "select * from $this->productsTableName where id = '$id'";
-        $data=$this->getArray($sql);
-        if(count($data) > 0){
+    function getProduct($id) {
+        $sql =
+                "select * from $this->productsTableName where id = '$id'";
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
             return $data[0];
-        }else{
+        } else {
             return NULL;
         }
     }
@@ -58,9 +88,10 @@ class dbproducts extends dbtable {
      * deletes a product
      * @param $id  ID of the product to be deleted
      */
-    function  deleteOriginalProduct($id){
+    function deleteOriginalProduct($id) {
         $this->delete("id", $id);
     }
+
 }
 
 ?>

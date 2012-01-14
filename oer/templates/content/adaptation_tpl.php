@@ -24,10 +24,9 @@ $objFix->fixTwo();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "originalproductform",
+        "block" : "adaptationform",
 
         <?php
-
         echo '"configData":';
         echo '"' . $id . '|'.$step.'"';
         ?>

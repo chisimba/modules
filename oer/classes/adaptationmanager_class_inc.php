@@ -40,7 +40,7 @@ class adaptationmanager extends object {
      * @return type 
      */
     function saveNewAdaptationStep1() {
-
+        $parentid = $this->getParam("id");
         $data = array(
             "title" => $this->getParam("title"),
             "alternative_title" => $this->getParam("alternative_title"),
@@ -48,6 +48,7 @@ class adaptationmanager extends object {
             "othercontributors" => $this->getParam("othercontributors"),
             "publisher" => $this->getParam("publisher"),
             "language" => $this->getParam("language"),
+            "parent_id" => $parentid,
             "translation_of" => "",
             "description" => "",
             "abstract" => "",
@@ -62,8 +63,8 @@ class adaptationmanager extends object {
             "coverage" => "",
             "status" => "",
         );
-
-        return $this->dbproducts->saveOriginalProduct($data);
+        $result = $this->dbproducts->saveOriginalProduct($data);
+        return $result;
     }
 
     /**
@@ -315,9 +316,6 @@ class adaptationmanager extends object {
 
 
         $action = "saveadaptationstep1";
-        if ($product != null) {
-            $action = "updateadaptationstep1";
-        }
         $formData = new form('adaptationForm1', $this->uri(array("action" => $action, "id" => $id)));
         $formData->addToForm($fieldset);
 
@@ -343,8 +341,10 @@ class adaptationmanager extends object {
     public function buildAdaptationFormStep2($id) {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
+        
         if ($id != null) {
-            $product = $this->dbproducts->getProduct($id);
+            $product = $this->dbproducts->getParentData($id);
+            
             $hidId = new hiddeninput('id');
             $hidId->cssId = "id";
             $hidId->value = $id;
@@ -465,7 +465,8 @@ class adaptationmanager extends object {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
         if ($id != null) {
-            $product = $this->dbproducts->getProduct($id);
+            $product = $this->dbproducts->getParentData($id);
+
             $hidId = new hiddeninput('id');
             $hidId->cssId = "id";
             $hidId->value = $id;
@@ -668,9 +669,9 @@ class adaptationmanager extends object {
      * @return type 
      */
     public function getAdaptationsListingAsGrid() {
-        $originalProducts = $this->dbproducts->getOriginalProducts();
-        $newproductlink = new link($this->uri(array("action" => "newadaptationstep1")));
-        $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
+        $originalProducts = $this->dbproducts->getAdaptedProducts();
+        $newproductlink = new link($this->uri(array("action" => "adaptableproductslist")));
+        $newproductlink->link = $this->objLanguage->languageText('mod_oer_newadaptation', 'oer');
 
 
         $controlBand.=
@@ -747,6 +748,99 @@ class adaptationmanager extends object {
             $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
             $product.='<br/><br/>' . $commentsThumbnail.'&nbsp;'.$languageField->show();
             
+            $adaptionsCount=0;
+            $adaptationsLink=new link($this->uri(array("action"=>"viewadaptions","id"=>$originalProduct['id'])));
+            $adaptationsLink->link=$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $product.="<br/>".$adaptionsCount.'&nbsp;'. $adaptationsLink->show();
+
+            //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+            $table->addCell($product,null,null,null,"view_original_product");
+            if ($count > 3) {
+                $table->endRow();
+                $startNewRow = TRUE;
+                $count = 1;
+            }
+            $count++;
+        }
+        return $controlBand . $table->show();
+    }
+
+    /**
+     * creates a table and returns the list of adaptable products
+     * @return type
+     */
+    public function getAdaptatableProductListAsGrid() {
+        $originalProducts = $this->dbproducts->getOriginalProducts();
+
+
+        $controlBand.=
+                '<div id="originalproducts_controlband">';
+
+        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
+        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+        $gridlink = new link($this->uri(array("action" => "home")));
+        $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+        $controlBand.=$gridlink->show();
+
+        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+        $listlink = new link($this->uri(array("action" => "1a")));
+        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
+        $controlBand.=$listlink->show();
+
+        $sortbydropdown = new dropdown('sortby');
+        $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+
+        $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
+        $controlBand.=$sortbydropdown->show();
+
+
+
+        $controlBand.= '</div> ';
+        $startNewRow = TRUE;
+        $count = 2;
+        $table = $this->getObject('htmltable', 'htmlelements');
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("ProductCreators");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+
+        foreach ($originalProducts as $originalProduct) {
+            if ($startNewRow) {
+                $startNewRow = FALSE;
+                $table->startRow();
+            }
+            $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+            if ($originalProduct['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
+            }
+            $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+            $link->link = $thumbnail . '<br/>';
+            $product = $link->show();
+
+            $link->link = $originalProduct['title'];
+            $product.= $link->show();
+            if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                $editImg = '<img src="skins/oer/images/icons/edit.png">';
+                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+
+                $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'])));
+                $editLink->link = $editImg;
+                $product.=$editLink->show();
+
+                $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
+                $deleteLink->link = $deleteImg;
+                $deleteLink->cssClass = "deleteadaptation";
+                $product.=$deleteLink->show();
+            }
+
+            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
+
+            $languageField = new dropdown('language');
+            $languageField->cssClass = 'original_product_languageField';
+            $languageField->setSelected($product['language']);
+            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+            $product.='<br/><br/>' . $commentsThumbnail.'&nbsp;'.$languageField->show();
+
             $adaptionsCount=0;
             $adaptationsLink=new link($this->uri(array("action"=>"viewadaptions","id"=>$originalProduct['id'])));
             $adaptationsLink->link=$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');

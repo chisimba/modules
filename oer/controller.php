@@ -100,6 +100,7 @@ class oer extends controller {
 
         return "1a_tpl.php";
     }
+
     /**
      *
      * This is loads adaptation home
@@ -108,6 +109,15 @@ class oer extends controller {
 
         return "1b_tpl.php";
     }
+
+    /**
+     *
+     * This is loads list of products that can be adapted
+     */
+    private function __adaptableproductslist() {
+        return "adaptableproductslist_tpl.php";
+    }
+
     /**
      * this launches control panel
      * @return type 
@@ -154,7 +164,6 @@ class oer extends controller {
         return "product_tpl.php";
     }
 
-    
     /**
      * Saves the original product in step 1
      */
@@ -218,7 +227,6 @@ class oer extends controller {
     }
 
     // Adaptations home
-
     // Manage adaptations
     function __editadaptationstep1() {
         $id = $this->getParam("id");
@@ -263,8 +271,8 @@ class oer extends controller {
      */
     function __saveadaptationstep1() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $id = $objAdaptationManager->saveNewProductStep1();
-        $this->setVarByRef("id", $id);
+        $result = $objAdaptationManager->saveNewAdaptationStep1();
+        $this->setVarByRef("id", $result);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
     }
@@ -274,7 +282,7 @@ class oer extends controller {
      */
     function __saveadaptationstep2() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $id = $objProductManager->updateProductStep2();
+        $id = $objAdaptationManager->updateAdaptationStep2();
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "adaptation_tpl.php";
@@ -285,7 +293,7 @@ class oer extends controller {
      */
     function __saveadaptationstep3() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $id = $objProductManager->updateProductStep3();
+        $id = $objAdaptationManager->updateAdaptationStep3();
         $this->setVarByRef("id", $id);
         return "upload_tpl.php";
     }
@@ -409,7 +417,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -512,7 +520,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.

@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * Builds a form for creating an adaptation form
+ *
+ * @author pwando
+ */
+class block_adaptationform extends object {
+
+    public function init() {
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+    }
+
+    /**
+     * contructs the form and returns it for display
+     * @return type 
+     */
+    public function show() {
+        $objProductManager = $this->getObject("adaptationmanager", "oer");
+        $data = explode("|", $this->configData);
+        $id = NULL;
+        $step = '1';
+        if (count($data == 2)) {
+            $id = $data[0];
+            $step = $data[1];
+        }
+        switch ($step) {
+            case '1':
+                return $objProductManager->buildAdaptationFormStep1($id);
+                break;
+            case '2':
+                return $objProductManager->buildAdaptationFormStep2($id);
+                break;
+            case '3':
+                return $objProductManager->buildAdaptationFormStep3($id);
+                break;
+        }
+    }
+}
+?>
