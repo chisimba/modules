@@ -93,6 +93,7 @@ function saveStep1(){
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
         jQuery("#form_originalProductForm1").submit();
     }
+    return false;
 }
     
 
@@ -105,6 +106,7 @@ function saveStep2(){
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
         jQuery("#form_originalProductForm2").submit();
     }
+    return false;
 }
     
 
@@ -118,6 +120,7 @@ function saveStep3(){
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
         jQuery("#form_originalProductForm3").submit();
     }
+    return false;
 }
     
 
@@ -130,6 +133,7 @@ function saveStep4(){
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
         jQuery("#form_originalProductForm4").submit();
     }
+    return false;
 }
         
     
