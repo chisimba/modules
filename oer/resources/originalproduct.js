@@ -21,20 +21,34 @@ jQuery(function() {
         jQuery("#form_originalProductForm2").validate();
         jQuery("#form_originalProductForm3").validate();
         jQuery("#form_originalProductForm4").validate();
+        
+        
+        jQuery('ul#nav-secondary li').click(function() {
+            jQuery(this).html ('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
+          
+        });
+        
+        
     });
     
-      jQuery("a[class=deleteoriginalproduct]").click(function(){
+    
+    
+    jQuery("a[class=deleteoriginalproduct]").click(function(){
 
-            var r=confirm(confirm_delete_original_product);
-            if (r==true){
-                var link = this.href;
+        var r=confirm(confirm_delete_original_product);
+        if (r==true){
+            var link = this.href;
 
-                window.location=link;
-            }
+            window.location=link;
+        }
 
 
-            return false;
-        });
+        return false;
+    });
+    
+    
+
+    
     
     // Function for saving the institutional data
     jQuery("#form_originalProductForm").submit(function(e) {
@@ -70,3 +84,52 @@ jQuery(function() {
 
 });
 
+/**
+ * Submits step 1 details
+ */
+function saveStep1(){
+    if(jQuery("#form_originalProductForm1").valid()){ 
+        jQuery("#saveStep1Button").attr("disabled", "disabled");
+        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
+        jQuery("#form_originalProductForm1").submit();
+    }
+}
+    
+
+/**
+ * Submits step 2 details
+ */
+function saveStep2(){
+    if(jQuery("#form_originalProductForm2").valid()){ 
+        jQuery("#saveStep2Button").attr("disabled", "disabled");
+        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
+        jQuery("#form_originalProductForm2").submit();
+    }
+}
+    
+
+
+/**
+ * Submits step 3 details
+ */
+function saveStep3(){
+    if(jQuery("#form_originalProductForm3").valid()){ 
+        jQuery("#saveStep3Button").attr("disabled", "disabled");
+        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
+        jQuery("#form_originalProductForm3").submit();
+    }
+}
+    
+
+/**
+ * Submits step 4 details
+ */
+function saveStep4(){
+    if(jQuery("#form_originalProductForm4").valid()){ 
+        jQuery("#saveStep1Button").attr("disabled", "disabled");
+        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
+        jQuery("#form_originalProductForm4").submit();
+    }
+}
+        
+    

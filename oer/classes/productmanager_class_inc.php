@@ -214,9 +214,9 @@ class productmanager extends object {
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
         $arrayVars['confirm_delete_original_product'] = "mod_oer_confirm_delete_original_product";
-
-        $objSerialize = $this->getObject('serializevars', 'oer');
-        $objSerialize->serializetojs($arrayVars);
+        $arrayVars['loading'] = "mod_oer_loading";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oer');
     }
 
     /**
@@ -224,11 +224,7 @@ class productmanager extends object {
      * @return type FORM
      */
     public function buildProductFormStep1($id) {
-
-
         $objTable = $this->getObject('htmltable', 'htmlelements');
-
-
         if ($id != null) {
             $product = $this->dbproducts->getProduct($id);
             $hidId = new hiddeninput('id');
@@ -269,7 +265,6 @@ class productmanager extends object {
         $objTable->endRow();
 
 
-
         //author
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_oer_author', 'oer'));
@@ -284,8 +279,6 @@ class productmanager extends object {
         }
         $objTable->addCell($textinput->show());
         $objTable->endRow();
-
-
 
         //other contributors
         $objTable->startRow();
@@ -362,7 +355,8 @@ class productmanager extends object {
         $formData = new form('originalProductForm1', $this->uri(array("action" => $action, "id" => $id)));
         $formData->addToForm($fieldset);
 
-        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $button = new button('saveStep1Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep1();');
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -372,10 +366,15 @@ class productmanager extends object {
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
+        $title = $product['title'];
+        if ($title == '') {
+            $title = $this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step1', 'oer');
+        }
+
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_title";
-        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step1', 'oer');
+        $header->str = $title . '-' . $this->objLanguage->languageText('mod_oer_step1', 'oer');
 
 
         return $header->show() . $formData->show();
@@ -474,7 +473,8 @@ class productmanager extends object {
         $formData = new form('originalProductForm2', $this->uri(array("action" => "saveoriginalproductstep2")));
         $formData->addToForm($fieldset);
 
-        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $button = new button('saveStep2Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep2();');
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -677,10 +677,11 @@ class productmanager extends object {
         $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step3', 'oer'));
         $fieldset->addContent($objTable->show());
 
-        $formData = new form('originalProductForm2', $this->uri(array("action" => "saveoriginalproductstep3")));
+        $formData = new form('originalProductForm3', $this->uri(array("action" => "saveoriginalproductstep3")));
         $formData->addToForm($fieldset);
 
-        $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $button = new button('saveStep3Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep3();');
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -743,6 +744,9 @@ class productmanager extends object {
 
         // Insert the selectbox into the form object.
         $objForm->addToForm($objSelectBox->show());
+
+        $objForm->addToForm('<br/><div id="save_results"><div/>');
+
 
         // Get and insert the save and cancel form buttons
         $arrFormButtons = $objSelectBox->getFormButtons();
@@ -853,13 +857,11 @@ class productmanager extends object {
         $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
         $controlBand.=$sortbydropdown->show();
 
-
-
         $controlBand.= '</div> ';
         $startNewRow = TRUE;
         $count = 2;
         $table = $this->getObject('htmltable', 'htmlelements');
-
+        $table->attributes = "style='table-layout:fixed;'";
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -874,7 +876,7 @@ class productmanager extends object {
             $titleLink->link = $thumbnail . '<br/>';
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
-            $product= $titleLink->show();
+            $product = $titleLink->show();
 
             if ($mode == 'grid') {
                 $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
@@ -885,9 +887,10 @@ class productmanager extends object {
                 $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
                 $thumbnailLink->link = $thumbnail . '<br/>';
                 $thumbnailLink->cssClass = 'original_product_listing_thumbail';
-                $product = $thumbnailLink->show().'<br/>'.$titleLink->show();;
+                $product = $thumbnailLink->show() . '<br/>' . $titleLink->show();
+                ;
             }
-           
+
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
                 $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
@@ -917,7 +920,7 @@ class productmanager extends object {
             $product.="<br/>" . $adaptationsLink->show();
 
             //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-            $table->addCell($product, null, null, null, "view_original_product");
+            $table->addCell($product, null, "top", "left", "view_original_product");
             if ($count > 3) {
                 $table->endRow();
                 $startNewRow = TRUE;

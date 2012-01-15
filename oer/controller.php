@@ -199,7 +199,7 @@ class oer extends controller {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep3();
         $this->setVarByRef("id", $id);
-        return "upload_tpl.php";
+        return "productstep4_tpl.php";
     }
 
     /**
@@ -334,7 +334,7 @@ class oer extends controller {
         $id = $this->getParam("id");
         $objProductManager = $this->getObject("productmanager", "oer");
         $objProductManager->deleteOriginalProduct();
-        return "1a_tpl.php";
+        return "productlisting_tpl.php";
     }
 
     /**
