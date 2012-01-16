@@ -176,9 +176,7 @@ class oer extends controller {
     function __saveoriginalproductstep1() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->saveNewProductStep1();
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "2");
-        return "product_tpl.php";
+        die($id);
     }
 
     /**
@@ -187,9 +185,7 @@ class oer extends controller {
     function __saveoriginalproductstep2() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep2();
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "3");
-        return "product_tpl.php";
+        die($id);
     }
 
     /**
@@ -198,8 +194,7 @@ class oer extends controller {
     function __saveoriginalproductstep3() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep3();
-        $this->setVarByRef("id", $id);
-        return "productstep4_tpl.php";
+        die($id);
     }
 
     /**
@@ -208,7 +203,9 @@ class oer extends controller {
     function __saveoriginalproductstep4() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep4();
-        return $this->nextAction('home', null);
+        $this->setVarByRef("id", $id);
+        $this->setVar("step", "4");
+        return "productstep4_tpl.php";
     }
 
     //EDIT Functions
@@ -319,10 +316,7 @@ class oer extends controller {
     function __updateoriginalproductstep1() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep1();
-
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "2");
-        return "product_tpl.php";
+        die($id);
     }
 
     //DELETE Functions
@@ -334,6 +328,7 @@ class oer extends controller {
         $id = $this->getParam("id");
         $objProductManager = $this->getObject("productmanager", "oer");
         $objProductManager->deleteOriginalProduct();
+        $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }
 

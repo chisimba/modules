@@ -91,12 +91,52 @@ function saveStep1(){
     if(jQuery("#form_originalProductForm1").valid()){ 
         jQuery("#saveStep1Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-        jQuery("#form_originalProductForm1").submit();
+        data_string = jQuery("#form_originalProductForm1").serialize();
+        jQuery.ajax({
+            url: 'index.php?module=oer&action=saveoriginalproductstep1',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#saveStep1Button").attr("disabled", "");
+                if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                    var id=msg;
+                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
+                       
+                    window.location="?module=oer&action=editoriginalproductstep2&id="+id;
+                } else {
+                    alert(status_fail);
+                }
+            }
+        });
     }
     return false;
 }
     
-
+function updateStep1(){
+    if(jQuery("#form_originalProductForm1").valid()){ 
+        jQuery("#saveStep1Button").attr("disabled", "disabled");
+        jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
+        data_string = jQuery("#form_originalProductForm1").serialize();
+        jQuery.ajax({
+            url: 'index.php?module=oer&action=updateoriginalproductstep1',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#saveStep1Button").attr("disabled", "");
+                if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                   
+                    var id=msg;
+                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
+                    window.location="?module=oer&action=editoriginalproductstep2&id="+id;
+                } else {
+                    alert(status_fail);
+                }
+            }
+        });
+    }
+    return false;
+}
+    
 /**
  * Submits step 2 details
  */
@@ -104,7 +144,23 @@ function saveStep2(){
     if(jQuery("#form_originalProductForm2").valid()){ 
         jQuery("#saveStep2Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-        jQuery("#form_originalProductForm2").submit();
+                data_string = jQuery("#form_originalProductForm2").serialize();
+        jQuery.ajax({
+            url: 'index.php?module=oer&action=saveoriginalproductstep2',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#saveStep1Button").attr("disabled", "");
+                if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                   
+                    var id=msg;
+                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
+                    window.location="?module=oer&action=editoriginalproductstep3&id="+id;
+                } else {
+                    alert(status_fail);
+                }
+            }
+        });
     }
     return false;
 }
@@ -118,7 +174,23 @@ function saveStep3(){
     if(jQuery("#form_originalProductForm3").valid()){ 
         jQuery("#saveStep3Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-        jQuery("#form_originalProductForm3").submit();
+               data_string = jQuery("#form_originalProductForm3").serialize();
+        jQuery.ajax({
+            url: 'index.php?module=oer&action=saveoriginalproductstep3',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#saveStep3Button").attr("disabled", "");
+                if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                    
+                    var id=msg;
+                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
+                    window.location="?module=oer&action=editoriginalproductstep4&id="+id;
+                } else {
+                    alert(status_fail);
+                }
+            }
+        });
     }
     return false;
 }
@@ -129,9 +201,24 @@ function saveStep3(){
  */
 function saveStep4(){
     if(jQuery("#form_originalProductForm4").valid()){ 
-        jQuery("#saveStep1Button").attr("disabled", "disabled");
+        jQuery("#saveStep4Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-        jQuery("#form_originalProductForm4").submit();
+                data_string = jQuery("#form_originalProductForm4").serialize();
+        jQuery.ajax({
+            url: 'index.php?module=oer&action=saveoriginalproductstep4',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#saveStep1Button").attr("disabled", "");
+                if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                    var id=msg;
+                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
+                    window.location="?module=oer&action=editoriginalproductstep4&id="+id;
+                } else {
+                    alert(status_fail);
+                }
+            }
+        });
     }
     return false;
 }

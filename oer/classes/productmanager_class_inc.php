@@ -349,15 +349,18 @@ class productmanager extends object {
 
 
         $action = "saveoriginalproductstep1";
+        $jsFunction = "javascript:saveStep1();";
         if ($product != null) {
             $action = "updateoriginalproductstep1";
+            $jsFunction = "javascript:updateStep1('".$id."');";
         }
         $formData = new form('originalProductForm1', $this->uri(array("action" => $action, "id" => $id)));
         $formData->addToForm($fieldset);
 
         $formData->addToForm('<br/><div id="save_results"><div/>');
-        $button = new button('saveStep1Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep1();');
-        $button->setToSubmit();
+        $button = new button('saveStep1Button', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+      //  $button->setToSubmit();
+        $button->setOnClick($jsFunction);
         $formData->addToForm('<br/>' . $button->show());
 
 
