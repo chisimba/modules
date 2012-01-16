@@ -9,7 +9,6 @@ ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
 ?>
-Now is the time for all good men to come to the aid of the party
 <div id="twocolumn">
     <div id="Canvas_Content_Body_Region1">
         {
