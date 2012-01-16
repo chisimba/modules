@@ -38,7 +38,10 @@ class textblock extends controller
 
         //Create an instance of the language object
         $this->objLanguage = $this->getObject("language", "language");
-        
+        // Load the module helper Javascript
+        $this->appendArrayVar('headerParams',
+        $this->getJavaScriptFile('textblock.js',
+          'textblock'));
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -52,7 +55,30 @@ class textblock extends controller
     {
         switch ($this->action) {
             case null:
-            case "view":
+            case 'narrowblock':
+            case 'view':
+                // Set the layout template to compatible one
+                $this->setLayoutTemplate('layout_tpl.php');
+                return 'narrowblockview_tpl.php';
+                break;
+            case 'middleblock':
+                // Set the layout template to compatible one
+                $this->setLayoutTemplate('layout_tpl.php');
+                return 'wideblockview_tpl.php';
+                break;
+            case 'deleteajax':
+                $this->objDb->delete("id", $this->getParam('id', Null));
+                die("RECORD_DELETED");
+                break;
+            case 'ajaxedit':
+                // Set the layout template to compatible one
+                $this->setLayoutTemplate('layout_tpl.php');
+                return "editajax_tpl.php";
+                break;
+            
+            
+            
+            case "oldview":
 		  $pageNr = $this->getParam('pagenum', '1');
 		  $records = 20;
 		  $start = (($pageNr * $records) - $records);
@@ -60,7 +86,8 @@ class textblock extends controller
                   $ar = $this->objDb->getAll(" LIMIT $start, $end");
                   $this->setVarByRef('ar', $ar);
                   return "main_tpl.php";
-                  break;
+                  break; //@Deprecated
+
             case 'edit':
                  $this->getForEdit('edit');
                  $this->setVar('mode', 'edit');
@@ -75,6 +102,8 @@ class textblock extends controller
                     return $this->nextAction('view',null);
                 }
                 break;
+                
+
 				
             case 'add':
                 $this->setVar('mode', 'add');
@@ -88,7 +117,7 @@ class textblock extends controller
                 break;
 
             default:
-                $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown").": ".$action);
+                $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown",NULL,"Unknown action").": ".$this->action);
                 return 'dump_tpl.php';
 
         }//switch

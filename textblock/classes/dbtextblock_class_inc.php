@@ -38,6 +38,16 @@ class dbtextblock extends dbTable
 		$result = $this->getAll(" WHERE blockid = '$txtBlockId'");
 		return $result[0];
     }
+    
+    /**
+    * Method to return the block row by id
+    * @param string $id the id as per tbl_module_blocks.blockid.
+    */
+    public function getBlockById($id)
+    {   
+		$result = $this->getAll(" WHERE id = '$id'");
+		return $result;
+    }
 
     /**
     * Save method for editing a record in this table

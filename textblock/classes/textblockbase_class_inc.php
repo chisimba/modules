@@ -8,8 +8,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* The class provides a hello world block to demonstrate
-* how to use blockalicious
+* The class provides a base text block for use by all 
+* textblocks to render their contents
 *
 * @author Derek Keats
 *
