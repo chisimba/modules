@@ -837,7 +837,7 @@ class productmanager extends object {
         $controlBand.=
                 '<div id="originalproducts_controlband">';
 
-        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
+        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
         $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
         $gridlink = new link($this->uri(array("action" => "home")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
@@ -850,7 +850,7 @@ class productmanager extends object {
 
         if ($this->objUser->isLoggedIn()) {
             $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
-            $controlBand.= '&nbsp;' . $newthumbnail . $newproductlink->show();
+            $controlBand.= '&nbsp;|&nbsp;' . $newthumbnail . $newproductlink->show();
         }
 
 
@@ -897,15 +897,20 @@ class productmanager extends object {
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
                 $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
 
-                $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $originalProduct['id'])));
+                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                $adaptLink->link = $adaptImg;
+                $product.="<br />".$adaptLink->show();
+
+                $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $originalProduct['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
-                $product.=$editLink->show();
+                $product.="&nbsp;".$editLink->show();
 
                 $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $originalProduct['id'])));
                 $deleteLink->link = $deleteImg;
                 $deleteLink->cssClass = "deleteoriginalproduct";
-                $product.=$deleteLink->show();
+                $product.="&nbsp;".$deleteLink->show();
             }
 
             $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';

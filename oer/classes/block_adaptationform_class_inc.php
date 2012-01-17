@@ -19,15 +19,18 @@ class block_adaptationform extends object {
     public function show() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $data = explode("|", $this->configData);
+        
         $id = NULL;
         $step = '1';
         if (count($data == 2)) {
             $id = $data[0];
             $step = $data[1];
+            $mode = $data[2];
         }
+        print_r($id);//exit;
         switch ($step) {
             case '1':
-                return $objAdaptationManager->buildAdaptationFormStep1($id);
+                return $objAdaptationManager->buildAdaptationFormStep1($id, $mode);
                 break;
             case '2':
                 return $objAdaptationManager->buildAdaptationFormStep2($id);

@@ -28,7 +28,7 @@ $objFix->fixTwo();
 
         <?php
         echo '"configData":';
-        echo '"' . $id . '|'.$step.'"';
+        echo '"' . $id . '|'.$step.'|'.$mode.'"';
         ?>
         }
 

@@ -242,13 +242,15 @@ class oer extends controller {
     // Manage adaptations
     function __editadaptationstep1() {
         $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
         $this->setVar("step", "1");
         return "adaptation_tpl.php";
     }
 
     function __editadaptationstep2() {
-        $id = $this->getParam("id");
+        $id = $this->getParam("id");        
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -330,6 +332,16 @@ class oer extends controller {
         $objProductManager->deleteOriginalProduct();
         $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
+    }
+    /**
+     * deletes a product. Assumes the deletion is already confirmed
+     */
+    function __deleteadaptation() {
+        $id = $this->getParam("id");
+        $objProductManager = $this->getObject("productmanager", "oer");
+        $objProductManager->deleteOriginalProduct();
+        $this->setVar("mode", "grid");
+        return "1b_tpl.php";
     }
 
     /**
