@@ -133,6 +133,7 @@ class textblockui extends object
             // Make title clickable to show the contents
             $title = "<a href=\"javascript:void(0);\" class=\"BLOCK_TITLE\" id=\"BLOCK_$id\">$title</a>";
             $content = $block['blocktext'];
+            $content = $this->renderContent($content);
             $content = $this->putInDiv($content, $id);
             $table->startRow(NULL, "ROW_" . $id);
             $table->addCell($iconVw, 30);
@@ -499,6 +500,21 @@ class textblockui extends object
         return $this->objH->show() 
           . "<br />\n\n" 
           . $objForm->show();
+    }
+    
+    /**
+     *
+     * Render the content to parse filters
+     * 
+     * @param string $content The content to render
+     * @return string The parsed content
+     * @access public
+     * 
+     */
+    public function renderContent($content)
+    {
+        $objWashout = $this->getObject("washout", "utilities");
+        return $objWashout->parseText($content);
     }
     
 }
