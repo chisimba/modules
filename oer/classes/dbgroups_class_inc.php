@@ -19,6 +19,16 @@
  * along with this program; if not, write to the
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+  *
+ * @category  Chisimba
+ * @package   OER
+ * @author    UNKNOWN
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   0.001
+ * @link      http://www.chisimba.com
+ * 
  */
 // security check - must be included in all scripts
 if (!
@@ -43,234 +53,146 @@ $GLOBALS['kewl_entry_point_run'])
  *
  * Database access for OER groups for enabling display, edit,
  * add of groups
+ * 
+ * @package   switchboard
+ * @author    Derek Keats derek@dkeats.com
  *
  */
 class dbgroups extends dbtable {
 
-    function init() {
+    /**
+     * 
+     * Constructor which sets the database table
+     * 
+     * @access public
+     * @return VOID
+     * 
+     */
+    public function init() {
         parent::init("tbl_oer_groups");
     }
 
-    function getgroups($start, $limit) {
+    /**
+     * 
+     * Get am array of group data with a limit
+     *
+     * @param integer $start The starting pagenumber
+     * @param integer $limit The number of records
+     * @return string array The array of records
+     * @access public
+     * 
+     */
+    public function getgroups($start, $limit) {
         $sql = "select * from tbl_oer_groups limit $start,$limit";
         return $this->getArray($sql);
     }
 
-    function getidbylocation($loclat, $loclong) {
+    /**
+     * 
+     * Return groups by latitude and longitude
+     *
+     * @param string $loclat Latitude 
+     * @param string $loclong Longitude
+     * @return string array The array of records
+     * @access public
+     * 
+     */
+    public function getidbylocation($loclat, $loclong) {
         $sql = "select * from tbl_oer_groups where loclat = '$loclat' and loclong = '$loclong'";
-
         return $this->getArray($sql);
     }
 
-    function getAllGroups() {
+    /**
+     * 
+     * Return an array of all groups
+     * 
+     * @return string array The array of records
+     * @access public
+     * 
+     */
+    public function getAllGroups() {
         $sql = "select * from tbl_oer_groups where parent_id is  NULL";
         return $this->getArray($sql);
     }
 
-    function getGroupInfo($groupid) {
+    /**
+     *
+     * Return an array by group ID
+     * 
+     * @param string $groupid The groupid of the group to return
+     * @return string array The array of records
+     * @access public
+     * 
+     */
+    public function getGroupInfo($groupid) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         return $this->getArray($sql);
     }
 
-    function deleteGroup($groupid) {
+    /**
+     *
+     * Delete a group by group id
+     * 
+     * @param string $groupid The groupid of the group to delete
+     * @return VOID
+     * @access public
+     * 
+     */
+    public function deleteGroup($groupid) {
         $sql = "DELETE FROM tbl_oer_groups WHERE id='$groupid'";
         $this->getArray($sql);
     }
 
-    function getGroupForumId($groupid) {
-        $sql =
-                "select id from tbl_forum where forum_workgroup = '$groupid'";
+    /**
+     *
+     * Return the group forum id from the group id
+     * 
+     * @param string $groupid The groupid of the group to lookup the forum id for
+     * @return string The forum id
+     * @access public
+     * 
+     */
+    public function getGroupForumId($groupid) {
+        $sql = "select id from tbl_forum where forum_workgroup = '$groupid'";
         $result = $this->getArray($sql);
         return $result[0]['id'];
     }
 
-    function editgroup($id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four) {
+//Forgoodness sake.... look at what this is doing... if name is blank it doesn't do anything, no warning, error, nothing
+    
+    public function editgroup($id, $name, $email, $address, $city, 
+        $state, $country, $postalcode, $website, $institution, 
+        $loclat, $loclong, $description, $thumbnail, $description_one, 
+        $description_two, $description_three, $description_four) {
         if ($name != '') {
             $data = array(
-                'id' => $id,
-                'name' => $name);
+                'name' => $name,
+                'email' => $email,
+                'website' => $website,
+                'address' => $address,
+                'city' => $city,
+                'state' => $state,
+                'country' => $country,
+                'postalcode' => $postalcode,
+                'linkedInstitution' => $institution,
+                'loclat' => $loclat,
+                'loclong' => $loclong,
+                'description' => $description,
+                'thumbnail' => $thumbnail,
+                'description_one' => $description_one,
+                'description_two' => $description_two,
+                'description_three' => $description_three,
+                'description_four' => $description_four,
+            );
             $this->update('id', $id, $data);
-        }
-
-        if ($email != '') {
-            $data = array(
-                'id' => $id,
-                'email' => $email);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($website != '') {
-
-
-            $data = array(
-                'id' => $id,
-                'website' => $website);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-        if ($address != '') {
-
-            $data = array(
-                'id' => $id,
-                'address' => $address);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($city != '') {
-
-            $data = array(
-                'id' => $id,
-                'city' => $city);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($state != '') {
-
-            $data = array(
-                'id' => $id,
-                'state' => $state);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($country != '') {
-
-            $data = array(
-                'id' => $id,
-                'country' => $country);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-        if ($postalcode != '') {
-
-            $data = array(
-                'id' => $id,
-                'postalcode' => $postalcode);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-
-        if ($institution != '') {
-
-            $data = array(
-                'id' => $id,
-                'linkedInstitution' => $institution);
-            $this->update(
-                    'id', $id, $data);
-        }
-
-        if ($loclat != '') {
-
-            $data = array(
-                'id' => $id,
-                'loclat' => $loclat);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($loclong != '') {
-            $data = array(
-                'id' => $id,
-                'loclong' => $loclong);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-        if ($description != '') {
-
-            $data = array(
-                'id' => $id,
-                'description' => $description);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-        if ($thumbnail != '') {
-            $data = array(
-                'id' => $id,
-                'thumbnail' => $thumbnail);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-        if ($description_one != '') {
-            $data = array(
-                'id' => $id,
-                'description_one' => $description_one);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-
-        if ($description_two != '') {
-            $data = array(
-                'id' => $id,
-                'description_two' => $description_two);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-
-        if ($description_three != '') {
-            $data = array(
-                'id' => $id,
-                'description_three' => $description_three);
-            $this->update(
-                    'id', $id, $data
-            );
-        }
-
-
-        if ($description_four != '') {
-            $data = array(
-                'id' => $id,
-                'description_four' => $description_four);
-            $this->update(
-                    'id', $id, $data
-            );
         }
     }
 
-//
-//    function addGroup($name, $loclat, $loclong, $thumbnailPath, $country = NULL) {
-//        $data = array(
-//            'name' => $name,
-//            'loclat' => $loclat,
-//            'loclong' => $loclong,
-//            'country' => $country,
-//            'thumbnail' => $thumbnailPath
-//        );
-//
-//        $this->insert($data);
-//    }
-    // PBROBLEM PROBLEM PROBLEM   #############################################
-    // Does a User need necessarily to know the Latitude and Longitude of the group Location?
-    //
-    function saveNewGroup($name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four) {
+    
+    public function saveNewGroup($name, $email, $address, $city, 
+        $state, $country, $postalcode, $website, $institution, $loclat, 
+        $loclong, $description, $admin, $thumbnail, $description_one, 
+        $description_two, $description_three, $description_four) {
         $data = array(
             'name' => $name,
             'email' => $email,
@@ -299,7 +221,6 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
-
     function getGroupLatitude($groupid) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
@@ -311,7 +232,6 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
-
     function getGroupLongitude($groupid) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
@@ -516,16 +436,6 @@ class dbgroups extends dbtable {
         return $array[0]['admin'];
     }
 
-
-
-
-//    function getGroupOwnerID($groupid) {
-//      $sql = "SELECT * FROM tbl_oer_groups WHERE id = '$groupid'";
-//      $owner= $this->getArray($sql);
-//      return $owner[0]['admin'];
-//
-//    }
-
     function storegroupinstitution($groupid, $institutionid) {
         $data = array(
             'group_id' => $groupid,
@@ -594,7 +504,7 @@ class dbgroups extends dbtable {
         $array = $this->getArray($sql);
         return $array[0]['replies'];
     }
-    function saveSubGroup($name,$website,$description,$brief_descriptiont,$interest,$parent_id) {
+    function saveSubGroup($name,$website,$description,$brief_description,$interest,$parent_id) {
         $data = array(
             'name' => $name,
             'email' => '',
@@ -621,15 +531,15 @@ class dbgroups extends dbtable {
     }
 
 
+    /**
+     * THIS IS JUSTS A CRAP DESIGN
+     * @param type $groupid
+     * @return type 
+     */
     function getGroupSubgroup($groupid){
         $sql="select * from tbl_oer_groups where parent_id='$groupid'";
         $array = $this->getArray($sql);
         return $array;
     }
-
-
-
-
-
 }
 ?>
