@@ -54,6 +54,10 @@ class adaptationmanager extends object {
             $this->dbproducts->updateOriginalProduct($data, $parentid);
             return $parentid;
         } else {
+            //get thumbnail of original product
+            $parentData = $this->dbproducts->getProduct($parentid);
+            $thumbnail = $parentData['thumbnail'];
+            
             $data = array(
                 "title" => $this->getParam("title"),
                 "alternative_title" => $this->getParam("alternative_title"),
@@ -62,6 +66,7 @@ class adaptationmanager extends object {
                 "publisher" => $this->getParam("publisher"),
                 "language" => $this->getParam("language"),
                 "parent_id" => $parentid,
+                "thumbnail" => $thumbnail,
                 "translation_of" => "",
                 "description" => "",
                 "abstract" => "",
@@ -197,7 +202,7 @@ class adaptationmanager extends object {
      */
     function addJS() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('originalproduct.js', 'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('adaptation.js', 'oer'));
     }
 
     /**
@@ -334,7 +339,7 @@ class adaptationmanager extends object {
         $objTable->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step1', 'oer'));
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_adaptation_heading_step1', 'oer'));
         $fieldset->addContent($objTable->show());
 
 
@@ -456,10 +461,10 @@ class adaptationmanager extends object {
         $objTable->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step2', 'oer'));
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_adaptation_heading_step2', 'oer'));
         $fieldset->addContent($objTable->show());
 
-        $formData = new form('originalProductForm2', $this->uri(array("action" => "saveadaptationstep2")));
+        $formData = new form('adaptationForm2', $this->uri(array("action" => "saveadaptationstep2")));
         $formData->addToForm($fieldset);
 
         $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
@@ -684,10 +689,10 @@ class adaptationmanager extends object {
         $objTable->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_originalproduct_heading_new_step3', 'oer'));
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_adaptation_heading_step3', 'oer'));
         $fieldset->addContent($objTable->show());
 
-        $formData = new form('adaptationForm2', $this->uri(array("action" => "saveadaptationstep3")));
+        $formData = new form('adaptationForm3', $this->uri(array("action" => "saveadaptationstep3")));
         $formData->addToForm($fieldset);
 
         $button = new button('save', $this->objLanguage->languageText('word_next', 'system', 'Next'));
