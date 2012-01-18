@@ -8,7 +8,7 @@
 class block_productstep4 extends object {
 
     function init() {
-        
+        $this->title="";
     }
 
     function show() {

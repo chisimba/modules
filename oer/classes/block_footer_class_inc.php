@@ -7,7 +7,7 @@
  */
 class block_footer extends object{
     function  init(){
-        
+        $this->title="";
     }
     
     function show(){

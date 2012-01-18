@@ -9,7 +9,7 @@
 class block_originalproductformnav extends object {
 
     function init() {
-        
+        $this->title="";
     }
 
     public function show() {

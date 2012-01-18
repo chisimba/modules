@@ -352,14 +352,14 @@ class productmanager extends object {
         $jsFunction = "javascript:saveStep1();";
         if ($product != null) {
             $action = "updateoriginalproductstep1";
-            $jsFunction = "javascript:updateStep1('".$id."');";
+            $jsFunction = "javascript:updateStep1('" . $id . "');";
         }
         $formData = new form('originalProductForm1', $this->uri(array("action" => $action, "id" => $id)));
         $formData->addToForm($fieldset);
 
         $formData->addToForm('<br/><div id="save_results"><div/>');
         $button = new button('saveStep1Button', $this->objLanguage->languageText('word_next', 'system', 'Next'));
-      //  $button->setToSubmit();
+        //  $button->setToSubmit();
         $button->setOnClick($jsFunction);
         $formData->addToForm('<br/>' . $button->show());
 
@@ -412,9 +412,10 @@ class productmanager extends object {
             }
         }
 
-        if ($product != null) {
-            $translation->setSelected($product['translation']);
-        }
+        $translationId = $product['translation_of'];
+        $translationTitle = $this->dbproducts->getProduct($translationId);
+        $translation->setSelected($translationTitle);
+
         $objTable->addCell($translation->show());
         $objTable->endRow();
 
@@ -834,7 +835,7 @@ class productmanager extends object {
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
 
 
-        $controlBand.=
+        $controlBand =
                 '<div id="originalproducts_controlband">';
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
@@ -876,7 +877,7 @@ class productmanager extends object {
                 $table->startRow();
             }
             $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
-            $titleLink->link = $thumbnail . '<br/>';
+
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
             $product = $titleLink->show();
@@ -901,16 +902,16 @@ class productmanager extends object {
 
                 $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
-                $product.="<br />".$adaptLink->show();
+                $product.="<br />" . $adaptLink->show();
 
                 $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $originalProduct['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
-                $product.="&nbsp;".$editLink->show();
+                $product.="&nbsp;" . $editLink->show();
 
                 $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $originalProduct['id'])));
                 $deleteLink->link = $deleteImg;
                 $deleteLink->cssClass = "deleteoriginalproduct";
-                $product.="&nbsp;".$deleteLink->show();
+                $product.="&nbsp;" . $deleteLink->show();
             }
 
             $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';

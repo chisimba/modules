@@ -10,6 +10,7 @@ class block_originalproductform extends object {
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
+        $this->title="";
     }
 
     /**

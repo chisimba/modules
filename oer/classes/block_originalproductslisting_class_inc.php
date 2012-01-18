@@ -10,11 +10,12 @@ $this->loadClass('link', 'htmlelements');
 class block_originalproductslisting extends object {
 
     public function init() {
-        $this->loadClass("link", "htmlelements");
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = "";
     }
 
     public function show() {
-       $mode=  $this->configData;
+        $mode = $this->configData;
         $objProductManager = $this->getObject("productmanager", "oer");
         return $objProductManager->getOriginalProductListing($mode);
     }
