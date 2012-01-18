@@ -13,17 +13,28 @@ class block_uploadadaptation extends object {
 
     function show() {
         $id=  $this->configData;
+        //Load objects
         $this->addJS();
         $this->loadClass('link', 'htmlelements');
         $objLanguage = $this->getObject('language', 'language');
         $content = $objLanguage->languageText('mod_oer_attachingfile', 'oer');
         $this->loadClass('iframe', 'htmlelements');
         $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
-
+        //Load Ajax Upload form
         $content.= $objAjaxUpload->show($id);
-        $link = new link($this->uri(array("")));
-        $link->link = $objLanguage->languageText('word_home', 'system');
-        $content.= $link->show();
+
+        //Back button
+        $backButton = new button('back', $objLanguage->languageText('word_back'));
+        $backUri = $this->uri(array("action" => "editadaptationstep3", "id" => $id));
+        $backButton->setOnClick('javascript: window.location=\'' . $backUri . '\'');
+        $content.= $backButton->show();
+
+        //Finish button
+        $button = new button('finish', $objLanguage->languageText('mod_oer_finish', 'oer'));
+        $uri = $this->uri(array("action" => "1b"));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        
+        $content.= "&nbsp;".$button->show();
         return $content;
     }
 

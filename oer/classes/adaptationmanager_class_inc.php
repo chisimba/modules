@@ -41,7 +41,7 @@ class adaptationmanager extends object {
      */
     function saveNewAdaptationStep1() {
         $parentid = $this->getParam("id");
-        $mode = $this->getParam("mode", "edit");
+        $mode = $this->getParam("mode", "edit");        
         if ($mode == "edit") {
             $data = array(
                 "title" => $this->getParam("title"),
@@ -51,8 +51,8 @@ class adaptationmanager extends object {
                 "publisher" => $this->getParam("publisher"),
                 "language" => $this->getParam("language"));
             
-            $this->dbproducts->updateOriginalProduct($data, $id);
-            return $id;
+            $this->dbproducts->updateOriginalProduct($data, $parentid);
+            return $parentid;
         } else {
             $data = array(
                 "title" => $this->getParam("title"),
@@ -115,6 +115,7 @@ class adaptationmanager extends object {
     function updateAdaptationStep2() {
         $id = $this->getParam("id");
         $data = array(
+            "translation_of" => $this->getParam("translation"),
             "description" => $this->getParam("description"),
             "abstract" => $this->getParam("abstract"),
             "provenonce" => $this->getParam("provenonce"),
@@ -131,6 +132,9 @@ class adaptationmanager extends object {
     function updateAdaptationStep3() {
         $id = $this->getParam("id");
         $data = array(
+            "oerresource" => $this->getParam("oerresource"),
+            "accredited" => $this->getParam("accredited"),
+            "accreditation_body" => $this->getparam("accreditationbody"),
             "accreditation_date" => $this->getParam("accreditationdate"),
             "contacts" => $this->getParam("contacts"),
             "relation_type" => $this->getParam("relationtype"),
@@ -318,8 +322,11 @@ class adaptationmanager extends object {
         $objTable->startRow();
         $language = new dropdown('language');
         $language->cssClass = 'required';
+        
         if ($product != null) {
-            $language->setSelected($product['language']);
+            $language->selected = $product['language'];
+        } else {
+            $language->selected = "en";
         }
         $language->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
@@ -392,7 +399,7 @@ class adaptationmanager extends object {
         }
 
         if ($product != null) {
-            $translation->setSelected($product['translation']);
+            $translation->selected = $product['translation_of'];
         }
         $objTable->addCell($translation->show());
         $objTable->endRow();
@@ -519,6 +526,9 @@ class adaptationmanager extends object {
         $oerresource->cssClass = 'required';
         $oerresource->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        if($product != null) {
+            $oerresource->selected = $product['oerresource'];
+        }
         $objTable->addCell($oerresource->show());
         $objTable->endRow();
 
@@ -547,7 +557,7 @@ class adaptationmanager extends object {
         $radio->addOption('yes', $this->objLanguage->languageText('word_yes', 'system'));
         $radio->addOption('no', $this->objLanguage->languageText('word_no', 'system'));
         if ($product != null) {
-            $radio->setSelected($product['accredited']);
+            $radio->selected = $product['accredited'];
         }
         $objTable->startRow();
         $objTable->addCell($radio->show());
@@ -615,6 +625,9 @@ class adaptationmanager extends object {
         $relationtype->addOption('haspartof', $this->objLanguage->languageText('mod_oer_haspartof', 'oer'));
         $relationtype->addOption('references', $this->objLanguage->languageText('mod_oer_references', 'oer'));
         $relationtype->addOption('isversionof', $this->objLanguage->languageText('mod_oer_isversionof', 'oer'));
+        if($product != null) {            
+            $relationtype->selected = $product['relation_type'];
+        }
         $objTable->addCell($relationtype->show());
         $objTable->endRow();
 
@@ -631,6 +644,9 @@ class adaptationmanager extends object {
             if ($originalProduct['id'] != $id) {
                 $relatedproduct->addOption($originalProduct['id'], $originalProduct['title']);
             }
+        }
+        if($product != null) {            
+            $relatedproduct->selected = $product['relation'];
         }
 
         $objTable->addCell($relatedproduct->show());
@@ -662,7 +678,7 @@ class adaptationmanager extends object {
         $published->addOption('draft', $this->objLanguage->languageText('mod_oer_draft', 'oer'));
         $published->addOption('published', $this->objLanguage->languageText('mod_oer_published', 'oer'));
         if ($product != null) {
-            $published->setSelected($product['status']);
+            $published->selected = $product['status'];
         }
         $objTable->addCell($published->show());
         $objTable->endRow();
@@ -697,7 +713,6 @@ class adaptationmanager extends object {
 
         return $header->show() . $formData->show();
     }
-
     /**
      * creates a table and returns the list of current adaptations
      * @return type 

@@ -267,7 +267,7 @@ class oer extends controller {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
-        return "upload_tpl.php";
+        return "uploadadaptation_tpl.php";
     }
 
     /**
@@ -286,6 +286,7 @@ class oer extends controller {
     function __saveadaptationstep1() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $result = $objAdaptationManager->saveNewAdaptationStep1();
+        
         $this->setVarByRef("id", $result);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -309,7 +310,7 @@ class oer extends controller {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $id = $objAdaptationManager->updateAdaptationStep3();
         $this->setVarByRef("id", $id);
-        return "upload_tpl.php";
+        return "uploadadaptation_tpl.php";
     }
 
     /**

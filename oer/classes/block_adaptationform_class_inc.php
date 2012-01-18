@@ -27,7 +27,7 @@ class block_adaptationform extends object {
             $step = $data[1];
             $mode = $data[2];
         }
-        print_r($id);//exit;
+        print_r($id);
         switch ($step) {
             case '1':
                 return $objAdaptationManager->buildAdaptationFormStep1($id, $mode);
