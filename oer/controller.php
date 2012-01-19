@@ -22,7 +22,7 @@ class oer extends controller {
      * @return type 
      */
     function requiresLogin($action = 'home') {
-        $allowedActions = array(NULL, 'home', 'vieworiginalproduct');
+        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", "viewadaptation");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {

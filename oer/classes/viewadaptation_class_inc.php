@@ -28,11 +28,19 @@ class viewadaptation extends object {
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>' . $product['description'];
 
         $rightContent = "";
-        $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_category_label">' . $objLanguage->languageText('mod_oer_category', 'oer') . ': ' . $product['themes'] . '</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ': ' . $product['keywords'] . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_author_label"></div>
+            <div id="viewadaptation_author_text"></div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_author_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': </div>
+            <div id="viewadaptation_author_text">' . $product['author'] . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ':</div>
+            <div id="viewadaptation_unesco_contacts_text"> ' . $product['contacts'] . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ':</div>
+            <div id="viewadaptation_publishedby_text">' . $product['publisher'] . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_category_label">' . $objLanguage->languageText('mod_oer_category', 'oer') . ':</div>
+            <div id="viewadaptation_category_text"> ' . $product['themes'] . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ':</div>
+            <div id="viewadaptation_keywords_text"> ' . $product['keywords'] . '</div><br/><br/>';
+        /*
         $language = "Not specified";
         if($product['language'] == 'en'){
             $language = "English";
@@ -40,7 +48,7 @@ class viewadaptation extends object {
         $rightContent.='<div id="viewproduct_selectlanguages_label">' . $objLanguage->languageText('mod_oer_language', 'oer') . ':<br/>' . $language . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_relatednews_label">' . $objLanguage->languageText('mod_oer_relatednews', 'oer') . ': </div><br/><br/>';
         $rightContent.='<div id="viewproduct_relatedevents_label">' . $objLanguage->languageText('mod_oer_relatedevents', 'oer') . ':</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>';
+        $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>';*/
 
         $table->startRow();
         $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "60%", "top", "left");
