@@ -161,13 +161,24 @@ class oer extends controller {
       ORIGINAL PRODUCT FUNCTIONS
      */
     ///////////////////////////////////////////////////////////////
+
+    /**
+     * this returns the template for displaying details of the selected product
+     * @return type 
+     */
+    function __vieworiginalproduct() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "vieworiginalproduct_tpl.php";
+    }
+
     /**
      * this returns a template for creating a new product
      */
     function __newproductstep1() {
         $this->setVar("step", "1");
 
-        return "product_tpl.php";
+        return "addeditproduct_tpl.php";
     }
 
     /**
@@ -185,7 +196,9 @@ class oer extends controller {
     function __saveoriginalproductstep2() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep2();
-        die($id);
+        $this->setVar("step", "3");
+        $this->setVarByRef('id', $id);
+        return "addeditproduct_tpl.php";
     }
 
     /**
@@ -214,21 +227,21 @@ class oer extends controller {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         $this->setVar("step", "1");
-        return "product_tpl.php";
+        return "addeditproduct_tpl.php";
     }
 
     function __editoriginalproductstep2() {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
-        return "product_tpl.php";
+        return "addeditproduct_tpl.php";
     }
 
     function __editoriginalproductstep3() {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
-        return "product_tpl.php";
+        return "addeditproduct_tpl.php";
     }
 
     function __editoriginalproductstep4() {
@@ -250,7 +263,7 @@ class oer extends controller {
     }
 
     function __editadaptationstep2() {
-        $id = $this->getParam("id");        
+        $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -286,7 +299,7 @@ class oer extends controller {
     function __saveadaptationstep1() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $result = $objAdaptationManager->saveNewAdaptationStep1();
-        
+
         $this->setVarByRef("id", $result);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -334,6 +347,7 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }
+
     /**
      * deletes a product. Assumes the deletion is already confirmed
      */

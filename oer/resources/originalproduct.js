@@ -150,6 +150,7 @@ function saveStep2(){
             type: "POST",
             data: data_string,
             success: function(msg) {
+              
                 jQuery("#saveStep1Button").attr("disabled", "");
                 if(msg !== "ERROR_DATA_INSERT_FAIL") {
                    

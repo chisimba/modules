@@ -358,7 +358,7 @@ class productmanager extends object {
         $formData->addToForm($fieldset);
 
         $formData->addToForm('<br/><div id="save_results"><div/>');
-        $button = new button('saveStep1Button', $this->objLanguage->languageText('word_next', 'system', 'Next'));
+        $button = new button('saveStep1Button', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         //  $button->setToSubmit();
         $button->setOnClick($jsFunction);
         $formData->addToForm('<br/>' . $button->show());
@@ -432,7 +432,7 @@ class productmanager extends object {
             $description->value = $product['description'];
         }
         $description->height = '150px';
-        $description->setBasicToolBar();
+        //$description->setBasicToolBar();
         $objTable->addCell($description->show());
         $objTable->endRow();
 
@@ -449,7 +449,7 @@ class productmanager extends object {
         if ($product != null) {
             $abstract->value = $product['abstract'];
         }
-        $abstract->setBasicToolBar();
+        //$abstract->setBasicToolBar();
         $objTable->addCell($abstract->show());
         $objTable->endRow();
 
@@ -466,7 +466,7 @@ class productmanager extends object {
         if ($product != null) {
             $provenonce->value = $product['provenonce'];
         }
-        $provenonce->setBasicToolBar();
+       // $provenonce->setBasicToolBar();
         $objTable->addCell($provenonce->show());
         $objTable->endRow();
 
@@ -478,7 +478,7 @@ class productmanager extends object {
         $formData->addToForm($fieldset);
 
         $formData->addToForm('<br/><div id="save_results"><div/>');
-        $button = new button('saveStep2Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep2();');
+        $button = new button('saveStep2Button', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -685,7 +685,7 @@ class productmanager extends object {
         $formData->addToForm($fieldset);
 
         $formData->addToForm('<br/><div id="save_results"><div/>');
-        $button = new button('saveStep3Button', $this->objLanguage->languageText('word_next', 'system', 'Next'), 'javascript:saveStep3();');
+        $button = new button('saveStep3Button', $this->objLanguage->languageText('word_save', 'system', 'Save'), 'javascript:saveStep3();');
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -876,7 +876,7 @@ class productmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
-            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'], "mode" => $mode)));
 
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
@@ -888,7 +888,7 @@ class productmanager extends object {
                     $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
                 }
 
-                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'], "mode" => $mode)));
                 $thumbnailLink->link = $thumbnail . '<br/>';
                 $thumbnailLink->cssClass = 'original_product_listing_thumbail';
                 $product = $thumbnailLink->show() . '<br/>' . $titleLink->show();
@@ -958,7 +958,9 @@ class productmanager extends object {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
         }
 
-        $content = $thumbnail;
+        $viewProductLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $id)));
+        $viewProductLink->link = $thumbnail;
+        $content = $viewProductLink->show();
         $content .= $header->show();
         $content.='<ul id="nav-secondary">';
 
