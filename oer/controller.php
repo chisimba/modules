@@ -164,12 +164,21 @@ class oer extends controller {
 
     /**
      * this returns the template for displaying details of the selected product
-     * @return type 
+     * @return string
      */
     function __vieworiginalproduct() {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         return "vieworiginalproduct_tpl.php";
+    }
+    /**
+     * this returns the template for displaying the selected adaptation
+     * @return string
+     */
+    function __viewadaptation() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "viewadaptation_tpl.php";
     }
 
     /**

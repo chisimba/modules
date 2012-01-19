@@ -764,11 +764,12 @@ class adaptationmanager extends object {
             if ($originalProduct['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
-            $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . '<br/>';
+            $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
+            $link->link = $thumbnail . '<br/>';            
             $product = $link->show();
 
             $link->link = $originalProduct['title'];
+            $link->cssClass = 'original_product_listing_title';
             $product.= $link->show();
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
@@ -867,6 +868,7 @@ class adaptationmanager extends object {
             $product = $link->show();
 
             $link->link = $originalProduct['title'];
+            $link->cssClass = 'original_product_listing_title';
             $product.= $link->show();
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
