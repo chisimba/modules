@@ -27,6 +27,17 @@ class viewadaptation extends object {
         }
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>' . $product['description'];
 
+        $sections = "";
+        $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
+        $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
+        $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
+        $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
+        $sections.=$addNodeLink->show();
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+
+        $navigator= $sectionManager->buildSectionsTree($product["id"],'');
+        $leftContent.='<br/>' .$sections.'<br/>'. $navigator;
+
         $rightContent = "";
         $rightContent.='<div id="viewadaptation_author_label"></div>
             <div id="viewadaptation_author_text"></div><br/><br/>';
