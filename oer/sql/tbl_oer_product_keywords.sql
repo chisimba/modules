@@ -21,8 +21,7 @@ $options = array('comment'=>'Table to store keywords for products','collate'=>'u
 
 //define fields
 $fields = array(
-		'id' => array('type' =>'text','length' => 32,'not null'),
+		'id' => array('type' =>'text','length' => 32,'not null'),                
                 'keyword' => array('type'=>'text','length'=>128), //main theme
 );
-
 ?>

@@ -21,7 +21,19 @@
             <add>
                 <name>keywords</name>
                 <type>text</type>
-       
+                <length>128</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.098</version>
+        <description><br/>Added new column for institution</description>
+        <data>
+            <add>
+                <name>institutionid</name>
+                <type>text</type>
+                <length>32</length>
             </add>
         </data>
     </update>

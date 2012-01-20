@@ -8,15 +8,17 @@
 class adaptationmanager extends object {
 
     private $dbproducts;
+    private $dbInstitution;
     private $objLanguage;
     public $objConfig;
     private $objUser;
 
     function init() {
-        $this->dbproducts = $this->getObject('dbproducts', 'oer');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
+        $this->dbInstitution = $this->getObject("dbinstitution", "oer");
+        $this->dbproducts = $this->getObject("dbproducts", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -41,7 +43,7 @@ class adaptationmanager extends object {
      */
     function saveNewAdaptationStep1() {
         $parentid = $this->getParam("id");
-        $mode = $this->getParam("mode", "edit");        
+        $mode = $this->getParam("mode", "edit");
         if ($mode == "edit") {
             $data = array(
                 "title" => $this->getParam("title"),
@@ -49,21 +51,25 @@ class adaptationmanager extends object {
                 "author" => $this->getParam("author"),
                 "othercontributors" => $this->getParam("othercontributors"),
                 "publisher" => $this->getParam("publisher"),
+                "keywords" => $this->getParam("keywords"),
+                "institutionid" => $this->getParam("institution"),
                 "language" => $this->getParam("language"));
-            
+
             $this->dbproducts->updateOriginalProduct($data, $parentid);
             return $parentid;
         } else {
             //get thumbnail of original product
             $parentData = $this->dbproducts->getProduct($parentid);
             $thumbnail = $parentData['thumbnail'];
-            
+
             $data = array(
                 "title" => $this->getParam("title"),
                 "alternative_title" => $this->getParam("alternative_title"),
                 "author" => $this->getParam("author"),
                 "othercontributors" => $this->getParam("othercontributors"),
                 "publisher" => $this->getParam("publisher"),
+                "keywords" => $this->getParam("keywords"),
+                "institutionid" => $this->getParam("institution"),
                 "language" => $this->getParam("language"),
                 "parent_id" => $parentid,
                 "thumbnail" => $thumbnail,
@@ -228,7 +234,9 @@ class adaptationmanager extends object {
         $objTable = $this->getObject('htmltable', 'htmlelements');
 
         if ($id != null) {
+            //Get adapted-product data
             $product = $this->dbproducts->getProduct($id);
+
             $hidId = new hiddeninput('id');
             $hidId->cssId = "id";
             $hidId->value = $id;
@@ -236,7 +244,7 @@ class adaptationmanager extends object {
             $hidMode->cssId = "mode";
             $hidMode->value = $mode;
             $objTable->startRow();
-            $objTable->addCell($hidId->show().$hidMode->show());
+            $objTable->addCell($hidId->show() . $hidMode->show());
             $objTable->endRow();
         }
         //the title
@@ -318,6 +326,45 @@ class adaptationmanager extends object {
         $objTable->addCell($textinput->show());
         $objTable->endRow();
 
+        //keywords
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer') . " (" . $this->objLanguage->languageText('mod_oer_keywordsInstruction', 'oer') . ")");
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('keywords');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($product != null) {
+            $textinput->value = $product['keywords'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+        //Institution
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_group_institution', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $institution = new dropdown('institution');
+        $institution->cssClass = 'required';
+
+        $institution->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        //Get institutions
+        $currentInstitutions = $this->dbInstitution->getAllInstitution();
+        //Generate dropdown from existing institutions
+        if ($currentInstitutions != Null) {
+            foreach ($currentInstitutions as $currentInstitution) {
+                $institution->addOption($currentInstitution['id'], $currentInstitution['name']);
+            }
+        }
+        //Set selected
+        if ($product != null) {
+            $institution->selected = $product['institutionid'];
+        }
+        $objTable->addCell($institution->show());
+        $objTable->endRow();
 
         //language
         $objTable->startRow();
@@ -327,7 +374,7 @@ class adaptationmanager extends object {
         $objTable->startRow();
         $language = new dropdown('language');
         $language->cssClass = 'required';
-        
+
         if ($product != null) {
             $language->selected = $product['language'];
         } else {
@@ -531,7 +578,7 @@ class adaptationmanager extends object {
         $oerresource->cssClass = 'required';
         $oerresource->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
-        if($product != null) {
+        if ($product != null) {
             $oerresource->selected = $product['oerresource'];
         }
         $objTable->addCell($oerresource->show());
@@ -630,7 +677,7 @@ class adaptationmanager extends object {
         $relationtype->addOption('haspartof', $this->objLanguage->languageText('mod_oer_haspartof', 'oer'));
         $relationtype->addOption('references', $this->objLanguage->languageText('mod_oer_references', 'oer'));
         $relationtype->addOption('isversionof', $this->objLanguage->languageText('mod_oer_isversionof', 'oer'));
-        if($product != null) {            
+        if ($product != null) {
             $relationtype->selected = $product['relation_type'];
         }
         $objTable->addCell($relationtype->show());
@@ -650,7 +697,7 @@ class adaptationmanager extends object {
                 $relatedproduct->addOption($originalProduct['id'], $originalProduct['title']);
             }
         }
-        if($product != null) {            
+        if ($product != null) {
             $relatedproduct->selected = $product['relation'];
         }
 
@@ -718,6 +765,7 @@ class adaptationmanager extends object {
 
         return $header->show() . $formData->show();
     }
+
     /**
      * creates a table and returns the list of current adaptations
      * @return type 
@@ -765,7 +813,7 @@ class adaptationmanager extends object {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . '<br/>';            
+            $link->link = $thumbnail . '<br/>';
             $product = $link->show();
 
             $link->link = $originalProduct['title'];

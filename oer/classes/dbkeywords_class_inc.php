@@ -21,8 +21,6 @@ class dbkeywords extends dbtable {
         return $this->getArray($sql);
     }
 
-    
-
     /**
      * inserts new key word into database
      * @param type $keyword
