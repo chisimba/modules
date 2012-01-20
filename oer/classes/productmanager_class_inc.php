@@ -225,6 +225,7 @@ class productmanager extends object {
      */
     public function buildProductFormStep1($id) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
+        $product=null;
         if ($id != null) {
             $product = $this->dbproducts->getProduct($id);
             $hidId = new hiddeninput('id');

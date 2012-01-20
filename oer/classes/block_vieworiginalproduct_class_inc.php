@@ -5,7 +5,7 @@
  *
  * @author davidwaf
  */
-class block_viewproduct extends object {
+class block_vieworiginalproduct extends object {
 
     function init() {
         $this->title = "";
@@ -13,10 +13,10 @@ class block_viewproduct extends object {
 
     function show() {
         $id = $this->configData;
-        $objProductManager = $this->getObject("viewproduct", "oer");
+        $objProductManager = $this->getObject("vieworiginalproduct", "oer");
         return $objProductManager->buildProductDetails($id);
     }
 
 }
-
 ?>
+

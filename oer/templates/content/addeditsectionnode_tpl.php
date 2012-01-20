@@ -5,12 +5,17 @@ $objFix->fixThree();
 ?>
 <div id="twocolumn">
    
-    <div id="Canvas_Content_Body_Region3">
+    <div id="Canvas_Content_Body_Region1">
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "featuredoriginalproduct"
+        "block" : "sectionnavigator",
+        <?php
+        echo '"configData":';
+        echo '"' . $productid . '"';
+        ?>
         }
+        
         <div id="rightdynamic_area" class="rightdynamic_area_layer"></div>
         <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>
     </div>
@@ -18,10 +23,10 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "vieworiginalproduct",
+        "block" : "sectionnode",
         <?php
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $productid . '"';
         ?>
         }
         

@@ -5,14 +5,19 @@
  *
  * @author davidwaf
  */
-class viewproduct extends object {
+class vieworiginalproduct extends object {
 
     function init() {
-       
+        
     }
 
+    /**
+     * this creates the detailed view of the prodcut details
+     * @param type $productId
+     * @return type 
+     */
     function buildProductDetails($productId) {
-        $this->loadClass("link","htmlelements");
+        $this->loadClass("link", "htmlelements");
         $objLanguage = $this->getObject("language", "language");
         $objDbProducts = $this->getObject("dbproducts", "oer");
         $product = $objDbProducts->getProduct($productId);
@@ -31,7 +36,16 @@ class viewproduct extends object {
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_category_label">' . $objLanguage->languageText('mod_oer_category', 'oer') . ': ' . $product['themes'] . '</div><br/><br/>';
+
+        $objDbThemes = $this->getObject("dbthemes", "oer");
+        $themeIds = explode(",", $product['themes']);
+        $themes = "<ul>";
+        foreach ($themeIds as $themeId) {
+            $themes.='<li>' . $objDbThemes->getThemeFormatted($themeId) . '</li>';
+        }
+        $themes.='</ul>';
+
+        $rightContent.='<div id="viewproduct_category_label">' . $objLanguage->languageText('mod_oer_category', 'oer') . ': ' . $themes . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ': ' . $product['keywords'] . '</div><br/><br/>';
 
         $language = new dropdown('language');
@@ -43,21 +57,30 @@ class viewproduct extends object {
         $rightContent.='<div id="viewproduct_relatedevents_label">' . $objLanguage->languageText('mod_oer_relatedevents', 'oer') . ':</div><br/><br/>';
         $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>';
 
+
+        $sections = "";
+        $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
+        $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
+        $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
+        $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
+        $sections.=$addNodeLink->show();
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+   
+        $navigator= $sectionManager->buildSectionsTree($productId,'');
+        $leftContent.='<br/>' .$sections.'<br/>'. $navigator;
+
         $table->startRow();
+
         $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "60%", "top", "left");
+
         $table->addCell('<div id="viewproduct_rightcontent>' . $rightContent . '</div>', "40%", "top", "left");
 
         $table->endRow();
 
-        $homeLink=new link($this->uri(array("action"=>"home")));
-        $homeLink->link=$objLanguage->languageText('mod_oer_home', 'system');
-        
-        
-        $objTools = $this->newObject('tools', 'toolbar');
-        $crumbs = array($homeLink->show());
-        $objTools->addToBreadCrumbs($crumbs);
+        $homeLink = new link($this->uri(array("action" => "home")));
+        $homeLink->link = $objLanguage->languageText('mod_oer_home', 'system');
 
-        return  '<br/><div id="viewproduct">' . $table->show() . '</div>';
+        return '<br/><div id="viewproduct">' . $table->show() . '</div>';
     }
 
 }

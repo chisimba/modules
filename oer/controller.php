@@ -171,6 +171,7 @@ class oer extends controller {
         $this->setVarByRef("id", $id);
         return "vieworiginalproduct_tpl.php";
     }
+
     /**
      * this returns the template for displaying the selected adaptation
      * @return string
@@ -186,7 +187,7 @@ class oer extends controller {
      */
     function __newproductstep1() {
         $this->setVar("step", "1");
-
+        $this->setVar("id", "");
         return "addeditproduct_tpl.php";
     }
 
@@ -376,6 +377,43 @@ class oer extends controller {
         $objProductManager = $this->getObject("productmanager", "oer");
         $params = $objProductManager->doajaxupload();
         return $this->nextAction('showProductthumbnailuploadresults', $params);
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    /*
+
+
+      PRODUCT SECTION FUCNTIONS
+
+
+     *//////////////////////////////////////////////////////////////////
+
+    /**
+     * returns the template for adding a new sections
+     */
+    function __addsectionnode() {
+        $id = $this->getParam("productid");
+        $this->setVarByRef("productid", $id);
+        return "addeditsectionnode_tpl.php";
+    }
+
+    /**
+     * saves a new section
+     * @return type 
+     */
+    function __savesection() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $id = $sectionManager->saveSection();
+        $params = array("id" => $id);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
+    function __createsectionnode() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $productId = $this->getParam("productid");
+        $id = $sectionManager->saveSectionNode();
+        $params = array("nodeid" => $id, "id" => $productId);
+        return $this->nextAction('vieworiginalproduct', $params);
     }
 
     ///////////////////////////////////////////////////////////////

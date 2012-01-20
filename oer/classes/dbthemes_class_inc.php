@@ -47,18 +47,36 @@ class dbthemes extends dbtable {
         $data = array("theme" => $title, 'umbrellatheme' => $umbrellaTheme);
         return $this->insert($data);
     }
-    
+
     /**
      * Returns theme data for a supplied id
      * @param type $id
      * @return type 
      */
-    function getTheme($id){
-        $sql="select * from tbl_oer_themes where id = '".$id."'";
-        $data= $this->getArray($sql);
-        if(count($data) > 0){
+    function getTheme($id) {
+        $sql = "select * from tbl_oer_themes where id = '" . $id . "'";
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
             return $data[0];
-        }else{
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * get the theme together with umbrella theme, formatted
+     * @param type $id
+     * @return type 
+     */
+    function getThemeFormatted($id) {
+        $sql = "select th.id,th.theme as theme,uth.theme as umbrellatheme from 
+              tbl_oer_themes th, tbl_oer_umbrella_themes uth where th.umbrellatheme = uth.id and th.id='$id'";
+
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
+            $row = $data[0];
+            return $row['umbrellatheme'] . '|' . $row['theme'];
+        } else {
             return null;
         }
     }
