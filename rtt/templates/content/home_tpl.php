@@ -28,7 +28,7 @@ $link=new link($this->uri(array("action"=>"runjnlp")));
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 $title=$this->objLanguage->languageText('mod_realtime_filtertitle','realtime','To join Virtual Classroom, click on image below.');
-$str.='<hr class="realtime-hr"><center><p class="realtime-title">'.$title.'</p><p class="realtime-img"><a href = "'.$link->href.'">'.$imgLink.'</a></p></center><hr class="realtime-hr">';
+$str='<hr class="realtime-hr"><center><p class="realtime-title">'.$title.'</p><p class="realtime-img"><a href = "'.$link->href.'">'.$imgLink.'</a></p></center><hr class="realtime-hr">';
 
 $toolbar = $this->getObject('contextsidebar', 'context');
 $cssLayout->setLeftColumnContent('');
