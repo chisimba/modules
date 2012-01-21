@@ -97,7 +97,7 @@ class rttutil extends object {
         foreach ($properties as $property) {
             $this->objDBRttJnlp->saveParams($property);
         }
-        $iconPath = $codebase . 'images';
+        $iconPath = $codebase . 'images/splash_rtt.png';
         $jnlpPath = $objAltConfig->getModulePath() . '/rtt/resources';
 
         $content =
