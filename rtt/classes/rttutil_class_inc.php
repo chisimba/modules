@@ -43,6 +43,9 @@ class rttutil extends object {
         $baseUrl = $objSysConfig->getValue('BASE_URL', 'rtt');
         $isDemo = $objSysConfig->getValue('IS_DEMO', 'rtt');
         $roomName = $objSysConfig->getValue('DEFAULT_ROOM', 'rtt');
+        $defaultSIPPwd=$objSysConfig->getValue('DEFAULT_SIP_PWD', 'rtt');
+        
+        
         $this->objContext = $this->getObject('dbcontext', 'context');
         if ($this->objContext->isInContext()) {
             $roomName =  $this->objContext->getContextCode();
@@ -84,7 +87,7 @@ class rttutil extends object {
             array("jnlp_key" => "-sipPort", "jnlp_value" => $sipPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-isdemo", "jnlp_value" => $isDemo, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-outboundProxy", "jnlp_value" => $outboundProxy, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-password", "jnlp_value" => "1234", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-password", "jnlp_value" => $defaultSIPPwd, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-domain", "jnlp_value" => $sipDomain, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-userpart", "jnlp_value" => "1000", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-conferencenumber", "jnlp_value" => $conferenceNumber, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
