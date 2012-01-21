@@ -14,7 +14,7 @@ class rttutil extends object {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $string = '';
         for ($p = 0; $p < $length; $p++) {
-            $string .= $characters[mt_rand(0, strlen($characters)-1)];
+            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
         }
         return $string;
     }
@@ -41,6 +41,12 @@ class rttutil extends object {
         $debug = $objSysConfig->getValue('DEBUG', 'rtt');
         $jnlpPath = $objSysConfig->getValue('JNLP_PATH', 'rtt');
         $baseUrl = $objSysConfig->getValue('BASE_URL', 'rtt');
+        $isDemo = $objSysConfig->getValue('IS_DEMO', 'rtt');
+        $roomName = $objSysConfig->getValue('DEFAULT_ROOM', 'rtt');
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        if ($this->objContext->isInContext()) {
+            $roomName =  $this->objContext->getContextCode();
+        }
         $paramsBaseUrl = $objSysConfig->getValue('PARAMS_BASE_URL', 'rtt');
 
         $videoBroadcastUrl = $objSysConfig->getValue('VIDEO_BROADCAST_URL', 'rtt');
@@ -54,13 +60,12 @@ class rttutil extends object {
         $admin = $this->objUser->isAdmin() ? 'true' : 'false';
         $userId = $this->genRandomString();
         $password = $this->genRandomString();
-        $user=array("userid"=>$userId,"password"=>$password,"createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
+        $user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         $this->objDbRttUser->saveRttUser($user);
 
         $properties = array(
             //array("jnlp_key" => "-params_baseurl", "jnlp_value" => $paramsBaseUrl,"userid"=>$userId,"createdon"=>strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-maxstanzas", "jnlp_value" => '5', "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            
             array("jnlp_key" => "-baseurl", "jnlp_value" => $baseUrl, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-broadcastvideourl", "jnlp_key" => $videoBroadcastUrl, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-receivervideourl", "jnlp_value" => $videoFeedUrl, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
@@ -77,13 +82,13 @@ class rttutil extends object {
             array("jnlp_key" => "-names", "jnlp_value" => $this->objUser->fullname(), "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-rtpPort", "jnlp_value" => $rtpPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-sipPort", "jnlp_value" => $sipPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-isdemo", "jnlp_value" => "false", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-isdemo", "jnlp_value" => $isDemo, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-outboundProxy", "jnlp_value" => $outboundProxy, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-password", "jnlp_value" => "1234", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-domain", "jnlp_value" => $sipDomain, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-userpart", "jnlp_value" => "1000", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-conferencenumber", "jnlp_value" => $conferenceNumber, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-roomname", "jnlp_value" => "rtt", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-roomname", "jnlp_value" => $roomName, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-chatwelcomemessage", "jnlp_value" => $chatWelcomeMessage, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-startupcomponent", "jnlp_value" => "startup", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-processid", "jnlp_value" => "-1", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()))
