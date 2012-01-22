@@ -39,7 +39,8 @@ class dbinstitution extends dbtable {
     function getInstitutionById($id) {
         $sql = "SELECT * FROM tbl_oer_institutions WHERE id = '$id'";
 
-        return $this->getArray($sql);
+        $result = $this->getArray($sql);
+        return $result[0];
     }
 
     function getInstitutionIdbyType($type) {
