@@ -151,6 +151,10 @@ class rtt extends controller {
         return $this->objRttUtil->runJNLP();
     }
 
+    
+    function __voiceapp() {
+        return $this->objRttUtil->generateVoiceAppJNLP();
+    }
     /**
      * Method to turn off login requirement for certain actions
      */
