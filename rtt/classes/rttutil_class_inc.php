@@ -135,7 +135,7 @@ class rttutil extends object {
             if ($dh = opendir($jnlpPath)) {
                 while (($file = readdir($dh)) !== false) {
                     $path_info = pathinfo($jnlpPath . '/' . $file);
-                    if (count($path_info) > 0) {
+                   if (array_key_exists('extension', $path_info)) {
                         $ext = $path_info['extension'];
                         $startsWith = substr($file, 0, 3);
                         if ($ext == 'jar' && $startsWith != 'swt') {
