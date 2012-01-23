@@ -79,7 +79,7 @@ class switchboard extends controller
 
     /**
     *
-    * Intialiser for the myprofile controller
+    * Intialiser for the switchboard controller
     * @access public
     *
     */
@@ -87,7 +87,7 @@ class switchboard extends controller
     {
         // Load the module block ajax helper.
         $this->objAjax = $this->getObject('moduleblockajax', 'canvas');
-
+        //$this->setVar('JQUERY_VERSION', '1.5.2');
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('switchboard.js',
           'switchboard'));
