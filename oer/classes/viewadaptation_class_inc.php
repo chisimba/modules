@@ -21,15 +21,14 @@ class viewadaptation extends object {
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
-        $tablecellspacing = 20;
 
         $leftContent = "";
-        $prodTitle ='<h1 class="viewproduct_title">' . $product['title'] . '</h1>';
+        $prodTitle = '<h1 class="viewadaptation_title">' . $product['title'] . '</h1>';
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
-        $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
+        $leftContent.='<div id="viewadaptation_coverpage">' . $thumbnail . '</div>';
 
         //Link for - adapting product from existing adapatation
         $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
@@ -47,7 +46,7 @@ class viewadaptation extends object {
         $fullProdView = $fullProdViewLink->show();
 
         $sections = "";
-        $sectionTitle = '<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
+        $sectionTitle = '<h3>' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
         $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
         $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $objLanguage->languageText('mod_oer_addnode', 'oer');
@@ -93,44 +92,33 @@ class viewadaptation extends object {
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
             }
         }
-        /*
-          $language = "Not specified";
-          if($product['language'] == 'en'){
-          $language = "English";
-          }
-          $rightContent.='<div id="viewproduct_selectlanguages_label">' . $objLanguage->languageText('mod_oer_language', 'oer') . ':<br/>' . $language . '</div><br/><br/>';
-          $rightContent.='<div id="viewproduct_relatednews_label">' . $objLanguage->languageText('mod_oer_relatednews', 'oer') . ': </div><br/><br/>';
-          $rightContent.='<div id="viewproduct_relatedevents_label">' . $objLanguage->languageText('mod_oer_relatedevents', 'oer') . ':</div><br/><br/>';
-          $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>'; */
-
+        
         $table->startRow();
-        $table->addCell('<div id="viewproduct_leftcontent">' . $prodTitle . '</div>', "100%", "top", "left", "", 'colspan="3"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $prodTitle . '</div>'.
+                '<div id="viewadaptation_leftcontent">' . $product['description']. '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
+        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
         $table->endRow();
         $table->startRow();
-        $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "10%", "top", "left", "", 'colspan="1"');
-        $table->addCell('<div id="viewproduct_leftcontent">' . $product['description'] . '</div>', "50%", "top", "left", "", 'colspan="1"');
-        $table->addCell('<div id="viewproduct_rightcontent>' . $rightContent . '</div>', "40%", "top", "left", "", 'rowspan="6"');
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $newAdapt . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
-        $table->addCell('&nbsp;', "20%", "top", "left", "");
-        $table->addCell('<div id="viewproduct_leftcontent">' . $newAdapt . '</div>', "40%", "top", "left", "");
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
-        $table->addCell('&nbsp;', "20%", "top", "left", "");
-        $table->addCell('<div id="viewproduct_leftcontent">' . $existingAdaptations . '</div>', "40%", "top", "left", "");
-        $table->endRow();
-        $table->startRow();
-        $table->addCell('&nbsp;', "20%", "top", "left", "");
-        $table->addCell('<div id="viewproduct_leftcontent">' . $fullProdView . '</div>', "40%", "top", "left", "");
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $fullProdView . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
 
         $table->startRow();
-        $table->addCell('<div id="viewproduct_leftcontent">' . $sectionTitle . '</div>', "20%", "top", "left");
-        $table->addCell('<div id="viewproduct_leftcontent">' . $sections . '</div>', "40%", "top", "right");
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $sectionTitle . '</div>', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $sections . '</div>', "", "top", "right", "", 'style="width:55%"');
         $table->endRow();
 
         $table->startRow();
-        $table->addCell('<div id="viewproduct_leftcontent">' . $navigator . '</div>', "60%", "top", "left", "", 'colspan="2"');
+        $table->addCell('<div id="viewadaptation_navigator">' . $navigator . '</div>', "", "top", "left", "", 'colspan="2",style="width:70%"');
         $table->endRow();
 
         $homeLink = new link($this->uri(array("action" => "home")));
@@ -141,7 +129,7 @@ class viewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        return '<br/><div id="viewproduct">' . $table->show() . '</div>';
+        return '<br/><div id="viewadaptation">' . $table->show() . '</div>';
     }
 
 }
