@@ -135,10 +135,12 @@ class rttutil extends object {
             if ($dh = opendir($jnlpPath)) {
                 while (($file = readdir($dh)) !== false) {
                     $path_info = pathinfo($jnlpPath . '/' . $file);
-                    $ext = $path_info['extension'];
-                    $startsWith = substr($file, 0, 3);
-                    if ($ext == 'jar' && $startsWith != 'swt') {
-                        $content .= "<jar href=\"" . $file . "\" />\n";
+                    if ($path_info != null) {
+                        $ext = $path_info['extension'];
+                        $startsWith = substr($file, 0, 3);
+                        if ($ext == 'jar' && $startsWith != 'swt') {
+                            $content .= "<jar href=\"" . $file . "\" />\n";
+                        }
                     }
                 }
                 closedir($dh);
