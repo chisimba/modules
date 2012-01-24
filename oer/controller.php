@@ -151,8 +151,21 @@ class oer extends controller {
     }
 
     function __savenewkeyword() {
-        $objKeywordsManager = $this->getObject("keywordsmanager", "oer");
-        return $objKeywordsManager->addNewKeyWord();
+        $objCommentsManager = $this->getObject("commentsmanager", "oer");
+        return $objCommentsManager->addNewComment();
+    }
+    /////////////////////////////////////////////////////////////////
+    /*
+
+      COMMENTS FUNCTIONS
+     */
+    //////////////////////////////////////////////////////////////////
+
+    function __addcomment() {
+        $objCommentsManager = $this->getObject("commentsmanager", "oer");
+        $resultsArr =  $objCommentsManager->addNewComment();
+        return $this->nextAction('viewadaptation', $resultsArr);
+
     }
 
     /////////////////////////////////////////////////////////////////

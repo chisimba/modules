@@ -8,23 +8,25 @@
 class viewadaptation extends object {
 
     function init() {
-
+        $this->loadClass('textarea', 'htmlelements');
+        $this->loadClass("link", "htmlelements");
+        $this->loadClass("form", "htmlelements");
+        $this->objLanguage = $this->getObject("language", "language");
+        $this->objDbProducts = $this->getObject("dbproducts", "oer");
+        $this->objDbProductComments = $this->getObject("dbproductcomments", "oer");
+        $this->objDbInstitution = $this->getObject("dbinstitution", "oer");
+        $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
+        $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
     }
 
     function buildAdaptationView($productId) {
-        $this->loadClass("link", "htmlelements");
-        $objLanguage = $this->getObject("language", "language");
-        $objDbProducts = $this->getObject("dbproducts", "oer");
-        $objDbInstitution = $this->getObject("dbinstitution", "oer");
-        $objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
-        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $product = $objDbProducts->getProduct($productId);        
+        $product = $this->objDbProducts->getProduct($productId);
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
-        
+
         //Flag to check if user has perms to manage adaptations
-        $hasPerms = $objAdaptationManager->userHasPermissions();
+        $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
         $leftContent = "";
         $prodTitle = '<h1 class="viewadaptation_title">' . $product['title'] . '</h1>';
@@ -38,27 +40,61 @@ class viewadaptation extends object {
         if ($hasPerms) {
             //Link for - adapting product from existing adapatation
             $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
-            $newAdaptLink->link = $objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+            $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
             $newAdapt = $newAdaptLink->show();
         }
 
         //Link for - See existing adaptations of this UNESCO Product
         $existingAdaptationsLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
-        $existingAdaptationsLink->link = $objLanguage->languageText('mod_oer_existingadaptations', 'oer');
+        $existingAdaptationsLink->link = $this->objLanguage->languageText('mod_oer_existingadaptations', 'oer');
         $existingAdaptations = $existingAdaptationsLink->show();
 
         //Link for - Full view of product
         $fullProdViewLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
-        $fullProdViewLink->link = $objLanguage->languageText('mod_oer_fullprodview', 'oer');
+        $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
         $fullProdView = $fullProdViewLink->show();
 
         $sections = "";
-        $sectionTitle = '<h3>' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
+        $sectionTitle = '<h3>' . $this->objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         if ($hasPerms) {
             $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
-            $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $objLanguage->languageText('mod_oer_addnode', 'oer');
+            $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $this->objLanguage->languageText('mod_oer_addnode', 'oer');
             $sections.=$addNodeLink->show();
+        }
+
+        //Get comments
+        $prodcomments = "";
+        $userComments = $this->objDbProductComments->getProductComments($productId);
+        if(!empty($userComments)){
+            $prodcomments .= '<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>';
+            foreach($userComments as $usercomment) {
+                $prodcomments .= '<br /><div class="greyTextLink">'.$usercomment["comment"].'</div>';
+            }
+        }
+        //Comment fetcher
+        $commentfetcher = "";
+        if ($hasPerms) {
+            $fetcheritems = "";
+            $textarea = new textarea('usercomment', '', 5, 5);
+            $textarea->cssClass = 'commentTextBox';
+            $fetcheritems.="<br />" . $textarea->show();
+            $addSectionIcon = '<img src="skins/oer/images/button-search.png"/>';
+            //$addNodeLink = new link('javascript:document.form_adaptationViewForm.submit();');
+            $submitLink = new link('#');
+            $submitLink->link = $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon;
+            $submitLink->extra = 'onclick="document.form_adaptationViewForm.submit();return false;"';
+            $submitLink->class = "submitCommentImage";
+
+            //$button = new button('save', $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon);
+            $button = new button('save', $this->objLanguage->languageText('word_submit', 'system'));
+            $button->cssClass = "submitCommentImage";
+            $button->setToSubmit();
+            $fetcheritems.="<br />" . $button->show();
+            //Form for comment fetcher
+            $formData = new form('adaptationViewForm', $this->uri(array("action" => "addcomment", "product_id" => $productId)));
+            $formData->addToForm($fetcheritems);
+            $commentfetcher = $formData->show();
         }
         $sectionManager = $this->getObject("sectionmanager", "oer");
 
@@ -77,28 +113,28 @@ class viewadaptation extends object {
                 $adaptlang = "English";
             }
             //Get inst data
-            $instData = $objDbInstitution->getInstitutionById($product["institutionid"]);
+            $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
                 //Get institution type
-                $instType = $objDbInstitutionType->getType($instData["type"]);
+                $instType = $this->objDbInstitutionType->getType($instData["type"]);
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
-                $rightContent.='<div id="viewadaptation_label">' . $objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
+                $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
             <div id="viewadaptation_text"><h2>' . $instData['name'] . '</h2></div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_label">' . $objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
+                $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_label">' . $objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
+                $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
             <div id="viewadaptation_text">' . $instData['country'] . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_category_label">' . $objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':</div>
+                $rightContent.='<div id="viewadaptation_category_label">' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':</div>
             <div id="viewadaptation_category_text"> ' . $adaptlang . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_label">' . $objLanguage->languageText('mod_oer_language', 'oer') . ':</div>
+                $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_language', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $adaptlang . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $objLanguage->languageText('mod_oer_fullinfo', 'oer') . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_label">' . $objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
+                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_fullinfo', 'oer') . '</div><br/><br/>';
+                $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_label">' . $objLanguage->languageText('mod_oer_comments', 'oer') . ':</div>
-            <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
+                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';
+                /*$rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>
+            <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';*/
             }
         }
 
@@ -106,7 +142,7 @@ class viewadaptation extends object {
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $prodTitle . '</div>' .
                 '<div id="viewadaptation_leftcontent">' . $product['description'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
-        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
+        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent .$prodcomments. $commentfetcher . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
@@ -131,7 +167,7 @@ class viewadaptation extends object {
         $table->endRow();
 
         $homeLink = new link($this->uri(array("action" => "home")));
-        $homeLink->link = $objLanguage->languageText('mod_oer_home', 'system');
+        $homeLink->link = $this->objLanguage->languageText('mod_oer_home', 'system');
 
 
         $objTools = $this->newObject('tools', 'toolbar');
