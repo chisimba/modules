@@ -996,6 +996,23 @@ class adaptationmanager extends object {
 
         return $content;
     }
+    function userHasPermissions(){
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $this->objUser = $this->getObject("user", "security");
+        //Set groupId for site managers
+        $groupId = $objGroups->getId("ProductCreators");
+        //Get userId
+        $userId = $this->objUser->userId();
+        //Flag to check if user has perms to manage adaptations
+        $hasPerms = false;
+        if ($this->objUser->isLoggedIn()) {
+            if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                $hasPerms = true;
+            }
+        }
+        return $hasPerms;
+    }
 
 }
 

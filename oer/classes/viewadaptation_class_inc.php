@@ -17,10 +17,14 @@ class viewadaptation extends object {
         $objDbProducts = $this->getObject("dbproducts", "oer");
         $objDbInstitution = $this->getObject("dbinstitution", "oer");
         $objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
-        $product = $objDbProducts->getProduct($productId);
+        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $product = $objDbProducts->getProduct($productId);        
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
+        
+        //Flag to check if user has perms to manage adaptations
+        $hasPerms = $objAdaptationManager->userHasPermissions();
 
         $leftContent = "";
         $prodTitle = '<h1 class="viewadaptation_title">' . $product['title'] . '</h1>';
@@ -30,10 +34,13 @@ class viewadaptation extends object {
         }
         $leftContent.='<div id="viewadaptation_coverpage">' . $thumbnail . '</div>';
 
-        //Link for - adapting product from existing adapatation
-        $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
-        $newAdaptLink->link = $objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
-        $newAdapt = $newAdaptLink->show();
+        $newAdapt = "";
+        if ($hasPerms) {
+            //Link for - adapting product from existing adapatation
+            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
+            $newAdaptLink->link = $objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+            $newAdapt = $newAdaptLink->show();
+        }
 
         //Link for - See existing adaptations of this UNESCO Product
         $existingAdaptationsLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
@@ -47,10 +54,12 @@ class viewadaptation extends object {
 
         $sections = "";
         $sectionTitle = '<h3>' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
-        $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
-        $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
-        $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $objLanguage->languageText('mod_oer_addnode', 'oer');
-        $sections.=$addNodeLink->show();
+        if ($hasPerms) {
+            $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
+            $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
+            $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $objLanguage->languageText('mod_oer_addnode', 'oer');
+            $sections.=$addNodeLink->show();
+        }
         $sectionManager = $this->getObject("sectionmanager", "oer");
 
         $navigator = $sectionManager->buildSectionsTree($product["id"], '');
@@ -92,11 +101,11 @@ class viewadaptation extends object {
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
             }
         }
-        
+
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $prodTitle . '</div>'.
-                '<div id="viewadaptation_leftcontent">' . $product['description']. '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $prodTitle . '</div>' .
+                '<div id="viewadaptation_leftcontent">' . $product['description'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
         $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
         $table->endRow();
         $table->startRow();
