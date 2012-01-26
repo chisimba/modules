@@ -37,4 +37,18 @@
             </add>
         </data>
     </update>
+
+    <update>
+        <table>tbl_oer_sectionnodes</table>
+        <version>0.109</version>
+        <description><br/>Added node type</description>
+        <data>
+            <add>
+                <name>nodetype</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
+
 </updates>

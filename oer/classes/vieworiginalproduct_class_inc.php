@@ -58,12 +58,15 @@ class vieworiginalproduct extends object {
         $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>';
 
 
-        $sections = "";
+        $sections = '<div id="nodeband">';
         $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
         $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
         $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
         $sections.=$addNodeLink->show();
+        $sections.='</div>';
+        
+        
         $sectionManager = $this->getObject("sectionmanager", "oer");
    
         $navigator= $sectionManager->buildSectionsTree($productId,'');

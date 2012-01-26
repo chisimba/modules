@@ -41,7 +41,7 @@ class sectionmanager extends object {
      */
     function addJS() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('section.js', 'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('sections.js', 'oer'));
     }
 
     /**
@@ -85,6 +85,12 @@ class sectionmanager extends object {
         $sectionNode = $dbSections->getSectionNode($parentid);
         $parent = $sectionNode['path'];
         $name = $this->getParam("title");
+        $nodeType=  $this->getParam("nodetype");
+         if($nodeType == 'curriculum'){
+             $forward=$this->getParam("forward");
+             echo $forward;
+             die();
+         }
         $path = "";
         if ($parent) {
             $path = $parent . '/' . $name;
@@ -108,7 +114,7 @@ class sectionmanager extends object {
      * Builds a form for managing section
      * @return type 
      */
-    function buildAddEditSectionForm($productid, $id=null, $parentid=null) {
+    function buildAddEditCuriculumForm($productid, $id=null, $parentid=null) {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
         $product = $this->dbproducts->getProduct($productid);
@@ -227,30 +233,46 @@ class sectionmanager extends object {
 
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_section', 'oer'));
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
         $fieldset->addContent($objTable->show());
 
-        $formData = new form('sectionForm', $this->uri(array("action" => "savesection")));
-        $formData->addToForm($fieldset);
-
-        $formData->addToForm('<br/><div id="save_results"><div/>');
-        $button = new button('saveSectionButton', $this->objLanguage->languageText('word_save', 'system', 'Save'));
-        $button->setToSubmit();
-        $formData->addToForm('<br/>' . $button->show());
-
-
-        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "vieworiginalproduct", "id" => $id));
-        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+       
 
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_section";
-        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_section', 'oer');
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_curriculum', 'oer');
 
 
-        return $header->show() . $formData->show();
+        return $header->show() . $fieldset->show();
+    }
+
+    /**
+     * This creates the fields for calendar
+     * @return type 
+     */
+    function createCalendarField() {
+        $label = new label($this->objLanguage->languageText('mod_oer_calendar', 'oer'), 'input_sectionnodename');
+
+        $textinput = new textinput('calendar');
+        $textinput->value = $name;
+        $textinput->cssClass = 'required';
+
+        return $label->show() . '<br/>' . $textinput->show();
+    }
+
+    /**
+     * Creates year field
+     * @return type 
+     */
+    function createYearField() {
+        $label = new label($this->objLanguage->languageText('mod_oer_year', 'oer'), 'input_sectionnodename');
+
+        $textinput = new textinput('calendar');
+        $textinput->value = $name;
+        $textinput->cssClass = 'required';
+
+        return $label->show() . '<br/>' . $textinput->show();
     }
 
     /**
@@ -264,11 +286,40 @@ class sectionmanager extends object {
         $textinput = new textinput('title');
         $textinput->value = $name;
         $textinput->cssClass = 'required';
-        $label = new label($this->objLanguage->languageText('mod_oer_nodename', 'oer'), 'input_sectionnodename');
-        $form->addToForm("<br/>" . $this->objLanguage->languageText('mod_oer_createin', 'oer'));
-        $form->addToForm("<br/>" . $this->buildSectionsTree($productId, '', 'htmldropdown'));
+        $label = new label($this->objLanguage->languageText('mod_oer_sectionname', 'oer'), 'input_sectionname');
+
         $form->addToForm('<br/>' . $label->show());
         $form->addToForm('<br/>' . $textinput->show());
+
+
+
+        $label = new label($this->objLanguage->languageText('mod_oer_sectiontype', 'oer'), 'input_sectionname');
+        $nodeType = new dropdown('nodetype');
+        $nodeType->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $nodeType->cssClass = "required";
+        $nodeType->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        $nodeType->addOption('calendar', $this->objLanguage->languageText('mod_oer_calendar', 'oer'));
+        $nodeType->addOption('year', $this->objLanguage->languageText('mod_oer_year', 'oer'));
+        $nodeType->addOption('module', $this->objLanguage->languageText('mod_oer_module', 'oer'));
+        $nodeType->addOnchange("javascript:displaySelectedNode();");
+
+
+
+        $form->addToForm('<br/>' . $label->show());
+        $form->addToForm('<br/>' . $nodeType->show());
+
+        $createIn = '<div id="createin">' . $this->objLanguage->languageText('mod_oer_createin', 'oer') . '<br/>' .
+                $this->buildSectionsTree($productId, '', 'htmldropdown') . '</div>';
+
+        $form->addToForm("<br/>" . $createIn);
+
+
+
+        $form->addToForm('<br/><div id="curriculum">' . $this->buildAddEditCuriculumForm($productid) . '</div>');
+        $form->addToForm('<div id="calendar">' . $this->createCalendarField() . '</div>');
+        $form->addToForm('<div id="year">' . $this->createYearField() . '</div>');
+
+
         $button = new button('create', $this->objLanguage->languageText('word_save', 'system'));
         $button->setToSubmit();
 

@@ -23,6 +23,7 @@ $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
                 'parent_id' => array('type' => 'text','length' => 32),
                 'product_id' => array('type' => 'text','length' => 32),
+                'nodetype' => array('type' => 'text','length' => 32),
                 'title' => array('type' => 'text', 'length' => 255),
                 'forward' => array('type' =>'text'),
                 'background' => array('type' =>'text'),
