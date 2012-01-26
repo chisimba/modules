@@ -87,22 +87,40 @@ class fbapps extends object
      * 
      * Get Facebook comments for the current URL
      *
+     * @param string $width The width of the block 
+     * @param string $numPosts The number of posts to show
+     * @param string $url The URL to which the posts apply
      * @return string Facebook comments
+     * @access public
+     * 
      */
-    public function getComments($width=425, $numPosts=10)
+    public function getComments($width=425, $numPosts=10, $url=FALSE)
     {
+        if (!$url) {
+            $objUrl = $this->getObject('urlutils', 'utilities');
+            $url = $objUrl->curPageURL();
+        }
         $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
         $apikey = $this->objDbSysconfig->getValue('apid', 'facebookapps');
         $script = $this->loadFbApiScript();
 
-        $this->appendArrayVar('afterBodyScripts','TEST');
-        $this->appendArrayVar('afterBodyScripts','TEST2');
+        //$this->appendArrayVar('afterBodyScripts','TEST');
+        //$this->appendArrayVar('afterBodyScripts','TEST2');
 
         return '<div id="fb-root"></div>' . $script . '<fb:comments numposts="'
           . $numPosts . '" width="' . $width
+          . '" data-href="' . $url 
           . '" publish_feed="true"></fb:comments>';
     }
 
+    /**
+     *
+     * Render the FB API script.
+     * 
+     * @return string The rendered script
+     * @access public
+     * 
+     */
     public function loadFbApiScript()
     {
         $this->objDbSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
