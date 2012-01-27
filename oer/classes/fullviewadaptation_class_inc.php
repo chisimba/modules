@@ -60,9 +60,9 @@ class fullviewadaptation extends object {
         $objTools->addToBreadCrumbs($crumbs);
 
         $leftCol = '<div class="pageBreadCrumb">
-                    <a href="#" class="greyText Underline">Barchelor</a> | 
-                    <a href="#" class="greyText Underline">Year 1</a> | 
-                    <a href="#" class="greyText Underline">Term 1</a> | 
+                    <a href="#" class="greyText Underline">User Set</a> |
+                    <a href="#" class="greyText Underline">Current</a> |
+                    <a href="#" class="greyText Underline">Path</a> |
                     <span class="greyText">'.$product['title'].'</span>
                     <br><br>
                 </div>
