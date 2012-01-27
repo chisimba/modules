@@ -29,7 +29,7 @@ class viewadaptation extends object {
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
         $leftContent = "";
-        $prodTitle = '<h1 class="viewadaptation_title">' . $product['title'] . '</h1>';
+        
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
@@ -50,7 +50,7 @@ class viewadaptation extends object {
         $existingAdaptations = $existingAdaptationsLink->show();
 
         //Link for - Full view of product
-        $fullProdViewLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
+        $fullProdViewLink = new link($this->uri(array("action" => "fullviewadaptation", "id" => $productId)));
         $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
         $fullProdView = $fullProdViewLink->show();
 
@@ -120,15 +120,13 @@ class viewadaptation extends object {
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
-            <div id="viewadaptation_text"><h2>' . $instData['name'] . '</h2></div><br/><br/>';
+            <div id="viewadaptation_text"><h2 class="pinkText">' . $instData['name'] . '</h2></div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
             <div id="viewadaptation_text">' . $instData['country'] . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_category_label">' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':</div>
             <div id="viewadaptation_category_text"> ' . $adaptlang . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_language', 'oer') . ':</div>
-            <div id="viewadaptation_keywords_text"> ' . $adaptlang . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_fullinfo', 'oer') . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
@@ -140,8 +138,7 @@ class viewadaptation extends object {
 
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $prodTitle . '</div>' .
-                '<div id="viewadaptation_leftcontent">' . $product['description'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $product['abstract'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
         $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent .$prodcomments. $commentfetcher . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
         $table->endRow();
         $table->startRow();
@@ -174,7 +171,9 @@ class viewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        return '<br/><div id="viewadaptation">' . $table->show() . '</div>';
+        $prodTitle = '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
+
+        return '<br/><div id="adaptationsBackgroundColor">'.$prodTitle . $table->show() . '</div>';
     }
 
 }

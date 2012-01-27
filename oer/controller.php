@@ -22,7 +22,7 @@ class oer extends controller {
      * @return type 
      */
     function requiresLogin($action = 'home') {
-        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", "viewadaptation");
+        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", "viewadaptation", "fullviewadaptation");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -193,6 +193,16 @@ class oer extends controller {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         return "viewadaptation_tpl.php";
+    }
+
+    /**
+     * this returns the template for displaying the selected adaptation
+     * @return string
+     */
+    function __fullviewadaptation() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "fullviewadaptation_tpl.php";
     }
 
     /**
