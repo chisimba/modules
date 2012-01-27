@@ -21,6 +21,9 @@ class fullviewadaptation extends object {
 
     function buildAdaptationFullView($productId) {
         $product = $this->objDbProducts->getProduct($productId);
+        $parentProduct = $this->objDbProducts->getProduct($product["parent_id"]);
+        $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+        $parentInstData = $this->objDbInstitution->getInstitutionById($parentProduct["institutionid"]);
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
@@ -37,9 +40,14 @@ class fullviewadaptation extends object {
         }
 
         //Link for - See existing adaptations of this UNESCO Product
-        $existingAdaptationsLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
-        $existingAdaptationsLink->link = $this->objLanguage->languageText('mod_oer_existingadaptations', 'oer');
-        $existingAdaptations = $existingAdaptationsLink->show();
+        $viewParentProdLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode"=>"grid")));
+        $viewParentProdLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
+        $viewParentProd = $viewParentProdLink->show();
+
+        //Link for - See existing adaptations of this UNESCO Product
+        $viewParentInstLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode"=>"grid")));
+        $viewParentInstLink->link = $parentInstData['name'];
+        $viewParentInst = $viewParentInstLink->show();
 
         //Link for - Full view of product
         $fullProdViewLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
@@ -63,7 +71,7 @@ class fullviewadaptation extends object {
                     <a href="#" class="greyText Underline">User Set</a> |
                     <a href="#" class="greyText Underline">Current</a> |
                     <a href="#" class="greyText Underline">Path</a> |
-                    <span class="greyText">'.$product['title'].'</span>
+                    <span class="greyText">' . $product['title'] . '</span>
                     <br><br>
                 </div>
             <div class="headingHolder"><div class="heading2"><h1 class="greyText">' . $product['title'] . '</h1></div>
@@ -75,11 +83,55 @@ class fullviewadaptation extends object {
             <a href="#"><img src="skins/oer/images/icons/icon-download.png" alt="Download" width="18" height="18"></a>
             </div></div>';
 
-        $content = '<div class="viewadaptation_leftcontent">' . $leftCol .'<div class="contentDivThreeWider">'. $product['description'] . '</div></div>';
+        $content = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $product['description'] . '</div></div>';
         $content .= '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div></div>';
 
-        return '<div class="mainContentHolder"><div class="adaptationsBackgroundColor"><div class="adaptationListViewTop">
-            <div class="hunderedPercentGreyHorizontalLine">' . $content . '</div></div></div></div>';
+        $topStuff = '<div class="adaptationListViewTop">
+            <div class="tenPixelLeftPadding tenPixelTopPadding">
+                        <div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftTopImage">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            </div>
+                            <div class="leftFloatDiv">
+                                <h3>'.$viewParentInst.'</h3><br>
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv">'.$viewParentProd.'</a></div>
+                            </div>
+                    	</div>
+
+                        <div class="middleAdaptedByIcon">
+                        	<img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"><br>
+                        	<span class="pinkText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
+                        </div>
+
+
+                        <div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftTopImage">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            </div>
+                            <div class="leftFloatDiv">
+                                <h3 class="darkGreyColour">'.$instData['name'].'</h3><br>
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv">'.$viewParentProd.'</div>
+                            </div>
+                    	</div>
+
+
+                        <div class="middleAdaptedByIcon">
+                        	<img src="skins/oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_oer_managedby', 'oer').'" width="24" height="24"><br>
+                        	<span class="greenText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
+                        </div>
+
+                        <div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftFloatDiv">
+                                <h3 class="greenText">'.$instData['name'].'</h3><br>
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="greenTextLink">View group</a></div>
+                            </div>
+                    	</div>
+                    </div></div>';
+
+        return '<div class="mainContentHolder"><div class="adaptationsBackgroundColor">'.$topStuff.'
+            <div class="hunderedPercentGreyHorizontalLine">' . $content . '</div></div></div>';
     }
 
 }
