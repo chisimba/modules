@@ -696,8 +696,15 @@ class oer extends controller {
      */
     public function __userdetailssave()
     {
-        $objDb = $this->getObject('', 'oer');
-        $result = $objDb->saveData();
+        $objDb = $this->getObject('dbuseroer', 'oer');
+        $mode = $this->getParam('mode', 'add');
+        if ($mode == 'add' || $mode == 'selfregister') {
+            $result = $objDb->addSave();
+        } elseif ($mode == 'edit') {
+            $result = $objDb->editSave();
+        } else {
+            $result = 'invalidmode';
+        }
         die($result);
     }
     
