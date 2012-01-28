@@ -14,6 +14,23 @@ class dbsectionnodes extends dbTable {
     }
 
     /**
+     * this determines if a product has any sections created
+     * @param type $productid The product to check sections for
+     * @return type Boolean: True if sectiond exist, FALSE otherwise
+     */
+    function sectionsExist($productId) {
+        $sql =
+                "select count(id) as totalnodes from tbl_oer_sectionnodes where product_id = '$productId'";
+        $results = $this->getArray($sql);
+       
+        if (count($results) > 0) {
+            return $results['totalnodes'] > 0 ? TRUE : FALSE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * returns the nodes of the sections
      * @param type $productId
      * @return type 
@@ -23,8 +40,6 @@ class dbsectionnodes extends dbTable {
                 "select * from tbl_oer_sectionnodes where product_id = '$productId'";
         return $this->getArray($sql);
     }
-
-    
 
     function getSectionNode($sectionId) {
         $sql =
@@ -37,10 +52,6 @@ class dbsectionnodes extends dbTable {
         }
     }
 
-    
-    
-    
-    
     /**
      * creates a new section record for a product
      * @param type $data - the section details

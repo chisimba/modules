@@ -14,7 +14,7 @@ class block_sectionnavigator extends object {
     function show() {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $productId = $this->configData;
-        return $sectionManager->buildSectionsTree($productId,"");
+        return $sectionManager->buildSectionsTree($productId, "");
     }
 
 }

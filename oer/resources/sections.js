@@ -1,12 +1,15 @@
+/**
+ * 
+ */
+
 jQuery(document).ready(function(){ 
-    
-    
+    jQuery("#form_curriculumform").validate();
     jQuery("#form_createsectionnode").validate();
     jQuery("#calendar").hide();
     jQuery("#module").hide();
     jQuery("#year").hide();
     jQuery("#createin").hide();
-    jQuery("#curriculum").hide();
+
 }); 
 
 
@@ -15,27 +18,24 @@ jQuery(document).ready(function(){
  */
 function displaySelectedNode(){
     var selectedVal = jQuery("#input_nodetype").val(); 
-    if(selectedVal == 'curriculum'){
-        jQuery("#createin").hide();
-        jQuery("#curriculum").show();
-    }else  if(selectedVal == 'calendar'){
+  if(selectedVal == 'calendar'){
         jQuery("#calendar").show();
         jQuery("#module").hide();
         jQuery("#year").hide();
         jQuery("#createin").show();
-        jQuery("#curriculum").hide();
+       
     }else    if(selectedVal == 'module'){
         jQuery("#module").show();
         jQuery("#calendar").hide();
         jQuery("#year").hide();
         jQuery("#createin").show();
-        jQuery("#curriculum").hide();
+       
     }else  if(selectedVal == 'year'){
         jQuery("#year").show();
         jQuery("#calendar").hide();
         jQuery("#module").hide();
         jQuery("#createin").show();
-        jQuery("#curriculum").hide();
+       
     }
        
 }

@@ -154,6 +154,7 @@ class oer extends controller {
         $objCommentsManager = $this->getObject("commentsmanager", "oer");
         return $objCommentsManager->addNewComment();
     }
+
     /////////////////////////////////////////////////////////////////
     /*
 
@@ -163,9 +164,8 @@ class oer extends controller {
 
     function __addcomment() {
         $objCommentsManager = $this->getObject("commentsmanager", "oer");
-        $resultsArr =  $objCommentsManager->addNewComment();
+        $resultsArr = $objCommentsManager->addNewComment();
         return $this->nextAction('viewadaptation', $resultsArr);
-
     }
 
     /////////////////////////////////////////////////////////////////
@@ -415,9 +415,20 @@ class oer extends controller {
      * returns the template for adding a new sections
      */
     function __addsectionnode() {
-        $id = $this->getParam("productid");
-        $this->setVarByRef("productid", $id);
+        $productid = $this->getParam("productid");
+        $this->setVarByRef("productid", $productid);
         return "addeditsectionnode_tpl.php";
+    }
+
+    /**
+     * Creates a new curriculum and returns to view product page
+     * @return type 
+     */
+    function __createcurriculum() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $id = $sectionManager->saveCurriculum();
+        $params = array("id" => $id);
+        return $this->nextAction('vieworiginalproduct', $params);
     }
 
     /**
