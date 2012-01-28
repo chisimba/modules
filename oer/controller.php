@@ -13,6 +13,9 @@ class oer extends controller {
 
         //// Set the jQuery version to the one required
         $this->setVar('JQUERY_VERSION', '1.6.1');
+        // Load the login helper scripts, they won't load in the template
+        $objLogin = $this->getObject('showlogin', 'login');
+        $objLogin->loadAllScripts();
     }
 
     /**
@@ -38,7 +41,6 @@ class oer extends controller {
      * @return string Filename of template to be displayed
      */
     public function dispatch($action) {
-
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -669,7 +671,21 @@ class oer extends controller {
 
         return 'thumbnailuploadresults_tpl.php';
     }
-
+    
+    /**
+     *
+     * Open the edit/add form for users, includes the additional data
+     * that the OER project needs, as well as the data from tbl_users
+     *
+     * @return string Template
+     * @access public
+     * 
+     */
+    public function __editUser()
+    {
+        return 'useredit_tpl.php';
+    }
+    
 }
 
 ?>
