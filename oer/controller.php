@@ -686,6 +686,12 @@ class oer extends controller {
         return 'useredit_tpl.php';
     }
     
+    public function userdetailssave()
+    {
+        $objDb = $this->getObject('', 'oer');
+        $result = $objDb->saveData();
+    }
+    
 }
 
 ?>
