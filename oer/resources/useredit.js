@@ -1,5 +1,5 @@
 /* 
- * Javascript to support institution edit
+ * Javascript to support user edit
  *
  * Written by Derek Keats derek@dkeats.com
  * Started on: December 18, 2011, 8:48 am
@@ -21,22 +21,22 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        jQuery("#form_institutionTypeEditor").validate();
+        jQuery("#form_edituser").validate();
     });
 
     // Function for saving the institutional data
-    jQuery("#form_institutionTypeEditor").submit(function(e) {
-        if(jQuery("#form_institutionTypeEditor").valid()){ 
+    jQuery("#form_edituser").submit(function(e) {
+        if(jQuery("#form_edituser").valid()){ 
             e.preventDefault();
-            jQuery("#submitType").attr("disabled", "disabled");
+            jQuery("#submitUser").attr("disabled", "disabled");
             jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
-            data_string = jQuery("#form_institutionTypeEditor").serialize();
+            data_string = jQuery("#form_edituser").serialize();
             jQuery.ajax({
-                url: 'index.php?module=oer&action=institutiontypesave',
+                url: 'index.php?module=oer&action=userdetailssave',
                 type: "POST",
                 data: data_string,
                 success: function(msg) {
-                    jQuery("#submitInstitution").attr("disabled", "");
+                    jQuery("#submitUser").attr("disabled", "");
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
                         // Update the information area 
                         // (msg is the id of the record on success)

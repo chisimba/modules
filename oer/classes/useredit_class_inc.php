@@ -296,12 +296,12 @@ class useredit extends object
         unset($label);
         
         // Sex input (what is called gender these days)
-        $sexRadio = new radio ('register_sex');
+        $sexRadio = new radio ('sex');
         $sexRadio->addOption('M', $this->objLanguage->languageText('word_male', 'system'));
         $sexRadio->addOption('F', $this->objLanguage->languageText('word_female', 'system'));
         $sexRadio->setBreakSpace(' &nbsp; ');
         if ($this->mode == 'edit') {
-            $sexRadio->setSelected($this->getParam('register_sex'));
+            $sexRadio->setSelected($this->getParam('sex'));
         } else {
             $sexRadio->setSelected('M');
         }
@@ -488,6 +488,7 @@ class useredit extends object
         unset($label);
         
         // About yourself input options.
+        $description = $this->getParam('description', NULL);
         $label = new label($this->objLanguage->languageText(
           'phrase_aboutyou'), 'description');
         $table->startRow();
@@ -497,7 +498,7 @@ class useredit extends object
         $editor->height = '150px';
         $editor->width = '500px';
         $editor->setBasicToolBar();
-        $editor->setContent($userExtra[0]['description']);
+        $editor->setContent($description);
         if ($this->mode == 'edit') {
             $value = $this->getParam('description', NULL);
             $textinput->setValue($value);
@@ -510,7 +511,7 @@ class useredit extends object
         $table->startRow();
         $table->addCell("&nbsp;");
         $buttonTitle = $this->objLanguage->languageText('word_save');
-        $button = new button('submitType', $buttonTitle);
+        $button = new button('submitUser', $buttonTitle);
         $button->setToSubmit();
         //$button->cssId = "submitInstitution";
         $table->addCell($button->show());

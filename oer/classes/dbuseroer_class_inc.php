@@ -15,17 +15,131 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-class dbuserextra extends dbtable {
+class dbuseroer extends dbtable {
 
+    /**
+     * 
+     * @var string object $objAdmin Holds the useradmin model from security
+     * @access private
+     * 
+     */
     private $objAdmin;
+    /**
+     * 
+     * @var string object $objAdmin Holds the user object
+     * @access private
+     * 
+     */
     private $objUser;
+    
+    /**
+     * 
+     * @var string array $fieldsAr An array of all the fields we will be using
+     * @access private
+     * 
+     */
+    private $fieldsAr;
+    
+    /**
+     * 
+     * @var string array $oerFieldsAr An array of the fields to write to 
+     * tbl_oer_userextra
+     * 
+     * @access private
+     * 
+     */
+    private $oerFieldsAr;
 
-    function init() {
-        parent::init("tbl_unesco_oer_userextra");
+    /**
+     * 
+     * Standard init method
+     * 
+     * @access public
+     * @return void
+     * 
+     */
+    public function init() {
+        parent::init("tbl_oer_userextra");
         $this->objAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objUser = $this->getObject('user', 'security');
-        $this->ObjDbUserGroups = $this->getObject('dbusergroups', 'unesco_oer');
+        $this->ObjDbUserGroups = $this->getObject('dbusergroups', 'oer');
+        $this->fieldsAr = array(
+            'id', 'title', 'firstname', 'surname', 'username', 'password', 
+            'confirmpassword', 'email', 'sex', 'birthdate', 'city', 
+            'state', 'postalcode', 'country', 'orgcomp', 'jobtitle', 
+            'occupationtype', 'workphone', 'mobilephone', 'website', 
+            'description', 'mode');
+        // These fields go in this table. The others go with tbl_users.
+        $this->oerFieldsAr = array(
+            'birthdate', 'city', 'state', 'postalcode', 'country', 'orgcomp', 
+            'jobtitle', 'occupationtype', 'workphone', 'mobilephone', 'website', 
+            'description');
     }
+    
+    /**
+     * 
+     * Load the data where each field becomes a property of this class
+     * @access private
+     * @return VOID
+     * 
+     */
+    private function loadData()
+    {
+        foreach($fieldsAr as $field) {
+            $this->$field = $this->getParam($field, NULL);
+        }
+        
+    }
+    
+    private function editSave()
+    {
+        if ($this->id == NULL) {
+            return 'errornoid';
+        } else {
+            // Send the data to the primary users table
+            
+            // Send the data to the oer users data
+            
+            
+            return 'yes';
+        }
+    }
+    
+    private function addSave()
+    {
+        if ($this->id == NULL) {
+            return 'errornoid';
+        } else {
+            // Send the data to the primary users table
+            // Check if the username already exists, if so, return an error
+            if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
+                return 'usernametaken';
+            }
+            // Generate a userId for the user
+            $userId = $this->objUserAdmin->generateUserId();
+            // Add the user and get the id back
+            $pkid = $this->objUserAdmin->addUser(
+              $userId, $this->username, $this->password, $this->title, 
+              $this->firstname, $this->surname, $this->email, $this->sex, 
+              $this->country, $this->cellnumber, '', 'useradmin', 1);
+            // Send the data to the oer users data
+            
+            
+            return $pkid;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     function SaveNewUser($id, $userId, $birthdate, $address, $city, $state, $postaladdress, $organisation, $jobtittle, $TypeOccapation, $WorkingPhone, $DescriptionText, $WebsiteLink, $GroupMembership) {
         $data = array(
