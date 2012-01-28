@@ -78,38 +78,23 @@ class sectionmanager extends object {
     }
 
     /**
-     *
-     * @return type saves section of a product
+     * Saves a given section, depending on the type of node selected
+     * @return type 
      */
-    function saveSection() {
-
-        $data = array(
-            "product_id" => $this->getParam("productid"),
-            "parent_id" => $this->getParam("parentid"),
-            "title" => $this->getParam("title"),
-            "forward" => $this->getParam("forward"),
-            "background" => $this->getParam("background"),
-            "status" => $this->getParam("status"),
-            "introduction" => $this->getParam("introduction")
-        );
-
-        $dbSections = $this->getObject("dbsections", "oer");
-        $id = $dbSections->addSection($data);
-        return $id;
-    }
-
     function saveSectionNode() {
+
         $parentid = $this->getParam('selectednode');
 
         $dbSections = $this->getObject("dbsectionnodes", "oer");
         $sectionNode = $dbSections->getSectionNode($parentid);
         $parent = $sectionNode['path'];
-        $name = $this->getParam("title");
+        $name = NULL;
         $nodeType = $this->getParam("nodetype");
-        if ($nodeType == 'curriculum') {
-            $forward = $this->getParam("forward");
-            echo $forward;
-            die();
+        $sectionId = null;
+        if ($nodeType == 'calendar') {
+            $dbCalendar = $this->getObject("dbcalendar", "oer");
+            $name = $this->getParam("calendar");
+            $sectionId = $dbCalendar->addCalendar(array("title" => $name));
         }
         $path = "";
         if ($parent) {
@@ -120,7 +105,8 @@ class sectionmanager extends object {
 
         $data = array(
             "product_id" => $this->getParam("productid"),
-            "title" => $this->getParam("title"),
+            "section_id" => $sectionId,
+            "title" => $name,
             "path" => $path,
             "level" => count(explode("/", $path))
         );
@@ -271,11 +257,9 @@ class sectionmanager extends object {
      */
     function createCalendarField() {
         $label = new label($this->objLanguage->languageText('mod_oer_calendar', 'oer'), 'input_sectionnodename');
-
         $textinput = new textinput('calendar');
-        $textinput->value = $name;
         $textinput->cssClass = 'required';
-
+        $textinput->size = 77;
         return $label->show() . '<br/>' . $textinput->show();
     }
 
@@ -285,9 +269,7 @@ class sectionmanager extends object {
      */
     function createYearField() {
         $label = new label($this->objLanguage->languageText('mod_oer_year', 'oer'), 'input_sectionnodename');
-
-        $textinput = new textinput('calendar');
-        $textinput->value = $name;
+        $textinput = new textinput('year');
         $textinput->cssClass = 'required';
 
         return $label->show() . '<br/>' . $textinput->show();
@@ -318,29 +300,17 @@ class sectionmanager extends object {
      * @return type 
      */
     function getAddEditNodeForm($productId, $name='') {
-
         $form = new form('createsectionnode', $this->uri(array('action' => 'createsectionnode', "productid" => $productId)));
-        $textinput = new textinput('title');
-        $textinput->value = $name;
-        $textinput->cssClass = 'required';
-        $label = new label($this->objLanguage->languageText('mod_oer_sectionname', 'oer'), 'input_sectionname');
-
-        $form->addToForm('<br/>' . $label->show());
-        $form->addToForm('<br/>' . $textinput->show());
-
-
 
         $label = new label($this->objLanguage->languageText('mod_oer_sectiontype', 'oer'), 'input_sectionname');
         $nodeType = new dropdown('nodetype');
         $nodeType->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $nodeType->cssClass = "required";
-     
+
         $nodeType->addOption('calendar', $this->objLanguage->languageText('mod_oer_calendar', 'oer'));
         $nodeType->addOption('year', $this->objLanguage->languageText('mod_oer_year', 'oer'));
         $nodeType->addOption('module', $this->objLanguage->languageText('mod_oer_module', 'oer'));
         $nodeType->addOnchange("javascript:displaySelectedNode();");
-
-
 
         $form->addToForm('<br/>' . $label->show());
         $form->addToForm('<br/>' . $nodeType->show());
@@ -349,12 +319,8 @@ class sectionmanager extends object {
                 $this->buildSectionsTree($productId, '', 'htmldropdown') . '</div>';
 
         $form->addToForm("<br/>" . $createIn);
-
-
-
-        $form->addToForm('<br/><div id="calendar">' . $this->createCalendarField() . '</div>');
-        $form->addToForm('<div id="year">' . $this->createYearField() . '</div>');
-
+        $form->addToForm('<br/><div id="calendardiv">' . $this->createCalendarField() . '</div>');
+        $form->addToForm('<div id="yeardiv">' . $this->createYearField() . '</div>');
 
         $button = new button('create', $this->objLanguage->languageText('word_save', 'system'));
         $button->setToSubmit();
@@ -446,9 +412,13 @@ class sectionmanager extends object {
 
         if (count($sectionNodes) > 0) {
             foreach ($sectionNodes as $sectionNode) {
-                $folderText = $sectionNode['title'];
-
-                $folderShortText = substr($sectionNode['title'], 0, 500) . '...';
+                $maxLen = 50;
+                $text = $sectionNode['title'];
+                if (strlen($text) > $maxLen) {
+                    $text = substr($sectionNode['title'], 0, $maxLen) . '...';
+                }
+                $folderText = $text;
+                $folderShortText = $text;
                 if ($this->objUser->isAdmin()) {
                     
                 }

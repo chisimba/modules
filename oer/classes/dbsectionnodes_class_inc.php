@@ -22,9 +22,13 @@ class dbsectionnodes extends dbTable {
         $sql =
                 "select count(id) as totalnodes from tbl_oer_sectionnodes where product_id = '$productId'";
         $results = $this->getArray($sql);
-       
+
         if (count($results) > 0) {
-            return $results['totalnodes'] > 0 ? TRUE : FALSE;
+            if (array_key_exists('first', $results)) {
+                return $results['totalnodes'] > 0 ? TRUE : FALSE;
+            } else {
+                return FALSE;
+            }
         } else {
             return FALSE;
         }
