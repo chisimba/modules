@@ -13,9 +13,11 @@ class block_sectionnode extends object {
     }
 
     function show() {
-        $productId = $this->configData;
+        $data = explode("|", $this->configData);
+        $productId = $data[0];
+        $sectionId = $data[1];
         $objSectionManager = $this->getObject("sectionmanager", "oer");
-        return $objSectionManager->buildCreateEditNodeForm($productId);
+        return $objSectionManager->buildCreateEditNodeForm($productId,$sectionId);
     }
 
 }

@@ -41,7 +41,8 @@ class dbsectionnodes extends dbTable {
      */
     function getSectionNodes($productId) {
         $sql =
-                "select * from tbl_oer_sectionnodes where product_id = '$productId'";
+                "select * from tbl_oer_sectionnodes where product_id = '$productId' order by level";
+       
         return $this->getArray($sql);
     }
 
@@ -65,6 +66,15 @@ class dbsectionnodes extends dbTable {
         return $this->insert($data);
     }
 
+    /**
+     *  Updates the section info using the supplied id
+     * @param type $data
+     * @param type $sectionId
+     * @return type 
+     */
+    function updateSectionNode($data,$sectionId){
+        return $this->update("id", $sectionId, $data);
+    }
 }
 
 ?>

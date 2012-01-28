@@ -15,7 +15,7 @@ class oer extends controller {
         $this->setVar('JQUERY_VERSION', '1.6.1');
         // Load the login helper scripts, they won't load in the template
         $objLogin = $this->getObject('showlogin', 'login');
-        $objLogin->loadAllScripts();
+        //$objLogin->loadAllScripts();
     }
 
     /**
@@ -418,7 +418,18 @@ class oer extends controller {
      */
     function __addsectionnode() {
         $productid = $this->getParam("productid");
-        $this->setVarByRef("productid", $productid);
+        $sectionId = '';
+        $data = $productid . '|' . $sectionId;
+        $this->setVarByRef("data", $data);
+        return "addeditsectionnode_tpl.php";
+    }
+
+    function __editsectionnode() {
+        $id = $this->getParam("id");
+        $productid = $this->getParam("editproductid");
+        $data = $productid . '|' . $id;
+
+        $this->setVarByRef("data", $data);
         return "addeditsectionnode_tpl.php";
     }
 
@@ -448,6 +459,18 @@ class oer extends controller {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $productId = $this->getParam("productid");
         $id = $sectionManager->saveSectionNode();
+        $params = array("nodeid" => $id, "id" => $productId);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
+    /**
+     * Updates section node info
+     * @return type 
+     */
+    function __updatesectionnode() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $productId = $this->getParam("productid");
+        $id = $sectionManager->updateSectionNode();
         $params = array("nodeid" => $id, "id" => $productId);
         return $this->nextAction('vieworiginalproduct', $params);
     }
@@ -671,7 +694,7 @@ class oer extends controller {
 
         return 'thumbnailuploadresults_tpl.php';
     }
-    
+
     /**
      *
      * Open the edit/add form for users, includes the additional data
@@ -681,8 +704,7 @@ class oer extends controller {
      * @access public
      * 
      */
-    public function __editUser()
-    {
+    public function __editUser() {
         return 'useredit_tpl.php';
     }
     
@@ -707,7 +729,7 @@ class oer extends controller {
         }
         die($result);
     }
-    
+
     /**
      * 
      * Check availability of a username and return results to Ajax

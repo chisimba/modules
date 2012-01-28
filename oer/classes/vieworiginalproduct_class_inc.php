@@ -8,7 +8,7 @@
 class vieworiginalproduct extends object {
 
     function init() {
-        
+        $this->objUser = $this->getObject("user", "security");
     }
 
     /**
@@ -22,6 +22,12 @@ class vieworiginalproduct extends object {
         $objDbProducts = $this->getObject("dbproducts", "oer");
         $product = $objDbProducts->getProduct($productId);
         $table = $this->getObject("htmltable", "htmlelements");
+
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("ProductCreators");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+
         $table->attributes = "style='table-layout:fixed;'";
 
         $leftContent = "";
@@ -59,18 +65,41 @@ class vieworiginalproduct extends object {
 
 
         $sections = '<div id="nodeband">';
+
+        if ($objGroupOps->isGroupMember($groupId, $userId)) {
+            $editImg = '<img src="skins/oer/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+
+            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
+            $adaptLink->link = $adaptImg;
+            $sections.= $adaptLink->show();
+
+            $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
+            $editLink->link = $editImg;
+            $sections.="&nbsp;" . $editLink->show();
+
+            $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
+            $deleteLink->link = $deleteImg;
+            $deleteLink->cssClass = "deleteoriginalproduct";
+            $sections.="&nbsp;" . $deleteLink->show();
+        }
+
         $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
+
         $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
         $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
         $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
         $sections.=$addNodeLink->show();
         $sections.='</div>';
-        
-        
+
+
         $sectionManager = $this->getObject("sectionmanager", "oer");
-   
-        $navigator= $sectionManager->buildSectionsTree($productId,'');
-        $leftContent.='<br/>' .$sections.'<br/>'. $navigator;
+        $navigator = $sectionManager->buildSectionsTree($productId, '');
+
+
+
+        $leftContent.='<br/>' . $sections . '<br/>' . $navigator;
 
         $table->startRow();
 

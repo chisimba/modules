@@ -12,7 +12,7 @@ $objFix->fixThree();
         "block" : "sectionnavigator",
         <?php
         echo '"configData":';
-        echo '"' . $productid . '"';
+        echo '"' . $data . '|true"';
         ?>
         }
         
@@ -26,7 +26,7 @@ $objFix->fixThree();
         "block" : "sectionnode",
         <?php
         echo '"configData":';
-        echo '"' . $productid . '"';
+        echo '"' . $data . '"';
         ?>
         }
         
