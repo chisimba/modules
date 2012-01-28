@@ -686,10 +686,42 @@ class oer extends controller {
         return 'useredit_tpl.php';
     }
     
-    public function userdetailssave()
+    /**
+     * 
+     * Save the userdetails data and return resulting Id to be used by Ajax
+     * 
+     * @access public
+     * @ return VOID
+     * 
+     */
+    public function __userdetailssave()
     {
         $objDb = $this->getObject('', 'oer');
         $result = $objDb->saveData();
+        die($result);
+    }
+    
+    /**
+     * 
+     * Check availability of a username and return results to Ajax
+     * 
+     * @access public
+     * @return VOID
+     * 
+     */
+    public function __checkUsernameAjax()
+    {
+        $userName = $this->getParam('username', FALSE);
+        if ($username) {
+            $objUserAdmin = $this->getObject('useradmin_model2', 'security');
+            if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
+                die('unavailable');
+            } else {
+                die('available');
+            }
+        } else {
+            die('errornousername');
+        }
     }
     
 }
