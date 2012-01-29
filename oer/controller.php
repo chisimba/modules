@@ -25,7 +25,8 @@ class oer extends controller {
      * @return type 
      */
     function requiresLogin($action = 'home') {
-        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", "viewadaptation", "fullviewadaptation");
+        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", 
+          "viewadaptation", "fullviewadaptation", "selfregister");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -709,6 +710,20 @@ class oer extends controller {
     }
     
     /**
+     *
+     * Open the edit/add form for self-register to provide the 
+     * additional data that the OER project needs, as well as 
+     * the data from tbl_users
+     *
+     * @return string Template
+     * @access public
+     * 
+     */
+    public function __selfregister() {
+        return 'useredit_tpl.php';
+    }
+    
+    /**
      * 
      * Save the userdetails data and return resulting Id to be used by Ajax
      * 
@@ -754,5 +769,4 @@ class oer extends controller {
     }
     
 }
-
 ?>
