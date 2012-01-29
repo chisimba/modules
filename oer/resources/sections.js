@@ -8,34 +8,39 @@ jQuery(document).ready(function(){
    
     jQuery("a").hover(
         function () {
-            var link = this.href;
-            if(link.indexOf("viewsection") > 0){
-                var sectionIdIndex=link.indexOf("sectionid=")+10;
-                var productIdIndex=link.indexOf("productid=")+10;
-                var nodeTypeIndex=link.indexOf("nodetype=")+9;
-                var sectionId='-1';
-                var productId='-1';
-                var nodeType='';
-                if(sectionIdIndex > -1){
-                    sectionId= link.substring(sectionIdIndex);
-                }
-                if(productIdIndex > -1){
-                    productId= link.substring(productIdIndex,sectionIdIndex-11);
-                }
-                if(nodeTypeIndex > -1){
-                    nodeType=link.substring(nodeTypeIndex);
-                }
-                var editLink='&nbsp;<a href="?module=oer&action=editsectionnode&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/icons/edit.png" /></a>';
-                var editContentLink='';
-                if(nodeType == 'section'){
-                    editContentLink= '&nbsp;<a href="?module=oer&action=editsectioncontent&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/application_form_edit.png" /></a>';
-                }
+            if(loggedIn){
+            
+                var link = this.href;
+                if(link.indexOf("viewsection") > 0){
+                    var sectionIdIndex=link.indexOf("sectionid=")+10;
+                    var productIdIndex=link.indexOf("productid=")+10;
+                    var nodeTypeIndex=link.indexOf("nodetype=")+9;
+                    var sectionId='-1';
+                    var productId='-1';
+                    var nodeType='';
+                    if(sectionIdIndex > -1){
+                        sectionId= link.substring(sectionIdIndex);
+                    }
+                    if(productIdIndex > -1){
+                        productId= link.substring(productIdIndex,sectionIdIndex-11);
+                    }
+                    if(nodeTypeIndex > -1){
+                        nodeType=link.substring(nodeTypeIndex);
+                    }
+                    var editLink='&nbsp;<a href="?module=oer&action=editsectionnode&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/icons/edit.png" /></a>';
+                    var editContentLink='';
+                    if(nodeType == 'section'){
+                        editContentLink= '&nbsp;<a href="?module=oer&action=editsectioncontent&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/application_form_edit.png" /></a>';
+                    }
                 
-                jQuery(this).append(jQuery("<span>"+editLink+editContentLink+"</span>"));     
+                    jQuery(this).prepend(jQuery('<span class="editsection">'+editLink+editContentLink+"&nbsp;</span>"));     
+                }
             }
         }, 
         function () {
-            jQuery(this).find("span:last").remove();
+            if(loggedIn){
+                jQuery(this).find("span:first").remove();
+            }
         }
         );
 

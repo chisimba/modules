@@ -25,8 +25,8 @@ class oer extends controller {
      * @return type 
      */
     function requiresLogin($action = 'home') {
-        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b", 
-          "viewadaptation", "fullviewadaptation", "selfregister");
+        $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b",
+            "viewadaptation", "fullviewadaptation", "selfregister", "viewsection");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -425,6 +425,10 @@ class oer extends controller {
         return "addeditsectionnode_tpl.php";
     }
 
+    /**
+     * allows user to edit section node
+     * @return type 
+     */
     function __editsectionnode() {
         $id = $this->getParam("id");
         $productid = $this->getParam("editproductid");
@@ -432,6 +436,33 @@ class oer extends controller {
 
         $this->setVarByRef("data", $data);
         return "addeditsectionnode_tpl.php";
+    }
+
+    /**
+     * Allows the user to add section content
+     * @return type 
+     */
+    function __editsectioncontent() {
+        $sectionid = $this->getParam("id");
+        $productid = $this->getParam("editproductid");
+        $data = $productid . '|' . $sectionid;
+        $this->setVarByRef("data", $data);
+        return "addeditsectioncontent_tpl.php";
+    }
+
+    function __viewsection() {
+        $sectionid = $this->getParam("sectionid");
+        $productid = $this->getParam("productid");
+        $nodeType = $this->getParam("nodetype");
+        if ($nodeType == 'section') {
+            $data = $productid . '|' . $sectionid;
+            $this->setVarByRef("data", $data);
+            return "viewproductsection_tpl.php";
+        } else {
+
+            $this->setVarByRef("id", $productid);
+            return "vieworiginalproduct_tpl.php";
+        }
     }
 
     /**
@@ -456,11 +487,28 @@ class oer extends controller {
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
+    /**
+     * Creates a new node in the sections tree
+     * @return type 
+     */
     function __createsectionnode() {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $productId = $this->getParam("productid");
         $id = $sectionManager->saveSectionNode();
         $params = array("nodeid" => $id, "id" => $productId);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
+    /**
+     * Creates new content on a section
+     * @return type 
+     */
+    function __createsectioncontent() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $sectionId = $this->getParam("sectionid");
+        $productId = $this->getParam("productid");
+        $id = $sectionManager->saveSectionContent();
+        $params = array("nodeid" => $sectionId, "id" => $productId);
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
@@ -473,6 +521,19 @@ class oer extends controller {
         $productId = $this->getParam("productid");
         $id = $sectionManager->updateSectionNode();
         $params = array("nodeid" => $id, "id" => $productId);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
+    /**
+     * updates the sections content
+     * @return type 
+     */
+    function __updatesectioncontent() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $sectionId = $this->getParam("sectionid");
+        $productId = $this->getParam("productid");
+        $id = $sectionManager->updateSectionContent();
+        $params = array("nodeid" => $sectionId, "id" => $productId);
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
@@ -708,7 +769,7 @@ class oer extends controller {
     public function __editUser() {
         return 'useredit_tpl.php';
     }
-    
+
     /**
      *
      * Open the edit/add form for self-register to provide the 
@@ -722,7 +783,7 @@ class oer extends controller {
     public function __selfregister() {
         return 'useredit_tpl.php';
     }
-    
+
     /**
      * 
      * Save the userdetails data and return resulting Id to be used by Ajax
@@ -731,8 +792,7 @@ class oer extends controller {
      * @ return VOID
      * 
      */
-    public function __userdetailssave()
-    {
+    public function __userdetailssave() {
         $objDb = $this->getObject('dbuseroer', 'oer');
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'add' || $mode == 'selfregister') {
@@ -753,8 +813,7 @@ class oer extends controller {
      * @return VOID
      * 
      */
-    public function __checkUsernameAjax()
-    {
+    public function __checkUsernameAjax() {
         $userName = $this->getParam('username', FALSE);
         if ($username) {
             $objUserAdmin = $this->getObject('useradmin_model2', 'security');
@@ -767,6 +826,7 @@ class oer extends controller {
             die('errornousername');
         }
     }
-    
+
 }
+
 ?>
