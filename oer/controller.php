@@ -27,6 +27,7 @@ class oer extends controller {
     function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b",
             "viewadaptation", "fullviewadaptation", "selfregister", 
+            "viewrootsection",
             "viewsection", "checkusernameajax", "userdetailssave");
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -423,6 +424,10 @@ class oer extends controller {
 
 
      *//////////////////////////////////////////////////////////////////
+    
+    function  __viewrootsection(){
+         $productid = $this->getParam("productid");
+    }
 
     /**
      * returns the template for adding a new sections
@@ -486,6 +491,17 @@ class oer extends controller {
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
+    /**
+     * edits the curriculum
+     * @return type 
+     */
+    function __editcurriculum() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $id = $sectionManager->updateCurriculum();
+        $params = array("id" => $id);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+    
     /**
      * saves a new section
      * @return type 

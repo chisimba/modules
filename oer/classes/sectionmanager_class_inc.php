@@ -79,6 +79,27 @@ class sectionmanager extends object {
     }
 
     /**
+     * updates existing curriculum
+     * @return type 
+     */
+    function updateCurriculum() {
+        $productId = $this->getParam("productid");
+        $id=  $this->getParam("id");
+        $data = array(
+            "title" => $this->getParam("title"),
+            "forward" => $this->getParam("forward"),
+            "background" => $this->getParam("background"),
+            "introduction"=>  $this->getParam("introduction"),
+            "status" => $this->getParam("status")
+        );
+
+        $dbCurriculum = $this->getObject("dbcurriculums", "oer");
+        $dbCurriculum->updateCurriculum($data,$id);
+        //here we must return the product id to be used for creating section tree
+        return $productId;
+    }
+
+    /**
      * generates a random string
      * @return string 
      */
@@ -292,14 +313,14 @@ class sectionmanager extends object {
 
         //description
         $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_description', 'oer'));
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_introduction', 'oer'));
         $objTable->endRow();
 
         $objTable->startRow();
         $description = $this->newObject('htmlarea', 'htmlelements');
-        $description->name = 'description';
+        $description->name = 'introduction';
         $description->height = '150px';
-        $description->value = $curriculum['description'];
+        $description->value = $curriculum['introduction'];
         $objTable->addCell($description->show());
         $objTable->endRow();
 
@@ -335,37 +356,17 @@ class sectionmanager extends object {
         $header->cssClass = "original_product_section";
         $header->str = $title . '-' . $this->objLanguage->languageText('mod_oer_curriculum', 'oer');
 
+        $action = 'createcurriculum';
+        if ($id != null) {
+            $action = "editcurriculum";
+        }
 
-        $form = new form('curriculumform', $this->uri(array('action' => 'createcurriculum', "productid" => $productId)));
+        $form = new form('curriculumform', $this->uri(array('action' => $action, "productid" => $productId)));
         $form->addToForm($fieldset->show());
         $button = new button('create', $this->objLanguage->languageText('word_save', 'system'));
         $button->setToSubmit();
         $form->addToForm('<br/>' . $button->show());
         return $header->show() . $form->show();
-    }
-
-    /**
-     * This creates the fields for calendar
-     * @return type 
-     */
-    function createCalendarField() {
-        $label = new label($this->objLanguage->languageText('mod_oer_calendar', 'oer'), 'input_sectionnodename');
-        $textinput = new textinput('calendar');
-        $textinput->cssClass = 'required';
-        $textinput->size = 77;
-        return $label->show() . '<br/>' . $textinput->show();
-    }
-
-    /**
-     * Creates year field
-     * @return type 
-     */
-    function createYearField() {
-        $label = new label($this->objLanguage->languageText('mod_oer_year', 'oer'), 'input_sectionnodename');
-        $textinput = new textinput('year');
-        $textinput->cssClass = 'required';
-
-        return $label->show() . '<br/>' . $textinput->show();
     }
 
     /**
@@ -377,12 +378,18 @@ class sectionmanager extends object {
      * @return type 
      */
     function buildCreateEditNodeForm($productId, $sectionId) {
+
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
         $curriculum = $dbCurriculum->getCurriculum($productId);
-        if ($curriculum != null) {
-            return $this->getAddEditNodeForm($productId, $sectionId);
+
+        if ($curriculum == null) {
+            return $this->buildAddEditCuriculumForm($productId, $sectionId);
         } else {
-            return $this->buildAddEditCuriculumForm($productId);
+            if ($sectionId == $curriculum['id']) {
+                return $this->buildAddEditCuriculumForm($productId, $sectionId);
+            } else {
+                return $this->getAddEditNodeForm($productId, $sectionId);
+            }
         }
     }
 
@@ -480,6 +487,13 @@ class sectionmanager extends object {
         return $header->show() . $fs->show();
     }
 
+    /**
+     * this formats and presents content of a selected node on sections tree of
+     * a product
+     * @param type $productId
+     * @param type $sectionId
+     * @return string 
+     */
     function getSectionContent($productId, $sectionId) {
         $dbSections = $this->getObject("dbsectioncontent", "oer");
         $dbSectionNode = $this->getObject("dbsectionnodes", "oer");
@@ -493,9 +507,9 @@ class sectionmanager extends object {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $content.='<div id="sectionheader">';
-        
-        $content.='<a href="?module=oer&action=vieworiginalproduct&id='.$productId.'">'.$thumbnail.'</a>';
-        $content.='<a href="?module=oer&action=vieworiginalproduct&id='.$productId.'">'.'<h1>' . $product['title'] . '</h1></a>';
+
+        $content.='<a href="?module=oer&action=vieworiginalproduct&id=' . $productId . '">' . $thumbnail . '</a>';
+        $content.='<a href="?module=oer&action=vieworiginalproduct&id=' . $productId . '">' . '<h1>' . $product['title'] . '</h1></a>';
         $content.='</div>';
         $content.='<div id="sectionbody">';
 
@@ -680,10 +694,9 @@ class sectionmanager extends object {
 
 
         if ($treeType == 'htmldropdown') {
-
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewsection', "productid" => $productId, 'sectionid' => '-1', 'nodetype' => 'unknown', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewrootsection', "productid" => $productId, 'sectionid' => $rootId, 'nodetype' => 'curriculum', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
         }
 
         $refArray = array();
@@ -693,6 +706,7 @@ class sectionmanager extends object {
         $menu = new treemenu();
 
         $sectionEditor = FALSE;
+
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
             $sectionEditor = TRUE;
         }
@@ -705,6 +719,7 @@ class sectionmanager extends object {
                     $icon = 'folder.gif';
                 }
                 if ($nodeType == 'section') {
+
                     $icon = 'document.png';
                 }
 
@@ -731,8 +746,8 @@ class sectionmanager extends object {
                     // echo "css class == $cssClass<br/>";
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $sectionNode['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 } else {
-                    $link =new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
-                    $link->cssClass='sectionlink';
+                    $link = new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
+                    $link->cssClass = 'sectionlink';
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
                 }
 

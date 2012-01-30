@@ -31,12 +31,36 @@ class vieworiginalproduct extends object {
         $table->attributes = "style='table-layout:fixed;'";
 
         $leftContent = "";
-        $leftContent.='<h1 class="viewproduct_title">' . $product['title'] . '</h1>';
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
-        $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>' . $product['description'];
+
+        //$editControls = '<div id="viewproducr_editcontrols">';
+        $editControls = "";
+        if ($objGroupOps->isGroupMember($groupId, $userId)) {
+            $editImg = '<img src="skins/oer/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+
+            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
+            $adaptLink->link = $adaptImg;
+            $editControls.= $adaptLink->show();
+
+            $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
+            $editLink->link = $editImg;
+            $editControls.="" . $editLink->show();
+
+            $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
+            $deleteLink->link = $deleteImg;
+            $deleteLink->cssClass = "deleteoriginalproduct";
+            $editControls.="" . $deleteLink->show();
+        }
+        // $editControls.='</div>';
+        $leftContent.='<h1 class="viewproduct_title">' . $editControls .$product['title'] . '</h1>';
+        $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
+
+        $leftContent.=$product['description'];
 
         $rightContent = "";
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
@@ -45,11 +69,10 @@ class vieworiginalproduct extends object {
 
         $objDbThemes = $this->getObject("dbthemes", "oer");
         $themeIds = explode(",", $product['themes']);
-        $themes = "<ul>";
+        $themes = '';
         foreach ($themeIds as $themeId) {
-            $themes.='<li>' . $objDbThemes->getThemeFormatted($themeId) . '</li>';
+            $themes.= $objDbThemes->getThemeFormatted($themeId) . '<br/>';
         }
-        $themes.='</ul>';
 
         $rightContent.='<div id="viewproduct_category_label">' . $objLanguage->languageText('mod_oer_category', 'oer') . ': ' . $themes . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ': ' . $product['keywords'] . '</div><br/><br/>';
@@ -66,31 +89,14 @@ class vieworiginalproduct extends object {
 
         $sections = '<div id="nodeband">';
 
+        $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
-            $editImg = '<img src="skins/oer/images/icons/edit.png">';
-            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-
-            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
-            $adaptLink->link = $adaptImg;
-            $sections.= $adaptLink->show();
-
-            $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
-            $editLink->link = $editImg;
-            $sections.="&nbsp;" . $editLink->show();
-
-            $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
-            $deleteLink->link = $deleteImg;
-            $deleteLink->cssClass = "deleteoriginalproduct";
-            $sections.="&nbsp;" . $deleteLink->show();
+            $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
+            $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
+            $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
+            $sections.=$addNodeLink->show();
         }
 
-        $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
-
-        $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
-        $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
-        $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
-        $sections.=$addNodeLink->show();
         $sections.='</div>';
 
 

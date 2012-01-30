@@ -38,6 +38,16 @@ class dbcurriculums extends dbTable {
     function addCurriculum($data) {
         return $this->insert($data);
     }
+    
+    /**
+     * Updates the curriculum info
+     * @param type $data
+     * @param type $id
+     * @return type 
+     */
+    function updateCurriculum($data,$id){
+        return $this->update("id", $id, $data);
+    }
 
 }
 
