@@ -103,12 +103,21 @@ class dbuseroer extends dbtable {
      * @return VOID
      * 
      */
-    private function loadData()
+    private function loadData($sanityCheck=FALSE)
     {
-        foreach($this->fieldsAr as $field) {
-            $this->$field = $this->getParam($field, NULL);
+        if ($sanityCheck) {
+            $objSanity = $this->getObject('sanitize', 'security');
         }
-        
+        foreach($this->fieldsAr as $field) {
+            if ($sanityCheck) {
+                $field = $this->getParam($field, NULL);
+                // No fields in the querystring
+                $objSanity->disallowQuerystringFormElements($this->fieldsAr);
+                $this->$field = $objSanity->sanitize($value, FALSE, TRUE);
+            } else {
+                $this->$field = $this->getParam($field, NULL);
+            }
+        }
     }
     
     /**
@@ -167,7 +176,17 @@ class dbuseroer extends dbtable {
      */
     public function addSave()
     {
-        $this->loadData();
+        // Add sanity checks and disallow loggedin users from adding
+        if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser-isAdmin()) {
+                $sanityCheck=FALSE;
+            } else {
+                return 'ERROR_DATA_INSERT_FAIL';
+            }
+        } else {
+            $sanityCheck=TRUE;
+        }
+        $this->loadData($sanityCheck);
         // Send the data to the primary users table
         // Check if the username already exists, if so, return an error
         if ($this->objAdmin->userNameAvailable($this->username) == FALSE) {

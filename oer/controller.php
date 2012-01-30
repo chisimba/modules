@@ -27,7 +27,7 @@ class oer extends controller {
     function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b",
             "viewadaptation", "fullviewadaptation", "selfregister", 
-            "viewsection", "checkusernameajax");
+            "viewsection", "checkusernameajax", "userdetailssave");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {

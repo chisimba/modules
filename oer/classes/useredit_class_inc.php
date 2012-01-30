@@ -83,16 +83,16 @@ class useredit extends object
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $arrayVars['required_field'] = "phrase_requiredfield";
-        $arrayVars['min2'] = "phrase_min2chars";
-        $arrayVars['min6'] = "phrase_min6chars";
-        $arrayVars['min8'] = "phrase_min8chars";
+        $arrayVars['required_field'] = "mod_oer_requiredfield";
+        $arrayVars['min2'] = "mod_oer_min2chars";
+        $arrayVars['min6'] = "mod_oer_min6chars";
+        $arrayVars['min8'] = "mod_oer_min8chars";
         $arrayVars['min100'] = "mod_oer_say100";
-        $arrayVars['validemail'] = "phrase_validemail";
-        $arrayVars['validdate'] = "phrase_validdate";
-        $arrayVars['makeselection'] = "phrase_makeselection";
-        $arrayVars['firstchoiceno'] = "phrase_firstchoiceno";
-        $arrayVars['passnomatch'] = "phrase_passwdnotmatch";
+        $arrayVars['validemail'] = "mod_oer_validemail";
+        $arrayVars['validdate'] = "mod_oer_validdate";
+        $arrayVars['makeselection'] = "mod_oer_makeselection";
+        $arrayVars['firstchoiceno'] = "mod_oer_firstchoiceno";
+        $arrayVars['passnomatch'] = "mod_oer_passwdnotmatch";
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
         $this->objDbUser = $this->getObject('dbuseroer','oer');
@@ -108,7 +108,7 @@ class useredit extends object
 
     /**
      *
-     * Render the input form for the institutional data.
+     * Render the input form for the user data.
      *
      * @return string The rendered form
      * @access public
@@ -116,10 +116,55 @@ class useredit extends object
      */
     public function show()
     {
+        $action = $this->getParam('action', FALSE);
+        if ($action) {
+            // This requires login so its OK not to have additional security
+            if ($action == 'edit' || $action=='add') {
+                return $this->showForLoggedIn();
+            // This is open to not logged in users, so it needs extra security
+            } elseif ($action == 'selfregister') {
+                return $this->showForNotLoggedIn();
+            } 
+        } 
+    }
+    
+    /**
+     *
+     * Render the input form for the user data for logged in users.
+     *
+     * @return string The rendered form
+     * @access public
+     * 
+     */
+    private function showForLoggedIn()
+    {
         return $this->makeHeading() 
-            . "<div class='formwrapper'>"
-            . $this->buildForm()
-            . "</div>";
+          . "<div class='formwrapper'>"
+          . $this->buildForm()
+          . "</div>";
+    }
+    
+    /**
+     *
+     * Render the input form for the user data for self registration
+     *
+     * @return string The rendered form
+     * @access public
+     * 
+     */
+    private function showForNotLoggedIn()
+    {
+        $objUser = $this->getObject('user', 'security');
+        if ($objUser->isLoggedIn()) {
+            return $this->showForLoggedIn();
+        } else  {
+            return $this->makeHeading() 
+              . "<div class='formwrapper'>"
+              // Build the form with a captcha.
+              . $this->buildForm(TRUE)
+              . "</div>";
+        }
+        
     }
     
     /**
@@ -192,7 +237,7 @@ class useredit extends object
      * @access private
      * 
      */
-    private function buildForm()
+    private function buildForm($moreSecure=FALSE)
     {
         // Load all the required HTML classes from HTMLElements module
         $this->loadClass('form', 'htmlelements');
@@ -560,10 +605,44 @@ class useredit extends object
         //$button->cssId = "submitInstitution";
         $table->addCell($button->show());
         $table->endRow();
+        
+        // If we need more security as it is a self register.
+        if ($moreSecure) {
+            // Create a nonce
+            
+            // Get a captcha
+            
+            
+        }
 
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
         
+        // Add captcha to the form.
+        $objPrototype = $this->newObject('prototype','prototype');
+        $this->appendArrayVar('headerParams', $objPrototype->show());
+        $objCaptcha = $this->getObject('captcha', 'utilities');
+        $captcha = new textinput('request_captcha');
+        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->legend = 'Verify Image';
+        $required = '<span class="required_field"> * '
+          . $this->objLanguage->languageText(
+            'word_required', 'system', 'Required')
+          . '</span>';
+        $fieldset->contents = stripslashes(
+          $this->objLanguage->languageText(
+            'mod_security_explaincaptcha', 'security', 
+            'To prevent abuse, please enter the code as shown 
+             below. If you are unable to view the code, click 
+             on "Redraw" for a new one.'))
+          . '<br /><div id="captchaDiv">'
+          . $objCaptcha->show() . '</div>' 
+          . $captcha->show() . $required 
+          . '  <a href="javascript:redraw();">'
+          .$this->objLanguage->languageText('word_redraw', 'security', 'Redraw')
+          .'</a>';
+
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";
         $hidMode = new hiddeninput('mode');
@@ -581,6 +660,7 @@ class useredit extends object
         $formData = new form('edituser', NULL);
         $formData->addToForm(
             $table->show()
+          . $fieldset->show()
           . $hiddenFields
           . $msgArea);
         // Add a div for the error messages

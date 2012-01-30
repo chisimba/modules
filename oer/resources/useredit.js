@@ -9,6 +9,26 @@
 
 
 var data_string;
+var response;
+
+// Stuff for the captcha
+function init () {
+    $('input_redraw').onclick = function () {
+        redraw();
+    }
+}
+function redraw () {
+    var url = 'index.php';
+    var pars = 'module=security&action=generatenewcaptcha';
+    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+    $('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+    var newData = originalRequest.responseText;
+    $('captchaDiv').innerHTML = newData;
+}
 
 
 /**
@@ -18,14 +38,26 @@ var data_string;
  */
 jQuery(function() {
     
-    jQuery.validator.addMethod(
-        "unescoDate",
-            function(value, element) {
-                // put your own logic here, this is just a (crappy) example
-                return value.match(/^\d\d?\/\d\d?\/\d\d\d\d$/);
-            },
-        "Please enter a date in the format dd/mm/yyyy"
-    );
+    // Create an Ajax method to validate user name is not used
+    jQuery.validator.addMethod("uniqueUserName", function(value, element) {
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=oer&action=checkusernameajax",
+            data: "username="+value,
+            dataType:"html",
+            success: function(msg)
+            {
+                //If username exists, set response to true
+                if (msg == 'true') {
+                    response = false;
+                } else {
+                    response = true;
+                }
+            }
+         })
+         return response;
+    }, "Username is already taken.");
+
 
 
     // Things to do on loading the page.
@@ -47,7 +79,8 @@ jQuery(function() {
                 },
                 username: {
                     required: true,
-                    minlength: 6
+                    minlength: 2,
+                    uniqueUserName: true
                 },
                 password: {
                     required: true,
@@ -56,7 +89,7 @@ jQuery(function() {
                 confirmpassword: {
                     required: true,
                     minlength: 8,
-                    equalTo: "#input_password"
+                    equalTo: "#password"
                 },
                 email: {
                     required: true,
@@ -121,7 +154,8 @@ jQuery(function() {
                 },
                 username: {
                     required: required_field,
-                    minlength: min6
+                    minlength: min6,
+                    uniqueUserName: "Username is already used"
                 },
                 password: {
                     required: required_field,
@@ -130,7 +164,7 @@ jQuery(function() {
                 confirmpassword: {
                     required: required_field,
                     minlength: min8,
-                    equalTo: passnomatch
+                    pwEqual: passnomatch
                 },
                 email: {
                     required: required_field,
