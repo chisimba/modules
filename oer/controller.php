@@ -26,7 +26,8 @@ class oer extends controller {
      */
     function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b",
-            "viewadaptation", "fullviewadaptation", "selfregister", "viewsection");
+            "viewadaptation", "fullviewadaptation", "selfregister", 
+            "viewsection", "checkusernameajax");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -813,14 +814,14 @@ class oer extends controller {
      * @return VOID
      * 
      */
-    public function __checkUsernameAjax() {
+    public function __checkusernameajax() {
         $userName = $this->getParam('username', FALSE);
-        if ($username) {
+        if ($userName) {
             $objUserAdmin = $this->getObject('useradmin_model2', 'security');
-            if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
-                die('unavailable');
+            if ($objUserAdmin->userNameAvailable($userName) == FALSE) {
+                die('true');
             } else {
-                die('available');
+                die('false');
             }
         } else {
             die('errornousername');
