@@ -298,6 +298,15 @@ class oer extends controller {
         $this->setVar("step", "1");
         return "adaptation_tpl.php";
     }
+    // Make New Adaptation from product
+    // Manage adaptations
+    function __makeadaptation() {
+        $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
+        return "makeadaptation_tpl.php";
+    }
 
     function __editadaptationstep2() {
         $id = $this->getParam("id");

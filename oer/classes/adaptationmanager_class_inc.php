@@ -225,6 +225,232 @@ class adaptationmanager extends object {
     }
 
     /**
+     * setup make new adaptation form
+     * @param $id The id of the product
+     * @param $mode Whether its a new adaptation or editing an existing one
+     * return string
+     */
+    public function makeNewAdaptation($id, $mode) {
+        $formStr = '<div class="blueHorizontalStrip"></div>
+    <div class="mainWrapper">
+    	
+        <div class="mainContentHolder">
+        	<div class="subNavigation"></div>
+            <div class="wideTopContentHolderDiv">
+
+                <div class="topHeadingDiv">
+                <div class="breadCrumb tenPixelLeftPadding">
+                	<a href="#" class="pinkTextLink">Product adaptations</a> |
+                    <a href="#" class="greyTextLink">Politechnic of Namibia</a> |
+                    Model Curricula for Journalism
+                </div>
+                </div>
+
+                <div class="topWideAdaptationDiv">
+                    <div class="adaptationsBackgroundColor">
+                    	<div class="adaptationListViewTop tenPixelLeftPadding tenPixelTopPadding eightPixelBottomPadding">
+                            <div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftTopImage">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            </div>
+                            <div class="leftFloatDiv">
+                                <h3><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h3><br>
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+                            </div>
+                    	</div>
+                        <div class="middleAdaptedByIcon">
+                            <img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"><br>
+                            <span class="pinkText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
+                        </div>
+                    <div class="productAdaptationListViewRightColumn">
+                    	<div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftTopImage">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            </div>
+                            <div class="leftFloatDiv">
+                                <h3 class="darkGreyColour">Polytechnic of Namibia</h3><br>
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
+                            </div>
+                    	</div>
+
+
+                    </div>
+                </div>
+
+                    </div>
+                    </div>
+
+
+            </div>
+        	<!-- Left Wide column DIv -->
+            <div class="adaptationsBackgroundColor">
+          	<div class="WideColumnDiv">
+
+              <div class="pageBreadCrumb">
+              	<a href="#" class="greyTextLink">Barchelor</a> |
+                <a href="#" class="greyTextLink">Year 1</a> |
+                <a href="#" class="greyTextLink">Term 1</a> |
+                <span class="greyText">Foundation of Journalism Writing</span><br><br>
+             </div>
+
+                <div class="headingHolder">
+                	<div class="heading"><h2 class="pinkTextLink">Editing:Foundations of Journalism: Writing</h2></div>
+                </div>
+            <div class="contentWideDivThree">
+                  <h4  class="greyText fontBold labelSpacing">Section title (required):</h4>
+                  <input type="text" class="wideInputTextField">
+                  <br>
+        		<br>
+                    <h4  class="greyText fontBold">Current path (required):</h4>
+                    <div class="floatLeftText greyText">Barchelor | Year 1 | Term 1 | Foundation of Journalism Writing</div>
+
+                    <a href=""><img src="skins/oer/images/button-search.png" class="changeImage" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a>
+                    <a href="" class="searchGoLink">CHANGE</a>
+                    <br><br>
+                    <h4  class="greyText fontBold labelSpacing">Section Content (required):</h4>
+                    <textarea name="" class="wysiwig" id="profile"></textarea><br>
+                    <br>
+                    <h4  class="greyText fontBold labelSpacing">Status (required):</h4>
+                    <select name="" class="wysiwigDropDown">
+                    	<option value="">Published</option>
+                    </select>
+
+                    <br><br>
+                    <h4  class="greyText fontBold labelSpacing">Attach file :</h4>
+                    <span class="greyText">Select file:</span> <input type="file" name="" class="fileInput">
+                    <br><br>
+                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    <div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
+                    <br><br>
+                    <div class="uploadedFiles">
+                    	<a href="#" class="uploadedFilesLink">Document 1.pdf</a><br>
+                        <a href="#" class="uploadedFilesLink">Document2.doc</a><br>
+                    </div>
+                    <br><br>
+                    <h4  class="greyText fontBold labelSpacing">Keywords :</h4>
+              			<div class="wideDivider">
+
+                            <div class="floatLeftText">
+                            <table border="0" cellspacing="0" cellpadding="0" class="bottomRTbl">
+                            	<tr>
+                                	<td><span class="greyText fontBold labelSpacing">Add to the</span></td>
+                                    <td>
+                                    	<select name="" class="smallDropDown">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    				<div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
+
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                	<td><span class="greyText fontBold labelSpacing">Add your own</span></td>
+                                    <td><input type="text" class="smallInputBox"></td>
+                                    <td>
+                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    				<div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
+                                    </td>
+                                 </tr>
+                            </table>
+                            </div>
+
+                            <div class="rightKeywordDiv">
+                                <div class="box">
+                                    Gender Ethics
+                                </div>
+                            </div>
+
+
+                            <div class="leftKeywordDiv">
+
+
+
+                        <br>
+                    </div>
+
+                    </div>
+
+                    <div class="wideDivider">
+                    <h4  class="greyText fontBold labelSpacing">Contributed by :</h4>
+                  	<input type="text" class="wideInputTextField">
+                    <br><br>
+              		</div>
+
+                    <div class="wideDivider">
+                    <img src="skins/oer/images/icon-attention.png" width="18" height="18" class="smallLisitngIcons">
+                    <h4  class="greyText fontBold labelSpacing">Adaptation notes : (required)</h4>
+
+                    <textarea name="" class="wideInputTextAreaField"></textarea>
+                    <br>
+                    <br>
+              		</div>
+
+                    <div class="wideDivider rightTextFloat">
+                    	<div class="saveCancelButtonHolder">
+
+                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    	<div class="textNextoSubmitButton"><a href="" class="searchGoLink">CANCEL</a></div>
+                        </div>
+                      <div class="saveCancelButtonHolder">
+
+                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    	<div class="textNextoSubmitButton"><a href="" class="searchGoLink">SAVE</a></div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+
+            </div>
+            </div>
+        <!-- Footer-->
+        <div class="footerDiv">
+        	<div class="footerLinksLists">
+            	<div class="footerLinksHeadings">Links Set One</div>
+                <a href="" class="footerLink">Link 1</a><br>
+                <a href="" class="footerLink">Link 2</a><br>
+                <a href="" class="footerLink">Link 3</a>
+            </div>
+            <div class="footerLinksLists">
+            	<div class="footerLinksHeadings">Links Set Two</div>
+                <a href="" class="footerLink">Link 4</a><br>
+                <a href="" class="footerLink">Link 5</a><br>
+                <a href="" class="footerLink">Link 6</a>
+            </div>
+            <div class="footerLinksLists">
+            	<div class="footerLinksHeadings">Links Set Three</div>
+                <a href="" class="footerLink">Link 7</a><br>
+                <a href="" class="footerLink">Link 8</a><br>
+                <a href="" class="footerLink">Link 9</a>
+            </div>
+            <div class="footerLinksLists">
+            	<div class="footerLinksHeadings">Links Set Four</div>
+                <a href="" class="footerLink">Link 10</a><br>
+                <a href="" class="footerLink">Link 11</a><br>
+                <a href="" class="footerLink">Link 12</a>
+            </div>
+            <div class="footerBottomText">
+            	<img src="images/icon-footer.png" alt="CC" width="80" height="15" class="imageFooterPad">
+                <a href="" class="footerLink">UNESCO</a> |
+                <a href="" class="footerLink">Communication and Information</a> |
+                <a href="" class="footerLink">About OER Platform</a> |
+                <a href="" class="footerLink">F.A.Q.</a> |
+                <a href="" class="footerLink">Glossary</a> |
+                <a href="" class="footerLink">Terms of use</a> |
+                <a href="" class="footerLink">Contact</a> |
+                <a href="" class="footerLink">Sitemap</a>
+            </div>
+        </div>
+    </div>';
+
+        return $formStr;
+    }
+
+    /**
      * this constructs the  form for managing an adaptation
      * @return type FORM
      */
