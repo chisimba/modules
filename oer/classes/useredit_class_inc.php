@@ -83,9 +83,19 @@ class useredit extends object
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
+        $arrayVars['required_field'] = "phrase_requiredfield";
+        $arrayVars['min2'] = "phrase_min2chars";
+        $arrayVars['min6'] = "phrase_min6chars";
+        $arrayVars['min8'] = "phrase_min8chars";
+        $arrayVars['min100'] = "mod_oer_say100";
+        $arrayVars['validemail'] = "phrase_validemail";
+        $arrayVars['validdate'] = "phrase_validdate";
+        $arrayVars['makeselection'] = "phrase_makeselection";
+        $arrayVars['firstchoiceno'] = "phrase_firstchoiceno";
+        $arrayVars['passnomatch'] = "phrase_passwdnotmatch";
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
-        $this->objDbUser = $this->getObject('dbuserextra','oer');
+        $this->objDbUser = $this->getObject('dbuseroer','oer');
          // Load the jquery validate plugin
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
@@ -111,6 +121,23 @@ class useredit extends object
             . $this->buildForm()
             . "</div>";
     }
+    
+    /**
+     *
+     * For editing, load the data according to the ID provided. It
+     * loads the data into object properties.
+     *
+     * @param string $id The id of the record to load
+     * @return boolean TRUE|FALSE
+     * @access private
+     *
+     */
+    private function loadData($res)
+    {
+        foreach($res as $key=>$value) {
+            $this->$key = $value;
+        }
+    }
 
     /**
      *
@@ -132,8 +159,6 @@ class useredit extends object
                   'mod_oer_user_heading_edit',
                   'oer');
                 $ex = "";
-                $id = $this->getParam('id');
-                $this->loadData($id);
                 break;
             case 'selfregister':
                 $h = $this->objLanguage->languageText(
@@ -175,10 +200,24 @@ class useredit extends object
         $this->loadClass('textinput','htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
+        
+        
+        // If it is an edit, go fetch the data.
+        if ($this->mode == 'edit') {
+            $id = $this->getParam('id', FALSE);
+            if ($id) {
+                $res = $this->objDbUser->getForEdit($id);
+                if (is_array($res) && !empty ($res)) {
+                    $this->loadData($res);
+                }
+            }
+
+        }
+        
         
         // Setup table and table headings with input options.
         $table = $this->newObject('htmltable', 'htmlelements');
-        
         // The user title.
         $titlesDropdown = new dropdown('title');
         $titlesLabel = new label(
@@ -190,7 +229,7 @@ class useredit extends object
             $titlesDropdown->addOption($title,$title);
         }
         if ($this->mode == 'edit') {
-            $titlesDropdown->setSelected($this->getParam('title'));
+            $titlesDropdown->setSelected($this->title);
         }
         $table->startRow();
         $table->addCell($titlesLabel->show());
@@ -203,12 +242,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($fnLabel->show());
         $textinput = new textinput('firstname');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('firstname', NULL);
+            $value = $this->firstname;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'firstname';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($fnLabel);
@@ -219,12 +258,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($snLabel->show());
         $textinput = new textinput('surname');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('surname', NULL);
+            $value = $this->surname;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'surname';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($snLabel);
@@ -235,12 +274,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($unLabel->show());
         $textinput = new textinput('username');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('username', NULL);
+            $value = $this->username;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'username';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($unLabel);
@@ -251,13 +290,9 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('password');
-        $textinput->size = 50;
+        $textinput->size = 40;
         $textinput->fldType = 'password';
-        if ($this->mode == 'edit') {
-            $value = $this->getParam('password', NULL);
-            $textinput->setValue($value);
-        }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'password';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -268,13 +303,9 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('confirmpassword');
-        $textinput->size = 50;
+        $textinput->size = 40;
         $textinput->fldType = 'password';
-        if ($this->mode == 'edit') {
-            $value = $this->getParam('confirmpassword', NULL);
-            $textinput->setValue($value);
-        }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'confirmpassword';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -285,12 +316,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('email');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('email', NULL);
+            $value = $this->emailaddress;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'email';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -301,12 +332,10 @@ class useredit extends object
         $sexRadio->addOption('F', $this->objLanguage->languageText('word_female', 'system'));
         $sexRadio->setBreakSpace(' &nbsp; ');
         if ($this->mode == 'edit') {
-            $sexRadio->setSelected($this->getParam('sex'));
+            $sexRadio->setSelected($this->sex);
         } else {
             $sexRadio->setSelected('M');
         }
-        
-
         $label = new label($this->objLanguage->languageText(
           'word_sex'), 'sex');
         $table->startRow();
@@ -320,12 +349,28 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('birthdate');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('birthdate', NULL);
+            $value = $this->birthdate;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'birthdate';
+        $table->addCell($textinput->show());
+        $table->endRow();
+        unset($label);
+        
+        // Address input options.
+        $label = new label($this->objLanguage->languageText(
+          'word_address'), 'address');
+        $table->startRow();
+        $table->addCell($label->show());
+        $textinput = new textinput('address');
+        $textinput->size = 40;
+        if ($this->mode == 'edit') {
+            $value = $this->address;
+            $textinput->setValue($value);
+        }
+        $textinput->cssId = 'address';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -336,12 +381,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('city');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('city', NULL);
+            $value = $this->city;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'city';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -352,11 +397,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('state');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('state', NULL);
+            $value = $this->state;
             $textinput->setValue($value);
         }
+        $textinput->cssId = 'state';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -367,12 +413,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('postalcode');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('postalcode', NULL);
+            $value = $this->postalcode;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'postalcode';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -383,7 +429,7 @@ class useredit extends object
         $label = new label($this->objLanguage->languageText('word_country'));
         $table->addCell($label->show());
         if ($this->mode == 'edit') {
-            $table->addCell($objCountries->countryAlpha($this->getParam('country')));
+            $table->addCell($objCountries->countryAlpha($this->country));
         } else {
             $table->addCell($objCountries->countryAlpha());
         }
@@ -396,12 +442,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('orgcomp');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('orgcomp', NULL);
+            $value = $this->orgcomp;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'orgcomp';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -412,12 +458,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('jobtitle');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('jobtitle', NULL);
+            $value = $this->jobtitle;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'jobtitle';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -428,12 +474,12 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('occupationtype');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('occupationtype', NULL);
+            $value = $this->occupationtype;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'occupationtype';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
@@ -445,12 +491,12 @@ class useredit extends object
         $phoneIcon = "<span class='phone'></span>";
         $table->addCell($label->show());
         $textinput = new textinput('workphone');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('workphone', NULL);
+            $value = $this->workphone;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'workphone';
         $table->addCell($textinput->show() . $phoneIcon);
         $table->endRow();
         unset($label);
@@ -462,12 +508,12 @@ class useredit extends object
         $phoneIcon = "<span class='phone'></span>";
         $table->addCell($label->show());
         $textinput = new textinput('mobilephone');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('mobilephone', NULL);
+            $value = $this->cellnumber;
             $textinput->setValue($value);
         }
-        $textinput->cssClass = 'required';
+        $textinput->cssId = 'mobilephone';
         $table->addCell($textinput->show() . $phoneIcon);
         $table->endRow();
         unset($label);
@@ -478,9 +524,9 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $textinput = new textinput('website');
-        $textinput->size = 50;
+        $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->getParam('website', NULL);
+            $value = $this->website;
             $textinput->setValue($value);
         }
         $table->addCell($textinput->show());
@@ -488,20 +534,18 @@ class useredit extends object
         unset($label);
         
         // About yourself input options.
-        $description = $this->getParam('description', NULL);
         $label = new label($this->objLanguage->languageText(
           'phrase_aboutyou'), 'description');
         $table->startRow();
         $table->addCell($label->show());
-        $editor = $this->newObject('htmlarea', 'htmlelements');
-        $editor->name = 'description';
-        $editor->height = '150px';
-        $editor->width = '500px';
-        $editor->setBasicToolBar();
-        $editor->setContent($description);
+        $editor = new textarea ('description');
+        //$editor->name = 'description';
+        //$editor->height = '150px';
+        //$editor->width = '500px';
+        //$editor->setBasicToolBar();
         if ($this->mode == 'edit') {
-            $value = $this->getParam('description', NULL);
-            $textinput->setValue($value);
+            $description = $this->description;
+            $editor->setContent($description);
         }
         $table->addCell($editor->show());
         $table->endRow();
@@ -525,10 +569,12 @@ class useredit extends object
         $hidMode = new hiddeninput('mode');
         $hidMode->cssId = "mode";
         $hidMode->value = $this->mode;
-        $hiddenFields .= $hidMode->show() . "\n";
+        $hiddenFields .= $hidMode->show() . "\n";      
         $hidId = new hiddeninput('id');
         $hidId->cssId = "id";
-        $hidId->value = $this->getParam('id', NULL);
+        if ($this->mode == 'edit') {
+            $hidId->value = $this->id;
+        }
         $hiddenFields .= $hidId->show() . "\n\n";
         
         // Createform, add fields to it and display.
@@ -537,22 +583,9 @@ class useredit extends object
             $table->show()
           . $hiddenFields
           . $msgArea);
-        return $formData->show();
-    }
-
-    /**
-     *
-     * For editing, load the data according to the ID provided. It
-     * loads the data into object properties.
-     *
-     * @param string $id The id of the record to load
-     * @return boolean TRUE|FALSE
-     * @access private
-     *
-     */
-    private function loadData($id)
-    {
-
+        // Add a div for the error messages
+        $erm = NULL;// '<div id="RegisterErrors" style="display:none"></div>';
+        return $erm . $formData->show();
     }
 
     /**
