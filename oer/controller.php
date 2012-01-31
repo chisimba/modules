@@ -260,6 +260,15 @@ class oer extends controller {
     }
 
     //EDIT Functions
+    // Adaptations home
+    // Manage adaptations
+    function __makeadaptation() {
+        $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
+        return "makeadaptation_tpl.php";
+    }
 
     function __editoriginalproductstep1() {
         $id = $this->getParam("id");
