@@ -207,7 +207,7 @@ jQuery(function() {
                     allow_submit=false;
                 // The captcha has been entered so verify it
                 } else {
-                    alert(jQuery("#captcha").val())
+                    //alert(jQuery("#captcha").val())
                     captcha = jQuery("#captcha").val();
 
                     jQuery.ajax({
