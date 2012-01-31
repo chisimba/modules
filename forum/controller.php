@@ -63,6 +63,7 @@ class forum extends controller {
      *
      */
     public function init() {
+        //trigger_error('*');
         //Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
@@ -124,7 +125,7 @@ class forum extends controller {
 
         // Workgroup Classes
         $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-        $this->usingWorkGroupsFlag = $this->objModuleCatalogue->checkIfRegistered('workgroups');
+        $this->usingWorkGroupsFlag = $this->objModuleCatalogue->checkIfRegistered('workgroup');
         if ($this->usingWorkGroupsFlag) {
             $this->objWorkGroup = & $this->getObject('dbworkgroup', 'workgroup');
             $this->objWorkGroupUser = & $this->getObject('dbworkgroupusers', 'workgroup');
@@ -448,7 +449,7 @@ class forum extends controller {
 
         // Get Order and Sorting Values
         $order = $this->getParam('order', $this->getSession('sortorder', 'date'));
-       
+
         $direction = $this->getParam('direction', $this->getSession('sortdirection', 'asc'));
 
 
