@@ -74,7 +74,7 @@ class workgroup extends controller {
         // 2. load the data object (calls the magical getObject which finds the
         //    appropriate file, includes it, and either instantiates the object,
         //    or returns the existing instance if there is one. In this case we
-        //    are not actually getting a data object, just a helper to the 
+        //    are not actually getting a data object, just a helper to the
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
@@ -207,7 +207,16 @@ class workgroup extends controller {
         //}
         //$lecturers = $groups->getGroupUsers($gid, array('userId',"'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
         //EDIT THIS ION MONDAY!!!!!!!!
-        $lecturers = $groups->getGroupUsers($gid, array('userId', "'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+        $lecturers_ = $groups->getGroupUsers($gid, array('userId', "'firstname' || ' ' || 'surname' AS fullname"), "ORDER BY fullname");
+        $lecturers = array();
+        foreach ($lecturers_ as $lecturer){
+            $fullname = $lecturer['firstname'].' '.$lecturer['surname'];
+            $lecturers[$fullname] = array(
+                'userid'=>$lecturer['userid'],
+                'fullname'=>$fullname
+            );
+        }
+        ksort($lecturers);
         $this->setVar('lecturers', $lecturers);
 
         return "main_tpl.php";
