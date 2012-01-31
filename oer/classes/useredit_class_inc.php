@@ -117,12 +117,13 @@ class useredit extends object
     public function show()
     {
         $action = $this->getParam('action', FALSE);
+        $mode = $this->getParam('mode', FALSE);
         if ($action) {
             // This requires login so its OK not to have additional security
-            if ($action == 'edit' || $action=='add') {
+            if ($mode == 'edit' || $action=='add') {
                 return $this->showForLoggedIn();
             // This is open to not logged in users, so it needs extra security
-            } elseif ($action == 'selfregister') {
+            } elseif ($action == 'selfregister' && $mode == 'selfregister') {
                 return $this->showForNotLoggedIn();
             } 
         } 
@@ -596,6 +597,24 @@ class useredit extends object
         $table->endRow();
         unset($label);
         
+        // If we need more security as it is a self register.
+        if ($moreSecure == TRUE) {
+            // Create a nonce
+
+           
+            // Add the captcha to the form
+            $img = '<br /><img id="img_captcha" src="index.php?module=oer&action=showcaptcha" />';
+            $table->startRow();
+            $table->addCell("");
+            // Get a text input for the captcha
+            $objInput = new textinput('captcha', '', 'text','15');
+            $objInput->setId('captcha');
+            $table->addCell("<span class='captcha-image'>" . $img 
+              . "</span><span class='captcha-input'>" 
+              . $objInput->show() . "</span>");
+            $table->endRow();
+        }
+        
         // Save button.
         $table->startRow();
         $table->addCell("&nbsp;");
@@ -606,42 +625,10 @@ class useredit extends object
         $table->addCell($button->show());
         $table->endRow();
         
-        // If we need more security as it is a self register.
-        if ($moreSecure) {
-            // Create a nonce
-            
-            // Get a captcha
-            
-            
-        }
+
 
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        
-        // Add captcha to the form.
-        $objPrototype = $this->newObject('prototype','prototype');
-        $this->appendArrayVar('headerParams', $objPrototype->show());
-        $objCaptcha = $this->getObject('captcha', 'utilities');
-        $captcha = new textinput('request_captcha');
-        $captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
-        $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend = 'Verify Image';
-        $required = '<span class="required_field"> * '
-          . $this->objLanguage->languageText(
-            'word_required', 'system', 'Required')
-          . '</span>';
-        $fieldset->contents = stripslashes(
-          $this->objLanguage->languageText(
-            'mod_security_explaincaptcha', 'security', 
-            'To prevent abuse, please enter the code as shown 
-             below. If you are unable to view the code, click 
-             on "Redraw" for a new one.'))
-          . '<br /><div id="captchaDiv">'
-          . $objCaptcha->show() . '</div>' 
-          . $captcha->show() . $required 
-          . '  <a href="javascript:redraw();">'
-          .$this->objLanguage->languageText('word_redraw', 'security', 'Redraw')
-          .'</a>';
 
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";
@@ -658,14 +645,12 @@ class useredit extends object
         
         // Createform, add fields to it and display.
         $formData = new form('edituser', NULL);
+        //$formData = new form('edituser', 'index.php?module=oer&action=userdetailssave');
         $formData->addToForm(
             $table->show()
-          . $fieldset->show()
           . $hiddenFields
           . $msgArea);
-        // Add a div for the error messages
-        $erm = NULL;// '<div id="RegisterErrors" style="display:none"></div>';
-        return $erm . $formData->show();
+        return $formData->show();
     }
 
     /**

@@ -10,26 +10,11 @@
 
 var data_string;
 var response;
-
-// Stuff for the captcha
-function init () {
-    $('input_redraw').onclick = function () {
-        redraw();
-    }
-}
-function redraw () {
-    var url = 'index.php';
-    var pars = 'module=security&action=generatenewcaptcha';
-    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-function showLoad () {
-    $('load').style.display = 'block';
-}
-function showResponse (originalRequest) {
-    var newData = originalRequest.responseText;
-    $('captchaDiv').innerHTML = newData;
-}
-
+var captcha;
+var captcha_img;
+var allow_submit=true;
+var redirect=false;
+var redirection;
 
 /**
  *
@@ -38,7 +23,7 @@ function showResponse (originalRequest) {
  */
 jQuery(function() {
     
-    // Create an Ajax method to validate user name is not used
+    //Create an Ajax method to validate user name is not used
     jQuery.validator.addMethod("uniqueUserName", function(value, element) {
         jQuery.ajax({
             type: "POST",
@@ -212,29 +197,72 @@ jQuery(function() {
     jQuery("#form_edituser").submit(function(e) {
         if(jQuery("#form_edituser").valid()){ 
             e.preventDefault();
-            jQuery("#submitUser").attr("disabled", "disabled");
-            jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
-            data_string = jQuery("#form_edituser").serialize();
-            jQuery.ajax({
-                url: 'index.php?module=oer&action=userdetailssave',
-                type: "POST",
-                data: data_string,
-                success: function(msg) {
-                    alert(msg);
-                    jQuery("#submitUser").attr("disabled", "");
-                    if(msg !== "ERROR_DATA_INSERT_FAIL") {
-                        // Update the information area 
-                        // (msg is the id of the record on success)
-                        jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');
-                        // Change the id field to be the id that is returned as msg & mode to edit
-                        jQuery("#id").val(msg);
-                        jQuery("#mode").val('edit');
-                    } else {
-                        //alert(msg);
-                        jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');
-                    }
+            if (jQuery("#captcha").length){
+                redirect = true;
+                redirection = '';
+                // The captcha has not been entered so disable submit.
+                if (jQuery("#captcha").val() == "") {
+                    //alert("novalue");
+                    jQuery("#save_results").html('<span class="error">Please enter the captcha. You left it blank.</span>');//.fadeOut('5000');
+                    allow_submit=false;
+                // The captcha has been entered so verify it
+                } else {
+                    alert(jQuery("#captcha").val())
+                    captcha = jQuery("#captcha").val();
+
+                    jQuery.ajax({
+                        url: 'index.php?module=oer&action=verifycaptcha',
+                        type: "POST",
+                        data: 'captcha='+captcha,
+                        success: function(msg) {
+                            if (msg !== 'ok') {
+                                allow_submit=false;
+                                jQuery("#save_results").html('<span class="error">Invalid captcha: ' + msg + '. Please try again.</span>');//.fadeOut('5000');
+                                // Reset the captcha.
+                                captcha_img = "index.php?module=oer&action=showcaptcha";
+                                jQuery("#img_captcha").attr("src", captcha_img);
+                                jQuery("#captcha").val("");
+                                // Now how do I stop the form from submitting???????/
+                            } else {
+                                allow_submit=true;
+                            }
+
+                        }
+
+                    });
                 }
-            });
+            }
+            alert("ALLOWED: "+allow_submit);
+            if (allow_submit==true) {
+                jQuery("#submitUser").attr("disabled", "disabled");
+                jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
+                data_string = jQuery("#form_edituser").serialize();
+                jQuery.ajax({
+                    url: 'index.php?module=oer&action=userdetailssave',
+                    type: "POST",
+                    data: data_string,
+                    success: function(msg) {
+                        //alert(msg);
+                        jQuery("#submitUser").attr("disabled", "");
+                        if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                            if (redirect == true) {
+                                // Redirect after anonymous save
+                                window.location = 'index.php?module=oer';
+                            } else {
+                                // Update the information area 
+                                // (msg is the id of the record on success)
+                                jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');//.fadeOut('5000');
+                                // Change the id field to be the id that is returned as msg & mode to edit
+                                jQuery("#id").val(msg);
+                                jQuery("#mode").val('edit');
+                            }
+                        } else {
+                            //alert(msg);
+                            jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
+                        }
+                    }
+                });
+            }
         }
     });
 });

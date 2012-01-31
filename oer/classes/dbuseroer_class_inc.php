@@ -106,14 +106,16 @@ class dbuseroer extends dbtable {
     private function loadData($sanityCheck=FALSE)
     {
         if ($sanityCheck) {
-            $objSanity = $this->getObject('sanitize', 'security');
+            $objSanity = $this->getObject('sanitizevars', 'security');
         }
         foreach($this->fieldsAr as $field) {
             if ($sanityCheck) {
-                $field = $this->getParam($field, NULL);
-                // No fields in the querystring
-                $objSanity->disallowQuerystringFormElements($this->fieldsAr);
-                $this->$field = $objSanity->sanitize($value, FALSE, TRUE);
+                $strValue = $this->getParam($field, NULL);
+                if ($strValue!==NULL) {
+                    // No fields in the querystring
+                    $objSanity->disallowQuerystringFormElements($this->fieldsAr);
+                    $this->$field = $objSanity->sanitize($strValue, FALSE, TRUE);
+                }
             } else {
                 $this->$field = $this->getParam($field, NULL);
             }
