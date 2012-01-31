@@ -93,6 +93,8 @@ class useredit extends object
         $arrayVars['makeselection'] = "mod_oer_makeselection";
         $arrayVars['firstchoiceno'] = "mod_oer_firstchoiceno";
         $arrayVars['passnomatch'] = "mod_oer_passwdnotmatch";
+        $arrayVars['nofirstchoice'] = "mod_oer_nofirstchoice";
+        $arrayVars['usernametaken'] = "mod_oer_usernametaken";
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
         $this->objDbUser = $this->getObject('dbuseroer','oer');
@@ -253,7 +255,7 @@ class useredit extends object
         if ($this->mode == 'edit') {
             $id = $this->getParam('id', FALSE);
             if ($id) {
-                $res = $this->objDbUser->getForEdit($id);
+                $res = $this->objDbUsr->getForEdit($id);
                 if (is_array($res) && !empty ($res)) {
                     $this->loadData($res);
                 }
@@ -269,10 +271,15 @@ class useredit extends object
         $titlesLabel = new label(
           $this->objLanguage->languageText('word_title', 'system'),
           'input_title');
-        $titles=array("title_mr", "title_miss", "title_mrs", "title_ms", "title_dr", "title_prof", "title_rev", "title_assocprof");
+        $titles=array("title_chooseone", "title_mr", "title_miss", "title_mrs", "title_ms", "title_dr", "title_prof", "title_rev", "title_assocprof");
         foreach ($titles as $title) {
-            $title=trim($this->objLanguage->languageText($title));
-            $titlesDropdown->addOption($title,$title);
+            $titleForDd = trim($this->objLanguage->languageText($title));
+            if ($title == "title_chooseone") {
+                //die($title);
+                $titlesDropdown->addOption("none",$titleForDd);
+            } else {
+                $titlesDropdown->addOption($titleForDd,$titleForDd);
+            }
         }
         if ($this->mode == 'edit') {
             $titlesDropdown->setSelected($this->title);

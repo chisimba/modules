@@ -42,6 +42,12 @@ jQuery(function() {
          })
          return response;
     }, "Username is already taken.");
+    
+    jQuery.validator.addMethod('notNone', 
+        function(value, element) {
+            return (value != 'none');
+        }, 'Please select an option.'
+    );
 
 
 
@@ -53,6 +59,7 @@ jQuery(function() {
             // JUST MAKE ALL THE MESSAGES SIMPLE, SHORT - required
             rules: {
                 title: {
+                    notNone: true
                 }, 
                 firstname: {
                     required: true,
@@ -129,6 +136,9 @@ jQuery(function() {
             },
             
             messages: {
+                title: {
+                    notNone: nofirstchoice
+                },
                 firstname: {
                     required: required_field, 
                     minlength: min2
@@ -140,7 +150,7 @@ jQuery(function() {
                 username: {
                     required: required_field,
                     minlength: min6,
-                    uniqueUserName: "Username is already used"
+                    uniqueUserName: usernametaken
                 },
                 password: {
                     required: required_field,
@@ -232,7 +242,6 @@ jQuery(function() {
                     });
                 }
             }
-            alert("ALLOWED: "+allow_submit);
             if (allow_submit==true) {
                 jQuery("#submitUser").attr("disabled", "disabled");
                 jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
