@@ -11,6 +11,9 @@ class block_adaptationslisting extends object {
 
     public function init() {
         $this->loadClass("link", "htmlelements");
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title= "";
+
     }
 
     public function show() {

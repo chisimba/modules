@@ -878,7 +878,7 @@ class adaptationmanager extends object {
         $originalProducts = $this->dbproducts->getAdaptedProducts();
 
 
-        $controlBand.=
+        $controlBand=
                 '<div id="originalproducts_controlband">';
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';

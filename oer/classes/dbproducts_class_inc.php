@@ -91,7 +91,5 @@ class dbproducts extends dbtable {
     function deleteOriginalProduct($id) {
         $this->delete("id", $id);
     }
-
 }
-
 ?>

@@ -105,7 +105,5 @@ class dbinstitutiontypes extends dbtable {
         $typeID=$this->getArray($sql);
         return $typeID[0]['id'];
     }
-
 }
-
 ?>

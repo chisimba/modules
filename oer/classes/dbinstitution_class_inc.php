@@ -276,7 +276,5 @@ class dbinstitution extends dbtable {
         $id = $this->getArray($sql);
         return $id;
     }
-
 }
-
 ?>

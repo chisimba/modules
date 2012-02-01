@@ -52,7 +52,7 @@ class viewadaptation extends object {
 
         //Link for - Full view of product
         $fullProdViewLink = new link($this->uri(array("action" => "fullviewadaptation", "id" => $productId)));
-        $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
+        $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_productfullinfo', 'oer');
         $fullProdView = $fullProdViewLink->show();
 
         $sections = "";
@@ -144,15 +144,15 @@ class viewadaptation extends object {
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $fullProdView . '</div>', "", "top", "left", "", 'style="width:55%"');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $newAdapt . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
-        $table->endRow();
-        $table->startRow();
-        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $fullProdView . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
 
         $table->startRow();
