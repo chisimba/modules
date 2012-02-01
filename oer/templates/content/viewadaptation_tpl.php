@@ -3,8 +3,9 @@ ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
 // objects that almost every template will use
-$objSysConfig = $this->getObject('altconfig', 'config');
 /*
+//$objSysConfig = $this->getObject('altconfig', 'config');
+
 //Get packages dir name
 $modPath = $objConfig->getItem("MODULE_URI");
 
