@@ -123,7 +123,7 @@ class oeruserdata extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'selfregister');
+        $action=$this->getParam('action', 'view');
         /*
         * Convert the action into a method (alternative to 
         * using case selections)
@@ -266,10 +266,11 @@ class oeruserdata extends controller
 
     /**
      * 
-     * Save the userdetails data and return resulting Id to be used by Ajax
+     * Save the userdetails data and return resulting Id to be 
+     * used by Ajax
      * 
      * @access public
-     * @ return VOID
+     * @return VOID
      * 
      */
     public function __userdetailssave() {

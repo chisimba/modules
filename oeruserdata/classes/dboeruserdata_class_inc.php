@@ -233,18 +233,16 @@ class dboeruserdata extends dbtable {
      */
     public function getForEdit($id)
     {
-        $sql = "SELECT tbl_users.*, tbl_oeruserdata_userextra.parentid, "
-          . "tbl_oeruserdata_userextra.birthdate, tbl_oeruserdata_userextra.address, "
-          . "tbl_oeruserdata_userextra.city, tbl_oeruserdata_userextra.state, " 
-          . "tbl_oeruserdata_userextra.postalcode, tbl_oeruserdata_userextra.orgcomp, "
-          . "tbl_oeruserdata_userextra.jobtitle, tbl_oeruserdata_userextra.occupationtype, "
-          . "tbl_oeruserdata_userextra.workphone, tbl_oeruserdata_userextra.description, "
-          . "tbl_oeruserdata_userextra.website  \n"
-          . "FROM tbl_users, tbl_oeruserdata_userextra \n"
-          . "WHERE tbl_oeruserdata_userextra.parentid = tbl_users.id\n"
-          . "AND tbl_users.id = '$id'";
+        $sql = "SELECT tbl_users.* FROM tbl_users LEFT OUTER JOIN "
+          . "tbl_oeruserdata_userextra ON tbl_oeruserdata_userextra.parentid "
+          . "= tbl_users.id WHERE tbl_users.id = '$id'";
         $res = $this->getArray($sql);
-        return $res[0];
+        if (!empty ($res)) {
+            return $res[0];
+        } else {
+            return FALSE;
+        }
+        
     }
     
     /**

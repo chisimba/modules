@@ -1,10 +1,11 @@
 <?php
 /**
  *
- * Block for editing or adding users
+ * Wideblock for administrative listing of users
  *
- * A block for editing or adding users that can 
- * be rendered using a JSON template.
+ * A wideblock for administrative listing of users so that they can be 
+ * explored or edited by an administrative user or memeber of the
+ * Usermanagers group
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,10 +42,11 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Block for editing or adding users
+ * Wideblock for administrative listing of users
  *
- * A block for editing or adding users that can 
- * be rendered using a JSON template.
+ * A wideblock for administrative listing of users so that they can be 
+ * explored or edited by an administrative user or memeber of the
+ * Usermanagers group
  *
  * @category  Chisimba
  * @author    Derek Keats derek@dkeats.com
@@ -52,7 +54,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_useredit extends object
+class block_userlister extends object
 {
     /**
      *
@@ -75,7 +77,7 @@ class block_useredit extends object
     {
         // We don't need a title in this block.
         $this->title = NULL;
-        $this->objLanguage = $this->getObject('language', 'language');
+        //mod_oeruserdata_linksttl
     }
     /**
      *
@@ -87,15 +89,8 @@ class block_useredit extends object
      */
     public function show() 
     {
-        $objUserEditForm = $this->getObject('useredit','oeruserdata');
-        $ret = $objUserEditForm->show();
-        if ($ret) {
-            return $ret;
-        } else {
-            $title = $this->objLanguage->languageText('mod_oeruserdata_nopermtitle', 'oeruserdata');
-            $txt = $this->objLanguage->languageText('mod_oeruserdata_noperm', 'oeruserdata');
-            return "<h1>$title</h1><span class='warning'>$txt</span>";
-        }
+        $objUb = $this->getObject('userblocks','oeruserdata');
+        return $objUb->showUserList();
     }
 }
 ?>

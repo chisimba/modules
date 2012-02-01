@@ -80,6 +80,7 @@ class useredit extends object
     public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oeruserdata_status_success";
         $arrayVars['status_fail'] = "mod_oeruserdata_status_fail";
@@ -106,6 +107,8 @@ class useredit extends object
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('useredit.js',
           'oeruserdata'));
+        // Get the mode from the querystring
+        $this->mode = $this->getParam('mode', 'add');
     }
 
     /**
@@ -121,7 +124,7 @@ class useredit extends object
         $action = $this->getParam('action', FALSE);
         if ($action) {
             // This requires login so its OK not to have additional security
-            if ($action == 'edit' || $action=='add') {
+            if ($action == 'edituser' || $action=='adduser') {
                 return $this->showForLoggedIn();
             // This is open to not logged in users, so it needs extra security
             } elseif ($action == 'selfregister') {
@@ -140,10 +143,16 @@ class useredit extends object
      */
     private function showForLoggedIn()
     {
-        return $this->makeHeading() 
-          . "<div class='formwrapper'>"
-          . $this->buildForm()
-          . "</div>";
+        $form = $this->buildForm();
+        if ($form) {
+            return $this->makeHeading() 
+              . "<div class='formwrapper'>"
+              . $form
+              . "</div>";
+        } else {
+            return FALSE;
+        }
+
     }
     
     /**
@@ -156,17 +165,20 @@ class useredit extends object
      */
     private function showForNotLoggedIn()
     {
-        $objUser = $this->getObject('user', 'security');
-        if ($objUser->isLoggedIn()) {
-            return $this->showForLoggedIn();
-        } else  {
-            return $this->makeHeading() 
-              . "<div class='formwrapper'>"
-              // Build the form with a captcha.
-              . $this->buildForm(TRUE)
-              . "</div>";
-        }
+        $userId = $this->objUser->userId();
         
+        $objGa = $this->getObject('gamodel','groupadmin');
+        $edGroup = $objGa->isGroupMember($userId, "Usermanagers");
+        if ($this->objUser->isLoggedIn()) {
+            if (!$this->objUser->isAdmin() && !$edGroup ) {
+                return FALSE;
+            }
+        }
+        return $this->makeHeading() 
+          . "<div class='formwrapper'>"
+          // Build the form with a captcha.
+          . $this->buildForm(TRUE)
+          . "</div>";
     }
     
     /**
@@ -198,8 +210,7 @@ class useredit extends object
     {
         // Load a heading class.
         $this->loadClass('htmlheading', 'htmlelements');
-        // Get heading based on whether it is edit or add.
-        $this->mode = $this->getParam('mode', 'add');
+        // Depends on the mode from the querystring.
         switch($this->mode) {
             case 'edit':
                 $h = $this->objLanguage->languageText(
@@ -249,14 +260,23 @@ class useredit extends object
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         
-        
         // If it is an edit, go fetch the data.
         if ($this->mode == 'edit') {
+           
             $id = $this->getParam('id', FALSE);
             if ($id) {
-                $res = $this->objDbUsr->getForEdit($id);
-                if (is_array($res) && !empty ($res)) {
-                    $this->loadData($res);
+                // See if they are allowed to edit it
+                $eUserId = $this->objUser->getItemFromPkId($id,'userid');
+                $myUserId = $this->objUser->userId();
+                if ($eUserId == $myUserId || $this->objUser->isAdmin()) {
+                    $objDbUsr = $this->getObject('dboeruserdata','oeruserdata');
+                    $res = $objDbUsr->getForEdit($id);
+                    if (is_array($res) && !empty ($res)) {
+                        $this->loadData($res);
+                    }
+                } else {
+                    // Return false if they are not allowed to edit.
+                    return FALSE;
                 }
             }
 
@@ -281,7 +301,9 @@ class useredit extends object
             }
         }
         if ($this->mode == 'edit') {
-            $titlesDropdown->setSelected($this->title);
+            if (isset($this->title)){ 
+                $titlesDropdown->setSelected($this->title);
+            }
         }
         $table->startRow();
         $table->addCell($titlesLabel->show());
@@ -296,8 +318,10 @@ class useredit extends object
         $textinput = new textinput('firstname');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->firstname;
-            $textinput->setValue($value);
+            if (isset($this->firstname)){ 
+                $value = $this->firstname;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'firstname';
         $table->addCell($textinput->show());
@@ -312,8 +336,10 @@ class useredit extends object
         $textinput = new textinput('surname');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->surname;
-            $textinput->setValue($value);
+            if (isset($this->surname)){ 
+                $value = $this->surname;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'surname';
         $table->addCell($textinput->show());
@@ -328,8 +354,10 @@ class useredit extends object
         $textinput = new textinput('username');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->username;
-            $textinput->setValue($value);
+            if (isset($this->username)){ 
+                $value = $this->username;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'username';
         $table->addCell($textinput->show());
@@ -384,7 +412,9 @@ class useredit extends object
         $sexRadio->addOption('F', $this->objLanguage->languageText('word_female', 'system'));
         $sexRadio->setBreakSpace(' &nbsp; ');
         if ($this->mode == 'edit') {
-            $sexRadio->setSelected($this->sex);
+            if (isset($this->sex)){ 
+                $sexRadio->setSelected($this->sex);
+            }
         } else {
             $sexRadio->setSelected('M');
         }
@@ -403,8 +433,10 @@ class useredit extends object
         $textinput = new textinput('birthdate');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->birthdate;
-            $textinput->setValue($value);
+            if (isset($this->birthdate)){
+                $value = $this->birthdate;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'birthdate';
         $table->addCell($textinput->show());
@@ -419,8 +451,10 @@ class useredit extends object
         $textinput = new textinput('address');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->address;
-            $textinput->setValue($value);
+            if (isset($this->address)){ 
+                $value = $this->address;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'address';
         $table->addCell($textinput->show());
@@ -435,8 +469,10 @@ class useredit extends object
         $textinput = new textinput('city');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->city;
-            $textinput->setValue($value);
+            if (isset($this->city)){ 
+                $value = $this->city;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'city';
         $table->addCell($textinput->show());
@@ -451,8 +487,10 @@ class useredit extends object
         $textinput = new textinput('state');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->state;
-            $textinput->setValue($value);
+            if (isset($this->state)){
+                $value = $this->state;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'state';
         $table->addCell($textinput->show());
@@ -467,8 +505,10 @@ class useredit extends object
         $textinput = new textinput('postalcode');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->postalcode;
-            $textinput->setValue($value);
+            if (isset($this->postalcode)){
+                $value = $this->postalcode;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'postalcode';
         $table->addCell($textinput->show());
@@ -481,7 +521,11 @@ class useredit extends object
         $label = new label($this->objLanguage->languageText('word_country'));
         $table->addCell($label->show());
         if ($this->mode == 'edit') {
-            $table->addCell($objCountries->countryAlpha($this->country));
+            if (isset($this->country)){
+                $table->addCell($objCountries->countryAlpha($this->country));
+            } else {
+                $table->addCell($objCountries->countryAlpha());
+            }
         } else {
             $table->addCell($objCountries->countryAlpha());
         }
@@ -496,8 +540,10 @@ class useredit extends object
         $textinput = new textinput('orgcomp');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->orgcomp;
-            $textinput->setValue($value);
+            if (isset($this->orgcomp)){
+                $value = $this->orgcomp;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'orgcomp';
         $table->addCell($textinput->show());
@@ -512,8 +558,10 @@ class useredit extends object
         $textinput = new textinput('jobtitle');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->jobtitle;
-            $textinput->setValue($value);
+            if (isset($this->jobtitle)){
+                $value = $this->jobtitle;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'jobtitle';
         $table->addCell($textinput->show());
@@ -528,8 +576,10 @@ class useredit extends object
         $textinput = new textinput('occupationtype');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->occupationtype;
-            $textinput->setValue($value);
+            if (isset($this->occupationtype)){
+                $value = $this->occupationtype;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'occupationtype';
         $table->addCell($textinput->show());
@@ -545,8 +595,10 @@ class useredit extends object
         $textinput = new textinput('workphone');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->workphone;
-            $textinput->setValue($value);
+            if (isset($this->workphone)){
+                $value = $this->workphone;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'workphone';
         $table->addCell($textinput->show() . $phoneIcon);
@@ -562,8 +614,10 @@ class useredit extends object
         $textinput = new textinput('mobilephone');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->cellnumber;
-            $textinput->setValue($value);
+            if (isset($this->cellnumber)){
+                $value = $this->cellnumber;
+                $textinput->setValue($value);
+            }
         }
         $textinput->cssId = 'mobilephone';
         $table->addCell($textinput->show() . $phoneIcon);
@@ -578,8 +632,10 @@ class useredit extends object
         $textinput = new textinput('website');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            $value = $this->website;
-            $textinput->setValue($value);
+            if (isset($this->website)){
+                $value = $this->website;
+                $textinput->setValue($value);
+            }
         }
         $table->addCell($textinput->show());
         $table->endRow();
@@ -596,8 +652,10 @@ class useredit extends object
         //$editor->width = '500px';
         //$editor->setBasicToolBar();
         if ($this->mode == 'edit') {
-            $description = $this->description;
-            $editor->setContent($description);
+            if (isset($this->description)){
+                $description = $this->description;
+                $editor->setContent($description);
+            }
         }
         $table->addCell($editor->show());
         $table->endRow();
@@ -657,24 +715,6 @@ class useredit extends object
           . $hiddenFields
           . $msgArea);
         return $formData->show();
-    }
-
-    /**
-     *
-     * Get a parameter from the object properties as set by loadData()
-     *
-     * @param string $paramName The object property to retrieve
-     * @return string The parameter value
-     * @access private
-     *
-     */
-    private function getValue($paramName)
-    {
-        if (isset ($this->$paramName)) {
-            return $this->$paramName;
-        } else {
-            return NULL;
-        }
     }
 }
 ?>
