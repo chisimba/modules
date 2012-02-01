@@ -4,11 +4,13 @@ $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
 // objects that almost every template will use
 $objSysConfig = $this->getObject('altconfig', 'config');
+/*
 //Get packages dir name
 $modPath = $objConfig->getItem("MODULE_URI");
 
 $this->appendArrayVar( 'headerParams', '<link rel="stylesheet"
     href="'.$modPath.'oer/resources/adaptations.css" type="text/css" media="all" />');
+*/
 ?>
 <div id="twocolumn">
    
