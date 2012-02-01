@@ -121,7 +121,7 @@ class viewadaptation extends object {
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
-            <div id="viewadaptation_text"><h2 class="pinkText">' . $instData['name'] . '</h2></div><br/><br/>';
+            <div id="viewadaptation_text"></div><div class="pinkText">' . $instData['name'] . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>

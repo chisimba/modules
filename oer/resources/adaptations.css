@@ -1,0 +1,19 @@
+/* 
+    Document   : adaptations
+    Created on : 01 Feb 2012, 9:55:23 PM
+    Author     : paul
+    Description:
+        Contains product adaptation styles
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+#viewadaptation_label{
+    font-size: 12px;
+    font-weight: bold;
+}
+#pinkText {
+    font-size: 11px;
+}
