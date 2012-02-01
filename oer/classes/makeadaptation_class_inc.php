@@ -76,14 +76,6 @@ class makeadaptation extends object {
     }
 
     /**
-     * used for deleting an original product 
-     */
-    function deleteOriginalProduct() {
-        $id = $this->getParam("id");
-        $this->dbproducts->deleteOriginalProduct($id);
-    }
-
-    /**
      * Validates the contents of new adaptation field values in step 1. If all are valid, these
      * are save, else the form is returned with the errors highlighted
      * @return type

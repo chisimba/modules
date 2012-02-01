@@ -18,6 +18,7 @@ class adaptationmanager extends object {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
         $this->dbInstitution = $this->getObject("dbinstitution", "oer");
+        $this->dbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->dbproducts = $this->getObject("dbproducts", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -132,13 +133,13 @@ class adaptationmanager extends object {
                             </div>
                             <div class="leftFloatDiv">
                                 <h3><a href="#" class="adaptationListingLink">Model Curricula for Journalism</a></h3><br>
-                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') . '" width="18" height="18" class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
                             </div>
                     	</div>
                         <div class="middleAdaptedByIcon">
-                            <img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"><br>
-                            <span class="pinkText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
+                            <img src="skins/oer/images/icon-adapted-by.png" alt="' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" width="24" height="24"><br>
+                            <span class="pinkText">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '</span>
                         </div>
                     <div class="productAdaptationListViewRightColumn">
                     	<div class="productAdaptationViewLeftColumnTop">
@@ -147,7 +148,7 @@ class adaptationmanager extends object {
                             </div>
                             <div class="leftFloatDiv">
                                 <h3 class="darkGreyColour">Polytechnic of Namibia</h3><br>
-                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') . '" width="18" height="18" class="smallLisitngIcons">
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="productsLink">Full view of product</a></div>
                             </div>
                     	</div>
@@ -183,7 +184,7 @@ class adaptationmanager extends object {
                     <h4  class="greyText fontBold">Current path (required):</h4>
                     <div class="floatLeftText greyText">Barchelor | Year 1 | Term 1 | Foundation of Journalism Writing</div>
 
-                    <a href=""><img src="skins/oer/images/button-search.png" class="changeImage" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a>
+                    <a href=""><img src="skins/oer/images/button-search.png" class="changeImage" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a>
                     <a href="" class="searchGoLink">CHANGE</a>
                     <br><br>
                     <h4  class="greyText fontBold labelSpacing">Section Content (required):</h4>
@@ -198,7 +199,7 @@ class adaptationmanager extends object {
                     <h4  class="greyText fontBold labelSpacing">Attach file :</h4>
                     <span class="greyText">Select file:</span> <input type="file" name="" class="fileInput">
                     <br><br>
-                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a></div>
                     <div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
                     <br><br>
                     <div class="uploadedFiles">
@@ -219,7 +220,7 @@ class adaptationmanager extends object {
                                         </select>
                                     </td>
                                     <td>
-                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a></div>
                     				<div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
 
                                      </td>
@@ -228,7 +229,7 @@ class adaptationmanager extends object {
                                 	<td><span class="greyText fontBold labelSpacing">Add your own</span></td>
                                     <td><input type="text" class="smallInputBox"></td>
                                     <td>
-                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                                    <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a></div>
                     				<div class="textNextoSubmitButton"><a href="" class="searchGoLink">ADD</a></div>
                                     </td>
                                  </tr>
@@ -269,12 +270,12 @@ class adaptationmanager extends object {
                     <div class="wideDivider rightTextFloat">
                     	<div class="saveCancelButtonHolder">
 
-                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a></div>
                     	<div class="textNextoSubmitButton"><a href="" class="searchGoLink">CANCEL</a></div>
                         </div>
                       <div class="saveCancelButtonHolder">
 
-                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="'.$this->objLanguage->languageText('word_search', 'system').'"></a></div>
+                        <div class="buttonSubmit"><a href=""><img src="skins/oer/images/button-search.png" alt="' . $this->objLanguage->languageText('word_search', 'system') . '"></a></div>
                     	<div class="textNextoSubmitButton"><a href="" class="searchGoLink">SAVE</a></div>
                       </div>
                     </div>
@@ -911,6 +912,10 @@ class adaptationmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
+            //Get parent product related data(institution, institution type)
+            $parentData = $this->dbproducts->getProduct($originalProduct['parent_id']);
+            $institutionData = $this->dbInstitution->getInstitutionById($originalProduct['institutionid']);
+            $institutionTypeName = $this->dbInstitutionType->getInstitutionTypeName($institutionData['type']);
             $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($originalProduct['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
@@ -919,204 +924,217 @@ class adaptationmanager extends object {
             $link->link = $thumbnail . '<br/>';
             $product = $link->show();
 
-            $link->link = $originalProduct['title'];
+            $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
             $link->cssClass = 'original_product_listing_title';
             $product.= $link->show();
-            if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $editImg = '<img src="skins/oer/images/icons/edit.png">';
-                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-
-                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
-                $adaptLink->link = $adaptImg;
-                $product.="<br />" . $adaptLink->show();
-
-                $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "edit")));
-                $editLink->link = $editImg;
-                $product.="&nbsp;" . $editLink->show();
-
-                $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
-                $deleteLink->link = $deleteImg;
-                $deleteLink->cssClass = "deleteoriginalproduct";
-                $product.="&nbsp;" . $deleteLink->show();
+            $product.= "<br /><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . "</div>";
+            $product.= "<br /><div id='institutionva'>" . $institutionData['name'] . "</div>";
+            $product.= "<br /><div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
+            //Display language if english, todo, allow other language items
+            if (!empty($originalProduct['language'])) {
+                if ($originalProduct['language'] == 'en') {
+                    $language = "English";
+                    $product.= "<br /><div id='institutionlang'>" . $language . "</div>";
+                }
             }
 
-            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
 
-            $languageField = new dropdown('language');
-            $languageField->cssClass = 'original_product_languageField';
-            $languageField->setSelected($product['language']);
-            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $product.='<br/><br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
+                if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                    $editImg = '<img src="skins/oer/images/icons/edit.png">';
+                    $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+                    $adaptImg = '<img src="skins/oer/images/icons/add.png">';
 
-            $adaptionsCount = 0;
-            $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
-            $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
-            $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
+                    $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                    $adaptLink->link = $adaptImg;
+                    $product.="<br />" . $adaptLink->show();
 
-            //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-            $table->addCell($product, null, null, null, "view_original_product");
-            if ($count > 3) {
-                $table->endRow();
-                $startNewRow = TRUE;
-                $count = 1;
+                    $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "edit")));
+                    $editLink->link = $editImg;
+                    $product.="&nbsp;" . $editLink->show();
+
+                    $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
+                    $deleteLink->link = $deleteImg;
+                    $deleteLink->cssClass = "deleteoriginalproduct";
+                    $product.="&nbsp;" . $deleteLink->show();
+                }
+
+                $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
+
+                $languageField = new dropdown('language');
+                $languageField->cssClass = 'original_product_languageField';
+                $languageField->setSelected($product['language']);
+                $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+                $product.='<br/><br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
+
+                $adaptionsCount = 0;
+                $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
+                $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+                $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
+
+                //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+                $table->addCell($product, null, null, null, "view_original_product");
+                if ($count > 3) {
+                    $table->endRow();
+                    $startNewRow = TRUE;
+                    $count = 1;
+                }
+                $count++;
             }
-            $count++;
+            return $controlBand . $table->show();
         }
-        return $controlBand . $table->show();
-    }
 
-    /**
-     * creates a table and returns the list of adaptable products
-     * @return type
-     */
-    public function getAdaptatableProductListAsGrid() {
-        $originalProducts = $this->dbproducts->getOriginalProducts();
+        /**
+         * creates a table and returns the list of adaptable products
+         * @return type
+         */
+        public function getAdaptatableProductListAsGrid() {
+            $originalProducts = $this->dbproducts->getOriginalProducts();
 
 
-        $controlBand.=
-                '<div id="originalproducts_controlband">';
+            $controlBand.=
+                    '<div id="originalproducts_controlband">';
 
-        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
-        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
-        $gridlink = new link($this->uri(array("action" => "1b")));
-        $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
-        $controlBand.=$gridlink->show();
+            $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
+            $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+            $gridlink = new link($this->uri(array("action" => "1b")));
+            $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+            $controlBand.=$gridlink->show();
 
-        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
-        $listlink = new link($this->uri(array("action" => "1a")));
-        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
-        $controlBand.=$listlink->show();
+            $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+            $listlink = new link($this->uri(array("action" => "1a")));
+            $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
+            $controlBand.=$listlink->show();
 
-        $sortbydropdown = new dropdown('sortby');
-        $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
+            $sortbydropdown = new dropdown('sortby');
+            $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-        $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
-        $controlBand.=$sortbydropdown->show();
+            $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
+            $controlBand.=$sortbydropdown->show();
 
 
 
-        $controlBand.= '</div> ';
-        $startNewRow = TRUE;
-        $count = 2;
-        $table = $this->getObject('htmltable', 'htmlelements');
-        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroups->getId("ProductCreators");
-        $objGroupOps = $this->getObject("groupops", "groupadmin");
-        $userId = $this->objUser->userId();
+            $controlBand.= '</div> ';
+            $startNewRow = TRUE;
+            $count = 2;
+            $table = $this->getObject('htmltable', 'htmlelements');
+            $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+            $groupId = $objGroups->getId("ProductCreators");
+            $objGroupOps = $this->getObject("groupops", "groupadmin");
+            $userId = $this->objUser->userId();
 
-        foreach ($originalProducts as $originalProduct) {
-            if ($startNewRow) {
-                $startNewRow = FALSE;
-                $table->startRow();
+            foreach ($originalProducts as $originalProduct) {
+                if ($startNewRow) {
+                    $startNewRow = FALSE;
+                    $table->startRow();
+                }
+                $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+                if ($originalProduct['thumbnail'] == '') {
+                    $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
+                }
+                $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
+                $link->link = $thumbnail . '<br/>';
+                $product = $link->show();
+
+                $link->link = $originalProduct['title'];
+                $link->cssClass = 'original_product_listing_title';
+                $product.= $link->show();
+                if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                    $editImg = '<img src="skins/oer/images/icons/edit.png">';
+                    $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+
+                    $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'])));
+                    $editLink->link = $editImg;
+                    $product.=$editLink->show();
+
+                    $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
+                    $deleteLink->link = $deleteImg;
+                    $deleteLink->cssClass = "deleteadaptation";
+                    $product.=$deleteLink->show();
+                }
+
+                $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
+
+                $languageField = new dropdown('language');
+                $languageField->cssClass = 'original_product_languageField';
+                $languageField->setSelected($product['language']);
+                $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+                $product.='<br/><br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
+
+                $adaptionsCount = 0;
+                $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
+                $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+                $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
+
+                //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+                $table->addCell($product, null, null, null, "view_original_product");
+                if ($count > 3) {
+                    $table->endRow();
+                    $startNewRow = TRUE;
+                    $count = 1;
+                }
+                $count++;
             }
-            $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
-            if ($originalProduct['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
-            }
-            $link = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . '<br/>';
-            $product = $link->show();
-
-            $link->link = $originalProduct['title'];
-            $link->cssClass = 'original_product_listing_title';
-            $product.= $link->show();
-            if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $editImg = '<img src="skins/oer/images/icons/edit.png">';
-                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-
-                $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'])));
-                $editLink->link = $editImg;
-                $product.=$editLink->show();
-
-                $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
-                $deleteLink->link = $deleteImg;
-                $deleteLink->cssClass = "deleteadaptation";
-                $product.=$deleteLink->show();
-            }
-
-            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
-
-            $languageField = new dropdown('language');
-            $languageField->cssClass = 'original_product_languageField';
-            $languageField->setSelected($product['language']);
-            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $product.='<br/><br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
-
-            $adaptionsCount = 0;
-            $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
-            $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
-            $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
-
-            //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-            $table->addCell($product, null, null, null, "view_original_product");
-            if ($count > 3) {
-                $table->endRow();
-                $startNewRow = TRUE;
-                $count = 1;
-            }
-            $count++;
+            return $controlBand . $table->show();
         }
-        return $controlBand . $table->show();
-    }
 
-    /**
-     * Creates side navigation links for moving in between forms when managing
-     * an adaptation
-     */
-    function buildAdaptationStepsNav($id) {
+        /**
+         * Creates side navigation links for moving in between forms when managing
+         * an adaptation
+         */
+        function buildAdaptationStepsNav($id) {
 
-        $header = new htmlheading();
-        $header->type = 2;
-        $header->cssClass = "build_product_steps_nav";
-        $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
+            $header = new htmlheading();
+            $header->type = 2;
+            $header->cssClass = "build_product_steps_nav";
+            $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
 
-        $content = $header->show();
+            $content = $header->show();
 
-        $content.='<ul id="nav-secondary">';
+            $content.='<ul id="nav-secondary">';
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $id)));
-        $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
+            $link = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $id)));
+            $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
+            $content.='<li>' . $link->show() . '</li>';
 
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep2", "id" => $id)));
-        $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
+            $link = new link($this->uri(array("action" => "editoriginalproductstep2", "id" => $id)));
+            $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
+            $content.='<li>' . $link->show() . '</li>';
 
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep3", "id" => $id)));
-        $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
+            $link = new link($this->uri(array("action" => "editoriginalproductstep3", "id" => $id)));
+            $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
+            $content.='<li>' . $link->show() . '</li>';
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep4", "id" => $id)));
-        $link->link = $this->objLanguage->languageText('mod_oer_step4', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
-
-
-        $content.="</ul>";
+            $link = new link($this->uri(array("action" => "editoriginalproductstep4", "id" => $id)));
+            $link->link = $this->objLanguage->languageText('mod_oer_step4', 'oer');
+            $content.='<li>' . $link->show() . '</li>';
 
 
-        return $content;
-    }
-    function userHasPermissions(){
-        $objGroupOps = $this->getObject("groupops", "groupadmin");
-        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $this->objUser = $this->getObject("user", "security");
-        //Set groupId for site managers
-        $groupId = $objGroups->getId("ProductCreators");
-        //Get userId
-        $userId = $this->objUser->userId();
-        //Flag to check if user has perms to manage adaptations
-        $hasPerms = false;
-        if ($this->objUser->isLoggedIn()) {
-            if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $hasPerms = true;
-            }
+            $content.="</ul>";
+
+
+            return $content;
         }
-        return $hasPerms;
-    }
 
-}
+        function userHasPermissions() {
+            $objGroupOps = $this->getObject("groupops", "groupadmin");
+            $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+            $this->objUser = $this->getObject("user", "security");
+            //Set groupId for site managers
+            $groupId = $objGroups->getId("ProductCreators");
+            //Get userId
+            $userId = $this->objUser->userId();
+            //Flag to check if user has perms to manage adaptations
+            $hasPerms = false;
+            if ($this->objUser->isLoggedIn()) {
+                if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                    $hasPerms = true;
+                }
+            }
+            return $hasPerms;
+        }
+
+    }
 
 ?>

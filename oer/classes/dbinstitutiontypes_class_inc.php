@@ -60,9 +60,39 @@ class dbinstitutiontypes extends dbtable {
     * return type
     */
     function getType($typeID){
-        $sql = "SELECT * FROM tbl_oer_institution_types WHERE id='$typeID'";
+        $sql = "SELECT * FROM tbl_oer_institution_types WHERE id='".$typeID."'";
         $type=$this->getArray($sql);
         return $type[0]['type'];
+    }
+    /*
+     * Function to get the name of an institution-type
+     * @param id id of the institution-type record
+     * @return string institution-type name
+     */
+
+    function getInstitutionTypeName($id) {
+        $sql = "SELECT type FROM tbl_oer_institution_types WHERE id='".$id."'";
+        $institutionType = $this->getArray($sql);
+        if (count($institutionType) > 0) {
+            return $institutionType[0]['type'];
+        } else {
+            return Null;
+        }
+    }
+    /*
+     * Function to get the data of an institution-type
+     * @param id id of the institution-type record
+     * @return array of institution-type data
+     */
+
+    function getInstitutionTypeData($id) {
+        $sql = "SELECT * FROM tbl_oer_institutions WHERE id='".$id."'";
+        $institutiontype = $this->getArray($sql);
+        if (count($institutiontype) > 0) {
+            return $institutiontype[0];
+        } else {
+            return Null;
+        }
     }
 
     /*
@@ -71,7 +101,7 @@ class dbinstitutiontypes extends dbtable {
     * return type
     */
     function findTypeID($type){
-        $sql = "SELECT * FROM tbl_oer_institution_types WHERE type='$type'";
+        $sql = "SELECT * FROM tbl_oer_institution_types WHERE type='".$type."'";
         $typeID=$this->getArray($sql);
         return $typeID[0]['id'];
     }

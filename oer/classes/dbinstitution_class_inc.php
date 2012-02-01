@@ -36,13 +36,6 @@ class dbinstitution extends dbtable {
         //return $this->getArray($sql);
     }
 
-    function getInstitutionById($id) {
-        $sql = "SELECT * FROM tbl_oer_institutions WHERE id = '$id'";
-
-        $result = $this->getArray($sql);
-        return $result[0];
-    }
-
     function getInstitutionIdbyType($type) {
         $sql = "SELECT id FROM tbl_oer_institutions WHERE type = '$type'";
 
@@ -111,10 +104,35 @@ class dbinstitution extends dbtable {
         return $InstitutionNames;
     }
 
-    function getInstitutionName($name) {
-        $sql = "SELECT * FROM tbl_oer_institutions WHERE name='$name'";
-        $InstitutionName = $this->getArray($sql);
-        return $InstitutionName[0]['name'];
+    /*
+     * Function to get the name of an institution
+     * @param id id of the institution record
+     * @return string institution name
+     */
+
+    function getInstitutionName($id) {
+        $sql = "SELECT name FROM tbl_oer_institutions WHERE id='$id'";
+        $institutionName = $this->getArray($sql);
+        if (count($institutionName) > 0) {
+            return $institutionName[0]['name'];
+        } else {
+            return Null;
+        }
+    }
+    /*
+     * Function to get the institution data by id
+     * @param id id of the institution record
+     * @return array institution data
+     */
+
+    function getInstitutionById($id) {
+        $sql = "SELECT * FROM tbl_oer_institutions WHERE id = '" . $id . "'";
+        $result = $this->getArray($sql);
+        if (count($result) > 0) {
+            return $result[0];
+        } else {
+            return Null;
+        }
     }
 
     function getInstitutionByName($name) {
@@ -189,20 +207,20 @@ class dbinstitution extends dbtable {
         $puid = $tempPuid[0]['puid'];
 //        echo $puid;
         $result = $this->update(
-                'puid', $puid, array(
-            'name' => $name,
-            'description' => $description,
-            'country' => $country,
-            'type' => $type,
-            'address1' => $address1,
-            'address2' => $address2,
-            'address3' => $address3,
-            'city' => $city,
-            'websiteLink' => $websiteLink,
-            'keyword1' => $keyword1,
-            'keyword2' => $keyword2,
-            'zip' => $zip,
-            'thumbnail' => $thumbnail)
+                        'puid', $puid, array(
+                    'name' => $name,
+                    'description' => $description,
+                    'country' => $country,
+                    'type' => $type,
+                    'address1' => $address1,
+                    'address2' => $address2,
+                    'address3' => $address3,
+                    'city' => $city,
+                    'websiteLink' => $websiteLink,
+                    'keyword1' => $keyword1,
+                    'keyword2' => $keyword2,
+                    'zip' => $zip,
+                    'thumbnail' => $thumbnail)
         );
         if ($result != FALSE) {
 
