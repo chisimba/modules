@@ -68,7 +68,7 @@ class block_linksmakemodule extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->title = "Easy to make a module";
     }
     /**
      * Standard block show method.
@@ -77,7 +77,7 @@ class block_linksmakemodule extends object
      */
     public function show() 
     {
-        return "This is a demonstration right block.";
+        return "Fill in the form to build a working Chisimba module.";
     }
 }
 ?>

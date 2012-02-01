@@ -68,7 +68,7 @@ class block_aboutmakemodule extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->title = "Makemodule made makemodule";
     }
     /**
      * Standard block show method.
@@ -77,7 +77,7 @@ class block_aboutmakemodule extends object
      */
     public function show() 
     {
-        return "Put something here";
+        return "A previous version of makemodule was used to make this module.";
     }
 }
 ?>
