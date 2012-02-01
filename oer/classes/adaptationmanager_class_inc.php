@@ -37,129 +37,6 @@ class adaptationmanager extends object {
     }
 
     /**
-     * Validates the contents of new adaptation field values in step 1. If all are valid, these
-     * are save, else the form is returned with the errors highlighted
-     * @return type 
-     */
-    function saveNewAdaptationStep1() {
-        $parentid = $this->getParam("id");
-        $mode = $this->getParam("mode", "edit");
-        if ($mode == "edit") {
-            $data = array(
-                "title" => $this->getParam("title"),
-                "alternative_title" => $this->getParam("alternative_title"),
-                "author" => $this->getParam("author"),
-                "othercontributors" => $this->getParam("othercontributors"),
-                "publisher" => $this->getParam("publisher"),
-                "keywords" => $this->getParam("keywords"),
-                "institutionid" => $this->getParam("institution"),
-                "language" => $this->getParam("language"));
-
-            $this->dbproducts->updateOriginalProduct($data, $parentid);
-            return $parentid;
-        } else {
-            //get thumbnail of original product
-            $parentData = $this->dbproducts->getProduct($parentid);
-            $thumbnail = $parentData['thumbnail'];
-
-            $data = array(
-                "title" => $this->getParam("title"),
-                "alternative_title" => $this->getParam("alternative_title"),
-                "author" => $this->getParam("author"),
-                "othercontributors" => $this->getParam("othercontributors"),
-                "publisher" => $this->getParam("publisher"),
-                "keywords" => $this->getParam("keywords"),
-                "institutionid" => $this->getParam("institution"),
-                "language" => $this->getParam("language"),
-                "parent_id" => $parentid,
-                "thumbnail" => $thumbnail,
-                "translation_of" => "",
-                "description" => "",
-                "abstract" => "",
-                "oerresource" => "",
-                "provenonce" => "",
-                "accredited" => "",
-                "accreditation_body" => "",
-                "accreditation_date" => "",
-                "contacts" => "",
-                "relation_type" => "",
-                "relation" => "",
-                "coverage" => "",
-                "status" => "",
-            );
-            $result = $this->dbproducts->saveOriginalProduct($data);
-            return $result;
-        }
-    }
-
-    /**
-     * updates adaptation step 1 details
-     * @return type 
-     */
-    function updateAdaptationStep1() {
-        $id = $this->getParam("id");
-        $data = array(
-            "title" => $this->getParam("title"),
-            "alternative_title" => $this->getParam("alternative_title"),
-            "author" => $this->getParam("author"),
-            "othercontributors" => $this->getParam("othercontributors"),
-            "publisher" => $this->getParam("publisher"),
-            "language" => $this->getParam("language"),
-        );
-
-        $this->dbproducts->updateOriginalProduct($data, $id);
-        return $id;
-    }
-
-    /**
-     * used for deleting an adaptation
-     */
-    function deleteAdaptation() {
-        $id = $this->getParam("id");
-        $this->dbproducts->deleteOriginalProduct($id);
-    }
-
-    /**
-     * Updates the adaptation's step 2 details
-     * @return type 
-     */
-    function updateAdaptationStep2() {
-        $id = $this->getParam("id");
-        $data = array(
-            "translation_of" => $this->getParam("translation"),
-            "description" => $this->getParam("description"),
-            "abstract" => $this->getParam("abstract"),
-            "provenonce" => $this->getParam("provenonce"),
-        );
-
-        $this->dbproducts->updateOriginalProduct($data, $id);
-        return $id;
-    }
-
-    /**
-     * Updates the adaptation's step 3 details
-     * @return type 
-     */
-    function updateAdaptationStep3() {
-        $id = $this->getParam("id");
-        $data = array(
-            "oerresource" => $this->getParam("oerresource"),
-            "accredited" => $this->getParam("accredited"),
-            "accreditation_body" => $this->getparam("accreditationbody"),
-            "accreditation_date" => $this->getParam("accreditationdate"),
-            "contacts" => $this->getParam("contacts"),
-            "relation_type" => $this->getParam("relationtype"),
-            "relation" => $this->getParam("relatedproduct"),
-            "coverage" => $this->getParam("coverage"),
-            "status" => $this->getParam("status"),
-            "rights" => $this->getParam("creativecommons")
-        );
-
-        $this->dbproducts->updateOriginalProduct($data, $id);
-        return $id;
-    }
-
-    /**
      * Used fo uploading product thumbnail
      *
      */
@@ -233,7 +110,7 @@ class adaptationmanager extends object {
     public function makeNewAdaptation($id, $mode) {
         $formStr = '<div class="blueHorizontalStrip"></div>
     <div class="mainWrapper">
-    	
+
         <div class="mainContentHolder">
         	<div class="subNavigation"></div>
             <div class="wideTopContentHolderDiv">
@@ -766,7 +643,7 @@ class adaptationmanager extends object {
 
     /**
      * Builds the step 3 adaptation form
-     * @param type $id 
+     * @param type $id
      */
     public function buildAdaptationFormStep3($id) {
 
@@ -994,7 +871,7 @@ class adaptationmanager extends object {
 
     /**
      * creates a table and returns the list of current adaptations
-     * @return type 
+     * @return type
      */
     public function getAdaptationsListingAsGrid() {
         $originalProducts = $this->dbproducts->getAdaptedProducts();

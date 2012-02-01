@@ -78,6 +78,21 @@ class dboer_adaptations extends dbTable
         return $id;
     }
     /**
+     * save adaptation into db
+     */
+    function saveAdaptation($data) {
+        return $this->insert($data);
+    }
+    /**
+     * Updates Adaptation
+     * @param  $data fields containing updated data
+     * @param  $id ID of adaptation to be updated
+     * @return type
+     */
+    function updateAdaptation($data, $id) {
+        return $this->update("id", $id, $data);
+    }
+    /**
      * Update a record
      * @param string $id ID
      * @param string $parentproduct_id The Root product ID

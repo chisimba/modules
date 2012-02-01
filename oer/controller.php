@@ -16,6 +16,7 @@ class oer extends controller {
         // Load the login helper scripts, they won't load in the template
         $objLogin = $this->getObject('showlogin', 'login');
         //$objLogin->loadAllScripts();
+        $this->objMakeAdaptation = $this->getObject("makeadaptation", "oer");
     }
 
     /**
@@ -227,7 +228,13 @@ class oer extends controller {
         $id = $objProductManager->saveNewProductStep1();
         die($id);
     }
-
+/**
+     * Saves the original product in step 1
+     */
+    function __saveAdaptation() {        
+        $id = $this->objMakeAdaptation->saveNewAdaptation();
+        die($id);
+    }
     /**
      * Saves the original product in step 2
      */
@@ -343,9 +350,8 @@ class oer extends controller {
     /**
      * Saves the adaptation in step 1
      */
-    function __saveadaptationstep1() {
-        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $result = $objAdaptationManager->saveNewAdaptationStep1();
+    function __saveadaptationstep1() {        
+        $result = $this->objMakeAdaptation->saveNewAdaptationStep1();
 
         $this->setVarByRef("id", $result);
         $this->setVar("step", "2");
@@ -356,8 +362,7 @@ class oer extends controller {
      * Saves the adaptation in step 2
      */
     function __saveadaptationstep2() {
-        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $id = $objAdaptationManager->updateAdaptationStep2();
+        $id = $this->objMakeAdaptation->updateAdaptationStep2();
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "adaptation_tpl.php";
@@ -367,8 +372,7 @@ class oer extends controller {
      * Saves the adaptation in step 3
      */
     function __saveadaptationstep3() {
-        $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
-        $id = $objAdaptationManager->updateAdaptationStep3();
+        $id = $this->objMakeAdaptation->updateAdaptationStep3();
         $this->setVarByRef("id", $id);
         return "uploadadaptation_tpl.php";
     }
@@ -400,8 +404,7 @@ class oer extends controller {
      */
     function __deleteadaptation() {
         $id = $this->getParam("id");
-        $objProductManager = $this->getObject("productmanager", "oer");
-        $objProductManager->deleteOriginalProduct();
+        $this->objMakeAdaptation->deleteOriginalProduct();
         $this->setVar("mode", "grid");
         return "1b_tpl.php";
     }
@@ -851,7 +854,5 @@ class oer extends controller {
             die('errornousername');
         }
     }
-
 }
-
 ?>
