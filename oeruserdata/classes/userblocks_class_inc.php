@@ -107,7 +107,7 @@ class userblocks extends object
             $objGa = $this->getObject('gamodel','groupadmin');
             $userId = $this->objUser->userId();
             $edGroup = $objGa->isGroupMember($userId, "Usermanagers");
-                    die($userId);
+//-=-=
             if ($this->objUser->isAdmin()|| $edGroup ) {
                 $linkText = $this->objLanguage->languageText(
                   'mod_oeruserdata_adminreg', 'oeruserdata');
