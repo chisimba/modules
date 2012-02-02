@@ -504,7 +504,7 @@ class adaptationmanager extends object {
 
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "1b"));
+        $uri = $this->uri(array("action" => "adaptationlist"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
@@ -629,7 +629,7 @@ class adaptationmanager extends object {
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "1b"));
+        $uri = $this->uri(array("action" => "adaptationlist"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
@@ -857,7 +857,7 @@ class adaptationmanager extends object {
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "1b"));
+        $uri = $this->uri(array("action" => "adaptationlist"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 
@@ -883,12 +883,12 @@ class adaptationmanager extends object {
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
         $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
-        $gridlink = new link($this->uri(array("action" => "1b")));
+        $gridlink = new link($this->uri(array("action" => "adaptationlist")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
         $controlBand.=$gridlink->show();
 
         $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
-        $listlink = new link($this->uri(array("action" => "1b")));
+        $listlink = new link($this->uri(array("action" => "adaptationlist")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
         $controlBand.=$listlink->show();
 
@@ -996,7 +996,7 @@ class adaptationmanager extends object {
 
             $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ':';
             $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
-            $gridlink = new link($this->uri(array("action" => "1b")));
+            $gridlink = new link($this->uri(array("action" => "adaptationlist")));
             $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
             $controlBand.=$gridlink->show();
 

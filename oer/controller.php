@@ -116,9 +116,9 @@ class oer extends controller {
      *
      * This is loads adaptation home
      */
-    private function __1b() {
+    private function __adaptationlist() {
 
-        return "1b_tpl.php";
+        return "adaptationlist_tpl.php";
     }
 
     /**
