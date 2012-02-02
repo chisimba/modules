@@ -230,13 +230,6 @@ class oer extends controller {
         die($id);
     }
 
-    /**
-     * Saves the original product in step 1
-     */
-    function __saveAdaptation() {
-        $id = $this->objMakeAdaptation->saveNewAdaptation();
-        die($id);
-    }
 
     /**
      * Saves the original product in step 2
@@ -276,8 +269,19 @@ class oer extends controller {
         $id = $this->getParam("id");
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("id", $id);
-        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("mode", $mode);        
+        $errors = $this->getParam("errors", Null);
+        $this->setVarByRef("errors", $errors);
+        $this->setVar("step", "1");
         return "makeadaptation_tpl.php";
+    }
+
+    /**
+     * Saves the section adaptation data
+     */
+    function __saveAdaptation() {
+        $id = $this->objMakeAdaptation->saveNewAdaptation();
+        return "listadaptation_tpl.php";
     }
 
     function __editoriginalproductstep1() {
@@ -325,8 +329,6 @@ class oer extends controller {
         $id = $this->getParam("id");
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("mode", $mode);
-        $errors = $this->getParam("errors", "");
-        $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";

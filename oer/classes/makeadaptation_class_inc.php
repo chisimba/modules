@@ -25,17 +25,10 @@ class makeadaptation extends object {
     function saveNewAdaptation() {
 
         $data = array(
-            "title" => $this->getParam("title"),
-            "alternative_title" => $this->getParam("alternative_title"),
-            "author" => $this->getParam("author"),
-            "othercontributors" => $this->getParam("othercontributors"),
-            "publisher" => $this->getParam("publisher"),
-            "language" => $this->getParam("language"),
-            "keywords" => $this->getParam("keywords"),
             'parent_productid' => $this->getParam("parentproduct_id"),
             'userid' => $this->objUser->userId(),
             'section_title' => $this->getParam("section_title"),
-            'current_path' => $this->getParam("current_path"),
+            'current_path' => $this->getParam("selectnode"),
             'section_content' => $this->getParam("section_content"),
             'status' => $this->getParam("status"),
             'attachment' => $this->getParam("attachment"),
@@ -53,16 +46,10 @@ class makeadaptation extends object {
     function updateAdaptation() {
         $id = $this->getParam("id");
         $data = array(
-            "title" => $this->getParam("title"),
-            "alternative_title" => $this->getParam("alternative_title"),
-            "author" => $this->getParam("author"),
-            "othercontributors" => $this->getParam("othercontributors"),
-            "publisher" => $this->getParam("publisher"),
-            "language" => $this->getParam("language"),
-            "keywords" => $this->getParam("keywords"),
+            'parent_productid' => $this->getParam("parentproduct_id"),
             'userid' => $this->objUser->userId(),
             'section_title' => $this->getParam("section_title"),
-            'current_path' => $this->getParam("current_path"),
+            'current_path' => $this->getParam("selectnode"),
             'section_content' => $this->getParam("section_content"),
             'status' => $this->getParam("status"),
             'attachment' => $this->getParam("attachment"),
@@ -197,6 +184,7 @@ class makeadaptation extends object {
         $this->dbproducts->updateOriginalProduct($data, $id);
         return $id;
     }
+
 }
 
 ?>
