@@ -17,6 +17,7 @@ class oer extends controller {
         $objLogin = $this->getObject('showlogin', 'login');
         //$objLogin->loadAllScripts();
         $this->objMakeAdaptation = $this->getObject("makeadaptation", "oer");
+        $this->objDBProducts = $this->getObject("dbproducts", "oer");
     }
 
     /**
@@ -318,6 +319,8 @@ class oer extends controller {
 
     function __editadaptationstep2() {
         $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -325,6 +328,8 @@ class oer extends controller {
 
     function __editadaptationstep3() {
         $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "adaptation_tpl.php";
@@ -332,6 +337,8 @@ class oer extends controller {
 
     function __editadaptationstep4() {
         $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "uploadadaptation_tpl.php";
@@ -403,10 +410,10 @@ class oer extends controller {
      * deletes a product. Assumes the deletion is already confirmed
      */
     function __deleteadaptation() {
-        $id = $this->getParam("id");
-        $this->objMakeAdaptation->deleteOriginalProduct();
+        $id = $this->getParam("id");        
+        $this->objDBProducts->deleteOriginalProduct($id);
         $this->setVar("mode", "grid");
-        return "1b_tpl.php";
+        return "adaptationlist_tpl.php";
     }
 
     /**

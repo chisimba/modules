@@ -16,10 +16,13 @@ class block_originalproductformnav extends object {
        $data = explode("|", $this->configData);
         $id = NULL;
         $step = '1';
-        if (count($data == 2)) {
+        if (count($data) == 2) {
             $id = $data[0];
             $step = $data[1];
+        } else if (count($data) == 1){
+            $id = $data[0];
         }
+        
         $objProductManager = $this->getObject('productmanager', 'oer');
         return $objProductManager->buildProductStepsNav($id,$step);
     }
