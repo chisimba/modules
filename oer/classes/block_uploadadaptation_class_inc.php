@@ -8,7 +8,7 @@
 class block_uploadadaptation extends object {
 
     function init() {
-        
+        $this->title = "";
     }
 
     function show() {
@@ -31,7 +31,7 @@ class block_uploadadaptation extends object {
 
         //Finish button
         $button = new button('finish', $objLanguage->languageText('mod_oer_finish', 'oer'));
-        $uri = $this->uri(array("action" => "1b"));
+        $uri = $this->uri(array("action" => "adaptationlist"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         
         $content.= "&nbsp;".$button->show();

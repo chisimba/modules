@@ -28,7 +28,7 @@ class oer extends controller {
      */
     function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "1b",
-            "viewadaptation", "fullviewadaptation", "selfregister", 
+            "viewadaptation", "fullviewadaptation", "selfregister",
             "viewsection", "checkusernameajax", "userdetailssave",
             "showcaptcha", "verifycaptcha");
         if (in_array($action, $allowedActions)) {
@@ -229,13 +229,15 @@ class oer extends controller {
         $id = $objProductManager->saveNewProductStep1();
         die($id);
     }
-/**
+
+    /**
      * Saves the original product in step 1
      */
-    function __saveAdaptation() {        
+    function __saveAdaptation() {
         $id = $this->objMakeAdaptation->saveNewAdaptation();
         die($id);
     }
+
     /**
      * Saves the original product in step 2
      */
@@ -313,6 +315,8 @@ class oer extends controller {
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("id", $id);
         $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
         $this->setVar("step", "1");
         return "adaptation_tpl.php";
     }
@@ -321,6 +325,8 @@ class oer extends controller {
         $id = $this->getParam("id");
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -330,6 +336,8 @@ class oer extends controller {
         $id = $this->getParam("id");
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "adaptation_tpl.php";
@@ -339,6 +347,8 @@ class oer extends controller {
         $id = $this->getParam("id");
         $mode = $this->getParam("mode", "edit");
         $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "uploadadaptation_tpl.php";
@@ -357,9 +367,12 @@ class oer extends controller {
     /**
      * Saves the adaptation in step 1
      */
-    function __saveadaptationstep1() {        
+    function __saveadaptationstep1() {
         $result = $this->objMakeAdaptation->saveNewAdaptationStep1();
-
+        $mode = $this->getParam("mode", "edit");
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $result);
         $this->setVar("step", "2");
         return "adaptation_tpl.php";
@@ -370,6 +383,10 @@ class oer extends controller {
      */
     function __saveadaptationstep2() {
         $id = $this->objMakeAdaptation->updateAdaptationStep2();
+        $mode = $this->getParam("mode", "edit");
+        $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "3");
         return "adaptation_tpl.php";
@@ -380,6 +397,10 @@ class oer extends controller {
      */
     function __saveadaptationstep3() {
         $id = $this->objMakeAdaptation->updateAdaptationStep3();
+        $mode = $this->getParam("mode", "edit");
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
+        $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
         return "uploadadaptation_tpl.php";
     }
@@ -410,8 +431,8 @@ class oer extends controller {
      * deletes a product. Assumes the deletion is already confirmed
      */
     function __deleteadaptation() {
-        $id = $this->getParam("id");        
-        $this->objDBProducts->deleteOriginalProduct($id);
+        $id = $this->getParam("id");
+        $this->obj->deleteOriginalProduct($id);
         $this->setVar("mode", "grid");
         return "adaptationlist_tpl.php";
     }
@@ -643,7 +664,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -746,7 +767,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.
@@ -779,4 +800,5 @@ class oer extends controller {
     }
 
 }
+
 ?>
