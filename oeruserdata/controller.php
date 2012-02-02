@@ -263,6 +263,20 @@ class oeruserdata extends controller
     public function __selfregister() {
         return 'useredit_tpl.php';
     }
+    
+    /**
+     *
+     * Open the edit/add form for admin to add user to provide the 
+     * additional data that the OER project needs, as well as 
+     * the data from tbl_users
+     *
+     * @return string Template
+     * @access public
+     * 
+     */
+    public function __adduser() {
+        return 'useredit_tpl.php';
+    }
 
     /**
      * 

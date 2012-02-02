@@ -114,30 +114,49 @@ class userblocks extends object
               $objGroupOps->isGroupMember($groupId, $userId )) {
                   $linkText = $this->objLanguage->languageText(
                     'mod_oeruserdata_adminreg', 'oeruserdata');
-                    $ret .= "<br /><br />" . $this->putRegLink($linkText);
+                    $ret .= "<br /><br />" 
+                    . $this->putLink($linkText, 'adduser');
             }
         } else {
             // Put a registration link
             $linkText = $this->objLanguage->languageText(
               'mod_oeruserdata_selfreg', 'oeruserdata');
-            $ret = $this->putRegLink($linkText);
+            $ret = $this->putLink($linkText, 'selfregister');
             
         }
         
         return $ret;
     }
     
-    public function putRegLink($linkText)
+    /**
+     *
+     * Add a link to register or add user
+     * 
+     * @param string $linkText The text to display
+     * @param string $linkType The type of link (selfregister, or adduser)
+     * @return string The rendered link 
+     * @access private
+     * 
+     */
+    private function putLink($linkText, $linkType)
     {
         // Put a registration link
         $uri = $this->uri(array(
-          'action' => 'selfregister'), 
+          'action' => $linkType), 
           'oeruserdata');
         $link = new link($uri);
         $link->link = $linkText;
         return $link->show();
     }
     
+    /**
+     *
+     * Show a paginated list of users
+     * 
+     * @return string A rendered list with edit/delete links
+     * @access public
+     * 
+     */
     public function showUserList()
     {
         return "WORKING HERE";

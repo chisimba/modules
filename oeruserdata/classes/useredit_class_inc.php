@@ -143,7 +143,7 @@ class useredit extends object
      */
     private function showForLoggedIn()
     {
-        $form = $this->buildForm();
+        $form = $this->buildForm(FALSE);
         if ($form) {
             return $this->makeHeading() 
               . "<div class='formwrapper'>"
