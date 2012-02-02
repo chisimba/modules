@@ -461,14 +461,8 @@ class blogui extends object
                 if (!file_exists($this->objConfig->getcontentBasePath() . 'users/' . $userid)) {
                     mkdir($this->objConfig->getcontentBasePath() . 'users/' . $userid, 0777);
                 }
-            } else {
-                throw new  customException("STOPPING...error in blogui_class");
-                exit();
-            }
-        } else {
-            throw new  customException("STOPPING...error in blogui_class");
-            exit();
-        }
+            } 
+        }  
 
         // read the YAML config to see what this user wants
         $yamlfile = $this->objConfig->getcontentBasePath() . 'users/' . $userid . '/blogconfig.yaml';
