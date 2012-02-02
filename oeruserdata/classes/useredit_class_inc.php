@@ -667,14 +667,18 @@ class useredit extends object
 
            
             // Add the captcha to the form
-            $img = '<br /><img id="img_captcha" src="index.php?module=oer&action=showcaptcha" />';
+            $img = '<br /><img id="img_captcha" src="index.php?module=oeruserdata&action=showcaptcha" />';
             $table->startRow();
-            $table->addCell("");
+            // About yourself input options.
+            $label = new label($this->objLanguage->languageText(
+              'mod_oeruserdata_caplab', 'oeruserdata'), 'captcha');
+            $table->addCell($label->show());
             // Get a text input for the captcha
             $objInput = new textinput('captcha', '', 'text','15');
             $objInput->setId('captcha');
+            $objInput->size=1;
             $table->addCell("<span class='captcha-image'>" . $img 
-              . "</span><span class='captcha-input'>" 
+              . "</span><br /><span class='captcha-input'>" 
               . $objInput->show() . "</span>");
             $table->endRow();
         }

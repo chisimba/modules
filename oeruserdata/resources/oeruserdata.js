@@ -23,7 +23,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
       // Load some demo content into the middle dynamic area.
-      jQuery("#middledynamic_area").load('packages/oeruserdata/resources/sample.txt');
+      
     });
 
 });

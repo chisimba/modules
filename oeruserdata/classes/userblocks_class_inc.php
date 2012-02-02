@@ -104,14 +104,17 @@ class userblocks extends object
             $ret = $link->show();
             
             // Put a register link for admins
-            $objGa = $this->getObject('gamodel','groupadmin');
+            //$objGa = $this->getObject('gamodel','groupadmin');
+            
+            $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+            $groupId = $objGroups->getId("Usermanagers");
+            $objGroupOps = $this->getObject("groupops", "groupadmin");
             $userId = $this->objUser->userId();
-            $edGroup = $objGa->isGroupMember($userId, "Usermanagers");
-//-=-=
-            if ($this->objUser->isAdmin()|| $edGroup ) {
-                $linkText = $this->objLanguage->languageText(
-                  'mod_oeruserdata_adminreg', 'oeruserdata');
-                   $ret .= "<br /><br />" . $this->putRegLink($linkText);
+            if ($this->objUser->isAdmin() || 
+              $objGroupOps->isGroupMember($groupId, $userId )) {
+                  $linkText = $this->objLanguage->languageText(
+                    'mod_oeruserdata_adminreg', 'oeruserdata');
+                    $ret .= "<br /><br />" . $this->putRegLink($linkText);
             }
         } else {
             // Put a registration link
