@@ -43,7 +43,6 @@ $objFix->fixTwo();
 
 <?php
 // Get the contents for the layout template 
-
 $pageContent = ob_get_contents();
 ob_end_clean();
 $this->setVar('pageContent', $pageContent);

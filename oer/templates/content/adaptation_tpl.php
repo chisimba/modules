@@ -44,9 +44,9 @@ $objFix->fixTwo();
 
 <?php
 // Get the contents for the layout template 
-$this->setVar('errors', $errors);
-$this->setVar('mode', $mode);
+//$this->setVar('mode', $mode);
 //$this->setVar('title',$title);
+$this->setVar('errors', Null);
 $pageContent = ob_get_contents();
 ob_end_clean();
 $this->setVar('pageContent', $pageContent);
