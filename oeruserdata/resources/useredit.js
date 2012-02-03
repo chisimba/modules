@@ -25,22 +25,25 @@ jQuery(function() {
     
     //Create an Ajax method to validate user name is not used
     jQuery.validator.addMethod("uniqueUserName", function(value, element) {
-        jQuery.ajax({
-            type: "POST",
-            url: "index.php?module=oeruserdata&action=checkusernameajax",
-            data: "username="+value,
-            dataType:"html",
-            success: function(msg)
-            {
-                //If username exists, set response to true
-                if (msg == 'true') {
-                    response = false;
-                } else {
-                    response = true;
+        response=true;
+        if (jQuery("#edmode").val()!=='edit') {
+            jQuery.ajax({
+                type: "POST",
+                url: "index.php?module=oeruserdata&action=checkusernameajax",
+                data: "username="+value,
+                dataType:"html",
+                success: function(msg)
+                {
+                    //If username exists, set response to true
+                    if (msg == 'true') {
+                        response = false;
+                    } else {
+                        response = true;
+                    }
                 }
-            }
-         })
-         return response;
+             })
+        }
+        return response;
     }, "Username is already taken.");
     
     jQuery.validator.addMethod('notNone', 

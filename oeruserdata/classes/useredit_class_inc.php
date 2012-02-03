@@ -345,50 +345,55 @@ class useredit extends object
         $table->addCell($textinput->show());
         $table->endRow();
         unset($snLabel);
-        
         // Username input options.
         $unLabel = new label($this->objLanguage->languageText(
           'word_username'), 'username');
         $table->startRow();
         $table->addCell($unLabel->show());
-        $textinput = new textinput('username');
-        $textinput->size = 40;
-        if ($this->mode == 'edit') {
-            if (isset($this->username)){ 
-                $value = $this->username;
-                $textinput->setValue($value);
+        if ($this->mode !== 'edit') {
+            $textinput = new textinput('username');
+            $textinput->size = 40;
+            if ($this->mode == 'edit') {
+                if (isset($this->username)){ 
+                    $value = $this->username;
+                    $textinput->setValue($value);
+                }
             }
+            $textinput->cssId = 'username';
+            $un = $textinput->show();
+        } else {
+            $un = '<div class="fake_input">' . $this->username . "</div>";
         }
-        $textinput->cssId = 'username';
-        $table->addCell($textinput->show());
+        $table->addCell($un);
         $table->endRow();
         unset($unLabel);
-        
-        // Password input options.
-        $label = new label($this->objLanguage->languageText(
-          'word_password'), 'password');
-        $table->startRow();
-        $table->addCell($label->show());
-        $textinput = new textinput('password');
-        $textinput->size = 40;
-        $textinput->fldType = 'password';
-        $textinput->cssId = 'password';
-        $table->addCell($textinput->show());
-        $table->endRow();
-        unset($label);
-        
-        // Password confirmation input options.
-        $label = new label($this->objLanguage->languageText(
-          'phrase_confirmpassword'), 'confirmpassword');
-        $table->startRow();
-        $table->addCell($label->show());
-        $textinput = new textinput('confirmpassword');
-        $textinput->size = 40;
-        $textinput->fldType = 'password';
-        $textinput->cssId = 'confirmpassword';
-        $table->addCell($textinput->show());
-        $table->endRow();
-        unset($label);
+        if ($this->mode !== 'edit') {
+            // Password input options.
+            $label = new label($this->objLanguage->languageText(
+              'word_password'), 'password');
+            $table->startRow();
+            $table->addCell($label->show());
+            $textinput = new textinput('password');
+            $textinput->size = 40;
+            $textinput->fldType = 'password';
+            $textinput->cssId = 'password';
+            $table->addCell($textinput->show());
+            $table->endRow();
+            unset($label);
+
+            // Password confirmation input options.
+            $label = new label($this->objLanguage->languageText(
+              'phrase_confirmpassword'), 'confirmpassword');
+            $table->startRow();
+            $table->addCell($label->show());
+            $textinput = new textinput('confirmpassword');
+            $textinput->size = 40;
+            $textinput->fldType = 'password';
+            $textinput->cssId = 'confirmpassword';
+            $table->addCell($textinput->show());
+            $table->endRow();
+            unset($label);
+        }
         
         // Email input options.
         $label = new label($this->objLanguage->languageText(
@@ -710,7 +715,20 @@ class useredit extends object
             $hidId->value = $this->id;
         }
         $hiddenFields .= $hidId->show() . "\n\n";
-        
+        // Hidden for mode to turn off validation of username on edit
+        $hidMode = new hiddeninput('edmode');
+        $hidMode->cssId = "edmode";
+        if ($this->mode == 'edit') {
+            $hidMode->value = 'edit';
+        }
+        $hiddenFields .= $hidMode->show() . "\n\n";
+        // Hidden field for username since we should not change it here
+        if ($this->mode == 'edit') {
+            $hidMode = new hiddeninput('username');
+            $hidMode->cssId = "username";
+            $hidMode->value = $this->username;
+            $hiddenFields .= $hidMode->show() . "\n\n";
+        }
         // Createform, add fields to it and display.
         $formData = new form('edituser', NULL);
         //$formData = new form('edituser', 'index.php?module=oer&action=userdetailssave');

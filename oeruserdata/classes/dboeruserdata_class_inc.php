@@ -99,6 +99,7 @@ class dboeruserdata extends dbtable {
      * 
      * Load the data where each field becomes a property of this class
      * 
+     * @param boolean $sanityCheck Whether or to perform security parsing
      * @access private
      * @return VOID
      * 
@@ -144,21 +145,45 @@ class dboeruserdata extends dbtable {
               $this->sex, $this->country, $this->mobilephone, 
               NULL, $this->password, '', '');
             
-            // Send the data to the oer users data
-            $data = array(
-                'birthdate' => $this->birthdate, 
-                'address' => $this->address, 
-                'city' => $this->city, 
-                'state' => $this->state, 
-                'postalcode' => $this->postalcode, 
-                'orgcomp' => $this->orgcomp, 
-                'jobtitle' => $this->jobtitle, 
-                'occupationtype' => $this->occupationtype, 
-                'workphone' => $this->workphone, 
-                'website' => $this->website, 
-                'description' => $this->description
-            );
-            if ($res = $this->update('parentid', $this->id, $data)) {
+            // Check if the user is already in there, else add
+            
+            $sql = "SELECT id FROM tbl_oeruserdata_userextra WHERE parentid='" . $this->id . "';";
+            $res = $this->getArray($sql);
+            if (!empty($res)) {
+                // Send the data to the oer users data
+                $data = array(
+                    'birthdate' => $this->birthdate, 
+                    'address' => $this->address, 
+                    'city' => $this->city, 
+                    'state' => $this->state, 
+                    'postalcode' => $this->postalcode, 
+                    'orgcomp' => $this->orgcomp, 
+                    'jobtitle' => $this->jobtitle, 
+                    'occupationtype' => $this->occupationtype, 
+                    'workphone' => $this->workphone, 
+                    'website' => $this->website, 
+                    'description' => $this->description
+                );
+                $res = $this->update('parentid', $this->id, $data);
+            } else {
+                // Add the data to the oer users data
+                $data = array(
+                    'parentid' => $this->id,
+                    'birthdate' => $this->birthdate, 
+                    'address' => $this->address, 
+                    'city' => $this->city, 
+                    'state' => $this->state, 
+                    'postalcode' => $this->postalcode, 
+                    'orgcomp' => $this->orgcomp, 
+                    'jobtitle' => $this->jobtitle, 
+                    'occupationtype' => $this->occupationtype, 
+                    'workphone' => $this->workphone, 
+                    'website' => $this->website, 
+                    'description' => $this->description
+                );
+                $res = $this->insert($data);
+            }
+            if ($res) {
                 return $this->id;
             } else {
                 return 'ERROR_DATA_INSERT_FAIL';
@@ -233,15 +258,45 @@ class dboeruserdata extends dbtable {
      */
     public function getForEdit($id)
     {
-        $sql = "SELECT tbl_users.* FROM tbl_users LEFT OUTER JOIN "
-          . "tbl_oeruserdata_userextra ON tbl_oeruserdata_userextra.parentid "
-          . "= tbl_users.id WHERE tbl_users.id = '$id'";
+        $sql = "SELECT tbl_users.*, " 
+            . "tbl_oeruserdata_userextra.parentid, "
+            . "tbl_oeruserdata_userextra.birthdate, "
+            . "tbl_oeruserdata_userextra.address, "
+            . "tbl_oeruserdata_userextra.city, "
+            . "tbl_oeruserdata_userextra.state, "
+            . "tbl_oeruserdata_userextra.postalcode, "
+            . "tbl_oeruserdata_userextra.orgcomp, "
+            . "tbl_oeruserdata_userextra.jobtitle, "
+            . "tbl_oeruserdata_userextra.occupationtype, "
+            . "tbl_oeruserdata_userextra.workphone, "
+            . "tbl_oeruserdata_userextra.description, "
+            . "tbl_oeruserdata_userextra.website "
+            . "FROM tbl_users LEFT OUTER JOIN "
+            . "tbl_oeruserdata_userextra ON tbl_oeruserdata_userextra.parentid "
+            . "= tbl_users.id WHERE tbl_users.id = '$id';";
         $res = $this->getArray($sql);
         if (!empty ($res)) {
             return $res[0];
         } else {
             return FALSE;
         }
+        
+    }
+    
+    /**
+     *
+     * Get an array of records for the user listing page
+     * 
+     * @param integer $start Starting record in paginated set
+     * @param integer $records Page size for paginated set
+     * 
+     */
+    public function getForListing($start, $records)
+    {
+        $sql = "SELECT id, title, firstname, surname, username "
+        . " FROM tbl_users LIMIT $start, $records";
+        $rs = $this->getArray($sql);
+        return $rs;
         
     }
     

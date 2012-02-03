@@ -157,9 +157,67 @@ class userblocks extends object
      * @access public
      * 
      */
-    public function showUserList()
+    public function showUserList($addDiv=TRUE)
     {
-        return "WORKING HERE";
+        $start = $this->getParam('start', 1);
+        $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
+        $rs = $objDb->getForListing($start, 10);
+        $ret = '';
+        $this->loadClass('htmltable','htmlelements');
+        $table = $this->newObject('htmltable', 'htmlelements');
+        // Edit icon
+        $edIcon = $this->newObject('geticon', 'htmlelements');
+        $edIcon->setIcon('edit');
+        $editIcon = $edIcon->show();
+        unset($edIcon);
+        // Delete icon.
+        $delIcon = $this->newObject('geticon', 'htmlelements');
+        $delIcon->setIcon('delete');
+        $deleteIcon = $delIcon->show();
+        unset($delIcon);
+        // Next icon.
+        $nextIcon = $this->newObject('geticon', 'htmlelements');
+        $nextIcon->setIcon('next');
+        $next = $nextIcon->show();
+        // Next icon greyed.
+        $nextIcon = $this->newObject('geticon', 'htmlelements');
+        $nextIcon->setIcon('next_grey');
+        $nextGr = $nextIcon->show();
+        unset($nextIcon);
+        // Previous icon.
+        $prIcon = $this->newObject('geticon', 'htmlelements');
+        $prIcon->setIcon('prev');
+        $prev = $prIcon->show();
+        // Previous icon greyed.
+        $prIcon = $this->newObject('geticon', 'htmlelements');
+        $prIcon->setIcon('prev_grey');
+        $prev = $prIcon->show();
+        unset($prIcon);
+        // Display the records.
+        if (!empty($rs)) {
+            foreach($rs as $record) {
+                $edUrl = $this->uri(array(
+                  'action' => 'edituser', 
+                  'id' => $record['id'], 
+                  'mode' => 'edit'), 'oeruserdata');
+                $link = new link($edUrl);
+                $link->link = $editIcon;
+                $delUrl = 'javascript:void(0);';
+                $delLink = new link($delUrl);
+                $delLink->cssId = $record['id'];
+                $delLink->cssClass = "dellink";
+                $delLink->link = $deleteIcon;
+                $table->startRow();
+                $table->addCell($record['title']);
+                $table->addCell($record['firstname']);
+                $table->addCell($record['surname']);
+                $table->addCell($record['username']);
+                $table->addCell($link->show() . ' ' . $delLink->show());
+                $table->endRow();
+            }
+        }
+        $ret = $table->show();
+        return $ret;
     }
     
 }
