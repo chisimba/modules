@@ -1,11 +1,9 @@
 <?php
-
 $objBlocks = $this->getObject('blockfilter', 'dynamiccanvas');
 $pageContent = $this->getVar('pageContent');
 $pageContent = $objBlocks->parse($pageContent);
 
 $objLanguage = $this->getObject('language', 'language');
-
 
 if (isset($errors)) {
     $errorTitle = "";

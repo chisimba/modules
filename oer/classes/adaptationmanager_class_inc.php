@@ -87,6 +87,14 @@ class adaptationmanager extends object {
     function addJS() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('adaptation.js', 'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('makeadaptation.js', 'oer'));
+    }
+    /**
+     * adds essential js
+     */
+    function makeAdaptationJS() {
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('makeadaptation.js', 'oer'));
     }
 
     /**
@@ -108,7 +116,7 @@ class adaptationmanager extends object {
      * @param $mode Whether its a new adaptation or editing an existing one
      * return string
      */
-    public function makeNewAdaptation($id, $mode) {
+    public function makeNewAdaptation($productid, $mode) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
         if ($mode == "new") {
             $objSectionManager = $this->getObject('sectionmanager', 'oer');
@@ -119,20 +127,20 @@ class adaptationmanager extends object {
             /* if ($section != null) {
               $selected = $section['path'];
               } */
-            $createInDdown = $objSectionManager->buildSectionsTree($id, '', "false", 'htmldropdown', $selected) . '</div>';
+            $createInDdown = $objSectionManager->buildSectionsTree($productid, '', "false", 'htmldropdown', $selected) . '</div>';
 
             //Store the mode
             $hidMode = new hiddeninput('mode');
             $hidMode->cssId = "mode";
             $hidMode->value = $mode;
 
-            if ($id != null) {
+            if ($productid != null) {
                 //Get adapted-product data
-                $product = $this->dbproducts->getProduct($id);
+                $product = $this->dbproducts->getProduct($productid);
 
-                $hidId = new hiddeninput('id');
-                $hidId->cssId = "id";
-                $hidId->value = $id;
+                $hidId = new hiddeninput('parentproduct_id');
+                $hidId->cssId = "product_id";
+                $hidId->value = $productid;
                 $objTable->startRow();
                 $objTable->addCell($hidId->show() . $hidMode->show());
                 $objTable->endRow();
@@ -177,6 +185,7 @@ class adaptationmanager extends object {
             $objTable->startRow();
             $description = $this->newObject('htmlarea', 'htmlelements');
             $description->name = 'section_content';
+            $description->cssClass = 'required';
             if ($product != null) {
                 //$description->value = $product['section_content'];
             }
@@ -215,7 +224,8 @@ class adaptationmanager extends object {
             
             //keywords
             $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer') . " (" . $this->objLanguage->languageText('mod_oer_keywordsInstruction', 'oer') . ")");
+            $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer') . " (" .
+                    $this->objLanguage->languageText('mod_oer_keywordsInstruction', 'oer') . ")");
             $objTable->endRow();
 
             $objTable->startRow();
@@ -236,7 +246,7 @@ class adaptationmanager extends object {
             $objTable->startRow();
             $textinput = new textinput('contributed_by');
             $textinput->size = 60;
-            $textinput->cssClass = 'required';
+            //$textinput->cssClass = 'required';
             if ($product != null) {
                 //$textinput->value = $product['contributed_by'];
             }
@@ -246,7 +256,8 @@ class adaptationmanager extends object {
 
             //adaptation notes
             $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer'));
+            $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer') .
+                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
             $objTable->endRow();
 
             $objTable->startRow();
@@ -263,8 +274,8 @@ class adaptationmanager extends object {
             $fieldset->addContent($objTable->show());
 
 
-            $action = "savedaptationsecdata";
-            $formData = new form('saveAdaptation', $this->uri(array("action" => $action, "parentproduct_id" => $id, "mode" => $mode)));
+            $action = "addadaptationsection";
+            $formData = new form('addadaptationsection', $this->uri(array("action" => $action)));
             $formData->addToForm($fieldset);
 
             $button = new button('save', $this->objLanguage->languageText('word_save', 'system', 'Save'));

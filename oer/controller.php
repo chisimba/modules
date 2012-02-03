@@ -68,7 +68,7 @@ class oer extends controller {
      * @return string the name of the method
      *
      */
-    function getMethod(& $action) {
+    function getMethod(& $action) {        
         $this->setLayoutTemplate('layout_tpl.php');
         if ($this->validAction($action)) {
             return '__' . $action;
@@ -267,10 +267,10 @@ class oer extends controller {
     // Manage adaptations
     function __makeadaptation() {
         $id = $this->getParam("id");
-        $mode = $this->getParam("mode", "edit");
+        $mode = $this->getParam("mode", "new");
         $this->setVarByRef("id", $id);
         $this->setVarByRef("mode", $mode);        
-        $errors = $this->getParam("errors", Null);
+        $errors = $this->getParam("errors", "");
         $this->setVarByRef("errors", $errors);
         $this->setVar("step", "1");
         return "makeadaptation_tpl.php";
@@ -279,9 +279,13 @@ class oer extends controller {
     /**
      * Saves the section adaptation data
      */
-    function __saveAdaptation() {
-        $id = $this->objMakeAdaptation->saveNewAdaptation();
-        return "listadaptation_tpl.php";
+    function __addadaptationsection() {
+        $id = $this->objMakeAdaptation->addNewAdaptation();
+        $mode = $this->getParam("mode", "new");
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
+        $this->setVarByRef("errors", $errors);
+        return "makeadaptation_tpl.php";
     }
 
     function __editoriginalproductstep1() {

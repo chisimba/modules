@@ -22,8 +22,7 @@ class makeadaptation extends object {
      * are save, else the form is returned with the errors highlighted
      * @return type 
      */
-    function saveNewAdaptation() {
-
+    function addNewAdaptation() {
         $data = array(
             'parent_productid' => $this->getParam("parentproduct_id"),
             'userid' => $this->objUser->userId(),
@@ -36,8 +35,8 @@ class makeadaptation extends object {
             'contributed_by' => $this->getParam("contributed_by"),
             'adaptation_notes' => $this->getParam("adaptation_notes")
             );
-
-        return $this->dboer_adaptations->saveAdaptation($data);
+            $id = $this->dboer_adaptations->addNewAdaptation($data);
+        return $id;
     }
     /**
      * updates adaptation details
