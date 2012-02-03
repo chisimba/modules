@@ -12,7 +12,7 @@ $objFix->fixTwo();
 
         <?php
         echo '"configData":';
-        echo '"' . $id . '|'.$mode.'"';
+        echo '"' . $productid . '|' . $mode . '|' . $id .'"';
         ?>
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>

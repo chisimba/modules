@@ -21,15 +21,20 @@ class block_makeadaptation extends object {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $data = explode("|", $this->configData);
 
-        $id = NULL;
+        $id = Null;
+        $productid = Null;
         $mode = "new";
-        if (count($data) == 2) {
-            $id = $data[0];
+        if (count($data) == 3) {
+            $productid = $data[0];
+            $mode = $data[1];
+            $id = $data[2];
+        } else if (count($data) == 2) {
+            $productid = $data[0];
             $mode = $data[1];
         } else if (!empty($data )) {
-            $id = $data[0];
+            $productid = $data[0];
         }
-        return $objAdaptationManager->makeNewAdaptation($id, $mode);
+        return $objAdaptationManager->makeNewAdaptation($mode, $id, $productid);
         break;
     }
 }

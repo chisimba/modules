@@ -20,6 +20,7 @@ class adaptationmanager extends object {
         $this->dbInstitution = $this->getObject("dbinstitution", "oer");
         $this->dbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->dbproducts = $this->getObject("dbproducts", "oer");
+        $this->dbOERAdaptations = $this->getObject("dboer_adaptations", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -89,6 +90,7 @@ class adaptationmanager extends object {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('adaptation.js', 'oer'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('makeadaptation.js', 'oer'));
     }
+
     /**
      * adds essential js
      */
@@ -116,187 +118,200 @@ class adaptationmanager extends object {
      * @param $mode Whether its a new adaptation or editing an existing one
      * return string
      */
-    public function makeNewAdaptation($productid, $mode) {
+    public function makeNewAdaptation($mode, $id=Null, $productid=Null) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
-        if ($mode == "new") {
-            $objSectionManager = $this->getObject('sectionmanager', 'oer');
-
-            $createInLang = '<div id="createin">' . $this->objLanguage->languageText('mod_oer_currentpath', 'oer') .
-                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")" . '<div>';
-            $selected = '';
-            /* if ($section != null) {
-              $selected = $section['path'];
-              } */
-            $createInDdown = $objSectionManager->buildSectionsTree($productid, '', "false", 'htmldropdown', $selected) . '</div>';
-
-            //Store the mode
-            $hidMode = new hiddeninput('mode');
-            $hidMode->cssId = "mode";
-            $hidMode->value = $mode;
-
-            if ($productid != null) {
-                //Get adapted-product data
-                $product = $this->dbproducts->getProduct($productid);
-
-                $hidId = new hiddeninput('parentproduct_id');
-                $hidId->cssId = "product_id";
-                $hidId->value = $productid;
-                $objTable->startRow();
-                $objTable->addCell($hidId->show() . $hidMode->show());
-                $objTable->endRow();
-            } else {
-                $objTable->startRow();
-                $objTable->addCell($hidMode->show());
-                $objTable->endRow();
-            }
-
-            //the title
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_sectiontitle', 'oer') .
-                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
-            $objTable->endRow();
-
-            $objTable->startRow();
-            $textinput = new textinput('section_title');
-            $textinput->size = 60;
-            $textinput->cssClass = 'required';
-            if ($product != null) {
-                $textinput->value = $product['title'];
-            }
-            $objTable->addCell($textinput->show());
-            $objTable->endRow();
-
-            //Current path lang item
-            $objTable->startRow();
-            $objTable->addCell($createInLang);
-            $objTable->endRow();
-
-            //current path drop down
-            $objTable->startRow();
-            $objTable->addCell($createInDdown);
-            $objTable->endRow();
-
-            //section content
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_sectioncontent', 'oer') .
-                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
-            $objTable->endRow();
-
-            $objTable->startRow();
-            $description = $this->newObject('htmlarea', 'htmlelements');
-            $description->name = 'section_content';
-            $description->cssClass = 'required';
-            if ($product != null) {
-                //$description->value = $product['section_content'];
-            }
-            $description->height = '150px';
-            $description->setBasicToolBar();
-            $objTable->addCell($description->show());
-            $objTable->endRow();
-
-            //published status
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_status', 'oer') .
-                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
-            $objTable->endRow();
-            $objTable->startRow();
-            $published = new dropdown('status');
-            $published->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
-            $published->cssClass = "required";
-            $published->addOption('disabled', $this->objLanguage->languageText('mod_oer_disabled', 'oer'));
-            $published->addOption('draft', $this->objLanguage->languageText('mod_oer_draft', 'oer'));
-            $published->addOption('published', $this->objLanguage->languageText('mod_oer_published', 'oer'));
-
-            //$published->setSelected($curriculum['status']);
-            $objTable->addCell($published->show());
-            $objTable->endRow();
-
-            //attach file
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_attachfile', 'oer'));
-            $objTable->endRow();
-
-            $hidAttachment = new hiddeninput('attachment');
-            $hidAttachment->value = "";
-            $objTable->startRow();
-            $objTable->addCell($hidAttachment->show());
-            $objTable->endRow();
-            
-            //keywords
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer') . " (" .
-                    $this->objLanguage->languageText('mod_oer_keywordsInstruction', 'oer') . ")");
-            $objTable->endRow();
-
-            $objTable->startRow();
-            $textinput = new textinput('keywords');
-            $textinput->size = 60;
-            $textinput->cssClass = 'required';
-            if ($product != null) {
-                $textinput->value = $product['keywords'];
-            }
-            $objTable->addCell($textinput->show());
-            $objTable->endRow();
-
-            //publisher
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_contributedby', 'oer'));
-            $objTable->endRow();
-
-            $objTable->startRow();
-            $textinput = new textinput('contributed_by');
-            $textinput->size = 60;
-            //$textinput->cssClass = 'required';
-            if ($product != null) {
-                //$textinput->value = $product['contributed_by'];
-            }
-            $objTable->addCell($textinput->show());
-            $objTable->endRow();
-
-
-            //adaptation notes
-            $objTable->startRow();
-            $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer') .
-                    " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
-            $objTable->endRow();
-
-            $objTable->startRow();
-            $textarea = new textarea('adaptation_notes', '', 5, 60);
-            $textarea->cssClass = 'required';
-            if ($product != null) {
-                //$textarea->value = $product['adaptation_notes'];
-            }
-            $objTable->addCell($textarea->show());
-            $objTable->endRow();
-
-            $fieldset = $this->newObject('fieldset', 'htmlelements');
-            $fieldset->setLegend($this->objLanguage->languageText('mod_oer_sectionviewaddadaptation', 'oer'));
-            $fieldset->addContent($objTable->show());
-
-
-            $action = "addadaptationsection";
-            $formData = new form('addadaptationsection', $this->uri(array("action" => $action)));
-            $formData->addToForm($fieldset);
-
-            $button = new button('save', $this->objLanguage->languageText('word_save', 'system', 'Save'));
-            $button->setToSubmit();
-            $formData->addToForm('<br/>' . $button->show());
-
-
-            $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-            $uri = $this->uri(array("action" => "adaptationlist"));
-            $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
-            $formData->addToForm('&nbsp;&nbsp;' . $button->show());
-
-            $header = new htmlheading();
-            $header->type = 2;
-            $header->cssClass = "original_product_title";
-            $header->str = $product['title'];
-
-            return $header->show() . $formData->show();
-        } else {
-            return "Coming soon - edit adaptation";
+        if ($productid == Null || empty($productid)) {
+            return $this->nextAction('adaptationlist');
         }
+        $objSectionManager = $this->getObject('sectionmanager', 'oer');
+
+        $createInLang = '<div id="createin">' . $this->objLanguage->languageText('mod_oer_currentpath', 'oer') .
+                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")" . '<div>';
+        $selected = '';
+        /* if ($section != null) {
+          $selected = $section['path'];
+          } */
+        $createInDdown = $objSectionManager->buildSectionsTree($productid, '', "false", 'htmldropdown', $selected) . '</div>';
+
+        //Store the mode
+        $hidMode = new hiddeninput('mode');
+        $hidMode->cssId = "mode";
+        $hidMode->value = $mode;
+
+
+        if ($id != Null) {
+            //Get adaptation section data
+            $adaptationSection = $this->dbOERAdaptations->listSingle($id);
+            if (!empty($adaptationSection)) {
+                $adaptationSection = $adaptationSection[0];
+            }
+        }
+        if ($productid != Null) {
+            //Get adapted-product data
+            $product = $this->dbproducts->getProduct($productid);
+        }
+
+        //the title
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_sectiontitle', 'oer') .
+                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('section_title');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($id != null) {
+            $textinput->value = $adaptationSection['section_title'];
+        } else if ($productid != null) {
+            $textinput->value = $product['title'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+        //Current path lang item
+        $objTable->startRow();
+        $objTable->addCell($createInLang);
+        $objTable->endRow();
+
+        //current path drop down
+        $objTable->startRow();
+        $objTable->addCell($createInDdown);
+        $objTable->endRow();
+
+        //section content
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_sectioncontent', 'oer') .
+                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $description = $this->newObject('htmlarea', 'htmlelements');
+        $description->name = 'section_content';
+        $description->cssClass = 'required';
+
+        if ($id != null) {
+            $description->value = $adaptationSection['section_content'];
+        }
+        $description->height = '150px';
+        $description->setBasicToolBar();
+        $objTable->addCell($description->show());
+        $objTable->endRow();
+
+        //published status
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_status', 'oer') .
+                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
+        $objTable->endRow();
+        $objTable->startRow();
+        $published = new dropdown('status');
+        $published->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $published->cssClass = "required";
+        $published->addOption('disabled', $this->objLanguage->languageText('mod_oer_disabled', 'oer'));
+        $published->addOption('draft', $this->objLanguage->languageText('mod_oer_draft', 'oer'));
+        $published->addOption('published', $this->objLanguage->languageText('mod_oer_published', 'oer'));
+
+        if ($id != null) {
+            $published->setSelected($adaptationSection['status']);
+        }
+        $objTable->addCell($published->show());
+        $objTable->endRow();
+
+        //attach file
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_attachfile', 'oer'));
+        $objTable->endRow();
+
+        $hidAttachment = new hiddeninput('attachment');
+        $hidAttachment->value = "";
+        if ($id != null) {
+            $hidAttachment->value = $adaptationSection['attachment'];
+        }
+        $objTable->startRow();
+        $objTable->addCell($hidAttachment->show());
+        $objTable->endRow();
+
+        //keywords
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_keywords', 'oer') . " (" .
+                $this->objLanguage->languageText('mod_oer_keywordsInstruction', 'oer') . ")");
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('keywords');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+
+        if ($id != null) {
+            $textinput->value = $adaptationSection['keywords'];
+        } else if ($product) {
+            $textinput->value = $product['keywords'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+        //contributed by
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_contributedby', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textinput = new textinput('contributed_by');
+        $textinput->size = 60;
+        $textinput->cssClass = 'required';
+        if ($id != null) {
+            $textinput->value = $adaptationSection['contributed_by'];
+        }
+        $objTable->addCell($textinput->show());
+        $objTable->endRow();
+
+
+        //adaptation notes
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer') .
+                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $textarea = new textarea('adaptation_notes', '', 5, 60);
+        $textarea->cssClass = 'required';
+
+        if ($id != null) {
+            $textarea->value = $adaptationSection['adaptation_notes'];
+        }
+
+        $objTable->addCell($textarea->show());
+        $objTable->endRow();
+
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        if ($mode == "new") {
+            $fieldset->setLegend($this->objLanguage->languageText('mod_oer_sectionviewaddadaptation', 'oer'));
+        } else {
+            $fieldset->setLegend($this->objLanguage->languageText('mod_oer_sectionvieweditadaptation', 'oer'));
+        }
+        $fieldset->addContent($objTable->show());
+
+
+        $action = "addadaptationsection";
+        $formData = new form('addadaptationsection', $this->uri(array("action" => $action, "id" => $id, "productid" => $productid, "mode" => $mode)));
+        $formData->addToForm($fieldset);
+
+        $button = new button('save', $this->objLanguage->languageText('word_save', 'system', 'Save'));
+        $button->setToSubmit();
+        $formData->addToForm('<br/>' . $button->show());
+
+
+        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "adaptationlist"));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $formData->addToForm('&nbsp;&nbsp;' . $button->show());
+
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'];
+
+        return $header->show() . $formData->show();
     }
 
     /**

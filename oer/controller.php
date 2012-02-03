@@ -68,7 +68,7 @@ class oer extends controller {
      * @return string the name of the method
      *
      */
-    function getMethod(& $action) {        
+    function getMethod(& $action) {
         $this->setLayoutTemplate('layout_tpl.php');
         if ($this->validAction($action)) {
             return '__' . $action;
@@ -230,7 +230,6 @@ class oer extends controller {
         die($id);
     }
 
-
     /**
      * Saves the original product in step 2
      */
@@ -266,10 +265,12 @@ class oer extends controller {
     // Adaptations home
     // Manage adaptations
     function __makeadaptation() {
-        $id = $this->getParam("id");
+        $id = $this->getParam("id", Null);
+        $productid = $this->getParam("productid", Null);
         $mode = $this->getParam("mode", "new");
         $this->setVarByRef("id", $id);
-        $this->setVarByRef("mode", $mode);        
+        $this->setVarByRef("productid", $productid);
+        $this->setVarByRef("mode", $mode);
         $errors = $this->getParam("errors", "");
         $this->setVarByRef("errors", $errors);
         $this->setVar("step", "1");
@@ -280,12 +281,22 @@ class oer extends controller {
      * Saves the section adaptation data
      */
     function __addadaptationsection() {
-        $id = $this->objMakeAdaptation->addNewAdaptation();
         $mode = $this->getParam("mode", "new");
+        $id = $this->getParam("id", Null);
+        $productid = $this->getParam("productid", Null);
+        if ($mode == "edit" && ($id != Null || !empty($id))) {
+            $this->objMakeAdaptation->updateAdaptationSection();
+            $mode = "edit";
+        } else {
+            $id = $this->objMakeAdaptation->addNewAdaptationSection();            
+            $mode = "edit";
+        }        
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("productid", $productid);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("errors", $errors);
-        return "makeadaptation_tpl.php";
+        $params = array("id" => $id, "productid" => $productid, "mode" => $mode);
+        return $this->nextAction('makeadaptation', $params);    
     }
 
     function __editoriginalproductstep1() {

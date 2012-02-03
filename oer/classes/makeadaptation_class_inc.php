@@ -22,9 +22,9 @@ class makeadaptation extends object {
      * are save, else the form is returned with the errors highlighted
      * @return type 
      */
-    function addNewAdaptation() {
+    function addNewAdaptationSection() {
         $data = array(
-            'parent_productid' => $this->getParam("parentproduct_id"),
+            'parent_productid' => $this->getParam("productid"),
             'userid' => $this->objUser->userId(),
             'section_title' => $this->getParam("section_title"),
             'current_path' => $this->getParam("selectnode"),
@@ -35,17 +35,17 @@ class makeadaptation extends object {
             'contributed_by' => $this->getParam("contributed_by"),
             'adaptation_notes' => $this->getParam("adaptation_notes")
             );
-            $id = $this->dboer_adaptations->addNewAdaptation($data);
+            $id = $this->dboer_adaptations->addNewAdaptation($data);            
         return $id;
     }
     /**
      * updates adaptation details
      * @return type 
      */
-    function updateAdaptation() {
+    function updateAdaptationSection() {
         $id = $this->getParam("id");
         $data = array(
-            'parent_productid' => $this->getParam("parentproduct_id"),
+            //'parent_productid' => $this->getParam("productid"),
             'userid' => $this->objUser->userId(),
             'section_title' => $this->getParam("section_title"),
             'current_path' => $this->getParam("selectnode"),
