@@ -5,12 +5,18 @@ $objFix->fixThree();
 ?>
 <div id="threecolumn">
     <div id="Canvas_Content_Body_Region1">
+         {
+        "display" : "block",
+        "module" : "oeruserdata",
+        "block" : "myuserdetails"
+        }
         {
         "display" : "block",
         "module" : "language",
         "block" : "language"
         }
 
+        
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>

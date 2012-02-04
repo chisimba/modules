@@ -15,6 +15,7 @@ class block_cpanel extends object {
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->title="";
     }
 
     function show() {

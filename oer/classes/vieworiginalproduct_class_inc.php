@@ -57,7 +57,7 @@ class vieworiginalproduct extends object {
             $editControls.="" . $deleteLink->show();
         }
         // $editControls.='</div>';
-        $leftContent.='<h1 class="viewproduct_title">' . $editControls .$product['title'] . '</h1>';
+        $leftContent.='<h1 class="viewproduct_title">' . $editControls . $product['title'] . '</h1>';
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
 
         $leftContent.=$product['description'];
@@ -84,7 +84,33 @@ class vieworiginalproduct extends object {
         $rightContent.='<div id="viewproduct_selectlanguages_label">' . $objLanguage->languageText('mod_oer_selectlangversions', 'oer') . ':<br/>' . $language->show() . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_relatednews_label">' . $objLanguage->languageText('mod_oer_relatednews', 'oer') . ': </div><br/><br/>';
         $rightContent.='<div id="viewproduct_relatedevents_label">' . $objLanguage->languageText('mod_oer_relatedevents', 'oer') . ':</div><br/><br/>';
-        $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ': </div>';
+
+        $objWallOps = $this->getObject('wallops', 'wall');
+
+        $numOfPostsToDisplay = 10;
+        $wallType = '4';
+        $comments = '';
+        if ($this->objUser->isLoggedIn()) {
+            $comments = $objWallOps->showObjectWall('identifier', $productId,0,$numOfPostsToDisplay);
+        } else {
+            $keyValue = $productId;
+            $keyName = 'identifier';
+            $dbWall = $this->getObject('dbwall', 'wall');
+            $posts = $dbWall->getMorePosts($wallType, 0, $keyName, $keyValue, $numOfPostsToDisplay);
+            $numPosts = $dbWall->countPosts($wallType, FALSE, $keyName, $keyValue);
+            $str = '';
+            if ($numPosts <= 10) {
+                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, TRUE, FALSE,FALSE);
+                
+            } else {
+               $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, FALSE, FALSE,FALSE);
+            }
+
+            $comments = "\n\n<div class='wall_wrapper' id='wall_wrapper_{$keyValue}'>\n" . $str . "\n</div>\n\n";
+        }
+        $rightContent.='<div id="viewproduct_usercomments_label">' . $objLanguage->languageText('mod_oer_usercomments', 'oer') . ':' .
+                $comments .
+                '</div>';
 
 
         $sections = '<div id="nodeband">';

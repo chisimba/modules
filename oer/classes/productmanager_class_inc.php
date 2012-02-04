@@ -225,7 +225,7 @@ class productmanager extends object {
      */
     public function buildProductFormStep1($id) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
-        $product=null;
+        $product = null;
         if ($id != null) {
             $product = $this->dbproducts->getProduct($id);
             $hidId = new hiddeninput('id');
@@ -467,7 +467,7 @@ class productmanager extends object {
         if ($product != null) {
             $provenonce->value = $product['provenonce'];
         }
-       // $provenonce->setBasicToolBar();
+        // $provenonce->setBasicToolBar();
         $objTable->addCell($provenonce->show());
         $objTable->endRow();
 
@@ -877,7 +877,7 @@ class productmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
-            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'], "mode" => $mode)));
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'],'module'=>'oer', "id" => $originalProduct['id'], "mode" => $mode)));
 
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
@@ -889,7 +889,7 @@ class productmanager extends object {
                     $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
                 }
 
-                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $originalProduct['id'], "mode" => $mode)));
+                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'],'module'=>'oer', "id" => $originalProduct['id'], "mode" => $mode)));
                 $thumbnailLink->link = $thumbnail . '<br/>';
                 $thumbnailLink->cssClass = 'original_product_listing_thumbail';
                 $product = $thumbnailLink->show() . '<br/>' . $titleLink->show();
