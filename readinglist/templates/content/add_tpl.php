@@ -52,7 +52,7 @@
 	$objTable->addRow($row, 'even');
  	$table = $this->newObject('htmltable', 'htmlelements');
 	$addDropdown = new dropdown('publishingYear');
-	$year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07");
+	$year=array("yr_80", "yr_81", "yr_82", "yr_83", "yr_84", "yr_85", "yr_86", "yr_87", "yr_88", "yr_89", "yr_90", "yr_91", "yr_92", "yr_93", "yr_94", "yr_95", "yr_96", "yr_97", "yr_98", "yr_99", "yr_00", "yr_01", "yr_02", "yr_03", "yr_04", "yr_05", "yr_06", "yr_07", "yr_08", "yr_09", "yr_10", "yr_11", "yr_12", "yr_13");
 	foreach ($year as $row)
 	{
     		$row=trim($this->objLanguage->languageText($row));
