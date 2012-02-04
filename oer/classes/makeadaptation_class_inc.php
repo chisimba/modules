@@ -7,12 +7,14 @@
  */
 class makeadaptation extends object {
 
-    private $dboer_adaptations;
+    private $dbsectioncontent;
+    private $dbsectionnodes;
     private $objUser;
     private $dbproducts;
 
     function init() {
-        $this->dboer_adaptations = $this->getObject('dboer_adaptations', 'oer');
+        $this->dbsectioncontent = $this->getObject('dbsectioncontent', 'oer');
+        $this->dbsectionnodes = $this->getObject('dbsectionnodes', 'oer');
         $this->objUser = $this->getObject("user", "security");
         $this->dbproducts = $this->getObject("dbproducts", "oer");
     }
@@ -23,42 +25,55 @@ class makeadaptation extends object {
      * @return type 
      */
     function addNewAdaptationSection() {
+        $nodeid = $this->getParam("node_id");
+        $title = $this->getParam("section_title");
         $data = array(
-            'parent_productid' => $this->getParam("productid"),
-            'userid' => $this->objUser->userId(),
-            'section_title' => $this->getParam("section_title"),
-            'current_path' => $this->getParam("selectnode"),
-            'section_content' => $this->getParam("section_content"),
+            'node_id' => $nodeid,
+            'title' => $title,
+            'content' => $this->getParam("section_content"),
             'status' => $this->getParam("status"),
-            'attachment' => $this->getParam("attachment"),
+            'contributedby' => $this->getParam("contributed_by"),
+            'userid' => $this->objUser->userId(),
             'keywords' => $this->getParam("keywords"),
-            'contributed_by' => $this->getParam("contributed_by"),
-            'adaptation_notes' => $this->getParam("adaptation_notes")
-            );
-            $id = $this->dboer_adaptations->addNewAdaptation($data);            
+            'adaptation_notes' => $this->getParam("adaptation_notes"),
+            'current_path' => $this->getParam("selectnode")
+        );
+        $id = $this->dbsectioncontent->addSectionContent($data);
+        //Update section node title
+        $nodedata = array(
+            'title' => $title
+        );
+        $this->dbsectionnodes->updateSectionNode($nodedata, $nodeid);
         return $id;
     }
+
     /**
      * updates adaptation details
      * @return type 
      */
     function updateAdaptationSection() {
         $id = $this->getParam("id");
+        $nodeid = $this->getParam("node_id");
+        $title = $this->getParam("section_title");
         $data = array(
-            //'parent_productid' => $this->getParam("productid"),
-            'userid' => $this->objUser->userId(),
-            'section_title' => $this->getParam("section_title"),
-            'current_path' => $this->getParam("selectnode"),
-            'section_content' => $this->getParam("section_content"),
+            //'node_id' => $this->getParam("node_id"),
+            'title' => $title,
+            'content' => $this->getParam("section_content"),
             'status' => $this->getParam("status"),
-            'attachment' => $this->getParam("attachment"),
+            'contributedby' => $this->getParam("contributed_by"),
+            'userid' => $this->objUser->userId(),
             'keywords' => $this->getParam("keywords"),
-            'contributed_by' => $this->getParam("contributed_by"),
-            'adaptation_notes' => $this->getParam("adaptation_notes")
+            'adaptation_notes' => $this->getParam("adaptation_notes"),
+            'current_path' => $this->getParam("selectnode")
         );
 
-        $this->dboer_adaptations->updateAdaptation($data, $id);
-        return $id;
+        $this->dbsectioncontent->updateSectionContent($data, $id);
+        //Update section node title
+        $nodedata = array(
+            'title' => $title
+        );
+        $this->dbsectionnodes->updateSectionNode($nodedata, $nodeid);
+        return $nodeid;
     }
 
     /**

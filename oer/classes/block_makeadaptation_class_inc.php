@@ -20,7 +20,6 @@ class block_makeadaptation extends object {
     public function show() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $data = explode("|", $this->configData);
-
         $id = Null;
         $productid = Null;
         $mode = "new";

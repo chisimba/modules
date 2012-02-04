@@ -51,12 +51,12 @@ class dbproducts extends dbtable {
      * @param  $id ID of the product
      * @return array
      */
-    function getParentData($id) {        
+    function getParentData($id) {
         //Fetch parent id of the adaptation
         $sql = "select * from $this->productsTableName where id = '$id'";
         $data = $this->getArray($sql);
-        if (count($data) > 0) {            
-            $sql = "select * from $this->productsTableName where id = '".$data[0]["parent_id"]."'";
+        if (count($data) > 0) {
+            $sql = "select * from $this->productsTableName where id = '" . $data[0]["parent_id"] . "'";
             $data = $this->getArray($sql);
             if (count($data) > 0) {
                 return $data[0];
@@ -85,11 +85,32 @@ class dbproducts extends dbtable {
     }
 
     /**
+     * returns true if product is original-product
+     * @param  $id the product id
+     * @return True if product does not have parentid, else false
+     */
+    function isOriginalProduct($id) {
+        $sql = "select * from $this->productsTableName where id = '$id'";
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
+            if (!empty($data[0]['parent_id'])) {
+                return False;
+            } else {
+                return True;
+            }
+        } else {
+            return False;
+        }
+    }
+
+    /**
      * deletes a product
      * @param $id  ID of the product to be deleted
      */
     function deleteOriginalProduct($id) {
         $this->delete("id", $id);
     }
+
 }
+
 ?>

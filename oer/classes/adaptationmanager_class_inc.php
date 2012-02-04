@@ -12,6 +12,7 @@ class adaptationmanager extends object {
     private $objLanguage;
     public $objConfig;
     private $objUser;
+    private $dbSectionContent;
 
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
@@ -21,6 +22,7 @@ class adaptationmanager extends object {
         $this->dbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->dbproducts = $this->getObject("dbproducts", "oer");
         $this->dbOERAdaptations = $this->getObject("dboer_adaptations", "oer");
+        $this->dbSectionContent = $this->getObject("dbsectioncontent", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -138,13 +140,17 @@ class adaptationmanager extends object {
         $hidMode->cssId = "mode";
         $hidMode->value = $mode;
 
-
         if ($id != Null) {
-            //Get adaptation section data
-            $adaptationSection = $this->dbOERAdaptations->listSingle($id);
-            if (!empty($adaptationSection)) {
-                $adaptationSection = $adaptationSection[0];
-            }
+            //Get adaptation section data with sectionnode id
+            $adaptationSection = $this->dbSectionContent->getSectionContent($id);
+
+            $id = $adaptationSection["id"];
+            $mode = "edit";
+            $hidNodeId = new hiddeninput('node_id');
+            $hidNodeId->value = $adaptationSection['node_id'];
+            $objTable->startRow();
+            $objTable->addCell($hidNodeId->show());
+            $objTable->endRow();
         }
         if ($productid != Null) {
             //Get adapted-product data
@@ -162,7 +168,7 @@ class adaptationmanager extends object {
         $textinput->size = 60;
         $textinput->cssClass = 'required';
         if ($id != null) {
-            $textinput->value = $adaptationSection['section_title'];
+            $textinput->value = $adaptationSection['title'];
         } else if ($productid != null) {
             $textinput->value = $product['title'];
         }
@@ -191,7 +197,7 @@ class adaptationmanager extends object {
         $description->cssClass = 'required';
 
         if ($id != null) {
-            $description->value = $adaptationSection['section_content'];
+            $description->value = $adaptationSection['content'];
         }
         $description->height = '150px';
         $description->setBasicToolBar();
@@ -225,7 +231,7 @@ class adaptationmanager extends object {
         $hidAttachment = new hiddeninput('attachment');
         $hidAttachment->value = "";
         if ($id != null) {
-            $hidAttachment->value = $adaptationSection['attachment'];
+            //$hidAttachment->value = $adaptationSection['attachment'];
         }
         $objTable->startRow();
         $objTable->addCell($hidAttachment->show());
@@ -260,7 +266,7 @@ class adaptationmanager extends object {
         $textinput->size = 60;
         $textinput->cssClass = 'required';
         if ($id != null) {
-            $textinput->value = $adaptationSection['contributed_by'];
+            $textinput->value = $adaptationSection['contributedby'];
         }
         $objTable->addCell($textinput->show());
         $objTable->endRow();
@@ -300,9 +306,8 @@ class adaptationmanager extends object {
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
-
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "adaptationlist"));
+        $uri = $this->uri(array("action" => "viewadaptation", "id" => $productid));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
 

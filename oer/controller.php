@@ -284,19 +284,20 @@ class oer extends controller {
         $mode = $this->getParam("mode", "new");
         $id = $this->getParam("id", Null);
         $productid = $this->getParam("productid", Null);
+
         if ($mode == "edit" && ($id != Null || !empty($id))) {
-            $this->objMakeAdaptation->updateAdaptationSection();
+            $id = $this->objMakeAdaptation->updateAdaptationSection();
             $mode = "edit";
         } else {
-            $id = $this->objMakeAdaptation->addNewAdaptationSection();            
+            $id = $this->objMakeAdaptation->addNewAdaptationSection();
             $mode = "edit";
-        }        
+        }
         $this->setVarByRef("id", $id);
         $this->setVarByRef("productid", $productid);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("errors", $errors);
         $params = array("id" => $id, "productid" => $productid, "mode" => $mode);
-        return $this->nextAction('makeadaptation', $params);    
+        return $this->nextAction('makeadaptation', $params);
     }
 
     function __editoriginalproductstep1() {
@@ -491,8 +492,12 @@ class oer extends controller {
     function __editsectionnode() {
         $id = $this->getParam("id");
         $productid = $this->getParam("editproductid");
-        $data = $productid . '|' . $id;
-
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct)
+            $isOriginalProduct = 1;
+        else
+            $isOriginalProduct = 0;
+        $data = $productid . '|' . $id . '|' . $isOriginalProduct;
         $this->setVarByRef("data", $data);
         return "addeditsectionnode_tpl.php";
     }
@@ -504,9 +509,21 @@ class oer extends controller {
     function __editsectioncontent() {
         $sectionid = $this->getParam("id");
         $productid = $this->getParam("editproductid");
-        $data = $productid . '|' . $sectionid;
-        $this->setVarByRef("data", $data);
-        return "addeditsectioncontent_tpl.php";
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct) {
+            $data = $productid . '|' . $sectionid;
+            $this->setVarByRef("data", $data);
+            return "addeditsectioncontent_tpl.php";
+        } else {
+            $mode = $this->getParam("mode", "new");
+            $this->setVarByRef("id", $sectionid);
+            $this->setVarByRef("productid", $productid);
+            $this->setVarByRef("mode", $mode);
+            $errors = $this->getParam("errors", "");
+            $this->setVarByRef("errors", $errors);
+            $this->setVar("step", "1");
+            return "makeadaptation_tpl.php";
+        }
     }
 
     function __viewsection() {
@@ -553,9 +570,15 @@ class oer extends controller {
     function __createsectionnode() {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $productId = $this->getParam("productid");
+        $isOriginalProduct = $this->getParam("isoriginalproduct");
         $id = $sectionManager->saveSectionNode();
-        $params = array("nodeid" => $id, "id" => $productId);
-        return $this->nextAction('vieworiginalproduct', $params);
+        if ($isOriginalProduct == 1) {
+            $params = array("nodeid" => $id, "id" => $productId);
+            return $this->nextAction('vieworiginalproduct', $params);
+        } else {
+            $params = array("nodeid" => $id, "id" => $productId);
+            return $this->nextAction('viewadaptation', $params);
+        }
     }
 
     /**
@@ -578,9 +601,15 @@ class oer extends controller {
     function __updatesectionnode() {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $productId = $this->getParam("productid");
+        $isOriginalProduct = $this->getParam("isoriginalproduct");
         $id = $sectionManager->updateSectionNode();
-        $params = array("nodeid" => $id, "id" => $productId);
-        return $this->nextAction('vieworiginalproduct', $params);
+        if ($isOriginalProduct == 1) {
+            $params = array("nodeid" => $id, "id" => $productId);
+            return $this->nextAction('vieworiginalproduct', $params);
+        } else {
+            $params = array("id" => $productId);
+            return $this->nextAction('viewadaptation', $params);
+        }
     }
 
     /**

@@ -44,8 +44,9 @@ class dbsectioncontent extends dbTable {
      * @param type $id
      * @return type 
      */
-    function updateSectionContent($data,$id){
-        return $this->update("id", $id, $data);
+    function updateSectionContent($data,$id){        
+        $results = $this->update("id", $id, $data);        
+        return $results;
     }
 }
 

@@ -84,17 +84,17 @@ class sectionmanager extends object {
      */
     function updateCurriculum() {
         $productId = $this->getParam("productid");
-        $id=  $this->getParam("id");
+        $id = $this->getParam("id");
         $data = array(
             "title" => $this->getParam("title"),
             "forward" => $this->getParam("forward"),
             "background" => $this->getParam("background"),
-            "introduction"=>  $this->getParam("introduction"),
+            "introduction" => $this->getParam("introduction"),
             "status" => $this->getParam("status")
         );
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
-        $dbCurriculum->updateCurriculum($data,$id);
+        $dbCurriculum->updateCurriculum($data, $id);
         //here we must return the product id to be used for creating section tree
         return $productId;
     }
@@ -234,7 +234,7 @@ class sectionmanager extends object {
      * Builds a form for managing section
      * @return type 
      */
-    function buildAddEditCuriculumForm($productId, $id=null, $parentid=null) {
+    function buildAddEditCuriculumForm($productId, $id=null, $parentid=null, $isOriginalProduct = null) {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
         $product = $this->dbproducts->getProduct($productId);
@@ -377,18 +377,18 @@ class sectionmanager extends object {
      * @param type $name
      * @return type 
      */
-    function buildCreateEditNodeForm($productId, $sectionId) {
+    function buildCreateEditNodeForm($productId, $sectionId, $isOriginalProduct) {
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
         $curriculum = $dbCurriculum->getCurriculum($productId);
 
         if ($curriculum == null) {
-            return $this->buildAddEditCuriculumForm($productId, $sectionId);
+            return $this->buildAddEditCuriculumForm($productId, $sectionId, $isOriginalProduct);
         } else {
             if ($sectionId == $curriculum['id']) {
-                return $this->buildAddEditCuriculumForm($productId, $sectionId);
+                return $this->buildAddEditCuriculumForm($productId, $sectionId, $isOriginalProduct);
             } else {
-                return $this->getAddEditNodeForm($productId, $sectionId);
+                return $this->getAddEditNodeForm($productId, $sectionId, $isOriginalProduct);
             }
         }
     }
@@ -398,7 +398,7 @@ class sectionmanager extends object {
      * @param type $name
      * @return type 
      */
-    function getAddEditNodeForm($productId, $sectionId) {
+    function getAddEditNodeForm($productId, $sectionId, $isOriginalProduct) {
         $dbSections = $this->getObject("dbsectionnodes", "oer");
         $section = $dbSections->getSectionNode($sectionId);
 
@@ -415,6 +415,11 @@ class sectionmanager extends object {
             $hidId->value = $sectionId;
             $form->addToForm($hidId->show());
         }
+        $hidOP = new hiddeninput('isoriginalproduct');
+        $hidOP->cssId = "id";
+        $hidOP->value = $isOriginalProduct;
+        $form->addToForm($hidOP->show());
+
         $label = new label($this->objLanguage->languageText('mod_oer_nodetype', 'oer'), 'input_sectionname');
         $nodeType = new dropdown('nodetype');
         $nodeType->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
@@ -465,7 +470,12 @@ class sectionmanager extends object {
         $form->addToForm('<br/>' . $button->show());
 
         $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "vieworiginalproduct", "id" => $productId));
+        //Check if original product or adaptation
+        if ($isOriginalProduct == 1) {
+            $uri = $this->uri(array("action" => "vieworiginalproduct", "id" => $productId));
+        } else {
+            $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+        }
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $form->addToForm('&nbsp;&nbsp;' . $button->show());
 

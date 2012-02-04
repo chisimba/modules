@@ -39,8 +39,8 @@ class viewadaptation extends object {
         $newAdapt = "";
         if ($hasPerms) {
             //Link for - adapting product from existing adapatation
-            //$newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
-            $newAdaptLink = new link($this->uri(array("action" => "makeadaptation", "productid" => $productId, 'mode' => 'new')));
+            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
+            //$newAdaptLink = new link($this->uri(array("action" => "makeadaptation", "productid" => $productId, 'mode' => 'new')));
             $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
             $newAdapt = $newAdaptLink->show();
         }
