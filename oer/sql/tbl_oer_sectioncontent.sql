@@ -1,5 +1,4 @@
 <?php
-
 //define table
 $tablename = 'tbl_oer_sectioncontent';
 $options = array('comment'=>'Table to store section content','collate'=>'utf8_general_ci','character_set'=>'utf8');
@@ -12,6 +11,9 @@ $fields = array(
                 'content' => array('type' => 'text'),
                 'status' => array('type' => 'text','length' => 12),
                 'contributedby' => array('type' => 'text'),
-
+                'userid'=>array('type' => 'text','length' => 32),
+                'keywords' => array('type' => 'text', 'length' => 255),
+                'adaptation_notes' => array('type' => 'text'),
+                'current_path' => array('type' => 'text', 'length' => 255)
                 );
 ?>

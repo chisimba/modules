@@ -63,5 +63,50 @@
             </add>
         </data>
     </update>
-
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.131</version>
+        <description><br/>Added userid</description>
+        <data>
+            <add>
+                <name>userid</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.131</version>
+        <description><br/>Added keywords</description>
+        <data>
+            <add>
+                <name>keywords</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.131</version>
+        <description><br/>Added adaptation notes</description>
+        <data>
+            <add>
+                <name>adaptation_notes</name>
+                <type>text</type>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.131</version>
+        <description><br/>Added current path</description>
+        <data>
+            <add>
+                <name>current_path</name>
+                <type>text</type>
+            </add>
+        </data>
+    </update>
 </updates>
