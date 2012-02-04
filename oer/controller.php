@@ -30,7 +30,7 @@ class oer extends controller {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "adaptationlist",
             "viewadaptation", "fullviewadaptation", "selfregister",
             "viewsection", "checkusernameajax", "userdetailssave",
-            "showcaptcha", "verifycaptcha");
+            "showcaptcha", "verifycaptcha","viewrootsection");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {

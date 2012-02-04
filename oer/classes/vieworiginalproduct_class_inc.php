@@ -9,6 +9,7 @@ class vieworiginalproduct extends object {
 
     function init() {
         $this->objUser = $this->getObject("user", "security");
+        $this->loadJS();
     }
 
     /**
@@ -60,7 +61,9 @@ class vieworiginalproduct extends object {
         $leftContent.='<h1 class="viewproduct_title">' . $editControls . $product['title'] . '</h1>';
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
 
+
         $leftContent.=$product['description'];
+        $leftContent.=$this->createRatingDiv();
 
         $rightContent = "";
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
@@ -91,7 +94,7 @@ class vieworiginalproduct extends object {
         $wallType = '4';
         $comments = '';
         if ($this->objUser->isLoggedIn()) {
-            $comments = $objWallOps->showObjectWall('identifier', $productId,0,$numOfPostsToDisplay);
+            $comments = $objWallOps->showObjectWall('identifier', $productId, 0, $numOfPostsToDisplay);
         } else {
             $keyValue = $productId;
             $keyName = 'identifier';
@@ -100,10 +103,9 @@ class vieworiginalproduct extends object {
             $numPosts = $dbWall->countPosts($wallType, FALSE, $keyName, $keyValue);
             $str = '';
             if ($numPosts <= 10) {
-                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, TRUE, FALSE,FALSE);
-                
+                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, TRUE, FALSE, FALSE);
             } else {
-               $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, FALSE, FALSE,FALSE);
+                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, FALSE, FALSE, FALSE);
             }
 
             $comments = "\n\n<div class='wall_wrapper' id='wall_wrapper_{$keyValue}'>\n" . $str . "\n</div>\n\n";
@@ -145,6 +147,58 @@ class vieworiginalproduct extends object {
         $homeLink->link = $objLanguage->languageText('mod_oer_home', 'system');
 
         return '<br/><div id="viewproduct">' . $table->show() . '</div>';
+    }
+
+    /**
+     * JS an CSS for product rating
+     */
+    function loadJS() {
+        $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
+        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
+
+        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
+        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
+
+        $this->appendArrayVar('headerParams', $ratingEffectJs);
+        $this->appendArrayVar('headerParams', $ratingUIJs);
+        $this->appendArrayVar('headerParams', $ratingUICSS);
+        $this->appendArrayVar('headerParams', $crystalCSS);
+    }
+
+    /**
+     * Builds a div for rating
+     * @return string 
+     */
+    function createRatingDiv() {
+        $options = array(
+            1 => array('title' => 'Not so great'),
+            2 => array('title' => 'Quite good'),
+            3 => array('title' => 'Good'),
+            4 => array('title' => 'Great!'),
+            5 => array('title' => 'Excellent!'));
+        $avg=51;
+        foreach ($options as $id => $val) {
+            $options[$id]['disabled'] = 'disabled="disabled"';
+            $options[$id]['checked'] = $id == $avg ? 'checked="checked"' : '';
+        }
+
+        $div = '<form id="rat" action="" method="post">';
+
+
+        foreach ($options as $id => $rb) {
+            $div.='<input type="radio" name="rate" value="' . $id . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
+        }
+
+        if (!$rb['disabled']) {
+            $div.='<input type="submit" value="Rate it!" />';
+        }
+
+        $div.='</form>
+
+			<div id="loader"><div style="padding-top: 5px;">please wait...</div></div>';
+
+
+        return $div;
     }
 
 }
