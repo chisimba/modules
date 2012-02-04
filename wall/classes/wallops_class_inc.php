@@ -124,7 +124,7 @@ class wallops extends object
     public function init()
     {
         // Set the jQuery version to the latest functional
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        //$this->setVar('JQUERY_VERSION', '1.4.2');
         // Create an instance of the database class.
         $this->objDbwall = & $this->getObject('dbwall', 'wall');
         // Load jQuery Oembed.

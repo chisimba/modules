@@ -6,6 +6,7 @@
  *
  */
 
+
 // Remove HTML from wall posts
 function stripHTML(source){
 	var strippedText = source.replace(/<\/?[^>]+(>|$)/g, "");
@@ -18,6 +19,7 @@ function replaceURLWithHTMLLinks(source) {
    replaced = source.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
    return replaced;
 }
+
 
 // The main jQuery for the wall
 jQuery(function() {

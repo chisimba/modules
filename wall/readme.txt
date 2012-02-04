@@ -62,9 +62,6 @@ KNOWN ISSUES:
 
 - It is not yet tested very much in context (though it seems to work). You can
   use it as a wide context block (with 'Turn editing on').
-- It shows only 10 posts, and there is as yet no means to get the next 10.
-- There are no replies yet.
-- You cannot edit or delete posts. You will never be able to edit, only delete.
 - There is no security, I want to add something to prevent spam. Should your wall
   only be visible to buddies / classmates? If so, is anyone working on making
   buddies a proper social module?
