@@ -294,10 +294,9 @@ class dboeruserdata extends dbtable {
     public function getForListing($start, $records)
     {
         $sql = "SELECT id, title, firstname, surname, username "
-        . " FROM tbl_users LIMIT $start, $records";
-        $rs = $this->getArray($sql);
+        . " FROM tbl_users WHERE isactive=1 LIMIT $start, $records";
+        $rs = $this->getArray($sql); 
         return $rs;
-        
     }
     
     /**
@@ -310,7 +309,14 @@ class dboeruserdata extends dbtable {
      */
     public function deleteUser($id) 
     {
-        // @TODO
+        if ($id) {
+            // Set the primary user record inactive
+            $this->objAdmin->setUserAsInActive($id);
+            $this->delete('parentid', $id);
+            return 'RECORD_DELETED';  
+        } else {
+            return 'ERROR_NO_ID';
+        }
     }
 }
 ?>

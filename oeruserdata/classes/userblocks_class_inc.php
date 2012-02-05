@@ -153,72 +153,114 @@ class userblocks extends object
      *
      * Show a paginated list of users
      * 
+     * @param boolean $firstRender Should be true to set up the page, false thereafter for Ajax
      * @return string A rendered list with edit/delete links
      * @access public
      * 
      */
-    public function showUserList($addDiv=TRUE)
+    public function showUserList($firstRender=TRUE)
     {
-        $start = $this->getParam('start', 1);
-        $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
-        $rs = $objDb->getForListing($start, 10);
-        $ret = '';
-        $this->loadClass('htmltable','htmlelements');
-        $table = $this->newObject('htmltable', 'htmlelements');
-        // Edit icon
-        $edIcon = $this->newObject('geticon', 'htmlelements');
-        $edIcon->setIcon('edit');
-        $editIcon = $edIcon->show();
-        unset($edIcon);
-        // Delete icon.
-        $delIcon = $this->newObject('geticon', 'htmlelements');
-        $delIcon->setIcon('delete');
-        $deleteIcon = $delIcon->show();
-        unset($delIcon);
-        // Next icon.
-        $nextIcon = $this->newObject('geticon', 'htmlelements');
-        $nextIcon->setIcon('next');
-        $next = $nextIcon->show();
-        // Next icon greyed.
-        $nextIcon = $this->newObject('geticon', 'htmlelements');
-        $nextIcon->setIcon('next_grey');
-        $nextGr = $nextIcon->show();
-        unset($nextIcon);
-        // Previous icon.
-        $prIcon = $this->newObject('geticon', 'htmlelements');
-        $prIcon->setIcon('prev');
-        $prev = $prIcon->show();
-        // Previous icon greyed.
-        $prIcon = $this->newObject('geticon', 'htmlelements');
-        $prIcon->setIcon('prev_grey');
-        $prev = $prIcon->show();
-        unset($prIcon);
-        // Display the records.
-        if (!empty($rs)) {
-            foreach($rs as $record) {
-                $edUrl = $this->uri(array(
-                  'action' => 'edituser', 
-                  'id' => $record['id'], 
-                  'mode' => 'edit'), 'oeruserdata');
-                $link = new link($edUrl);
-                $link->link = $editIcon;
-                $delUrl = 'javascript:void(0);';
-                $delLink = new link($delUrl);
-                $delLink->cssId = $record['id'];
-                $delLink->cssClass = "dellink";
-                $delLink->link = $deleteIcon;
-                $table->startRow();
-                $table->addCell($record['title']);
-                $table->addCell($record['firstname']);
-                $table->addCell($record['surname']);
-                $table->addCell($record['username']);
-                $table->addCell($link->show() . ' ' . $delLink->show());
-                $table->endRow();
+        $pageSize = 5;
+        // Some security: only admin and the appropriate group should do this
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("Usermanagers");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+        if ($this->objUser->isAdmin() || 
+          $objGroupOps->isGroupMember($groupId, $userId )) {
+            $this->loadClass('link', 'htmlelements');
+            $this->loadClass('htmltable','htmlelements');
+            // Set up the page navigation.
+            $page = $this->getParam('page', 1);
+            $objDb = $this->getObject('dboerusermain', 'oeruserdata');
+            $count = $objDb->getUserCount();
+            $pages = ceil($count/$pageSize);
+            // Set up the sql elements.
+            $start = (($page - 1) * $pageSize);
+            $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
+            $rs = $objDb->getForListing($start, $pageSize);
+           
+            // Edit icon
+            $edIcon = $this->newObject('geticon', 'htmlelements');
+            $edIcon->setIcon('edit');
+            $editIcon = $edIcon->show();
+            unset($edIcon);
+            // Delete icon.
+            $delIcon = $this->newObject('geticon', 'htmlelements');
+            $delIcon->setIcon('delete');
+            $deleteIcon = $delIcon->show();
+            unset($delIcon);
+            
+            // Display the records.
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->cssId = 'users';
+            $table->startHeaderRow();
+            $table->addHeaderCell('Title');
+            $table->addHeaderCell('First name');
+            $table->addHeaderCell('Surname');
+            $table->addHeaderCell('Username');
+            $table->addHeaderCell('&nbsp;');
+            $table->endHeaderRow();
+            if (!empty($rs)) {
+                foreach($rs as $record) {
+                    $edUrl = $this->uri(array(
+                      'action' => 'edituser', 
+                      'id' => $record['id'], 
+                      'mode' => 'edit'), 'oeruserdata');
+                    $link = new link($edUrl);
+                    $link->link = $editIcon;
+                    $delUrl = 'javascript:void(0);';
+                    $delLink = new link($delUrl);
+                    $delLink->cssId = $record['id'];
+                    $delLink->cssClass = "dellink";
+                    $delLink->link = $deleteIcon;
+                    $table->startRow(NULL, "ROW_" . $record['id']);
+                    $table->addCell($record['title']);
+                    $table->addCell($record['firstname']);
+                    $table->addCell($record['surname']);
+                    $table->addCell($record['username']);
+                    $table->addCell($link->show() . ' ' . $delLink->show());
+                    $table->endRow();
+                }
             }
-        }
-        $ret = $table->show();
-        return $ret;
+            $ret = $table->show();
+                $h = $this->objLanguage->languageText(
+                      'mod_oeruserdata_ulst', 'oeruserdata');
+                if ($firstRender == TRUE) {
+                    $ret = "<h1>$h</h1><br />"
+                      . "<div id='userlisting'>$ret</div><br/>"
+                      . $navTable->show();
+                } 
+            
+          } else {
+            $ret = $this->objLanguage->languageText(
+              'mod_oeruserdata_nvrts', 'oeruserdata');
+          }
+          return $ret;
     }
     
+    /**
+     * 
+     * Paginated recordset using the pagination class in navigation
+     *
+     * @param type $pageSize
+     * @return type 
+     * 
+     */
+    public function showUserListPaginated($pageSize=5)
+    {
+        $objPagination = $this->newObject ( 'pagination', 'navigation' );
+        $objPagination->module = 'oeruserdata';
+        $objPagination->action = 'userlistajax';
+        $objPagination->id = 'oeruserlist_div';
+        $objDb = $this->getObject('dboerusermain', 'oeruserdata');
+        $objPagination->currentPage = 1;
+        $count = $objDb->getUserCount();
+        $pages = ceil($count/$pageSize);
+        $objPagination->numPageLinks = $pages;
+        $h = $this->objLanguage->languageText(
+              'mod_oeruserdata_ulst', 'oeruserdata');
+        return $objPagination->show();
+    }
 }
 ?>

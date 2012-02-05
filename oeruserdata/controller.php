@@ -151,30 +151,8 @@ class oeruserdata extends controller
     */
     private function __view()
     {
-        // All the action is in the blocks
         return "main_tpl.php";
     }
-    
-    /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
-    }
-    
     
     /**
     * 
@@ -295,7 +273,7 @@ class oeruserdata extends controller
         } elseif ($mode == 'edit') {
             $result = $objDb->editSave();
         } else {
-            $result = 'invalidmode';
+            $result = 'INVALID_MODE';
         }
         die($result);
     }
@@ -352,6 +330,49 @@ class oeruserdata extends controller
         } else {
             die('errornousername');
         }
+    }
+    
+    /**
+     * 
+     * Delete a user using ajax method
+     * 
+     * @return void
+     * @access public
+     * 
+     */
+    public function __delete()
+    {
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("Usermanagers");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+        if ($this->objUser->isAdmin() || 
+          $objGroupOps->isGroupMember($groupId, $userId )) {
+            $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
+            $id = $this->getParam('id', FALSE);
+            if ($id) {
+                die($objDb->deleteUser($id));
+            } else {
+                die('ERROR_NO_ID');
+            }
+          } else {
+              die('ATTEMPT_BREACH');
+          }
+    }
+    
+    /**
+     * 
+     * Userlisting for ajax call
+     * 
+     * @return void
+     * @access public
+     * 
+     */
+    public function __userlistajax()
+    {
+        $objList = $this->getObject('userblocks', 'oeruserdata');
+        echo $objList->showUserList(FALSE);
+        die();
     }
 
 

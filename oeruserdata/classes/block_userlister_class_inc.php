@@ -89,8 +89,10 @@ class block_userlister extends object
      */
     public function show() 
     {
+        
         $objUb = $this->getObject('userblocks','oeruserdata');
-        return $objUb->showUserList();
+        //return $objUb->showUserList();
+        return $objUb->showUserListPaginated();
     }
 }
 ?>
