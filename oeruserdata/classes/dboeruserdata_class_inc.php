@@ -295,6 +295,7 @@ class dboeruserdata extends dbtable {
     {
         $sql = "SELECT id, title, firstname, surname, username "
         . " FROM tbl_users WHERE isactive=1 LIMIT $start, $records";
+       
         $rs = $this->getArray($sql); 
         return $rs;
     }

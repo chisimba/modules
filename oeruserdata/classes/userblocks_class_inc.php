@@ -170,13 +170,18 @@ class userblocks extends object
           $objGroupOps->isGroupMember($groupId, $userId )) {
             $this->loadClass('link', 'htmlelements');
             $this->loadClass('htmltable','htmlelements');
+           
             // Set up the page navigation.
             $page = $this->getParam('page', 1);
+           
             $objDb = $this->getObject('dboerusermain', 'oeruserdata');
             $count = $objDb->getUserCount();
             $pages = ceil($count/$pageSize);
             // Set up the sql elements.
-            $start = (($page - 1) * $pageSize);
+            $start = (($page) * $pageSize);
+            if($start < 0){
+                $start=0;
+            }
             $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
             $rs = $objDb->getForListing($start, $pageSize);
            
@@ -254,7 +259,7 @@ class userblocks extends object
         $objPagination->action = 'userlistajax';
         $objPagination->id = 'oeruserlist_div';
         $objDb = $this->getObject('dboerusermain', 'oeruserdata');
-        $objPagination->currentPage = 1;
+        $objPagination->currentPage = 0;
         $count = $objDb->getUserCount();
         $pages = ceil($count/$pageSize);
         $objPagination->numPageLinks = $pages;
