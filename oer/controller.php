@@ -104,7 +104,7 @@ class oer extends controller {
      * This is the default function
      */
     private function __home() {
-        $this->setVar("mode", "grid");
+        $this->setVar("mode", "grid");        
         return "productlisting_tpl.php";
     }
 

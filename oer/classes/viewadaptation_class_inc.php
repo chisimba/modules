@@ -17,6 +17,7 @@ class viewadaptation extends object {
         $this->objDbInstitution = $this->getObject("dbinstitution", "oer");
         $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $this->objUser = $this->getObject("user", "security");
     }
 
     function buildAdaptationView($productId) {
@@ -29,7 +30,7 @@ class viewadaptation extends object {
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
         $leftContent = "";
-        
+
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
@@ -66,14 +67,40 @@ class viewadaptation extends object {
 
         //Get comments
         $prodcomments = "";
-        $userComments = $this->objDbProductComments->getProductComments($productId);
-        if(!empty($userComments)){
-            $prodcomments .= '<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>';
-            foreach($userComments as $usercomment) {
-                $prodcomments .= '<br /><div class="greyTextLink">'.$usercomment["comment"].'</div>';
+        /* $userComments = $this->objDbProductComments->getProductComments($productId);
+          if(!empty($userComments)){
+          $prodcomments .= '<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>';
+          foreach($userComments as $usercomment) {
+          $prodcomments .= '<br /><div class="greyTextLink">'.$usercomment["comment"].'</div>';
+          }
+          } */
+        $objWallOps = $this->getObject('wallops', 'wall');
+
+        $numOfPostsToDisplay = 10;
+        $wallType = '4';
+        $comments = '';
+        if ($hasPerms) {
+            $comments = $objWallOps->showObjectWall('identifier', $productId, 0, $numOfPostsToDisplay);
+        } else {
+            $keyValue = $productId;
+            $keyName = 'identifier';
+            $dbWall = $this->getObject('dbwall', 'wall');
+            $posts = $dbWall->getMorePosts($wallType, 0, $keyName, $keyValue, $numOfPostsToDisplay);
+            $numPosts = $dbWall->countPosts($wallType, FALSE, $keyName, $keyValue);
+            $str = '';
+            if ($numPosts <= 10) {
+                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, TRUE, FALSE, FALSE);
+            } else {
+                $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, FALSE, FALSE, FALSE);
             }
+
+            $comments = "\n\n<div class='wall_wrapper' id='wall_wrapper_{$keyValue}'>\n" . $str . "\n</div>\n\n";
         }
+        $prodcomments.='<div id="viewproduct_usercomments_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':' .
+                $comments .
+                '</div>';
         //Comment fetcher
+        /*
         $commentfetcher = "";
         if ($hasPerms) {
             $fetcheritems = "";
@@ -96,7 +123,7 @@ class viewadaptation extends object {
             $formData = new form('adaptationViewForm', $this->uri(array("action" => "addcomment", "product_id" => $productId)));
             $formData->addToForm($fetcheritems);
             $commentfetcher = $formData->show();
-        }
+        }*/
         $sectionManager = $this->getObject("sectionmanager", "oer");
 
         $navigator = $sectionManager->buildSectionsTree($product["id"], '');
@@ -132,15 +159,15 @@ class viewadaptation extends object {
                 $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';
-                /*$rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>
-            <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';*/
+                /* $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>
+                  <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>'; */
             }
         }
 
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $product['abstract'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
-        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent .$prodcomments. $commentfetcher . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
+        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
@@ -174,7 +201,7 @@ class viewadaptation extends object {
 
         $prodTitle = '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
 
-        return '<br/><div id="adaptationsBackgroundColor">'.$prodTitle . $table->show() . '</div>';
+        return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
 
 }

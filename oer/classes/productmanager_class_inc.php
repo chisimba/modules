@@ -937,7 +937,7 @@ class productmanager extends object {
                 $count = 1;
             }
             $count++;
-        }
+        }        
         return $controlBand . $table->show();
     }
 
