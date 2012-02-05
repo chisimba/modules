@@ -89,10 +89,11 @@ class block_userlister extends object
      */
     public function show() 
     {
-        
+        $objLanguage = $this->getObject('language', 'language');
+        $h = $objLanguage->languageText('mod_oeruserdata_ulst', 'oeruserdata');
+        $h = "<h1>$h</h1><br />";
         $objUb = $this->getObject('userblocks','oeruserdata');
-        //return $objUb->showUserList();
-        return $objUb->showUserListPaginated();
+        return $h. $objUb->showUserListPaginated();
     }
 }
 ?>

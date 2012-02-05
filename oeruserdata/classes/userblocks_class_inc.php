@@ -104,8 +104,6 @@ class userblocks extends object
             $ret = $link->show();
             
             // Put a register link for admins
-            //$objGa = $this->getObject('gamodel','groupadmin');
-            
             $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $groupId = $objGroups->getId("Usermanagers");
             $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -124,7 +122,6 @@ class userblocks extends object
             $ret = $this->putLink($linkText, 'selfregister');
             
         }
-        
         return $ret;
     }
     
@@ -160,7 +157,7 @@ class userblocks extends object
      */
     public function showUserList($firstRender=TRUE)
     {
-        $pageSize = 5;
+        $pageSize = 10;
         // Some security: only admin and the appropriate group should do this
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("Usermanagers");
@@ -233,8 +230,7 @@ class userblocks extends object
                       'mod_oeruserdata_ulst', 'oeruserdata');
                 if ($firstRender == TRUE) {
                     $ret = "<h1>$h</h1><br />"
-                      . "<div id='userlisting'>$ret</div><br/>"
-                      . $navTable->show();
+                      . "<div id='userlisting'>$ret</div><br/>";
                 } 
             
           } else {
@@ -252,20 +248,29 @@ class userblocks extends object
      * @return type 
      * 
      */
-    public function showUserListPaginated($pageSize=5)
+    public function showUserListPaginated($pageSize=10)
     {
-        $objPagination = $this->newObject ( 'pagination', 'navigation' );
-        $objPagination->module = 'oeruserdata';
-        $objPagination->action = 'userlistajax';
-        $objPagination->id = 'oeruserlist_div';
-        $objDb = $this->getObject('dboerusermain', 'oeruserdata');
-        $objPagination->currentPage = 0;
-        $count = $objDb->getUserCount();
-        $pages = ceil($count/$pageSize);
-        $objPagination->numPageLinks = $pages;
-        $h = $this->objLanguage->languageText(
-              'mod_oeruserdata_ulst', 'oeruserdata');
-        return $objPagination->show();
+        
+        // Some security: only admin and the appropriate group should do this
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("Usermanagers");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+        if ($this->objUser->isAdmin() || 
+          $objGroupOps->isGroupMember($groupId, $userId )) {
+            $objPagination = $this->newObject ( 'pagination', 'navigation' );
+            $objPagination->module = 'oeruserdata';
+            $objPagination->action = 'userlistajax';
+            $objPagination->id = 'oeruserlist_div';
+            $objDb = $this->getObject('dboerusermain', 'oeruserdata');
+            $objPagination->currentPage = 0;
+            $count = $objDb->getUserCount();
+            $pages = ceil($count/$pageSize);
+            $objPagination->numPageLinks = $pages;
+            return $objPagination->show();
+          } else {
+              return FALSE;
+          }
     }
 }
 ?>
