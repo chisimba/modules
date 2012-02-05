@@ -877,7 +877,7 @@ class productmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
-            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'],'module'=>'oer', "id" => $originalProduct['id'], "mode" => $mode)));
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'], 'module' => 'oer', "id" => $originalProduct['id'], "mode" => $mode)));
 
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
@@ -889,7 +889,7 @@ class productmanager extends object {
                     $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
                 }
 
-                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'],'module'=>'oer', "id" => $originalProduct['id'], "mode" => $mode)));
+                $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'], 'module' => 'oer', "id" => $originalProduct['id'], "mode" => $mode)));
                 $thumbnailLink->link = $thumbnail . '<br/>';
                 $thumbnailLink->cssClass = 'original_product_listing_thumbail';
                 $product = $thumbnailLink->show() . '<br/>' . $titleLink->show();
@@ -1010,6 +1010,32 @@ class productmanager extends object {
 
 
         return $content;
+    }
+
+    /**
+     * this records the rating and return the total values of rating
+     */
+    function rateProduct() {
+        $rateRaw = $this->getParam("rate");
+        $rateParts = explode("|", $rateRaw);
+       
+        
+        $rateValue = intval($rateParts[0]);
+        $productId = $rateParts[1];
+        $userId = $rateParts[2];
+
+        $dbProductRating = $this->getObject("dbproductrating", "oer");
+        $totalRating = $dbProductRating->getTotalRating($productId);
+        $totalRating = $totalRating + $rateValue;
+
+        $data = array(
+            'rate' => $rateValue,
+            'totalrating' => $totalRating,
+            'productid' => $productId,
+            'userid' => $userId
+        );
+        $dbProductRating->addRating($data);
+        return $totalRating;
     }
 
 }

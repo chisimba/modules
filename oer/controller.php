@@ -30,7 +30,7 @@ class oer extends controller {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "adaptationlist",
             "viewadaptation", "fullviewadaptation", "selfregister",
             "viewsection", "checkusernameajax", "userdetailssave",
-            "showcaptcha", "verifycaptcha","viewrootsection");
+            "showcaptcha", "verifycaptcha", "viewrootsection");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -104,7 +104,7 @@ class oer extends controller {
      * This is the default function
      */
     private function __home() {
-        $this->setVar("mode", "grid");        
+        $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }
 
@@ -465,7 +465,25 @@ class oer extends controller {
         return $this->nextAction('showProductthumbnailuploadresults', $params);
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    /*
+
+      AUX product functions : Rate, comment, bookmark etc
+
+     */
+    //////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
+
+    /**
+     * This rates a given product
+     */
+    function __rateproduct() {
+        $objProductManager = $this->getObject("productmanager", "oer");
+        $totalRating = $objProductManager->rateProduct();
+        echo '{"votes":'.$totalRating.',"sum":0,"avg":"3"}';
+        die();
+    }
+
     /*
 
 
@@ -710,7 +728,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -813,7 +831,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.

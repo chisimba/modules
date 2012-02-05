@@ -10,6 +10,7 @@ class vieworiginalproduct extends object {
     function init() {
         $this->objUser = $this->getObject("user", "security");
         $this->loadJS();
+        $this->setupLanguageItems();
     }
 
     /**
@@ -58,14 +59,17 @@ class vieworiginalproduct extends object {
             $editControls.="" . $deleteLink->show();
         }
         // $editControls.='</div>';
-        $leftContent.='<h1 class="viewproduct_title">' . $editControls . $product['title'] . '</h1>';
+       
+        $leftContent.='<h1 class="viewproduct_title">'  . $product['title'] . '</h1>';
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
 
-
+  if ($this->objUser->isLoggedIn()) {
+            $leftContent.=$this->createRatingDiv($productId);
+        }
         $leftContent.=$product['description'];
-        $leftContent.=$this->createRatingDiv();
-
+      
         $rightContent = "";
+        $rightContent.='<div id="viewproduct_editcontrols">'.$editControls.'</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
@@ -159,24 +163,38 @@ class vieworiginalproduct extends object {
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
 
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);
         $this->appendArrayVar('headerParams', $ratingUICSS);
         $this->appendArrayVar('headerParams', $crystalCSS);
     }
 
+    
+       /**
+     * sets up necessary lang items for use in js
+     */
+    function setupLanguageItems() {
+        // Serialize language items to Javascript
+        $arrayVars['totalvotestext'] = "mod_oer_productrating";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oer');
+    }
     /**
      * Builds a div for rating
      * @return string 
      */
-    function createRatingDiv() {
+    function createRatingDiv($productId) {
+        $objLanguage=  $this->getObject("language", "language");
         $options = array(
-            1 => array('title' => 'Not so great'),
-            2 => array('title' => 'Quite good'),
-            3 => array('title' => 'Good'),
-            4 => array('title' => 'Great!'),
-            5 => array('title' => 'Excellent!'));
-        $avg=51;
+            1 => array('title' =>  $objLanguage->languageText('mod_oer_notsogreat', 'oer')),
+            2 => array('title' =>  $objLanguage->languageText('mod_oer_quitegood', 'oer')),
+            3 => array('title' =>  $objLanguage->languageText('mod_oer_good', 'oer')),
+            4 => array('title' =>  $objLanguage->languageText('mod_oer_great', 'oer')),
+            5 => array('title' =>  $objLanguage->languageText('mod_oer_excellent', 'oer')));
+        $dbProductRating = $this->getObject("dbproductrating", "oer");
+        $totalRating = $dbProductRating->getTotalRating($productId);
+        $avg = $totalRating;
         foreach ($options as $id => $val) {
             $options[$id]['disabled'] = 'disabled="disabled"';
             $options[$id]['checked'] = $id == $avg ? 'checked="checked"' : '';
@@ -186,17 +204,15 @@ class vieworiginalproduct extends object {
 
 
         foreach ($options as $id => $rb) {
-            $div.='<input type="radio" name="rate" value="' . $id . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
+            $div.='<input type="radio" name="rate" value="' . $id . '|'.$productId.'|'.$this->objUser->userId().'" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
         }
 
-        if (!$rb['disabled']) {
-            $div.='<input type="submit" value="Rate it!" />';
-        }
+       
 
         $div.='</form>
 
-			<div id="loader"><div style="padding-top: 5px;">please wait...</div></div>';
-
+			<div id="loader"><div style="padding-top: 5px;">'. $objLanguage->languageText('mod_oer_pleasewait', 'oer').'...</div></div>';
+       $div.='<div id="votes">'. $objLanguage->languageText('mod_oer_productrating', 'oer').': '.$totalRating.'</div>';
 
         return $div;
     }

@@ -6,18 +6,18 @@
  * Dual licensed under the MIT and GPL licenses.
  * http://docs.jquery.com/License
  *
- * $Rev: 164 $
- * $Date:: 2010-05-01 #$
- * $Build: 35 (2010-05-01)
+ * jQueryRev: 164 jQuery
+ * jQueryDate:: 2010-05-01 #jQuery
+ * jQueryBuild: 35 (2010-05-01)
  *
  * Depends:
  *	jquery.ui.core.js
  *	jquery.ui.widget.js
  *
  */
-(function($) {
+(function(jQuery) {
 
-$.widget('ui.stars', {
+jQuery.widget('ui.stars', {
 	options: {
 		inputType: 'radio', // [radio|select]
 		split: 0, // decrease number of stars by splitting each star into pieces [2|3|4|...]
@@ -49,14 +49,14 @@ $.widget('ui.stars', {
 		this.element.data('former.stars', this.element.html());
 
 		o.isSelect = o.inputType == 'select';
-		this.$form = $(this.element).closest('form');
-		this.$selec = o.isSelect ? $('select', this.element)  : null;
-		this.$rboxs = o.isSelect ? $('option', this.$selec)   : $(':radio', this.element);
+		this.jQueryform = jQuery(this.element).closest('form');
+		this.jQueryselec = o.isSelect ? jQuery('select', this.element)  : null;
+		this.jQueryrboxs = o.isSelect ? jQuery('option', this.jQueryselec)   : jQuery(':radio', this.element);
 
 		/*
-		 * Map all inputs from $rboxs array to Stars elements
+		 * Map all inputs from jQueryrboxs array to Stars elements
 		 */
-		this.$stars = this.$rboxs.map(function(i)
+		this.jQuerystars = this.jQueryrboxs.map(function(i)
 		{
 			var el = {
 				value:      this.value,
@@ -69,8 +69,8 @@ $.widget('ui.stars', {
 				o.val2id = [];
 				o.id2val = [];
 				o.id2title = [];
-				o.name = o.isSelect ? self.$selec.get(0).name : this.name;
-				o.disabled = o.disabled || (o.isSelect ? $(self.$selec).attr('disabled') : $(this).attr('disabled'));
+				o.name = o.isSelect ? self.jQueryselec.get(0).name : this.name;
+				o.disabled = o.disabled || (o.isSelect ? jQuery(self.jQueryselec).attr('disabled') : jQuery(this).attr('disabled'));
 			}
 
 			/*
@@ -91,8 +91,8 @@ $.widget('ui.stars', {
 				o.title = el.title;
 			}
 
-			var $s = $('<div/>').addClass(o.starClass);
-			var $a = $('<a/>').attr('title', o.showTitles ? el.title : '').text(el.value);
+			var jQuerys = jQuery('<div/>').addClass(o.starClass);
+			var jQuerya = jQuery('<a/>').attr('title', o.showTitles ? el.title : '').text(el.value);
 
 			/*
 			 * Prepare division settings
@@ -100,12 +100,12 @@ $.widget('ui.stars', {
 			if(o.split) {
 				var oddeven = (starId % o.split);
 				var stwidth = Math.floor(o.starWidth / o.split);
-				$s.width(stwidth);
-				$a.css('margin-left', '-' + (oddeven * stwidth) + 'px');
+				jQuerys.width(stwidth);
+				jQuerya.css('margin-left', '-' + (oddeven * stwidth) + 'px');
 			}
 
 			starId++;
-			return $s.append($a).get(0);
+			return jQuerys.append(jQuerya).get(0);
 		});
 
 		/*
@@ -116,15 +116,15 @@ $.widget('ui.stars', {
 		/*
 		 * Remove old content
 		 */
-		o.isSelect ? this.$selec.remove() : this.$rboxs.remove();
+		o.isSelect ? this.jQueryselec.remove() : this.jQueryrboxs.remove();
 
 		/*
 		 * Append Stars interface
 		 */
-		this.$cancel = $('<div/>').addClass(o.cancelClass).append( $('<a/>').attr('title', o.showTitles ? o.cancelTitle : '').text(o.cancelValue) );
+		this.jQuerycancel = jQuery('<div/>').addClass(o.cancelClass).append( jQuery('<a/>').attr('title', o.showTitles ? o.cancelTitle : '').text(o.cancelValue) );
 		o.cancelShow &= !o.disabled && !o.oneVoteOnly;
-		o.cancelShow && this.element.append(this.$cancel);
-		this.element.append(this.$stars);
+		o.cancelShow && this.element.append(this.jQuerycancel);
+		this.element.append(this.jQuerystars);
 
 		/*
 		 * Initial selection
@@ -138,21 +138,21 @@ $.widget('ui.stars', {
 		/*
 		 * The only FORM element, that has been linked to the stars control. The value field is updated on each Star click event
 		 */
-		this.$value = $("<input type='hidden' name='"+o.name+"' value='"+o.value+"' />");
-		this.element.append(this.$value);
+		this.jQueryvalue = jQuery("<input type='hidden' name='"+o.name+"' value='"+o.value+"' />");
+		this.element.append(this.jQueryvalue);
 
 
 		/*
 		 * Attach stars event handler
 		 */
-		this.$stars.bind('click.stars', function(e) {
+		this.jQuerystars.bind('click.stars', function(e) {
 			if(!o.forceSelect && o.disabled) return false;
 
-			var i = self.$stars.index(this);
+			var i = self.jQuerystars.index(this);
 			o.checked = i;
 			o.value = o.id2val[i];
 			o.title = o.id2title[i];
-			self.$value.attr({disabled: o.disabled ? 'disabled' : '', value: o.value});
+			self.jQueryvalue.attr({disabled: o.disabled ? 'disabled' : '', value: o.value});
 
 			fillTo(i, false);
 			self._disableCancel();
@@ -161,7 +161,7 @@ $.widget('ui.stars', {
 		})
 		.bind('mouseover.stars', function() {
 			if(o.disabled) return false;
-			var i = self.$stars.index(this);
+			var i = self.jQuerystars.index(this);
 			fillTo(i, true);
 		})
 		.bind('mouseout.stars', function() {
@@ -173,15 +173,15 @@ $.widget('ui.stars', {
 		/*
 		 * Attach cancel event handler
 		 */
-		this.$cancel.bind('click.stars', function(e) {
+		this.jQuerycancel.bind('click.stars', function(e) {
 			if(!o.forceSelect && (o.disabled || o.value == o.cancelValue)) return false;
 
 			o.checked = -1;
 			o.value = o.cancelValue;
 			o.title = '';
 			
-			self.$value.val(o.value);
-			o.disableValue && self.$value.attr({disabled: 'disabled'});
+			self.jQueryvalue.val(o.value);
+			o.disableValue && self.jQueryvalue.attr({disabled: 'disabled'});
 
 			fillNone();
 			self._disableCancel();
@@ -190,21 +190,21 @@ $.widget('ui.stars', {
 		})
 		.bind('mouseover.stars', function() {
 			if(self._disableCancel()) return false;
-			self.$cancel.addClass(o.cancelHoverClass);
+			self.jQuerycancel.addClass(o.cancelHoverClass);
 			fillNone();
 			self._showCap(o.cancelTitle);
 		})
 		.bind('mouseout.stars', function() {
 			if(self._disableCancel()) return false;
-			self.$cancel.removeClass(o.cancelHoverClass);
-			self.$stars.triggerHandler('mouseout.stars');
+			self.jQuerycancel.removeClass(o.cancelHoverClass);
+			self.jQuerystars.triggerHandler('mouseout.stars');
 		});
 
 
 		/*
 		 * Attach onReset event handler to the parent FORM
 		 */
-		this.$form.bind('reset.stars', function(){
+		this.jQueryform.bind('reset.stars', function(){
 			!o.disabled && self.select(o.defaultValue);
 		});
 
@@ -212,11 +212,11 @@ $.widget('ui.stars', {
 		/*
 		 * Clean up to avoid memory leaks in certain versions of IE 6
 		 */
-		$(window).unload(function(){
-			self.$cancel.unbind('.stars');
-			self.$stars.unbind('.stars');
-			self.$form.unbind('.stars');
-			self.$selec = self.$rboxs = self.$stars = self.$value = self.$cancel = self.$form = null;
+		jQuery(window).unload(function(){
+			self.jQuerycancel.unbind('.stars');
+			self.jQuerystars.unbind('.stars');
+			self.jQueryform.unbind('.stars');
+			self.jQueryselec = self.jQueryrboxs = self.jQuerystars = self.jQueryvalue = self.jQuerycancel = self.jQueryform = null;
 		});
 
 
@@ -227,14 +227,14 @@ $.widget('ui.stars', {
 			if(index != -1) {
 				var addClass = hover ? o.starHoverClass : o.starOnClass;
 				var remClass = hover ? o.starOnClass    : o.starHoverClass;
-				self.$stars.eq(index).prevAll('.' + o.starClass).andSelf().removeClass(remClass).addClass(addClass);
-				self.$stars.eq(index).nextAll('.' + o.starClass).removeClass(o.starHoverClass + ' ' + o.starOnClass);
+				self.jQuerystars.eq(index).prevAll('.' + o.starClass).andSelf().removeClass(remClass).addClass(addClass);
+				self.jQuerystars.eq(index).nextAll('.' + o.starClass).removeClass(o.starHoverClass + ' ' + o.starOnClass);
 				self._showCap(o.id2title[index]);
 			}
 			else fillNone();
 		};
 		function fillNone() {
-			self.$stars.removeClass(o.starOnClass + ' ' + o.starHoverClass);
+			self.jQuerystars.removeClass(o.starOnClass + ' ' + o.starHoverClass);
 			self._showCap('');
 		};
 
@@ -252,16 +252,16 @@ $.widget('ui.stars', {
 	 */
 	_disableCancel: function() {
 		var o = this.options, disabled = o.disabled || o.oneVoteOnly || (o.value == o.cancelValue);
-		if(disabled)  this.$cancel.removeClass(o.cancelHoverClass).addClass(o.cancelDisabledClass);
-		else          this.$cancel.removeClass(o.cancelDisabledClass);
-		this.$cancel.css('opacity', disabled ? 0.5 : 1);
+		if(disabled)  this.jQuerycancel.removeClass(o.cancelHoverClass).addClass(o.cancelDisabledClass);
+		else          this.jQuerycancel.removeClass(o.cancelDisabledClass);
+		this.jQuerycancel.css('opacity', disabled ? 0.5 : 1);
 		return disabled;
 	},
 	_disableAll: function() {
 		var o = this.options;
 		this._disableCancel();
-		if(o.disabled)  this.$stars.filter('div').addClass(o.starDisabledClass);
-		else            this.$stars.filter('div').removeClass(o.starDisabledClass);
+		if(o.disabled)  this.jQuerystars.filter('div').addClass(o.starDisabledClass);
+		else            this.jQuerystars.filter('div').removeClass(o.starDisabledClass);
 	},
 	_showCap: function(s) {
 		var o = this.options;
@@ -275,13 +275,13 @@ $.widget('ui.stars', {
 		return this.options.value;
 	},
 	select: function(val) {
-		var o = this.options, e = (val == o.cancelValue) ? this.$cancel : this.$stars.eq(o.val2id[val]);
+		var o = this.options, e = (val == o.cancelValue) ? this.jQuerycancel : this.jQuerystars.eq(o.val2id[val]);
 		o.forceSelect = true;
 		e.triggerHandler('click.stars');
 		o.forceSelect = false;
 	},
 	selectID: function(id) {
-		var o = this.options, e = (id == -1) ? this.$cancel : this.$stars.eq(id);
+		var o = this.options, e = (id == -1) ? this.jQuerycancel : this.jQuerystars.eq(id);
 		o.forceSelect = true;
 		e.triggerHandler('click.stars');
 		o.forceSelect = false;
@@ -295,10 +295,10 @@ $.widget('ui.stars', {
 		this._disableAll();
 	},
 	destroy: function() {
-		this.$form.unbind('.stars');
-		this.$cancel.unbind('.stars').remove();
-		this.$stars.unbind('.stars').remove();
-		this.$value.remove();
+		this.jQueryform.unbind('.stars');
+		this.jQuerycancel.unbind('.stars').remove();
+		this.jQuerystars.unbind('.stars').remove();
+		this.jQueryvalue.remove();
 		this.element.unbind('.stars').html(this.element.data('former.stars')).removeData('stars');
 		return this;
 	},
@@ -309,7 +309,7 @@ $.widget('ui.stars', {
 	}
 });
 
-$.extend($.ui.stars, {
+jQuery.extend(jQuery.ui.stars, {
 	version: '3.0.1'
 });
 
