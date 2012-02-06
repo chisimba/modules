@@ -93,6 +93,7 @@ class dbuserimport extends dbTable
     {
         $this->objContextGroups=$this->getObject('managegroups','contextgroups');
         $this->objAdminGroups=$this->getObject('groupadminmodel','groupadmin');
+        $this->objGroupOps=$this->getObject('groupops','groupadmin');
         $sql="where batchId='$batchCode'";
         $list=$this->getAll($sql);
         $groupId=NULL;
@@ -105,7 +106,7 @@ class dbuserimport extends dbTable
                 // Don't delete a user that wasn't added by the userimport method!
                 // Or if in more than one context!
                 $userPK=$this->objUser->PKId($line['userid']);
-                if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='import')&&
+                if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='userimport')&&
                     ( count($this->objContextGroups->userContexts($line['userid'],array('contextcode')))<2) ){
                     $this->objUserAdmin->setUserDelete($line['userid']);
                 } else {
@@ -113,7 +114,10 @@ class dbuserimport extends dbTable
                     if ($groupId==NULL){
                         $groupId=$this->objAdminGroups->getLeafId( array( $line['contextcode'], 'Students' ));
                     }
-                    $this->objAdminGroups->deleteGroupUser( $groupId, $userPK );
+                    $usrdata = $this->objGroupOps->getUserByUserId($line['userid']);
+                    $permUserId = $usrdata['perm_user_id'];
+                    //$this->objAdminGroups->deleteGroupUser( $groupId, $userPK );
+                    $this->objAdminGroups->deleteGroupUser( $groupId, $permUserId );
                 }
             }
         }
