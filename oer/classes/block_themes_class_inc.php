@@ -10,7 +10,7 @@
 class block_themes extends object {
 
     function init() {
-       
+       $this->title="";
     }
 
     function show() {

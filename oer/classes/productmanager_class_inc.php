@@ -1018,8 +1018,8 @@ class productmanager extends object {
     function rateProduct() {
         $rateRaw = $this->getParam("rate");
         $rateParts = explode("|", $rateRaw);
-       
-        
+
+
         $rateValue = intval($rateParts[0]);
         $productId = $rateParts[1];
         $userId = $rateParts[2];
@@ -1036,6 +1036,61 @@ class productmanager extends object {
         );
         $dbProductRating->addRating($data);
         return $totalRating;
+    }
+
+    /**
+     * makes a given product featured
+     */
+    function makefeatured() {
+        $data = array(
+            'productid' => $this->getParam("productid"),
+            'featuredon' => date("Y-m-d H:i:s")
+        );
+        $dbFeaturedProduct = $this->getObject("dbfeaturedproduct", "oer");
+        $dbFeaturedProduct->setFeaturedProduct($data);
+    }
+
+    /**
+     * get the feature product
+     */
+    function getFeaturedProduct() {
+        $dbFeaturedProduct = $this->getObject("dbfeaturedproduct", "oer");
+        $productId = $dbFeaturedProduct->getFeaturedProduct();
+        $product = $this->dbproducts->getProduct($productId);
+        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="136" height="176" align="left"/>';
+        if ($product['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="136" height="176" align="left"/>';
+        }
+
+        $mode = "";
+        $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+        $thumbnailLink->link = $thumbnail . '<br/>';
+        $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+        $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+        $titleLink->cssClass = 'original_product_listing_title';
+        $titleLink->link = $product['title'];
+        $product = $titleLink->show();
+
+
+        $content = '<div id="featuredproduct>"';
+        $content.='<div id="featuredproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+        $content.='<div id="featuredproduct_title">' . $titleLink->show() . '</div>';
+        $content.='<div id="featuredproduct_thumbnail">0 adaptations</div>';
+        $content.="</div>";
+        return $content;
+    }
+
+    /**
+     * this get the most (A)daprated, (R)ated, (F)eatured 
+     */
+    function getMostARC() {
+        $objTabs = $this->newObject('tabcontent', 'htmlelements');
+        $objTabs->width = '95%';
+        $objTabs->addTab('Adapted', '');
+        $objTabs->addTab('Rated', '');
+        $objTabs->addTab('Featured', '');
+        return $objTabs->show();
     }
 
 }

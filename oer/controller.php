@@ -193,6 +193,18 @@ class oer extends controller {
     }
 
     /**
+     * makes the selected product featured
+     * @return type 
+     */
+    function __featureoriginalproduct() {
+        $objProductManager = $this->getObject("productmanager", "oer");
+        $objProductManager->makefeatured();
+        $id = $this->getParam("productid");
+        $params = array("id" => $id);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
+    /**
      * this returns the template for displaying the selected adaptation
      * @return string
      */
@@ -480,7 +492,7 @@ class oer extends controller {
     function __rateproduct() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $totalRating = $objProductManager->rateProduct();
-        echo '{"votes":'.$totalRating.',"sum":0,"avg":"3"}';
+        echo '{"votes":' . $totalRating . ',"sum":0,"avg":"3"}';
         die();
     }
 

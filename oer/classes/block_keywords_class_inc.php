@@ -21,10 +21,11 @@ class block_keywords extends object {
 
     public $objLanguage;
     private $objDBKeyWords;
-    
+
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDBKeyWords = $this->getObject('dbkeywords', 'oer');
+        $this->title = "";
     }
 
     function show() {
@@ -54,7 +55,7 @@ class block_keywords extends object {
         $objTable->startHeaderRow();
         $objTable->addHeaderCell($this->objLanguage->languageText('mod_oer_count', 'oer'), "10%");
         $objTable->addHeaderCell(ucfirst($this->objLanguage->languageText('mod_oer_keyword', 'oer')), "90%");
-        
+
         $objTable->endHeaderRow();
 
         $keywords = $this->objDBKeyWords->getKeyWords();
@@ -63,7 +64,7 @@ class block_keywords extends object {
             $objTable->startRow();
             $objTable->addCell($count, "10%");
             $objTable->addCell($keyword['keyword'], "90%");
-            
+
             $objTable->endRow();
 
             $count++;

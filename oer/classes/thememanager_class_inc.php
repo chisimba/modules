@@ -247,7 +247,7 @@ class thememanager extends object {
             $objIcon->setIcon('edit');
             $editlink->link = $objIcon->show();
 
-            $deletelink = new link($this->uri(array("action" => "confirmdeletetheme", "id" => $departmentid)));
+            $deletelink = new link($this->uri(array("action" => "confirmdeletetheme", "id" => $theme['id'])));
             $objIcon->setIcon('delete');
             $deletelink->link = $objIcon->show();
 

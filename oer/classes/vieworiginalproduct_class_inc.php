@@ -38,38 +38,46 @@ class vieworiginalproduct extends object {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
 
-        //$editControls = '<div id="viewproducr_editcontrols">';
         $editControls = "";
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
             $editImg = '<img src="skins/oer/images/icons/edit.png">';
             $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
             $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+            $featuredImg = '<img src="skins/oer/images/featured.png">';
 
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
             $adaptLink->link = $adaptImg;
+            $adaptLink->cssClass="adaptoriginalproduct";
             $editControls.= $adaptLink->show();
 
             $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
+            $editLink->cssClass="editoriginalproduct";
             $editControls.="" . $editLink->show();
 
             $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
             $deleteLink->link = $deleteImg;
             $deleteLink->cssClass = "deleteoriginalproduct";
             $editControls.="" . $deleteLink->show();
+
+            $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
+            $featuredLink->link = $featuredImg;
+            $featuredLink->cssClass = "featuredoriginalproduct";
+            $editControls.="" . $featuredLink->show();
         }
-        // $editControls.='</div>';
-       
-        $leftContent.='<h1 class="viewproduct_title">'  . $product['title'] . '</h1>';
+
+
+
+        $leftContent.='<h1 class="viewproduct_title">' . $product['title'] . '</h1>';
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
 
-  if ($this->objUser->isLoggedIn()) {
+        if ($this->objUser->isLoggedIn()) {
             $leftContent.=$this->createRatingDiv($productId);
         }
         $leftContent.=$product['description'];
-      
+
         $rightContent = "";
-        $rightContent.='<div id="viewproduct_editcontrols">'.$editControls.'</div>';
+        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . '</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
@@ -106,7 +114,7 @@ class vieworiginalproduct extends object {
             $posts = $dbWall->getMorePosts($wallType, 0, $keyName, $keyValue, $numOfPostsToDisplay);
             $numPosts = $dbWall->countPosts($wallType, FALSE, $keyName, $keyValue);
             $str = '';
-            if ($numPosts <= 10) {
+            if ($numPosts <= $numOfPostsToDisplay) {
                 $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, TRUE, FALSE, FALSE);
             } else {
                 $str = $objWallOps->showPosts($posts, $numPosts, $wallType, $keyValue, $numOfPostsToDisplay, FALSE, FALSE, FALSE);
@@ -170,8 +178,7 @@ class vieworiginalproduct extends object {
         $this->appendArrayVar('headerParams', $crystalCSS);
     }
 
-    
-       /**
+    /**
      * sets up necessary lang items for use in js
      */
     function setupLanguageItems() {
@@ -180,18 +187,19 @@ class vieworiginalproduct extends object {
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
     }
+
     /**
      * Builds a div for rating
      * @return string 
      */
     function createRatingDiv($productId) {
-        $objLanguage=  $this->getObject("language", "language");
+        $objLanguage = $this->getObject("language", "language");
         $options = array(
-            1 => array('title' =>  $objLanguage->languageText('mod_oer_notsogreat', 'oer')),
-            2 => array('title' =>  $objLanguage->languageText('mod_oer_quitegood', 'oer')),
-            3 => array('title' =>  $objLanguage->languageText('mod_oer_good', 'oer')),
-            4 => array('title' =>  $objLanguage->languageText('mod_oer_great', 'oer')),
-            5 => array('title' =>  $objLanguage->languageText('mod_oer_excellent', 'oer')));
+            1 => array('title' => $objLanguage->languageText('mod_oer_notsogreat', 'oer')),
+            2 => array('title' => $objLanguage->languageText('mod_oer_quitegood', 'oer')),
+            3 => array('title' => $objLanguage->languageText('mod_oer_good', 'oer')),
+            4 => array('title' => $objLanguage->languageText('mod_oer_great', 'oer')),
+            5 => array('title' => $objLanguage->languageText('mod_oer_excellent', 'oer')));
         $dbProductRating = $this->getObject("dbproductrating", "oer");
         $totalRating = $dbProductRating->getTotalRating($productId);
         $avg = $totalRating;
@@ -204,18 +212,20 @@ class vieworiginalproduct extends object {
 
 
         foreach ($options as $id => $rb) {
-            $div.='<input type="radio" name="rate" value="' . $id . '|'.$productId.'|'.$this->objUser->userId().'" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
+            $div.='<input type="radio" name="rate" value="' . $id . '|' . $productId . '|' . $this->objUser->userId() . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
         }
 
-       
+
 
         $div.='</form>
 
-			<div id="loader"><div style="padding-top: 5px;">'. $objLanguage->languageText('mod_oer_pleasewait', 'oer').'...</div></div>';
-       $div.='<div id="votes">'. $objLanguage->languageText('mod_oer_productrating', 'oer').': '.$totalRating.'</div>';
+			<div id="loader"><div style="padding-top: 5px;">' . $objLanguage->languageText('mod_oer_pleasewait', 'oer') . '...</div></div>';
+        $div.='<div id="votes">' . $objLanguage->languageText('mod_oer_productrating', 'oer') . ': ' . $totalRating . '</div>';
 
         return $div;
     }
+    
+    
 
 }
 

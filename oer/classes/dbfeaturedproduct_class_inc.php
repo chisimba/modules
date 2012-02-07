@@ -7,7 +7,7 @@
  */
 class dbfeaturedproduct extends dbtable {
 
-    private $productsTableName = 'tbl_oer_featuedproduct';
+    private $productsTableName = 'tbl_oer_featuredproduct';
 
     function init() {
         parent::init($this->productsTableName);
@@ -20,10 +20,10 @@ class dbfeaturedproduct extends dbtable {
      */
     function getFeaturedProduct() {
         $sql =
-                "select * from $this->productsTableName";
+                "select * from $this->productsTableName order by puid desc limit 1";
         $data = $this->getArray($sql);
         if (count($data) > 0) {
-            return $data[0];
+            return $data[0]['productid'];
         } else {
             return NULL;
         }

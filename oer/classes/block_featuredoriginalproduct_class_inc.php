@@ -8,13 +8,13 @@
 class block_featuredoriginalproduct extends object {
 
     function init() {
-          $this->objLanguage = $this->getObject('language', 'language');
-          $this->title= $this->objLanguage->languageText('mod_oer_featured', 'oer');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText('mod_oer_featured', 'oer');
     }
 
     function show() {
-      
-        return "Featured product";
+        $objProductManager = $this->getObject("productmanager", "oer");
+        return $objProductManager->getFeaturedProduct();
     }
 
 }

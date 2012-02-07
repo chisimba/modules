@@ -8,7 +8,7 @@
 class block_umbrellathemes extends object {
 
     function init() {
-        
+        $this->title="";
     }
 
     function show() {

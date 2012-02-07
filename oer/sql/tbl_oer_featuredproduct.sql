@@ -21,7 +21,8 @@ $options = array('comment'=>'Table to featured product','collate'=>'utf8_general
 //define fields
 $fields = array(
 		'id' => array('type' => 'text','length' => 32,'not null'),
-                'productid' => array('type' => 'text', 'length' => 32)
+                'productid' => array('type' => 'text', 'length' => 32),
+                'featuredon'=>array('type'=>'timestamp')
  		);
 
 ?>
