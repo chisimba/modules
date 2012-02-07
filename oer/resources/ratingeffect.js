@@ -22,7 +22,7 @@
 					jQuery.post("?module=oer&action=rateproduct", {rate: value}, function(db)
 					{
 						// Select stars to match "Average" value
-						ui.select(Math.round(db.avg));
+						ui.select(Math.round(db.avg));                                                
 						
 						// Update other text controls...
 						jQuery("#avg").text(db.avg);
