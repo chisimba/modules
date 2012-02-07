@@ -28,7 +28,7 @@ class viewadaptation extends object {
      * JS an CSS for product rating
      */
     function loadJS() {
-        $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
+        $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars2.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
@@ -62,16 +62,16 @@ class viewadaptation extends object {
 //var_dump($options);
         $div = '<form id="rat" action="" method="post">';
 
-        $radio = new radio('rate');
+        //$radio = new radio('rate');
         foreach ($options as $id => $rb) {
-            var_dump($rb['title']);
-            $radio->addOption($id . '|' . $productId . '|' . $this->objUser->userId(), $rb['title']);// . ' ' . $rb['checked'] . ' ' . $rb['disabled']
-            //$div.='<input type="radio" name="rate" value="' . $id . '|' . $productId . '|' . $this->objUser->userId() . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
+            //var_dump($rb['title']);
+            //$radio->addOption($id . '|' . $productId . '|' . $this->objUser->userId(), $rb['title']);// . ' ' . $rb['checked'] . ' ' . $rb['disabled']
+            $div.='<input type="radio" name="rate" value="' . $id . '|' . $productId . '|' . $this->objUser->userId() . '|titletext|' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '"/>';
         }
         /* if ($check) {
           $radio->selected = $product['accredited'];
           } */
-        $div.=$radio->show();
+        //$div.=$radio->show();
 
 
         $div.='</form><div id="loader"><div style="padding-top: 5px;">' . $this->objLanguage->languageText('mod_oer_pleasewait', 'oer') . '...</div></div>';
