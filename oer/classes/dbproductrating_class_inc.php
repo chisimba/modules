@@ -30,6 +30,18 @@ class dbproductrating extends dbtable {
         $data=$this->getArray($sql);
         return $data[0]['rating'];
     }
+    
+    
+    /**
+     * gets the most rated product
+     * @return type 
+     */
+    function  getMostRatedProduct(){
+        $sql=
+        "select * from $this->productRatingTableName order by totalrating DESC limit 1";
+        $data=$this->getArray($sql);
+        return $data[0]['productid'];  
+    }
 
 }
 

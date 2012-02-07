@@ -16,6 +16,9 @@ jQuery(function() {
 
     // Things to do on loading the page.
     jQuery(document).ready(function() {
+        
+        jQuery( "#most_arc" ).tabs();
+         jQuery( "#most_arc" ).tabs("select",1);
         // Add jQuery Validation to form
         jQuery("#form_originalProductForm1").validate();
         jQuery("#form_originalProductForm2").validate();
@@ -144,7 +147,7 @@ function saveStep2(){
     if(jQuery("#form_originalProductForm2").valid()){ 
         jQuery("#saveStep2Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-                data_string = jQuery("#form_originalProductForm2").serialize();
+        data_string = jQuery("#form_originalProductForm2").serialize();
         jQuery.ajax({
             url: 'index.php?module=oer&action=saveoriginalproductstep2',
             type: "POST",
@@ -175,7 +178,7 @@ function saveStep3(){
     if(jQuery("#form_originalProductForm3").valid()){ 
         jQuery("#saveStep3Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-               data_string = jQuery("#form_originalProductForm3").serialize();
+        data_string = jQuery("#form_originalProductForm3").serialize();
         jQuery.ajax({
             url: 'index.php?module=oer&action=saveoriginalproductstep3',
             type: "POST",
@@ -204,7 +207,7 @@ function saveStep4(){
     if(jQuery("#form_originalProductForm4").valid()){ 
         jQuery("#saveStep4Button").attr("disabled", "disabled");
         jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt="'+loading+'" />');
-                data_string = jQuery("#form_originalProductForm4").serialize();
+        data_string = jQuery("#form_originalProductForm4").serialize();
         jQuery.ajax({
             url: 'index.php?module=oer&action=saveoriginalproductstep4',
             type: "POST",

@@ -27,7 +27,11 @@ $objFix->fixThree();
         "block" : "featuredoriginalproduct"
         }
 
-       
+        {
+        "display" : "block",
+        "module" : "oer",
+        "block" : "mostarc"
+        }
         <div id="rightdynamic_area" class="rightdynamic_area_layer">
            
         </div>

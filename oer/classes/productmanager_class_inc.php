@@ -30,7 +30,7 @@ class productmanager extends object {
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
-        $this->addJS();
+        $this->loadCSSandJS();
         $this->setupLanguageItems();
     }
 
@@ -199,10 +199,19 @@ class productmanager extends object {
     }
 
     /**
-     * adds essential js
+     * adds essential js and css
      */
-    function addJS() {
+    function loadCSSandJS() {
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '">';
+        $this->appendArrayVar('headerParams', $uiAllCSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
+
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.tabs.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('tabber.js', 'oer'));
+
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('originalproduct.js', 'oer'));
     }
 
@@ -1060,7 +1069,7 @@ class productmanager extends object {
     }
 
     /**
-     * get the feature product
+     * get the featured product
      * @param string $prodtype whether original or adaptation product
      * @return string contains featured product data
      */
@@ -1104,15 +1113,69 @@ class productmanager extends object {
     }
 
     /**
+     * this gets the most rated  product
+     * @return string 
+     */
+    function getMostRatedProduct() {
+        $dbProductRating = $this->getObject("dbproductrating", "oer");
+        $productId = $dbProductRating->getMostRatedProduct();
+
+        $product = $this->dbproducts->getProduct($productId);
+        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+        if ($product['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+        }
+
+        $mode = "";
+        $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+        $thumbnailLink->link = $thumbnail . '<br/>';
+        $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+        $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+        $titleLink->cssClass = 'original_product_listing_title';
+        $titleLink->link = $product['title'];
+        $product = $titleLink->show();
+
+
+        $content = '<div id="mostratedproduct">';
+        $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+        $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
+        $content.='<div id="mostratedproduct_thumbnail">0 adaptations</div>';
+        $content.="</div>";
+        return $content;
+    }
+
+    /**
      * this get the most (A)daprated, (R)ated, (F)eatured 
      */
     function getMostARC() {
-        $objTabs = $this->newObject('tabcontent', 'htmlelements');
-        $objTabs->width = '95%';
-        $objTabs->addTab('Adapted', '');
-        $objTabs->addTab('Rated', '');
-        $objTabs->addTab('Featured', '');
-        return $objTabs->show();
+        $content = '<h2>' . $this->objLanguage->languageText('mod_oer_most', 'oer') . '</h2>';
+
+        $content = '
+<div class="tabber">
+
+     <div class="tabbertab">
+	  <h2 class="mostadapted">' . $this->objLanguage->languageText('mod_oer_mostadapted', 'oer') . '</h2>
+	  ' . $this->getMostRatedProduct() . '
+     </div>
+
+
+     <div class="tabbertab">
+	  <h2 class="mostrated">' . $this->objLanguage->languageText('mod_oer_mostrated', 'oer') . '</h2>
+	    ' . $this->getMostRatedProduct() . '
+     </div>
+
+
+     <div class="tabbertab">
+	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_mostcommented', 'oer') . '</h2>
+	  <p>Tab 3 content.</p>
+     </div>
+
+</div>
+            
+
+';
+        return $content;
     }
 
 }

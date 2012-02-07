@@ -9,7 +9,7 @@ class vieworiginalproduct extends object {
 
     function init() {
         $this->objUser = $this->getObject("user", "security");
-        $this->loadJS();
+        $this->loadCSSandJS();
         $this->setupLanguageItems();
     }
 
@@ -164,7 +164,7 @@ class vieworiginalproduct extends object {
     /**
      * JS an CSS for product rating
      */
-    function loadJS() {
+    function loadCSSandJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
 

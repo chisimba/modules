@@ -8,7 +8,8 @@
 class block_mostarc extends object {
 
     function init() {
-        $this->title = "";
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText('mod_oer_most', 'oer');
     }
 
     function show() {
