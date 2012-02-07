@@ -11,6 +11,7 @@ class viewadaptation extends object {
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass("link", "htmlelements");
         $this->loadClass("form", "htmlelements");
+        $this->loadClass("radio", "htmlelements");
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "oer");
         $this->objDbProductComments = $this->getObject("dbproductcomments", "oer");
@@ -18,6 +19,65 @@ class viewadaptation extends object {
         $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $this->objUser = $this->getObject("user", "security");
+        $this->loadJS();
+        //Flag to check if user has perms to manage adaptations
+        $this->hasPerms = $this->objAdaptationManager->userHasPermissions();
+    }
+
+    /**
+     * JS an CSS for product rating
+     */
+    function loadJS() {
+        $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
+        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
+
+        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
+        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
+
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $ratingEffectJs);
+        $this->appendArrayVar('headerParams', $ratingUIJs);
+        $this->appendArrayVar('headerParams', $ratingUICSS);
+        $this->appendArrayVar('headerParams', $crystalCSS);
+    }
+
+    /**
+     * Builds a div for rating
+     * @return string
+     */
+    function createRatingDiv($productId) {
+        $options = array(
+            1 => array('title' => $this->objLanguage->languageText('mod_oer_notsogreat', 'oer')),
+            2 => array('title' => $this->objLanguage->languageText('mod_oer_quitegood', 'oer')),
+            3 => array('title' => $this->objLanguage->languageText('mod_oer_good', 'oer')),
+            4 => array('title' => $this->objLanguage->languageText('mod_oer_great', 'oer')),
+            5 => array('title' => $this->objLanguage->languageText('mod_oer_excellent', 'oer')));
+        $dbProductRating = $this->getObject("dbproductrating", "oer");
+        $totalRating = $dbProductRating->getTotalRating($productId);
+        $avg = $totalRating;
+        foreach ($options as $id => $val) {
+            $options[$id]['disabled'] = 'disabled="disabled"';
+            $options[$id]['checked'] = $id == $avg ? 'checked="checked"' : '';
+        }
+//var_dump($options);
+        $div = '<form id="rat" action="" method="post">';
+
+        $radio = new radio('rate');
+        foreach ($options as $id => $rb) {
+            var_dump($rb['title']);
+            $radio->addOption($id . '|' . $productId . '|' . $this->objUser->userId(), $rb['title']);// . ' ' . $rb['checked'] . ' ' . $rb['disabled']
+            //$div.='<input type="radio" name="rate" value="' . $id . '|' . $productId . '|' . $this->objUser->userId() . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
+        }
+        /* if ($check) {
+          $radio->selected = $product['accredited'];
+          } */
+        $div.=$radio->show();
+
+
+        $div.='</form><div id="loader"><div style="padding-top: 5px;">' . $this->objLanguage->languageText('mod_oer_pleasewait', 'oer') . '...</div></div>';
+        $div.='<div id="votes">' . $this->objLanguage->languageText('mod_oer_productrating', 'oer') . ': ' . $totalRating . '</div>';
+
+        return $div;
     }
 
     function buildAdaptationView($productId) {
@@ -26,9 +86,6 @@ class viewadaptation extends object {
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
 
-        //Flag to check if user has perms to manage adaptations
-        $hasPerms = $this->objAdaptationManager->userHasPermissions();
-
         $leftContent = "";
 
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
@@ -36,9 +93,10 @@ class viewadaptation extends object {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $leftContent.='<div id="viewadaptation_coverpage">' . $thumbnail . '</div>';
+        $ratingDiv = $this->createRatingDiv($productId);
 
         $newAdapt = "";
-        if ($hasPerms) {
+        if ($this->hasPerms) {
             //Link for - adapting product from existing adapatation
             $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
             //$newAdaptLink = new link($this->uri(array("action" => "makeadaptation", "productid" => $productId, 'mode' => 'new')));
@@ -58,7 +116,7 @@ class viewadaptation extends object {
 
         $sections = "";
         $sectionTitle = '<h3>' . $this->objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
-        if ($hasPerms) {
+        if ($this->hasPerms) {
             $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
             $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $this->objLanguage->languageText('mod_oer_addnode', 'oer');
@@ -79,7 +137,7 @@ class viewadaptation extends object {
         $numOfPostsToDisplay = 10;
         $wallType = '4';
         $comments = '';
-        if ($hasPerms) {
+        if ($this->hasPerms) {
             $comments = $objWallOps->showObjectWall('identifier', $productId, 0, $numOfPostsToDisplay);
         } else {
             $keyValue = $productId;
@@ -102,7 +160,7 @@ class viewadaptation extends object {
         //Comment fetcher
         /*
           $commentfetcher = "";
-          if ($hasPerms) {
+          if ($this->hasPerms) {
           $fetcheritems = "";
           $textarea = new textarea('usercomment', '', 5, 5);
           $textarea->cssClass = 'commentTextBox';
@@ -167,7 +225,7 @@ class viewadaptation extends object {
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $product['abstract'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
-        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="6", style="width:30%"');
+        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="7", style="width:30%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
@@ -180,6 +238,10 @@ class viewadaptation extends object {
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $ratingDiv . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
 
         $table->startRow();
