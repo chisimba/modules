@@ -101,29 +101,29 @@ class viewadaptation extends object {
                 '</div>';
         //Comment fetcher
         /*
-        $commentfetcher = "";
-        if ($hasPerms) {
-            $fetcheritems = "";
-            $textarea = new textarea('usercomment', '', 5, 5);
-            $textarea->cssClass = 'commentTextBox';
-            $fetcheritems.="<br />" . $textarea->show();
-            $addSectionIcon = '<img src="skins/oer/images/button-search.png"/>';
-            //$addNodeLink = new link('javascript:document.form_adaptationViewForm.submit();');
-            $submitLink = new link('#');
-            $submitLink->link = $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon;
-            $submitLink->extra = 'onclick="document.form_adaptationViewForm.submit();return false;"';
-            $submitLink->class = "submitCommentImage";
+          $commentfetcher = "";
+          if ($hasPerms) {
+          $fetcheritems = "";
+          $textarea = new textarea('usercomment', '', 5, 5);
+          $textarea->cssClass = 'commentTextBox';
+          $fetcheritems.="<br />" . $textarea->show();
+          $addSectionIcon = '<img src="skins/oer/images/button-search.png"/>';
+          //$addNodeLink = new link('javascript:document.form_adaptationViewForm.submit();');
+          $submitLink = new link('#');
+          $submitLink->link = $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon;
+          $submitLink->extra = 'onclick="document.form_adaptationViewForm.submit();return false;"';
+          $submitLink->class = "submitCommentImage";
 
-            //$button = new button('save', $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon);
-            $button = new button('save', $this->objLanguage->languageText('word_submit', 'system'));
-            $button->cssClass = "submitCommentImage";
-            $button->setToSubmit();
-            $fetcheritems.="<br />" . $button->show();
-            //Form for comment fetcher
-            $formData = new form('adaptationViewForm', $this->uri(array("action" => "addcomment", "product_id" => $productId)));
-            $formData->addToForm($fetcheritems);
-            $commentfetcher = $formData->show();
-        }*/
+          //$button = new button('save', $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon);
+          $button = new button('save', $this->objLanguage->languageText('word_submit', 'system'));
+          $button->cssClass = "submitCommentImage";
+          $button->setToSubmit();
+          $fetcheritems.="<br />" . $button->show();
+          //Form for comment fetcher
+          $formData = new form('adaptationViewForm', $this->uri(array("action" => "addcomment", "product_id" => $productId)));
+          $formData->addToForm($fetcheritems);
+          $commentfetcher = $formData->show();
+          } */
         $sectionManager = $this->getObject("sectionmanager", "oer");
 
         $navigator = $sectionManager->buildSectionsTree($product["id"], '');
@@ -199,7 +199,14 @@ class viewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+
         $prodTitle = '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
+        $prodTitle .= '<p>' . $bookmarks . '</p>';
 
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }

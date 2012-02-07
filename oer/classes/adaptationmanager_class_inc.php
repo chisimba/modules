@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contains util methods for managing adaptations
  *

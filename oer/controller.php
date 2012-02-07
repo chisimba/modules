@@ -10,7 +10,6 @@ class oer extends controller {
      * Constructor for the Module
      */
     public function init() {
-
         //// Set the jQuery version to the one required
         $this->setVar('JQUERY_VERSION', '1.6.1');
         // Load the login helper scripts, they won't load in the template

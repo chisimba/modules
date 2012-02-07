@@ -523,10 +523,17 @@ class sectionmanager extends object {
         $content.='</div>';
         $content.='<div id="sectionbody">';
 
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+
         $leftContent = "";
-        $leftContent.='<h2>' . $node['title'] . '</h2>';
-        $leftContent.=$this->objLanguage->languageText('mod_oer_contributedby', 'oer') . '&nbsp;' . $section['contributedby'];
-        $leftContent.=$section['content'];
+        $leftContent .= '<p>' . $bookmarks . '</p>';
+        $leftContent .= '<h2>' . $node['title'] . '</h2>';
+        $leftContent .= $this->objLanguage->languageText('mod_oer_contributedby', 'oer') . '&nbsp;' . $section['contributedby'];
+        $leftContent .= $section['content'];
 
         $rightContent = "";
         $rightContent.=$this->buildSectionsTree($productId, $sectionId);
