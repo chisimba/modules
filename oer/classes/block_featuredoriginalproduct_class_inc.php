@@ -14,7 +14,7 @@ class block_featuredoriginalproduct extends object {
 
     function show() {
         $objProductManager = $this->getObject("productmanager", "oer");
-        return $objProductManager->getFeaturedProduct();
+        return $objProductManager->getFeaturedProduct("original");
     }
 
 }

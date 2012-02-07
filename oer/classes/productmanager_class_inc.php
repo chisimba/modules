@@ -1042,8 +1042,17 @@ class productmanager extends object {
      * makes a given product featured
      */
     function makefeatured() {
+        $prodtype = "adaptation";
+        $id = $this->getParam("productid");
+        //Check if product is an original
+        $isOriginalProduct = $this->dbproducts->isOriginalProduct($id);
+        if ($isOriginalProduct) {
+            $prodtype = "original";
+        }
         $data = array(
-            'productid' => $this->getParam("productid"),
+            'productid' => $id,
+            'prodtype' => $prodtype,
+            'status' => "active",
             'featuredon' => date("Y-m-d H:i:s")
         );
         $dbFeaturedProduct = $this->getObject("dbfeaturedproduct", "oer");
@@ -1052,10 +1061,12 @@ class productmanager extends object {
 
     /**
      * get the feature product
+     * @param string $prodtype whether original or adaptation product
+     * @return string contains featured product data
      */
-    function getFeaturedProduct() {
+    function getFeaturedProduct($prodtype) {
         $dbFeaturedProduct = $this->getObject("dbfeaturedproduct", "oer");
-        $productId = $dbFeaturedProduct->getFeaturedProduct();
+        $productId = $dbFeaturedProduct->getFeaturedProduct($prodtype);
         $product = $this->dbproducts->getProduct($productId);
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="136" height="176" align="left"/>';
         if ($product['thumbnail'] == '') {
@@ -1063,14 +1074,25 @@ class productmanager extends object {
         }
 
         $mode = "";
-        $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
-        $thumbnailLink->link = $thumbnail . '<br/>';
-        $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+        if ($prodtype == "original") {
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
 
-        $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
-        $titleLink->cssClass = 'original_product_listing_title';
-        $titleLink->link = $product['title'];
-        $product = $titleLink->show();
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+        } else {
+            $thumbnailLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+            $titleLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+        }
 
 
         $content = '<div id="featuredproduct>"';
