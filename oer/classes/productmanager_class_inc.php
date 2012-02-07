@@ -1104,7 +1104,7 @@ class productmanager extends object {
         }
 
 
-        $content = '<div id="featuredproduct>"';
+        $content = '<div id="featuredproduct">';
         $content.='<div id="featuredproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
         $content.='<div id="featuredproduct_title">' . $titleLink->show() . '</div>';
         $content.='<div id="featuredproduct_thumbnail">0 adaptations</div>';
