@@ -262,10 +262,6 @@ class viewadaptation extends object {
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
-        $table->endRow();
-        $table->startRow();
-        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $featureAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
