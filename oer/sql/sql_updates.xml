@@ -109,4 +109,40 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.131</version>
+        <description><br/>Added keywords</description>
+        <data>
+            <add>
+                <name>keywords</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_featuredproduct</table>
+        <version>0.140</version>
+        <description><br/>Added product type</description>
+        <data>
+            <add>
+                <name>prodtype</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
+    <update>
+        <table>tbl_oer_featuredproduct</table>
+        <version>0.140</version>
+        <description><br/>Added featured status</description>
+        <data>
+            <add>
+                <name>status</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
 </updates>

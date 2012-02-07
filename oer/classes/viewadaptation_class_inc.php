@@ -24,6 +24,7 @@ class viewadaptation extends object {
         $this->hasPerms = $this->objAdaptationManager->userHasPermissions();
         $this->setupLanguageItems();
     }
+
     /**
      * sets up necessary lang items for use in js
      */
@@ -33,6 +34,7 @@ class viewadaptation extends object {
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
     }
+
     /**
      * JS an CSS for product rating
      */
@@ -230,11 +232,21 @@ class viewadaptation extends object {
                   <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>'; */
             }
         }
+        $featuredAdaptation = "";
+        if ($this->hasPerms) {
+            //Add mark as featured adaptation
+            $featuredImg = '<img src="skins/oer/images/featured.png">';
+            $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
+            $featuredLink->link = $featuredImg;
+            $featuredLink->cssClass = "featuredoriginalproduct";
+            $featureAdaptation="" . $featuredLink->show();
+        }
+
 
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $product['abstract'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
-        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="7", style="width:30%"');
+        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="8", style="width:30%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
@@ -247,6 +259,14 @@ class viewadaptation extends object {
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
+        $table->endRow();
+        $table->startRow();
+        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $featureAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');

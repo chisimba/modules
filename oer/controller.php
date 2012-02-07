@@ -200,7 +200,11 @@ class oer extends controller {
         $objProductManager->makefeatured();
         $id = $this->getParam("productid");
         $params = array("id" => $id);
-        return $this->nextAction('vieworiginalproduct', $params);
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct)
+            return $this->nextAction('vieworiginalproduct', $params);
+        else
+            return $this->nextAction('viewadaptation', $params);
     }
 
     /**
