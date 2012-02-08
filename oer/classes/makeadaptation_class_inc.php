@@ -198,7 +198,5 @@ class makeadaptation extends object {
         $this->dbproducts->updateOriginalProduct($data, $id);
         return $id;
     }
-
 }
-
 ?>

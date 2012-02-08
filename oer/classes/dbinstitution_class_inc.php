@@ -119,6 +119,7 @@ class dbinstitution extends dbtable {
             return Null;
         }
     }
+
     /*
      * Function to get the institution data by id
      * @param id id of the institution record
@@ -160,11 +161,6 @@ class dbinstitution extends dbtable {
         $scale_x = imagesx($im);
         $scale_y = imagesy($im);
         $pt = $this->getlocationcoords($lat, $long, $scale_x, $scale_y);
-//        if(imagefilledrectangle($im, $pt["x"] - 2, $pt["y"] - 2, $pt["x"] + 2, $pt["y"] + 2, $red)){
-//            $abLink = new link($this->uri(array("action" => "3a")));
-//            $abLink->link = '';
-//            echo $abLink->show();
-//        }
         imagefilledrectangle($im, $pt["x"] - 2, $pt["y"] - 2, $pt["x"] + 2, $pt["y"] + 2, $red);
         header("Content-Type: image/png");
     }
@@ -276,5 +272,7 @@ class dbinstitution extends dbtable {
         $id = $this->getArray($sql);
         return $id;
     }
+
 }
+
 ?>

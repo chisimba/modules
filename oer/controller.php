@@ -28,7 +28,7 @@ class oer extends controller {
     function requiresLogin($action = 'home') {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "adaptationlist",
             "viewadaptation", "fullviewadaptation", "selfregister",
-            "viewsection", "checkusernameajax", "userdetailssave",
+            "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection");
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -809,6 +809,19 @@ class oer extends controller {
      */
     public function __institutionedit() {
         return 'institutionedit_tpl.php';
+    }
+    /**
+     *
+     * Method to open view of an insitution
+     *
+     * @return string Template
+     * @access public
+     *
+     */
+    public function __viewinstitution() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return 'viewinstitution_tpl.php';
     }
 
     /**

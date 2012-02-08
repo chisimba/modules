@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class contains util methods for displaying adaptations
  *
@@ -70,21 +69,13 @@ class viewadaptation extends object {
             $options[$id]['disabled'] = 'disabled="disabled"';
             $options[$id]['checked'] = $id == $avg ? 'checked="checked"' : '';
         }
-//var_dump($options);
+
         $div = '<form id="rat" action="" method="post">';
 
         //$radio = new radio('rate');
         foreach ($options as $id => $rb) {
-            //var_dump($rb['title']);
-            //$radio->addOption($id . '|' . $productId . '|' . $this->objUser->userId(), $rb['title']);// . ' ' . $rb['checked'] . ' ' . $rb['disabled']
             $div.='<input type="radio" name="rate" value="' . $id . '|' . $productId . '|' . $this->objUser->userId() . '" title="' . $rb['title'] . ' ' . $rb['checked'] . ' ' . $rb['disabled'] . '/>';
         }
-        /* if ($check) {
-          $radio->selected = $product['accredited'];
-          } */
-        ///$div.=$radio->show();
-
-
         $div.='</form><div id="loader"><div style="padding-top: 5px;">' . $this->objLanguage->languageText('mod_oer_pleasewait', 'oer') . '...</div></div>';
         $div.='<div id="votes">' . $this->objLanguage->languageText('mod_oer_productrating', 'oer') . ': ' . $totalRating . '</div>';
 
@@ -109,8 +100,7 @@ class viewadaptation extends object {
         $newAdapt = "";
         if ($this->hasPerms) {
             //Link for - adapting product from existing adapatation
-            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
-            //$newAdaptLink = new link($this->uri(array("action" => "makeadaptation", "productid" => $productId, 'mode' => 'new')));
+            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));            
             $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
             $newAdapt = $newAdaptLink->show();
         }
@@ -136,13 +126,6 @@ class viewadaptation extends object {
 
         //Get comments
         $prodcomments = "";
-        /* $userComments = $this->objDbProductComments->getProductComments($productId);
-          if(!empty($userComments)){
-          $prodcomments .= '<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>';
-          foreach($userComments as $usercomment) {
-          $prodcomments .= '<br /><div class="greyTextLink">'.$usercomment["comment"].'</div>';
-          }
-          } */
         $objWallOps = $this->getObject('wallops', 'wall');
 
         $numOfPostsToDisplay = 10;
@@ -168,31 +151,7 @@ class viewadaptation extends object {
         $prodcomments.='<div id="viewproduct_usercomments_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':' .
                 $comments .
                 '</div>';
-        //Comment fetcher
-        /*
-          $commentfetcher = "";
-          if ($this->hasPerms) {
-          $fetcheritems = "";
-          $textarea = new textarea('usercomment', '', 5, 5);
-          $textarea->cssClass = 'commentTextBox';
-          $fetcheritems.="<br />" . $textarea->show();
-          $addSectionIcon = '<img src="skins/oer/images/button-search.png"/>';
-          //$addNodeLink = new link('javascript:document.form_adaptationViewForm.submit();');
-          $submitLink = new link('#');
-          $submitLink->link = $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon;
-          $submitLink->extra = 'onclick="document.form_adaptationViewForm.submit();return false;"';
-          $submitLink->class = "submitCommentImage";
 
-          //$button = new button('save', $this->objLanguage->languageText('word_submit', 'system') . "&nbsp;&nbsp;" . $addSectionIcon);
-          $button = new button('save', $this->objLanguage->languageText('word_submit', 'system'));
-          $button->cssClass = "submitCommentImage";
-          $button->setToSubmit();
-          $fetcheritems.="<br />" . $button->show();
-          //Form for comment fetcher
-          $formData = new form('adaptationViewForm', $this->uri(array("action" => "addcomment", "product_id" => $productId)));
-          $formData->addToForm($fetcheritems);
-          $commentfetcher = $formData->show();
-          } */
         $sectionManager = $this->getObject("sectionmanager", "oer");
 
         $navigator = $sectionManager->buildSectionsTree($product["id"], '');
@@ -214,10 +173,15 @@ class viewadaptation extends object {
             if (!empty($instData)) {
                 //Get institution type
                 $instType = $this->objDbInstitutionType->getType($instData["type"]);
+                $instName = $instData["name"];
+                $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+                $instNameLink->link = $instName;
+                $instNameLink->cssClass = "viewinstitutionlink";
+                $instNameLk = "" . $instNameLink->show();
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
-            <div id="viewadaptation_text"></div><div class="pinkText">' . $instData['name'] . '</div><br/><br/>';
+            <div id="viewadaptation_text"></div><div class="pinkText">' . $instNameLk . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
@@ -227,9 +191,7 @@ class viewadaptation extends object {
                 $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_fullinfo', 'oer') . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';
-                /* $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_usercomments', 'oer') . ':</div>
-                  <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>'; */
+                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';                
             }
         }
         $featuredAdaptation = "";
@@ -239,7 +201,7 @@ class viewadaptation extends object {
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
-            $featuredAdaptation="" . $featuredLink->show();
+            $featuredAdaptation = "" . $featuredLink->show();
         }
 
 
@@ -299,5 +261,4 @@ class viewadaptation extends object {
     }
 
 }
-
 ?>

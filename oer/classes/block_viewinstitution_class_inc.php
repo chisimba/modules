@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * Block for editing or adding institutions
+ * Block for viewing institution info
  *
- * A block for editing or adding institutions that can be rendered using a JSON
+ * A block for viewing institution info that can be rendered using a JSON
  * template.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  *
  * @version    0.001
  * @package    oer
- * @author     Derek Keats derek@dkeats.com
+ * @author     Paul Mungai paulwando@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -41,18 +41,18 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Block for editing or adding institutions
+ * Block for viewing an institution
  *
- * A block for editing or adding institutions that can be rendered
+ * A block for viewing institution info that can be rendered
  * using a JSON template.
  *
  * @category  Chisimba
- * @author    Derek Keats derek@dkeats.com
+ * @author    Paul Mungai paulwando@gmail.com
  * @version   0.001
  * @copyright 2011 AVOIR
  *
  */
-class block_institutionedit extends object
+class block_viewinstitution extends object
 {
     /**
      *
@@ -78,7 +78,7 @@ class block_institutionedit extends object
     }
     /**
      *
-     * Standard block show method to show the edit form for institutions
+     * Standard block show method to show institution info
      * rendered as a wideblock
      *
      * @return string $this->display block rendered
@@ -87,7 +87,9 @@ class block_institutionedit extends object
     public function show() 
     {
         $objInstEditForm = $this->getObject('institutionedit','oer');
-        return $objInstEditForm->show();
+        $institutionId = $this->configData;
+        
+        return $objInstEditForm->viewInstitution($institutionId);
     }
 }
 ?>
