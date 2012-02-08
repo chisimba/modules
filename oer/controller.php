@@ -201,7 +201,7 @@ class oer extends controller {
         $id = $this->getParam("productid");
         $params = array("id" => $id);
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($id);
-        
+
         if ($isOriginalProduct)
             return $this->nextAction('vieworiginalproduct', $params);
         else
@@ -526,12 +526,13 @@ class oer extends controller {
     function __editsectionnode() {
         $id = $this->getParam("id");
         $productid = $this->getParam("editproductid");
+        $nodeType = $this->getParam("nodetype");
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
         if ($isOriginalProduct)
             $isOriginalProduct = 1;
         else
             $isOriginalProduct = 0;
-        $data = $productid . '|' . $id . '|' . $isOriginalProduct;
+        $data = $productid . '|' . $id . '|' . $isOriginalProduct . '|' . $nodeType;
         $this->setVarByRef("data", $data);
         return "addeditsectionnode_tpl.php";
     }
@@ -586,6 +587,13 @@ class oer extends controller {
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
+    function __editcurriculum() {
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $id = $sectionManager->updateCurriculum();
+        $params = array("id" => $id);
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
     /**
      * saves a new section
      * @return type 
@@ -596,6 +604,14 @@ class oer extends controller {
         $params = array("id" => $id);
         return $this->nextAction('vieworiginalproduct', $params);
     }
+
+    function  __deletesectionnode(){
+        $sectionManager = $this->getObject("sectionmanager", "oer");
+        $sectionManager->deleteSectionNode();
+        $params = array("id" => $this->getParam("editproductid"));
+        return $this->nextAction('vieworiginalproduct', $params);
+    }
+
 
     /**
      * Creates a new node in the sections tree
@@ -810,6 +826,7 @@ class oer extends controller {
     public function __institutionedit() {
         return 'institutionedit_tpl.php';
     }
+
     /**
      *
      * Method to open view of an insitution

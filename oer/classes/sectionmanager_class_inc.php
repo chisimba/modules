@@ -41,7 +41,7 @@ class sectionmanager extends object {
      */
     function addJS() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
-      //  $this->appendArrayVar('headerParams', '<script type="text/javascript">var loggedIn=' . $this->objUser->isLoggedIn() . ';</script>');
+        //  $this->appendArrayVar('headerParams', '<script type="text/javascript">var loggedIn=' . $this->objUser->isLoggedIn() . ';</script>');
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('sections.js', 'oer'));
     }
 
@@ -64,6 +64,7 @@ class sectionmanager extends object {
      */
     function saveCurriculum() {
         $productId = $this->getParam("productid");
+        $id = $this->getParam("id");
         $data = array(
             "product_id" => $productId,
             "title" => $this->getParam("title"),
@@ -73,7 +74,7 @@ class sectionmanager extends object {
         );
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
-        $dbCurriculum->addCurriculum($data);
+        $dbCurriculum->updateCurriculum($data, $id);
         //here we must return the product id to be used for creating section tree
         return $productId;
     }
@@ -162,6 +163,7 @@ class sectionmanager extends object {
         $data = array(
             "node_id" => $this->getParam("sectionid"),
             "title" => $this->getParam("title"),
+            "deleted"=>'N',
             "content" => $this->getParam("content"),
             "status" => $this->getParam("status"),
             "contributedby" => $this->getParam("contributedby")
@@ -173,10 +175,6 @@ class sectionmanager extends object {
         return $id;
     }
 
-    /**
-     * Updates section info
-     * @return type 
-     */
     function updateSectionNode() {
 
         $parentid = $this->getParam('selectednode');
@@ -207,6 +205,21 @@ class sectionmanager extends object {
             "level" => count(explode("/", $path))
         );
 
+        $id = $dbSections->updateSectionNode($data, $sectionId);
+        return $id;
+    }
+
+    /**
+     * Updates section info by setting deleted to false
+     * @return type 
+     */
+    function deleteSectionNode() {
+        $sectionId = $this->getParam("id");
+
+        $data = array(
+            "deleted" => "Y"
+        );
+        $dbSections = $this->getObject("dbsectionnodes", "oer");
         $id = $dbSections->updateSectionNode($data, $sectionId);
         return $id;
     }
@@ -713,7 +726,7 @@ class sectionmanager extends object {
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
         } else {
-            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewrootsection', "productid" => $productId, 'sectionid' => $rootId, 'nodetype' => 'curriculum', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewsection', "productid" => $productId, 'sectionid' => $rootId, 'nodetype' => 'curriculum', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
         }
 
         $refArray = array();
@@ -736,8 +749,8 @@ class sectionmanager extends object {
                     $icon = 'folder.gif';
                 }
                 if ($nodeType == 'section') {
-
                     $icon = 'document.png';
+                    $expandedIcon = $icon;
                 }
 
 
@@ -747,17 +760,16 @@ class sectionmanager extends object {
                 }
                 $folderText = $text;
                 $folderShortText = $text;
-                if ($sectionEditor) {
-                    // $addImg = '<img src="skins/oer/images/icons/add-10.png">';
-                    // $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId, "nodetype" => $nodeType, "selected" => $text)));
-                    // $addNodeLink->link = $addImg;
-                    // $folderShortText.='&nbsp;'.$addNodeLink->show();
-                }
+
                 if ($sectionNode['path'] == $selected) {
                     $folderText = '<strong>' . $folderText . '</strong>';
                     $cssClass = 'confirm';
                 } else {
                     $cssClass = '';
+                }
+                
+                if($sectionNode['deleted'] == 'Y'){
+                    $cssClass='deleted';
                 }
                 if ($treeType == 'htmldropdown') {
                     // echo "css class == $cssClass<br/>";

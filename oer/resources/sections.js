@@ -28,12 +28,13 @@ jQuery(document).ready(function(){
                         nodeType=link.substring(nodeTypeIndex);
                     }
                     var editLink='&nbsp;<a href="?module=oer&action=editsectionnode&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/icons/edit.png" /></a>';
+                    var deleteLink='&nbsp;<a  class="deletenode" href="?module=oer&action=deletesectionnode&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/icons/delete.png" /></a>';
                     var editContentLink='';
                     if(nodeType == 'section'){
                         editContentLink= '&nbsp;<a href="?module=oer&action=editsectioncontent&id='+sectionId+'&editproductid='+productId+'"><img src="skins/oer/images/application_form_edit.png" /></a>';
                     }
-                
-                    jQuery(this).prepend(jQuery('<span class="editsection">'+editLink+editContentLink+"&nbsp;</span>"));     
+                  
+                    jQuery(this).prepend(jQuery('<span class="editsection">'+editLink+editContentLink+deleteLink+"&nbsp;</span>"));     
                 }
             }
         }, 

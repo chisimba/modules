@@ -47,12 +47,12 @@ class vieworiginalproduct extends object {
 
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
             $adaptLink->link = $adaptImg;
-            $adaptLink->cssClass="adaptoriginalproduct";
+            $adaptLink->cssClass = "adaptoriginalproduct";
             $editControls.= $adaptLink->show();
 
             $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
-            $editLink->cssClass="editoriginalproduct";
+            $editLink->cssClass = "editoriginalproduct";
             $editControls.="" . $editLink->show();
 
             $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
@@ -77,7 +77,12 @@ class vieworiginalproduct extends object {
         $leftContent.=$product['description'];
 
         $rightContent = "";
-        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . '</div>';
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks.'</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
@@ -167,10 +172,16 @@ class vieworiginalproduct extends object {
     function loadCSSandJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
+        
+        $loggedInVar = '<script language="JavaScript" type="text/javascript">
+            
+         var loggedIn='.$this->objUser->isLoggedIn().';
+        </script>';
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
 
+        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);
@@ -224,8 +235,6 @@ class vieworiginalproduct extends object {
 
         return $div;
     }
-    
-    
 
 }
 
