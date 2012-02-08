@@ -239,7 +239,7 @@ class viewadaptation extends object {
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
-            $featureAdaptation="" . $featuredLink->show();
+            $featuredAdaptation="" . $featuredLink->show();
         }
 
 
@@ -262,7 +262,7 @@ class viewadaptation extends object {
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $featureAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
+        $table->addCell('<div id="viewadaptation_leftcontent">' . $featuredAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');

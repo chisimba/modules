@@ -244,7 +244,7 @@ class institutionedit extends object
         // Institution type selection
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_type', 'oer');
+          'mod_oer_typeofinstitution_label', 'oer');
         $table->addCell($title);
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $objInstitutionTypesdd = new dropdown('type');
@@ -260,7 +260,7 @@ class institutionedit extends object
         // Field for keyword 1
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_keyword1', 'oer');
+          'mod_oer_keyword', 'oer')." 1";
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->keyword1;
@@ -277,7 +277,7 @@ class institutionedit extends object
         // Field for keyword 2
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_keyword2', 'oer');
+          'mod_oer_keyword', 'oer')." 2";
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->keyword2;
@@ -300,7 +300,7 @@ class institutionedit extends object
         $table->cssClass = "moduleHeader";
         // Field for address1.
         $table->startRow();
-        $title = $this->objLanguage->languageText('mod_oer_institution_address1', 'oer');
+        $title = $this->objLanguage->languageText('mod_oer_address1', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->address1;
@@ -316,7 +316,7 @@ class institutionedit extends object
 
         // Field for address2.
         $table->startRow();
-        $title = $this->objLanguage->languageText('mod_oer_institution_address2', 'oer');
+        $title = $this->objLanguage->languageText('mod_oer_address2', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->address2;
@@ -331,8 +331,7 @@ class institutionedit extends object
 
         // Field for address3.
         $table->startRow();
-        $title = $this->objLanguage->languageText(
-          'mod_oer_institution_address3', 'oer');
+        $title = $this->objLanguage->languageText('mod_oer_address1', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->address3;
@@ -348,7 +347,7 @@ class institutionedit extends object
         // Field for ZIP code.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_zip', 'oer');
+          'mod_oer_zip', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->zip;
@@ -365,7 +364,7 @@ class institutionedit extends object
         // Field for Country
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_country', 'oer');
+          'mod_oer_group_country', 'oer');
         $table->addCell($title);
         // Get the countries
         $objCountries = $this->getObject('languagecode', 'language');
@@ -384,7 +383,7 @@ class institutionedit extends object
         // Field for City.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_city', 'oer');
+          'mod_oer_group_city', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->city;
@@ -401,7 +400,7 @@ class institutionedit extends object
         // Field for website link.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-          'mod_oer_institution_websitelink', 'oer');
+          'word_website', 'system');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->websitelink;
