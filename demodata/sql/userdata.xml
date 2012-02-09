@@ -273,5 +273,77 @@
         <howcreated>install</howcreated>
         <updated>2011-02-06</updated>
     </user>
-
+    <user>
+        <id>init_17</id>
+        <userid>17</userid>
+        <username>ho</username>
+        <title>Dr</title>
+        <firstname>Chi Minh</firstname>
+        <surname>Hồ</surname>
+        <pass>a</pass>
+        <creationdate>2012-02-09</creationdate>
+        <emailaddress>ho@localhost.local</emailaddress>
+        <logins>12</logins>
+        <sex>M</sex>
+        <country>VN</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2011-02-09</updated>
+    </user>
+    <user>
+        <id>init_18</id>
+        <userid>18</userid>
+        <username>bfskinner</username>
+        <title>Dr</title>
+        <firstname>Burrhus</firstname>
+        <surname>Skinner</surname>
+        <pass>a</pass>
+        <creationdate>2012-02-09</creationdate>
+        <emailaddress>bf@localhost.local</emailaddress>
+        <logins>2</logins>
+        <sex>M</sex>
+        <country>US</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2012-02-09</updated>
+    </user>
+    <user>
+        <id>init_19</id>
+        <userid>19</userid>
+        <username>pocahontas</username>
+        <title>Ms</title>
+        <firstname>Pocahontas</firstname>
+        <surname>Powhatan</surname>
+        <pass>a</pass>
+        <creationdate>2012-02-09</creationdate>
+        <emailaddress>bf@localhost.local</emailaddress>
+        <logins>2</logins>
+        <sex>M</sex>
+        <country>US</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2012-02-09</updated>
+    </user>
+    <user>
+        <id>init_20</id>
+        <userid>20</userid>
+        <username>santhony</username>
+        <title>Ms</title>
+        <firstname>Susan</firstname>
+        <surname>Anthony</surname>
+        <pass>a</pass>
+        <creationdate>2012-02-09</creationdate>
+        <emailaddress>bf@localhost.local</emailaddress>
+        <logins>11</logins>
+        <sex>M</sex>
+        <country>US</country>
+        <accesslevel>1</accesslevel>
+        <isactive>1</isactive>
+        <howcreated>install</howcreated>
+        <updated>2012-02-09</updated>
+    </user>
+    
 </userdata>
