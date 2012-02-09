@@ -253,9 +253,9 @@ class viewadaptation extends object {
         $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
-
-        $prodTitle = '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
-        $prodTitle .= '<p>' . $bookmarks . '</p>';
+        
+        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . '</div><br />';
+        $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
 
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
