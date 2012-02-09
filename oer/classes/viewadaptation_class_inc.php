@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class contains util methods for displaying adaptations
  *
@@ -18,6 +19,7 @@ class viewadaptation extends object {
         $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $this->objUser = $this->getObject("user", "security");
+        $this->objWashout = $this->getObject('washout', 'utilities');
         $this->loadJS();
         //Flag to check if user has perms to manage adaptations
         $this->hasPerms = $this->objAdaptationManager->userHasPermissions();
@@ -100,7 +102,7 @@ class viewadaptation extends object {
         $newAdapt = "";
         if ($this->hasPerms) {
             //Link for - adapting product from existing adapatation
-            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));            
+            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
             $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
             $newAdapt = $newAdaptLink->show();
         }
@@ -172,8 +174,9 @@ class viewadaptation extends object {
             $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
                 //Get institution type
-                $instType = $this->objDbInstitutionType->getType($instData["type"]);
-                $instName = $instData["name"];
+                $instType = $this->objDbInstitutionType->getType($instData['type']);
+                
+                $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');;
                 $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
@@ -181,17 +184,17 @@ class viewadaptation extends object {
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
-            <div id="viewadaptation_text"></div><div class="pinkText">' . $instNameLk . '</div><br/><br/>';
+            <div id="viewadaptation_text"></div><div class="pinkText">' . $instData['name'] . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
             <div id="viewadaptation_text">' . $instData['country'] . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_category_label">' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':</div>
             <div id="viewadaptation_category_text"> ' . $adaptlang . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_fullinfo', 'oer') . '</div><br/><br/>';
+                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $instNameLk . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_label">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</div>
             <div id="viewadaptation_keywords_text"> ' . $managedby . '</div><br/><br/>';
-                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';                
+                $rightContent.='<div id="viewadaptation_keywords_text"> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</div><br/><br/>';
             }
         }
         $featuredAdaptation = "";
@@ -208,7 +211,7 @@ class viewadaptation extends object {
         $table->startRow();
         $table->addCell('<div id="viewadaptation_leftcontent">' . $leftContent . '</div>', "", "top", "left", "", 'colspan="1", style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $product['abstract'] . '</div>', "", "top", "left", "", 'colspan="1", style="width:55%"');
-        $table->addCell('<div id="viewadaptation_rightcontent>' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="8", style="width:30%"');
+        $table->addCell('<div id="viewadaptation_rightcontent">' . $rightContent . $prodcomments . '</div>', "", "top", "left", "", 'rowspan="8", style="width:30%"');
         $table->endRow();
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
@@ -253,12 +256,100 @@ class viewadaptation extends object {
         $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
-        
-        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . '</div><br />';
+
+        //Add mark as featured adaptation
+        $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
+        $printLink = new link($this->uri(array("action" => "printPDF", "id" => $productId, 'type' => 'adaptation')));
+        $printLink->link = $printImg;
+        $printLink->cssClass = "printproduct";
+        $printLink->target = "_blank";
+        $printLk = "" . $printLink->show();
+
+        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div><br />';
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
 
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
 
+    /**
+     * Function that builds adaptation view for print
+     * @param string $productId
+     * @return string
+     */
+    function buildAdaptationForPrint($productId) {
+        $product = $this->objDbProducts->getProduct($productId);
+
+        $leftContent = "";
+        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
+        if ($product['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+        }
+        $leftContent.= $thumbnail;
+        //Get comments
+
+        
+        //Get institution details
+        if (!empty($product["institutionid"])) {
+            //Get adaptation manager
+            $managedby = "";
+            //Get comments
+            $comments = "";
+            //Get language
+            $adaptlang = "";
+            if ($product['language'] == "en") {
+                $adaptlang = "English";
+            }
+            //Get keywords
+            $kwords = $product['thumbnail'];
+            //get group
+            $group = "";
+            //Get inst data
+            $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+            if (!empty($instData)) {
+                //Get institution type
+                $instType = $this->objDbInstitutionType->getType($instData['type']);
+                
+                $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');
+                $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+                $instNameLink->link = $instName;
+                $instNameLink->cssClass = "viewinstitutionlink";
+                $instNameLk = "" . $instNameLink->show();
+                $rightContent = "";
+                /* $rightContent.='<div id="viewadaptation_author_label"></div>
+                  <div id="viewadaptation_author_text"></div><br/><br/>'; */
+                if (!empty($instData["name"])) {
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </b>' . $instData['name'] . '<br /><br />';
+                }
+                if (!empty($instType)) {
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ': </b>' . $instType . '<br /><br />';
+                }
+                if (!empty($instData['country'])) {
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ': </b>' . $instData['country'] . '<br /><br />';
+                }
+                if (!empty($adaptlang)) {
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ': </b>' . $adaptlang . '<br /><br />';
+                }
+                if (!empty($instNameLk)) {
+                    $rightContent.=' ' . $instNameLk . '<br></br>';
+                }
+                if (!empty($managedby)) {
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . ':</b> ' . $managedby . '<br /><br />';
+                }
+                if (!empty($group)) {
+                    $rightContent.='<b> ' . $this->objLanguage->languageText('mod_oer_viewgroup', 'oer') . '</b><br /><br />';
+                }
+            }
+        }
+        
+        $strAd = "<p>".$leftContent.'<b><br /> ' . $this->objLanguage->languageText('mod_oer_abstract', 'oer') . '</b><br />'.
+                $this->objWashout->parseText($product['abstract'])."<br />".'<b> ' . $this->objLanguage->languageText('mod_oer_description', 'oer') . '</b><br />'.
+                $this->objWashout->parseText($product['description'])."<br />".$rightContent."</p>";
+
+        $prodTitle = '<h1>' . $product['title'] . '</h1>';
+
+        return $prodTitle . $strAd;
+    }
+
 }
+
 ?>

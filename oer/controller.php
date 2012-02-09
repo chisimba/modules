@@ -461,6 +461,18 @@ class oer extends controller {
         return "productlisting_tpl.php";
     }
 
+    /*
+     * Function that prints a pdf of a product
+     */
+
+    public function __printPDF() {
+        $generator = $this->getObject('documentgenerator', 'oer');
+        $prodType = $this->getParam('type');
+        if($prodType == "adaptation"){
+        return $generator->showProductPDF($this->getParam('id'), $prodType);
+        }
+    }
+
     /**
      * deletes a product. Assumes the deletion is already confirmed
      */
@@ -605,13 +617,12 @@ class oer extends controller {
         return $this->nextAction('vieworiginalproduct', $params);
     }
 
-    function  __deletesectionnode(){
+    function __deletesectionnode() {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $sectionManager->deleteSectionNode();
         $params = array("id" => $this->getParam("editproductid"));
         return $this->nextAction('vieworiginalproduct', $params);
     }
-
 
     /**
      * Creates a new node in the sections tree
@@ -760,7 +771,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -877,7 +888,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.
