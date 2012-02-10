@@ -80,6 +80,7 @@ class institutionedit extends object {
      */
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
+
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
@@ -92,13 +93,9 @@ class institutionedit extends object {
         $scriptaculous = $this->getObject('scriptaculous', 'prototype');
         $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
         // Load the jquery validate plugin
-        $this->appendArrayVar('headerParams',
-                $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
-                        'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         // Load the helper Javascript
-        $this->appendArrayVar('headerParams',
-                $this->getJavaScriptFile('institutionedit.js',
-                        'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('institutionedit.js', 'oer'));
         // Load all the required HTML classes from HTMLElements module
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -116,11 +113,11 @@ class institutionedit extends object {
      * @access public
      * 
      */
-    public function show() {
+    public function show($id=NULL) {
         return $this->makeHeading()
-        . "<div class='formwrapper'>"
-        . $this->buildForm()
-        . "</div>";
+                . "<div class='formwrapper'>"
+                . $this->buildForm($id)
+                . "</div>";
     }
 
     /**
@@ -137,8 +134,7 @@ class institutionedit extends object {
     private function insertAddIcon($mode) {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $link = $this->uri(
-                        array("action" => "institutionedit"),
-                        'oer');
+                array("action" => "institutionedit"), 'oer');
         $addlink = new link($link);
         $objIcon->setIcon('add');
 
@@ -149,8 +145,8 @@ class institutionedit extends object {
             $showCss = " style='visibility:show' ";
         }
         return "&nbsp; <span class='conditional_add' "
-        . $showCss . ">" . $addlink->show()
-        . "</span>";
+                . $showCss . ">" . $addlink->show()
+                . "</span>";
     }
 
     /**
@@ -166,14 +162,12 @@ class institutionedit extends object {
         $this->mode = $this->getParam('mode', 'add');
         if ($this->mode == 'edit') {
             $h = $this->objLanguage->languageText(
-                            'mod_oer_institution_heading_edit',
-                            'oer');
+                    'mod_oer_institution_heading_edit', 'oer');
             $id = $this->getParam('id', NULL);
             $this->loadData($id);
         } else {
             $h = $this->objLanguage->languageText(
-                            'mod_oer_institution_heading_new',
-                            'oer');
+                    'mod_oer_institution_heading_new', 'oer');
         }
         // Setup and show heading.
         $header = new htmlHeading();
@@ -190,13 +184,18 @@ class institutionedit extends object {
      * @access private
      * 
      */
-    private function buildForm() {
+    private function buildForm($id) {
+        if ($id != null) {
+            $this->loadData($id);
+            $this->mode = 'edit';
+        }
+
         // Setup table and table headings with input options.
         $table = $this->newObject('htmltable', 'htmlelements');
 
         //Institution name input options
         $title = $this->objLanguage->languageText(
-                        'mod_oer_institution_name', 'oer');
+                'mod_oer_institution_name', 'oer');
         $table->startRow();
         $table->addCell($title);
         $textinput = new textinput('name');
@@ -239,7 +238,7 @@ class institutionedit extends object {
         // Institution type selection
         $table->startRow();
         $title = $this->objLanguage->languageText(
-                        'mod_oer_typeofinstitution_label', 'oer');
+                'mod_oer_typeofinstitution_label', 'oer');
         $table->addCell($title);
         $institutionTypes = $this->objDbInstitutionType->getInstitutionTypes();
         $objInstitutionTypesdd = new dropdown('type');
@@ -249,7 +248,10 @@ class institutionedit extends object {
             $value = NULL;
         }
         $objInstitutionTypesdd->addFromDB($institutionTypes, 'type', 'id', $value);
-        $table->addCell($objInstitutionTypesdd->show());
+        $addTypeLink = new link($this->uri(array("action" => 'institutiontypeedit')));
+        $addTypeLink->link = $this->objLanguage->languageText('word_new', 'system');
+
+        $table->addCell($objInstitutionTypesdd->show() . $addTypeLink->show());
         $table->endRow();
 
         // Field for keyword 1
@@ -342,7 +344,7 @@ class institutionedit extends object {
         // Field for ZIP code.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-                        'mod_oer_zip', 'oer');
+                'mod_oer_zip', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->zip;
@@ -359,7 +361,7 @@ class institutionedit extends object {
         // Field for Country
         $table->startRow();
         $title = $this->objLanguage->languageText(
-                        'mod_oer_group_country', 'oer');
+                'mod_oer_group_country', 'oer');
         $table->addCell($title);
         // Get the countries
         $objCountries = $this->getObject('languagecode', 'language');
@@ -378,7 +380,7 @@ class institutionedit extends object {
         // Field for City.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-                        'mod_oer_group_city', 'oer');
+                'mod_oer_group_city', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->city;
@@ -395,7 +397,7 @@ class institutionedit extends object {
         // Field for website link.
         $table->startRow();
         $title = $this->objLanguage->languageText(
-                        'word_website', 'system');
+                'word_website', 'system');
         $table->addCell($title);
         if ($this->mode == 'edit') {
             $value = $this->websitelink;
@@ -468,7 +470,7 @@ class institutionedit extends object {
 
         //Institution name input options
         $title = $this->objLanguage->languageText(
-                        'mod_oer_institution_name', 'oer');
+                'mod_oer_institution_name', 'oer');
         if (!empty($instData['name'])) {
             $table->startRow();
             $table->addCell($title);
@@ -503,7 +505,7 @@ class institutionedit extends object {
         if (!empty($instData['type'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'mod_oer_typeofinstitution_label', 'oer');
+                    'mod_oer_typeofinstitution_label', 'oer');
             $table->addCell($title);
             //Get Institution type
             $institutionType = $this->objDbInstitutionType->getType($instData["type"]);
@@ -516,7 +518,7 @@ class institutionedit extends object {
         if (!empty($instData['keyword1']) || !empty($instData['keyword2'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'mod_oer_keywords', 'oer');
+                    'mod_oer_keywords', 'oer');
             $table->addCell($title);
             $table->endRow();
             $kwords = "";
@@ -582,7 +584,7 @@ class institutionedit extends object {
         if (!empty($instData['zip'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'mod_oer_zip', 'oer');
+                    'mod_oer_zip', 'oer');
             $table->addCell($title);
             $table->endRow();
 
@@ -594,7 +596,7 @@ class institutionedit extends object {
         if (!empty($instData['country'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'mod_oer_group_country', 'oer');
+                    'mod_oer_group_country', 'oer');
             $table->addCell($title);
             $table->endRow();
 
@@ -610,7 +612,7 @@ class institutionedit extends object {
         if (!empty($instData['city'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'mod_oer_group_city', 'oer');
+                    'mod_oer_group_city', 'oer');
             $table->addCell($title);
             $table->endRow();
             $table->startRow();
@@ -622,7 +624,7 @@ class institutionedit extends object {
         if (!empty($instData['websitelink'])) {
             $table->startRow();
             $title = $this->objLanguage->languageText(
-                            'word_website', 'system');
+                    'word_website', 'system');
             $table->addCell($title);
             $table->endRow();
             $table->startRow();
@@ -651,8 +653,9 @@ class institutionedit extends object {
     private function loadData($id) {
         $objDbInstitution = $this->getObject('dbinstitution');
         $arData = $objDbInstitution->getInstitutionById($id);
+       
         if (!empty($arData)) {
-            foreach ($arData[0] as $key => $value) {
+            foreach ($arData as $key => $value) {
                 $this->$key = $value;
             }
             return TRUE;
@@ -660,5 +663,7 @@ class institutionedit extends object {
             return FALSE;
         }
     }
+
 }
+
 ?>

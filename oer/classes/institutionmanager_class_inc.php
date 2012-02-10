@@ -23,7 +23,8 @@ class institutionmanager extends object {
     private $_objDbInstitutionType;
     private $_objCountry;
     private $_validation;
-        /**
+
+    /**
      * @var object $objLanguage Language Object
      */
     private $_objLanguage;
@@ -41,27 +42,21 @@ class institutionmanager extends object {
     public function institutionNameExists($name) {
         $checkName = $this->_objDbInstitution->getInstitutionName($name);
 
-        if(strlen($checkName) > 0){
+        if (strlen($checkName) > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public function addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         //Check if institution exists
-     return   $this->_objDbInstitution->addInstitution($name, $description, $type,
-                $country, $address1, $address2, $address3, $zip,
-                $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-        
+        return $this->_objDbInstitution->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
     public function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         //First check if an institution with a similar name exists        
-        $this->_objDbInstitution->editInstitution($id, $name, $description, $type,
-                $country, $address1, $address2, $address3, $zip,
-                $city, $websiteLink, $keyword1, $keyword2,
-                $thumbnail);
+        $this->_objDbInstitution->editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
     public function removeInstitution($id) {
@@ -75,8 +70,34 @@ class institutionmanager extends object {
     }
 
     public function getAllInstitutions($filter = NULL) {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objUser = $this->getObject("user", "security");
         $this->_institutionList = $this->_objDbInstitution->getAllInstitutions($filter);
-        return $this->_institutionList;
+        $table = $this->getObject("htmltable", "htmlelements");
+        $table->startHeaderRow();
+        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_name', 'oer'));
+        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_country', 'oer'));
+        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_type', 'oer'));
+        $table->endHeaderRow();
+        $dbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
+        $canEdit = $objUser->isLoggedIn();
+        foreach ($this->_institutionList as $institution) {
+            $table->startRow();
+            $objIcon->setIcon("edit");
+            $editLink=new link($this->uri(array("action"=>"institutionedit","mode"=>"edit", "id"=>$institution['id'])));
+            $editLink->link=$objIcon->show();
+            
+            $table->addCell($institution['name'].$editLink->show());
+            $table->addCell($institution['country']);
+            $table->addCell($dbInstitutionType->getType($institution['type']));
+            $table->endRow();
+        }
+        $header = '<div id="institutionlisting_header">';
+        $addLink = new link($this->uri(array("action" => 'institutionedit')));
+        $addLink->link = $this->_objLanguage->languageText('mod_oer_institution_heading_new', 'oer');
+        $header.=$addLink->show();
+        $header.='</div>';
+        return $header . $table->show();
     }
 
     private function constructInstitution($id) {
@@ -270,4 +291,5 @@ class institutionmanager extends object {
     }
 
 }
+
 ?>

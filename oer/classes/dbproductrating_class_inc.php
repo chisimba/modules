@@ -36,11 +36,11 @@ class dbproductrating extends dbtable {
      * gets the most rated product
      * @return type 
      */
-    function  getMostRatedProduct(){
+    function  getMostRatedProducts(){
         $sql=
-        "select * from $this->productRatingTableName order by totalrating DESC limit 1";
+        "select distinct rt.productid from $this->productRatingTableName as rt,tbl_oer_products as pr where  pr.id=rt.productid and pr.parent_id is null order by rt.totalrating DESC limit 3";
         $data=$this->getArray($sql);
-        return $data[0]['productid'];  
+        return $data;  
     }
 
 }

@@ -1,10 +1,10 @@
 <?php
 /**
-*  A main content template for OER group editor
-*  Author: Derek Keats derek@dkeats.com
-*  Date: December 18, 2011, 8:48 am
-*
-*/
+ *  A main content template for OER group editor
+ *  Author: Derek Keats derek@dkeats.com
+ *  Date: December 18, 2011, 8:48 am
+ *
+ */
 ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
@@ -12,9 +12,14 @@ $objFix->fixThree();
 <div id="onecolumn">
     <div id="Canvas_Content_Body_Region2">
         {
-            "display" : "block",
-            "module" : "oer",
-            "block" : "institutionedit"
+        "display" : "block",
+        "module" : "oer",
+        "block" : "institutionedit",
+
+        <?php
+        echo '"configData":';
+        echo '"' . $id . '"';
+        ?>
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
     </div>

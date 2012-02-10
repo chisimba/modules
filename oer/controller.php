@@ -468,8 +468,8 @@ class oer extends controller {
     public function __printPDF() {
         $generator = $this->getObject('documentgenerator', 'oer');
         $prodType = $this->getParam('type');
-        if($prodType == "adaptation"){
-        return $generator->showProductPDF($this->getParam('id'), $prodType);
+        if ($prodType == "adaptation") {
+            return $generator->showProductPDF($this->getParam('id'), $prodType);
         }
     }
 
@@ -771,7 +771,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -825,6 +825,10 @@ class oer extends controller {
         }
     }
 
+    public function __institutionlisting() {
+        return "institutionlisting_tpl.php";
+    }
+
     /**
      *
      * Method to open the edit/add form for insitutions
@@ -835,6 +839,8 @@ class oer extends controller {
      * 
      */
     public function __institutionedit() {
+        $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
         return 'institutionedit_tpl.php';
     }
 
@@ -878,6 +884,8 @@ class oer extends controller {
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
         $thumbnail = $this->getParam('thumbnail'); // ====== Where is this from?
+        print_r("ttt == ".$thumbnail);
+        die();
         $onestepid = $this->getParam('productID'); // ====== Where is this from?
         $groupid = $this->getParam('groupid'); // ====== Where is this from?
         // Get the mode (edit or add).
@@ -888,7 +896,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.

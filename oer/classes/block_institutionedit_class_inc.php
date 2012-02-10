@@ -86,8 +86,9 @@ class block_institutionedit extends object
      */
     public function show() 
     {
+        $id=  $this->configData;
         $objInstEditForm = $this->getObject('institutionedit','oer');
-        return $objInstEditForm->show();
+        return $objInstEditForm->show($id);
     }
 }
 ?>

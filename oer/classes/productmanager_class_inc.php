@@ -1116,32 +1116,37 @@ class productmanager extends object {
      * this gets the most rated  product
      * @return string 
      */
-    function getMostRatedProduct() {
+    function getMostRatedProducts() {
         $dbProductRating = $this->getObject("dbproductrating", "oer");
-        $productId = $dbProductRating->getMostRatedProduct();
+        $productIds = $dbProductRating->getMostRatedProducts();
+        $content='<div id="mostratedproducts">';
+        foreach ($productIds as $productId) {
+            
+            $product = $this->dbproducts->getProduct($productId['productid']);
+            $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            }
 
-        $product = $this->dbproducts->getProduct($productId);
-        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
-        if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            $mode = "";
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' =>$productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+
+
+            $content .= '<div id="mostratedproduct">';
+            $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
+            $content.='<div id="mostratedproduct_thumbnail">0 adaptations</div>';
+            $content.="</div>";
+           
         }
-
-        $mode = "";
-        $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
-        $thumbnailLink->link = $thumbnail . '<br/>';
-        $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
-
-        $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId, 'module' => 'oer', "id" => $productId, "mode" => $mode)));
-        $titleLink->cssClass = 'original_product_listing_title';
-        $titleLink->link = $product['title'];
-        $product = $titleLink->show();
-
-
-        $content = '<div id="mostratedproduct">';
-        $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
-        $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
-        $content.='<div id="mostratedproduct_thumbnail">0 adaptations</div>';
-        $content.="</div>";
+         $content.="</div>";
         return $content;
     }
 
@@ -1156,13 +1161,13 @@ class productmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostadapted">' . $this->objLanguage->languageText('mod_oer_mostadapted', 'oer') . '</h2>
-	  ' . $this->getMostRatedProduct() . '
+	  ' . $this->getMostRatedProducts() . '
      </div>
 
 
      <div class="tabbertab">
 	  <h2 class="mostrated">' . $this->objLanguage->languageText('mod_oer_mostrated', 'oer') . '</h2>
-	    ' . $this->getMostRatedProduct() . '
+	    ' . $this->getMostRatedProducts() . '
      </div>
 
 
