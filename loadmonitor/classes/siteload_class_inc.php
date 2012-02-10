@@ -24,17 +24,42 @@ class siteload extends dbTable
     }
 
     /**
-    * Return all records
-	* @return array All users
+    * Return count of users logged in in the last hour.
+	* @return int Count
     */
-	public function Count()
+	public function getCountLoggedIn()
 	{
-		$sql = "SELECT COUNT(id) AS cnt FROM {$this->_tableName}";
+
+		$sql = "SELECT COUNT(id) AS cnt FROM {$this->_tableName} WHERE whenLoggedIn > DATE_SUB(NOW(), INTERVAL 1 HOUR)";
         $rs = $this->getArray($sql);
 	    if (FALSE === $rs) {
 	        return 0;
 	    } else {
-    	    return $rs[0]['cnt'];
+    	    return (int)$rs[0]['cnt'];
+	    }
+	    /*
+        elseif (
+	        is_array($rs)
+    	    && isset($rs[0])
+	        && is_array($rs[0])
+    	    && isset($rs[0]['cnt'])
+	    )
+        */
+	}
+    /**
+    * Return count of users active in the last 5 minutes.
+	* @return int Count
+    */
+	public function getCountActive($offset = 5, $length = 5)
+	{
+	    $start = $offset;
+	    $finish = $offset - $length;
+		$sql = "SELECT COUNT(id) AS cnt FROM {$this->_tableName} WHERE whenlastactive > DATE_SUB(NOW(), INTERVAL {$start} MINUTE) AND whenlastactive <= DATE_SUB(NOW(), INTERVAL {$finish} MINUTE)";
+        $rs = $this->getArray($sql);
+	    if (FALSE === $rs) {
+	        return 0;
+	    } else {
+    	    return (int)$rs[0]['cnt'];
 	    }
 	    /*
         elseif (
