@@ -8,7 +8,7 @@
  */
 
 $objSiteLoad = $this->newObject('siteload');
-echo '<h2>Logged in statistics</h2>';
+echo '<h2>User log in statistics</h2>';
 $count = $objSiteLoad->getCountLoggedIn();
 if ($count == 1) {
     echo $count.' user has logged in during the last 1 hour.';
