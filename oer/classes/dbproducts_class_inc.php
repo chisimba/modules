@@ -83,7 +83,21 @@ class dbproducts extends dbtable {
             return NULL;
         }
     }
-
+    /**
+     * returns product title for a specific id
+     * @param  $id the product id
+     * @return NULL if product not found, else an array with product details
+     */
+    function getProductTitle($id) {
+        $sql =
+                "select * from $this->productsTableName where id = '$id'";
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
+            return $data[0]['title'];
+        } else {
+            return NULL;
+        }
+    }
     /**
      * returns true if product is original-product
      * @param  $id the product id

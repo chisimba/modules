@@ -24,25 +24,56 @@
 class documentgenerator extends object {
 
     public $pdf;
+    private $dbproducts;
 
     public function init() {
         $this->pdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
         $this->objViewAdaptation = $this->getObject("viewadaptation", "oer");
+        $this->dbproducts = $this->getObject("dbproducts", "oer");
     }
 
-    public function showProductPDF($productID, $prodType) {
-        $pdf = $this->getProductPDF($productID, $prodType);
-        return $pdf->show();
-    }
-
-    public function getProductPDF($productID, $prodType) {
+    public function showProductPDF($productId, $prodType) {
         $this->pdf->initWrite();
         $prodData = "";
         if ($prodType == "adaptation") {
-            $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productID);
+            $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productId);
         }
         $this->pdf->partWrite($prodData);
-        return $this->pdf;
+
+        return $this->pdf->show();
+    }
+    /**
+     * Function that generates docs into diff word formats i.e. .doc, .odt
+     * @param <type> $productId
+     * @param <type> $prodType
+     * @param <type> $ext 
+     */
+
+    public function showProductWordFormats($productId, $prodType, $ext) {
+        $this->pdf->initWrite();
+        $prodData = "";
+        if(empty($ext)){
+            $ext = ".doc";
+        }
+        if ($prodType == "adaptation") {
+            $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productId);
+            //Remove all images
+            $prodData = preg_replace("/<img[^>]+\>/i", " ", $prodData);
+        }
+        //Form doc name
+        $prodTitle = "product";
+        $prodTitle = $this->dbproducts->getProductTitle($productId);
+        if($prodTitle != Null && !empty($prodTitle)) {
+            $prodTitle = str_replace(" ", "_", $prodTitle);            
+        }
+
+        $fpath = "/tmp/";
+        $docPath = $fpath.$prodTitle.$ext;
+        
+        //Form the document
+        $fp = fopen($docPath, 'w+');
+        fwrite($fp, $prodData);
+        fclose($fp);
     }
 }
 ?>

@@ -259,7 +259,7 @@ class viewadaptation extends object {
 
         //Add mark as featured adaptation
         $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
-        $printLink = new link($this->uri(array("action" => "printPDF", "id" => $productId, 'type' => 'adaptation')));
+        $printLink = new link($this->uri(array("action" => "printproduct", "id" => $productId, "ext" => ".odt", 'type' => 'adaptation')));
         $printLink->link = $printImg;
         $printLink->cssClass = "printproduct";
         $printLink->target = "_blank";

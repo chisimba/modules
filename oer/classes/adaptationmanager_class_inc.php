@@ -28,8 +28,7 @@ class adaptationmanager extends object {
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');        
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');

@@ -6,6 +6,10 @@
 
 class oer extends controller {
 
+    private $objMakeAdaptation;
+    private $objDBProducts;
+    private $objDBdownloaders;
+
     /**
      * Constructor for the Module
      */
@@ -17,6 +21,7 @@ class oer extends controller {
         //$objLogin->loadAllScripts();
         $this->objMakeAdaptation = $this->getObject("makeadaptation", "oer");
         $this->objDBProducts = $this->getObject("dbproducts", "oer");
+        $this->objDBdownloaders = $this->getObject('dboer_downloaders');
     }
 
     /**
@@ -29,7 +34,7 @@ class oer extends controller {
         $allowedActions = array(NULL, 'home', 'vieworiginalproduct', "adaptationlist",
             "viewadaptation", "fullviewadaptation", "selfregister",
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
-            "showcaptcha", "verifycaptcha", "viewrootsection", "printPDF");
+            "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -345,6 +350,40 @@ class oer extends controller {
     }
 
     // Adaptations home
+    // record downloader data if not logged in
+    function __downloaderedit() {
+        $id = $this->getParam("id");
+        $mode = $this->getParam("mode", "add");
+        $this->setVarByRef("id", $id);
+        $this->setVarByRef("mode", $mode);
+        $errors = $this->getParam("errors", "");
+        $this->setVarByRef("errors", $errors);
+        return "downloaderedit_tpl.php";
+    }
+
+    /**
+     * Saves the downloader info
+     */
+    function __downloadersave() {
+        $data = array(
+            'fname' => $this->getParam("fname"),
+            'lname' => $this->getParam("lname"),
+            'email' => $this->getParam("email"),
+            'organisation' => $this->getParam("organisation"),
+            'occupation' => $this->getParam("occupation"),
+            'downloadreason' => $this->getParam("downloadreason"),
+            'useterms' => $this->getParam("useterms")
+        );
+        //die(print_r($data));
+        $id = $this->objDBdownloaders->insertSingle($data);
+        // Note we are not returning a template as this is an AJAX save.
+        if ($id !== NULL && $id !== FALSE) {
+            die($id);
+        } else {
+            die("ERROR_DATA_INSERT_FAIL");
+        }
+    }
+
     // Manage adaptations
     function __editadaptationstep1() {
         $id = $this->getParam("id");
@@ -462,14 +501,33 @@ class oer extends controller {
     }
 
     /*
-     * Function that prints a pdf of a product
+     * Function that prints product data in pdf format
      */
 
-    public function __printPDF() {
+    public function __printproduct() {
+        $generator = $this->getObject('documentgenerator', 'oer');
+        $prodType = $this->getParam('type');
+        $fileExt = $this->getParam('ext');
+        if ($fileExt == ".pdf") {
+            if ($prodType == "adaptation") {
+                return $generator->showProductPDF($this->getParam('id'), $prodType);
+            }
+        } else {
+            if ($prodType == "adaptation") {
+                return $generator->showProductWordFormats($this->getParam('id'), $prodType, $fileExt);
+            }
+        }
+    }
+
+    /*
+     * Function that prints product data in MSWord format
+     */
+
+    public function __printmsword() {
         $generator = $this->getObject('documentgenerator', 'oer');
         $prodType = $this->getParam('type');
         if ($prodType == "adaptation") {
-            return $generator->showProductPDF($this->getParam('id'), $prodType);
+            return $generator->showProductMSWord($this->getParam('id'), $prodType);
         }
     }
 
@@ -771,7 +829,7 @@ class oer extends controller {
         $objDbGroups = $this->getObject('dbgroups', 'oer');
         if ($mode == 'edit') {
             $id = $objDbGroups->saveNewGroup(
-                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
+                            $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
         } else {
             $objDbGroups->updategroup(
                     $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
@@ -884,7 +942,7 @@ class oer extends controller {
         $keyword1 = $this->getParam('keyword1');
         $keyword2 = $this->getParam('keyword2');
         $thumbnail = $this->getParam('thumbnail'); // ====== Where is this from?
-        print_r("ttt == ".$thumbnail);
+        print_r("ttt == " . $thumbnail);
         die();
         $onestepid = $this->getParam('productID'); // ====== Where is this from?
         $groupid = $this->getParam('groupid'); // ====== Where is this from?
@@ -896,7 +954,7 @@ class oer extends controller {
                     $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         } else {
             $id = $objInstitutionManager->addInstitution(
-                    $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
+                            $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
         }
 
         // Note we are not returning a template as this is an AJAX save.
