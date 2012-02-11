@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Downloader Info editor functionality for OER module
@@ -30,50 +31,46 @@
  * @link      http://www.chisimba.com
  *
  */
-
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-*
+ *
  * Downloader Info editor functionality for OER module
  *
  * Downloader Info editor functionality for OER module provides for the creation of the
  * downloader Info editor form, which is used by the class block_groupedit_class_inc.php
-*
-* @package   oer
-* @author    Paul Mungai paulwando@gmail.com
-*
-*/
-class downloaderedit extends object
-{
+ *
+ * @package   oer
+ * @author    Paul Mungai paulwando@gmail.com
+ *
+ */
+class downloaderedit extends object {
 
     public $objLanguage;
     private $objDBdownloaders;
 
     /**
-    *
-    * Intialiser for the oerfixer database connector
-    * @access public
-    * @return VOID
-    *
-    */
-    public function init()
-    {
+     *
+     * Intialiser for the oerfixer database connector
+     * @access public
+     * @return VOID
+     *
+     */
+    public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDBdownloaders = $this->getObject('dboer_downloaders');
         // Serialize language items to Javascript
@@ -81,40 +78,39 @@ class downloaderedit extends object
         $arrayVars['status_fail'] = "mod_oer_status_fail";
         $objSerialize = $this->getObject('serializevars', 'oer');
         $objSerialize->serializetojs($arrayVars);
-        
+
         // Load the jquery validate plugin
         $this->appendArrayVar('headerParams',
-        $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
-          'jquery'));
+                $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
+                        'jquery'));
         // Load the helper Javascript.
         $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('downloaderedit.js', 'oer'));
+                $this->getJavaScriptFile('downloaderedit.js', 'oer'));
         // Load all the required HTML classes from HTMLElements module.
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
-        $this->loadClass('htmltable','htmlelements');
-        $this->loadClass('textinput','htmlelements');
-        $this->loadClass('textarea','htmlelements');
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
-        $this->loadClass('fieldset','htmlelements');
+        $this->loadClass('fieldset', 'htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         // Get edit or add mode from querystring.
         $this->mode = $this->getParam('mode', 'add');
     }
+
     /**
      * Builds and Renders the downloader edit form
      *
      * @param string $productId
      * @return string
      */
-
-    public function show($productId, $step)
-    {        
-        return $this->makeHeading()  
-          . $this->buildForm($productId, $step);
+    public function show($productId, $id, $producttype) {        
+        return $this->makeHeading()
+        . $this->buildForm($productId, $id, $producttype);
     }
-    
+
     /**
      *
      * For editing, load the data according to the ID provided. It
@@ -125,19 +121,18 @@ class downloaderedit extends object
      * @access private
      *
      */
-    private function loadData($id)
-    {
+    private function loadData($id) {
         $arData = $this->objDBdownloaders->listSingle($id);
         if (!empty($arData)) {
-            foreach ($arData[0] as $key=>$value) {
-                $this->$key =  $value;
+            foreach ($arData[0] as $key => $value) {
+                $this->$key = $value;
             }
             return TRUE;
         } else {
             return FALSE;
         }
     }
-    
+
     /**
      *
      * Make a heading for the form
@@ -146,8 +141,7 @@ class downloaderedit extends object
      * @access private
      *
      */
-    private function makeHeading()
-    {
+    private function makeHeading() {
         // setup and show heading
         $header = new htmlheading();
         $header->type = 1;
@@ -155,278 +149,284 @@ class downloaderedit extends object
             $header->str = $this->name;
         } else {
             $header->str = $this->objLanguage->languageText(
-                  'mod_oer_downloadproduct', 'oer', "Download product");
-        }        
+                            'mod_oer_downloadproduct', 'oer', "Download product");
+        }
         return $header->show();
     }
 
-    private function buildForm($productId, $step)
-    {
-        // Create the form.
-        $form = new form ('downloadereditor');
+    private function buildForm($productId, $id, $producttype) {
+        $mode = $this->getParam('mode', 'add');
+        if ($mode == "add") {
+            // Create the form.
+            $form = new form('downloadereditor');
 
-        // Create a table to hold the layout
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->width = '550px';
-        $table->border = '0';
-        $tableable->cellspacing = '0';
-        $table->cellpadding = '2';
+            // Create a table to hold the layout
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->width = '550px';
+            $table->border = '0';
+            $tableable->cellspacing = '0';
+            $table->cellpadding = '2';
 
-        // first name.
-        $fname = new textinput('fname');
-        $fname->size = 40;
-        $fname->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $fname->value = $this->fname;
+            // first name.
+            $fname = new textinput('fname');
+            $fname->size = 40;
+            $fname->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $fname->value = $this->fname;
+            } else {
+                $fname->value = NULL;
+            }
+            $table->startRow();
+            $table->addCell(
+                    $this->objLanguage->languageText('mod_oer_fname',
+                            'oer'));
+            $table->addCell($fname->show());
+            $table->endRow();
+
+            // last name.
+            $fname = new textinput('lname');
+            $fname->size = 40;
+            $fname->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $fname->value = $this->lname;
+            } else {
+                $fname->value = NULL;
+            }
+            $table->startRow();
+            $table->addCell(
+                    $this->objLanguage->languageText('mod_oer_lname',
+                            'oer'));
+            $table->addCell($fname->show());
+            $table->endRow();
+
+            // Email.
+            $email = new textinput('email');
+            $email->size = 40;
+            $email->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $email->value = $this->email;
+            } else {
+                $email->value = NULL;
+            }
+            $table->startRow();
+            $table->addCell(
+                    $this->objLanguage->languageText('word_email',
+                            'system'));
+            $table->addCell($email->show());
+            $table->endRow();
+
+            // Organisation.
+            $organisation = new textinput('organisation');
+            $organisation->size = 40;
+            $organisation->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $organisation->value = $this->organisation;
+            } else {
+                $organisation->value = NULL;
+            }
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText('phrase_orgcomp', 'system'));
+            $table->addCell($organisation->show());
+            $table->endRow();
+
+            // occupation
+            $occupation = new textinput('occupation');
+            $occupation->size = 40;
+            $occupation->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $occupation->value = $this->occupation;
+            } else {
+                $occupation->value = NULL;
+            }
+
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText(
+                            'mod_oer_occupation', 'oer'));
+            $table->addCell($occupation->show());
+            $table->endRow();
+
+            //Reason for download
+            $downloadreason = new textarea('downloadreason');
+            $downloadreason->rows = 4;
+            $downloadreason->cols = 40;
+            $downloadreason->cssClass = 'required';
+            if ($this->mode == 'edit') {
+                $downloadreason->value = $this->downloadreason;
+            } else {
+                $downloadreason->value = NULL;
+            }
+
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText(
+                            'mod_oer_downloadreason', 'oer'));
+            $table->addCell($downloadreason->show());
+            $table->endRow();
+
+            //Terms of use
+            $tosLabel = $this->objLanguage->languageText(
+                            'mod_oer_useterms', 'oer');
+            $useterms = new checkbox('useterms', "", false);
+            $useterms->cssClass = "required";
+            if ($this->mode == 'edit') {
+                //$useterms->ischecked = $this->useterms;
+            } else {
+                $useterms->value = NULL;
+            }
+
+            $table->startRow();
+            $table->addCell("&nbsp;");
+            $table->addCell($useterms->show() . "&nbsp;" . $tosLabel);
+            $table->endRow();
+
+            //Add table to form
+            $form->addToForm($table->show());
+
+            //Submit button
+            $button = new button('submit', $this->objLanguage->languageText('mod_oer_next', 'oer'));
+            $button->setToSubmit();
+            //$form->addToForm($button->show());
+            //Cancel
+            $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+            $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+            $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
+            $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
+
+            // Add hidden fields for use by JS
+            $hiddenFields = "\n\n";
+            $hidMode = new hiddeninput('mode');
+            $hidMode->cssId = "mode";
+            $hidMode->value = $this->getparam("mode");
+            $hiddenFields .= $hidMode->show() . "\n";
+            $hidId = new hiddeninput('id');
+            $hidId->cssId = "id";
+            $hidId->value = $this->getParam('id', NULL);
+            $hiddenFields .= $hidId->show() . "\n\n";
+            $prodId = new hiddeninput('productid');
+            $prodId->cssId = "productid";
+            $prodId->value = $productId;
+            $hiddenFields .= $prodId->show() . "\n\n";
+            //
+            $producttypeHd = new hiddeninput('producttype');
+            $producttypeHd->cssId = "producttype";
+            $producttypeHd->value = $producttype;
+            $hiddenFields .= $producttypeHd->show() . "\n\n";
+
+            $form->addToForm($hiddenFields);
+
+            // Insert a message area for Ajax result to display.
+            $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";            
+
+            $form->addToForm($msgArea);
+
+            // Send the form
+            return "<div id='downloaderinfoform'>" . $form->show() . "</div>";
         } else {
-            $fname->value = NULL;
+            //Get download form
+            $buildDownloadForm = $this->buildDownloadForm($productId, $id);
+            return "<div id='downloadprodform'>" . $buildDownloadForm . "</div>";
         }
-        $table->startRow();
-        $table->addCell(
-          $this->objLanguage->languageText('mod_oer_fname',
-          'oer'));
-        $table->addCell($fname->show());
-        $table->endRow();
-
-        // last name.
-        $fname = new textinput('lname');
-        $fname->size = 40;
-        $fname->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $fname->value = $this->lname;
-        } else {
-            $fname->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell(
-          $this->objLanguage->languageText('mod_oer_lname',
-          'oer'));
-        $table->addCell($fname->show());
-        $table->endRow();
-
-        // Email.
-        $email = new textinput('email');
-        $email->size = 40;
-        $email->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $email->value = $this->email;
-        } else {
-            $email->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell(
-          $this->objLanguage->languageText('word_email',
-          'system'));
-        $table->addCell($email->show());
-        $table->endRow();
-
-        // Organisation.
-        $organisation = new textinput('organisation');
-        $organisation->size = 40;
-        $organisation->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $organisation->value = $this->organisation;
-        } else {
-            $organisation->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('phrase_orgcomp', 'system'));
-        $table->addCell($organisation->show());
-        $table->endRow();
-
-        // occupation
-        $occupation = new textinput('occupation');
-        $occupation->size = 40;
-        $occupation->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $occupation->value = $this->occupation;
-        } else {
-            $occupation->value = NULL;
-        }
-        
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_occupation','oer'));
-        $table->addCell($occupation->show());
-        $table->endRow();
-
-        //Reason for download
-        $downloadreason = new textarea('downloadreason');
-        $downloadreason->rows = 4;
-        $downloadreason->cols = 40;
-        $downloadreason->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $downloadreason->value = $this->downloadreason;
-        } else {
-            $downloadreason->value = NULL;
-        }
-
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_downloadreason','oer'));
-        $table->addCell($downloadreason->show());
-        $table->endRow();
-
-        //Terms of use
-        $tosLabel = $this->objLanguage->languageText(
-          'mod_oer_useterms','oer');
-        $useterms = new checkbox('useterms', "", false);
-        $useterms->cssClass = "required";
-        if ($this->mode == 'edit') {
-            //$useterms->ischecked = $this->useterms;
-        } else {
-            $useterms->value = NULL;
-        }
-
-        $table->startRow();
-        $table->addCell("&nbsp;");
-        $table->addCell($useterms->show()."&nbsp;".$tosLabel);
-        $table->endRow();
-
-        //Add table to form
-        $form->addToForm($table->show());
-
-        //Submit button
-        $button = new button ('submit',$this->objLanguage->languageText('mod_oer_next', 'oer'));
-        $button->setToSubmit();
-        //$form->addToForm($button->show());
-
-        //Cancel
-        $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
-        $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
-        
-        // Add hidden fields for use by JS
-        $hiddenFields = "\n\n";
-        $hidMode = new hiddeninput('mode');
-        $hidMode->cssId = "mode";
-        $hidMode->value = $this->mode;
-        $hiddenFields .= $hidMode->show() . "\n";
-        $hidId = new hiddeninput('id');
-        $hidId->cssId = "id";
-        $hidId->value = $this->getParam('id', NULL);
-        $hiddenFields .= $hidId->show() . "\n\n";
-        $prodId = new hiddeninput('productid');
-        $prodId->cssId = "productid";
-        $prodId->value = $productId;
-        $hiddenFields .= $prodId->show() . "\n\n";
-        $stepHd = new hiddeninput('step');
-        $stepHd->cssId = "step";
-        $stepHd->value = $step;
-        $hiddenFields .= $stepHd->show() . "\n\n";
-
-        $form->addToForm($hiddenFields);
-
-        // Insert a message area for Ajax result to display.
-        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        $downloadForm = "<br /><div id='downloadproductform' class='ajax_results'>".$this->buildDownloadForm($productId, $step)."</div>";
-        //$form->addToForm($msgArea);
-        
-        // Send the form
-        return "<div id='downloaderinfoform'>".$form->show()."</div>".$msgArea.$downloadForm;
     }
-    private function buildDownloadForm($productId, $step)
-    {
-        // Create the form.
-        $form = new form ('downloadproductform');
 
-        // Create a table to hold the layout
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->width = '550px';
-        $table->border = '0';
-        $tableable->cellspacing = '0';
-        $table->cellpadding = '2';
+        function buildDownloadForm($productId, $id) {
+            // Create the form.
+            $form = new form('downloadproductform');
 
-        //Download format
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_selectformat','oer'));
-        $table->endRow();
-        
-        $downloadformat = new radio('downloadformat');
-        $downloadformat->breakSpace = "<br />";
-        $downloadformat->addOption(".pdf", $this->objLanguage->languageText(
-          'mod_oer_pdf','oer'));        
-        $downloadformat->addOption(".odt", $this->objLanguage->languageText(
-          'mod_oer_odt','oer'));
-        $downloadformat->addOption(".doc", $this->objLanguage->languageText(
-          'mod_oer_msword','oer'));
+            // Create a table to hold the layout
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->width = '550px';
+            $table->border = '0';
+            $tableable->cellspacing = '0';
+            $table->cellpadding = '2';
 
-        $table->startRow();
-        $table->addCell($downloadformat->show());
-        $table->endRow();
-        //Spacer
-        $table->startRow();
-        $table->addCell("&nbsp;");
-        $table->endRow();
+            //Download format
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText(
+                            'mod_oer_selectformat', 'oer'));
+            $table->endRow();
 
-        //Notify updates original
-        $notifyupdateoriginalLabel = $this->objLanguage->languageText(
-          'mod_oer_acceptnotifyupdatesoriginal','oer');
-        $notifyupdateoriginal = new checkbox('notifyupdateoriginal', "", false);
-        //$useterms->cssClass = "required";
-        if ($this->mode == 'edit') {
-            //$useterms->ischecked = $this->useterms;
+            $downloadformat = new radio('downloadformat');
+            $downloadformat->breakSpace = "<br />";
+            $downloadformat->addOption(".pdf", $this->objLanguage->languageText(
+                            'mod_oer_pdf', 'oer'));
+            $downloadformat->addOption(".odt", $this->objLanguage->languageText(
+                            'mod_oer_odt', 'oer'));
+            $downloadformat->addOption(".doc", $this->objLanguage->languageText(
+                            'mod_oer_msword', 'oer'));
+
+            $table->startRow();
+            $table->addCell($downloadformat->show());
+            $table->endRow();
+            //Spacer
+            $table->startRow();
+            $table->addCell("&nbsp;");
+            $table->endRow();
+
+            //Notify updates original
+            $notifyupdateoriginalLabel = $this->objLanguage->languageText(
+                            'mod_oer_acceptnotifyupdatesoriginal', 'oer');
+            $notifyupdateoriginal = new checkbox('notifyupdateoriginal', "", false);
+            //$useterms->cssClass = "required";
+            if ($this->mode == 'edit') {
+                //$useterms->ischecked = $this->useterms;
+            }
+
+            $table->startRow();
+            $table->addCell($notifyupdateoriginal->show() . "&nbsp;" . $notifyupdateoriginalLabel);
+            $table->endRow();
+
+            //Notify updates adaptation
+            $notifyupdateadaptationLabel = $this->objLanguage->languageText(
+                            'mod_oer_acceptnotifyupdatesoriginal', 'oer');
+            $notifyupdateadaptation = new checkbox('notifyupdateadaptation', "", false);
+            //$useterms->cssClass = "required";
+            if ($this->mode == 'edit') {
+                //$useterms->ischecked = $this->useterms;
+            }
+
+            $table->startRow();
+            $table->addCell($notifyupdateadaptation->show() . "&nbsp;" . $notifyupdateadaptationLabel);
+            $table->endRow();
+
+            $form->addToForm($table->show());
+
+            //Submit button
+            $button = new button('submit', $this->objLanguage->languageText('mod_oer_next', 'oer'));
+            $button->setToSubmit();
+            //$form->addToForm($button->show());
+            //Cancel
+            $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+            $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+            $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
+            $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
+
+            // Insert a message area for Ajax result to display.
+            $msgArea = "<br /><div id='save_results' class='ajax_results'>Hello!</div>";
+            $form->addToForm($msgArea);
+
+            // Add hidden fields for use by JS
+            $hiddenFields = "\n\n";
+            $hidProdType = new hiddeninput('producttype');
+            $hidProdType->cssId = "producttype";
+            $hidProdType->value = $this->getparam("producttype", "adaptation");
+            $hiddenFields .= $hidProdType->show() . "\n";
+            $hidMode = new hiddeninput('mode');
+            $hidMode->cssId = "mode";
+            $hidMode->value = $this->getparam("mode");
+            $hiddenFields .= $hidMode->show() . "\n";
+            $hidUserId = new hiddeninput('id');
+            $hidUserId->cssId = "id";
+            $hidUserId->value = $this->getParam('id', NULL);
+            $hiddenFields .= $hidUserId->show() . "\n\n";
+            $prodId = new hiddeninput('productid');
+            $prodId->cssId = "productid";
+            $prodId->value = $productId;
+            $hiddenFields .= $prodId->show() . "\n\n";
+
+            $form->addToForm($hiddenFields);
+            // Send the form, dont show to allow addition of form items
+            return $form->show();
         }
 
-        $table->startRow();
-        $table->addCell($notifyupdateoriginal->show()."&nbsp;".$notifyupdateoriginalLabel);
-        $table->endRow();
-
-        //Notify updates adaptation
-        $notifyupdateadaptationLabel = $this->objLanguage->languageText(
-          'mod_oer_acceptnotifyupdatesoriginal','oer');
-        $notifyupdateadaptation = new checkbox('notifyupdateadaptation', "", false);
-        //$useterms->cssClass = "required";
-        if ($this->mode == 'edit') {
-            //$useterms->ischecked = $this->useterms;
-        }
-
-        $table->startRow();
-        $table->addCell($notifyupdateadaptation->show()."&nbsp;".$notifyupdateadaptationLabel);
-        $table->endRow();
-
-        $form->addToForm($table->show());
-
-        //Submit button
-        $button = new button ('submit',$this->objLanguage->languageText('mod_oer_next', 'oer'));
-        $button->setToSubmit();
-        //$form->addToForm($button->show());
-
-        //Cancel
-        $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
-        $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
-        $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
-        
-        // Insert a message area for Ajax result to display.
-        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        $form->addToForm($msgArea);
-
-        // Add hidden fields for use by JS
-        $hiddenFields = "\n\n";
-        $hidMode = new hiddeninput('mode');
-        $hidMode->cssId = "mode";
-        $hidMode->value = $this->mode;
-        $hiddenFields .= $hidMode->show() . "\n";
-        $hidUserId = new hiddeninput('userid');
-        $hidUserId->cssId = "userid";
-        $hidUserId->value = $this->getParam('id', NULL);
-        $hiddenFields .= $hidUserId->show() . "\n\n";
-        $prodId = new hiddeninput('productid');
-        $prodId->cssId = "productid";
-        $prodId->value = $productId;
-        $hiddenFields .= $prodId->show() . "\n\n";
-        $stepHd = new hiddeninput('step');
-        $stepHd->cssId = "step";
-        $stepHd->value = $step;
-        $hiddenFields .= $stepHd->show() . "\n\n";
-
-        $form->addToForm($hiddenFields);
-                
-        // Send the form
-        return $form->show();
     }
-}
+
 ?>

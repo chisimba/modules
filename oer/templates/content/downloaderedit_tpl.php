@@ -12,7 +12,7 @@ $objFix->fixThree();
         "block" : "downloaderedit",
         <?php
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $id . '|' . $productid . '|' .$producttype. '"';
         ?>
         }
         

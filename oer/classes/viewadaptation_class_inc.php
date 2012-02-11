@@ -278,15 +278,14 @@ class viewadaptation extends object {
      */
     function buildAdaptationForPrint($productId) {
         $product = $this->objDbProducts->getProduct($productId);
-
+        //String holders for content
+        $rightContent = "";
         $leftContent = "";
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $leftContent.= $thumbnail;
-        //Get comments
-
         
         //Get institution details
         if (!empty($product["institutionid"])) {
@@ -303,6 +302,7 @@ class viewadaptation extends object {
             $kwords = $product['thumbnail'];
             //get group
             $group = "";
+            
             //Get inst data
             $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
@@ -314,7 +314,7 @@ class viewadaptation extends object {
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
                 $instNameLk = "" . $instNameLink->show();
-                $rightContent = "";
+                
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 if (!empty($instData["name"])) {

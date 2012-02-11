@@ -37,6 +37,7 @@ class documentgenerator extends object {
         $prodData = "";
         if ($prodType == "adaptation") {
             $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productId);
+            
         }
         $this->pdf->partWrite($prodData);
 

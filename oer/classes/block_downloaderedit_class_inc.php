@@ -14,16 +14,20 @@ class block_downloaderedit extends object {
     }
 
     function show() {        
-        $data = explode("|", $this->configData);        
-        $productId = NULL;
+        $data = explode("|", $this->configData);
+     
+        $productId = Null;
+        $id = Null;
+        $producttype = "adaptation";
         $step = '1';
-        if (count($data) == 2) {
-            $productId = $data[0];
-            $step = $data[1];
+        if (count($data) == 3) {
+            $id = $data[0];
+            $productId = $data[1];
+            $producttype = $data[2];
         } else if (count($data) == 1){
             $productId = $data[0];
         }
-        return $this->objDownloaderEdit->show($productId, $step);
+        return $this->objDownloaderEdit->show($productId, $id, $producttype);
     }
 }
 ?>

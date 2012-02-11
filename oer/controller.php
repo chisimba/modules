@@ -352,15 +352,18 @@ class oer extends controller {
     // Adaptations home
     // record downloader data if not logged in
     function __downloaderedit() {
-        $id = $this->getParam("id");
-        $mode = $this->getParam("mode", "add");
+        $id = $this->getParam("id", Null);
+        $productid = $this->getParam("productid", Null);
+        $producttype = $this->getParam("producttype", "adaptation");
+        $mode = $this->getParam("mode", "add");        
         $this->setVarByRef("id", $id);
+        $this->setVarByRef("productid", $productid);
+        $this->setVarByRef("producttype", $producttype);
         $this->setVarByRef("mode", $mode);
         $errors = $this->getParam("errors", "");
         $this->setVarByRef("errors", $errors);
         return "downloaderedit_tpl.php";
     }
-
     /**
      * Saves the downloader info
      */
@@ -506,9 +509,11 @@ class oer extends controller {
 
     public function __printproduct() {
         $generator = $this->getObject('documentgenerator', 'oer');
-        $prodType = $this->getParam('type');
+        $prodType = $this->getParam('producttype', "adaptation");
         $fileExt = $this->getParam('downloadformat');
         $productId = $this->getParam('productid');
+        $id = $this->getParam('id');
+        
         if ($fileExt == ".pdf") {
             if ($prodType == "adaptation") {
                 return $generator->showProductPDF($productId, $prodType);
