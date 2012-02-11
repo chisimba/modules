@@ -162,7 +162,7 @@ class downloaderedit extends object {
 
             // Create a table to hold the layout
             $table = $this->newObject('htmltable', 'htmlelements');
-            $table->width = '550px';
+            $table->width = '500px';
             $table->border = '0';
             $tableable->cellspacing = '0';
             $table->cellpadding = '2';
@@ -202,7 +202,7 @@ class downloaderedit extends object {
             // Email.
             $email = new textinput('email');
             $email->size = 40;
-            $email->cssClass = 'required';
+            $email->cssClass = 'email required';
             if ($this->mode == 'edit') {
                 $email->value = $this->email;
             } else {

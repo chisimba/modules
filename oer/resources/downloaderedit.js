@@ -18,7 +18,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        jQuery("#form_downloadereditor").validate();
+        jQuery("#form_downloadereditor").validate({ rules: { field: { required: true, email: true } } });
         jQuery("#form_downloadproductform").validate();
         jQuery("#save_results").hide();        
     });
@@ -68,7 +68,7 @@ jQuery(function() {
             var id = jQuery("#id").val();
             var downloadformat = jQuery('input[name=downloadformat]:checked').val();
             var notifyupdateoriginal = jQuery('input[name=notifyupdateoriginal]:checked').val();            
-            var notifyupdateadaptation = jQuery('input[name=notifyadaptation]:checked').val();
+            var notifyupdateadaptation = jQuery('input[name=notifyupdateadaptation]:checked').val();            
             jQuery("#submit").attr("disabled", "disabled");
             jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
             jQuery("#save_results").show();
