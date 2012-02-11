@@ -379,7 +379,7 @@ class downloaderedit extends object {
 
             //Notify updates adaptation
             $notifyupdateadaptationLabel = $this->objLanguage->languageText(
-                            'mod_oer_acceptnotifyupdatesoriginal', 'oer');
+                            'mod_oer_acceptnotifyupdatesadaptation', 'oer');
             $notifyupdateadaptation = new checkbox('notifyupdateadaptation', "", false);
             $notifyupdateadaptation->value = "notifyadaptation";
             //$useterms->cssClass = "required";

@@ -259,10 +259,11 @@ class viewadaptation extends object {
 
         //Add mark as featured adaptation
         $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
-        $printLink = new link($this->uri(array("action" => "printproduct", "id" => $productId, "ext" => ".odt", 'type' => 'adaptation')));
+        //$printLink = new link($this->uri(array("action" => "printproduct", "id" => $productId, "ext" => ".odt", 'type' => 'adaptation')));
+        $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
         $printLink->link = $printImg;
-        $printLink->cssClass = "printproduct";
-        $printLink->target = "_blank";
+        $printLink->cssClass = "downloaderedit";
+        //$printLink->target = "_blank";
         $printLk = "" . $printLink->show();
 
         $prodTitle = '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div><br />';

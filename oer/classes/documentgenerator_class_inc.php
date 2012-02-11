@@ -76,6 +76,7 @@ class documentgenerator extends object {
         $fp = fopen($docPath, 'w+');
         fwrite($fp, $prodData);
         fclose($fp);
+        return $docPath;
     }
 }
 ?>
