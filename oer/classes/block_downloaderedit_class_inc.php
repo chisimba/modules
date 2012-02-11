@@ -13,10 +13,17 @@ class block_downloaderedit extends object {
         $this->objDownloaderEdit = $this->getObject("downloaderedit", "oer");
     }
 
-    function show() {
-        $id = $this->configData;
-        
-        return $this->objDownloaderEdit->show();
+    function show() {        
+        $data = explode("|", $this->configData);        
+        $productId = NULL;
+        $step = '1';
+        if (count($data) == 2) {
+            $productId = $data[0];
+            $step = $data[1];
+        } else if (count($data) == 1){
+            $productId = $data[0];
+        }
+        return $this->objDownloaderEdit->show($productId, $step);
     }
 }
 ?>

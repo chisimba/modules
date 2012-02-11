@@ -19,6 +19,9 @@ jQuery(function() {
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
         jQuery("#form_downloadereditor").validate();
+        jQuery("#form_downloadproduct").validate();
+        jQuery("#save_results").hide();
+        jQuery("#downloadproductform").hide();
     });
 
     // Function for saving the downloader data
@@ -38,7 +41,41 @@ jQuery(function() {
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
                         // Update the information area 
                         // (msg is the id of the record on success)
+                        jQuery("#downloaderinfoform").hide();
                         jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');
+                        jQuery("#downloadproductform").show();
+
+                        // Change the id field to be the id that is returned as msg & mode to edit
+                        jQuery("#id").val(msg);
+                        jQuery("#mode").val('edit');
+                    } else {
+                        //alert(msg);
+                        alert(status_fail);
+                    }
+                }
+            });
+        }
+    });
+        // Function for saving the downloader data
+    jQuery("#form_downloadproductform").submit(function(e) {
+        if(jQuery("#form_downloadproductform").valid()){
+            e.preventDefault();
+            jQuery("#submit").attr("disabled", "disabled");
+            jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
+            data_string = jQuery("#form_downloadproductform").serialize();
+
+            jQuery.ajax({
+                url: 'index.php?module=oer&action=printproduct',
+                type: "POST",
+                data: data_string,
+                success: function(msg) {
+                    alert(msg);
+                    jQuery("#submit").attr("disabled", "");
+                    if(msg !== "ERROR_DATA_INSERT_FAIL") {                        
+                        // Update the information area
+                        // (msg is the id of the record on success)
+                        jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');
+                        
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');

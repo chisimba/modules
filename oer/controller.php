@@ -507,14 +507,15 @@ class oer extends controller {
     public function __printproduct() {
         $generator = $this->getObject('documentgenerator', 'oer');
         $prodType = $this->getParam('type');
-        $fileExt = $this->getParam('ext');
+        $fileExt = $this->getParam('downloadformat');
+        $productId = $this->getParam('productid');
         if ($fileExt == ".pdf") {
             if ($prodType == "adaptation") {
-                return $generator->showProductPDF($this->getParam('id'), $prodType);
+                return $generator->showProductPDF($productId, $prodType);
             }
         } else {
             if ($prodType == "adaptation") {
-                return $generator->showProductWordFormats($this->getParam('id'), $prodType, $fileExt);
+                return $generator->showProductWordFormats($productId, $prodType, $fileExt);
             }
         }
     }

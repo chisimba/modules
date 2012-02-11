@@ -98,14 +98,21 @@ class downloaderedit extends object
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('fieldset','htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
+        $this->loadClass('radio', 'htmlelements');
         // Get edit or add mode from querystring.
         $this->mode = $this->getParam('mode', 'add');
     }
+    /**
+     * Builds and Renders the downloader edit form
+     *
+     * @param string $productId
+     * @return string
+     */
 
-    public function show()
-    {
+    public function show($productId, $step)
+    {        
         return $this->makeHeading()  
-          . $this->buildForm();
+          . $this->buildForm($productId, $step);
     }
     
     /**
@@ -153,7 +160,7 @@ class downloaderedit extends object
         return $header->show();
     }
 
-    private function buildForm()
+    private function buildForm($productId, $step)
     {
         // Create the form.
         $form = new form ('downloadereditor');
@@ -282,10 +289,13 @@ class downloaderedit extends object
         //Submit button
         $button = new button ('submit',$this->objLanguage->languageText('mod_oer_next', 'oer'));
         $button->setToSubmit();
-        $form->addToForm($button->show());
-        
-        // Insert a message area for Ajax result to display.
-        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
+        //$form->addToForm($button->show());
+
+        //Cancel
+        $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+        $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
         
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";
@@ -297,8 +307,122 @@ class downloaderedit extends object
         $hidId->cssId = "id";
         $hidId->value = $this->getParam('id', NULL);
         $hiddenFields .= $hidId->show() . "\n\n";
+        $prodId = new hiddeninput('productid');
+        $prodId->cssId = "productid";
+        $prodId->value = $productId;
+        $hiddenFields .= $prodId->show() . "\n\n";
+        $stepHd = new hiddeninput('step');
+        $stepHd->cssId = "step";
+        $stepHd->value = $step;
+        $hiddenFields .= $stepHd->show() . "\n\n";
 
+        $form->addToForm($hiddenFields);
+
+        // Insert a message area for Ajax result to display.
+        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
+        $downloadForm = "<br /><div id='downloadproductform' class='ajax_results'>".$this->buildDownloadForm($productId, $step)."</div>";
+        //$form->addToForm($msgArea);
+        
+        // Send the form
+        return "<div id='downloaderinfoform'>".$form->show()."</div>".$msgArea.$downloadForm;
+    }
+    private function buildDownloadForm($productId, $step)
+    {
+        // Create the form.
+        $form = new form ('downloadproductform');
+
+        // Create a table to hold the layout
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $table->width = '550px';
+        $table->border = '0';
+        $tableable->cellspacing = '0';
+        $table->cellpadding = '2';
+
+        //Download format
+        $table->startRow();
+        $table->addCell($this->objLanguage->languageText(
+          'mod_oer_selectformat','oer'));
+        $table->endRow();
+        
+        $downloadformat = new radio('downloadformat');
+        $downloadformat->breakSpace = "<br />";
+        $downloadformat->addOption(".pdf", $this->objLanguage->languageText(
+          'mod_oer_pdf','oer'));        
+        $downloadformat->addOption(".odt", $this->objLanguage->languageText(
+          'mod_oer_odt','oer'));
+        $downloadformat->addOption(".doc", $this->objLanguage->languageText(
+          'mod_oer_msword','oer'));
+
+        $table->startRow();
+        $table->addCell($downloadformat->show());
+        $table->endRow();
+        //Spacer
+        $table->startRow();
+        $table->addCell("&nbsp;");
+        $table->endRow();
+
+        //Notify updates original
+        $notifyupdateoriginalLabel = $this->objLanguage->languageText(
+          'mod_oer_acceptnotifyupdatesoriginal','oer');
+        $notifyupdateoriginal = new checkbox('notifyupdateoriginal', "", false);
+        //$useterms->cssClass = "required";
+        if ($this->mode == 'edit') {
+            //$useterms->ischecked = $this->useterms;
+        }
+
+        $table->startRow();
+        $table->addCell($notifyupdateoriginal->show()."&nbsp;".$notifyupdateoriginalLabel);
+        $table->endRow();
+
+        //Notify updates adaptation
+        $notifyupdateadaptationLabel = $this->objLanguage->languageText(
+          'mod_oer_acceptnotifyupdatesoriginal','oer');
+        $notifyupdateadaptation = new checkbox('notifyupdateadaptation', "", false);
+        //$useterms->cssClass = "required";
+        if ($this->mode == 'edit') {
+            //$useterms->ischecked = $this->useterms;
+        }
+
+        $table->startRow();
+        $table->addCell($notifyupdateadaptation->show()."&nbsp;".$notifyupdateadaptationLabel);
+        $table->endRow();
+
+        $form->addToForm($table->show());
+
+        //Submit button
+        $button = new button ('submit',$this->objLanguage->languageText('mod_oer_next', 'oer'));
+        $button->setToSubmit();
+        //$form->addToForm($button->show());
+
+        //Cancel
+        $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+        $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
+        $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
+        
+        // Insert a message area for Ajax result to display.
+        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
         $form->addToForm($msgArea);
+
+        // Add hidden fields for use by JS
+        $hiddenFields = "\n\n";
+        $hidMode = new hiddeninput('mode');
+        $hidMode->cssId = "mode";
+        $hidMode->value = $this->mode;
+        $hiddenFields .= $hidMode->show() . "\n";
+        $hidUserId = new hiddeninput('userid');
+        $hidUserId->cssId = "userid";
+        $hidUserId->value = $this->getParam('id', NULL);
+        $hiddenFields .= $hidUserId->show() . "\n\n";
+        $prodId = new hiddeninput('productid');
+        $prodId->cssId = "productid";
+        $prodId->value = $productId;
+        $hiddenFields .= $prodId->show() . "\n\n";
+        $stepHd = new hiddeninput('step');
+        $stepHd->cssId = "step";
+        $stepHd->value = $step;
+        $hiddenFields .= $stepHd->show() . "\n\n";
+
         $form->addToForm($hiddenFields);
                 
         // Send the form
