@@ -125,12 +125,16 @@ class tcpdfwrapper extends object
         // add a page
         $this->pdf->AddPage();
     }
+    //Construct output
+    function Output($docname,$dest="D")
+    {
+        $this->pdf->Output($docname, $dest);
+    }
+
     function show() 
     {
-        // reset pointer to the last page
-        //$this->pdf->lastPage();
         //Close and output PDF document
-        $this->pdf->Output('document.pdf', 'I', 'I');
+        $this->pdf->Output('document.pdf', 'I');
     }
 }
 ?>

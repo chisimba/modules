@@ -67,7 +67,7 @@
 // dullus for text Justification.
 // Bob Vincent (pillarsdotnet@users.sourceforge.net) for <li> value attribute.
 // Patrick Benny for text stretch suggestion on Cell().
-// Johannes Güntert for JavaScript support.
+// Johannes Gï¿½ntert for JavaScript support.
 // Denis Van Nuffelen for Dynamic Form.
 // Jacek Czekaj for multibyte justification
 // Anthony Ferrara for the reintroduction of legacy image methods.
@@ -6998,7 +6998,7 @@ if (!class_exists('TCPDF')) {
                                                                         } // end for each char
                                                                         // X8. All explicit directional embeddings and overrides are completely terminated at the end of each paragraph. Paragraph separators are not included in the embedding.
                                                                         // X9. Remove all RLE, LRE, RLO, LRO, PDF, and BN codes.
-                                                                        // X10. The remaining rules are applied to each run of characters at the same level. For each run, determine the start-of-level-run (sor) and end-of-level-run (eor) type, either L or R. This depends on the higher of the two levels on either side of the boundary (at the start or end of the paragraph, the level of the “other” run is the base embedding level). If the higher level is odd, the type is R; otherwise, it is L.
+                                                                        // X10. The remaining rules are applied to each run of characters at the same level. For each run, determine the start-of-level-run (sor) and end-of-level-run (eor) type, either L or R. This depends on the higher of the two levels on either side of the boundary (at the start or end of the paragraph, the level of the ï¿½otherï¿½ run is the base embedding level). If the higher level is odd, the type is R; otherwise, it is L.
                                                                         // 3.3.3 Resolving Weak Types
                                                                         // Weak types are now resolved one level run at a time. At level run boundaries where the type of the character on the other side of the boundary is required, the type assigned to sor or eor is used.
                                                                         // Nonspacing marks are now resolved based on the previous characters.
@@ -7479,7 +7479,7 @@ if (!class_exists('TCPDF')) {
                                                                     /*
                                                                     * Adds a javascript
                                                                     * @access public
-                                                                    * @author Johannes Güntert, Nicola Asuni
+                                                                    * @author Johannes Gï¿½ntert, Nicola Asuni
                                                                     * @since 2.1.002 (2008-02-12)
                                                                     */
                                                                     public function IncludeJS($script) 
@@ -7489,7 +7489,7 @@ if (!class_exists('TCPDF')) {
                                                                     /*
                                                                     * Create a javascript PDF string.
                                                                     * @access protected
-                                                                    * @author Johannes Güntert, Nicola Asuni
+                                                                    * @author Johannes Gï¿½ntert, Nicola Asuni
                                                                     * @since 2.1.002 (2008-02-12)
                                                                     */
                                                                     protected function _putjavascript() 
@@ -7993,7 +7993,7 @@ if (!class_exists('TCPDF')) {
                                                                          * @param array $col1 first color (RGB components).
                                                                          * @param array $col2 second color (RGB components).
                                                                          * @param array $coords array of the form (x1, y1, x2, y2) which defines the gradient vector (see linear_gradient_coords.jpg). The default value is from left to right (x1=0, y1=0, x2=1, y2=0).
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access public
                                                                          */
@@ -8016,7 +8016,7 @@ if (!class_exists('TCPDF')) {
                                                                          * @param array $col1 first color (RGB components).
                                                                          * @param array $col2 second color (RGB components).
                                                                          * @param array $coords array of the form (fx, fy, cx, cy, r) where (fx, fy) is the starting point of the gradient with color1, (cx, cy) is the center of the circle with color2, and r is the radius of the circle (see radial_gradient_coords.jpg). (fx, fy) should be inside the circle, otherwise some areas will not be defined.
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access public
                                                                          */
@@ -8041,10 +8041,10 @@ if (!class_exists('TCPDF')) {
                                                                          * @param array $col2 second color (lower right corner) (RGB components).
                                                                          * @param array $col3 third color (upper right corner) (RGB components).
                                                                          * @param array $col4 fourth color (upper left corner) (RGB components).
-                                                                         * @param array $coords <ul><li>for one patch mesh: array(float x1, float y1, .... float x12, float y12): 12 pairs of coordinates (normally from 0 to 1) which specify the Bézier control points that define the patch. First pair is the lower left edge point, next is its right control point (control point 2). Then the other points are defined in the order: control point 1, edge point, control point 2 going counter-clockwise around the patch. Last (x12, y12) is the first edge point's left control point (control point 1).</li><li>for two or more patch meshes: array[number of patches]: arrays with the following keys for each patch: f: where to put that patch (0 = first patch, 1, 2, 3 = right, top and left of precedent patch - I didn't figure this out completely - just try and error ;-) points: 12 pairs of coordinates of the Bézier control points as above for the first patch, 8 pairs of coordinates for the following patches, ignoring the coordinates already defined by the precedent patch (I also didn't figure out the order of these - also: try and see what's happening) colors: must be 4 colors for the first patch, 2 colors for the following patches</li></ul>
+                                                                         * @param array $coords <ul><li>for one patch mesh: array(float x1, float y1, .... float x12, float y12): 12 pairs of coordinates (normally from 0 to 1) which specify the Bï¿½zier control points that define the patch. First pair is the lower left edge point, next is its right control point (control point 2). Then the other points are defined in the order: control point 1, edge point, control point 2 going counter-clockwise around the patch. Last (x12, y12) is the first edge point's left control point (control point 1).</li><li>for two or more patch meshes: array[number of patches]: arrays with the following keys for each patch: f: where to put that patch (0 = first patch, 1, 2, 3 = right, top and left of precedent patch - I didn't figure this out completely - just try and error ;-) points: 12 pairs of coordinates of the Bï¿½zier control points as above for the first patch, 8 pairs of coordinates for the following patches, ignoring the coordinates already defined by the precedent patch (I also didn't figure out the order of these - also: try and see what's happening) colors: must be 4 colors for the first patch, 2 colors for the following patches</li></ul>
                                                                          * @param array $coords_min minimum value used by the coordinates. If a coordinate's value is smaller than this it will be cut to coords_min. default: 0
                                                                          * @param array $coords_max maximum value used by the coordinates. If a coordinate's value is greater than this it will be cut to coords_max. default: 1
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access public
                                                                          */
@@ -8146,7 +8146,7 @@ if (!class_exists('TCPDF')) {
                                                                          * @param float $y ordinate of the top left corner of the rectangle.
                                                                          * @param float $w width of the rectangle.
                                                                          * @param float $h height of the rectangle.
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access protected
                                                                          */
@@ -8169,7 +8169,7 @@ if (!class_exists('TCPDF')) {
                                                                          * @param array $col1 first color (RGB components).
                                                                          * @param array $col2 second color (RGB components).
                                                                          * @param array $coords array of coordinates.
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access protected
                                                                          */
@@ -8193,7 +8193,7 @@ if (!class_exists('TCPDF')) {
                                                                         }
                                                                         /**
                                                                          * Output shaders.
-                                                                         * @author Andreas Würmser, Nicola Asuni
+                                                                         * @author Andreas Wï¿½rmser, Nicola Asuni
                                                                          * @since 3.1.000 (2008-06-09)
                                                                          * @access protected
                                                                          */
