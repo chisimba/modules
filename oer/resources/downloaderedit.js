@@ -18,9 +18,16 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        jQuery("#form_downloadereditor").validate({ rules: { field: { required: true, email: true } } });
+        jQuery("#form_downloadereditor").validate({
+            rules: {
+                field: {
+                    required: true,
+                    email: true
+                }
+            }
+        });
         jQuery("#form_downloadproductform").validate();
-        jQuery("#save_results").hide();        
+        jQuery("#save_results").hide();
     });
 
     // Function for saving the downloader data
@@ -38,10 +45,10 @@ jQuery(function() {
                 url: 'index.php?module=oer&action=downloadersave',
                 type: "POST",
                 data: data_string,
-                success: function(msg) {                    
+                success: function(msg) {
                     jQuery("#submit").attr("disabled", "");
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
-                        // Update the information area 
+                        // Update the information area
                         // (msg is the id of the record on success)
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
@@ -70,26 +77,33 @@ jQuery(function() {
             jQuery("#submit").attr("disabled", "disabled");
             jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
             jQuery("#save_results").show();
-            data_string = jQuery("#form_downloadproductform").serialize();            
+            data_string = jQuery("#form_downloadproductform").serialize();
             jQuery.ajax({
                 url: 'index.php?module=oer&action=printproduct&'+id+'&productid='+productid+'&downloadformat='+downloadformat+'&producttype='+producttype+'&mode=edit',
                 type: "POST",
                 data: data_string,
-                success: function(msg) {                    
+                success: function(msg) {
                     jQuery("#submit").attr("disabled", "");
-                    if(msg !== "ERROR_DATA_INSERT_FAIL") {                        
+                    if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                        // alert(msg);
                         // Update the information area
                         // (msg is the id of the record on success)
-                        jQuery("#save_results").html('<span class="success">Document printed successfully</span>');
+                        if(msg !=""){
+                            jQuery("#save_results").html('<span class="success">Document printed successfully</span>');
+                        } else {
+                            jQuery("#save_results").html('<span class="success">Unfortunately an error was encountered.</span>');
+                        }
                         
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');
-                        window.location=msg;
+                        if(downloadformat != "pdf" && msg !=""){
+                            window.location=msg;
+                        }
                     } else {
                         //alert(msg);
                         jQuery("#save_results").html('<span class="fail">Unfortunately an error was encountered.</span>');
-                        //alert(status_fail);
+                    //alert(status_fail);
                     }
                 }
             });

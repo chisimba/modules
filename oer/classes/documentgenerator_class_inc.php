@@ -38,13 +38,36 @@ class documentgenerator extends object {
     public function showProductPDF($productId, $prodType) {
         $this->pdf->initWrite();
         $prodData = "";
+        $ext = ".pdf";
         if ($prodType == "adaptation") {
             $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productId);
             
         }
         $this->pdf->partWrite($prodData);
+        //doc random identifier
+        $randNo = mt_rand(1000, 15000);
+        $prodTitle = $randNo;
+        //Get product title
+        $prodTitle = $this->dbproducts->getProductTitle($productId);
+        if($prodTitle != Null && !empty($prodTitle)) {
+            $prodTitle = $randNo."_".str_replace(" ", "_", $prodTitle);
+        }
+        //Get content path
+        $fbasepath = $this->objConfig->getItem("KEWL_CONTENT_BASEPATH");
+        //Doc name
+        $docName = $prodTitle.$ext;
 
-        return $this->pdf->show();
+        $docBasePath = $fbasepath.$docName;
+        //Close and output PDF document
+        ob_start();
+        //Param F: save to a local server file with the name given by name in param 1 of Output
+        $this->pdf->Output($docBasePath, "F");
+        ob_end_clean();
+        $fpath = $this->objConfig->getItem("KEWL_CONTENT_PATH");
+        $sitepath = $this->objConfig->getItem("KEWL_SITE_ROOT");
+        $docPath = $sitepath.$fpath.$docName;
+        return $docPath;
+        //return $this->pdf->show();
     }
     /**
      * Function that generates docs into diff word formats i.e. .doc, .odt
@@ -67,7 +90,8 @@ class documentgenerator extends object {
             //Remove all images
             $prodData = preg_replace("/<img[^>]+\>/i", " ", $prodData);
         }
-        
+        //doc random identifier
+        $randNo = mt_rand(1000, 15000);
         $prodTitle = $randNo;
         $prodTitle = $this->dbproducts->getProductTitle($productId);
         if($prodTitle != Null && !empty($prodTitle)) {
@@ -75,7 +99,6 @@ class documentgenerator extends object {
         }
         $fbasepath = $this->objConfig->getItem("KEWL_CONTENT_BASEPATH");        
 
-        //$fpath = "/tmp/";
         $docBasePath = $fbasepath.$prodTitle.$ext;
         
         //Form the document
