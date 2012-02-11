@@ -67,8 +67,6 @@ jQuery(function() {
             var producttype = jQuery("#producttype").val();
             var id = jQuery("#id").val();
             var downloadformat = jQuery('input[name=downloadformat]:checked').val();
-            var notifyupdateoriginal = jQuery('input[name=notifyupdateoriginal]:checked').val();            
-            var notifyupdateadaptation = jQuery('input[name=notifyupdateadaptation]:checked').val();            
             jQuery("#submit").attr("disabled", "disabled");
             jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
             jQuery("#save_results").show();
@@ -87,6 +85,7 @@ jQuery(function() {
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');
+                        window.location=msg;
                     } else {
                         //alert(msg);
                         jQuery("#save_results").html('<span class="fail">Unfortunately an error was encountered.</span>');
