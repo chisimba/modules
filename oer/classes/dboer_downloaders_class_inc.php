@@ -53,9 +53,18 @@ class dboer_downloaders extends dbTable {
     /**
      * Updates A Record
      * @param string $id ID of the record to be updated
+     * @param string $data
      * @return string
      */
-    function updateSingle($id) {
+    function updateSingle($id, $data) {
+        return $this->update("id", $id, $data);
+    }
+    /**
+     * Updates A Record
+     * @param string $id ID of the record to be updated
+     * @return string
+     */
+    function updateSingleRecord($id) {
         $data = array(
             'fname' => $this->getParam("fname"),
             'lname' => $this->getParam("lname"),
@@ -63,7 +72,11 @@ class dboer_downloaders extends dbTable {
             'organisation' => $this->getParam("organisation"),
             'occupation' => $this->getParam("occupation"),
             'downloadreason' => $this->getParam("downloadreason"),
-            'useterms' => $this->getParam("useterms")
+            'useterms' => $this->getParam("useterms"),
+            'notifyoriginal' => $this->getParam("notifyoriginal"),
+            'notifyadaptation' => $this->getParam("notifyadaptation"),
+            'downloadformat' => $this->getParam("downloadformat"),
+            'downloadtime' => date("F j, Y, g:i a")
         );
 
         return $this->update("id", $id, $data);

@@ -375,7 +375,8 @@ class oer extends controller {
             'organisation' => $this->getParam("organisation"),
             'occupation' => $this->getParam("occupation"),
             'downloadreason' => $this->getParam("downloadreason"),
-            'useterms' => $this->getParam("useterms")
+            'useterms' => $this->getParam("useterms"),
+            'productid' => $this->getParam("productid")
         );
         //die(print_r($data));
         $id = $this->objDBdownloaders->insertSingle($data);
@@ -510,9 +511,18 @@ class oer extends controller {
     public function __printproduct() {
         $generator = $this->getObject('documentgenerator', 'oer');
         $prodType = $this->getParam('producttype', "adaptation");
-        $fileExt = $this->getParam('downloadformat');
+        $fileExt = ".".$this->getParam('downloadformat', "pdf");
+        $notifyupdateadaptation = $this->getParam('notifyupdateadaptation',"undefined");
+        $notifyupdateoriginal = $this->getParam('notifyupdateoriginal', "undefined");
         $productId = $this->getParam('productid');
         $id = $this->getParam('id');
+        $data = array(
+            'notifyadaptation' => $notifyupdateadaptation,
+            'notifyoriginal' => $notifyupdateoriginal,
+            'downloadformat' => $fileExt,
+            'downloadtime' => date("Y-m-d H:i:s")
+        );
+        $upid = $this->objDBdownloaders->updateSingle($id,$data);
         
         if ($fileExt == ".pdf") {
             if ($prodType == "adaptation") {

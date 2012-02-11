@@ -62,10 +62,11 @@ class documentgenerator extends object {
             $prodData = preg_replace("/<img[^>]+\>/i", " ", $prodData);
         }
         //Form doc name
-        $prodTitle = "product";
+        $randNo = mt_rand(1000, 15000);
+        $prodTitle = $randNo;
         $prodTitle = $this->dbproducts->getProductTitle($productId);
         if($prodTitle != Null && !empty($prodTitle)) {
-            $prodTitle = str_replace(" ", "_", $prodTitle);            
+            $prodTitle = $randNo."_".str_replace(" ", "_", $prodTitle);
         }
 
         $fpath = "/tmp/";

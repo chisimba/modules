@@ -19,9 +19,8 @@ jQuery(function() {
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
         jQuery("#form_downloadereditor").validate();
-        jQuery("#form_downloadproduct").validate();
-        jQuery("#save_results").hide();
-        jQuery("#downloadproductform").hide();
+        jQuery("#form_downloadproductform").validate();
+        jQuery("#save_results").hide();        
     });
 
     // Function for saving the downloader data
@@ -66,13 +65,16 @@ jQuery(function() {
             e.preventDefault();
             var productid = jQuery("#productid").val();
             var producttype = jQuery("#producttype").val();
-            var id = jQuery("#id").val();            
+            var id = jQuery("#id").val();
+            var downloadformat = jQuery('input[name=downloadformat]:checked').val();
+            var notifyupdateoriginal = jQuery('input[name=notifyupdateoriginal]:checked').val();            
+            var notifyupdateadaptation = jQuery('input[name=notifyadaptation]:checked').val();
             jQuery("#submit").attr("disabled", "disabled");
             jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
             jQuery("#save_results").show();
             data_string = jQuery("#form_downloadproductform").serialize();            
             jQuery.ajax({
-                url: 'index.php?module=oer&action=printproduct&'+id+'&productid='+productid+'&producttype='+producttype+'&mode=edit',
+                url: 'index.php?module=oer&action=printproduct&'+id+'&productid='+productid+'&downloadformat='+downloadformat+'&producttype='+producttype+'&mode=edit',
                 type: "POST",
                 data: data_string,
                 success: function(msg) {                    

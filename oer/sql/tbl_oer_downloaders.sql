@@ -13,6 +13,11 @@ $fields = array(
                 'organisation' =>array('type' =>'text','length'=>255),
                 'occupation' =>array('type' =>'text','length'=>255),                
                 'downloadreason' =>array('type' =>'text'),
-                'useterms' =>array('type' =>'text','length'=>255)
+                'notifyoriginal' =>array('type' =>'text','length'=>32),
+                'notifyadaptation' =>array('type' =>'text','length'=>32),
+                'productid' =>array('type' =>'text','length'=>32),
+                'useterms' =>array('type' =>'text','length'=>32),
+                'downloadformat' =>array('type' =>'text','length'=>32),
+                'downloadtime' =>array('type' =>'text','length'=>32)
 );
 ?>

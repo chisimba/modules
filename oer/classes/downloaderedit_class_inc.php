@@ -346,11 +346,13 @@ class downloaderedit extends object {
 
             $downloadformat = new radio('downloadformat');
             $downloadformat->breakSpace = "<br />";
-            $downloadformat->addOption(".pdf", $this->objLanguage->languageText(
+            $downloadformat->cssClass = "required";
+            //$downloadformat->cssId = "downloadformat";
+            $downloadformat->addOption("pdf", $this->objLanguage->languageText(
                             'mod_oer_pdf', 'oer'));
-            $downloadformat->addOption(".odt", $this->objLanguage->languageText(
+            $downloadformat->addOption("odt", $this->objLanguage->languageText(
                             'mod_oer_odt', 'oer'));
-            $downloadformat->addOption(".doc", $this->objLanguage->languageText(
+            $downloadformat->addOption("doc", $this->objLanguage->languageText(
                             'mod_oer_msword', 'oer'));
 
             $table->startRow();
@@ -365,6 +367,7 @@ class downloaderedit extends object {
             $notifyupdateoriginalLabel = $this->objLanguage->languageText(
                             'mod_oer_acceptnotifyupdatesoriginal', 'oer');
             $notifyupdateoriginal = new checkbox('notifyupdateoriginal', "", false);
+            $notifyupdateoriginal->value = "notifyoriginal";
             //$useterms->cssClass = "required";
             if ($this->mode == 'edit') {
                 //$useterms->ischecked = $this->useterms;
@@ -378,6 +381,7 @@ class downloaderedit extends object {
             $notifyupdateadaptationLabel = $this->objLanguage->languageText(
                             'mod_oer_acceptnotifyupdatesoriginal', 'oer');
             $notifyupdateadaptation = new checkbox('notifyupdateadaptation', "", false);
+            $notifyupdateadaptation->value = "notifyadaptation";
             //$useterms->cssClass = "required";
             if ($this->mode == 'edit') {
                 //$useterms->ischecked = $this->useterms;
@@ -400,7 +404,7 @@ class downloaderedit extends object {
             $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
 
             // Insert a message area for Ajax result to display.
-            $msgArea = "<br /><div id='save_results' class='ajax_results'>Hello!</div>";
+            $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
             $form->addToForm($msgArea);
 
             // Add hidden fields for use by JS
