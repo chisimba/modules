@@ -84,8 +84,7 @@ jQuery(function() {
                 data: data_string,
                 success: function(msg) {
                     jQuery("#submit").attr("disabled", "");
-                    if(msg !== "ERROR_DATA_INSERT_FAIL") {
-                        // alert(msg);
+                    if(msg !== "ERROR_DATA_INSERT_FAIL") {                        
                         // Update the information area
                         // (msg is the id of the record on success)
                         if(msg !=""){
@@ -97,7 +96,9 @@ jQuery(function() {
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
                         jQuery("#mode").val('edit');
-                        if(downloadformat != "pdf" && msg !=""){
+                        if(msg !=""){
+                            //window.open(msg,"","width=450,height=300,status=yes,toolbar=no,menubar=no");
+                            //window.open(msg,"_blank");
                             window.location=msg;
                         }
                     } else {

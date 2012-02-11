@@ -526,7 +526,7 @@ class oer extends controller {
         
         if ($fileExt == ".pdf") {
             if ($prodType == "adaptation") {
-                return $generator->showProductPDF($productId, $prodType);
+                die($generator->showProductPDF($productId, $prodType));
             }
         } else {
             if ($prodType == "adaptation") {

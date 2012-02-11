@@ -26,6 +26,7 @@ class documentgenerator extends object {
     public $pdf;
     private $dbproducts;
     public $objConfig;
+    public $buffer;
 
     public function init() {
         $this->pdf = $this->getObject('tcpdfwrapper', 'pdfmaker');
@@ -33,6 +34,7 @@ class documentgenerator extends object {
         $this->dbproducts = $this->getObject("dbproducts", "oer");
         //Create the configuration object
         $this->objConfig = $this->getObject("altconfig", "config");
+        $this->buffer = "";
     }
 
     public function showProductPDF($productId, $prodType) {
@@ -41,7 +43,6 @@ class documentgenerator extends object {
         $ext = ".pdf";
         if ($prodType == "adaptation") {
             $prodData = $this->objViewAdaptation->buildAdaptationForPrint($productId);
-            
         }
         $this->pdf->partWrite($prodData);
         //doc random identifier
@@ -49,26 +50,31 @@ class documentgenerator extends object {
         $prodTitle = $randNo;
         //Get product title
         $prodTitle = $this->dbproducts->getProductTitle($productId);
-        if($prodTitle != Null && !empty($prodTitle)) {
-            $prodTitle = $randNo."_".str_replace(" ", "_", $prodTitle);
+        if ($prodTitle != Null && !empty($prodTitle)) {
+            $prodTitle = $randNo . "_" . str_replace(" ", "_", $prodTitle);
         }
         //Get content path
         $fbasepath = $this->objConfig->getItem("KEWL_CONTENT_BASEPATH");
         //Doc name
-        $docName = $prodTitle.$ext;
+        $docName = $prodTitle . $ext;
 
-        $docBasePath = $fbasepath.$docName;
+        $docBasePath = $fbasepath . $docName;
+
         //Close and output PDF document
         ob_start();
         //Param F: save to a local server file with the name given by name in param 1 of Output
+        //$this->pdf->Output($docName, "D");
         $this->pdf->Output($docBasePath, "F");
         ob_end_clean();
+
         $fpath = $this->objConfig->getItem("KEWL_CONTENT_PATH");
         $sitepath = $this->objConfig->getItem("KEWL_SITE_ROOT");
-        $docPath = $sitepath.$fpath.$docName;
+        $docPath = $sitepath . $fpath . $docName;
         return $docPath;
+
         //return $this->pdf->show();
     }
+
     /**
      * Function that generates docs into diff word formats i.e. .doc, .odt
      * @param String $productId
@@ -77,10 +83,9 @@ class documentgenerator extends object {
      * @param String $randno a random number
      * @return document path
      */
-
     public function showProductWordFormats($productId, $prodType, $ext) {
         $prodData = "";
-        if(empty($ext)){
+        if (empty($ext)) {
             $ext = ".doc";
         }
         //doc random identifier
@@ -94,21 +99,23 @@ class documentgenerator extends object {
         $randNo = mt_rand(1000, 15000);
         $prodTitle = $randNo;
         $prodTitle = $this->dbproducts->getProductTitle($productId);
-        if($prodTitle != Null && !empty($prodTitle)) {
-            $prodTitle = $randNo."_".str_replace(" ", "_", $prodTitle);
+        if ($prodTitle != Null && !empty($prodTitle)) {
+            $prodTitle = $randNo . "_" . str_replace(" ", "_", $prodTitle);
         }
-        $fbasepath = $this->objConfig->getItem("KEWL_CONTENT_BASEPATH");        
+        $fbasepath = $this->objConfig->getItem("KEWL_CONTENT_BASEPATH");
 
-        $docBasePath = $fbasepath.$prodTitle.$ext;
-        
+        $docBasePath = $fbasepath . $prodTitle . $ext;
+
         //Form the document
         $fp = fopen($docBasePath, 'w+');
         fwrite($fp, $prodData);
         fclose($fp);
         $fpath = $this->objConfig->getItem("KEWL_CONTENT_PATH");
         $sitepath = $this->objConfig->getItem("KEWL_SITE_ROOT");
-        $docPath = $sitepath.$fpath.$prodTitle.$ext;
+        $docPath = $sitepath . $fpath . $prodTitle . $ext;
         return $docPath;
     }
+
 }
+
 ?>
