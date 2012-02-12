@@ -22,6 +22,11 @@ class cpanel extends object {
 
         $cPanelTable->startRow();
 
+        $cplink = new link($this->uri(array(),"modulecatalogue"));
+        $cplink->link = '<img  src="skins/' . $skinName . '/images/controlpanel.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_modulemanager', 'oer');
+        $cPanelTable->addCell($cplink->show(), null, "top");
+
+        
         $cplink = new link($this->uri(array("action" => "viewthemes")));
         $cplink->link = '<img  src="skins/' . $skinName . '/images/product_theme.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_productthemes', 'oer');
         $cPanelTable->addCell($cplink->show(), null, "top");
@@ -30,7 +35,24 @@ class cpanel extends object {
         $cplink->link = '<img  src="skins/' . $skinName . '/images/keyword.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_keywords', 'oer');
         $cPanelTable->addCell($cplink->show(), null, "top");
 
+
+
         $cPanelTable->endRow();
+
+        $cPanelTable->startRow();
+
+        
+        $cplink = new link($this->uri(array("action" => "oeruserdata"), "oeruserdata"));
+        $cplink->link = '<img  src="skins/' . $skinName . '/images/useradmin.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_users', 'oer');
+        $cPanelTable->addCell($cplink->show(), null, "top");
+        
+        $cplink = new link($this->uri(array("action" => "institutionlisting")));
+        $cplink->link = '<img  src="skins/' . $skinName . '/images/institutions.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_institutions', 'oer');
+        $cPanelTable->addCell($cplink->show(), null, "top");
+
+        $cPanelTable->endRow();
+
+
 
 
         return $cPanelTable->show();

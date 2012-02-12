@@ -82,6 +82,31 @@ class dbproducts extends dbtable {
             return NULL;
         }
     }
+  
+    
+    /**
+     * returns random x number of adaptations
+     * @param type $fragment
+     * @param type $limit
+     * @return type 
+     */
+    function getRandomAdaptationsByInstitution($fragment,$limit){
+        //$sql='SELECT * FROM tbl_oer_products WHERE RAND()<='.$fragment.' and parent_id is not null limit '.$limit.';';
+        $sql='SELECT * FROM  tbl_oer_products where  parent_id IS NOT NULL ORDER BY RAND() LIMIT '.$limit.';';
+        return $this->getArray($sql);
+    }
+    
+    /**
+     *
+     * @param type $institutionId
+     * @return type 
+     */
+      function getProductAdaptationCountByInstitution($institutionId) {
+        $sql = "select count(*) as adaptationcount from $this->productsTableName where institutionid = '$institutionId'";
+        $data = $this->getArray($sql);        
+        return $data[0]['adaptationcount'];       
+    }
+    
     /**
      * returns count of adaptations for a specific product
      * @param  $id the product id

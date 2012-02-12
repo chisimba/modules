@@ -165,7 +165,7 @@ class productmanager extends object {
 
         $objMkDir = $this->getObject('mkdir', 'files');
 
-        $productid = $this->getParam('productid');
+        $productid = $this->getParam('itemid');
         $destinationDir = $dir . '/oer/products/' . $productid;
 
         $objMkDir->mkdirs($destinationDir);
@@ -192,7 +192,7 @@ class productmanager extends object {
             $this->dbproducts->updateOriginalProduct($data, $productid);
 
 
-            $params = array('action' => 'showproductthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
+            $params = array('action' => 'showthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 
             return $params;
         }
@@ -766,11 +766,9 @@ class productmanager extends object {
         $arrFormButtons = $objSelectBox->getFormButtons();
         $objForm->addToForm(implode(' / ', $arrFormButtons));
 
-        $content.= $objAjaxUpload->show($id);
+        $content.= $objAjaxUpload->show($id,'uploadproductthumbnail');
         $link = new link($this->uri(array("")));
         $link->link = $objLanguage->languageText('word_home', 'system');
-
-
 
 
         $header = new htmlheading();

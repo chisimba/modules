@@ -95,7 +95,7 @@ class institutionedit extends object {
         // Load the jquery validate plugin
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         // Load the helper Javascript
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('institutionedit.js', 'oer'));
+        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('institutionedit.js', 'oer'));
         // Load all the required HTML classes from HTMLElements module
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -185,6 +185,7 @@ class institutionedit extends object {
      * 
      */
     private function buildForm($id) {
+        $this->addJS();
         if ($id != null) {
             $this->loadData($id);
             $this->mode = 'edit';
@@ -211,29 +212,30 @@ class institutionedit extends object {
         // Field for the description.
         if ($this->mode == 'edit') {
             $description = $this->description;
-            $textinput->setValue($value);
         } else {
             $description = NULL;
         }
+
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'description';
         $editor->height = '150px';
         $editor->width = '100%';
-        $editor->setBasicToolBar($description);
-        $editor->setContent($description);
+        $editor->setBasicToolBar();
+        $editor->value=$description;
+
+        $this->loadClass('textarea', 'htmlelements');
+        $textarea = new textarea('description', '', 5, 55);
+        $textarea->cssClass = 'required';
+        //$textarea->value = $description;
+       
+
+
         $table->startRow();
         $table->addCell($this->objLanguage->languageText('word_description'));
+        //$table->addCell($textarea->show());
         $table->addCell($editor->show());
         $table->endRow();
-        // Field for the thumbnail.
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText('mod_oer_thumbnail', 'oer'));
-        $tester = new hiddeninput('thumbnail');
-        if ($this->mode == 'edit') {
-            $tester->value = $this->getParam('thumbnail', NULL);
-        }
-        $table->addCell($tester->show() . $this->objThumbUploader->show());
-        $table->endRow();
+
 
         // Institution type selection
         $table->startRow();
@@ -443,15 +445,83 @@ class institutionedit extends object {
         $hidId->value = $this->getParam('id', NULL);
         $hiddenFields .= $hidId->show() . "\n\n";
 
+        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
+
         // Createform, add fields to it and display.
-        $formData = new form('institutionEditor', NULL);
+        $formData = new form('institutionEditor', $this->uri(array("action"=>"institutionsave")));
         $formData->addToForm(
                 $fieldsetInstitutionInfo->show()
                 . $fieldset2->show()
                 . $table->show()
                 . $hiddenFields
-                . $msgArea);
-        return $formData->show();
+                . $msgArea
+        );
+
+         $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
+         if ($this->mode == 'edit') {
+                $thumbnail = '<img src="usrfiles/' . $this->thumbnail . '"  width="136" height="176" align="left"/>';
+         }
+        
+        $fieldset3 = $this->newObject('fieldset', 'htmlelements');
+        $fieldset3->setLegend($this->objLanguage->languageText('mod_oer_logo', 'oer'));
+        $fieldset3->addContent($objAjaxUpload->show($id, 'uploadinstitutionthumbnail').$thumbnail);
+       
+
+        return $fieldset3->show() . $formData->show();
+    }
+
+    /**
+     * This includes necessary js for product 4 creation
+     */
+    function addJS() {
+        $this->appendArrayVar('headerParams', "
+
+<script type=\"text/javascript\">
+    //<![CDATA[
+
+    function loadAjaxForm(fileid) {
+        window.setTimeout('loadForm(\"'+fileid+'\");', 1000);
+    }
+
+    function loadForm(fileid) {
+        var pars = \"module=oer&action=ajaxprocess&id=\"+fileid;
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                $('updateform').innerHTML = response;
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+
+    function processConversions() {
+        window.setTimeout('doConversion();', 2000);
+    }
+
+    function doConversion() {
+
+        var pars = \"module=oer&action=ajaxprocessconversions\";
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert(response);
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+    //]]>
+</script>            
+");
     }
 
     /**
@@ -653,7 +723,6 @@ class institutionedit extends object {
     private function loadData($id) {
         $objDbInstitution = $this->getObject('dbinstitution');
         $arData = $objDbInstitution->getInstitutionById($id);
-       
         if (!empty($arData)) {
             foreach ($arData as $key => $value) {
                 $this->$key = $value;

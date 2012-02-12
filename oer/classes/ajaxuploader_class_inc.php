@@ -39,7 +39,8 @@ class ajaxuploader extends object {
      * Method to render the form
      * @return string Form
      */
-    public function show($productid) {
+    public function show($itemid,$action) {
+        
         // Generate an ID - In case multiple uploads occur on one page
         $id = $this->genRandomString(); // mktime().rand();
         // Generate Iframe
@@ -59,8 +60,8 @@ class ajaxuploader extends object {
         $objIcon->setIcon('loading_bar');
 
         // Create Form
-        $form = new form('uploadfile_' . $id, $this->uri(array('action' => 'uploadproductthumbnail',
-                            'productid' => $productid)));
+        $form = new form('uploadfile_' . $id, $this->uri(array('action' => $action,
+                            'itemid' => $itemid)));
         $form->extra = 'enctype="multipart/form-data" target="iframe_upload_' . $id . '"';
         ;
         $form->id = 'form_upload_' . $id;
@@ -79,7 +80,7 @@ class ajaxuploader extends object {
         $filename = new hiddeninput('filename', '');
         $hiddenInput = new hiddeninput('id', $id);
 
-        $form->addToForm($fileInput->show() . ' ' . $filename->show() . $hiddenInput->show());
+        $form->addToForm($fileInput->show() . ' ' . $filename->show() . $hiddenInput->show().'<div id="selectedimage"></div>');
         $form->addToForm($button->show());
 
         // Append JavaScript
@@ -87,26 +88,6 @@ class ajaxuploader extends object {
 
         $progress = $objLanguage->languageText("mod_oer_uploadinprogress", "oer");
 
-
-
-        //keywords
-
-        /*$form->addToForm($this->objLanguage->languageText('mod_oer_keywords', 'oer'));
-
-        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
-        $leftHeader = $this->objLanguage->languageText('mod_oer_availablekeywords', 'oer');
-        $rightHeader = $this->objLanguage->languageText('mod_oer_selectedkeywords', 'oer');
-        $objSelectBox->create($newproductform, 'keywordsLeftList[]', $leftHeader, 'selectedKeywords[]', $rightHeader);
-        $objDbKeyWords = $this->getObject('dbkeywords', 'oer');
-        $keywords = $objDbKeyWords->getKeyWords();
-        $objSelectBox->insertLeftOptions($keywords, 'id', 'keyword');
-        $objSelectBox->insertRightOptions(array());
-        $arrFormButtons = $objSelectBox->getFormButtons();
-        $form->addToForm($objSelectBox->show());
-
-        $form->addToForm(implode(' / ', $arrFormButtons));
-         * 
-         */
         return $form->show() . '<div id="div_upload_' . $id . '" style="display:none;">' . $objIcon->show() . ' ' . $progress . '</div><div id="uploadresults"></div><div id="updateform"></div>' . $objIframe->show();
     }
 
@@ -126,7 +107,7 @@ function doUpload(id)
     } else {
         document.getElementById(\'form_upload_\'+id).style.display=\'none\';
         document.getElementById(\'div_upload_\'+id).style.display=\'block\';
-        document.getElementById(\'uploadresults\').style.display=\'none\';
+        document.getElementById(\'uploadresults\').style.display=\'block\';
         document.forms[\'uploadfile_\'+id].submit();
     
     }
@@ -135,7 +116,7 @@ function doUpload(id)
 function changeFileName(id)
 {
     //document.forms[\'uploadfile\'].filename.value = document.forms[\'uploadfile\'].fileupload.value;
-
+    
     var tr = document.forms[\'uploadfile_\'+id].fileupload.value;
     len = tr.length;
     rs = 0;

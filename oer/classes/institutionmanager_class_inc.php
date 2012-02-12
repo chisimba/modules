@@ -34,9 +34,12 @@ class institutionmanager extends object {
         $this->_objDbInstitutionType = $this->getObject('dbinstitutiontypes');
         $this->_objCountry = $this->getObject('languagecode', 'language');
         $this->_objLanguage = $this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject("language", "language");
         $this->_institution = $this->getObject('institution');
         $this->_institutionList = array();
         $this->_validation['valid'] = TRUE;
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject("user", "security");
     }
 
     public function institutionNameExists($name) {
@@ -84,10 +87,10 @@ class institutionmanager extends object {
         foreach ($this->_institutionList as $institution) {
             $table->startRow();
             $objIcon->setIcon("edit");
-            $editLink=new link($this->uri(array("action"=>"institutionedit","mode"=>"edit", "id"=>$institution['id'])));
-            $editLink->link=$objIcon->show();
-            
-            $table->addCell($institution['name'].$editLink->show());
+            $editLink = new link($this->uri(array("action" => "institutionedit", "mode" => "edit", "id" => $institution['id'])));
+            $editLink->link = $objIcon->show();
+
+            $table->addCell($institution['name'] . $editLink->show());
             $table->addCell($institution['country']);
             $table->addCell($dbInstitutionType->getType($institution['type']));
             $table->endRow();
@@ -216,6 +219,51 @@ class institutionmanager extends object {
         return $institutionData;
     }
 
+    /**
+     * Used fo uploading institution thumbnail
+     * 
+     */
+    function doajaxupload() {
+        $dir = $this->objConfig->getcontentBasePath();
+
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
+
+        $objMkDir = $this->getObject('mkdir', 'files');
+
+        $institutionId = $this->getParam('itemid');
+        $destinationDir = $dir . '/oer/institutions/' . $institutionId;
+
+        $objMkDir->mkdirs($destinationDir);
+        // @chmod($destinationDir, 0777);
+
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array(
+            'all'
+        );
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir . '/';
+
+        $result = $objUpload->doUpload(TRUE, $filename);
+
+
+        if ($result['success'] == FALSE) {
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+            $error = $this->objLanguage->languageText('mod_oer_uploaderror', 'oer');
+            return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
+        } else {
+            $filename = $result['filename'];
+            $data = array("thumbnail" => "/oer/institutions/" . $institutionId . "/" . $filename);
+            $dbInstitions = $this->getObject("dbinstitution", "oer");
+            $dbInstitions->updateInstitution($data, $institutionId);
+
+            $params = array('action' => 'showthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
+
+            return $params;
+        }
+    }
+
     function validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $this->_validation['valid'] = TRUE;
         //Check if a name has been provided
@@ -288,6 +336,137 @@ class institutionmanager extends object {
         }
 
         return $this->_validation;
+    }
+
+    /**
+     * creates a view of the institution with adaptations
+     * @param type $institutionId
+     * @return type 
+     */
+    function buildViewInstitutionDetails($institutionId) {
+        $this->loadClass("link", "htmlelements");
+        $objLanguage = $this->getObject("language", "language");
+        $objDbInstitution = $this->getObject("dbinstitution", "oer");
+        $institution = $objDbInstitution->getInstitutionById($institutionId);
+
+        $table = $this->getObject("htmltable", "htmlelements");
+
+        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
+        $groupId = $objGroups->getId("InstitutionCreators");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $userId = $this->objUser->userId();
+
+        $table->attributes = "style='table-layout:fixed;'";
+
+        $leftContent = "";
+        $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"  width="136" height="176" align="left"/>';
+        if ($institution['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
+        }
+
+        $editControls = "";
+        if ($objGroupOps->isGroupMember($groupId, $userId)) {
+            $editImg = '<img src="skins/oer/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+            $featuredImg = '<img src="skins/oer/images/featured.png">';
+
+
+            $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $institutionId, "mode" => "edit")));
+            $editLink->link = $editImg;
+            $editLink->cssClass = "editoriginalproduct";
+            $editControls.="" . $editLink->show();
+
+            $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $institutionId)));
+            $deleteLink->link = $deleteImg;
+            $deleteLink->cssClass = "deleteoriginalproduct";
+            $editControls.="" . $deleteLink->show();
+
+            $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $institutionId)));
+            $featuredLink->link = $featuredImg;
+            $featuredLink->cssClass = "featuredoriginalproduct";
+            $editControls.="" . $featuredLink->show();
+        }
+
+
+
+        $leftContent.='<h1 class="viewproduct_title">' . $institution['name'] . '</h1>';
+        $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
+
+
+        $leftContent.=$institution['description'];
+        
+        
+          $dbProducts = $this->getObject("dbproducts", "oer");
+        $adaptationCount = $dbProducts->getProductAdaptationCountByInstitution($institutionId);
+        $limit = 10;
+        $fragment=0;
+        //$fragment = $limit / $adaptationCount;
+
+        $adaptations = $dbProducts->getRandomAdaptationsByInstitution($fragment, $limit);
+
+        $randomAdaptations = '<div id="randomadaptations">';
+
+        foreach ($adaptations as $adaptation) {
+
+            $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="45" height="49"  align="left"/>';
+            if ($adaptation['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="45" height="49"  align="left"/>';
+            }
+            
+            $title=$adaptation['title'];
+            $link=new link($this->uri(array("action"=>'viewadaptation',"id"=>$adaptation['id'])));
+            $link->link=$title;
+            
+            $language=$adaptation['language'];
+            $randomAdaptations.='<div id ="randomadaptation">';
+            $randomAdaptations.=$thumbnail.'<br/>';
+            $randomAdaptations.='<h4>'.$link->show().'</h4>';
+            $randomAdaptations.=$objLanguage->languageText('mod_oer_adaptedin', 'oer').':'.$language;
+            $randomAdaptations.='</div>';
+            
+        }
+
+        $randomAdaptations.='</div>';
+        $leftContent.=$randomAdaptations;
+
+        $rightContent = "";
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+
+
+        //Get institution type
+        $objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
+        $instType = $objDbInstitutionType->getType($institution['type']);
+
+        $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');
+
+        $rightContent.='<div id="viewadaptation_label"><b>' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</b></div>
+            <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
+        $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
+            <div id="viewadaptation_text">' . $institution['country'] . '</div><br/><br/>';
+
+        $rightContent.='<div id="viewproduct_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ': ' . $institution['keyword1'] . $institution['keyword2'] . '</div><br/><br/>';
+
+        $rightContent.='<div id="viewproduct_relatedevents_label">' . $objLanguage->languageText('mod_oer_relatedevents', 'oer') . ':</div><br/><br/>';
+
+
+        $table->startRow();
+
+        $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "60%", "top", "left");
+
+        $table->addCell('<div id="viewproduct_rightcontent>' . $rightContent . '</div>', "40%", "top", "left");
+
+        $table->endRow();
+
+        $homeLink = new link($this->uri(array("action" => "home")));
+        $homeLink->link = $objLanguage->languageText('mod_oer_home', 'system');
+
+      
+        return '<br/><div id="viewinstitution">' . $table->show() . '</div>';
     }
 
 }

@@ -86,10 +86,10 @@ class block_viewinstitution extends object
      */
     public function show() 
     {
-        $objInstEditForm = $this->getObject('institutionedit','oer');
+        $objInstManager = $this->getObject('institutionmanager','oer');
         $institutionId = $this->configData;
         
-        return $objInstEditForm->viewInstitution($institutionId);
+        return $objInstManager->buildViewInstitutionDetails($institutionId);
     }
 }
 ?>

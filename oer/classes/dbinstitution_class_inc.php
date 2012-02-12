@@ -62,7 +62,7 @@ class dbinstitution extends dbtable {
             'keyword1' => $keyword1,
             'keyword2' => $keyword2,
             'zip' => $zip,
-            'thumbnail' => $thumbnail
+            
         );
 
         $id = $this->insert($data);
@@ -198,12 +198,7 @@ class dbinstitution extends dbtable {
     //this function edit the instituin name
     //TODO MUST ALSO EDIT THUMBNAIL
     function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-        $sql = "SELECT puid FROM tbl_oer_institutions WHERE id = '$id'";
-        $tempPuid = $this->getArray($sql);
-        $puid = $tempPuid[0]['puid'];
-//        echo $puid;
-        $result = $this->update(
-                        'puid', $puid, array(
+        $data= array(
                     'name' => $name,
                     'description' => $description,
                     'country' => $country,
@@ -215,9 +210,13 @@ class dbinstitution extends dbtable {
                     'websiteLink' => $websiteLink,
                     'keyword1' => $keyword1,
                     'keyword2' => $keyword2,
-                    'zip' => $zip,
-                    'thumbnail' => $thumbnail)
+                    'zip' => $zip
+                    );
+                   
+          $result = $this->update(
+                        'id', $id,$data
         );
+       
         if ($result != FALSE) {
 
             // Call Object
@@ -273,6 +272,14 @@ class dbinstitution extends dbtable {
         return $id;
     }
 
+    /**
+     * updates institution with given data
+     * @param type $data
+     * @param type $id 
+     */
+    function updateInstitution($data,$id){
+        $this->update("id", $id, $data);
+    }
 }
 
 ?>

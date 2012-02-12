@@ -8,7 +8,7 @@ $options = array('comment'=>'Table to store institution','collate'=>'utf8_genera
 $fields = array(
 		'id'            => array('type' => 'text', 'length' => 32),
                 'name'          => array('type' => 'text', 'length' => 128),
-                'description'   => array('type' => 'text', 'length' => 500),
+                'description'   => array('type' => 'text',
                 'type'          => array('type' => 'text', 'length' => 32),
                 'country'       => array('type' => 'text', 'length' => 32),
                 'address1'      => array('type' => 'text', 'length' => 50),

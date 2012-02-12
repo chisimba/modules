@@ -241,4 +241,19 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_oer_institutions</table>
+        <version>0.152</version>
+        <description>
+            <br/>Added download time field
+        </description>
+        <data>
+            <change>
+                <name>description</name>
+                <type>text</type>
+              
+            </change>
+        </data>
+    </update>
+
 </updates>
