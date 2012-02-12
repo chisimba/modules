@@ -74,8 +74,7 @@ class dbproducts extends dbtable {
      * @return NULL if product not found, else an array with product details
      */
     function getProduct($id) {
-        $sql =
-                "select * from $this->productsTableName where id = '$id'";
+        $sql = "select * from $this->productsTableName where id = '$id'";
         $data = $this->getArray($sql);
         if (count($data) > 0) {
             return $data[0];
@@ -84,13 +83,32 @@ class dbproducts extends dbtable {
         }
     }
     /**
+     * returns count of adaptations for a specific product
+     * @param  $id the product id
+     * @return NULL if product not found, else a count of adaptations
+     */
+    function getProductAdaptationCount($parentId) {
+        $sql = "select count(*) as count from $this->productsTableName where parent_id = '$parentId'";
+        $data = $this->getArray($sql);        
+        return $data;       
+    }
+    /**
+     * returns count of adaptations for every original product
+     * @param  $id the product id
+     * @return an array with count of adaptations per product, where parentid is null, gives a count of original products
+     */
+    function getAllProductAdaptationCount() {
+        $sql = "select parent_id, count(*) as count from $this->productsTableName GROUP BY parent_id";
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
      * returns product title for a specific id
      * @param  $id the product id
      * @return NULL if product not found, else an array with product details
      */
     function getProductTitle($id) {
-        $sql =
-                "select * from $this->productsTableName where id = '$id'";
+        $sql = "select * from $this->productsTableName where id = '$id'";
         $data = $this->getArray($sql);
         if (count($data) > 0) {
             return $data[0]['title'];
