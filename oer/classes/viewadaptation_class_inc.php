@@ -86,10 +86,7 @@ class viewadaptation extends object {
 
     function buildAdaptationView($productId) {
         $product = $this->objDbProducts->getProduct($productId);
-        $parentproductAdaptCount = $this->objDbProducts->getProductAdaptationCount($product["parent_id"]);
-        var_dump($parentproductAdaptCount);
-        $allParentproductAdaptCount = $this->objDbProducts->getAllProductAdaptationCount();
-        var_dump($allParentproductAdaptCount);
+
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
