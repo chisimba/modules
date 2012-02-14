@@ -43,8 +43,17 @@ class modulelist extends controller
                 if(isset($results[2][0])) {
                     $descrip = $results[2][0];
                 }
+                preg_match_all('/(MODULE_STATUS:(.*))/', $moddata, $results);
+                if(isset($results[2][0])) {
+                    $status = strtolower($results[2][0]);
+                } else {
+                    $status = "unset";
+                }
                 
-                $moduleList[] = array('modname' => $chkdirs, 'description' => $descrip);
+                $moduleList[] = array(
+                  'modname' => $chkdirs, 
+                  'description' => $descrip,
+                  'status' => $status);
             }
         }
         

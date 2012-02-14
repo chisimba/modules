@@ -31,7 +31,10 @@ if ($moduleList)
         $header = new htmlHeading();
         $header->str = "Module: ".ucwords($moduleRow['modname']);
         $header->type = 3;
-        $middleColumn .= $objFb->show($header->show(), $moduleRow['description']);
+        $middleColumn .= $objFb->show($header->show(), 
+          "<div class='" . trim($moduleRow['status'])
+          . "'>" . $moduleRow['description'] 
+          . "</div><br /><b>Status</b>: " . $moduleRow['status']);
     }
 }
 
