@@ -766,7 +766,7 @@ class productmanager extends object {
         $arrFormButtons = $objSelectBox->getFormButtons();
         $objForm->addToForm(implode(' / ', $arrFormButtons));
 
-        $content.= $objAjaxUpload->show($id,'uploadproductthumbnail');
+        $content.= $objAjaxUpload->show($id, 'uploadproductthumbnail');
         $link = new link($this->uri(array("")));
         $link->link = $objLanguage->languageText('word_home', 'system');
 
@@ -871,14 +871,14 @@ class productmanager extends object {
 
         $controlBand.= '</div> ';
         $startNewRow = TRUE;
-        $count = 2;
+        $count = 1;
         $table = $this->getObject('htmltable', 'htmlelements');
         $table->attributes = "style='table-layout:fixed;'";
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
-
+        $maxCol = 3;
         foreach ($originalProducts as $originalProduct) {
             if ($startNewRow) {
                 $startNewRow = FALSE;
@@ -938,12 +938,22 @@ class productmanager extends object {
 
             //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
             $table->addCell($product, null, "top", "left", "view_original_product");
-            if ($count > 3) {
+
+            if ($count == $maxCol) {
+               
                 $table->endRow();
                 $startNewRow = TRUE;
                 $count = 1;
             }
             $count++;
+        }
+
+        $totalProducts = count($originalProducts);
+        $reminder = $totalProducts % $maxCol;
+       
+        if ($reminder != 0) {
+            
+            $table->endRow();
         }
         return $controlBand . $table->show();
     }
@@ -1117,9 +1127,9 @@ class productmanager extends object {
     function getMostRatedProducts() {
         $dbProductRating = $this->getObject("dbproductrating", "oer");
         $productIds = $dbProductRating->getMostRatedProducts();
-        $content='<div id="mostratedproducts">';
+        $content = '<div id="mostratedproducts">';
         foreach ($productIds as $productId) {
-            
+
             $product = $this->dbproducts->getProduct($productId['productid']);
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
@@ -1127,7 +1137,7 @@ class productmanager extends object {
             }
 
             $mode = "";
-            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' =>$productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
             $thumbnailLink->link = $thumbnail . '<br/>';
             $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
 
@@ -1142,9 +1152,8 @@ class productmanager extends object {
             $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
             $content.='<div id="mostratedproduct_thumbnail">0 adaptations</div>';
             $content.="</div>";
-           
         }
-         $content.="</div>";
+        $content.="</div>";
         return $content;
     }
 

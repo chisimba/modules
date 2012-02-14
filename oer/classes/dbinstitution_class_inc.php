@@ -72,7 +72,7 @@ class dbinstitution extends dbtable {
         $objIndexData = $this->getObject('indexdata', 'search');
         $saveDate = date('Y-m-d H:M:S');
         //module=oer&action=4&institutionId=gen11Srv48Nme53_3499_1312799815
-        $url = $this->uri(array('action' => '4', 'institutionId' => $id), 'oer');
+        $url = $this->uri(array('action' => 'viewinstitution', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
 

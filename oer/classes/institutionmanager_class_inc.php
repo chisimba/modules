@@ -395,12 +395,12 @@ class institutionmanager extends object {
 
 
         $leftContent.=$institution['description'];
-        
-        
-          $dbProducts = $this->getObject("dbproducts", "oer");
+
+
+        $dbProducts = $this->getObject("dbproducts", "oer");
         $adaptationCount = $dbProducts->getProductAdaptationCountByInstitution($institutionId);
         $limit = 10;
-        $fragment=0;
+        $fragment = 0;
         //$fragment = $limit / $adaptationCount;
 
         $adaptations = $dbProducts->getRandomAdaptationsByInstitution($fragment, $limit);
@@ -413,22 +413,26 @@ class institutionmanager extends object {
             if ($adaptation['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="45" height="49"  align="left"/>';
             }
-            
-            $title=$adaptation['title'];
-            $link=new link($this->uri(array("action"=>'viewadaptation',"id"=>$adaptation['id'])));
-            $link->link=$title;
-            
-            $language=$adaptation['language'];
+
+            $title = $adaptation['title'];
+            $link = new link($this->uri(array("action" => 'viewadaptation', "id" => $adaptation['id'])));
+            $link->link = $title;
+
+            $language = $adaptation['language'];
             $randomAdaptations.='<div id ="randomadaptation">';
-            $randomAdaptations.=$thumbnail.'<br/>';
-            $randomAdaptations.='<h4>'.$link->show().'</h4>';
-            $randomAdaptations.=$objLanguage->languageText('mod_oer_adaptedin', 'oer').':'.$language;
+            $randomAdaptations.=$thumbnail . '<br/>';
+            $randomAdaptations.='<h4>' . $link->show() . '</h4>';
+            $randomAdaptations.=$objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':' . $language;
             $randomAdaptations.='</div>';
-            
         }
 
         $randomAdaptations.='</div>';
-        $leftContent.=$randomAdaptations;
+        $filtermanager = $this->getObject("filtermanager", "oer");
+        $filter = $filtermanager->buildFilterProductsForm('filteradaptations', 'mod_oer_typeofadaptation');
+
+        $sectionsContent='<table><tr><td>' . $filter . '</td><td>' . $randomAdaptations . '</td></tr></table>';
+        
+        $leftContent.=$sectionsContent;
 
         $rightContent = "";
         //Add bookmark
@@ -456,7 +460,9 @@ class institutionmanager extends object {
 
         $table->startRow();
 
-        $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "60%", "top", "left");
+      
+        $table->addCell('<div id="viewproduct_leftcontent">'.$leftContent.'</div>', "60%", "top", "left");
+
 
         $table->addCell('<div id="viewproduct_rightcontent>' . $rightContent . '</div>', "40%", "top", "left");
 
@@ -465,7 +471,7 @@ class institutionmanager extends object {
         $homeLink = new link($this->uri(array("action" => "home")));
         $homeLink->link = $objLanguage->languageText('mod_oer_home', 'system');
 
-      
+
         return '<br/><div id="viewinstitution">' . $table->show() . '</div>';
     }
 
