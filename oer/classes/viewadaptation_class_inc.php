@@ -42,6 +42,7 @@ class viewadaptation extends object {
     function loadJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
+        $bubbleJs = '<script language="JavaScript" src="' . $this->getResourceUri('bubble-tooltip.js') . '" type="text/javascript"></script>';
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
@@ -51,6 +52,7 @@ class viewadaptation extends object {
         $this->appendArrayVar('headerParams', $ratingUIJs);
         $this->appendArrayVar('headerParams', $ratingUICSS);
         $this->appendArrayVar('headerParams', $crystalCSS);
+        $this->appendArrayVar('headerParams', $bubbleJs);
     }
 
     /**
@@ -264,10 +266,18 @@ class viewadaptation extends object {
         $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
         $printLink->link = $printImg;
         $printLink->cssClass = "downloaderedit";
+        $printLink->extra = 'onmouseover="showToolTip(event,\'Type in title of specific section of the course you are teaching. For example <i>Ethics</i> is a valid entry for a Psychology course. This is used for differentiating your course from others created with the same code. PLEASE NOTE that this is optional.\');return false" onmouseout="hideToolTip()"';
         //$printLink->target = "_blank";
         $printLk = "" . $printLink->show();
 
-        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div><br />';
+        $bubbleStr = '<div id="message"></div>
+                    <div id="bubble_tooltip">
+                        <div class="bubble_top"><span></span></div>
+                        <div class="bubble_middle"><span id="bubble_tooltip_content"></span></div>
+                        <div class="bubble_bottom"></div>
+                    </div>';
+
+        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div><br />'.$bubbleStr;
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
 
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
