@@ -23,6 +23,8 @@ class viewadaptation extends object {
         $this->loadJS();
         //Flag to check if user has perms to manage adaptations
         $this->hasPerms = $this->objAdaptationManager->userHasPermissions();
+        //Flag to check if user is logged in
+        $this->isLoggedIn = $this->objUser->isLoggedIn();
         $this->setupLanguageItems();
     }
 
@@ -41,18 +43,18 @@ class viewadaptation extends object {
      */
     function loadJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
-        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
-        $bubbleJs = '<script language="JavaScript" src="' . $this->getResourceUri('bubble-tooltip.js') . '" type="text/javascript"></script>';
+        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';        
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);
         $this->appendArrayVar('headerParams', $ratingUICSS);
         $this->appendArrayVar('headerParams', $crystalCSS);
-        $this->appendArrayVar('headerParams', $bubbleJs);
+        $this->appendArrayVar('headerParams', $dialogCSS);
     }
 
     /**
@@ -86,8 +88,61 @@ class viewadaptation extends object {
         return $div;
     }
 
+    function downloadJS($productId) {
+
+        $downloadJScript = '<script type="text/javascript">
+            $(document).ready(function() {
+    //select all the a tag with name equal to modal
+    $(\'a[name=modal]\').click(function(e) {
+        //Cancel the link behavior
+        e.preventDefault();
+        //Get the A tag
+        var id = $(this).attr(\'href\');
+
+        //Get the screen height and width
+        var maskHeight = $(document).height();
+        var maskWidth = $(window).width();
+
+        //Set height and width to mask to fill up the whole screen
+        $(\'#mask\').css({\'width\':maskWidth,\'height\':maskHeight});
+$(\'#mask\').html("");
+        //transition effect
+        $(\'#mask\').fadeIn(1000);
+        $(\'#mask\').fadeTo("slow",0.8);
+
+        //Get the window height and width
+        var winH = $(window).height();
+        var winW = $(window).width();
+
+        //Set the popup window to center
+        $(id).css(\'top\',  winH/2-$(id).height()/2);
+        $(id).css(\'left\', winW/2-$(id).width()/2);
+
+        //transition effect
+        $(id).fadeIn(2000);
+
+    });
+
+    //if close button is clicked
+    $(\'.window .close\').click(function (e) {
+        //Cancel the link behavior
+        e.preventDefault();
+        $(\'#mask, .window\').hide();
+    });
+
+    //if mask is clicked
+    $(\'#mask\').click(function () {
+        //$(this).hide();
+        //$(\'.window\').hide();
+    });
+});
+            </script>';
+        return $downloadJScript;
+    }
+
     function buildAdaptationView($productId) {
-        $product = $this->objDbProducts->getProduct($productId);
+            $this->appendArrayVar('headerParams', $this->downloadJS($productId));
+            $product = $this->objDbProducts->getProduct($productId);
 
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
@@ -178,8 +233,9 @@ class viewadaptation extends object {
             if (!empty($instData)) {
                 //Get institution type
                 $instType = $this->objDbInstitutionType->getType($instData['type']);
-                
-                $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');;
+
+                $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');
+                ;
                 $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
@@ -260,26 +316,71 @@ class viewadaptation extends object {
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
 
-        //Add mark as featured adaptation
+        //Add download link
         $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
-        //$printLink = new link($this->uri(array("action" => "printproduct", "id" => $productId, "ext" => ".odt", 'type' => 'adaptation')));
-        $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
-        $printLink->link = $printImg;
-        $printLink->cssClass = "downloaderedit";
-        $printLink->extra = 'onmouseover="showToolTip(event,\'Type in title of specific section of the course you are teaching. For example <i>Ethics</i> is a valid entry for a Psychology course. This is used for differentiating your course from others created with the same code. PLEASE NOTE that this is optional.\');return false" onmouseout="hideToolTip()"';
-        //$printLink->target = "_blank";
-        $printLk = "" . $printLink->show();
 
-        $bubbleStr = '<div id="message"></div>
-                    <div id="bubble_tooltip">
-                        <div class="bubble_top"><span></span></div>
-                        <div class="bubble_middle"><span id="bubble_tooltip_content"></span></div>
-                        <div class="bubble_bottom"></div>
-                    </div>';
+        // Download link
+        $prodTitle = "";
+        if (!$this->isLoggedIn) {
+            $printLink = new link("#dialog");
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            $printLink->target = "_blank";
+            $printLink->extra = 'name="modal"';
+            $printLk = "" . $printLink->show();
 
-        $prodTitle = '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div><br />'.$bubbleStr;
+            // Login link
+            $objLoginLk = new link($this->uri(array("action" => "login"), "security"));
+            $objLoginLk->cssId = "loginlink";
+            $objLoginLk->link = $this->objLanguage->languageText('mod_oer_clicktologin', 'oer');
+
+            // Register link
+            $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
+            $objRegisterLk->cssId = "registerlink";
+            $objRegisterLk->link = $this->objLanguage->languageText('mod_oer_clickhere', 'oer');
+
+            //Dialogue content
+            $toolTipStr = $this->objLanguage->languageText('mod_oer_downloadlnone', 'oer') . ".<br /><br />";
+            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlntwo', 'oer') . ".<br /><br />";
+            $toolTipStr .= $objRegisterLk->show() . " " . $this->objLanguage->languageText('mod_oer_downloadlnthree', 'oer')
+                    . ". " . $this->objLanguage->languageText('mod_oer_readmore', 'oer') . " " . $this->objLanguage->languageText('mod_oer_downloadlnfour', 'oer') . ".<br /><br />";
+            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlnfive', 'oer') . " " . $objLoginLk->show() . ". "
+                    . $this->objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $this->objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
+            $buttonTitle = $this->objLanguage->languageText('word_next');
+            //$buttonNxt = new button('submit', $buttonTitle);
+            $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
+            $objNextLk->cssId = "nextbtnspan";
+            $objNextLk->link = $this->objLanguage->languageText('word_next');
+
+            $toolTipStr .= " " . $objNextLk->show(); //"<a href=\'index.php?module=oer&action=downloaderedit&productid=".$productId."&mode=add&producttype=adaptation\'>Test</a>";
+            //$toolTipStr = "<div id=downloadcontent>".$toolTipStr."</div>";
+            $bubbleStr = '<!-- #dialog is the id of a DIV defined in the code below -->
+<!--<a href="#dialog" name="modal">Download Adaptation Window</a>-->
+
+<div id="boxes">
+
+    <!-- #customize your modal window here -->
+    <div id="dialog" class="window">
+    <!-- close button is defined as close class -->
+        <b><a href="#" id="nextbtnspan" class="close">Close Window</a></b><p>' . $toolTipStr . '</p>
+
+    </div>
+
+
+    <!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->
+    <div id="mask"></div>
+</div>';
+
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>' . $bubbleStr;
+        } else {
+            $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            //$printLink->target = "_blank";
+            $printLk = "" . $printLink->show();
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>';
+        }
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
-
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
 
@@ -298,7 +399,7 @@ class viewadaptation extends object {
             $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $leftContent.= $thumbnail;
-        
+
         //Get institution details
         if (!empty($product["institutionid"])) {
             //Get adaptation manager
@@ -314,21 +415,19 @@ class viewadaptation extends object {
             $kwords = $product['thumbnail'];
             //get group
             $group = "";
-            
+
             //Get inst data
             $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
                 //Get institution type
                 $instType = $this->objDbInstitutionType->getType($instData['type']);
-                
+
                 $instName = $this->objLanguage->languageText('mod_oer_fullinfo', 'oer');
                 $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
                 $instNameLk = "" . $instNameLink->show();
-                
-                /* $rightContent.='<div id="viewadaptation_author_label"></div>
-                  <div id="viewadaptation_author_text"></div><br/><br/>'; */
+
                 if (!empty($instData["name"])) {
                     $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </b>' . $instData['name'] . '<br /><br />';
                 }
@@ -352,16 +451,14 @@ class viewadaptation extends object {
                 }
             }
         }
-        
-        $strAd = "<p>".$leftContent.'<b><br /> ' . $this->objLanguage->languageText('mod_oer_abstract', 'oer') . '</b><br />'.
-                $this->objWashout->parseText($product['abstract'])."<br />".'<b> ' . $this->objLanguage->languageText('mod_oer_description', 'oer') . '</b><br />'.
-                $this->objWashout->parseText($product['description'])."<br />".$rightContent."</p>";
+
+        $strAd = "<p>" . $leftContent . '<b><br /> ' . $this->objLanguage->languageText('mod_oer_abstract', 'oer') . '</b><br />' .
+                $this->objWashout->parseText($product['abstract']) . "<br />" . '<b> ' . $this->objLanguage->languageText('mod_oer_description', 'oer') . '</b><br />' .
+                $this->objWashout->parseText($product['description']) . "<br />" . $rightContent . "</p>";
 
         $prodTitle = '<h1>' . $product['title'] . '</h1>';
 
         return $prodTitle . $strAd;
     }
-
 }
-
 ?>

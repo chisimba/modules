@@ -1101,7 +1101,21 @@ class adaptationmanager extends object {
 
         return $content;
     }
-
+    /**
+     * Check if user is logged in
+     * @return boolean
+     */
+    function userIsLoggedIn() {
+        $hasPerms = false;
+        if ($this->objUser->isLoggedIn()) {            
+                $hasPerms = true;
+        }
+        return $hasPerms;
+    }
+    /**
+     * Check if user is authorised
+     * @return boolean
+     */
     function userHasPermissions() {
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
@@ -1119,7 +1133,6 @@ class adaptationmanager extends object {
         }
         return $hasPerms;
     }
-
 }
 
 ?>
