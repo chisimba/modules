@@ -43,13 +43,21 @@ class viewadaptation extends object {
      */
     function loadJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
-        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';        
+        $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
+        $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css') . '"/>';
+        $this->appendArrayVar('headerParams', $jqUICSS);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);
         $this->appendArrayVar('headerParams', $ratingUICSS);
@@ -141,8 +149,8 @@ $(\'#mask\').html("");
     }
 
     function buildAdaptationView($productId) {
-            $this->appendArrayVar('headerParams', $this->downloadJS($productId));
-            $product = $this->objDbProducts->getProduct($productId);
+        $this->appendArrayVar('headerParams', $this->downloadJS($productId));
+        $product = $this->objDbProducts->getProduct($productId);
 
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
@@ -351,6 +359,13 @@ $(\'#mask\').html("");
             $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
             $objNextLk->cssId = "nextbtnspan";
             $objNextLk->link = $this->objLanguage->languageText('word_next');
+            
+            
+            
+        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $uri = $this->uri(array("action" => "home"));
+        $button->setOnClick('javascript: showDownload();');
+            
 
             $toolTipStr .= " " . $objNextLk->show(); //"<a href=\'index.php?module=oer&action=downloaderedit&productid=".$productId."&mode=add&producttype=adaptation\'>Test</a>";
             //$toolTipStr = "<div id=downloadcontent>".$toolTipStr."</div>";
@@ -371,7 +386,7 @@ $(\'#mask\').html("");
     <div id="mask"></div>
 </div>';
 
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>' . $bubbleStr;
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $button->show() . '</div><div id="downloader">' . $toolTipStr.'</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
@@ -460,5 +475,6 @@ $(\'#mask\').html("");
 
         return $prodTitle . $strAd;
     }
+
 }
 ?>
