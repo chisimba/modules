@@ -361,7 +361,9 @@ $(\'#mask\').html("");
 
             $toolTipStr .= " " . $objNextLk->show();
 
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " ." ".$printLk. '</div><div id="downloader">' . $toolTipStr.'</div>';
+            $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$this->objLanguage->languageText('mod_oer_adaptation','oer').")";
+
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " ." ".$printLk. '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;

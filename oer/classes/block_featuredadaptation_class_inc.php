@@ -14,7 +14,7 @@ class block_featuredadaptation extends object {
 
     function show() {
         $objProductManager = $this->getObject("productmanager", "oer");
-        return $objProductManager->getFeaturedProduct("adaptation");
+        return $objProductManager->getFeaturedAdaptation("adaptation");
     }
 }
 ?>
