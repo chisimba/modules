@@ -332,9 +332,8 @@ $(\'#mask\').html("");
         if (!$this->isLoggedIn) {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
-            $printLink->cssClass = "downloaderedit";
-            $printLink->target = "_blank";
-            $printLink->extra = 'name="modal"';
+            $printLink->cssClass = "downloaderedit";            
+            $printLink->extra = 'name="modal" onclick="showDownload();"';
             $printLk = "" . $printLink->show();
 
             // Login link
@@ -359,34 +358,10 @@ $(\'#mask\').html("");
             $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
             $objNextLk->cssId = "nextbtnspan";
             $objNextLk->link = $this->objLanguage->languageText('word_next');
-            
-            
-            
-        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-        $uri = $this->uri(array("action" => "home"));
-        $button->setOnClick('javascript: showDownload();');
-            
 
-            $toolTipStr .= " " . $objNextLk->show(); //"<a href=\'index.php?module=oer&action=downloaderedit&productid=".$productId."&mode=add&producttype=adaptation\'>Test</a>";
-            //$toolTipStr = "<div id=downloadcontent>".$toolTipStr."</div>";
-            $bubbleStr = '<!-- #dialog is the id of a DIV defined in the code below -->
-<!--<a href="#dialog" name="modal">Download Adaptation Window</a>-->
+            $toolTipStr .= " " . $objNextLk->show();
 
-<div id="boxes">
-
-    <!-- #customize your modal window here -->
-    <div id="dialog" class="window">
-    <!-- close button is defined as close class -->
-        <b><a href="#" id="nextbtnspan" class="close">Close Window</a></b><p>' . $toolTipStr . '</p>
-
-    </div>
-
-
-    <!-- Do not remove div#mask, because you\'ll need it to fill the whole screen -->
-    <div id="mask"></div>
-</div>';
-
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $button->show() . '</div><div id="downloader">' . $toolTipStr.'</div>';
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " ." ".$printLk. '</div><div id="downloader">' . $toolTipStr.'</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
