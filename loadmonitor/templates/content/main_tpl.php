@@ -18,7 +18,7 @@ if ($count == 1) {
 echo '<br />';
 echo '<br />';
 echo '<h2>User activity statistics</h2>';
-for ($offset = 60; $offset >= 5; $offset -= 5) {
+for ($offset = 5; $offset >= 5; $offset -= 5) {
     $start = $offset;
     $finish = $offset - 5;
     $count = $objSiteLoad->getCountActive($offset, 5);
