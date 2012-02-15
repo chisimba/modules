@@ -394,11 +394,11 @@ class downloaderedit extends object {
             $form->addToForm($table->show());
 
             //Submit button
-            $button = new button('submit', $this->objLanguage->languageText('mod_oer_next', 'oer'));
+            $button = new button('submit', $this->objLanguage->languageText('mod_oer_download', 'oer'));
             $button->setToSubmit();
             //$form->addToForm($button->show());
             //Cancel
-            $buttonCl = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+            $buttonCl = new button('cancel', $this->objLanguage->languageText('word_back', 'system'));
             $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
             $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
             $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
