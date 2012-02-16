@@ -113,9 +113,9 @@ class dbproducts extends dbtable {
      * @return NULL if product not found, else a count of adaptations
      */
     function getProductAdaptationCount($parentId) {
-        $sql = "select count(*) as count from $this->productsTableName where parent_id = '$parentId'";
+        $sql = "select count(*) as adaptationcount from $this->productsTableName where parent_id = '$parentId'";
         $data = $this->getArray($sql);        
-        return $data[0];
+        return $data[0]['adaptationcount'];
     }
     /**
      * returns count of adaptations for every original product

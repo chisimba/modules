@@ -202,16 +202,22 @@ class productmanager extends object {
      * adds essential js and css
      */
     function loadCSSandJS() {
-        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '">';
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
         $this->appendArrayVar('headerParams', $uiAllCSS);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
+        $loggedInVar = '<script language="JavaScript" type="text/javascript">
+            
+         var loggedIn=' . $this->objUser->isLoggedIn() . ';
+        </script>';
 
+
+        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.tabs.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('tabber.js', 'oer'));
-
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('expand.js', 'oer'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('originalproduct.js', 'oer'));
     }
 
@@ -874,6 +880,8 @@ class productmanager extends object {
         $count = 1;
         $table = $this->getObject('htmltable', 'htmlelements');
         $table->attributes = "style='table-layout:fixed;'";
+        $table->cellspacing = 10;
+        $table->cellpadding = 10;
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -884,8 +892,9 @@ class productmanager extends object {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
-            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'], 'module' => 'oer', "id" => $originalProduct['id'], "mode" => $mode)));
 
+
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'], 'module' => 'oer', "mode" => $mode, "id" => $originalProduct['id'])));
             $titleLink->cssClass = 'original_product_listing_title';
             $titleLink->link = $originalProduct['title'];
             $product = $titleLink->show();
@@ -895,52 +904,39 @@ class productmanager extends object {
                 if ($originalProduct['thumbnail'] == '') {
                     $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
                 }
+                $makeAdaptation = "";
+                if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                    $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+                    $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                    $adaptLink->link = $adaptImg;
+                    $makeAdaptation = $adaptLink->show();
+                }
 
                 $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $originalProduct['id'], 'module' => 'oer', "id" => $originalProduct['id'], "mode" => $mode)));
-                $thumbnailLink->link = $thumbnail . '<br/>';
+                $thumbnailLink->link = $thumbnail . $makeAdaptation . '<br/>';
                 $thumbnailLink->cssClass = 'original_product_listing_thumbail';
-                $product = $thumbnailLink->show() . '<br/>' . $titleLink->show();
-                ;
+
+
+                $product = $thumbnailLink->show() . $titleLink->show();
             }
 
-            if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $editImg = '<img src="skins/oer/images/icons/edit.png">';
-                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+            $languageField = '<h7 class="expand">' .
+                    $this->objLanguage->languageText('mod_oer_languages', 'oer')
+                    . '</h7>
+                        <div class="collapse">' . $this->objLanguage->languageText('mod_oer_english', 'oer') . '</div>';
+            $product.= $languageField;
 
-                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
-                $adaptLink->link = $adaptImg;
-                $product.="<br />" . $adaptLink->show();
-
-                $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $originalProduct['id'], "mode" => "edit")));
-                $editLink->link = $editImg;
-                $product.="&nbsp;" . $editLink->show();
-
-                $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $originalProduct['id'])));
-                $deleteLink->link = $deleteImg;
-                $deleteLink->cssClass = "deleteoriginalproduct";
-                $product.="&nbsp;" . $deleteLink->show();
-            }
-
-            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
-
-            $languageField = new dropdown('language');
-            $languageField->cssClass = 'original_product_languageField';
-            $languageField->setSelected($product['language']);
-            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $product.='<br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
-
-            $adaptionsCount = 0;
+            $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "viewproductadaptions", "id" => $originalProduct['id'])));
             $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
-            $product.="<br/>" . $adaptationsLink->show();
+            $product.=$adaptationsLink->show();
 
             //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
             $table->addCell($product, null, "top", "left", "view_original_product");
 
             if ($count == $maxCol) {
-               
+
                 $table->endRow();
                 $startNewRow = TRUE;
                 $count = 1;
@@ -950,9 +946,9 @@ class productmanager extends object {
 
         $totalProducts = count($originalProducts);
         $reminder = $totalProducts % $maxCol;
-       
+
         if ($reminder != 0) {
-            
+
             $table->endRow();
         }
         return $controlBand . $table->show();
@@ -1115,10 +1111,17 @@ class productmanager extends object {
         $content = '<div id="featuredproduct">';
         $content.='<div id="featuredproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
         $content.='<div id="featuredproduct_title">' . $titleLink->show() . '</div>';
-        $content.='<div id="featuredproduct_thumbnail">0 adaptations</div>';
+
+        $adaptionsCount = $this->dbproducts->getProductAdaptationCount($productId);
+        $adaptationsLink = new link($this->uri(array("action" => "viewproductadaptions", "id" => $productId)));
+        $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+        $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+
+        $content.='<div id="featuredproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
         $content.="</div>";
         return $content;
     }
+
     /**
      * get the featured adaptation
      * @param string $prodtype whether original or adaptation product
@@ -1127,7 +1130,7 @@ class productmanager extends object {
     function getFeaturedAdaptation($prodtype) {
         //Load DB objects
         $dbFeaturedProduct = $this->getObject("dbfeaturedproduct", "oer");
-        $dbInstitution = $this->getObject("dbinstitution", "oer");        
+        $dbInstitution = $this->getObject("dbinstitution", "oer");
         //Fetch featured product
         $productId = $dbFeaturedProduct->getFeaturedProduct($prodtype);
         //Fetch product data
@@ -1156,7 +1159,7 @@ class productmanager extends object {
         if ($instData['thumbnail'] == '') {
             $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="68" height="88" align="left"/>';
         }
-        
+
         $instThumbnailLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
         $instThumbnailLink->link = $instthumbnail . '<br/>';
         $instThumbnailLink->cssClass = 'featuredproduct_thumbnail';
@@ -1166,19 +1169,20 @@ class productmanager extends object {
         $instTitleLink->link = $instData['name'];
         $instTitle = $instTitleLink->show();
 
-        $seeAllAdaptations = $this->objLanguage->languageText('mod_oer_seeall', 'oer')." ".strtolower ($this->objLanguage->languageText('mod_oer_adaptationscount', 'oer'))." (".$adaptationCount['count'].")";
+        $seeAllAdaptations = $this->objLanguage->languageText('mod_oer_seeall', 'oer') . " " . strtolower($this->objLanguage->languageText('mod_oer_adaptationscount', 'oer')) . " (" . $adaptationCount['count'] . ")";
         $adaptedBy = $this->objLanguage->languageText('mod_oer_adaptedby', 'oer');
 
         $content = '<div id="featuredadaptation">';
         $content.='<div id="featuredadaptation_thumbnail">' . $thumbnailLink->show() . '</div>';
         $content.='<div id="featuredadaptation_title">' . $titleLk . '</div><br />';
-        $content.='<div id="featuredadaptation_seeall">'.$seeAllAdaptations.'</div><br /><br />';
-        $content.='<div id="featuredadaptation_title">'.$adaptedBy.'</div><br />';
+        $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptations . '</div><br /><br />';
+        $content.='<div id="featuredadaptation_title">' . $adaptedBy . '</div><br />';
         $content.='<div id="featuredadaptation_thumbnail">' . $instThumbnailLink->show() . '</div>';
         $content.='<div id="featuredadaptation_title">' . $instTitle . '</div><br />';
         $content.="</div>";
         return $content;
     }
+
     /**
      * this gets the most rated  product
      * @return string 
