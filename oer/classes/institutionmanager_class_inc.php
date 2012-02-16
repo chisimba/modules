@@ -421,7 +421,7 @@ class institutionmanager extends object {
             $language = $adaptation['language'];
             $randomAdaptations.='<div id ="randomadaptation">';
             $randomAdaptations.=$thumbnail . '<br/>';
-            $randomAdaptations.='<h4>' . $link->show() . '</h4>';
+            $randomAdaptations.='<h4 class="view_institution">' . $link->show() . '</h4>';
             $randomAdaptations.=$objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':' . $language;
             $randomAdaptations.='</div>';
         }

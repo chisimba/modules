@@ -9,6 +9,11 @@ $objFix->fixThree();
             "display" : "block",
             "module" : "language",
             "block" : "language"
+        },
+        {
+        "display" : "block",
+        "module" : "oer",
+        "block" : "filteroriginalproduct"
         }
        
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>

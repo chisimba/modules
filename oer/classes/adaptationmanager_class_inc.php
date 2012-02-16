@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains util methods for managing adaptations
  *
@@ -28,7 +29,7 @@ class adaptationmanager extends object {
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
-        $this->loadClass('label', 'htmlelements');        
+        $this->loadClass('label', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
@@ -85,9 +86,15 @@ class adaptationmanager extends object {
      * adds essential js
      */
     function addJS() {
+        $loggedInVar = '<script language="JavaScript" type="text/javascript">
+            
+         var loggedIn=' . $this->objUser->isLoggedIn() . ';
+        </script>';
+        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('adaptation.js', 'oer'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('makeadaptation.js', 'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('expand.js', 'oer'));
     }
 
     /**
@@ -117,7 +124,7 @@ class adaptationmanager extends object {
      * @param $mode Whether its a new adaptation or editing an existing one
      * return string
      */
-    public function makeNewAdaptation($mode, $id=Null, $productid=Null) {
+    public function makeNewAdaptation($mode, $id = Null, $productid = Null) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
         if ($productid == Null || empty($productid)) {
             return $this->nextAction('adaptationlist');
@@ -884,6 +891,8 @@ class adaptationmanager extends object {
         $startNewRow = TRUE;
         $count = 2;
         $table = $this->getObject('htmltable', 'htmlelements');
+        $table->cellspacing = 10;
+        $table->cellpadding = 10;
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -898,35 +907,40 @@ class adaptationmanager extends object {
             $parentData = $this->dbproducts->getProduct($originalProduct['parent_id']);
             $institutionData = $this->dbInstitution->getInstitutionById($originalProduct['institutionid']);
 
-            //Get institution type                
-                $instName = $institutionData['name'];
-                $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $originalProduct['institutionid'])));
-                $instNameLink->link = $instName;
-                $instNameLink->cssClass = "viewinstitutionlink";
-                $instNameLk = $instNameLink->show();
-                
+            //Get institution type            
+            $thumbnail = '<img src="usrfiles/' . $institutionData['thumbnail'] . '"  width="45" height="49"  align="left"/>';
+            if ($institutionData['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
+            }
+            $instName = $institutionData['name'];
+            $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $originalProduct['institutionid'])));
+            $instNameLink->link = $instName;
+            $instNameLink->cssClass = "viewinstitutionlink";
+            $instNameLk =$thumbnail .$instNameLink->show();
+
             $institutionTypeName = $this->dbInstitutionType->getInstitutionTypeName($institutionData['type']);
             $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($originalProduct['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
+            $makeAdaptation = "";
+            if ($objGroupOps->isGroupMember($groupId, $userId)) {
+                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                $adaptLink->link = $adaptImg;
+                $makeAdaptation = $adaptLink->show();
+            }
+
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . '<br/>';
+            $link->link = $thumbnail . $makeAdaptation;
             $product = $link->show();
 
             $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
             $link->cssClass = 'original_product_listing_title';
             $product.= $link->show();
-            $product.= "<br /><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . "</div>";
-            $product.= "<br /><div id='institutionva'>" . $instNameLk . "</div>";
-            $product.= "<br /><div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
-            //Display language if english, todo, allow other language items
-            if (!empty($originalProduct['language'])) {
-                if ($originalProduct['language'] == 'en') {
-                    $language = "English";
-                    $product.= "<br /><div id='institutionlang'>" . $language . "</div>";
-                }
-            }
+            $product.= "<br/><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . "</div>";
+            $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
+            $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
 
 
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
@@ -948,21 +962,13 @@ class adaptationmanager extends object {
                 $product.="&nbsp;" . $deleteLink->show();
             }
 
-            $commentsThumbnail = '<img src="skins/oer/images/comments.png"/>';
-
-            $languageField = new dropdown('language');
-            $languageField->cssClass = 'original_product_languageField';
-            $languageField->setSelected($product['language']);
-            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $product.='<br/><br/>' . $commentsThumbnail . '&nbsp;' . $languageField->show();
-
-            $adaptionsCount = 0;
+            $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
             $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
 
             $table->addCell($product, null, null, null, "view_original_product");
-            if ($count > 3) {
+            if ($count > 2) {
                 $table->endRow();
                 $startNewRow = TRUE;
                 $count = 1;
@@ -1003,6 +1009,8 @@ class adaptationmanager extends object {
         $startNewRow = TRUE;
         $count = 2;
         $table = $this->getObject('htmltable', 'htmlelements');
+        $table->cellspacing = 10;
+        $table->cellpadding = 10;
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -1101,17 +1109,19 @@ class adaptationmanager extends object {
 
         return $content;
     }
+
     /**
      * Check if user is logged in
      * @return boolean
      */
     function userIsLoggedIn() {
         $hasPerms = false;
-        if ($this->objUser->isLoggedIn()) {            
-                $hasPerms = true;
+        if ($this->objUser->isLoggedIn()) {
+            $hasPerms = true;
         }
         return $hasPerms;
     }
+
     /**
      * Check if user is authorised
      * @return boolean
@@ -1133,6 +1143,7 @@ class adaptationmanager extends object {
         }
         return $hasPerms;
     }
+
 }
 
 ?>
