@@ -22,8 +22,8 @@ class cpanel extends object {
 
         $cPanelTable->startRow();
 
-        $cplink = new link($this->uri(array(),"modulecatalogue"));
-        $cplink->link = '<img  src="skins/' . $skinName . '/images/controlpanel.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_modulemanager', 'oer');
+        $cplink = new link($this->uri(array(),"toolbar"));
+        $cplink->link = '<img  src="skins/' . $skinName . '/images/controlpanel.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_siteadministration', 'oer');
         $cPanelTable->addCell($cplink->show(), null, "top");
 
         
