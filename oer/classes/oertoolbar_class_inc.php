@@ -30,7 +30,7 @@ class oertoolbar extends object {
         $menuOptions = array(
             array('action' => 'home', 'text' => $this->objLanguage->languageText('mod_oer_products', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
             array('action' => 'adaptationlist', 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'contextadmin', 'text' => $this->objLanguage->languageText('mod_oer_groups', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
+            array('action' => 'home', 'text' => $this->objLanguage->languageText('mod_oer_groups', 'oer'), 'actioncheck' => array(), 'module' => 'contextadmin', 'status' => 'both'),
             array('action' => 'viewreports', 'text' => $this->objLanguage->languageText('mod_oer_reporting', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
             array('action' => 'about', 'text' => $this->objLanguage->languageText('mod_oer_about', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
             array('action' => 'contacts', 'text' => $this->objLanguage->languageText('mod_oer_contacts', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
