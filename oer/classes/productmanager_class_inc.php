@@ -1140,39 +1140,43 @@ class productmanager extends object {
         //Get institution data
         $instData = $dbInstitution->getInstitutionById($product['institutionid']);
 
-        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="68" height="88" align="left"/>';
+        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="68" height="88" align="left"/>';
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
         }
 
         $mode = "";
         $thumbnailLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, "id" => $productId)));
         $thumbnailLink->link = $thumbnail . '<br/>';
-        $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+        //$thumbnailLink->cssClass = 'featuredproduct_thumbnail';
 
         $titleLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, "id" => $productId)));
-        $titleLink->cssClass = 'original_product_listing_title';
+        //$titleLink->cssClass = 'featuredproduct_title';
         $titleLink->link = $product['title'];
         $titleLk = $titleLink->show();
 
-        $instthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="68" height="88" align="left"/>';
+        $originalPLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['parent_id'], "id" => $product['parent_id'])));
+        //$titleLink->cssClass = 'featuredproduct_title';
+        $originalPLink->link = $this->objLanguage->languageText('mod_oer_seeoriginalunesco', 'oer');
+        $originalPLink = $originalPLink->show();
+
+        $instthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
         if ($instData['thumbnail'] == '') {
-            $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="68" height="88" align="left"/>';
+            $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
         }
 
         $instThumbnailLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
         $instThumbnailLink->link = $instthumbnail . '<br/>';
-        $instThumbnailLink->cssClass = 'featuredproduct_thumbnail';
+        //$instThumbnailLink->cssClass = 'featuredproduct_thumbnail';
 
-        $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
-        $instTitleLink->cssClass = 'original_product_listing_title';
+        $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));        
         $instTitleLink->link = $instData['name'];
         $instTitle = $instTitleLink->show();
 
         $seeAllAdaptations = $this->objLanguage->languageText('mod_oer_seeall', 'oer') . " " . strtolower($this->objLanguage->languageText('mod_oer_adaptationscount', 'oer'));
 
         $seeAllAdaptationsLink = new link($this->uri(array("action" => "adaptationlist", 'productid' => $productId)));
-        $seeAllAdaptationsLink->cssClass = 'original_product_listing_title';
+        //$seeAllAdaptationsLink->cssClass = 'featuredproduct_thumbnail';
         $seeAllAdaptationsLink->link = $seeAllAdaptations;
         $seeAllAdaptationsLink = $seeAllAdaptationsLink->show();
 
@@ -1181,11 +1185,12 @@ class productmanager extends object {
 
         $content = '<div id="featuredadaptation">';
         $content.='<div id="featuredadaptation_thumbnail">' . $thumbnailLink->show() . '</div>';
-        $content.='<div id="featuredadaptation_title">' . $titleLk . '</div><br />';
-        $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptationsLink . " (" . $adaptationCount['count'] . ")" . '</div><br /><br />';
-        $content.='<div id="featuredadaptation_title">' . $adaptedBy . '</div><br />';
-        $content.='<div id="featuredadaptation_thumbnail">' . $instThumbnailLink->show() . '</div>';
-        $content.='<div id="featuredadaptation_title">' . $instTitle . '</div><br />';
+        $content.='<div id="featuredadaptation_prodtitle">' . $titleLk. '</div><br />';
+        $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptationsLink . " (" . $adaptationCount['count'] . ")" . '</div>';
+        $content.='<div id="featuredadaptation_seeall">' . $originalPLink . '</div><br /><br />';
+        $content.='<div id="featuredadaptation_text">' . $adaptedBy . '</div><br />';
+        $content.='<div id="featuredadaptation_thumbnail">' . $instThumbnailLink->show();
+        $content.='<div id="featuredadaptation_insttitle">' . $instTitle . '</div></div><br />';
         $content.="</div>";
         return $content;
     }

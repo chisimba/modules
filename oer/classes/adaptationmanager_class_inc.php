@@ -938,7 +938,7 @@ class adaptationmanager extends object {
             }
 
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail . $makeAdaptation;
+            $link->link = $thumbnail;// . $makeAdaptation;
             $product = $link->show();
 
             $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
