@@ -45,8 +45,26 @@ class dbtextblock extends dbTable
     */
     public function getBlockById($id)
     {   
-		$result = $this->getAll(" WHERE id = '$id'");
-		return $result;
+        $result = $this->getAll(" WHERE id = '$id'");
+        return $result;
+    }
+    
+    /** 
+     *
+     * Get an array of what blocks of a particular type
+     * are used.
+     * 
+     * @param string $blockType  Type of block (text, widetext)
+     * @return string array of used blocks
+     * @access public
+     * 
+     */
+    public function getArUsedBlockss($blockType)
+    {
+        $sql = "SELECT blockid from tbl_textblock WHERE blockid LIKE '" 
+        . $blockType . "%'";
+        $ar = $this->getArray($sql);
+        return $ar;
     }
 
     /**
@@ -60,10 +78,10 @@ class dbtextblock extends dbTable
             $blockid = $this->getParam('blockid', NULL);
             $title = $this->getParam('title', NULL);
             $blocktext = $this->getParam('blocktext', NULL);
-			$objUser = $this->getObject("user", "security");
-			$showTitle = $this->getParam('show_title', '1');
+            $objUser = $this->getObject("user", "security");
+            $showTitle = $this->getParam('show_title', '1');
 
-			$showTitle = ($showTitle == 'on')? '1' : '0';
+            $showTitle = ($showTitle == 'on')? '1' : '0';
 
             $cssId = $this->getParam('css_id', NULL);
             $cssClass = $this->getParam('css_class', NULL);

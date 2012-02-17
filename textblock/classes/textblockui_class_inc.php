@@ -178,6 +178,17 @@ class textblockui extends object
         return $this->showAllBlocks("text");
     }
     
+    /**
+     *
+     * Put the content in a div with the ID for the 
+     * Javascript to have access.
+     * 
+     * @param string $content The content
+     * @param string $id The record id
+     * @return string The div with the id and content
+     * @access public
+     * 
+     */
     public function putInDiv($content, $id)
     {
         return "<div id='BLCONT_$id' class='BLOCK_CONTENT' style='display: none'>$content</div>";
@@ -206,7 +217,7 @@ class textblockui extends object
         }
         // Setup and show heading.
         $header = new htmlHeading();
-        $header->str = $h . $this->insertAddIcon(TRUE);
+        $header->str = $h . $this->insertAddIcon(TRUE, $type);
         $header->type = 2;
         return $header->show();
     }
@@ -222,11 +233,13 @@ class textblockui extends object
      * @access private
      *  
      */
-    private function insertAddIcon($visible=TRUE)
+    private function insertAddIcon($visible=TRUE, $blockType="text")
     {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $link =  $this->uri(
-           array("action" => "add"),
+           array("action" => "ajaxedit",
+               "mode" => "add",
+               "blocktype" => $blockType),
            'textblock');
         $addlink = new link($link);
         $objIcon->setIcon('add');
@@ -361,11 +374,32 @@ class textblockui extends object
         }
     }
     
+    /**
+     *
+     * Render the edit form
+     * 
+     * @return string The rendered form
+     * @access public
+     *  
+     */
     public function showEditForm()
     {
+        // Serialize language items to Javascript.
+        $arrayVars['titlereq'] = "mod_textblock_titlereq";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'textblock');
+        
+        // Set the mode.
         $mode = $this->mode;
         $id = $this->getParam('id', NULL);
-        
+        // Load the jquery validate plugin.
+        $this->appendArrayVar('headerParams',
+        $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
+          'jquery'));
+        // Load the edit helper Javascript.
+        $this->appendArrayVar('headerParams',
+          $this->getJavaScriptFile('editblock.js',
+          'textblock'));
         $this->loadClass('form','htmlelements');
         $this->loadClass('textinput','htmlelements');
         $this->loadClass('textarea','htmlelements');
@@ -388,17 +422,32 @@ class textblockui extends object
         $objElement->fldType="hidden";
         $objForm->addToForm($objElement->show());
         
-        // Create an element for the input of blockid.
-        $objElement = new textinput ("blockid");
-        if (isset($this->blockid)) {
-            $objElement->setValue($this->blockid);
-        }
+        // Dropdown for the blockid.
         $wsiLabel = new label(
           $this->objLanguage->languageText(
             'mod_textblock_field_blockid','textblock'), 
             "input_blockid");
+        $blockType = $this->getParam('blocktype', 'text');
+        $blockAr = $this->getAvailableBlocks($blockType);
+        $this->loadClass('dropdown','htmlelements');
+        $dropdown = new dropdown('blockid');
+        // Get the current block back into the array.
+        if ($mode == 'edit') {
+            if (isset($this->blockid)){ 
+                array_unshift($blockAr, $this->blockid);
+            }
+        }
+        // Make the dropdown.
+        foreach ($blockAr as $block) {
+            $dropdown->addOption($block, $block);
+        }
+        if ($mode == 'edit') {
+            if (isset($this->blockid)){ 
+                $dropdown->setSelected($this->blockid);
+            }
+        }
         $objForm->addToForm($wsiLabel->show() 
-          . "<br />" . $objElement->show() 
+          . "<br />" . $dropdown->show() 
           . "<br /><br />");
         
         // Create an element for the input of title.
@@ -429,19 +478,18 @@ class textblockui extends object
         $objForm->addToForm($wsiLabel->show() 
           . "&nbsp;&nbsp;&nbsp;" 
           . $objCheck->show()
-          . $wsiQuestionLabel->show()
           . "<br />" . $objElement->show() 
           . "<br /><br />");
         
-        //Create input for an alternative cssClass to use
+        // Create input for an alternative cssClass to use.
         $objElement = new textinput ("css_class");
-        //Set the value of the element to $title
+        // Set the value of the element to the chosen cssClass.
         if (isset($this->cssClass)) {
             $objElement->setValue($this->cssClass);
         }
-        $objElement->extra = " onfocus=\"if (this.value == 'featurebox')"
+        /*$objElement->extra = " onfocus=\"if (this.value == 'featurebox')"
           . "{this.value='';}\" onblur=\"if (this.value == '') "
-          . "{this.value='featurebox'; } \" ";
+          . "{this.value='featurebox'; } \" ";*/
         $wsiLabel = new label(
           $this->objLanguage->languageText(
           'mod_textblock_css_class','textblock'),
@@ -517,5 +565,30 @@ class textblockui extends object
         return $objWashout->parseText($content);
     }
     
+    /**
+     *
+     * Get an array of unused blocks
+     * 
+     * @param type $blockType
+     * @return type 
+     */
+    public function getAvailableBlocks($blockType){
+        $numOfBlocks = 60;
+        // Build an array of potentially available blocks.
+        $counter = 1;
+        while ($counter <= 60) {
+            $rootBlocks[] = $blockType . $counter;
+            $counter++;
+        }
+        // Get an array of the used blocks.
+        $objDb = $this->getObject("dbtextblock");
+        $usedBlocks = $objDb->getArUsedBlockss($blockType);
+        // Need to feed the diff an empty array if none are used.
+        if (empty ($usedBlocks)) {
+            $usedBlocks[0] = array();
+        }
+        $avail = array_diff ($rootBlocks, $usedBlocks[0]);
+        return $avail;
+    }
 }
 ?>
