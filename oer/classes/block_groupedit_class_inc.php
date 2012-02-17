@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Block for editing or adding groups
@@ -29,12 +30,12 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -52,8 +53,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_groupedit extends object
-{
+class block_groupedit extends object {
+
     /**
      * The title of the block
      *
@@ -69,10 +70,10 @@ class block_groupedit extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
-        $this->title = NULL;//"Working here";
+    public function init() {
+        $this->title = NULL; //"Working here";
     }
+
     /**
      *
      * Standard block show method to show the edit form for groups
@@ -81,11 +82,29 @@ class block_groupedit extends object
      * @return string $this->display block rendered
      *
      */
-    public function show() 
-    {
-        $objGroupEditForm = $this->getObject('groupedit','oer');
-        //return "WOrking here me son.";
-        return $objGroupEditForm->show();
+    public function show() {
+        $objGroupEditForm = $this->getObject('groupedit', 'oer');
+        $contextCode = NULL;
+        $step = '1';
+        $data = explode("|", $this->configData);
+        if (count($data == 2)) {
+            $contextCode = $data[0];
+            $step = $data[1];
+        }
+        switch ($step) {
+            case '1':
+                return $objGroupEditForm->buildGroupFormStep1($contextCode);
+                break;
+            case '2':
+                return $objGroupEditForm->buildGroupFormStep2($contextCode);
+                break;
+            case '3':
+                return $objGroupEditForm->buildGroupFormStep3($contextCode);
+                break;
+        }
+
     }
+
 }
+
 ?>

@@ -17,7 +17,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         // Add jQuery Validation to form
-        jQuery("#form_groupEditor").validate();
+        jQuery("#form_groupFrom1").validate();
     });
 
     // Function for saving the institutional data

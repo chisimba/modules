@@ -112,9 +112,9 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }
-    
-    private function  __viewgroups(){
-       return $this->nextAction('home',NULL,'contextadmin');
+
+    private function __viewgroups() {
+        return "grouplist_tpl.php";
     }
 
     private function __showproductlistingaslist() {
@@ -574,6 +574,12 @@ class oer extends controller {
         return $this->nextAction('showthumbnailuploadresults', $params);
     }
 
+    function __uploadgroupthumbnail() {
+        $objGroupManager = $this->getObject("groupmanager", "oer");
+        $params = $objGroupManager->doajaxupload();
+        return $this->nextAction('showthumbnailuploadresults', $params);
+    }
+
     ///////////////////////////////////////////////////////////////////////
     /*
 
@@ -812,56 +818,39 @@ class oer extends controller {
      *
      * @return string Template
      */
-    function __groupedit() {
+    function __creategroupstep1() {
+        $this->setVar("step", "1");
+        $this->setVar("contextcode", "");
+        return 'groupedit_tpl.php';
+    }
+
+    function __editgroupstep1() {
+        $this->setVar("step", "1");
+        $this->setVar("contextcode", $this->getParam("contextcode"));
+        return 'groupedit_tpl.php';
+    }
+
+    function __editgroupstep2() {
+        $this->setVar("step", "2");
+        $this->setVar("contextcode", $this->getParam("contextcode"));
+        return 'groupedit_tpl.php';
+    }
+
+    function __editgroupstep3() {
+        $this->setVar("step", "3");
+        $this->setVar("contextcode", $this->getParam("contextcode"));
         return 'groupedit_tpl.php';
     }
 
     /**
      *
-     * Method to do ajax save for groups
      *
      * @return string Template
      */
-    function __groupsave() {
-        $name = $this->getParam('name');
-        $email = $this->getParam('email');
-        $onestepid = $this->getParam('productID', NULL);
-        $address = $this->getParam('address');
-        $city = $this->getParam('city');
-        $state = $this->getParam('state');
-        $country = $this->getParam('country');
-        $postalcode = $this->getParam('postalcode');
-        $website = $this->getParam('website');
-        $institution = $this->getParam('institutionlink');
-        $description = $this->getParam('description');
-        $loclat = $this->getParam('group_loclat');
-        $loclong = $this->getParam('group_loclong');
-        $admin = $this->objUser->userId();
-        $rightList = $this->getParam('rightList');
-        $description_one = $this->getParam('description_one');
-        $description_two = $this->getParam('description_two');
-        $description_three = $this->getParam('description_three');
-        $description_four = $this->getParam('description_four');
-        $path = 'unesco_oer/groups/' . $name . '/thumbnail/';
-
-        $thumbnail = "";
-        // Get the mode (edit or add).
-        $mode = $this->getParam('mode', 'add');
-        $id = $this->getParam('id', NULL);
-        $objDbGroups = $this->getObject('dbgroups', 'oer');
-        if ($mode == 'edit') {
-            $id = $objDbGroups->saveNewGroup(
-                    $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $admin, $thumbnail, $description_one, $description_two, $description_three, $description_four);
-        } else {
-            $objDbGroups->updategroup(
-                    $id, $name, $email, $address, $city, $state, $country, $postalcode, $website, $institution, $loclat, $loclong, $description, $thumbnail, $description_one, $description_two, $description_three, $description_four);
-        }
-        // Note we are not returning a template as this is an AJAX save.
-        if ($id !== NULL && $id !== FALSE) {
-            die($id);
-        } else {
-            die("ERROR_DATA_INSERT_FAIL");
-        }
+    function __savegroupstep1() {
+        $groupManager = $this->getObject("groupmanager", "oer");
+        $contextCode = $groupManager->saveGroupStep1();
+        return $this->nextAction("editgroupstep3", array("contextcode" => $contextCode));
     }
 
     /**
@@ -988,8 +977,8 @@ class oer extends controller {
         $id = $this->getParam('id', NULL);
         $objInstitutionManager->editInstitution(
                 $id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
-        $this->nextAction("institutionlisting", array("id"=>$id));
-        }
+        $this->nextAction("institutionlisting", array("id" => $id));
+    }
 
     /**
      * This method is used to display the results of uploading product thumbnail

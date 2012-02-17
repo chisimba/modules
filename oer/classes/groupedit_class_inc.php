@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Group editor functionality for OER module
@@ -31,37 +32,34 @@
  * @link      http://www.chisimba.com
  *
  */
-
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-*
+ *
  * Group editor functionality for OER module
  *
  * Group editor functionality for OER module provides for the creation of the
  * group editor form, which is used by the class block_groupedit_class_inc.php
-*
-* @package   oer
-* @author    Derek Keats derek@dkeats.com
-*
-*/
-class groupedit extends object
-{
+ *
+ * @package   oer
+ * @author    Derek Keats derek@dkeats.com
+ *
+ */
+class groupedit extends object {
 
     public $objLanguage;
     private $objThumbUploader;
@@ -71,14 +69,13 @@ class groupedit extends object
     private $linkedInstitution;
 
     /**
-    *
-    * Intialiser for the oerfixer database connector
-    * @access public
-    * @return VOID
-    *
-    */
-    public function init()
-    {
+     *
+     * Intialiser for the oerfixer database connector
+     * @access public
+     * @return VOID
+     *
+     */
+    public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
@@ -88,117 +85,62 @@ class groupedit extends object
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbInstitution = $this->getObject('dbinstitution');
         // Load the jquery validate plugin
-        $this->appendArrayVar('headerParams',
-        $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
-          'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         // Load the helper Javascript.
-        $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('groupedit.js',
-          'oer'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('groupedit.js', 'oer'));
         // Load all the required HTML classes from HTMLElements module.
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
-        $this->loadClass('htmltable','htmlelements');
-        $this->loadClass('textinput','htmlelements');
+        $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
-        $this->loadClass('fieldset','htmlelements');
+        $this->loadClass('fieldset', 'htmlelements');
         // Get Group details.
         $this->objDbGroups = $this->getObject('dbgroups');
-        $this->group=$this->objDbGroups->getGroupInfo($this->getParam('id', NULL));
         // Get edit or add mode from querystring.
         $this->mode = $this->getParam('mode', 'add');
     }
 
-    public function show()
-    {
-        return $this->makeHeading()  
-          . $this->buildForm();
-    }
-    
-    /**
-     *
-     * For editing, load the data according to the ID provided. It
-     * loads the data into object properties.
-     *
-     * @param string $id The id of the record to load
-     * @return boolean TRUE|FALSE
-     * @access private
-     *
-     */
-    private function loadData($id)
-    {
-        
-        $objDbGroups = $this->getObject('dbgroups');
-        $arData = $objDbGroups->getGroupInfo($id);
-        if (!empty($arData)) {
-            foreach ($arData[0] as $key=>$value) {
-                $this->$key =  $value;
-            }
-            return TRUE;
-        } else {
-            return FALSE;
+    public function buildGroupFormStep1($contextcode) {
+        $dbGroup = $this->getObject("dbgroups", "oer");
+        $group = $dbGroup->getGroupByContextCode($contextcode);
+        $objContext = $this->getObject('dbcontext', 'context');
+        $context = $objContext->getContext($contextcode);
+        $action = "savegroupstep1";
+        if ($group != null) {
+            $action = "updategroupstep1";
         }
-    }
-    
-    
-
-    /**
-     *
-     * Make a heading for the form
-     *
-     * @return string The text of the heading
-     * @access private
-     *
-     */
-    private function makeHeading()
-    {
-        // setup and show heading
-        $header = new htmlheading();
-        $header->type = 1;
-        if (isset($this->name)) {
-            $header->str = $this->name;
-        } else {
-            $header->str = $this->objLanguage->languageText(
-                  'mod_oer_group_new', 'oer', "Creating a new group");;
-        }
-        
-        return $header->show();
-    }
-
-    private function buildForm()
-    {
         // Create the form.
-        $form = new form ('groupEditor');
+        $form = new form('groupFrom1', $this->uri(array("action" => $action)));
 
         // Create a table to hold the layout
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->width = '100%';
         $table->border = '0';
-        $tableable->cellspacing = '0';
+        $table->cellspacing = '0';
         $table->cellpadding = '2';
 
         // Group name.
         $name = new textinput('name');
         $name->size = 80;
         $name->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $name->value = $this->name;
+        if ($context != null) {
+            $name->value = $context['title'];
         } else {
             $name->value = NULL;
         }
         $table->startRow();
         $table->addCell(
-          $this->objLanguage->languageText('mod_oer_group_name',
-          'oer'));
+                $this->objLanguage->languageText('mod_oer_group_name', 'oer'));
         $table->addCell($name->show());
         $table->endRow();
-        
+
         // Group website.
         $website = new textinput('website');
         $website->size = 80;
         $website->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $website->value = $this->website;
+        if ($group != null) {
+            $website->value = $group['website'];
         } else {
             $website->value = NULL;
         }
@@ -207,108 +149,35 @@ class groupedit extends object
         $table->addCell($website->show());
         $table->endRow();
 
-        // Group avatar or thumbnail.
-        if ($this->mode == 'edit') {
-            $content ="\n<img src='" 
-              . $this->thumbnail
-              . "' alt'='"
-              . $this->objLanguage->languageText('mod_oer_featured','oer')
-              . "' width='30' height='30'><br>\n\n";
-        } else {
-            $content = NULL;
-        }
-        $table->startRow();
-        $table->addCell($content);
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_changeavatar','oer') .'&nbsp;'
-          . $this->objThumbUploader->show());
-        $table->endRow();
-        
+
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText(
-          'mod_oer_group_fieldset1', 'oer');
+        $fieldset->legend = $this->objLanguage->languageText(
+                'mod_oer_group_fieldset1', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        // Descriprion line one.
         $table = $this->newObject('htmltable', 'htmlelements');
-        $description_one = new textinput('description_one');
-        $description_one ->size = 80;
-        $description_one->cssClass = "required";
-        if ($this->mode == 'edit') {
-            $description_one->value = $this->description_one;
-        } else {
-            $description_one->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_description_one','oer')); // obj lang
-        $table->addCell($description_one ->show());
-        $table->endRow();
-        
-        // Description line two.
-        $description_two = new textinput('description_two');
-        $description_two->size = 80;
-        if ($this->mode == 'edit') {
-            $description_two->value = $this->description_two;
-        } else {
-            $description_two->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_description_two','oer')); // obj lang
-        $table->addCell($description_two->show());
-        $table->endRow();
-        
-        //Descriprion line three
-        $description_three = new textinput('description_three');
-        $description_three->size = 80;
-        if ($this->mode == 'edit') {
-            $description_three->value = $this->description_two;
-        } else {
-            $description_three->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_description_three','oer')); // obj lang
-        $table->addCell($description_three->show());
-        $table->endRow();
-        
-        //Description line four.
-        $description_four= new textinput('description_four');
-        $description_four->size = 80;
-        if ($this->mode == 'edit') {
-            $description_four->value = $this->description_two;
-        } else {
-            $description_four->value = NULL;
-        }
-        $table->startRow();
-        $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_description_four','oer')); // obj lang
-        $table->addCell($description_four->show());
-        $table->endRow();
-        
         // Group description.
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'description';
         $editor->height = '150px';
         $editor->width = '85%';
         $editor->setBasicToolBar();
-        if ($this->mode == 'edit') {
-            $editor->setContent($this->description);
-        } 
+        if ($context != null) {
+            $editor->setContent($context['about']);
+        }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_description', 'oer'));
+                        'mod_oer_group_description', 'oer'));
         $table->addCell($editor->show());
         $table->endRow();
-        
+
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText(
-          'mod_oer_group_fieldset5', 'oer');
+        $fieldset->legend = $this->objLanguage->languageText(
+                'mod_oer_group_fieldset5', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
@@ -317,14 +186,14 @@ class groupedit extends object
         $table = $this->newObject('htmltable', 'htmlelements');
         $email = new textinput('email');
         $email->size = 80;
-        $email->cssClass = "requried";
-        if ($this->mode == 'edit') {
-            $email->value = $this->email;
+        $email->cssClass = "required";
+        if ($group != null) {
+            $email->value = $group['email'];
         } else {
             $email->value = NULL;
         }
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_email', 'oer'));
+                        'mod_oer_group_email', 'oer'));
         $table->addCell($email->show());
         $table->endRow();
 
@@ -332,29 +201,29 @@ class groupedit extends object
         $address = new textinput('address');
         $address->size = 80;
         $address->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $address->value = $this->address;
+        if ($group != null) {
+            $address->value = $group['address'];
         } else {
             $address->value = NULL;
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_address', 'oer'));
+                        'mod_oer_group_address', 'oer'));
         $table->addCell($address->show());
         $table->endRow();
 
         // Group city.
         $city = new textinput('city');
         $city->size = 80;
-        $city->cssClass='required';
-        if ($this->mode == 'edit') {
-            $city->value = $this->city;
+        $city->cssClass = 'required';
+        if ($group != null) {
+            $city->value = $group['city'];
         } else {
             $city->value = NULL;
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_city', 'oer'));
+                        'mod_oer_group_city', 'oer'));
         $table->addCell($city->show());
         $table->endRow();
 
@@ -362,14 +231,14 @@ class groupedit extends object
         $state = new textinput('state');
         $state->size = 80;
         $state->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $state->value = $this->state;
+        if ($group != null) {
+            $state->value = $group['state'];
         } else {
             $state->value = NULL;
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_state', 'oer'));// obj lang
+                        'mod_oer_group_state', 'oer')); // obj lang
         $table->addCell($state->show());
         $table->endRow();
 
@@ -377,25 +246,44 @@ class groupedit extends object
         $code = new textinput('postalcode');
         $code->size = 80;
         $code->cssClass = 'required';
-        if ($this->mode == 'edit') {
-            $code->value = $this->postalcode;
+        if ($group != null) {
+            $code->value = $group['postalcode'];
         } else {
             $code->value = NULL;
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_postalcode', 'oer'));
+                        'mod_oer_group_postalcode', 'oer'));
         $table->addCell($code->show());
         $table->endRow();
-        
+
         // Put it in a fieldset.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText(
-          'mod_oer_group_fieldset2', 'oer');
+        $fieldset->legend = $this->objLanguage->languageText(
+                'mod_oer_group_fieldset2', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
+        $button = new button('saveGroupButton1', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
+        $button->setToSubmit();
+        $form->addToForm($button->show());
+
+
+
+        // setup and show heading
+        $header = new htmlheading();
+        $header->type = 1;
+        if ($context != null) {
+            $header->str = $context['title'];
+        } else {
+            $header->str = $this->objLanguage->languageText(
+                    'mod_oer_group_new', 'oer', "Creating a new group");
+        }
+        return$header->show() . $form->show();
+    }
+
+    public function buildGroupFormStep2() {
         // Group latitude.
         $table = $this->newObject('htmltable', 'htmlelements');
         $latitude = new textinput('loclat');
@@ -407,10 +295,10 @@ class groupedit extends object
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_latitude', 'oer'));
+                        'mod_oer_group_latitude', 'oer'));
         $table->addCell($latitude->show());
         $table->endRow();
-        
+
         // Group longitude.
         $longitude = new textinput('loclong');
         $longitude->size = 38;
@@ -421,15 +309,15 @@ class groupedit extends object
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
-          'mod_oer_group_longitude', 'oer'));
+                        'mod_oer_group_longitude', 'oer'));
         $table->addCell($longitude->show());
         $table->endRow();
-        
+
         // Group country.
         $table->startRow();
         $objCountries = &$this->getObject('languagecode', 'language');
         $table->addCell($this->objLanguage->languageText(
-          'word_country', 'system'));
+                        'word_country', 'system'));
         if ($this->mode == 'edit') {
             $table->addCell($objCountries->countryAlpha($this->country));
         } else {
@@ -439,19 +327,35 @@ class groupedit extends object
 
         // Put it in a fieldset with a google map.
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
+        $fieldset->legend = $this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
         $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> 
             ' . $this->objLanguage->languageText('mod_oer_group_locincorrect', 'oer') . '
-            <div id="map_edit" style="width:600px; height:300px"></div><br/>' 
-            . $table->show();
+            <div id="map_edit" style="width:600px; height:300px"></div><br/>'
+                . $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
+    }
 
-// DONE TO HERE----------------------
-        
+    public function buildGroupFormStep3($contextcode) {
+        $this->addStep4JS();
+        $dbGroup = $this->getObject("dbgroups", "oer");
+        $group = $dbGroup->getGroupByContextCode($contextcode);
+        $objContext = $this->getObject('dbcontext', 'context');
+        $context = $objContext->getContext($contextcode);
+        $action = "savegroupstep3";
+        if ($group != null) {
+            $action = "updategroupstep3";
+        }
+        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
+
+
+        $form = new form('groupFrom1', $this->uri(array("action" => $action)));
+
+        $form->addToForm($objAjaxUpload->show($contextcode, 'uploadgroupthumbnail'));
+
         $table = $this->newObject('htmltable', 'htmlelements');
         $user_current_membership = $this->objDbGroups->getGroupInstitutions(
-          $this->getParam('id'));
+                $this->getParam('id'));
         $currentMembership = array();
 
         $availablegroups = array();
@@ -459,44 +363,41 @@ class groupedit extends object
         foreach ($groups as $group) {
             if (count($user_current_membership) > 0) { ///****** undefined
                 foreach ($user_current_membership as $membership) {
-                    if($membership['institution_id'] !=NULL){
-                    if (strcmp($group['id'], $membership['institution_id']) == 0 ) {
-                        array_push($currentMembership, $group);
-                    }else {
-                        array_push($availablegroups, $group);
-                    }}
+                    if ($membership['institution_id'] != NULL) {
+                        if (strcmp($group['id'], $membership['institution_id']) == 0) {
+                            array_push($currentMembership, $group);
+                        } else {
+                            array_push($availablegroups, $group);
+                        }
+                    }
                 }
             } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
                 array_push($availablegroups, $group);
             }
         }
 
-        $objSelectBox = $this->newObject('selectbox','htmlelements');
-        $objSelectBox->create( $form, 'leftList[]', 'Available Institutionss', 'rightList[]', 'Chosen Institutions' );
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        $objSelectBox->create($form, 'leftList[]', 'Available Institutions', 'rightList[]', 'Chosen Institutions');
         $objSelectBox->insertLeftOptions(
-            $availablegroups,
-            'id',
-            'name' );
+                $availablegroups, 'id', 'name');
         $objSelectBox->insertRightOptions(
-           $currentMembership,
-           'id',
-           'name');
+                $currentMembership, 'id', 'name');
 
-        $tblLeft = $this->newObject( 'htmltable','htmlelements');
-        $objSelectBox->selectBoxTable( $tblLeft, $objSelectBox->objLeftList);
+        $tblLeft = $this->newObject('htmltable', 'htmlelements');
+        $objSelectBox->selectBoxTable($tblLeft, $objSelectBox->objLeftList);
         //Construct tables for right selectboxes
-        $tblRight = $this->newObject( 'htmltable', 'htmlelements');
-        $objSelectBox->selectBoxTable( $tblRight, $objSelectBox->objRightList);
+        $tblRight = $this->newObject('htmltable', 'htmlelements');
+        $objSelectBox->selectBoxTable($tblRight, $objSelectBox->objRightList);
         //Construct tables for selectboxes and headings
-        $tblSelectBox = $this->newObject( 'htmltable', 'htmlelements' );
+        $tblSelectBox = $this->newObject('htmltable', 'htmlelements');
         $tblSelectBox->width = '90%';
         $tblSelectBox->startRow();
-            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrLeft'], '100pt' );
-            $tblSelectBox->addCell( $objSelectBox->arrHeaders['hdrRight'], '100pt' );
+        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrLeft'], '100pt');
+        $tblSelectBox->addCell($objSelectBox->arrHeaders['hdrRight'], '100pt');
         $tblSelectBox->endRow();
         $tblSelectBox->startRow();
-            $tblSelectBox->addCell( $tblLeft->show(), '100pt' );
-            $tblSelectBox->addCell( $tblRight->show(), '100pt' );
+        $tblSelectBox->addCell($tblLeft->show(), '100pt');
+        $tblSelectBox->addCell($tblRight->show(), '100pt');
         $tblSelectBox->endRow();
 
         $table->startRow();
@@ -505,40 +406,134 @@ class groupedit extends object
         $table->endRow();
 
         $fieldset = $this->newObject('fieldset', 'htmlelements');
-        $fieldset->legend =$this->objLanguage->languageText('mod_oer_group_fieldset4', 'oer');
+        $fieldset->legend = $this->objLanguage->languageText('mod_oer_group_fieldset4', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        //$button = new button ('submitform', $this->objLanguage->languageText('mod_oer_group_update_details_button', 'oer') );
-        //$button->setToSubmit();
-
-        $button = new button ('submitGroup',$this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
+        $button = new button('saveGroupButton', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
         $button->setToSubmit();
-        //$action = $objSelectBox->selectAllOptions( $objSelectBox->objRightList )." SubmitProduct();";
-        //$button->setOnClick('javascript: ' . $action);
         $form->addToForm($button->show());
-        
-        // Insert a message area for Ajax result to display.
-        $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        
-        // Add hidden fields for use by JS
-        $hiddenFields = "\n\n";
-        $hidMode = new hiddeninput('mode');
-        $hidMode->cssId = "mode";
-        $hidMode->value = $this->mode;
-        $hiddenFields .= $hidMode->show() . "\n";
-        $hidId = new hiddeninput('id');
-        $hidId->cssId = "id";
-        $hidId->value = $this->getParam('id', NULL);
-        $hiddenFields .= $hidId->show() . "\n\n";
-
-        $form->addToForm($msgArea);
-        $form->addToForm($hiddenFields);
-                
-        // Send the form
         return $form->show();
     }
 
+    /**
+     * Creates side navigation links for moving in between forms when creating
+     * a product 
+     */
+    function buildGroupStepsNav($contextcode, $step) {
+
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "build_group_steps_nav";
+        $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
+
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $group = $dbGroups->getGroupByContextCode($contextcode);
+
+        $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+        if ($group['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+        }
+
+        $viewGroupLink = new link($this->uri(array("action" => "viewgroup", "contextcode" => $contextcode)));
+        $viewGroupLink->link = $thumbnail;
+        $content = $viewGroupLink->show();
+        $content .= $header->show();
+        $content.='<ul id="nav-secondary">';
+
+        $class = "";
+        $link = new link($this->uri(array("action" => "editgroupstep1", "contextcode" => $contextcode)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
+
+        if ($step == '1') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
+
+
+        $link = new link($this->uri(array("action" => "editgroupstep2", "contextcode" => $contextcode)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
+
+        if ($step == '2') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
+
+        $link = new link($this->uri(array("action" => "editgroupstep3", "contextcode" => $contextcode)));
+        $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
+
+        if ($step == '3') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
+
+        $content.="</ul>";
+
+
+        return $content;
+    }
+
+    /**
+     * This includes necessary js for product 4 creation
+     */
+    function addStep4JS() {
+        $this->appendArrayVar('headerParams', "
+
+<script type=\"text/javascript\">
+    //<![CDATA[
+
+    function loadAjaxForm(fileid) {
+        window.setTimeout('loadForm(\"'+fileid+'\");', 1000);
+    }
+
+    function loadForm(fileid) {
+        var pars = \"module=oer&action=ajaxprocess&id=\"+fileid;
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                $('updateform').innerHTML = response;
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+
+    function processConversions() {
+        window.setTimeout('doConversion();', 2000);
+    }
+
+    function doConversion() {
+
+        var pars = \"module=oer&action=ajaxprocessconversions\";
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert(response);
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+    //]]>
+</script>            
+");
+    }
+
 }
+
 ?>

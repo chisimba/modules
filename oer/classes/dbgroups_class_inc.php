@@ -130,6 +130,21 @@ class dbgroups extends dbtable {
     }
 
     /**
+     * gets group info using context code
+     * @param type $contextcode
+     * @return type 
+     */
+     public function getGroupByContextCode($contextcode) {
+        $sql = "SELECT * FROM tbl_oer_groups WHERE contextcode='$contextcode'";
+        $data= $this->getArray($sql);
+        if(count($data) > 0){
+            return $data[0];
+        }else{
+            return NULL;
+        }
+    }
+    
+    /**
      *
      * Delete a group by group id
      * 
@@ -189,30 +204,12 @@ class dbgroups extends dbtable {
     }
 
     
-    public function saveNewGroup($name, $email, $address, $city, 
-        $state, $country, $postalcode, $website, $institution, $loclat, 
-        $loclong, $description, $admin, $thumbnail, $description_one, 
-        $description_two, $description_three, $description_four) {
-        $data = array(
-            'name' => $name,
-            'email' => $email,
-            'address' => $address,
-            'city' => $city,
-            'state' => $state,
-            'country' => $country,
-            'postalcode' => $postalcode,
-            'website' => $website,
-            'LinkedInstitution' => $institution,
-            'loclat' => $loclat,
-            'loclong' => $loclong,
-            'description' => $description,
-            'admin' => $admin,
-            'thumbnail' => $thumbnail,
-            'description_one' => $description_one,
-            'description_two' => $description_two,
-            'description_three' => $description_three,
-            'description_four' => $description_four
-        );
+    /**
+     *saves new group
+     * @param type $data
+     * @return type 
+     */
+    public function saveNewGroup($data){
         return $this->insert($data);
     }
 
