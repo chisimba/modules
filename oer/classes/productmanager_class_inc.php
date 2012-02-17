@@ -1160,7 +1160,7 @@ class productmanager extends object {
         $originalPLink->link = $this->objLanguage->languageText('mod_oer_seeoriginalunesco', 'oer');
         $originalPLink = $originalPLink->show();
 
-        $instthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
+        $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"  width="65" height="85" align="left"/>';
         if ($instData['thumbnail'] == '') {
             $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
         }
