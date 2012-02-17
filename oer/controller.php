@@ -127,7 +127,8 @@ class oer extends controller {
      * This is loads adaptation home
      */
     private function __adaptationlist() {
-
+        $productId = $this->getParam('productid', Null);
+        $this->setVar("productid", $productId);
         return "adaptationlist_tpl.php";
     }
 

@@ -864,8 +864,14 @@ class adaptationmanager extends object {
      * @return type
      */
     public function getAdaptationsListingAsGrid() {
-        $originalProducts = $this->dbproducts->getAdaptedProducts();
-
+        
+        $productId = $this->getParam('productid', Null);
+        //Get adapted products, if productId not null, fetch for that product only
+        if($productId != Null) {
+            $originalProducts = $this->dbproducts->getProductAdaptations($productId);
+        } else {
+            $originalProducts = $this->dbproducts->getAdaptedProducts();
+        }
 
         $controlBand =
                 '<div id="originalproducts_controlband">';

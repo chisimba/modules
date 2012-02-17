@@ -17,7 +17,6 @@ class block_adaptationslisting extends object {
     }
 
     public function show() {
-
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         return $objAdaptationManager->getAdaptationsListingAsGrid();
     }

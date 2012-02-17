@@ -927,7 +927,7 @@ class productmanager extends object {
             $product.= $languageField;
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
-            $adaptationsLink = new link($this->uri(array("action" => "viewproductadaptions", "id" => $originalProduct['id'])));
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $originalProduct['id'])));
             $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
             $product.=$adaptationsLink->show();
@@ -1113,7 +1113,7 @@ class productmanager extends object {
         $content.='<div id="featuredproduct_title">' . $titleLink->show() . '</div>';
 
         $adaptionsCount = $this->dbproducts->getProductAdaptationCount($productId);
-        $adaptationsLink = new link($this->uri(array("action" => "viewproductadaptions", "id" => $productId)));
+        $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId)));
         $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
         $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
 
@@ -1169,13 +1169,20 @@ class productmanager extends object {
         $instTitleLink->link = $instData['name'];
         $instTitle = $instTitleLink->show();
 
-        $seeAllAdaptations = $this->objLanguage->languageText('mod_oer_seeall', 'oer') . " " . strtolower($this->objLanguage->languageText('mod_oer_adaptationscount', 'oer')) . " (" . $adaptationCount['count'] . ")";
+        $seeAllAdaptations = $this->objLanguage->languageText('mod_oer_seeall', 'oer') . " " . strtolower($this->objLanguage->languageText('mod_oer_adaptationscount', 'oer'));
+
+        $seeAllAdaptationsLink = new link($this->uri(array("action" => "adaptationlist", 'productid' => $productId)));
+        $seeAllAdaptationsLink->cssClass = 'original_product_listing_title';
+        $seeAllAdaptationsLink->link = $seeAllAdaptations;
+        $seeAllAdaptationsLink = $seeAllAdaptationsLink->show();
+
+        
         $adaptedBy = $this->objLanguage->languageText('mod_oer_adaptedby', 'oer');
 
         $content = '<div id="featuredadaptation">';
         $content.='<div id="featuredadaptation_thumbnail">' . $thumbnailLink->show() . '</div>';
         $content.='<div id="featuredadaptation_title">' . $titleLk . '</div><br />';
-        $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptations . '</div><br /><br />';
+        $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptationsLink . " (" . $adaptationCount['count'] . ")" . '</div><br /><br />';
         $content.='<div id="featuredadaptation_title">' . $adaptedBy . '</div><br />';
         $content.='<div id="featuredadaptation_thumbnail">' . $instThumbnailLink->show() . '</div>';
         $content.='<div id="featuredadaptation_title">' . $instTitle . '</div><br />';
