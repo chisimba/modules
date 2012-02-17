@@ -112,6 +112,10 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }
+    
+    private function  __viewgroups(){
+       return $this->nextAction('home',NULL,'contextadmin');
+    }
 
     private function __showproductlistingaslist() {
         $this->setVar("mode", "list");
