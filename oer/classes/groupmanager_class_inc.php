@@ -14,7 +14,8 @@ class groupmanager extends object {
     }
 
     /**
-     * saves group step one as a context 
+     * saves group step one by creating a context out of it, then splitting the
+     * rest of the fields into own table
      */
     function saveGroupStep1() {
 
@@ -52,9 +53,56 @@ class groupmanager extends object {
         return $contextCode;
     }
 
+    
     /**
-     * creates a group listing
+     * We update group details here. First, the context is updated, since a group
+     * is actually a context. Extra params that cant go into a context are updated
+     * in tbl_oer_group table
      * @return type 
+     */
+     function updateGroupStep1() {
+
+        $contextCode = $this->getParam("contextcode");
+        $title = $this->getParam("name");
+        $status = 'Published';
+        $access = 'Public';
+        $about = $this->getParam("description");
+        $showcomment = 0;
+        $alerts = 0;
+        $canvas = 'None';
+        $objContext = $this->getObject('dbcontext', 'context');
+        $objContext->createContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
+
+
+        $address = $this->getParam('address');
+        $city = $this->getParam('city');
+        $state = $this->getParam('state');
+        $country = $this->getParam('country');
+        $postalcode = $this->getParam('postalcode');
+        $website = $this->getParam('website');
+        $email = $this->getParam("email");
+        $data = array(
+            "contextcode" => $contextCode,
+            "email" => $email,
+            "address" => $address,
+            "city" => $city,
+            "state" => $state,
+            "postalcode" => $postalcode,
+            "website" => $website,
+            "country" => $country
+        );
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $dbGroups->saveNewGroup($data);
+        return $contextCode;
+    }
+
+   
+    
+    /**
+     * This creates a grid of groups. Each cell has a thumbnail, and a title, 
+     * each when clicked leads to details of the group
+     * 
+     * @return type Returns a table with 3 columns, each cell representing a group
      */
     public function getGroupListing() {
         $dbGroups = $this->getObject("dbgroups", "oer");
@@ -105,7 +153,7 @@ class groupmanager extends object {
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
         $maxCol = 3;
-        $editImg = '<img src="skins/oer/images/icons/edit.png">';
+        $editImg = '<img src="skins/oer/images/icons/edit.png" class="groupedit" align="top" valign="top">';
         $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
 
         foreach ($groups as $group) {
@@ -114,10 +162,17 @@ class groupmanager extends object {
                 $table->startRow();
             }
             $context = $objContext->getContext($group['contextcode']);
+            $editControls = "";
+            if ($this->objUser->isLoggedIn()) {
+                $editLink = new link($this->uri(array("action" => "editgroupstep1", "contextcode" => $group['contextcode'])));
+                $editLink->link = $editImg;
+                $editLink->cssClass = "editgroup";
+                $editControls = "" . $editLink->show();
+            }
 
             $titleLink = new link($this->uri(array("action" => "viewgroup", "contextcode" => $group['contextcode'])));
             $titleLink->cssClass = 'group_listing_title';
-            $titleLink->link = $context['title'];
+            $titleLink->link = $context['title'] . $editControls;
             $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($group['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
@@ -125,17 +180,11 @@ class groupmanager extends object {
 
 
             $thumbnailLink = new link($this->uri(array("action" => "viewgroup", "contextcode" => $group['contextcode'])));
-            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->link = $thumbnail;
             $thumbnailLink->cssClass = 'group_listing_thumbail';
 
-            $editControls = "";
-            if ($this->objUser->isLoggedIn()) {
-                $editLink = new link($this->uri(array("action" => "editgroupstep1", "contextcode" => $group['contextcode'])));
-                $editLink->link = $editImg;
-                $editLink->cssClass = "editoriginalproduct";
-                $editControls = "" . $editLink->show();
-            }
-            $groupStr = $thumbnailLink->show() . $titleLink->show() . $editControls;
+
+            $groupStr = $thumbnailLink->show() .'<br/>'. $titleLink->show();
 
             $table->addCell($groupStr, null, "top", "left", "view_group");
 

@@ -28,17 +28,16 @@ class oertoolbar extends object {
         $userIsLoggedIn = $objUser->isLoggedIn();
 
         $menuOptions = array(
-            array('action' => 'home', 'text' => $this->objLanguage->languageText('mod_oer_products', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'adaptationlist', 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'viewgroups', 'text' => $this->objLanguage->languageText('mod_oer_groups', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'viewreports', 'text' => $this->objLanguage->languageText('mod_oer_reporting', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'about', 'text' => $this->objLanguage->languageText('mod_oer_about', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'contacts', 'text' => $this->objLanguage->languageText('mod_oer_contacts', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'both'),
-            array('action' => 'cpanel', 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 'actioncheck' => array(), 'module' => 'oer', 'status' => 'admin'),
-            
+            array('action' => 'home', 'text' => $this->objLanguage->languageText('mod_oer_products', 'oer'), 'actioncheck' => array("home"), 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'true'),
+            array('action' => 'adaptationlist', 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 'actioncheck' => array("adaptationlist","viewadaptation"), 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            array('action' => 'viewgroups', 'text' => $this->objLanguage->languageText('mod_oer_groups', 'oer'), 'actioncheck' => array("viewgroups","viewgroup"), 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            array('action' => 'viewreports', 'text' => $this->objLanguage->languageText('mod_oer_reporting', 'oer'), 'actioncheck' => array("viewreports"), 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            array('action' => 'view', 'text' => $this->objLanguage->languageText('mod_oer_about', 'oer'), 'actioncheck' => array("about","view","edit"), 'module' => 'about', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            array('action' => 'contacts', 'text' => $this->objLanguage->languageText('mod_oer_contacts', 'oer'), 'actioncheck' => array("contacts"), 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            array('action' => 'cpanel', 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 'actioncheck' => array("cpanel"), 'module' => 'oer', 'status' => 'admin', 'isDefaultSelected' => 'false'),
         );
 
-        $usedDefault = FALSE;
+
         $str = '';
 
         foreach ($menuOptions as $option) {
@@ -78,26 +77,25 @@ class oertoolbar extends object {
                 // If Module And Action Matches, item will be set as current action
                 $isDefault = ($actionCheck && $moduleCheck) ? TRUE : FALSE;
 
-                if ($isDefault) {
-                    $usedDefault = TRUE;
+                // Check whether Navigation has Current/Highlighted item
+                if ($this->getParam("action") =='') {
+                    if ($option['isDefaultSelected'] == 'true') {
+                        $isDefault = TRUE;
+                    }
                 }
-
                 // Add to Navigation
                 $str .= $this->generateItem($option['action'], $option['module'], $option['text'], $isDefault);
             }
         }
 
-        // Check whether Navigation has Current/Highlighted item
 
-        $usedDefault = $usedDefault ? FALSE : TRUE;
 
-      
 
         // Return Toolbar
         return '<div id="modernbricksmenu"><ul>' . $str . '</ul></div>';
     }
 
-    private function generateItem($action='', $module='oer', $text, $isActive=FALSE) {
+    private function generateItem($action = '', $module = 'oer', $text, $isActive = FALSE) {
         switch ($module) {
             case '_default' : $isRegistered = TRUE;
                 break;
@@ -110,6 +108,7 @@ class oertoolbar extends object {
             $link->link = $text;
 
             $isActive = $isActive ? ' id="current"' : '';
+
 
             return '<li' . $isActive . '>' . $link->show() . '</li>';
         } else {

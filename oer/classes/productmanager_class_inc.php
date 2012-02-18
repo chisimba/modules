@@ -1123,7 +1123,7 @@ class productmanager extends object {
     }
 
     /**
-     * get the featured adaptation
+     * this constructs an adaptation that has been selected as featured
      * @param string $prodtype whether original or adaptation product
      * @return string contains featured product data
      */
@@ -1140,12 +1140,11 @@ class productmanager extends object {
         //Get institution data
         $instData = $dbInstitution->getInstitutionById($product['institutionid']);
 
-        $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
+        $thumbnail = '<img class="featuredadaptation" src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
+            $thumbnail = '<img  class="featuredadaptation"  src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
         }
 
-        $mode = "";
         $thumbnailLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, "id" => $productId)));
         $thumbnailLink->link = $thumbnail . '<br/>';
         //$thumbnailLink->cssClass = 'featuredproduct_thumbnail';
@@ -1160,9 +1159,9 @@ class productmanager extends object {
         $originalPLink->link = $this->objLanguage->languageText('mod_oer_seeoriginalunesco', 'oer');
         $originalPLink = $originalPLink->show();
 
-        $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"  width="65" height="85" align="left"/>';
+        $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '" class="featuredadaptation"  width="65" height="85" align="left"/>';
         if ($instData['thumbnail'] == '') {
-            $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
+            $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" class="featuredadaptation" width="65" height="85" align="left"/>';
         }
 
         $instThumbnailLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
@@ -1188,7 +1187,7 @@ class productmanager extends object {
         $content.='<div id="featuredadaptation_prodtitle">' . $titleLk. '</div><br />';
         $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptationsLink . " (" . $adaptationCount['count'] . ")" . '</div>';
         $content.='<div id="featuredadaptation_seeall">' . $originalPLink . '</div><br /><br />';
-        $content.='<div id="featuredadaptation_text">' . $adaptedBy . '</div><br />';
+        $content.='<div id="featuredadaptation_text">' . $adaptedBy . ':</div>';
         $content.='<div id="featuredadaptation_thumbnail">' . $instThumbnailLink->show();
         $content.='<div id="featuredadaptation_insttitle">' . $instTitle . '</div></div><br />';
         $content.="</div>";

@@ -854,6 +854,18 @@ class oer extends controller {
     }
 
     /**
+     *updates a group with modified data. We go via the group manager to accomplish
+     * this. Two entities are updated: the context, which is the primary group entity,
+     * and the extra group params, stored diffirently
+     * @return type 
+     */
+    function __updategroupstep1() {
+        $groupManager = $this->getObject("groupmanager", "oer");
+        $contextCode = $groupManager->updateGroupStep1();
+        return $this->nextAction("editgroupstep3", array("contextcode" => $contextCode));
+    }
+
+    /**
      *
      * Method to open the edit/add form for insitution types.
      *
