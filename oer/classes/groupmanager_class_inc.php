@@ -27,7 +27,7 @@ class groupmanager extends object {
         $showcomment = 0;
         $alerts = 0;
         $canvas = 'None';
-        
+
         $objContext = $this->getObject('dbcontext', 'context');
         $objContext->createContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
 
@@ -54,14 +54,13 @@ class groupmanager extends object {
         return $contextCode;
     }
 
-    
     /**
      * We update group details here. First, the context is updated, since a group
      * is actually a context. Extra params that cant go into a context are updated
      * in tbl_oer_group table
      * @return type 
      */
-     function updateGroupStep1() {
+    function updateGroupStep1() {
 
         $contextCode = $this->getParam("contextcode");
         $title = $this->getParam("name");
@@ -72,8 +71,8 @@ class groupmanager extends object {
         $alerts = 0;
         $canvas = 'None';
         $objContext = $this->getObject('dbcontext', 'context');
-        
-        
+
+
         $objContext->updateContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
 
 
@@ -85,7 +84,6 @@ class groupmanager extends object {
         $website = $this->getParam('website');
         $email = $this->getParam("email");
         $data = array(
-           
             "email" => $email,
             "address" => $address,
             "city" => $city,
@@ -95,12 +93,10 @@ class groupmanager extends object {
             "country" => $country
         );
         $dbGroups = $this->getObject("dbgroups", "oer");
-        $dbGroups->updateGroup($data,$contextCode);
+        $dbGroups->updateGroup($data, $contextCode);
         return $contextCode;
     }
 
-   
-    
     /**
      * This creates a grid of groups. Each cell has a thumbnail, and a title, 
      * each when clicked leads to details of the group
@@ -187,7 +183,12 @@ class groupmanager extends object {
             $thumbnailLink->cssClass = 'group_listing_thumbail';
 
 
-            $groupStr = $thumbnailLink->show() .'<br/>'. $titleLink->show();
+            $groupStr = $thumbnailLink->show() . '<br/>' . $titleLink->show();
+            
+            $joinGroupLink=new link($this->uri(array("joinContext"=>$group['contextcode']),'context'));
+            $joinGroupLink->link=$this->objLanguage->languageText('mod_oer_join', 'oer');
+            $joinGroupLink->cssClass='joingroup';
+            $groupStr.='<br/>'.$joinGroupLink->show();
 
             $table->addCell($groupStr, null, "top", "left", "view_group");
 
@@ -246,21 +247,16 @@ class groupmanager extends object {
         );
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir . '/';
-
         $result = $objUpload->doUpload(TRUE, $filename);
-
-
         if ($result['success'] == FALSE) {
-
             $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
             $error = $this->objLanguage->languageText('mod_oer_uploaderror', 'oer');
             return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
         } else {
             $filename = $result['filename'];
             $data = array("thumbnail" => "/oer/groups/" . $contextcode . "/" . $filename);
-            $dbGroup=  $this->getObject("dbgroups", "oer");
+            $dbGroup = $this->getObject("dbgroups", "oer");
             $dbGroup->updateGroup($data, $contextcode);
-
             $params = array('action' => 'showthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 
             return $params;

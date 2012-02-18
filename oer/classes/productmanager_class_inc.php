@@ -1168,7 +1168,7 @@ class productmanager extends object {
         $instThumbnailLink->link = $instthumbnail . '<br/>';
         //$instThumbnailLink->cssClass = 'featuredproduct_thumbnail';
 
-        $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));        
+        $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
         $instTitleLink->link = $instData['name'];
         $instTitle = $instTitleLink->show();
 
@@ -1179,12 +1179,12 @@ class productmanager extends object {
         $seeAllAdaptationsLink->link = $seeAllAdaptations;
         $seeAllAdaptationsLink = $seeAllAdaptationsLink->show();
 
-        
+
         $adaptedBy = $this->objLanguage->languageText('mod_oer_adaptedby', 'oer');
 
         $content = '<div id="featuredadaptation">';
         $content.='<div id="featuredadaptation_thumbnail">' . $thumbnailLink->show() . '</div>';
-        $content.='<div id="featuredadaptation_prodtitle">' . $titleLk. '</div><br />';
+        $content.='<div id="featuredadaptation_prodtitle">' . $titleLk . '</div><br />';
         $content.='<div id="featuredadaptation_seeall">' . $seeAllAdaptationsLink . " (" . $adaptationCount['count'] . ")" . '</div>';
         $content.='<div id="featuredadaptation_seeall">' . $originalPLink . '</div><br /><br />';
         $content.='<div id="featuredadaptation_text">' . $adaptedBy . ':</div>';
@@ -1224,7 +1224,13 @@ class productmanager extends object {
             $content .= '<div id="mostratedproduct">';
             $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
             $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
-            $content.='<div id="mostratedproduct_thumbnail">0 adaptations</div>';
+            
+            $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
+            $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+
+            $content.='<div id="mostratedproduct_thumbnail">'.$adaptationsLink->show().'</div>';
             $content.="</div>";
         }
         $content.="</div>";
