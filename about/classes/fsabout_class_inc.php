@@ -81,16 +81,20 @@ class fsabout extends dbtable
      * @access public
      * 
      */
-    public function getContentsForDisplay()
+    public function getContentsForDisplay($file=FALSE)
     {
-        $strContent = $this->readContents();
+        if (!$file) {
+            // Read the file from querystring and default to 'default'.
+            $file = $this->getParam("file", "default");
+        }
+        $strContent = $this->readContents($file);
         // Parse for filters
         $objWashOut = $this->getObject('washout', 'utilities');
         $strContent = $objWashOut->parseText($strContent);
         $canEdit = $this->checkEditRights();
         // Add the edit icon and link.
         if ($canEdit) {
-            $ed = $this->getEditIcon();
+            $ed = $this->getEditIcon($file);
         } else {
             $ed=NULL;
         }
@@ -105,21 +109,30 @@ class fsabout extends dbtable
      * @access public
      * 
      */
-    public function getContentsForEdit()
+    public function getContentsForEdit($file=FALSE)
     {
+        if (!$file) {
+            // Read the file from querystring and default to 'default'.
+            $file = $this->getParam("file", "default");
+        }
         $this->loadClass('form','htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
         //Set up the form processor
         $paramArray=array(
-            'action'=>'save');
+            'action'=>'save',
+            'file' => $file);
         $formAction=$this->uri($paramArray);
         $objForm = new form('about_text');
         $objForm->setAction($formAction);
         $objForm->displayType=3; 
-        $strContent = $this->readContents();
+        $strContent = $this->readContents($file);
         $editor =  $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'about';
         $editor->setContent($strContent);
         $objForm->addToForm($editor->show());
+        $hidMode = new hiddeninput('file');
+        $hidMode->value = $file;
+        $objForm->addToForm($hidMode->show());
         return $objForm->show();
     }
     
@@ -130,12 +143,17 @@ class fsabout extends dbtable
      * @return VOID
      * 
      */
-    public function save()
+    public function save($file=FALSE)
     {
         if ($this->checkEditRights()) {
+            if (!$file) {
+                // Read the file from querystring and default to 'default'.
+                $file = $this->getParam("file", "default");
+            }
             $about = $this->getParam('about', NULL);
             $objAltConfig = $this->getObject('altconfig', 'config');
-            $targetPath = $objAltConfig->getSiteRootPath() . 'usrfiles/about/default.html';
+            $targetPath = $objAltConfig->getSiteRootPath() 
+              . 'usrfiles/about/' . $file . '.html';
             $strContent = file_put_contents($targetPath, $about);
         }
     }
@@ -148,10 +166,11 @@ class fsabout extends dbtable
      * @access private
      * 
      */
-    private function getEditIcon()
+    private function getEditIcon($file="default")
     {
         $this->loadClass('link', 'htmlelements');
-        $uri = $this->uri(array('action' => 'edit'), 'about');
+        $uri = $this->uri(array('action' => 'edit',
+            'file' => $file), 'about');
         $link = new link($uri);
         // Edit icon
         $edIcon = $this->newObject('geticon', 'htmlelements');
@@ -171,14 +190,22 @@ class fsabout extends dbtable
      * @access public
      * 
      */
-    public function readContents()
+    public function readContents($file="default")
     {
         $objAltConfig = $this->getObject('altconfig', 'config');
-        $targetPath = $objAltConfig->getSiteRootPath() . 'usrfiles/about/default.html';
+        $targetPath = $objAltConfig->getSiteRootPath() . 'usrfiles/about/' . $file . '.html';
         $strContent = file_get_contents($targetPath);
         return $strContent;
     }
     
+    /**
+     *
+     * Check if a user should be able to edit based on isAdmin
+     * and membership of the aboutcontact group
+     * 
+     * @return boolean If they have edit rights or not 
+     * @access public
+     */
     public function checkEditRights()
     {
         $ret=FALSE;

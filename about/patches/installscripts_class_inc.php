@@ -118,9 +118,12 @@ class about_installscripts extends dbtable
      */
     public function makeDefaultFile()
     {
-        $aboutDoc = $this->objAltConfig->getModulePath() . 'about/resources/default.html';
-        $targetPath = $this->objAltConfig->getSiteRootPath() . 'usrfiles/about/default.html';
-        copy($aboutDoc, $targetPath);
+        $defaultDoc = $this->objAltConfig->getModulePath() . 'about/resources/default.html';
+        $contactDoc = $this->objAltConfig->getModulePath() . 'about/resources/contact.html';
+        $targetDefault = $this->objAltConfig->getSiteRootPath() . 'usrfiles/about/default.html';
+        $targetContact = $this->objAltConfig->getSiteRootPath() . 'usrfiles/about/contact.html';
+        copy($defaultDoc, $targetDefault);
+        copy($contactDoc, $targetContact);
     }
 
 }
