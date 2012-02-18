@@ -8,6 +8,7 @@ $options = array('comment'=>'Table to store Products','collate'=>'utf8_general_c
     $fields = array(
             'id' => array('type' => 'text', 'length' => 32, 'not null'),
             'parent_id' => array('type' => 'text', 'length' => 32),
+            'institutionid' => array('type' => 'text', 'length' => 32),
             'title' => array('type' => 'text', 'length' => 255, 'not null'),
             'alternative_title' => array('type' => 'text', 'length' => 255, 'not null'),
             'author' => array('type' => 'text', 'length' => 512),
