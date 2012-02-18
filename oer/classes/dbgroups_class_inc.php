@@ -87,20 +87,7 @@ class dbgroups extends dbtable {
         return $this->getArray($sql);
     }
 
-    /**
-     * 
-     * Return groups by latitude and longitude
-     *
-     * @param string $loclat Latitude 
-     * @param string $loclong Longitude
-     * @return string array The array of records
-     * @access public
-     * 
-     */
-    public function getidbylocation($loclat, $loclong) {
-        $sql = "select * from tbl_oer_groups where loclat = '$loclat' and loclong = '$loclong'";
-        return $this->getArray($sql);
-    }
+
 
     /**
      * 
@@ -112,20 +99,6 @@ class dbgroups extends dbtable {
      */
     public function getAllGroups() {
         $sql = "select * from tbl_oer_groups where parent_id is  NULL";
-        return $this->getArray($sql);
-    }
-
-    /**
-     *
-     * Return an array by group ID
-     * 
-     * @param string $groupid The groupid of the group to return
-     * @return string array The array of records
-     * @access public
-     * 
-     */
-    public function getGroupInfo($groupid) {
-        $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         return $this->getArray($sql);
     }
 
@@ -173,34 +146,9 @@ class dbgroups extends dbtable {
         return $result[0]['id'];
     }
 
-//Forgoodness sake.... look at what this is doing... if name is blank it doesn't do anything, no warning, error, nothing
-    
-    public function editgroup($id, $name, $email, $address, $city, 
-        $state, $country, $postalcode, $website, $institution, 
-        $loclat, $loclong, $description, $thumbnail, $description_one, 
-        $description_two, $description_three, $description_four) {
-        if ($name != '') {
-            $data = array(
-                'name' => $name,
-                'email' => $email,
-                'website' => $website,
-                'address' => $address,
-                'city' => $city,
-                'state' => $state,
-                'country' => $country,
-                'postalcode' => $postalcode,
-                'linkedInstitution' => $institution,
-                'loclat' => $loclat,
-                'loclong' => $loclong,
-                'description' => $description,
-                'thumbnail' => $thumbnail,
-                'description_one' => $description_one,
-                'description_two' => $description_two,
-                'description_three' => $description_three,
-                'description_four' => $description_four,
-            );
-            $this->update('id', $id, $data);
-        }
+    public function updateGroup($data,$contextcode){
+            $this->update('contextcode', $contextcode, $data);
+        
     }
 
     

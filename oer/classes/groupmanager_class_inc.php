@@ -27,6 +27,7 @@ class groupmanager extends object {
         $showcomment = 0;
         $alerts = 0;
         $canvas = 'None';
+        
         $objContext = $this->getObject('dbcontext', 'context');
         $objContext->createContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
 
@@ -71,7 +72,9 @@ class groupmanager extends object {
         $alerts = 0;
         $canvas = 'None';
         $objContext = $this->getObject('dbcontext', 'context');
-        $objContext->createContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
+        
+        
+        $objContext->updateContext($contextCode, $title, $status, $access, $about, '', $showcomment, $alerts, $canvas);
 
 
         $address = $this->getParam('address');
@@ -82,7 +85,7 @@ class groupmanager extends object {
         $website = $this->getParam('website');
         $email = $this->getParam("email");
         $data = array(
-            "contextcode" => $contextCode,
+           
             "email" => $email,
             "address" => $address,
             "city" => $city,
@@ -92,7 +95,7 @@ class groupmanager extends object {
             "country" => $country
         );
         $dbGroups = $this->getObject("dbgroups", "oer");
-        $dbGroups->saveNewGroup($data);
+        $dbGroups->updateGroup($data,$contextCode);
         return $contextCode;
     }
 
@@ -231,8 +234,8 @@ class groupmanager extends object {
 
         $objMkDir = $this->getObject('mkdir', 'files');
 
-        $productid = $this->getParam('itemid');
-        $destinationDir = $dir . '/oer/groups/' . $productid;
+        $contextcode = $this->getParam('itemid');
+        $destinationDir = $dir . '/oer/groups/' . $contextcode;
 
         $objMkDir->mkdirs($destinationDir);
         // @chmod($destinationDir, 0777);
@@ -254,9 +257,9 @@ class groupmanager extends object {
             return array('message' => $error, 'file' => $filename, 'id' => $generatedid);
         } else {
             $filename = $result['filename'];
-            $data = array("thumbnail" => "/oer/groups/" . $productid . "/" . $filename);
-            $this->dbproducts->updateOriginalProduct($data, $productid);
-
+            $data = array("thumbnail" => "/oer/groups/" . $contextcode . "/" . $filename);
+            $dbGroup=  $this->getObject("dbgroups", "oer");
+            $dbGroup->updateGroup($data, $contextcode);
 
             $params = array('action' => 'showthumbnailuploadresults', 'id' => $generatedid, 'fileid' => $id, 'filename' => $filename);
 

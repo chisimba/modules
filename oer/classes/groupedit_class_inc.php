@@ -120,6 +120,17 @@ class groupedit extends object {
         $table->cellspacing = '0';
         $table->cellpadding = '2';
 
+        
+         if ($contextcode != null) {
+            $hidId = new hiddeninput('contextcode');
+            $hidId->cssId = "id";
+            $hidId->value = $contextcode;
+            $table->startRow();
+            $table->addCell($hidId->show());
+            $table->endRow();
+        }
+        
+        
         // Group name.
         $name = new textinput('name');
         $name->size = 80;
@@ -336,22 +347,23 @@ class groupedit extends object {
         $form->addToForm('<br />');
     }
 
+    /**
+     * the third step when creating a group. This step presents thumbnail uploader
+     * and a list of institutions that can be linked to the group
+     * @param type $contextcode
+     * @return type 
+     */
     public function buildGroupFormStep3($contextcode) {
         $this->addStep4JS();
         $dbGroup = $this->getObject("dbgroups", "oer");
         $group = $dbGroup->getGroupByContextCode($contextcode);
         $objContext = $this->getObject('dbcontext', 'context');
-        $context = $objContext->getContext($contextcode);
         $action = "savegroupstep3";
         if ($group != null) {
             $action = "updategroupstep3";
         }
-        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
-
-
+ 
         $form = new form('groupFrom1', $this->uri(array("action" => $action)));
-
-        $form->addToForm($objAjaxUpload->show($contextcode, 'uploadgroupthumbnail'));
 
         $table = $this->newObject('htmltable', 'htmlelements');
         $user_current_membership = $this->objDbGroups->getGroupInstitutions(
@@ -414,7 +426,9 @@ class groupedit extends object {
         $button = new button('saveGroupButton', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
         $button->setToSubmit();
         $form->addToForm($button->show());
-        return $form->show();
+        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
+
+        return $objAjaxUpload->show($contextcode, 'uploadgroupthumbnail').$form->show();
     }
 
     /**

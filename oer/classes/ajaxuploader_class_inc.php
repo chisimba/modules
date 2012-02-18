@@ -102,6 +102,7 @@ class ajaxuploader extends object {
 
 function doUpload(id)
 {
+
     if (document.forms[\'uploadfile_\'+id].fileupload.value == \'\') {
         alert(\'Please select a file\');
     } else {
