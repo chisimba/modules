@@ -64,7 +64,10 @@ class dbtextblock extends dbTable
         $sql = "SELECT blockid from tbl_textblock WHERE blockid LIKE '" 
         . $blockType . "%'";
         $ar = $this->getArray($sql);
-        return $ar;
+        foreach($ar as $entry) {
+            $newAr[] = $entry['blockid'];
+        }
+        return $newAr;
     }
 
     /**

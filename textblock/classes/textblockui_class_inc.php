@@ -294,9 +294,11 @@ class textblockui extends object
         $edIcon = $this->newObject('geticon', 'htmlelements');
         $edIcon->setIcon('edit');
         if ($this->objUser->isAdmin()) {
+            $blockType = $this->getParam("action", "text");
             $edUrl = $this->uri(array(
                 'action' => 'ajaxedit',
                 'mode' => 'edit',
+                'blocktype' => $blockType,
                 'id' => $id
                 )
             );
@@ -319,10 +321,10 @@ class textblockui extends object
     public function showLeftNav()
     {
         $narrowUri = $this->uri(array(
-            'action' => 'narrowblock'
+            'action' => 'text'
         ), 'textblock');
         $wideUri = $this->uri(array(
-            'action' => 'middleblock'
+            'action' => 'widetext'
         ), 'textblock');
         $icon = $this->getObject('image', 'htmlelements');
         $icon->height="15px";
@@ -406,6 +408,7 @@ class textblockui extends object
         $this->loadClass('label','htmlelements');
         $this->loadClass('checkbox', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
         
         // Create the form.
         $objForm = new form('blockeditor');
@@ -428,6 +431,7 @@ class textblockui extends object
             'mod_textblock_field_blockid','textblock'), 
             "input_blockid");
         $blockType = $this->getParam('blocktype', 'text');
+        //die($blockType);
         $blockAr = $this->getAvailableBlocks($blockType);
         $this->loadClass('dropdown','htmlelements');
         $dropdown = new dropdown('blockid');
@@ -487,9 +491,6 @@ class textblockui extends object
         if (isset($this->cssClass)) {
             $objElement->setValue($this->cssClass);
         }
-        /*$objElement->extra = " onfocus=\"if (this.value == 'featurebox')"
-          . "{this.value='';}\" onblur=\"if (this.value == '') "
-          . "{this.value='featurebox'; } \" ";*/
         $wsiLabel = new label(
           $this->objLanguage->languageText(
           'mod_textblock_css_class','textblock'),
@@ -527,6 +528,10 @@ class textblockui extends object
         $objForm->addToForm($quoteLabel->show() 
           . "<br />" . $objElement->show()
           . "<br /><br />");
+        // Make a hidden field for the type of block
+        $hidMode = new hiddeninput('blocktype');
+        $hidMode->value = $blockType;
+        $objForm->addToForm($hidMode->show());
         
         // Make a save button.
         $objElement = new button('submit');
@@ -585,9 +590,9 @@ class textblockui extends object
         $usedBlocks = $objDb->getArUsedBlockss($blockType);
         // Need to feed the diff an empty array if none are used.
         if (empty ($usedBlocks)) {
-            $usedBlocks[0] = array();
+            $usedBlocks = array();
         }
-        $avail = array_diff ($rootBlocks, $usedBlocks[0]);
+        $avail = array_diff ($rootBlocks, $usedBlocks);
         return $avail;
     }
 }

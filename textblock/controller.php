@@ -55,13 +55,13 @@ class textblock extends controller
     {
         switch ($this->action) {
             case null:
-            case 'narrowblock':
+            case 'text':
             case 'view':
                 // Set the layout template to compatible one
                 $this->setLayoutTemplate('layout_tpl.php');
                 return 'narrowblockview_tpl.php';
                 break;
-            case 'middleblock':
+            case 'widetext':
                 // Set the layout template to compatible one
                 $this->setLayoutTemplate('layout_tpl.php');
                 return 'wideblockview_tpl.php';
@@ -75,24 +75,8 @@ class textblock extends controller
                 $this->setLayoutTemplate('layout_tpl.php');
                 return "editajax_tpl.php";
                 break;
-            
-            
-            
-            case "oldview":
-		  $pageNr = $this->getParam('pagenum', '1');
-		  $records = 20;
-		  $start = (($pageNr * $records) - $records);
-		  $end = $pageNr * $records;
-                  $ar = $this->objDb->getAll(" LIMIT $start, $end");
-                  $this->setVarByRef('ar', $ar);
-                  return "main_tpl.php";
-                  break; //@Deprecated
 
-            case 'edit':
-                 $this->getForEdit('edit');
-                 $this->setVar('mode', 'edit');
-                 return "edit_tpl.php";
-                 break;
+
 
             case 'delete':
                 // retrieve the confirmation code from the querystring
@@ -102,18 +86,13 @@ class textblock extends controller
                     return $this->nextAction('view',null);
                 }
                 break;
-                
 
-				
-            case 'add':
-                $this->setVar('mode', 'add');
-                return "edit_tpl.php";
-                break;
 
             case 'save':
             	$objUser = $this->getObject("user", "security");
                 $this->objDb->saveRecord($this->getParam('mode', Null), $objUser->userId());
-                return $this->nextAction('view',null);
+                $blockType = $this->getParam('blocktype', 'narrowblock');
+                return $this->nextAction($blockType);
                 break;
 
             default:
