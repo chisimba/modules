@@ -23,7 +23,8 @@ class fullviewadaptation extends object {
         $product = $this->objDbProducts->getProduct($productId);
         $parentProduct = $this->objDbProducts->getProduct($product["parent_id"]);
         $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
-        $parentInstData = $this->objDbInstitution->getInstitutionById($parentProduct["institutionid"]);
+        $parentInstData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+        
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
@@ -39,14 +40,14 @@ class fullviewadaptation extends object {
             $newAdapt = $newAdaptLink->show();
         }
 
-        //Link for - See existing adaptations of this UNESCO Product
+        //Link for - original product for this adaptation
         $viewParentProdLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode"=>"grid")));
         $viewParentProdLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
         $viewParentProd = $viewParentProdLink->show();
 
         //Link for - See existing adaptations of this UNESCO Product
-        $viewParentInstLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode"=>"grid")));
-        $viewParentInstLink->link = $parentInstData['name'];
+        $viewParentInstLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+        $viewParentInstLink->link = $this->objLanguage->languageText('mod_oer_fullviewinst', 'oer');
         $viewParentInst = $viewParentInstLink->show();
 
         //Link for - Full view of product
@@ -93,38 +94,36 @@ class fullviewadaptation extends object {
                             	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
                             </div>
                             <div class="leftFloatDiv">
-                                <h3>'.$viewParentInst.'</h3><br>
+                                <h3>'.$parentProduct['title'].'</h3>
                                 <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">'.$viewParentProd.'</a></div>
+                                <div class="leftTextNextToTheListingIconDiv">'.$viewParentProd.'</a></div>
                             </div>
                     	</div>
-
+                        
                         <div class="middleAdaptedByIcon">
                         	<img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"><br>
                         	<span class="pinkText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
                         </div>
 
 
-                        <div class="productAdaptationViewLeftColumnTop">
+                        <div class="productAdaptationViewMiddleColumnTop">
                             <div class="leftTopImage">
                             	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
                             </div>
-                            <div class="leftFloatDiv">
-                                <h3 class="darkGreyColour">'.$instData['name'].'</h3><br>
+                            <div class="middleFloatDiv">
+                                <h3 class="darkGreyColour">'.$instData['name'].'</h3>
                                 <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="18" height="18" class="smallLisitngIcons">
-                                <div class="textNextToTheListingIconDiv">'.$viewParentProd.'</div>
+                                <div class="middleTextNextToTheListingIconDiv">'.$viewParentInst.'</div>
                             </div>
                     	</div>
 
-
-                        <div class="middleAdaptedByIcon">
+<div class="productAdaptationViewRightColumnTop">
+                        <div class="rightAdaptedByIcon">
                         	<img src="skins/oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_oer_managedby', 'oer').'" width="24" height="24"><br>
                         	<span class="greenText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
                         </div>
-
-                        <div class="productAdaptationViewLeftColumnTop">
-                            <div class="leftFloatDiv">
-                                <h3 class="greenText">'.$instData['name'].'</h3><br>
+                            <div class="rightFloatDiv">
+                                <h3 class="greenText">'.$instData['name'].'</h3>
                                 <div class="textNextToTheListingIconDiv"><a href="#" class="greenTextLink">View group</a></div>
                             </div>
                     	</div>

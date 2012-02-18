@@ -174,7 +174,7 @@ $(\'#mask\').html("");
         }
 
         //Link for - See existing adaptations of this UNESCO Product
-        $existingAdaptationsLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
+        $existingAdaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId)));
         $existingAdaptationsLink->link = $this->objLanguage->languageText('mod_oer_existingadaptations', 'oer');
         $existingAdaptations = $existingAdaptationsLink->show();
 
