@@ -75,57 +75,25 @@ class textblock extends controller
                 $this->setLayoutTemplate('layout_tpl.php');
                 return "editajax_tpl.php";
                 break;
-
-
-
-            case 'delete':
-                // retrieve the confirmation code from the querystring
-                $confirm=$this->getParam("confirm", "no");
-                if ($confirm=="yes") {
-                    $this->objDb->delete("id", $this->getParam('id', Null));
-                    return $this->nextAction('view',null);
-                }
-                break;
-
-
             case 'save':
             	$objUser = $this->getObject("user", "security");
                 $this->objDb->saveRecord($this->getParam('mode', Null), $objUser->userId());
                 $blockType = $this->getParam('blocktype', 'narrowblock');
                 return $this->nextAction($blockType);
                 break;
-
             default:
                 $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown",NULL,"Unknown action").": ".$this->action);
                 return 'dump_tpl.php';
 
-        }//switch
-    } // dispatch
+        }
+    }
     
     /**
     * Override the default requirement for login
     */
     public function requiresLogin()
     {
-        return TRUE;  
+        return TRUE;
     }
-    
-    /** 
-    *
-    * Method to retrieve the data for edit and prepare 
-    * the vars for the edit template.
-    *    @param string $mode The edit or add mode @values edit | add
-    */
-    public function getForEdit($mode)
-    {
-        $this->setvar('mode', $mode);
-        // retrieve the PK value from the querystring
-        $keyvalue=$this->getParam("id", NULL);
-        if (!$keyvalue) {
-            die($this->objLanguage->languageText("modules_badkey").": ".$keyvalue);
-        }
-        // Get the data for edit
-        $this->setVar('ar', $this->objDb->getRow('id', $keyvalue));
-    }//getForedit
 }
 ?>
