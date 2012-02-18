@@ -26,10 +26,14 @@ $middleColumn .= $countheader->show();
 if ($moduleList)
 {
     $objFb = $this->newObject('featurebox', 'navigation');
+    $modIcon = $this->getObject('getIcon', 'htmlelements');
     foreach($moduleList as $moduleRow)
     {
         $header = new htmlHeading();
-        $header->str = "Module: ".ucwords($moduleRow['modname']);
+        $theModule = $moduleRow['modname'];
+        $modIcon->setModuleIcon($theModule);
+        $icon = $modIcon->show();
+        $header->str =  $icon . " Module: ".ucwords($moduleRow['modname']);
         $header->type = 3;
         $middleColumn .= $objFb->show($header->show(), 
           "<div class='" . trim($moduleRow['status'])
