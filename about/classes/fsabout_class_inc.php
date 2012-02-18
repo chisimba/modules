@@ -73,7 +73,7 @@ class fsabout extends dbtable
     
     /**
      *
-     * Get the contents of the default.html file from
+     * Get the contents of the $file.html file from
      * the about directory in usrfiles. Format it for 
      * display.
      * 
@@ -103,7 +103,7 @@ class fsabout extends dbtable
     
     /**
      *
-     * Get the contents of the about file for editing
+     * Get the contents of the $file.html file for editing
      * 
      * @return string the file contents
      * @access public
@@ -138,7 +138,7 @@ class fsabout extends dbtable
     
     /**
      * 
-     * Save the edited contents back to the file
+     * Save the edited contents back to the $file.html file
      * @access public
      * @return VOID
      * 
@@ -183,7 +183,7 @@ class fsabout extends dbtable
 
     /**
      *
-     * Get the raw contents of the default.html file from
+     * Get the raw contents of the $file.html file from
      * the about directory in usrfiles. 
      * 
      * @return string The raw contents
