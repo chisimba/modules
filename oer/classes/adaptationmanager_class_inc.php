@@ -944,7 +944,7 @@ class adaptationmanager extends object {
             $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
             $link->cssClass = 'original_product_listing_title';
             $product.= $link->show();
-            $product.= "<br/><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . "</div>";
+            $product.= "<br/><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ":</div><br/>";
             $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
             $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
 
@@ -970,8 +970,9 @@ class adaptationmanager extends object {
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
-            $adaptationsLink->link = $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
-            $product.="<br/>" . $adaptionsCount . '&nbsp;' . $adaptationsLink->show();
+            $adaptationsLink->link = $adaptionsCount.'&nbsp;'.$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass='adaptationcount';
+            $product.="<br/>" .$adaptationsLink->show();
 
             $table->addCell($product, null, null, null, "view_original_product");
             if ($count > 2) {
