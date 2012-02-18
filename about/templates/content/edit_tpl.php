@@ -16,7 +16,6 @@ $objFix->fixThree();
             "module" : "about",
             "block" : "editabout"
         }
-        Is this working?
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
     </div>
 </div>
