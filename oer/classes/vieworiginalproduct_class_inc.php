@@ -71,8 +71,51 @@ class vieworiginalproduct extends object {
         $leftContent.='<h1 class="viewproduct_title">' . $product['title'] . '</h1>';
         $leftContent.='<div id="viewproduct_coverpage">' . $thumbnail . '</div>';
 
+        // Download link
+        $prodTitle = "";
+        //Add download link
+        $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
         if ($this->objUser->isLoggedIn()) {
             $leftContent.=$this->createRatingDiv($productId);
+                        $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'original')));
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            //$printLink->target = "_blank";
+            $printLk = "" . $printLink->show();
+            $prodTitle .=  " " . $printLk ;
+        } else {
+            //Print link
+            $printLink = new link("#dialog");
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            $printLink->extra = 'name="modal" onclick="showDownload();"';
+            $printLk = "" . $printLink->show();
+            // Login link
+            $objLoginLk = new link($this->uri(array("action" => "login"), "security"));
+            $objLoginLk->cssId = "loginlink";
+            $objLoginLk->link = $objLanguage->languageText('mod_oer_clicktologin', 'oer');
+
+            // Register link
+            $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
+            $objRegisterLk->cssId = "registerlink";
+            $objRegisterLk->link = $objLanguage->languageText('mod_oer_clickhere', 'oer');
+            //Dialogue content
+            $toolTipStr = $objLanguage->languageText('mod_oer_downloadlnone', 'oer') . ".<br /><br />";
+            $toolTipStr .= $objLanguage->languageText('mod_oer_downloadlntwo', 'oer') . ".<br /><br />";
+            $toolTipStr .= $objRegisterLk->show() . " " . $objLanguage->languageText('mod_oer_downloadlnthree', 'oer')
+                    . ". " . $objLanguage->languageText('mod_oer_readmore', 'oer') . " " . $objLanguage->languageText('mod_oer_downloadlnfour', 'oer') . ".<br /><br />";
+            $toolTipStr .= $objLanguage->languageText('mod_oer_downloadlnfive', 'oer') . " " . $objLoginLk->show() . ". "
+                    . $objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
+            //$buttonNxt = new button('submit', $buttonTitle);
+            $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'original')));
+            $objNextLk->cssId = "nextbtnspan";
+            $objNextLk->link = $objLanguage->languageText('word_next');
+
+            $toolTipStr .= " " . $objNextLk->show();
+
+            $dialogTitle = $objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$objLanguage->languageText('mod_oer_adaptation','oer').")";
+
+            $prodTitle .= " ".$printLk. '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
         }
         $leftContent.=$product['description'];
 
@@ -82,7 +125,7 @@ class vieworiginalproduct extends object {
         $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
-        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks.'</div>';
+        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks.$prodTitle.'</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
@@ -180,13 +223,24 @@ class vieworiginalproduct extends object {
 
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
+        $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css') . '"/>';
+        $this->appendArrayVar('headerParams', $jqUICSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
         $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);
         $this->appendArrayVar('headerParams', $ratingUICSS);
         $this->appendArrayVar('headerParams', $crystalCSS);
+        $this->appendArrayVar('headerParams', $dialogCSS);
     }
 
     /**

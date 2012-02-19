@@ -210,8 +210,8 @@ class downloaderedit extends object {
             }
             $table->startRow();
             $table->addCell(
-                    $this->objLanguage->languageText('word_email',
-                            'system'));
+                    $this->objLanguage->languageText('mod_oer_group_email',
+                            'oer'));
             $table->addCell($email->show());
             $table->endRow();
 
@@ -330,6 +330,7 @@ class downloaderedit extends object {
         function buildDownloadForm($productId, $id) {
             // Create the form.
             $form = new form('downloadproductform');
+            $producttype = $this->getParam("producttype","adaptation");
 
             // Create a table to hold the layout
             $table = $this->newObject('htmltable', 'htmlelements');
@@ -399,7 +400,11 @@ class downloaderedit extends object {
             //$form->addToForm($button->show());
             //Cancel
             $buttonCl = new button('cancel', $this->objLanguage->languageText('word_back', 'system'));
+            if($producttype == "adaptation") {
             $uri = $this->uri(array("action" => "viewadaptation", "id" => $productId));
+            } else {
+                $uri = $this->uri(array("action" => "vieworiginalproduct", "identifier" => $productId, "id" => $productId));
+            }
             $buttonCl->setOnClick('javascript: window.location=\'' . $uri . '\'');
             $form->addToForm($button->show() . '&nbsp;&nbsp;' . $buttonCl->show());
 
