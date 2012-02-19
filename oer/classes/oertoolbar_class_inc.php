@@ -35,7 +35,10 @@ class oertoolbar extends object {
             array('action' => 'adaptationlist', 
                 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 
                 'actioncheck' => array("adaptationlist","viewadaptation",
-                    "editadaptationstep1","editadaptationstep2","editadaptationstep3","editadaptationstep4"),
+                    "editadaptationstep1","editadaptationstep2","editadaptationstep3","editadaptationstep4",
+                    "viewinstitution"
+                    ),
+                
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
             array('action' => 'viewgroups', 
                 'text' => $this->objLanguage->languageText('mod_oer_groups', 'oer'),
@@ -56,7 +59,7 @@ class oertoolbar extends object {
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
             array('action' => 'cpanel',
                 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 
-                'actioncheck' => array("cpanel"), 
+                'actioncheck' => array("cpanel","modulecatalogue"), 
                 'module' => 'oer', 'status' => 'admin', 'isDefaultSelected' => 'false'),
         );
 

@@ -184,11 +184,12 @@ class groupmanager extends object {
 
 
             $groupStr = $thumbnailLink->show() . '<br/>' . $titleLink->show();
-            
-            $joinGroupLink=new link($this->uri(array("action"=>"joincontext","contextcode"=>$group['contextcode']),'context'));
-            $joinGroupLink->link=$this->objLanguage->languageText('mod_oer_join', 'oer');
-            $joinGroupLink->cssClass='joingroup';
-            $groupStr.='<br/>'.$joinGroupLink->show();
+
+
+            $joinGroupLink = new link($this->uri(array("action" => "joincontext", "contextcode" => $group['contextcode'])));
+            $joinGroupLink->link = $this->objLanguage->languageText('mod_oer_join', 'oer');
+            $joinGroupLink->cssClass = 'joingroup';
+            $groupStr.='<br/>' . $joinGroupLink->show();
 
             $table->addCell($groupStr, null, "top", "left", "view_group");
 
@@ -210,6 +211,8 @@ class groupmanager extends object {
         }
         return $controlBand . $table->show();
     }
+
+
 
     public function genRandomString() {
         $length = 5;
@@ -261,6 +264,53 @@ class groupmanager extends object {
 
             return $params;
         }
+    }
+
+    /**
+     * contructs group view details. Since a group is essentially a context,
+     * everything is done based on contextcode. This allows us to plug in modules
+     * that make use of context
+     * @param type $contextcode
+     * @return string 
+     */
+    function buildViewGroupDetails($contextcode) {
+        $dbGroup = $this->getObject("dbgroups", "oer");
+        $dbContext = $this->getObject("dbcontext", "context");
+        $group = $dbGroup->getGroupByContextCode($contextcode);
+        $context = $dbContext->getContext($contextcode);
+        $content = '<h2>' . $context['title'] . '</h2>';
+
+        $content = '
+<div class="tabber">
+
+     <div class="tabbertab">
+	  <h2 class="members">' . $this->objLanguage->languageText('mod_oer_members', 'oer') . '</h2>
+	 Members
+     </div>
+
+
+     <div class="tabbertab">
+	  <h2 class="mostrated">' . $this->objLanguage->languageText('mod_oer_word_adaptations', 'oer') . '</h2>
+	   Adaptations
+     </div>
+
+
+     <div class="tabbertab">
+	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_discussions', 'oer') . '</h2>
+	  <p>Tab 3 content.</p>
+     </div>
+
+
+     <div class="tabbertab">
+	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_institutions', 'oer') . '</h2>
+	  <p>Tab 4 content.</p>
+     </div>
+
+</div>
+            
+
+';
+        return $content;
     }
 
 }

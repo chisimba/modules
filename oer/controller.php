@@ -113,13 +113,42 @@ class oer extends controller {
         return "productlisting_tpl.php";
     }
 
+    /**
+     * renders available groupd
+     * @return strings
+     */
     private function __viewgroups() {
         return "grouplist_tpl.php";
+    }
+
+    /**
+     * renders details of a given group
+     * @return string 
+     */
+    private function __viewgroup() {
+        $contextCode = $this->getParam("contextcode");
+        $this->setVarByRef("contextcode", $contextCode);
+        return "viewgroup_tpl.php";
     }
 
     private function __showproductlistingaslist() {
         $this->setVar("mode", "list");
         return "productlisting_tpl.php";
+    }
+
+    /**
+     * joins the current user to the selected context. If the user cant, probably
+     * due to permissions issue, they are redirected to an error message
+     * @return type 
+     */
+    private function __joincontext() {
+        $contextCode = $this->getParam("contextcode");
+        $dbContext = $this->getObject("dbcontext", "context");
+        if ($dbContext->joinContext($contextCode)) {
+            return $this->nextAction('viewgroup',array("contextcode"=>$contextCode));
+        } else {
+            return $this->nextAction('join', array('error' => 'unabletoenter'),'context');
+        }
     }
 
     /**
@@ -854,7 +883,7 @@ class oer extends controller {
     }
 
     /**
-     *updates a group with modified data. We go via the group manager to accomplish
+     * updates a group with modified data. We go via the group manager to accomplish
      * this. Two entities are updated: the context, which is the primary group entity,
      * and the extra group params, stored diffirently
      * @return type 

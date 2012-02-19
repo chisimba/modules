@@ -1,16 +1,16 @@
 <?php
 /**
- *  A main content template for OER group editor
- *  Author: Paul Mungai paulwando@gmail.com
- *  Date: February 08, 2012 21:42 am
- *
- */
+*  A main content template for OER group editor
+*  Author: Paul Mungai paulwando@gmail.com
+*  Date: February 08, 2012 21:42 am
+*
+*/
 ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
 ?>
 <div id="twocolumn">
-    <div id="Canvas_Content_Body_Region3">
+        <div id="Canvas_Content_Body_Region3">
         {
         "display" : "block",
         "module" : "oer",
@@ -21,12 +21,12 @@ $objFix->fixThree();
     </div>
     <div id="Canvas_Content_Body_Region2">
         {
-        "display" : "block",
-        "module" : "oer",
-        "block" : "viewinstitution",
+            "display" : "block",
+            "module" : "oer",
+            "block" : "viewgroup",
         <?php
         echo '"configData":';
-        echo '"' . $id . '"';
+        echo '"' . $contextcode . '"';
         ?>
         }
 
