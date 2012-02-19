@@ -30,8 +30,10 @@ class oertoolbar extends object {
         $menuOptions = array(
             array('action' => 'home', 
                 'text' => $this->objLanguage->languageText('mod_oer_products', 'oer'),
-                'actioncheck' => array("home","vieworiginalproduct"), 
+                'actioncheck' => array("home","vieworiginalproduct","filteroriginalproduct",
+                    "showproductlistingaslist"), 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'true'),
+            
             array('action' => 'adaptationlist', 
                 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 
                 'actioncheck' => array("adaptationlist","viewadaptation",
@@ -59,7 +61,7 @@ class oertoolbar extends object {
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
             array('action' => 'cpanel',
                 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 
-                'actioncheck' => array("cpanel","modulecatalogue"), 
+                'actioncheck' => array("cpanel","modulecatalogue","toolbar"), 
                 'module' => 'oer', 'status' => 'admin', 'isDefaultSelected' => 'false'),
         );
 

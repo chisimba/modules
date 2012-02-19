@@ -445,7 +445,7 @@ class adaptationmanager extends object {
 
         $institution->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         //Get institutions
-        $currentInstitutions = $this->dbInstitution->getAllInstitution();
+        $currentInstitutions = $this->dbInstitution->getAllInstitutions();
         //Generate dropdown from existing institutions
         if ($currentInstitutions != Null) {
             foreach ($currentInstitutions as $currentInstitution) {
@@ -454,7 +454,7 @@ class adaptationmanager extends object {
         }
         //Set selected
         if ($product != null) {
-            $institution->selected = $product['institutionid'];
+            $institution->selected = $this->dbInstitution->getInstitutionName($product['institutionid']);
         }
         $objTable->addCell($institution->show());
         $objTable->endRow();
@@ -864,10 +864,11 @@ class adaptationmanager extends object {
      * @return type
      */
     public function getAdaptationsListingAsGrid() {
-        
+
+        $mode = $this->getParam("mode", "grid");
         $productId = $this->getParam('productid', Null);
         //Get adapted products, if productId not null, fetch for that product only
-        if($productId != Null) {
+        if ($productId != Null) {
             $originalProducts = $this->dbproducts->getProductAdaptations($productId);
         } else {
             $originalProducts = $this->dbproducts->getAdaptedProducts();
@@ -878,14 +879,20 @@ class adaptationmanager extends object {
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
         $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
-        $gridlink = new link($this->uri(array("action" => "adaptationlist")));
+        $gridlink = new link($this->uri(array("action" => "adaptationlist", "mode" => "grid")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+        if ($mode == 'grid') {
+            $gridlink->cssClass = 'highlight_grid';
+        }
         $controlBand.=$gridlink->show();
 
         $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
-        $listlink = new link($this->uri(array("action" => "adaptationlist")));
+        $listlink = new link($this->uri(array("action" => "adaptationlist", "mode" => "list")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
-        $controlBand.=$listlink->show();
+        if ($mode == 'list') {
+            $listlink->cssClass = 'highlight_list';
+        }
+        $controlBand.='&nbsp;'.$listlink->show();
 
         $sortbydropdown = new dropdown('sortby');
         $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
@@ -905,6 +912,10 @@ class adaptationmanager extends object {
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
 
+        $maxCol = 2;
+        if ($mode == 'list') {
+            $maxCol = 1;
+        }
         foreach ($originalProducts as $originalProduct) {
             if ($startNewRow) {
                 $startNewRow = FALSE;
@@ -915,20 +926,28 @@ class adaptationmanager extends object {
             $institutionData = $this->dbInstitution->getInstitutionById($originalProduct['institutionid']);
 
             //Get institution type            
+
             $thumbnail = '<img src="usrfiles/' . $institutionData['thumbnail'] . '"  width="45" height="49"  align="left"/>';
             if ($institutionData['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
+            }
+
+            if ($mode == 'list') {
+                $thumbnail = '';
             }
             $instName = $institutionData['name'];
             $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $originalProduct['institutionid'])));
             $instNameLink->link = $instName;
             $instNameLink->cssClass = "viewinstitutionlink";
-            $instNameLk =$thumbnail .$instNameLink->show();
+            $instNameLk = $thumbnail . $instNameLink->show();
 
             $institutionTypeName = $this->dbInstitutionType->getInstitutionTypeName($institutionData['type']);
             $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($originalProduct['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
+            }
+            if ($mode == 'list') {
+                $thumbnail = '';
             }
             $makeAdaptation = "";
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
@@ -939,7 +958,7 @@ class adaptationmanager extends object {
             }
 
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail;// . $makeAdaptation;
+            $link->link = $thumbnail; // . $makeAdaptation;
             $product = $link->show();
 
             $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
@@ -971,12 +990,12 @@ class adaptationmanager extends object {
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
-            $adaptationsLink->link = $adaptionsCount.'&nbsp;'.$this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
-            $adaptationsLink->cssClass='adaptationcount';
-            $product.="<br/>" .$adaptationsLink->show();
+            $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'adaptationcount';
+            $product.="<br/>" . $adaptationsLink->show();
 
             $table->addCell($product, null, null, null, "view_original_product");
-            if ($count > 2) {
+            if ($count > $maxCol) {
                 $table->endRow();
                 $startNewRow = TRUE;
                 $count = 1;

@@ -97,6 +97,16 @@ class dbproducts extends dbtable {
     }
     
     /**
+     *  returns list of adaptations by given institution id
+     * @param type $institutionId 
+     */
+    function getAdaptationsByInstitution($institutionId){
+        $sql = "select * from $this->productsTableName where institutionid = '$institutionId'";
+       
+       return $this->getArray($sql);
+    }
+    
+    /**
      *
      * @param type $institutionId
      * @return type 

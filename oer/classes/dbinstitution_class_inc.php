@@ -62,7 +62,6 @@ class dbinstitution extends dbtable {
             'keyword1' => $keyword1,
             'keyword2' => $keyword2,
             'zip' => $zip,
-            
         );
 
         $id = $this->insert($data);
@@ -96,12 +95,6 @@ class dbinstitution extends dbtable {
         $sql = "SELECT * FROM tbl_oer_institutions WHERE name='$name'";
         $Institution = $this->getArray($sql);
         return $Institution[0]['loclong'];
-    }
-
-    function getAllInstitution() {
-        $sql = " select * from tbl_oer_institutions";
-        $InstitutionNames = $this->getArray($sql);
-        return $InstitutionNames;
     }
 
     /*
@@ -198,25 +191,25 @@ class dbinstitution extends dbtable {
     //this function edit the instituin name
     //TODO MUST ALSO EDIT THUMBNAIL
     function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-        $data= array(
-                    'name' => $name,
-                    'description' => $description,
-                    'country' => $country,
-                    'type' => $type,
-                    'address1' => $address1,
-                    'address2' => $address2,
-                    'address3' => $address3,
-                    'city' => $city,
-                    'websiteLink' => $websiteLink,
-                    'keyword1' => $keyword1,
-                    'keyword2' => $keyword2,
-                    'zip' => $zip
-                    );
-                   
-          $result = $this->update(
-                        'id', $id,$data
+        $data = array(
+            'name' => $name,
+            'description' => $description,
+            'country' => $country,
+            'type' => $type,
+            'address1' => $address1,
+            'address2' => $address2,
+            'address3' => $address3,
+            'city' => $city,
+            'websiteLink' => $websiteLink,
+            'keyword1' => $keyword1,
+            'keyword2' => $keyword2,
+            'zip' => $zip
         );
-       
+
+        $result = $this->update(
+                'id', $id, $data
+        );
+
         if ($result != FALSE) {
 
             // Call Object
@@ -277,9 +270,10 @@ class dbinstitution extends dbtable {
      * @param type $data
      * @param type $id 
      */
-    function updateInstitution($data,$id){
+    function updateInstitution($data, $id) {
         $this->update("id", $id, $data);
     }
+
 }
 
 ?>

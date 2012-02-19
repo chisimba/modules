@@ -856,12 +856,21 @@ class productmanager extends object {
         $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
         $gridlink = new link($this->uri(array("action" => "home")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+        if ($mode == 'grid') {
+            $gridlink->cssClass = 'highlight_grid';
+        }
         $controlBand.=$gridlink->show();
+
 
         $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
         $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
-        $controlBand.=$listlink->show();
+        if ($mode == 'list') {
+            $listlink->cssClass = 'highlight_list';
+        }
+
+
+        $controlBand.='&nbsp;' . $listlink->show();
 
         if ($this->objUser->isLoggedIn()) {
             $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
@@ -887,6 +896,9 @@ class productmanager extends object {
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
         $maxCol = 3;
+        if ($mode == 'list') {
+            $maxCol = 1;
+        }
         foreach ($originalProducts as $originalProduct) {
             if ($startNewRow) {
                 $startNewRow = FALSE;
@@ -1195,6 +1207,61 @@ class productmanager extends object {
     }
 
     /**
+     * returns the number of adaptations by this institution 
+     */
+    function getAdaptationsByInstitution($institutionId) {
+        $dbProducts = $this->getObject("dbproducts", "oer");
+        $products = $dbProducts->getAdaptationsByInstitution($institutionId);
+        $dbInstitutions = $this->getObject("dbinstitution", "oer");
+        $content = "";
+        foreach ($products as $product) {
+
+            $product = $this->dbproducts->getProduct($product['id']);
+            $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            }
+
+            $mode = "";
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'], "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'], "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+
+
+            $content .= '<div id="product">';
+            $content.='<div id="product_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $content.='<div id="product_title">' . $titleLink->show() . '</div>';
+
+            $institution = $dbInstitutions->getInstitutionById($institutionId);
+
+            $instthumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '" class="institution_thumbnail"  width="65" height="85" align="bottom"/>';
+            if ($institution['thumbnail'] == '') {
+                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" class="institution_thumbnail" width="65" height="85" align="bottom"/>';
+            }
+
+            $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $institution['id'])));
+            $instTitleLink->link = $institution['name'];
+            $instTitle = $instTitleLink->show();
+
+            $content.='<div id="institution_small_title>' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ':<br/>' . $instTitle . '</div>';
+
+            $adaptationCount = $this->dbproducts->getProductAdaptationCount($product['productid']);
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $product['productid'])));
+            $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+
+            $content.='<div id="mostratedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
+            $content.="</div>";
+        }
+        return $content;
+    }
+
+    /**
      * this gets the most rated  product
      * @return string 
      */
@@ -1224,13 +1291,13 @@ class productmanager extends object {
             $content .= '<div id="mostratedproduct">';
             $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
             $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
-            
+
             $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
             $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
             $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
 
-            $content.='<div id="mostratedproduct_thumbnail">'.$adaptationsLink->show().'</div>';
+            $content.='<div id="mostratedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
             $content.="</div>";
         }
         $content.="</div>";
@@ -1260,7 +1327,7 @@ class productmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_mostcommented', 'oer') . '</h2>
-	  <p>Tab 3 content.</p>
+	 ' . $this->getMostRatedProducts() . '
      </div>
 
 </div>

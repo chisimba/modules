@@ -35,7 +35,8 @@ class oer extends controller {
             "viewadaptation", "fullviewadaptation", "selfregister",
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
-            "downloaderedit", "printproduct", "downloadersave");
+            "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
+            "viewgroups", "viewgroup","showproductlistingaslist");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -145,9 +146,9 @@ class oer extends controller {
         $contextCode = $this->getParam("contextcode");
         $dbContext = $this->getObject("dbcontext", "context");
         if ($dbContext->joinContext($contextCode)) {
-            return $this->nextAction('viewgroup',array("contextcode"=>$contextCode));
+            return $this->nextAction('viewgroup', array("contextcode" => $contextCode));
         } else {
-            return $this->nextAction('join', array('error' => 'unabletoenter'),'context');
+            return $this->nextAction('join', array('error' => 'unabletoenter'), 'context');
         }
     }
 
@@ -312,9 +313,7 @@ class oer extends controller {
     function __saveoriginalproductstep4() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep4();
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "4");
-        return "productstep4_tpl.php";
+        return $this->nextAction("vieworiginalproduct", array("id"=>$id));
     }
 
     //EDIT Functions
@@ -842,6 +841,15 @@ class oer extends controller {
         $objThemeManager->addNewTheme();
     }
 
+    ///////////////////////////////////////////////////////////////////
+    /*
+
+
+      GROUP FUNCTIONS
+
+     */
+    //////////////////////////////////////////////////////////////////////
+
     /**
      *
      * Method to open the edit/add form for groups
@@ -870,6 +878,12 @@ class oer extends controller {
         $this->setVar("step", "3");
         $this->setVar("contextcode", $this->getParam("contextcode"));
         return 'groupedit_tpl.php';
+    }
+
+    function __updategroupstep3() {
+        $groupManager = $this->getObject("groupmanager", "oer");
+        $groupManager->updateGroupStep3();
+        return $this->nextAction("viewgroup", array("contextcode" => $this->getParam("contextcode")));
     }
 
     /**

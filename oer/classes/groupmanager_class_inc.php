@@ -98,6 +98,19 @@ class groupmanager extends object {
     }
 
     /**
+     * updates the step three of group details: linking selected institutions
+     * to a group 
+     */
+    public function updateGroupStep3() {
+
+        $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
+        $institutions = $this->getParam("rightList");
+        $contextCode = $this->getParam("contextcode");
+
+        $dbGroupInstitutions->updateGroupInstitutions($institutions, $contextCode);
+    }
+
+    /**
      * This creates a grid of groups. Each cell has a thumbnail, and a title, 
      * each when clicked leads to details of the group
      * 
@@ -212,8 +225,6 @@ class groupmanager extends object {
         return $controlBand . $table->show();
     }
 
-
-
     public function genRandomString() {
         $length = 5;
         $characters = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -267,6 +278,109 @@ class groupmanager extends object {
     }
 
     /**
+     * this returns current context members 
+     */
+    function getContextMembers($contextCode) {
+        if (!$this->objUser->isLoggedIn()) {
+            $loginlink = new link($this->uri(array("action" => "login"), "security"));
+            $loginlink->link = $this->objLanguage->languageText("mod_oer_logintoseemembers", "oer");
+            return '<div id="login_to_see_members">' . $loginlink->show() . '</div>';
+        }
+        $objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        $groupEditors = $objManageGroups->contextUsers('Lecturers', $contextCode, array('tbl_users.userId', 'firstName', 'surname'));
+        $groupReadOnly = $objManageGroups->contextUsers('Students', $contextCode, array('tbl_users.userId', 'firstName', 'surname'));
+
+        $str = '';
+
+
+        $str .= '<p><strong>' . ucwords($this->objLanguage->code2Txt('word_lecturers', 'system')) . '</strong></p>';
+
+        if (count($groupEditors) == 0) {
+            $str .= '<p>' . $this->objLanguage->code2Txt('mod_contextgroups_nolecturers', 'contextgroups') . '<p>';
+        } else {
+            $str .= '<p>';
+
+            foreach ($groupEditors as $lecturer) {
+                $str .= $this->objUser->getSmallUserImage($lecturer['userid'], $lecturer['firstname'] . ' ' . $lecturer['surname']) . ' ';
+            }
+
+            $str .= '</p>';
+        }
+
+        $str .= '<p><strong>' . ucwords($this->objLanguage->code2Txt('word_students', 'system')) . '</strong></p>';
+
+        if (count($groupReadOnly) == 0) {
+            $str .= '<p>' . $this->objLanguage->code2Txt('mod_groupadmin_nostuds', 'groupadmin') . '<p>';
+        } else {
+            $str .= '<p>';
+
+            foreach ($groupReadOnly as $student) {
+                $str .= $this->objUser->getSmallUserImage($student['userid'], $student['firstname'] . ' ' . $student['surname']) . ' ';
+            }
+
+            $str .= '</p>';
+        }
+
+        $link = new link($this->uri(NULL, 'contextgroups'));
+        $link->link = $this->objLanguage->code2Txt('mod_contextgroups_toolbarname', 'contextgroups');
+
+        $str .= '<p>' . $link->show();
+        return $str;
+    }
+
+    /**
+     * gets a list of a adaptations by this group. First, we get list of instutions
+     * that are members of this group, then get adapations from each of the 
+     * institutions 
+     */
+    private function getGroupAdaptations($contextcode) {
+        $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
+        $institutions = $dbGroupInstitutions->getGroupInstitutions($contextcode);
+
+        $productManager = $this->getObject("productmanager", "oer");
+        $content = "";
+        foreach ($institutions as $institution) {
+            $content.=$productManager->getAdaptationsByInstitution($institution['institution_id']);
+        }
+        return $content;
+    }
+
+    /**
+     *this gets list of institution in this group
+     * @param type $contextcode
+     * @return type 
+     */
+    private function getInstitutionsByGroup($contextcode) {
+         $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
+        $institutions = $dbGroupInstitutions->getGroupInstitutions($contextcode);
+        $dbInstitution = $this->getObject("dbinstitution", "oer");
+        $content='<table>';
+        
+        foreach ($institutions as $xinstitution) {
+            $institution = $dbInstitution->getInstitutionById($xinstitution['institution_id']);
+            $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"  width="45" height="49"  align="left"/>';
+            if ($institution['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
+            }
+            $instName = $institution['name'];
+            $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $institution['id'])));
+            $instNameLink->link = $instName;
+           
+            $instNameLk = $thumbnail . $instNameLink->show();
+            $content.= '<tr><td class="viewgroup_institution" align="left" valign="top">'.$instNameLk.'</td></tr>';
+        }
+        $content.='</table>';
+        return $content;
+    }
+
+    
+    
+    function getGroupForums($contextcode){
+        $link=new link($this->uri(array(),"forum"));
+        $link->link=  $this->objLanguage->languageText("mod_forum","forum");
+        return $link->show();
+    }
+    /**
      * contructs group view details. Since a group is essentially a context,
      * everything is done based on contextcode. This allows us to plug in modules
      * that make use of context
@@ -274,40 +388,68 @@ class groupmanager extends object {
      * @return string 
      */
     function buildViewGroupDetails($contextcode) {
+        $loggedInVar = '<script language="JavaScript" type="text/javascript">
+            
+         var loggedIn=' . $this->objUser->isLoggedIn() . ';
+        </script>';
+
+
+        $this->appendArrayVar('headerParams', $loggedInVar);
         $dbGroup = $this->getObject("dbgroups", "oer");
         $dbContext = $this->getObject("dbcontext", "context");
         $group = $dbGroup->getGroupByContextCode($contextcode);
         $context = $dbContext->getContext($contextcode);
-        $content = '<h2>' . $context['title'] . '</h2>';
+        $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="left "/>';
+        if ($group['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+        }
 
-        $content = '
+        $table = $this->getObject("htmltable", "htmlelements");
+
+        $table->startRow();
+        $table->addCell('<div id="group_thumbnail">' . $thumbnail . '</div>');
+        $table->addCell('<div id="group_about">' . $context['about'] . '</div>');
+        $table->endRow();
+        $editImg = '<img src="skins/oer/images/icons/edit.png" class="groupedit" align="top" valign="top">';
+
+        $editControls = "";
+        if ($this->objUser->isLoggedIn()) {
+            $editLink = new link($this->uri(array("action" => "editgroupstep1", "contextcode" => $group['contextcode'])));
+            $editLink->link = $editImg;
+            $editLink->cssClass = "editgroup";
+            $editControls = "" . $editLink->show();
+        }
+        $content = '<h2>' . $context['title'] . $editControls . '</h2>';
+
+        $content.=$table->show();
+        $content .= '<div id="group_plugins">
 <div class="tabber">
 
      <div class="tabbertab">
-	  <h2 class="members">' . $this->objLanguage->languageText('mod_oer_members', 'oer') . '</h2>
-	 Members
+	  <h2 class="members">' . $this->objLanguage->languageText('mod_oer_members', 'oer') . '</h2>'
+                . $this->getContextMembers($contextcode) . '
      </div>
 
 
      <div class="tabbertab">
-	  <h2 class="mostrated">' . $this->objLanguage->languageText('mod_oer_word_adaptations', 'oer') . '</h2>
-	   Adaptations
+	  <h2 class="mostrated">' . $this->objLanguage->languageText('mod_oer_word_adaptations', 'oer') . '</h2>'
+                . $this->getGroupAdaptations($contextcode) . '
      </div>
 
 
      <div class="tabbertab">
-	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_discussions', 'oer') . '</h2>
-	  <p>Tab 3 content.</p>
+	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_discussions', 'oer') . '</h2>'
+	  .$this->getGroupForums($contextcode).'
      </div>
 
 
      <div class="tabbertab">
-	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_institutions', 'oer') . '</h2>
-	  <p>Tab 4 content.</p>
+	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_institutions', 'oer') . '</h2>'
+	 .$this->getInstitutionsByGroup($contextcode).'
      </div>
 
 </div>
-            
+</div>            
 
 ';
         return $content;

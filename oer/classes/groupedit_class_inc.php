@@ -120,8 +120,8 @@ class groupedit extends object {
         $table->cellspacing = '0';
         $table->cellpadding = '2';
 
-        
-         if ($contextcode != null) {
+
+        if ($contextcode != null) {
             $hidId = new hiddeninput('contextcode');
             $hidId->cssId = "id";
             $hidId->value = $contextcode;
@@ -129,8 +129,8 @@ class groupedit extends object {
             $table->addCell($hidId->show());
             $table->endRow();
         }
-        
-        
+
+
         // Group name.
         $name = new textinput('name');
         $name->size = 80;
@@ -175,7 +175,7 @@ class groupedit extends object {
         $editor->name = 'description';
         $editor->height = '150px';
         $editor->width = '85%';
-        $editor->setBasicToolBar();
+        //   $editor->setBasicToolBar();
         if ($context != null) {
             $editor->setContent($context['about']);
         }
@@ -294,9 +294,26 @@ class groupedit extends object {
         return$header->show() . $form->show();
     }
 
-    public function buildGroupFormStep2() {
+    public function buildGroupFormStep2($contextcode) {
+        $this->addStep4JS();
+        $dbGroup = $this->getObject("dbgroups", "oer");
+        $group = $dbGroup->getGroupByContextCode($contextcode);
+        $objContext = $this->getObject('dbcontext', 'context');
+        $action = "savegroupstep3";
+        if ($group != null) {
+            $action = "updategroupstep3";
+        }
+
+        $form = new form('groupFrom1', $this->uri(array("action" => $action)));
+
         // Group latitude.
         $table = $this->newObject('htmltable', 'htmlelements');
+        $hidId = new hiddeninput('contextcode');
+        $hidId->cssId = "id";
+        $hidId->value = $contextcode;
+        $table->startRow();
+        $table->addCell($hidId->show());
+        $table->endRow();
         $latitude = new textinput('loclat');
         $latitude->size = 38;
         if ($this->mode == 'edit') {
@@ -345,6 +362,7 @@ class groupedit extends object {
                 . $table->show();
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
+        return $form->show();
     }
 
     /**
@@ -357,41 +375,46 @@ class groupedit extends object {
         $this->addStep4JS();
         $dbGroup = $this->getObject("dbgroups", "oer");
         $group = $dbGroup->getGroupByContextCode($contextcode);
-        $objContext = $this->getObject('dbcontext', 'context');
-        $action = "savegroupstep3";
-        if ($group != null) {
-            $action = "updategroupstep3";
-        }
- 
+
+        $action = "updategroupstep3";
         $form = new form('groupFrom1', $this->uri(array("action" => $action)));
 
         $table = $this->newObject('htmltable', 'htmlelements');
-        $user_current_membership = $this->objDbGroups->getGroupInstitutions(
-                $this->getParam('id'));
+        $hidId = new hiddeninput('contextcode');
+        $hidId->cssId = "id";
+        $hidId->value = $contextcode;
+        $table->startRow();
+        $table->addCell($hidId->show());
+        $table->endRow();
+        $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
+        $user_current_membership = $dbGroupInstitutions->getGroupInstitutions($contextcode);
         $currentMembership = array();
 
         $availablegroups = array();
         $groups = $this->objDbInstitution->getAllInstitutions();
-        foreach ($groups as $group) {
-            if (count($user_current_membership) > 0) { ///****** undefined
-                foreach ($user_current_membership as $membership) {
-                    if ($membership['institution_id'] != NULL) {
-                        if (strcmp($group['id'], $membership['institution_id']) == 0) {
-                            array_push($currentMembership, $group);
-                        } else {
-                            array_push($availablegroups, $group);
-                        }
-                    }
-                }
-            } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
-                array_push($availablegroups, $group);
-            }
+        /*      foreach ($groups as $group) {
+          if (count($user_current_membership) > 0) { ///****** undefined
+          foreach ($user_current_membership as $membership) {
+          if ($membership['institution_id'] != NULL) {
+          if (strcmp($group['id'], $membership['institution_id']) == 0) {
+          array_push($currentMembership, $group);
+          } else {
+          array_push($availablegroups, $group);
+          }
+          }
+          }
+          } else { /// TODO WHY IS NOT SHOWING ON EDIT ADMIN
+          array_push($availablegroups, $group);
+          }
+          }
+         */
+        foreach ($user_current_membership as $gr) {
+            $currentMembership = array("name" => $this->objDbInstitution->getInstitutionName($gr['institution_id']), "id" => $gr['institution_id']);
         }
-
         $objSelectBox = $this->newObject('selectbox', 'htmlelements');
         $objSelectBox->create($form, 'leftList[]', 'Available Institutions', 'rightList[]', 'Chosen Institutions');
         $objSelectBox->insertLeftOptions(
-                $availablegroups, 'id', 'name');
+                $groups, 'id', 'name');
         $objSelectBox->insertRightOptions(
                 $currentMembership, 'id', 'name');
 
@@ -423,12 +446,15 @@ class groupedit extends object {
         $form->addToForm($fieldset->show());
         $form->addToForm('<br />');
 
-        $button = new button('saveGroupButton', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
-        $button->setToSubmit();
-        $form->addToForm($button->show());
+
+        // Get and insert the save and cancel form buttons
+        $arrFormButtons = $objSelectBox->getFormButtons();
+        $form->addToForm(implode(' / ', $arrFormButtons));
+
+
         $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
 
-        return $objAjaxUpload->show($contextcode, 'uploadgroupthumbnail').$form->show();
+        return $objAjaxUpload->show($contextcode, 'uploadgroupthumbnail') . $form->show();
     }
 
     /**

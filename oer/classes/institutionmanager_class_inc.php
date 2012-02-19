@@ -430,7 +430,7 @@ class institutionmanager extends object {
         $filtermanager = $this->getObject("filtermanager", "oer");
         $filter = $filtermanager->buildFilterProductsForm('filteradaptations', 'mod_oer_typeofadaptation');
 
-        $sectionsContent='<table><tr><td>' . $filter . '</td><td>' . $randomAdaptations . '</td></tr></table>';
+        $sectionsContent='<table><tr><td align="left" valign="top">' . $filter . '</td><td  align="left" valign="top">' . $randomAdaptations . '</td></tr></table>';
         
         $leftContent.=$sectionsContent;
 
