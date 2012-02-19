@@ -886,7 +886,7 @@ class productmanager extends object {
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
-        $maxCol = 3;
+        $maxCol = 2;
         foreach ($originalProducts as $originalProduct) {
             if ($startNewRow) {
                 $startNewRow = FALSE;

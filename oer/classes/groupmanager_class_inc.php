@@ -151,7 +151,7 @@ class groupmanager extends object {
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
-        $maxCol = 3;
+        $maxCol = 2;
         $editImg = '<img src="skins/oer/images/icons/edit.png" class="groupedit" align="top" valign="top">';
         $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
 
@@ -185,7 +185,7 @@ class groupmanager extends object {
 
             $groupStr = $thumbnailLink->show() . '<br/>' . $titleLink->show();
             
-            $joinGroupLink=new link($this->uri(array("joinContext"=>$group['contextcode']),'context'));
+            $joinGroupLink=new link($this->uri(array("action"=>"joincontext","contextcode"=>$group['contextcode']),'context'));
             $joinGroupLink->link=$this->objLanguage->languageText('mod_oer_join', 'oer');
             $joinGroupLink->cssClass='joingroup';
             $groupStr.='<br/>'.$joinGroupLink->show();
