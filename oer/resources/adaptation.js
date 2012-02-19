@@ -32,16 +32,13 @@ jQuery(function() {
     
     
     
-    jQuery("a[class=deleteoriginalproduct]").click(function(){
+    jQuery("a[class=confirmdeleteadaptation]").click(function(){
 
-        var r=confirm(confirm_delete_original_product);
-        if (r==true){
+        var answer=confirm(confirm_delete_adaptation);
+        if (answer==true){
             var link = this.href;
-
             window.location=link;
         }
-
-
         return false;
     });
     

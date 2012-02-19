@@ -112,7 +112,7 @@ class adaptationmanager extends object {
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $arrayVars['confirm_delete_original_product'] = "mod_oer_confirm_delete_original_product";
+        $arrayVars['confirm_delete_adaptation'] = "mod_oer_confirm_delete_adaptation";
         $arrayVars['loading'] = "mod_oer_loading";
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
@@ -899,6 +899,7 @@ class adaptationmanager extends object {
         $table = $this->getObject('htmltable', 'htmlelements');
         $table->cellspacing = 10;
         $table->cellpadding = 10;
+        $table->attributes = "style='table-layout:fixed;'";
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -962,10 +963,10 @@ class adaptationmanager extends object {
                 $editLink->link = $editImg;
                 $product.="&nbsp;" . $editLink->show();
 
-                $deleteLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
-                $deleteLink->link = $deleteImg;
-                $deleteLink->cssClass = "deleteoriginalproduct";
-                $product.="&nbsp;" . $deleteLink->show();
+                $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
+                $delLink->link = $deleteImg;
+                $delLink->cssClass = "confirmdeleteadaptation";
+                $product.="&nbsp;" . $delLink->show();
             }
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);

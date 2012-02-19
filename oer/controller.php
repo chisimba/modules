@@ -587,8 +587,9 @@ class oer extends controller {
      * deletes a product. Assumes the deletion is already confirmed
      */
     function __deleteadaptation() {
+        $objProductManager = $this->getObject("productmanager", "oer");
         $id = $this->getParam("id");
-        $this->obj->deleteOriginalProduct($id);
+        $objProductManager->deleteOriginalProduct($id);
         $this->setVar("mode", "grid");
         return "adaptationlist_tpl.php";
     }
