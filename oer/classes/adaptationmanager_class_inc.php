@@ -124,7 +124,7 @@ class adaptationmanager extends object {
      * @param $mode Whether its a new adaptation or editing an existing one
      * return string
      */
-    public function makeNewAdaptation($mode, $id = Null, $productid = Null) {
+    /*public function makeNewAdaptation($mode, $id = Null, $productid = Null) {
         $objTable = $this->getObject('htmltable', 'htmlelements');
         if ($productid == Null || empty($productid)) {
             return $this->nextAction('adaptationlist');
@@ -319,7 +319,7 @@ class adaptationmanager extends object {
         $header->str = $product['title'];
 
         return $header->show() . $formData->show();
-    }
+    }*/
 
     /**
      * this constructs the  form for managing an adaptation
@@ -478,6 +478,23 @@ class adaptationmanager extends object {
         $objTable->addCell($language->show());
         $objTable->endRow();
 
+        //Adaptation notes
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $adaptation_notes = $this->newObject('htmlarea', 'htmlelements');
+        $adaptation_notes->name = 'adaptation_notes';
+        $adaptation_notes->cssClass = 'required';
+        if ($product != null) {
+            $adaptation_notes->value = $product['adaptation_notes'];
+        }
+        $adaptation_notes->height = '150px';
+        $adaptation_notes->setBasicToolBar();
+        $objTable->addCell($adaptation_notes->show());
+        $objTable->endRow();
+        
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->setLegend($this->objLanguage->languageText('mod_oer_adaptation_heading_step1', 'oer'));
         $fieldset->addContent($objTable->show());

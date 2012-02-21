@@ -255,7 +255,7 @@ class oer extends controller {
      */
     function __viewadaptation() {
         $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);
+        $this->setVarByRef("id", $id);        
         return "viewadaptation_tpl.php";
     }
 

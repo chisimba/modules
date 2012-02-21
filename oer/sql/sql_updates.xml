@@ -255,5 +255,17 @@
             </change>
         </data>
     </update>
-
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.168</version>
+        <description>
+            <br/>Added adaptation notes
+        </description>
+        <data>
+            <add>
+                <name>adaptation_notes</name>
+                <type>text</type>
+            </add>
+        </data>
+    </update>
 </updates>

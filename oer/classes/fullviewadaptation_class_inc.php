@@ -17,6 +17,9 @@ class fullviewadaptation extends object {
         $this->objDbInstitution = $this->getObject("dbinstitution", "oer");
         $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $this->objUser = $this->getObject("user", "security");
+        //Flag to check if user is logged in
+        $this->isLoggedIn = $this->objUser->isLoggedIn();
     }
 
     function buildAdaptationFullView($productId) {
@@ -24,13 +27,67 @@ class fullviewadaptation extends object {
         $parentProduct = $this->objDbProducts->getProduct($product["parent_id"]);
         $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
         $parentInstData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+        //Flag to check if user has perms to manage adaptations
+        $hasPerms = $this->objAdaptationManager->userHasPermissions();
+        
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+
+        //Add download link
+        $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
+
+        // Download link
+        $prodTitle = "";
+        if (!$this->isLoggedIn) {
+            $printLink = new link("#dialog");
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            $printLink->extra = 'name="modal" onclick="showDownload();"';
+            $printLk = "" . $printLink->show();
+
+            // Login link
+            $objLoginLk = new link($this->uri(array("action" => "login"), "security"));
+            $objLoginLk->cssId = "loginlink";
+            $objLoginLk->link = $this->objLanguage->languageText('mod_oer_clicktologin', 'oer');
+
+            // Register link
+            $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
+            $objRegisterLk->cssId = "registerlink";
+            $objRegisterLk->link = $this->objLanguage->languageText('mod_oer_clickhere', 'oer');
+
+            //Dialogue content
+            $toolTipStr = $this->objLanguage->languageText('mod_oer_downloadlnone', 'oer') . ".<br /><br />";
+            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlntwo', 'oer') . ".<br /><br />";
+            $toolTipStr .= $objRegisterLk->show() . " " . $this->objLanguage->languageText('mod_oer_downloadlnthree', 'oer')
+                    . ". " . $this->objLanguage->languageText('mod_oer_readmore', 'oer') . " " . $this->objLanguage->languageText('mod_oer_downloadlnfour', 'oer') . ".<br /><br />";
+            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlnfive', 'oer') . " " . $objLoginLk->show() . ". "
+                    . $this->objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $this->objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
+            $buttonTitle = $this->objLanguage->languageText('word_next');
+            //$buttonNxt = new button('submit', $buttonTitle);
+            $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
+            $objNextLk->cssId = "nextbtnspan";
+            $objNextLk->link = $this->objLanguage->languageText('word_next');
+
+            $toolTipStr .= " " . $objNextLk->show();
+
+            $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$this->objLanguage->languageText('mod_oer_adaptation','oer').")";
+
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " ." ".$printLk. '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
+        } else {
+            $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
+            $printLink->link = $printImg;
+            $printLink->cssClass = "downloaderedit";
+            //$printLink->target = "_blank";
+            $printLk = "" . $printLink->show();
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>';
+        }
         
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
-
-        //Flag to check if user has perms to manage adaptations
-        $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
         $newAdapt = "";
         if ($hasPerms) {
@@ -68,24 +125,30 @@ class fullviewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        $leftCol = '<div class="pageBreadCrumb">
+        $leftCol = "";
+        /*$leftCol .= '<div class="pageBreadCrumb">
                     <a href="#" class="greyText Underline">User Set</a> |
                     <a href="#" class="greyText Underline">Current</a> |
                     <a href="#" class="greyText Underline">Path</a> |
                     <span class="greyText">' . $product['title'] . '</span>
-                    <br><br>
-                </div>
-            <div class="headingHolder"><div class="heading2"><h1 class="greyText">' . $product['title'] . '</h1></div>
-            <div class="icons2">
-            <a href="#"><img src="skins/oer/images/icons/icon-edit-section.png" alt="Edit" width="18" height="18"></a>
-            <a href="#"><img src="skins/oer/images/icons/icon-delete.png" alt="Delete" width="18" height="18"></a>
-            <a href="#"><img src="skins/oer/images/icons/icon-add-to-adaptation.png" alt="Add to Adaptation" width="18" height="18"></a>
-            <a href="#"><img src="skins/oer/images/icons/icon-content-top-print.png" alt="Print" width="18" height="18"></a>
-            <a href="#"><img src="skins/oer/images/icons/icon-download.png" alt="Download" width="18" height="18"></a>
-            </div></div>';
+                </div>';*/
 
-        $content = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $product['description'] . '</div></div>';
-        $content .= '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div></div>';
+        $leftCol .= '<div class="headingHolder"><div class="heading2"><h1 class="greyText">' . $product['title'] . '</h1></div>
+            <div class="icons2">'.$prodTitle.'</div></div>';
+        $table = $this->getObject("htmltable", "htmlelements");
+        $table->attributes = "style='table-layout:fixed;'";
+        $table->border = 0;
+
+        $leftContent = "";
+        $rightContent = "";
+        $leftContent = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $product['description'] . '</div>';
+        $leftContent .= '<div class="adaptationNotesContent"><h3>'.$this->objLanguage->languageText('mod_oer_adaptationotes', 'oer').'</h3>'
+                . $product['adaptation_notes'] . '</div></div>';
+        $rightContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div></div>';
+        $table->startRow();
+        $table->addCell($leftContent, "", "top", "left", "", 'style="width:75%"');
+        $table->addCell("<br /><br />".$rightContent, "", "top", "left", "", 'style="width:25%"');
+        $table->endRow();
 
         $topStuff = '<div class="adaptationListViewTop">
             <div class="tenPixelLeftPadding tenPixelTopPadding">
@@ -95,7 +158,8 @@ class fullviewadaptation extends object {
                             </div>
                             <div class="leftFloatDiv">
                                 <h3>'.$parentProduct['title'].'</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').
+                '" width="18" height="18" class="smallLisitngIcons">
                                 <div class="leftTextNextToTheListingIconDiv">'.$viewParentProd.'</a></div>
                             </div>
                     	</div>
@@ -130,7 +194,7 @@ class fullviewadaptation extends object {
                     </div></div>';
 
         return '<div class="mainContentHolder"><div class="adaptationsBackgroundColor">'.$topStuff.'
-            <div class="hunderedPercentGreyHorizontalLine">' . $content . '</div></div></div>';
+            <div class="hunderedPercentGreyHorizontalLine">' . $table->show() . '</div></div></div>';
     }
 
 }
