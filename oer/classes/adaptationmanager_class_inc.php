@@ -1002,6 +1002,7 @@ class adaptationmanager extends object {
             $link->cssClass = 'adaptation_listing_title';
             $product.= $link->show();
             $product.=$mnglinks;
+            
             $product.= "<br/><div id='adaptationtitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ":</div><br/>";
             $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
             $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
