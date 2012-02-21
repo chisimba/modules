@@ -243,10 +243,10 @@ class viewadaptation extends object {
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
-        $table->startRow();
+        /*$table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $featuredAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
-        $table->endRow();
+        $table->endRow();*/
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $ratingDiv . '</div>', "", "top", "left", "", 'style="width:55%"');
@@ -321,7 +321,7 @@ class viewadaptation extends object {
             $printLink->cssClass = "downloaderedit";
             //$printLink->target = "_blank";
             $printLk = "" . $printLink->show();
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>';
+            $prodTitle .= '<div class="displaybookmarks">' . $featuredAdaptation . $bookmarks . " " . $printLk . '</div>';
         }
         
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
