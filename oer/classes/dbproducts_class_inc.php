@@ -33,7 +33,21 @@ class dbproducts extends dbtable {
      * saves original product into db
      */
     function saveOriginalProduct($data) {
-        return $this->insert($data);
+        $id = $this->insert($data);
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $saveDate = date('Y-m-d H:M:S');
+        $name = $data['title'];
+        $product = $this->getProduct($id);
+        $description = $product['description'];
+        $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
+        $objUser = $this->getObject("user", "security");
+        $userId = $objUser->userId();
+        $module = 'oer';
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+        return $id;
     }
 
     /**
@@ -43,7 +57,23 @@ class dbproducts extends dbtable {
      * @return type 
      */
     function updateOriginalProduct($data, $id) {
-        return $this->update("id", $id, $data);
+        $this->update("id", $id, $data);
+        // Prepare to add product to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $saveDate = date('Y-m-d H:M:S');
+        $name = $data['title'];
+        $product = $this->getProduct($id);
+        $description = $product['description'];
+        $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
+        $objUser = $this->getObject("user", "security");
+        $userId = $objUser->userId();
+        $module = 'oer';
+
+        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+
+        return $id;
     }
 
     /**
@@ -82,41 +112,40 @@ class dbproducts extends dbtable {
             return NULL;
         }
     }
-  
-    
+
     /**
      * returns random x number of adaptations
      * @param type $fragment
      * @param type $limit
      * @return type 
      */
-    function getRandomAdaptationsByInstitution($fragment,$limit){
+    function getRandomAdaptationsByInstitution($fragment, $limit) {
         //$sql='SELECT * FROM tbl_oer_products WHERE RAND()<='.$fragment.' and parent_id is not null limit '.$limit.';';
-        $sql='SELECT * FROM  tbl_oer_products where  parent_id IS NOT NULL ORDER BY RAND() LIMIT '.$limit.';';
+        $sql = 'SELECT * FROM  tbl_oer_products where  parent_id IS NOT NULL ORDER BY RAND() LIMIT ' . $limit . ';';
         return $this->getArray($sql);
     }
-    
+
     /**
      *  returns list of adaptations by given institution id
      * @param type $institutionId 
      */
-    function getAdaptationsByInstitution($institutionId){
+    function getAdaptationsByInstitution($institutionId) {
         $sql = "select * from $this->productsTableName where institutionid = '$institutionId'";
-       
-       return $this->getArray($sql);
+
+        return $this->getArray($sql);
     }
-    
+
     /**
      *
      * @param type $institutionId
      * @return type 
      */
-      function getProductAdaptationCountByInstitution($institutionId) {
+    function getProductAdaptationCountByInstitution($institutionId) {
         $sql = "select count(*) as adaptationcount from $this->productsTableName where institutionid = '$institutionId'";
-        $data = $this->getArray($sql);        
-        return $data[0]['adaptationcount'];       
+        $data = $this->getArray($sql);
+        return $data[0]['adaptationcount'];
     }
-    
+
     /**
      * returns count of adaptations for a specific product
      * @param  $id the product id
@@ -124,19 +153,21 @@ class dbproducts extends dbtable {
      */
     function getProductAdaptationCount($parentId) {
         $sql = "select count(*) as adaptationcount from $this->productsTableName where parent_id = '$parentId'";
-        $data = $this->getArray($sql);        
+        $data = $this->getArray($sql);
         return $data[0]['adaptationcount'];
     }
+
     /**
      * returns array of adaptations for a specific product
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
     function getProductAdaptations($parentId) {
-        $sql = "select * from $this->productsTableName where parent_id = '$parentId'";        
+        $sql = "select * from $this->productsTableName where parent_id = '$parentId'";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns count of adaptations for every original product
      * @param  $id the product id
@@ -147,6 +178,7 @@ class dbproducts extends dbtable {
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns product title for a specific id
      * @param  $id the product id
@@ -161,6 +193,7 @@ class dbproducts extends dbtable {
             return NULL;
         }
     }
+
     /**
      * returns true if product is original-product
      * @param  $id the product id

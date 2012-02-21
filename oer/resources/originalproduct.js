@@ -154,8 +154,8 @@ function updateStep1(){
                 if(msg !== "ERROR_DATA_INSERT_FAIL") {
                    
                     var id=msg;
-                    jQuery("#save_results").html('<span class="success">' + status_success + '</span>');
-                    window.location="?module=oer&action=editoriginalproductstep2&id="+id;
+                    jQuery("#save_results").html('<span class="success">' + msg + '</span>');
+                   // window.location="?module=oer&action=editoriginalproductstep2&id="+id;
                 } else {
                     alert(status_fail);
                 }

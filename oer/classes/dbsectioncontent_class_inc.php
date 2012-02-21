@@ -35,7 +35,10 @@ class dbsectioncontent extends dbTable {
      * @return type ID of the saved section
      */
     function addSectionContent($data) {
-        return $this->insert($data);
+        
+        $id= $this->insert($data);
+        
+        return $id;
     }
 
     /** 

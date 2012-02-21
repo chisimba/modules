@@ -268,4 +268,24 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_oer_sectioncontent</table>
+        <version>0.169</version>
+        <description>
+            <br/>Added delered node
+        </description>
+        <data>
+            <add>
+                <name>deleted</name>
+                <type>text</type>
+                <length>1</length>
+            </add>
+        </data>
+    </update>
+
+
+
+
 </updates>
+
+

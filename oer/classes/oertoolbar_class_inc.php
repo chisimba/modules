@@ -30,8 +30,10 @@ class oertoolbar extends object {
         $menuOptions = array(
             array('action' => 'home', 
                 'text' => $this->objLanguage->languageText('mod_oer_products', 'oer'),
-                'actioncheck' => array("home","vieworiginalproduct","filteroriginalproduct",
-                    "showproductlistingaslist"), 
+                'actioncheck' => array(
+                    "home","vieworiginalproduct","filteroriginalproduct",
+                    "showproductlistingaslist","editoriginalproductstep1","editoriginalproductstep2",
+                    "editoriginalproductstep3","editoriginalproductstep4"), 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'true'),
             
             array('action' => 'adaptationlist', 

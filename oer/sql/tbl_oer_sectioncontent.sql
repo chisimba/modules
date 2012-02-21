@@ -12,6 +12,7 @@ $fields = array(
                 'status' => array('type' => 'text','length' => 12),
                 'contributedby' => array('type' => 'text'),
                 'userid'=>array('type' => 'text','length' => 32),
+                'deleted'=>array('type' => 'text','length' => 1),
                 'keywords' => array('type' => 'text', 'length' => 255),
                 'adaptation_notes' => array('type' => 'text'),
                 'current_path' => array('type' => 'text', 'length' => 255)
