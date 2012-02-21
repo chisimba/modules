@@ -155,7 +155,7 @@ function updateStep1(){
                    
                     var id=msg;
                     jQuery("#save_results").html('<span class="success">' + msg + '</span>');
-                   // window.location="?module=oer&action=editoriginalproductstep2&id="+id;
+                    window.location="?module=oer&action=editoriginalproductstep2&id="+id;
                 } else {
                     alert(status_fail);
                 }

@@ -46,7 +46,7 @@ class dbproducts extends dbtable {
         $userId = $objUser->userId();
         $module = 'oer';
 
-        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+        $objIndexData->luceneIndex($id, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
         return $id;
     }
 
@@ -71,7 +71,7 @@ class dbproducts extends dbtable {
         $userId = $objUser->userId();
         $module = 'oer';
 
-        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+        $objIndexData->luceneIndex($id, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
 
         return $id;
     }
