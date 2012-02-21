@@ -81,7 +81,7 @@ class dboer_adaptations extends dbTable
      * save adaptation into db
      */
     function addNewAdaptation($data) {
-        $id = $this->insert($data);        
+        $id = $this->insert($data);
         return $id;
     }
     /**
