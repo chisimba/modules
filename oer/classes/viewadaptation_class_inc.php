@@ -97,7 +97,6 @@ class viewadaptation extends object {
     }
 
     function buildAdaptationView($productId) {
-        $this->appendArrayVar('headerParams', $this->downloadJS($productId));
         $product = $this->objDbProducts->getProduct($productId);
 
         $table = $this->getObject("htmltable", "htmlelements");
@@ -324,6 +323,7 @@ class viewadaptation extends object {
             $printLk = "" . $printLink->show();
             $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>';
         }
+        
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
