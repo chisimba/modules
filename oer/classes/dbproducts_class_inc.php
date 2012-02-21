@@ -38,7 +38,7 @@ class dbproducts extends dbtable {
         $saveDate = date('Y-m-d H:M:S');
         $name = $data['title'];
         $product = $this->getProduct($id);
-        $description = $product['description'];
+        $description =$product['keywords'].' : '. $product['description'];
         $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
@@ -63,7 +63,7 @@ class dbproducts extends dbtable {
         $saveDate = date('Y-m-d H:M:S');
         $name = $data['title'];
         $product = $this->getProduct($id);
-        $description = $product['description'];
+        $description =$product['keywords'].' : '. $product['description'];
         $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
