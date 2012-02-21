@@ -186,7 +186,7 @@ class switchboardui extends object
             $activeLink->cssClass = "switchboard_icon_link";
             $activeLink->link = "<img src='$iconUrl' class='switchboard_icon' />";
 
-            $description =  $linkItem['description'];
+            $description =  "<div class='sb_desc'>" . $linkItem['description'] . "</div>";
             $table->startRow(NULL, "ROW_" . $id);
             $table->addCell($activeLink->show());
             $table->addCell($title . '<br />' . $description);
