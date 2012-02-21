@@ -34,6 +34,7 @@ class viewadaptation extends object {
     function setupLanguageItems() {
         // Serialize language items to Javascript
         $arrayVars['totalvotestext'] = "mod_oer_productrating";
+        $arrayVars['confirm_delete_adaptation'] = "mod_oer_confirm_delete_adaptation";
         $objSerialize = $this->getObject('serializevars', 'utilities');
         $objSerialize->languagetojs($arrayVars, 'oer');
     }
@@ -213,12 +214,24 @@ class viewadaptation extends object {
         }
         $featuredAdaptation = "";
         if ($this->hasPerms) {
+            $editImg = '<img src="skins/oer/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            //Link edit adaptation
+            $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "edit")));
+            $editLink->link = $editImg;
+            $featuredAdaptation .="&nbsp;" . $editLink->show();
+            //Link delete adaptation
+
+            $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $productId)));
+            $delLink->link = $deleteImg;
+            $delLink->cssClass = "confirmdeleteadaptation";
+            $featuredAdaptation .="&nbsp;" . $delLink->show()."&nbsp;";
             //Add mark as featured adaptation
             $featuredImg = '<img src="skins/oer/images/featured.png">';
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
-            $featuredAdaptation = "" . $featuredLink->show();
+            $featuredAdaptation .= "" . $featuredLink->show();
         }
 
 
@@ -243,10 +256,10 @@ class viewadaptation extends object {
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
-        /*$table->startRow();
-        $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
-        $table->addCell('<div id="viewadaptation_leftcontent">' . $featuredAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
-        $table->endRow();*/
+        /* $table->startRow();
+          $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
+          $table->addCell('<div id="viewadaptation_leftcontent">' . $featuredAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
+          $table->endRow(); */
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $ratingDiv . '</div>', "", "top", "left", "", 'style="width:55%"');
@@ -283,7 +296,7 @@ class viewadaptation extends object {
         if (!$this->isLoggedIn) {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
-            $printLink->cssClass = "downloaderedit";            
+            $printLink->cssClass = "downloaderedit";
             $printLink->extra = 'name="modal" onclick="showDownload();"';
             $printLk = "" . $printLink->show();
 
@@ -312,9 +325,9 @@ class viewadaptation extends object {
 
             $toolTipStr .= " " . $objNextLk->show();
 
-            $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$this->objLanguage->languageText('mod_oer_adaptation','oer').")";
+            $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct', 'oer') . " (" . $this->objLanguage->languageText('mod_oer_adaptation', 'oer') . ")";
 
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " ." ".$printLk. '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . " " . $printLk . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
@@ -323,7 +336,7 @@ class viewadaptation extends object {
             $printLk = "" . $printLink->show();
             $prodTitle .= '<div class="displaybookmarks">' . $featuredAdaptation . $bookmarks . " " . $printLk . '</div>';
         }
-        
+
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';
         return '<br/><div id="adaptationsBackgroundColor">' . $prodTitle . $table->show() . '</div>';
     }
@@ -406,4 +419,5 @@ class viewadaptation extends object {
     }
 
 }
+
 ?>
