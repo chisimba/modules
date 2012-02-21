@@ -691,6 +691,8 @@ class oer extends controller {
             $errors = $this->getParam("errors", "");
             $this->setVarByRef("errors", $errors);
             $this->setVar("step", "1");
+            $data = $productid . '|' . $sectionid;
+            $this->setVarByRef("data", $data);
             return "makeadaptation_tpl.php";
         }
     }
