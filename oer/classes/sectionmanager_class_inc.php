@@ -74,7 +74,11 @@ class sectionmanager extends object {
         );
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
-        $dbCurriculum->updateCurriculum($data, $id);
+        if($id == Null) {
+            $id = $dbCurriculum->addCurriculum($data);
+        } else {
+            $dbCurriculum->updateCurriculum($data, $id);
+        }
         //here we must return the product id to be used for creating section tree
         return $productId;
     }
@@ -394,8 +398,8 @@ class sectionmanager extends object {
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
         $curriculum = $dbCurriculum->getCurriculum($productId);
-
-        if ($curriculum == null) {
+        
+        if ($curriculum == Null) {
             return $this->buildAddEditCuriculumForm($productId, $sectionId, $isOriginalProduct);
         } else {
             if ($sectionId == $curriculum['id']) {

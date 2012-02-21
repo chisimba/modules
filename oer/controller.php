@@ -642,7 +642,13 @@ class oer extends controller {
     function __addsectionnode() {
         $productid = $this->getParam("productid");
         $sectionId = '';
-        $data = $productid . '|' . $sectionId;
+        $nodeType = '';
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct)
+            $isOriginalProduct = 1;
+        else
+            $isOriginalProduct = 0;
+        $data = $productid . '|' . $sectionId . '|' . $isOriginalProduct . '|' . $nodeType;
         $this->setVarByRef("data", $data);
         return "addeditsectionnode_tpl.php";
     }
@@ -654,7 +660,7 @@ class oer extends controller {
     function __editsectionnode() {
         $id = $this->getParam("id");
         $productid = $this->getParam("editproductid");
-        $nodeType = $this->getParam("nodetype");
+        $nodeType = $this->getParam("nodetype", "curriculum");
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
         if ($isOriginalProduct)
             $isOriginalProduct = 1;
@@ -671,7 +677,7 @@ class oer extends controller {
      */
     function __editsectioncontent() {
         $sectionid = $this->getParam("id");
-        $productid = $this->getParam("editproductid");
+        $productid = $this->getParam("productid");
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
         if ($isOriginalProduct) {
             $data = $productid . '|' . $sectionid;
@@ -709,17 +715,29 @@ class oer extends controller {
      * @return type 
      */
     function __createcurriculum() {
+        $productid = $this->getParam("productid");
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $id = $sectionManager->saveCurriculum();
         $params = array("id" => $id);
-        return $this->nextAction('vieworiginalproduct', $params);
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct) {
+            return $this->nextAction('vieworiginalproduct', $params);
+        } else {
+            return $this->nextAction('viewadaptation', $params);
+        }
     }
 
     function __editcurriculum() {
+        $productid = $this->getParam("productid");
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $id = $sectionManager->updateCurriculum();
         $params = array("id" => $id);
-        return $this->nextAction('vieworiginalproduct', $params);
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        if ($isOriginalProduct) {
+            return $this->nextAction('vieworiginalproduct', $params);
+        } else {
+            return $this->nextAction('viewadaptation', $params);
+        }
     }
 
     /**
