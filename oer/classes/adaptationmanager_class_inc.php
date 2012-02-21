@@ -973,19 +973,8 @@ class adaptationmanager extends object {
                 $adaptLink->link = $adaptImg;
                 $makeAdaptation = $adaptLink->show();
             }
-
-            $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
-            $link->link = $thumbnail; // . $makeAdaptation;
-            $product = $link->show();
-
-            $link->link = "<div id='producttitle'>" . $parentData['title'] . "</div>";
-            $link->cssClass = 'original_product_listing_title';
-            $product.= $link->show();
-            $product.= "<br/><div id='producttitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ":</div><br/>";
-            $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
-            $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
-
-
+            //Manage links
+            $mnglinks = "";
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $editImg = '<img src="skins/oer/images/icons/edit.png">';
                 $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
@@ -993,17 +982,29 @@ class adaptationmanager extends object {
 
                 $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
-                $product.="<br />" . $adaptLink->show();
+                $mnglinks.="<br />" . $adaptLink->show();
 
                 $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
-                $product.="&nbsp;" . $editLink->show();
+                $mnglinks.="&nbsp;" . $editLink->show();
 
                 $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
                 $delLink->link = $deleteImg;
                 $delLink->cssClass = "confirmdeleteadaptation";
-                $product.="&nbsp;" . $delLink->show();
+                $mnglinks.="&nbsp;" . $delLink->show()."<br />";
             }
+
+            $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
+            $link->link = $thumbnail; // . $makeAdaptation;
+            $product = $link->show();
+
+            $link->link = "<div id='adaptationtitle'>" . $parentData['title'] . "</div>";
+            $link->cssClass = 'adaptation_listing_title';
+            $product.= $link->show();
+            $product.=$mnglinks;
+            $product.= "<br/><div id='adaptationtitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ":</div><br/>";
+            $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
+            $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
