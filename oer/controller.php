@@ -679,9 +679,9 @@ class oer extends controller {
         $sectionid = $this->getParam("id");
         $productid = $this->getParam("productid");
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
-        if ($isOriginalProduct) {
-            $data = $productid . '|' . $sectionid;
-            $this->setVarByRef("data", $data);
+        $data = $productid . '|' . $sectionid;
+            $this->setVarByRef("data", $data);            
+        if ($isOriginalProduct) {            
             return "addeditsectioncontent_tpl.php";
         } else {
             $mode = $this->getParam("mode", "new");
@@ -691,8 +691,6 @@ class oer extends controller {
             $errors = $this->getParam("errors", "");
             $this->setVarByRef("errors", $errors);
             $this->setVar("step", "1");
-            $data = $productid . '|' . $sectionid;
-            $this->setVarByRef("data", $data);
             return "makeadaptation_tpl.php";
         }
     }

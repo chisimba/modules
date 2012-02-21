@@ -23,6 +23,7 @@ class block_makeadaptation extends object {
         $id = Null;
         $productid = Null;
         $mode = "new";
+        var_dump($data);exit;
         if (count($data) == 3) {
             $productid = $data[0];
             $mode = $data[1];
