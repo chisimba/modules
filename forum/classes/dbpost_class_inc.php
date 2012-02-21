@@ -858,6 +858,27 @@ class dbPost extends dbTable
         }
     }
 
+    
+    /**
+     * gets the last n posts in a forum
+     * @param type $forum
+     * @param type $limit
+     * @return type 
+     */
+
+        function getLastNPosts($forum,$limit=10)
+    {
+            $sql = 'SELECT distinct tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
+        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
+        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
+        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
+        WHERE tbl_forum_topic.forum_id = \''.$forum.'\'
+        ORDER BY tbl_forum_post.datelastupdated DESC LIMIT 10';
+        
+        return $this->getArray($sql);
+     
+    }
+    
     /**
     * Method to get the last 10 posts in a workgroup
     * All formatting is done here
@@ -880,8 +901,8 @@ class dbPost extends dbTable
             FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
             INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
             LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-            WHERE tbl_forum_topic.forum_id = \''.$workgroupForum.'\'
-            ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT '.$limit;
+            WHERE tbl_forum_topic.forum_id = \'' . $workgroupForum . '\'
+            ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT ' . $limit;
 
             $results = $this->getArray($sql);
 
