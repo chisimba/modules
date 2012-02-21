@@ -50,7 +50,10 @@ class groupmanager extends object {
             "country" => $country
         );
         $dbGroups = $this->getObject("dbgroups", "oer");
-        $dbGroups->saveNewGroup($data);
+        $id = $dbGroups->saveNewGroup($data);
+        $dbForum = $this->getObject("dbforum", "forum");
+        $dbForum->autoCreateWorkgroupForum($contextCode, $id, $title);
+
         return $contextCode;
     }
 
@@ -346,16 +349,16 @@ class groupmanager extends object {
     }
 
     /**
-     *this gets list of institution in this group
+     * this gets list of institution in this group
      * @param type $contextcode
      * @return type 
      */
     private function getInstitutionsByGroup($contextcode) {
-         $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
+        $dbGroupInstitutions = $this->getObject("dbgroupinstitutions", "oer");
         $institutions = $dbGroupInstitutions->getGroupInstitutions($contextcode);
         $dbInstitution = $this->getObject("dbinstitution", "oer");
-        $content='<table>';
-        
+        $content = '<table>';
+
         foreach ($institutions as $xinstitution) {
             $institution = $dbInstitution->getInstitutionById($xinstitution['institution_id']);
             $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"  width="45" height="49"  align="left"/>';
@@ -365,21 +368,34 @@ class groupmanager extends object {
             $instName = $institution['name'];
             $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $institution['id'])));
             $instNameLink->link = $instName;
-           
+
             $instNameLk = $thumbnail . $instNameLink->show();
-            $content.= '<tr><td class="viewgroup_institution" align="left" valign="top">'.$instNameLk.'</td></tr>';
+            $content.= '<tr><td class="viewgroup_institution" align="left" valign="top">' . $instNameLk . '</td></tr>';
         }
         $content.='</table>';
         return $content;
     }
 
-    
-    
-    function getGroupForums($contextcode){
-        $link=new link($this->uri(array(),"forum"));
-        $link->link=  $this->objLanguage->languageText("mod_forum","forum");
-        return $link->show();
+    /**
+     * returns post in this grouo
+     * @param type $workgroup
+     * @param type $contextcode
+     * @return type 
+     */
+    function getGroupForums($workgroup, $contextcode) {
+        $link = new link($this->uri(array(), "forum"));
+        $link->link = $this->objLanguage->languageText("mod_forum", "forum");
+        
+        $forum=  $this->getObject("forum", "oer");
+        return '<h1>'. $link->show().'</h1>'.$forum->showLastNPosts(10);
+
+        
+       /* $dbPost = $this->getObject("dbpost", "forum");
+        return $link->show() . '' . $dbPost->getWorkGroupPosts($workgroup, $contextcode);
+    */
+        
     }
+
     /**
      * contructs group view details. Since a group is essentially a context,
      * everything is done based on contextcode. This allows us to plug in modules
@@ -439,13 +455,13 @@ class groupmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_discussions', 'oer') . '</h2>'
-	  .$this->getGroupForums($contextcode).'
+                . $this->getGroupForums($group['id'],$contextcode) . '
      </div>
 
 
      <div class="tabbertab">
 	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_institutions', 'oer') . '</h2>'
-	 .$this->getInstitutionsByGroup($contextcode).'
+                . $this->getInstitutionsByGroup($contextcode) . '
      </div>
 
 </div>

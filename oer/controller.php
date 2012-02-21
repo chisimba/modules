@@ -128,6 +128,8 @@ class oer extends controller {
      */
     private function __viewgroup() {
         $contextCode = $this->getParam("contextcode");
+        $dbContent=  $this->getObject("dbcontext", "context");
+        $dbContent->joinContext($contextCode);
         $this->setVarByRef("contextcode", $contextCode);
         return "viewgroup_tpl.php";
     }
