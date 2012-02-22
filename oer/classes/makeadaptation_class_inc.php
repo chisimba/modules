@@ -25,7 +25,7 @@ class makeadaptation extends object {
      * @return type 
      */
     function addNewAdaptationSection() {
-        $nodeid = $this->getParam("node_id");
+        $nodeid = $this->getParam("id");
         $title = $this->getParam("section_title");
         $data = array(
             'node_id' => $nodeid,
@@ -53,6 +53,8 @@ class makeadaptation extends object {
      */
     function updateAdaptationSection() {
         $id = $this->getParam("id");
+        $adaptationSectionContent = $this->dbsectioncontent->getSectionContent($id);
+        $sContentId = $adaptationSectionContent["id"];
         $nodeid = $this->getParam("node_id");
         $title = $this->getParam("section_title");
         $data = array(
@@ -67,7 +69,7 @@ class makeadaptation extends object {
             'current_path' => $this->getParam("selectnode")
         );
 
-        $this->dbsectioncontent->updateSectionContent($data, $id);
+        $this->dbsectioncontent->updateSectionContent($data, $sContentId);
         //Update section node title
         $nodedata = array(
             'title' => $title

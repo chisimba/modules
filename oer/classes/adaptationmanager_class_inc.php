@@ -23,6 +23,7 @@ class adaptationmanager extends object {
         $this->dbproducts = $this->getObject("dbproducts", "oer");
         $this->dbOERAdaptations = $this->getObject("dboer_adaptations", "oer");
         $this->dbSectionContent = $this->getObject("dbsectioncontent", "oer");
+        $this->dbSectionNodes = $this->getObject("dbsectionnodes", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -129,6 +130,8 @@ class adaptationmanager extends object {
         if ($productid == Null || empty($productid)) {
             return $this->nextAction('adaptationlist');
         }
+        $sectionId = $id;
+
         $objSectionManager = $this->getObject('sectionmanager', 'oer');
 
         $createInLang = '<div id="createin">' . $this->objLanguage->languageText('mod_oer_currentpath', 'oer') .
@@ -142,14 +145,21 @@ class adaptationmanager extends object {
         $hidMode->cssId = "mode";
         $hidMode->value = $mode;
 
+        $adaptationSection = false;
+
         if ($id != Null) {
             //Get adaptation section data with sectionnode id
             $adaptationSection = $this->dbSectionContent->getSectionContent($id);
-
-            $id = $adaptationSection["id"];
-            $mode = "edit";
+            
             $hidNodeId = new hiddeninput('node_id');
-            $hidNodeId->value = $adaptationSection['node_id'];
+            if ($adaptationSection) {
+                $id = $adaptationSection["id"];
+                $mode = "edit";
+                $hidNodeId->value = $adaptationSection['node_id'];
+            } else {
+                $mode = "add";
+                $hidNodeId->value = "";
+            }
             $objTable->startRow();
             $objTable->addCell($hidNodeId->show());
             $objTable->endRow();
@@ -158,7 +168,6 @@ class adaptationmanager extends object {
             //Get adapted-product data
             $product = $this->dbproducts->getProduct($productid);
         }
-
         //the title
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_oer_sectiontitle', 'oer') .
@@ -169,7 +178,7 @@ class adaptationmanager extends object {
         $textinput = new textinput('section_title');
         $textinput->size = 60;
         $textinput->cssClass = 'required';
-        if ($id != null) {
+        if ($adaptationSection) {
             $textinput->value = $adaptationSection['title'];
         } else if ($productid != null) {
             $textinput->value = $product['title'];
@@ -198,7 +207,7 @@ class adaptationmanager extends object {
         $description->name = 'section_content';
         $description->cssClass = 'required';
 
-        if ($id != null) {
+        if ($adaptationSection) {
             $description->value = $adaptationSection['content'];
         }
         $description->height = '150px';
@@ -219,7 +228,7 @@ class adaptationmanager extends object {
         $published->addOption('draft', $this->objLanguage->languageText('mod_oer_draft', 'oer'));
         $published->addOption('published', $this->objLanguage->languageText('mod_oer_published', 'oer'));
 
-        if ($id != null) {
+        if ($adaptationSection) {
             $published->setSelected($adaptationSection['status']);
         }
         $objTable->addCell($published->show());
@@ -250,7 +259,7 @@ class adaptationmanager extends object {
         $textinput->size = 60;
         $textinput->cssClass = 'required';
 
-        if ($id != null) {
+        if ($adaptationSection) {
             $textinput->value = $adaptationSection['keywords'];
         } else if ($product) {
             $textinput->value = $product['keywords'];
@@ -267,7 +276,7 @@ class adaptationmanager extends object {
         $textinput = new textinput('contributed_by');
         $textinput->size = 60;
         $textinput->cssClass = 'required';
-        if ($id != null) {
+        if ($adaptationSection) {
             $textinput->value = $adaptationSection['contributedby'];
         }
         $objTable->addCell($textinput->show());
@@ -284,7 +293,7 @@ class adaptationmanager extends object {
         $textarea = new textarea('adaptation_notes', '', 5, 60);
         $textarea->cssClass = 'required';
 
-        if ($id != null) {
+        if ($adaptationSection) {
             $textarea->value = $adaptationSection['adaptation_notes'];
         }
 
@@ -301,14 +310,14 @@ class adaptationmanager extends object {
 
 
         $action = "addadaptationsection";
-        $formData = new form('addadaptationsection', $this->uri(array("action" => $action, "id" => $id, "productid" => $productid, "mode" => $mode)));
+        $formData = new form('addadaptationsection', $this->uri(array("action" => $action, "id" => $sectionId, "productid" => $productid, "mode" => $mode)));
         $formData->addToForm($fieldset);
 
         $button = new button('save', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
-        $button = new button('cancel', $this->objLanguage->languageText('word_cancel'));
+        $button = new button('cancel', $this->objLanguage->languageText('word_back'));
         $uri = $this->uri(array("action" => "viewadaptation", "id" => $productid));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());
@@ -316,7 +325,11 @@ class adaptationmanager extends object {
         $header = new htmlheading();
         $header->type = 2;
         $header->cssClass = "original_product_title";
-        $header->str = $product['title'];
+        if ($adaptationSection) {
+            $header->str = $adaptationSection['title'];
+        } else {
+            $header->str = $product['title'];
+        }
 
         return $header->show() . $formData->show();
     }
@@ -909,7 +922,7 @@ class adaptationmanager extends object {
         if ($mode == 'list') {
             $listlink->cssClass = 'highlight_list';
         }
-        $controlBand.='&nbsp;'.$listlink->show();
+        $controlBand.='&nbsp;' . $listlink->show();
 
         $sortbydropdown = new dropdown('sortby');
         $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
@@ -991,7 +1004,7 @@ class adaptationmanager extends object {
                 $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
                 $delLink->link = $deleteImg;
                 $delLink->cssClass = "confirmdeleteadaptation";
-                $mnglinks.="&nbsp;" . $delLink->show()."<br />";
+                $mnglinks.="&nbsp;" . $delLink->show() . "<br />";
             }
 
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));

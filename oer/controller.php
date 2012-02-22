@@ -36,7 +36,7 @@ class oer extends controller {
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
-            "viewgroups", "viewgroup","showproductlistingaslist");
+            "viewgroups", "viewgroup", "showproductlistingaslist");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -128,7 +128,7 @@ class oer extends controller {
      */
     private function __viewgroup() {
         $contextCode = $this->getParam("contextcode");
-        $dbContent=  $this->getObject("dbcontext", "context");
+        $dbContent = $this->getObject("dbcontext", "context");
         $dbContent->joinContext($contextCode);
         $this->setVarByRef("contextcode", $contextCode);
         return "viewgroup_tpl.php";
@@ -257,7 +257,7 @@ class oer extends controller {
      */
     function __viewadaptation() {
         $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);        
+        $this->setVarByRef("id", $id);
         return "viewadaptation_tpl.php";
     }
 
@@ -315,7 +315,7 @@ class oer extends controller {
     function __saveoriginalproductstep4() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep4();
-        return $this->nextAction("vieworiginalproduct", array("id"=>$id));
+        return $this->nextAction("vieworiginalproduct", array("id" => $id));
     }
 
     //EDIT Functions
@@ -339,21 +339,21 @@ class oer extends controller {
      */
     function __addadaptationsection() {
         $mode = $this->getParam("mode", "new");
-        $id = $this->getParam("id", Null);
-        $productid = $this->getParam("productid", Null);
+        $sectionId = $this->getParam("id", Null);
+        $productId = $this->getParam("productid", Null);
 
-        if ($mode == "edit" && ($id != Null || !empty($id))) {
+        if ($mode == "edit" && ($productId != Null || !empty($sectionId))) {
             $id = $this->objMakeAdaptation->updateAdaptationSection();
             $mode = "edit";
         } else {
             $id = $this->objMakeAdaptation->addNewAdaptationSection();
             $mode = "edit";
         }
-        $this->setVarByRef("id", $id);
-        $this->setVarByRef("productid", $productid);
+        $this->setVarByRef("id", $sectionId);
+        $this->setVarByRef("productid", $productId);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("errors", $errors);
-        $params = array("id" => $id, "productid" => $productid, "mode" => $mode);
+        $params = array("id" => $sectionId, "productid" => $productId, "mode" => $mode);
         return $this->nextAction('makeadaptation', $params);
     }
 
@@ -679,11 +679,11 @@ class oer extends controller {
      */
     function __editsectioncontent() {
         $sectionid = $this->getParam("id");
-        $productid = $this->getParam("productid");
+        $productid = $this->getParam("editproductid");
         $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
         $data = $productid . '|' . $sectionid;
-            $this->setVarByRef("data", $data);            
-        if ($isOriginalProduct) {            
+        $this->setVarByRef("data", $data);
+        if ($isOriginalProduct) {
             return "addeditsectioncontent_tpl.php";
         } else {
             $mode = $this->getParam("mode", "new");
@@ -754,10 +754,16 @@ class oer extends controller {
     }
 
     function __deletesectionnode() {
+        $productid = $this->getParam("editproductid");
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $sectionManager->deleteSectionNode();
-        $params = array("id" => $this->getParam("editproductid"));
-        return $this->nextAction('vieworiginalproduct', $params);
+        $isOriginalProduct = $this->objDBProducts->isOriginalProduct($productid);
+        $params = array("id" => $productid);
+        if ($isOriginalProduct) {
+            return $this->nextAction('vieworiginalproduct', $params);
+        } else {
+            return $this->nextAction('viewadaptation', $params);
+        }
     }
 
     /**
@@ -988,7 +994,7 @@ class oer extends controller {
         $institutionManager = $this->getObject("institutionmanager", "oer");
         if ($id == null) {
             $id = $institutionManager->addInstitution(
-                    'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
+                            'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
         }
         $this->setVarByRef("id", $id);
         return 'institutionedit_tpl.php';
