@@ -24,7 +24,6 @@ jQuery(function() {
     // Things to do on loading the page
     jQuery(document).ready(function() {
       // Set up the right content.
-      alert("YOUA RE HERE");
       jQuery("#middledynamic_area").load('packages/makemodule/resources/forms/startform.html');
     });
 
