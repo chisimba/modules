@@ -27,7 +27,7 @@ class filtermanager extends object {
     /**
      * builds a filter products form 
      */
-    function buildFilterProductsForm($action,$label) {
+    function buildFilterProductsForm($action, $label) {
 
         $typeOfProduct = "";
         $objElement = new checkbox('model', $this->objLanguage->languageText('mod_oer_model', 'oer'));
@@ -56,17 +56,15 @@ class filtermanager extends object {
         $language->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
         $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
 
-        $fieldset2 = $this->newObject('fieldset', 'htmlelements');
-        $fieldset2->setLegend($this->objLanguage->languageText('mod_oer_language', 'oer'));
-        $fieldset2->addContent($language->show());
+        $languageField = $this->objLanguage->languageText('mod_oer_language', 'oer') . '<br/>';
+        $languageField.=$language->show(). '<br/><br/>';
 
         $author = new dropdown('author');
         $author->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
 
 
-        $fieldset3 = $this->newObject('fieldset', 'htmlelements');
-        $fieldset3->setLegend($this->objLanguage->languageText('mod_oer_author', 'oer'));
-        $fieldset3->addContent($author->show());
+        $authorField = $this->objLanguage->languageText('mod_oer_author', 'oer') . '<br/>';
+        $authorField.=$author->show(). '<br/><br/>';
 
         $itemsPerPage = new dropdown('author');
         $itemsPerPage->addOption('15', '15');
@@ -74,19 +72,18 @@ class filtermanager extends object {
         $itemsPerPage->addOption('60', '60');
         $itemsPerPage->addOption('120', '120');
 
-        $fieldset4 = $this->newObject('fieldset', 'htmlelements');
-        $fieldset4->setLegend($this->objLanguage->languageText('mod_oer_itemsperpage', 'oer'));
-        $fieldset4->addContent($itemsPerPage->show());
+        $itemsPerPageField = $this->objLanguage->languageText('mod_oer_itemsperpage', 'oer') . '<br/>';
+        $itemsPerPageField.=$itemsPerPage->show(). '<br/><br/>';
 
 
         $formData = new form('originalproductfilter', $this->uri(array("action" => $action)));
-        $formData->addToForm($fieldset1->show() . $fieldset2->show() . $fieldset3->show() . $fieldset4->show());
+        $formData->addToForm($fieldset1->show() . $languageField . $authorField . $itemsPerPageField);
         $button = new button('searchoriginalproduct', $this->objLanguage->languageText('word_search', 'system'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
 
-        $button = new button('cancel', $this->objLanguage->languageText('mod_oer_reset','oer'));
+        $button = new button('cancel', $this->objLanguage->languageText('mod_oer_reset', 'oer'));
         $uri = $this->uri(array("action" => "home"));
         $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
         $formData->addToForm('&nbsp;&nbsp;' . $button->show());

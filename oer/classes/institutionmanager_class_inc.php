@@ -107,6 +107,8 @@ class institutionmanager extends object {
             $deleteLink->cssClass = "deleteinstitution";
             $deleteLink->link = $objIcon->show();
 
+            $viewLink=new link($this->uri(array("action"=>"viewinstitution", "id" => $institution['id'])));
+            $viewLink->link=$institution['name'];
 
 
             $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
@@ -115,7 +117,7 @@ class institutionmanager extends object {
             }
 
             $table->addCell($thumbnail);
-            $table->addCell($institution['name'] . $editLink->show() . $deleteLink->show());
+            $table->addCell($viewLink->show() . $editLink->show() . $deleteLink->show());
             $table->addCell($institution['country']);
             $table->addCell($dbInstitutionType->getType($institution['type']));
             $table->endRow();
@@ -471,7 +473,7 @@ class institutionmanager extends object {
         $filtermanager = $this->getObject("filtermanager", "oer");
         $filter = $filtermanager->buildFilterProductsForm('filteradaptations', 'mod_oer_typeofadaptation');
 
-        $sectionsContent = '<table><tr><td align="left" valign="top">' . $filter . '</td><td  align="left" valign="top">' . $randomAdaptations . '</td></tr></table>';
+        $sectionsContent = '<div id="institution_sections"><table><tr><td align="left" valign="top">' . $filter . '</td><td class="institution_randomadaptation" align="left" valign="top">' . $randomAdaptations . '</td></tr></table></div>';
 
         $leftContent.=$sectionsContent;
 
