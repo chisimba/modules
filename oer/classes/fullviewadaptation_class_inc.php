@@ -28,8 +28,7 @@ class fullviewadaptation extends object {
     function loadJS() {
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
-        $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getJavaScriptFile('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
-        $this->appendArrayVar('headerParams', $jqUICSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
@@ -175,36 +174,36 @@ class fullviewadaptation extends object {
             <div class="tenPixelLeftPadding tenPixelTopPadding">
                         <div class="productAdaptationViewLeftColumnTop">
                             <div class="leftTopImage">
-                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49" />
                             </div>
                             <div class="leftFloatDiv">
                                 <h3>'.$parentProduct['title'].'</h3>
                                 <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_bookmark', 'oer').
-                '" width="18" height="18" class="smallLisitngIcons">
+                '" width="18" height="18" class="smallLisitngIcons" />
                                 <div class="leftTextNextToTheListingIconDiv">'.$viewParentProd.'</a></div>
                             </div>
                     	</div>
                         
                         <div class="middleAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"><br>
+                        	<img src="skins/oer/images/icon-adapted-by.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="24" height="24"/><br />
                         	<span class="pinkText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
                         </div>
 
 
                         <div class="productAdaptationViewMiddleColumnTop">
                             <div class="leftTopImage">
-                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49">
+                            	<img src="skins/oer/images/adapted-product-grid-institution-logo-placeholder.jpg" width="45" height="49"/>
                             </div>
                             <div class="middleFloatDiv">
                                 <h3 class="darkGreyColour">'.$instData['name'].'</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="18" height="18" class="smallLisitngIcons">
+                                <img src="skins/oer/images/icon-product.png" alt="'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'" width="18" height="18" class="smallLisitngIcons" />
                                 <div class="middleTextNextToTheListingIconDiv">'.$viewParentInst.'</div>
                             </div>
                     	</div>
 
 <div class="productAdaptationViewRightColumnTop">
                         <div class="rightAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_oer_managedby', 'oer').'" width="24" height="24"><br>
+                        	<img src="skins/oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_oer_managedby', 'oer').'" width="24" height="24"/><br />
                         	<span class="greenText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>
                         </div>
                             <div class="rightFloatDiv">
