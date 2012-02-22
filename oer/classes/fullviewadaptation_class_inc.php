@@ -11,6 +11,7 @@ class fullviewadaptation extends object {
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass("link", "htmlelements");
         $this->loadClass("form", "htmlelements");
+        $this->loadJS();
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "oer");
         $this->objDbProductComments = $this->getObject("dbproductcomments", "oer");
@@ -19,8 +20,7 @@ class fullviewadaptation extends object {
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $this->objUser = $this->getObject("user", "security");
         //Flag to check if user is logged in
-        $this->isLoggedIn = $this->objUser->isLoggedIn();
-        $this->loadJS();
+        $this->isLoggedIn = $this->objUser->isLoggedIn();        
     }
 /**
      * JS an CSS for product rating
