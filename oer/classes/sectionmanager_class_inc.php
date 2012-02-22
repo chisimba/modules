@@ -153,10 +153,7 @@ class sectionmanager extends object {
             "nodetype" => $nodeType,
             "level" => count(explode("/", $path))
         );
-
-
-        $id = $dbSections->addSectionNode($data);
-
+        $id = $dbSections->addSectionNode($data);        
         return $id;
     }
 
