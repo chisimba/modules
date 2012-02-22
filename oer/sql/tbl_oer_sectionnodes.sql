@@ -13,5 +13,6 @@ $fields = array(
                 'status' => array('type' => 'text','length' => 32),
                 'deleted' => array('type' => 'text','length' => 1),
                 'level' => array('type' => 'text','length' => 1),
+                'nodetype' => array('type' => 'text','length' => 32),
                 'path' => array('type' => 'text'));
 ?>

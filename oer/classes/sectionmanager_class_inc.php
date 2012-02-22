@@ -156,6 +156,7 @@ class sectionmanager extends object {
 
 
         $id = $dbSections->addSectionNode($data);
+
         return $id;
     }
 
@@ -397,8 +398,7 @@ class sectionmanager extends object {
     function buildCreateEditNodeForm($productId, $sectionId, $isOriginalProduct) {
 
         $dbCurriculum = $this->getObject("dbcurriculums", "oer");
-        $curriculum = $dbCurriculum->getCurriculum($productId);
-        
+        $curriculum = $dbCurriculum->getCurriculum($productId);        
         if ($curriculum == Null) {
             return $this->buildAddEditCuriculumForm($productId, $sectionId, $isOriginalProduct);
         } else {
@@ -422,7 +422,7 @@ class sectionmanager extends object {
         $action = "createsectionnode";
         if ($section != null) {
             $action = 'updatesectionnode';
-        }
+        }        
 
         $form = new form('createsectionnode', $this->uri(array('action' => $action, "productid" => $productId)));
 
