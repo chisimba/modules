@@ -63,7 +63,8 @@ class fullviewadaptation extends object {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            $printLink->extra = 'name="modal" onclick="showDownload(); "alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->extra = 'name="modal" onclick="showDownload();" alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             $printLk = "" . $printLink->show();
 
             // Login link
