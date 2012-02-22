@@ -20,8 +20,26 @@ class fullviewadaptation extends object {
         $this->objUser = $this->getObject("user", "security");
         //Flag to check if user is logged in
         $this->isLoggedIn = $this->objUser->isLoggedIn();
+        $this->loadJS();
     }
+/**
+     * JS an CSS for product rating
+     */
+    function loadJS() {
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
+        $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css') . '"/>';
+        $this->appendArrayVar('headerParams', $jqUICSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
+        $this->appendArrayVar('headerParams', $dialogCSS);
+    }
+    
     function buildAdaptationFullView($productId) {
         $product = $this->objDbProducts->getProduct($productId);
         $parentProduct = $this->objDbProducts->getProduct($product["parent_id"]);
@@ -45,7 +63,7 @@ class fullviewadaptation extends object {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            $printLink->extra = 'name="modal" onclick="showDownload();"';
+            $printLink->extra = 'name="modal" onclick="showDownload(); "alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
             $printLk = "" . $printLink->show();
 
             // Login link
@@ -80,6 +98,8 @@ class fullviewadaptation extends object {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
+            $printLink->extra = 'alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             //$printLink->target = "_blank";
             $printLk = "" . $printLink->show();
             $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . $printLk . '</div>';
