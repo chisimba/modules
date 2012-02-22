@@ -1021,7 +1021,7 @@ class adaptationmanager extends object {
             $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
-            $adaptationsLink = new link($this->uri(array("action" => "viewadaptions", "id" => $originalProduct['id'])));
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "id" => $originalProduct['id'])));
             $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'adaptationcount';
             $product.="<br/>" . $adaptationsLink->show();
