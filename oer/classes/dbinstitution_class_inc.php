@@ -78,7 +78,7 @@ class dbinstitution extends dbtable {
         $userId = $this->objUser->userId();
         $module = 'oer';
 
-        $objIndexData->luceneIndex(NULL, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
+        $objIndexData->luceneIndex($id, $saveDate, $url, $name, NULL, $teaser, $module, $userId, NULL, NULL, NULL);
         return $id;
     }
 
@@ -113,6 +113,23 @@ class dbinstitution extends dbtable {
         }
     }
 
+    /**
+     * this tests if the supplied institutionid has been used in adaptation.
+     * Ideally, if this is the case, the institution cannot be deleted until
+     * it is di-linked from the pridct
+     * @param type $institutionId 
+     */
+    public function  isInstitutionInUse($institutionId){
+        $sql=
+        "select institutionid from tbl_oer_products where institutionid = '$institutionId'";
+        $rows=$this->getArray($sql);
+        if(count($rows) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     /*
      * Function to get the institution data by id
      * @param id id of the institution record
@@ -216,7 +233,7 @@ class dbinstitution extends dbtable {
             $objIndexData = $this->getObject('indexdata', 'search');
 
             // Prep Data
-            $docId = 'institution_' . $id;
+            
             $docDate = date('Y-m-d H:M:S');
             ;
             $url = $this->uri(array('action' => '4', 'institutionId' => $id), 'oer');
@@ -238,7 +255,7 @@ class dbinstitution extends dbtable {
             );
 
             // Add to Index
-            $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
+            $objIndexData->luceneIndex($id, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
 
             return $result;
         } else {

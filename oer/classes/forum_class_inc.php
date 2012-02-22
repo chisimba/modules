@@ -53,18 +53,10 @@ class forum extends object {
                 $cssClass = NULL;
             } else {
                 $cssClass = 'smallText';
-                $postLink = new link($this->uri(array('module' => 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post' => $post['post_id'])));
+                $postLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $post['topic_id'], 'post' => $post['post_id']),"forum"));
                 $postLink->link = stripslashes($post['post_title']);
                 $postDetails.= '<strong>' . $postLink->show() . '</strong>';
                 $postDetails .= '<br />' . $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
-
-                /*
-                  if ($post['firstName'] != '') {
-                  $user = 'By: '.$post['firstName'].' '.$post['surname'].' - ';
-                  } else {
-                  $user = '';
-                  }
-                 */
 
                 if ($this->formatDate($post['datelastupdated']) == date('j F Y')) {
                     $datefield = $todayAt . ' ' . $this->formatTime($post['datelastupdated']);
@@ -72,7 +64,7 @@ class forum extends object {
                     $datefield = $this->formatDate($post['datelastupdated']) . ' - ' . $this->formatTime($post['datelastupdated']);
                 }
 
-                $postDetails .= '<br /><strong>' . $datefield . '</strong><br/>';
+                $postDetails .= '<div id="forum_post"><strong>' . $datefield . '</strong></div>';
             }
         }
         return $postDetails;

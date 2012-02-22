@@ -40,6 +40,18 @@ class institutionmanager extends object {
         $this->_validation['valid'] = TRUE;
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
+        $this->setupLanguageItems();
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('institutionedit.js'));
+    }
+
+    /**
+     * sets up necessary lang items for use in js
+     */
+    function setupLanguageItems() {
+// Serialize language items to Javascript
+        $arrayVars['confirm_delete_institution'] = "mod_oer_confirmdeleteinstitution";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oer');
     }
 
     public function institutionNameExists($name) {
@@ -53,12 +65,12 @@ class institutionmanager extends object {
     }
 
     public function addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-        //Check if institution exists
+//Check if institution exists
         return $this->_objDbInstitution->addInstitution($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
     public function editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
-        //First check if an institution with a similar name exists        
+//First check if an institution with a similar name exists        
         $this->_objDbInstitution->editInstitution($id, $name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail);
     }
 
@@ -72,16 +84,16 @@ class institutionmanager extends object {
         return $this->_institution;
     }
 
-    public function getAllInstitutions($filter = NULL) {
+    /**
+     * this returns formatted list of institutions. This list includes the 
+     * institution logo, with controls for editing/deleting the institution
+     */
+    public function getAllInstitutions($message) {
+
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objUser = $this->getObject("user", "security");
-        $this->_institutionList = $this->_objDbInstitution->getAllInstitutions($filter);
+        $this->_institutionList = $this->_objDbInstitution->getAllInstitutions();
         $table = $this->getObject("htmltable", "htmlelements");
-        $table->startHeaderRow();
-        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_name', 'oer'));
-        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_country', 'oer'));
-        $table->addHeaderCell($this->_objLanguage->languageText('mod_oer_institution_type', 'oer'));
-        $table->endHeaderRow();
         $dbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $canEdit = $objUser->isLoggedIn();
         foreach ($this->_institutionList as $institution) {
@@ -90,17 +102,46 @@ class institutionmanager extends object {
             $editLink = new link($this->uri(array("action" => "institutionedit", "mode" => "edit", "id" => $institution['id'])));
             $editLink->link = $objIcon->show();
 
-            $table->addCell($institution['name'] . $editLink->show());
+            $objIcon->setIcon("delete");
+            $deleteLink = new link($this->uri(array("action" => "deleteinstitution", "id" => $institution['id'])));
+            $deleteLink->cssClass = "deleteinstitution";
+            $deleteLink->link = $objIcon->show();
+
+
+
+            $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
+            if ($institution['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+            }
+
+            $table->addCell($thumbnail);
+            $table->addCell($institution['name'] . $editLink->show() . $deleteLink->show());
             $table->addCell($institution['country']);
             $table->addCell($dbInstitutionType->getType($institution['type']));
             $table->endRow();
         }
-        $header = '<div id="institutionlisting_header">';
         $addLink = new link($this->uri(array("action" => 'institutionedit')));
         $addLink->link = $this->_objLanguage->languageText('mod_oer_institution_heading_new', 'oer');
-        $header.=$addLink->show();
-        $header.='</div>';
-        return $header . $table->show();
+
+        $controlBand = '<h1>' . $this->_objLanguage->languageText('mod_oer_institutions', 'oer') . '</h1>'
+                . '<div id="institution_controlband">';
+        $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
+        $controlBand.= '<h1>' . $newthumbnail . $addLink->show() . '</h1>';
+        $controlBand.= '</div> ';
+
+        $notification = '';
+        if ($message != '') {
+            $notification = '<script type="text/javascript">
+                        showNotification({
+                            message: "' . $message . '",
+                            type: "error",
+                            autoClose: true,
+                            duration: 5                                        
+                        });
+                    </script>
+';
+        }
+        return $controlBand . $table->show().$notification;
     }
 
     private function constructInstitution($id) {
@@ -165,7 +206,7 @@ class institutionmanager extends object {
         return $this->_institution->getWebsiteLink();
     }
 
-    //Get the country name by using the country ID stored in the database
+//Get the country name by using the country ID stored in the database
     function getInstitutionCountry() {
         $countryId = $this->_institution->getCountry();
 
@@ -197,7 +238,7 @@ class institutionmanager extends object {
         return $address;
     }
 
-    //Get the values of all the current institution in an array
+//Get the values of all the current institution in an array
     function getInstitutionData() {
         $institutionData['name'] = $this->getInstitutionName();
         $institutionData['id'] = $this->getInstitutionId();
@@ -235,7 +276,7 @@ class institutionmanager extends object {
         $destinationDir = $dir . '/oer/institutions/' . $institutionId;
 
         $objMkDir->mkdirs($destinationDir);
-        // @chmod($destinationDir, 0777);
+// @chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
         $objUpload->permittedTypes = array(
@@ -266,69 +307,69 @@ class institutionmanager extends object {
 
     function validate($name, $description, $type, $country, $address1, $address2, $address3, $zip, $city, $websiteLink, $keyword1, $keyword2, $thumbnail) {
         $this->_validation['valid'] = TRUE;
-        //Check if a name has been provided
+//Check if a name has been provided
         if (empty($name)) {
             $this->_validation['valid'] = FALSE;
             $nameErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_name_error', 'unesco_oer');
             $this->_validation['name'] = $nameErrMsg;
         }
 
-        //Ensure that a description has been provided
+//Ensure that a description has been provided
         if (empty($description)) {
             $this->_validation['valid'] = FALSE;
             $descriptionErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_type_error', 'unesco_oer');
             $this->_validation['description'] = $descriptionErrMsg;
         }
 
-        //Ensure that a type has been selected
+//Ensure that a type has been selected
         if (empty($type)) {
             $this->_validation['valid'] = FALSE;
             $typeErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_description_error', 'unesco_oer');
             $this->_validation['type'] = $typeErrMsg;
         }
 
-        //Ensure that a country has been selected
+//Ensure that a country has been selected
         if (empty($country)) {
             $this->_validation['valid'] = FALSE;
             $countryErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_country_error', 'unesco_oer');
             $this->_validation['country'] = $countryErrMsg;
         }
-        //Ensure that an address1 has been provided
+//Ensure that an address1 has been provided
         if (empty($address1)) {
             $this->_validation['valid'] = FALSE;
             $addressErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_address_error', 'unesco_oer');
             $this->_validation['address1'] = $addressErrMsg;
         }
 
-        //Ensure that a city has been provided
+//Ensure that a city has been provided
         if (empty($city)) {
             $this->_validation['valid'] = FALSE;
             $cityErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_city_error', 'unesco_oer');
             $this->_validation['city'] = $cityErrMsg;
         }
 
-        //Ensure that a zip has been provided
+//Ensure that a zip has been provided
         if (empty($zip)) {
             $this->_validation['valid'] = FALSE;
             $zipErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_zip_error', 'unesco_oer');
             $this->_validation['zip'] = $zipErrMsg;
         }
 
-        //Ensure that a websitelink has been provided
+//Ensure that a websitelink has been provided
         if (empty($websiteLink)) {
             $this->_validation['valid'] = FALSE;
             $urlErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_websitelink_error', 'unesco_oer');
             $this->_validation['websiteLink'] = $urlErrMsg;
         }
 
-        //Ensure that at least 1 keyword has been provided
+//Ensure that at least 1 keyword has been provided
         if (empty($keyword1)) {
             $this->_validation['valid'] = FALSE;
             $keywordErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_keyword_error', 'unesco_oer');
             $this->_validation['keyword1'] = $keywordErrMsg;
         }
 
-        //Ensure that thumbnail is provided
+//Ensure that thumbnail is provided
         if (empty($thumbnail)) {
             $this->_validation['valid'] = FALSE;
             $thumbnailErrMsg = $this->_objLanguage->languageText('mod_unesco_oer_institution_thumbnail_error', 'unesco_oer');
@@ -401,7 +442,7 @@ class institutionmanager extends object {
         $adaptationCount = $dbProducts->getProductAdaptationCountByInstitution($institutionId);
         $limit = 10;
         $fragment = 0;
-        //$fragment = $limit / $adaptationCount;
+//$fragment = $limit / $adaptationCount;
 
         $adaptations = $dbProducts->getRandomAdaptationsByInstitution($fragment, $limit);
 
@@ -430,19 +471,19 @@ class institutionmanager extends object {
         $filtermanager = $this->getObject("filtermanager", "oer");
         $filter = $filtermanager->buildFilterProductsForm('filteradaptations', 'mod_oer_typeofadaptation');
 
-        $sectionsContent='<table><tr><td align="left" valign="top">' . $filter . '</td><td  align="left" valign="top">' . $randomAdaptations . '</td></tr></table>';
-        
+        $sectionsContent = '<table><tr><td align="left" valign="top">' . $filter . '</td><td  align="left" valign="top">' . $randomAdaptations . '</td></tr></table>';
+
         $leftContent.=$sectionsContent;
 
         $rightContent = "";
-        //Add bookmark
+//Add bookmark
         $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
         $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
 
 
-        //Get institution type
+//Get institution type
         $objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
         $instType = $objDbInstitutionType->getType($institution['type']);
 
@@ -460,8 +501,8 @@ class institutionmanager extends object {
 
         $table->startRow();
 
-      
-        $table->addCell('<div id="viewproduct_leftcontent">'.$leftContent.'</div>', "60%", "top", "left");
+
+        $table->addCell('<div id="viewproduct_leftcontent">' . $leftContent . '</div>', "60%", "top", "left");
 
 
         $table->addCell('<div id="viewproduct_rightcontent>' . $rightContent . '</div>', "40%", "top", "left");

@@ -18,7 +18,11 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "institutionlisting"
+        "block" : "institutionlisting",
+         <?php
+        echo '"configData":';
+        echo '"' . $message . '"';
+        ?>
         }
         
 

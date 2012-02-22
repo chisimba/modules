@@ -53,4 +53,24 @@ jQuery(function() {
             });
         }
     });
+
+
+jQuery("a[class=deleteinstitution]").click(function(){
+
+    var r=confirm(confirm_delete_institution);
+    if (r==true){
+        var link = this.href;
+
+        window.location=link;
+    }
+
+
+    return false;
 });
+    
+    
+
+});
+
+
+

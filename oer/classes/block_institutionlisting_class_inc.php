@@ -13,7 +13,8 @@ class block_institutionlisting extends object {
 
     function show() {
         $institutionManager = $this->getObject("institutionmanager", "oer");
-        return $institutionManager->getAllInstitutions();
+        $message=$this->configData;
+        return $institutionManager->getAllInstitutions($message);
     }
 
 }

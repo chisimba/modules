@@ -213,7 +213,7 @@ class groupmanager extends object {
 
                 $table->endRow();
                 $startNewRow = TRUE;
-                $count = 1;
+                $count = 0;
             }
             $count++;
         }

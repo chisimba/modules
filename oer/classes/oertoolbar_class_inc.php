@@ -63,7 +63,10 @@ class oertoolbar extends object {
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
             array('action' => 'cpanel',
                 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 
-                'actioncheck' => array("cpanel","modulecatalogue","toolbar"), 
+                'actioncheck' => array(
+                    "cpanel","modulecatalogue","toolbar","institutionlisting",
+                    "institutionedit","modulecatalogue"), 
+                
                 'module' => 'oer', 'status' => 'admin', 'isDefaultSelected' => 'false'),
         );
 

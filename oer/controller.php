@@ -22,6 +22,7 @@ class oer extends controller {
         $this->objMakeAdaptation = $this->getObject("makeadaptation", "oer");
         $this->objDBProducts = $this->getObject("dbproducts", "oer");
         $this->objDBdownloaders = $this->getObject('dboer_downloaders');
+        $this->loadJS();
     }
 
     /**
@@ -101,6 +102,20 @@ class oer extends controller {
         } else {
             return FALSE;
         }
+    }
+
+    /**
+     * load notification js, needed in rest of the module. And the global var loggedIn 
+     */
+    function loadJS() {
+        $objUser=  $this->getObject("user", "security");
+        $isLoggedIn=$objUser->isLoggedIn() ?"true":"false";
+        $loggedInVar = '<script language="JavaScript" type="text/javascript">
+          
+         var loggedIn = ' . $isLoggedIn . ';
+        </script>';
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery_notification_v.1.js'));
+        $this->appendArrayVar('headerParams', $loggedInVar);
     }
 
     // Beginning of Functions Relating to Actions in the Controller //
@@ -977,6 +992,9 @@ class oer extends controller {
     }
 
     public function __institutionlisting() {
+        $message = $this->getParam("message");
+
+        $this->setVarByRef("message", $message);
         return "institutionlisting_tpl.php";
     }
 
@@ -994,7 +1012,7 @@ class oer extends controller {
         $institutionManager = $this->getObject("institutionmanager", "oer");
         if ($id == null) {
             $id = $institutionManager->addInstitution(
-                            'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
+                    'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
         }
         $this->setVarByRef("id", $id);
         return 'institutionedit_tpl.php';
@@ -1022,6 +1040,24 @@ class oer extends controller {
         $id = $this->getParam("id");
         $this->setVarByRef("id", $id);
         return 'viewinstitution_tpl.php';
+    }
+
+    /**
+     * deletes an institution..but first checks if 
+     * the institution is linked to an adaptation 
+     * first
+     */
+    public function __deleteinstitution() {
+        $id = $this->getParam("id");
+        $dbInstitution = $this->getObject("dbinstitution", "oer");
+        $params = array();
+        if ($dbInstitution->isInstitutionInUse($id)) {
+            $objLanguage = $this->getObject("language", "language");
+            $params = array("message" => $objLanguage->languageText("mod_oer_institutioninuse", "oer"));
+        } else {
+            $dbInstitution->deleteInstitution($id);
+        }
+       return $this->nextAction("institutionlisting", $params);
     }
 
     /**
