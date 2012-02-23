@@ -8,15 +8,17 @@
 class makeadaptation extends object {
 
     private $dbsectioncontent;
-    private $dbsectionnodes;
+    private $dbSectionNodes;
     private $objUser;
-    private $dbproducts;
+    private $dbProducts;
+    private $dbCurriculums;
 
     function init() {
         $this->dbsectioncontent = $this->getObject('dbsectioncontent', 'oer');
-        $this->dbsectionnodes = $this->getObject('dbsectionnodes', 'oer');
+        $this->dbSectionNodes = $this->getObject('dbSectionNodes', 'oer');
+        $this->dbCurriculums = $this->getObject('dbcurriculums', 'oer');
         $this->objUser = $this->getObject("user", "security");
-        $this->dbproducts = $this->getObject("dbproducts", "oer");
+        $this->dbProducts = $this->getObject("dbProducts", "oer");
     }
 
     /**
@@ -43,7 +45,7 @@ class makeadaptation extends object {
         $nodedata = array(
             'title' => $title
         );
-        $this->dbsectionnodes->updateSectionNode($nodedata, $nodeid);
+        $this->dbSectionNodes->updateSectionNode($nodedata, $nodeid);
         return $id;
     }
 
@@ -74,7 +76,7 @@ class makeadaptation extends object {
         $nodedata = array(
             'title' => $title
         );
-        $this->dbsectionnodes->updateSectionNode($nodedata, $nodeid);
+        $this->dbSectionNodes->updateSectionNode($nodedata, $nodeid);
         return $nodeid;
     }
 
@@ -99,11 +101,11 @@ class makeadaptation extends object {
                 "language" => $this->getParam("language"));
 
 
-            $this->dbproducts->updateOriginalProduct($data, $parentid);
+            $this->dbProducts->updateOriginalProduct($data, $parentid);
             return $parentid;
         } else {
             //get thumbnail of original product
-            $parentData = $this->dbproducts->getProduct($parentid);
+            $parentData = $this->dbProducts->getProduct($parentid);
             $thumbnail = $parentData['thumbnail'];
 
             $data = array(
@@ -132,8 +134,62 @@ class makeadaptation extends object {
                 "coverage" => "",
                 "status" => "",
             );
-            $result = $this->dbproducts->saveOriginalProduct($data);
-            return $result;
+
+            $adaptationId = $this->dbProducts->saveOriginalProduct($data);
+            //Clone product curriculum
+            $adaptationCC = $this->dbCurriculums->getCurriculum($parentid);
+
+            if ($adaptationCC != Null) {
+                $ccdata = array(
+                    "product_id" => $adaptationId,
+                    "title" => $adaptationCC["title"],
+                    "forward" => $adaptationCC["forward"],
+                    "background" => $adaptationCC["background"],
+                    "introduction" => $adaptationCC["introduction"],
+                    "status" => $adaptationCC["status"],
+                    "deleted" => $adaptationCC["deleted"]
+                );
+                $ccId = $this->dbCurriculums->addCurriculum($ccdata);
+            }
+
+            //Import product sections into this adaptation
+            $prodNodes = $this->dbSectionNodes->getSectionNodes($parentid);
+
+            foreach ($prodNodes as $prodNode) {
+                $nodeId = $prodNode["id"];
+                $sndata = array(
+                    "product_id" => $adaptationId,
+                    "section_id" => $prodNode["section_id"],
+                    "title" => $prodNode["title"],
+                    "path" => $prodNode["path"],
+                    "status" => $prodNode["status"],
+                    "nodetype" => $prodNode["nodetype"],
+                    "level" => $prodNode["level"],
+                    "deleted" => $prodNode["deleted"]
+                );
+
+                //Create a clone section-node for this adaptation
+                $secId = $this->dbSectionNodes->addSectionNode($sndata);
+
+                //Get section content if any
+                $sectionContent = $this->dbsectioncontent->getSectionContent($nodeId);
+                if ($sectionContent) {
+                    $data = array(
+                        "node_id" => $secId,
+                        "title" => $sectionContent["title"],
+                        "deleted" => $sectionContent['deleted'],
+                        "content" => $sectionContent["content"],
+                        "status" => $sectionContent["status"],
+                        "contributedby" => $sectionContent["contributedby"],
+                        "userid" => $sectionContent["userid"],
+                        "keywords" => $sectionContent["keywords"],
+                        "adaptation_notes" => $sectionContent["adaptation_notes"],
+                        "current_path" => $sectionContent["current_path"]
+                    );
+                    $newSectionId = $this->dbsectioncontent->addSectionContent($data);
+                }
+            }
+            return $adaptationId;
         }
     }
 
@@ -152,16 +208,51 @@ class makeadaptation extends object {
             "language" => $this->getParam("language"),
         );
 
-        $this->dbproducts->updateOriginalProduct($data, $id);
+        $this->dbProducts->updateOriginalProduct($data, $id);
         return $id;
     }
 
     /**
-     * used for deleting an adaptation
+     * Function that deletes adaptation
+     *
+     * @param string $id adaptation Id to be deleted
+     * @return void
      */
-    function deleteAdaptation() {
-        $id = $this->getParam("id");
-        $this->dbproducts->deleteOriginalProduct($id);
+    
+    function deleteAdaptation($id) {
+        //Delete adaptation curriculum
+        $adaptationCC = $this->dbCurriculums->getCurriculum($id);
+        if ($adaptationCC != Null) {
+            $ccdata = array(
+                "deleted" => 1
+            );
+            $this->dbCurriculums->updateCurriculum($ccdata, $adaptationCC["id"]);
+        }
+
+        //Import product sections into this adaptation
+        $prodNodes = $this->dbSectionNodes->getSectionNodes($id);
+
+        foreach ($prodNodes as $prodNode) {
+            $nodeId = $prodNode["id"];
+            $sndata = array(
+                "deleted" => "Y"
+            );
+            //Delete section node
+            $this->dbSectionNodes->updateSectionNode($sndata, $nodeId);
+
+            //Get section content if any
+            $sectionContent = $this->dbsectioncontent->getSectionContent($nodeId);
+            //Delete section content
+            if ($sectionContent) {
+                $data = array(
+                    "deleted" => "Y"
+                );
+                $this->dbsectioncontent->updateSectionContent($data, $sectionContent["id"]);
+            }
+        }
+
+        //Delete the adaptation
+        $this->dbProducts->deleteOriginalProduct($id);
     }
 
     /**
@@ -177,7 +268,7 @@ class makeadaptation extends object {
             "provenonce" => $this->getParam("provenonce"),
         );
 
-        $this->dbproducts->updateOriginalProduct($data, $id);
+        $this->dbProducts->updateOriginalProduct($data, $id);
         return $id;
     }
 
@@ -200,8 +291,10 @@ class makeadaptation extends object {
             "rights" => $this->getParam("creativecommons")
         );
 
-        $this->dbproducts->updateOriginalProduct($data, $id);
+        $this->dbProducts->updateOriginalProduct($data, $id);
         return $id;
     }
+
 }
+
 ?>

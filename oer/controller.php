@@ -605,7 +605,7 @@ class oer extends controller {
     function __deleteadaptation() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $this->getParam("id");
-        $objProductManager->deleteOriginalProduct($id);
+        $this->objMakeAdaptation->deleteAdaptation($id);
         $this->setVar("mode", "grid");
         return "adaptationlist_tpl.php";
     }
