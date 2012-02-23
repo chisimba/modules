@@ -75,6 +75,7 @@ class makemoduleops extends object
     {
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSvars = $this->getObject('serializevars', 'utilities');
     }
 
     /**
@@ -88,6 +89,14 @@ class makemoduleops extends object
      */
     public function loadHelperScript()
     {
+        // get relative module path.
+        $modulePath = $this->objConfig->getModuleURI();
+        $arrayVars = array();
+        $arrayVars['packages'] = $modulePath;
+       
+        // pass module path through to javascript.
+        $this->objSvars->varsToJs($arrayVars);
+        
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('js/makemodule.js',
           'makemodule'));

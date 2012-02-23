@@ -24,13 +24,13 @@ jQuery(function() {
     // Things to do on loading the page
     jQuery(document).ready(function() {
       // Set up the right content.
-      jQuery("#middledynamic_area").load('packages/makemodule/resources/forms/startform.html');
+        jQuery("#middledynamic_area").load(packages+'makemodule/resources/forms/startform.html');
     });
 
     jQuery('#templatetype').live("change", function(){
         if (jQuery("#templatetype").val() == 'dynamiccanvas') {
             //alert("Dynamic canvas is not ready yet");
-            jQuery("#canvastyes").load('packages/makemodule/resources/forms/dynamictype.html')
+            jQuery("#canvastyes").load(packages+'makemodule/resources/forms/dynamictype.html')
         }
     });
 
