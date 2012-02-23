@@ -10,8 +10,7 @@ class fullviewadaptation extends object {
     function init() {
         $this->loadClass('textarea', 'htmlelements');
         $this->loadClass("link", "htmlelements");
-        $this->loadClass("form", "htmlelements");
-        $this->loadJS();
+        $this->loadClass("form", "htmlelements");        
         $this->objLanguage = $this->getObject("language", "language");
         $this->objDbProducts = $this->getObject("dbproducts", "oer");
         $this->objDbProductComments = $this->getObject("dbproductcomments", "oer");
@@ -20,12 +19,13 @@ class fullviewadaptation extends object {
         $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
         $this->objUser = $this->getObject("user", "security");
         //Flag to check if user is logged in
-        $this->isLoggedIn = $this->objUser->isLoggedIn();        
+        $this->isLoggedIn = $this->objUser->isLoggedIn();
+        $this->loadJScript();
     }
 /**
      * JS an CSS for product rating
      */
-    function loadJS() {
+    function loadJScript() {
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery'));
@@ -58,11 +58,12 @@ class fullviewadaptation extends object {
 
         // Download link
         $prodTitle = "";
+        $downloadString = "";
         if (!$this->isLoggedIn) {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            $printLink->extra = 'name="modal" onclick="showDownload();" alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->extra = 'name="modal" onclick="showDownload(); "alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
             $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             $printLk = "" . $printLink->show();
 
@@ -75,25 +76,26 @@ class fullviewadaptation extends object {
             $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
             $objRegisterLk->cssId = "registerlink";
             $objRegisterLk->link = $this->objLanguage->languageText('mod_oer_clickhere', 'oer');
-
-            //Dialogue content
-            $toolTipStr = $this->objLanguage->languageText('mod_oer_downloadlnone', 'oer') . ".<br /><br />";
-            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlntwo', 'oer') . ".<br /><br />";
-            $toolTipStr .= $objRegisterLk->show() . " " . $this->objLanguage->languageText('mod_oer_downloadlnthree', 'oer')
-                    . ". " . $this->objLanguage->languageText('mod_oer_readmore', 'oer') . " " . $this->objLanguage->languageText('mod_oer_downloadlnfour', 'oer') . ".<br /><br />";
-            $toolTipStr .= $this->objLanguage->languageText('mod_oer_downloadlnfive', 'oer') . " " . $objLoginLk->show() . ". "
-                    . $this->objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $this->objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
             $buttonTitle = $this->objLanguage->languageText('word_next');
-            //$buttonNxt = new button('submit', $buttonTitle);
+
+            //Next button
             $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'adaptation')));
             $objNextLk->cssId = "nextbtnspan";
             $objNextLk->link = $this->objLanguage->languageText('word_next');
-
-            $toolTipStr .= " " . $objNextLk->show();
+            //Dialogue content
+            $toolTipStr = $this->objLanguage->languageText('mod_oer_downloadlnone', 'oer') . ".<br /><br />"
+                           . $this->objLanguage->languageText('mod_oer_downloadlntwo', 'oer') . ".<br /><br />"
+                           . $objRegisterLk->show() . " " . $this->objLanguage->languageText('mod_oer_downloadlnthree', 'oer')
+                           . ". " . $this->objLanguage->languageText('mod_oer_readmore', 'oer') . " "
+                           . $this->objLanguage->languageText('mod_oer_downloadlnfour', 'oer') . ".<br /><br />"
+                           . $this->objLanguage->languageText('mod_oer_downloadlnfive', 'oer') . " " . $objLoginLk->show() . ". "
+                           . $this->objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />"
+                           . $this->objLanguage->languageText('mod_oer_downloadlnseven', 'oer')
+                           . " " . $objNextLk->show();
 
             $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$this->objLanguage->languageText('mod_oer_adaptation','oer').")";
-
-            $prodTitle .= '<div class="displaybookmarks">'.$printLk." ". $bookmarks . " " . '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
+            $downloadString = '<div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
+            $prodTitle .= '<div class="displaybookmarks">'.$printLk." ". $bookmarks . " " . '</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
@@ -145,16 +147,11 @@ class fullviewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        $leftCol = "";
-        /*$leftCol .= '<div class="pageBreadCrumb">
-                    <a href="#" class="greyText Underline">User Set</a> |
-                    <a href="#" class="greyText Underline">Current</a> |
-                    <a href="#" class="greyText Underline">Path</a> |
-                    <span class="greyText">' . $product['title'] . '</span>
-                </div>';*/
+        $leftCol = $downloadString;
 
         $leftCol .= '<div class="headingHolder"><div class="heading2"><h1 class="greyText">' . $product['title'] . '</h1></div>
             <div class="icons2">'.$prodTitle.'</div></div>';
+
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
