@@ -154,7 +154,7 @@ class makemoduleops extends object
         if ($moduleCode) {
             $moduleCode = strtolower($moduleCode);
             // Create the module directory.
-            $baseDir = $this->objConfig->getsiteRootPath() . 'packages/' . $moduleCode;
+            $baseDir = $this->objConfig->getModuleURI() . $moduleCode;
             $workingDir = $baseDir . "/";
             if (!mkdir($baseDir, 0777)) {
                 return 'failedtocreate';
