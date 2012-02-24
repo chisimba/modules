@@ -57,15 +57,52 @@ class filtermanager extends object {
         $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
 
         $languageField = $this->objLanguage->languageText('mod_oer_language', 'oer') . '<br/>';
-        $languageField.=$language->show(). '<br/><br/>';
+        $languageField.=$language->show() . '<br/><br/>';
 
+        $dbProducts = $this->getObject("dbproducts", "oer");
+        $authors = $dbProducts->getProductAuthors();
         $author = new dropdown('author');
         $author->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
-
+        foreach ($authors as $cauthor) {
+            $author->addOption($cauthor['author'], $cauthor['author']);
+        }
 
         $authorField = $this->objLanguage->languageText('mod_oer_author', 'oer') . '<br/>';
-        $authorField.=$author->show(). '<br/><br/>';
+        $authorField.=$author->show() . '<br/><br/>';
 
+
+        $institutions = new dropdown('institutions');
+        $institutions->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
+        $dbInstitutions = $this->getObject("dbinstitution", "oer");
+        $allIntitutions = $dbInstitutions->getAllInstitutions();
+        foreach ($allIntitutions as $institution) {
+            $institutions->addOption($institution['id'], $institution['name']);
+        }
+        $institutionsField = $this->objLanguage->languageText('mod_oer_institutions', 'oer') . '<br/>';
+        $institutionsField.=$institutions->show() . '<br/><br/>';
+
+        $regions = new dropdown('regions');
+        $regions->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $allRegions = $dbGroups->getGroupRegions();
+        foreach ($allRegions as $region) {
+            $regions->addOption($region['region'], $region['region']);
+        }
+        $regionsField = $this->objLanguage->languageText('mod_oer_region', 'oer') . '<br/>';
+        $regionsField.=$regions->show() . '<br/><br/>';
+
+
+        
+        $countries = new dropdown('$countries');
+        $countries->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
+       
+        $allCountries = $dbGroups->getGroupCountries();
+        foreach ($allCountries as $country) {
+            $countries->addOption($country['country'], $country['country']);
+        }
+        $countriesField = $this->objLanguage->languageText('mod_oer_country', 'oer') . '<br/>';
+        $countriesField.=$countries->show() . '<br/><br/>';
+        
         $itemsPerPage = new dropdown('author');
         $itemsPerPage->addOption('15', '15');
         $itemsPerPage->addOption('30', '30');
@@ -73,11 +110,11 @@ class filtermanager extends object {
         $itemsPerPage->addOption('120', '120');
 
         $itemsPerPageField = $this->objLanguage->languageText('mod_oer_itemsperpage', 'oer') . '<br/>';
-        $itemsPerPageField.=$itemsPerPage->show(). '<br/><br/>';
+        $itemsPerPageField.=$itemsPerPage->show() . '<br/><br/>';
 
 
         $formData = new form('originalproductfilter', $this->uri(array("action" => $action)));
-        $formData->addToForm($fieldset1->show() . $languageField . $authorField . $itemsPerPageField);
+        $formData->addToForm($fieldset1->show() . $languageField . $authorField . $institutionsField .$regionsField.$countriesField. $itemsPerPageField);
         $button = new button('searchoriginalproduct', $this->objLanguage->languageText('word_search', 'system'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());

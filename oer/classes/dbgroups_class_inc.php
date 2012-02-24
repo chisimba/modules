@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Database access for OER groups
@@ -20,7 +21,7 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
-  *
+ *
  * @category  Chisimba
  * @package   OER
  * @author    UNKNOWN
@@ -32,18 +33,17 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
@@ -87,7 +87,23 @@ class dbgroups extends dbtable {
         return $this->getArray($sql);
     }
 
+    /**
+     * returns distinct regions that are available for all groups
+     */
+    function getGroupRegions() {
+        $sql =
+                "select distinct region from tbl_oer_groups";
+        return $this->getArray($sql);
+    }
 
+    /**
+     * returns distinct countries that are available for all groups
+     */
+    function getGroupCountries() {
+        $sql =
+                "select distinct country from tbl_oer_groups";
+        return $this->getArray($sql);
+    }
 
     /**
      * 
@@ -107,16 +123,16 @@ class dbgroups extends dbtable {
      * @param type $contextcode
      * @return type 
      */
-     public function getGroupByContextCode($contextcode) {
+    public function getGroupByContextCode($contextcode) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE contextcode='$contextcode'";
-        $data= $this->getArray($sql);
-        if(count($data) > 0){
+        $data = $this->getArray($sql);
+        if (count($data) > 0) {
             return $data[0];
-        }else{
+        } else {
             return NULL;
         }
     }
-    
+
     /**
      *
      * Delete a group by group id
@@ -146,18 +162,16 @@ class dbgroups extends dbtable {
         return $result[0]['id'];
     }
 
-    public function updateGroup($data,$contextcode){
-            $this->update('contextcode', $contextcode, $data);
-        
+    public function updateGroup($data, $contextcode) {
+        $this->update('contextcode', $contextcode, $data);
     }
 
-    
     /**
-     *saves new group
+     * saves new group
      * @param type $data
      * @return type 
      */
-    public function saveNewGroup($data){
+    public function saveNewGroup($data) {
         return $this->insert($data);
     }
 
@@ -166,6 +180,7 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
+
     function getGroupLatitude($groupid) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
@@ -177,6 +192,7 @@ class dbgroups extends dbtable {
      * @param $GroupID
      * return int
      */
+
     function getGroupLongitude($groupid) {
         $sql = "SELECT * FROM tbl_oer_groups WHERE id='$groupid'";
         $Group = $this->getArray($sql);
@@ -351,8 +367,8 @@ class dbgroups extends dbtable {
         $sql = "SELECT * FROM tbl_oer_institutions WHERE id ='$id'";
         return $this->getArray($sql);
     }
-    
-     function getLastEntry() {
+
+    function getLastEntry() {
         $sql = "SELECT id FROM tbl_oer_institutions order by id desc limit 1";
         return $this->getArray($sql);
     }
@@ -371,7 +387,7 @@ class dbgroups extends dbtable {
 
     function getNoOfInstitutions($id) {
         $sql = "SELECT * FROM tbl_oer_group_institutions WHERE group_id='$id' AND institution_id IS NOT NULL";
-         $institutions = $this->getArray($sql);
+        $institutions = $this->getArray($sql);
         return count($institutions);
     }
 
@@ -438,28 +454,29 @@ class dbgroups extends dbtable {
         }
     }
 
-
-    function getGroup_Pkid_in_forum($groupid){
-        $sql="select * from tbl_forum where forum_workgroup = '$groupid'";
+    function getGroup_Pkid_in_forum($groupid) {
+        $sql = "select * from tbl_forum where forum_workgroup = '$groupid'";
         $array = $this->getArray($sql);
         return $array[0]['id'];
     }
-    function  getNumberPost($topicid){
-        $sql="select * from tbl_forum_topic where id ='$topicid'";
+
+    function getNumberPost($topicid) {
+        $sql = "select * from tbl_forum_topic where id ='$topicid'";
         $array = $this->getArray($sql);
         return $array[0]['replies'];
     }
-    function saveSubGroup($name,$website,$description,$brief_description,$interest,$parent_id) {
+
+    function saveSubGroup($name, $website, $description, $brief_description, $interest, $parent_id) {
         $data = array(
             'name' => $name,
             'email' => '',
-            'address' =>'',
+            'address' => '',
             'city' => '',
             'state' => '',
-            'country' =>'',
+            'country' => '',
             'postalcode' => '',
             'website' => $website,
-            'LinkedInstitution' =>'',
+            'LinkedInstitution' => '',
             'loclat' => '',
             'loclong' => '',
             'description' => $description,
@@ -467,24 +484,25 @@ class dbgroups extends dbtable {
             'thumbnail' => '',
             'description_one' => $brief_description,
             'description_two' => '',
-            'description_three' =>'',
+            'description_three' => '',
             'description_four' => '',
-            'interests'=>$interest,
-             'parent_id'=>$parent_id
+            'interests' => $interest,
+            'parent_id' => $parent_id
         );
         return $this->insert($data);
     }
-
 
     /**
      * THIS IS JUSTS A CRAP DESIGN
      * @param type $groupid
      * @return type 
      */
-    function getGroupSubgroup($groupid){
-        $sql="select * from tbl_oer_groups where parent_id='$groupid'";
+    function getGroupSubgroup($groupid) {
+        $sql = "select * from tbl_oer_groups where parent_id='$groupid'";
         $array = $this->getArray($sql);
         return $array;
     }
+
 }
+
 ?>

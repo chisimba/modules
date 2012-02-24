@@ -30,6 +30,16 @@ class dbproducts extends dbtable {
     }
 
     /**
+     * returns current authors who have created/adapted ay products
+     */
+    function  getProductAuthors(){
+        $sql=
+        "select distinct author from $this->productsTableName";
+        return $this->getArray($sql);
+    }
+
+
+    /**
      * saves original product into db
      */
     function saveOriginalProduct($data) {
