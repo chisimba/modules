@@ -16,6 +16,11 @@ $objFix->fixThree();
         "module" : "oer",
         "block" : "featuredadaptation"
         }
+                {
+        "display" : "block",
+        "module" : "calendar",
+        "block" : "smallcalendar"
+        }
         <div id="rightdynamic_area" class="rightdynamic_area_layer"></div>
         <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>
     </div>
