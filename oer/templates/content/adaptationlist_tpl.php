@@ -36,11 +36,12 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "adaptationslisting",
+        "block" : "adaptationslisting"
         <?php
-        echo '"configData":';
+        
         if (isset($filter)) {
-            echo '"' . $filter . '"';
+        echo ',"configData":';
+        echo '"' . $filter . '"';
         }
         ?>
         }
