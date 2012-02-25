@@ -22,6 +22,20 @@ var redirection;
  *
  */
 jQuery(function() {
+    jQuery(document).ready(function() {
+        jQuery('#register_success').hide();
+        jQuery('#register_fail').hide();
+    });
+    function showRegisterSuccess(){
+        jQuery('#register_success').dialog({
+            width:350
+        });
+    };
+    function showRegisterFail(){
+        jQuery('#register_fail').dialog({
+            width:350
+        });
+    };
     
     //Create an Ajax method to validate user name is not used
     jQuery.validator.addMethod("uniqueUserName", function(value, element) {
@@ -41,7 +55,7 @@ jQuery(function() {
                         response = true;
                     }
                 }
-             })
+            })
         }
         return response;
     }, "Username is already taken.");
@@ -50,12 +64,12 @@ jQuery(function() {
         function(value, element) {
             return (value != 'none');
         }, 'Please select an option.'
-    );
+        );
 
 
 
     // Things to do on loading the page.
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function() {        
         // Add jQuery Validation to form
         jQuery("#form_edituser").validate({
             errorLabelContainer: jQuery("#RegisterErrors"),
@@ -157,7 +171,7 @@ jQuery(function() {
                 },
                 password: {
                     required: required_field,
-                    minlength: min2
+                    minlength: min8
                 },
                 confirmpassword: {
                     required: required_field,
@@ -235,7 +249,7 @@ jQuery(function() {
                                 captcha_img = "index.php?module=oeruserdata&action=showcaptcha";
                                 jQuery("#img_captcha").attr("src", captcha_img);
                                 jQuery("#captcha").val("");
-                                // Now how do I stop the form from submitting???????/
+                            // Now how do I stop the form from submitting???????/
                             } else {
                                 allow_submit=true;
                             }
@@ -253,24 +267,32 @@ jQuery(function() {
                     url: 'index.php?module=oeruserdata&action=userdetailssave',
                     type: "POST",
                     data: data_string,
-                    success: function(msg) {
-                        alert(msg);
+                    success: function(msg) {                        
                         jQuery("#submitUser").attr("disabled", "");
-                        if(msg !== "ERROR_DATA_INSERT_FAIL") {
+                        if(msg !== "ERROR_DATA_INSERT_FAIL" && msg != null) {
                             if (redirect == true) {
-                                // Redirect after anonymous save
-                                //window.location = 'index.php?module=oeruserdata';
+                                jQuery("#id").val(msg);
+                                jQuery("#mode").val('edit');
+                                jQuery("#save_results").html("");
+                                //Show success dialog
+                                showRegisterSuccess();
+                            // Redirect after anonymous save
+                            //window.location = 'index.php?module=oeruserdata';
                             } else {
                                 // Update the information area 
                                 // (msg is the id of the record on success)
-                                jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');//.fadeOut('5000');
+                                //jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');//.fadeOut('5000');
                                 // Change the id field to be the id that is returned as msg & mode to edit
                                 jQuery("#id").val(msg);
                                 jQuery("#mode").val('edit');
+                                jQuery("#save_results").html("");
+                                //Show success dialog
+                                showRegisterSuccess();
                             }
                         } else {
-                            //alert(msg);
-                            jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
+                            jQuery("#save_results").html("");
+                            showRegisterFail();
+                            //jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
                         }
                     }
                 });

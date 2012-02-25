@@ -103,6 +103,8 @@ class useredit extends object
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
           'jquery'));
+        //Load success dialog window
+        $this->loadJScript();
         // Load the helper Javascript
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('useredit.js',
@@ -198,6 +200,27 @@ class useredit extends object
         }
     }
 
+     /**
+     * JS an CSS for save registration status
+     */
+    function loadJScript() {
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
+
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
+        $this->appendArrayVar('headerParams', $uiAllCSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
+
+
+
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
+        $this->appendArrayVar('headerParams', $dialogCSS);
+    }
     /**
      *
      * Make a heading for the form
@@ -652,6 +675,7 @@ class useredit extends object
         $table->startRow();
         $table->addCell($label->show());
         $editor = new textarea ('description');
+        $editor->cols = 39;        
         //$editor->name = 'description';
         //$editor->height = '150px';
         //$editor->width = '500px';
@@ -681,7 +705,7 @@ class useredit extends object
             // Get a text input for the captcha
             $objInput = new textinput('captcha', '', 'text','15');
             $objInput->setId('captcha');
-            $objInput->size=1;
+            $objInput->size=8;
             $table->addCell("<span class='captcha-image'>" . $img 
               . "</span><br /><span class='captcha-input'>" 
               . $objInput->show() . "</span>");
@@ -702,6 +726,18 @@ class useredit extends object
 
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
+
+        // Default success message upon saving. Shown on a dialog window
+        $saveResultsMsg = '<div id="register_success"  title="'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_regsuccessmsg', 'oeruserdata').'</div>';
+        $saveResultsMsg .= '<div id="register_fail"  title="'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_regfailmsg', 'oeruserdata').'</div>';
 
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";
@@ -735,7 +771,8 @@ class useredit extends object
         $formData->addToForm(
             $table->show()
           . $hiddenFields
-          . $msgArea);
+          . $msgArea
+          . $saveResultsMsg);
         return $formData->show();
     }
 }
