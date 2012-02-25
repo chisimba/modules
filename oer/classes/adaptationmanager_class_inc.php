@@ -87,11 +87,6 @@ class adaptationmanager extends object {
      * adds essential js
      */
     function addJS() {
-        $loggedInVar = '<script language="JavaScript" type="text/javascript">
-
-         var loggedIn=' . $this->objUser->isLoggedIn() . ';
-        </script>';
-        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('adaptation.js', 'oer'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('makeadaptation.js', 'oer'));
@@ -897,7 +892,6 @@ class adaptationmanager extends object {
 
         $mode = $this->getParam("mode", "grid");
         $productId = $this->getParam('productid', Null);
-        echo "Prod Id: ".$productId;
         //Get adapted products, if productId not null, fetch for that product only
         if ($productId != Null) {
             $productAdaptations = $this->dbproducts->getProductAdaptations($productId);

@@ -198,6 +198,7 @@ class productmanager extends object {
         }
     }
 
+
     /**
      * adds essential js and css
      */
@@ -205,13 +206,6 @@ class productmanager extends object {
         $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
         $this->appendArrayVar('headerParams', $uiAllCSS);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
-        $loggedInVar = '<script language="JavaScript" type="text/javascript">
-            
-         var loggedIn=' . $this->objUser->isLoggedIn() . ';
-        </script>';
-
-
-        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
@@ -843,7 +837,7 @@ class productmanager extends object {
      * creates a table and returns the list of current products
      * @return type 
      */
-    public function getOriginalProductListing($mode,$filter='') {
+    public function getOriginalProductListing($mode, $filter='') {
         $originalProducts = $this->dbproducts->getOriginalProducts($filter);
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');

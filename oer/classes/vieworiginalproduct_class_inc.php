@@ -216,17 +216,14 @@ class vieworiginalproduct extends object {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
         
-        $loggedInVar = '<script language="JavaScript" type="text/javascript">
-            
-         var loggedIn='.$this->objUser->isLoggedIn().';
-        </script>';
-
+       
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
         $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css') . '"/>';
         $this->appendArrayVar('headerParams', $jqUICSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
@@ -234,7 +231,6 @@ class vieworiginalproduct extends object {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
-        $this->appendArrayVar('headerParams', $loggedInVar);
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $ratingEffectJs);
         $this->appendArrayVar('headerParams', $ratingUIJs);

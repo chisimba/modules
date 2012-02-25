@@ -50,7 +50,9 @@ class viewadaptation extends object {
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery'));
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
+        $this->appendArrayVar('headerParams', $uiAllCSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
@@ -117,7 +119,7 @@ class viewadaptation extends object {
             //Link for - adapting product from existing adapatation
             $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
             $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
-            $newAdaptLink->extra = 'alt="'.$this->objLanguage->languageText('word_edit', "system", "Edit").'"';
+            $newAdaptLink->extra = 'alt="' . $this->objLanguage->languageText('word_edit', "system", "Edit") . '"';
             $newAdaptLink->title = $this->objLanguage->languageText('word_edit', "system", "Edit");
             $newAdapt = $newAdaptLink->show();
         }
@@ -138,7 +140,7 @@ class viewadaptation extends object {
             $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
             $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $this->objLanguage->languageText('mod_oer_addnode', 'oer');
-            $newNodeLink->extra = 'alt="'.$this->objLanguage->languageText('word_add', 'system').'"';
+            $newNodeLink->extra = 'alt="' . $this->objLanguage->languageText('word_add', 'system') . '"';
             $sections.=$addNodeLink->show();
         }
 
@@ -221,7 +223,7 @@ class viewadaptation extends object {
             //Link edit adaptation
             $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
-            $editLink->extra = 'alt="'.$this->objLanguage->languageText('word_edit', "system", "Edit").'"';
+            $editLink->extra = 'alt="' . $this->objLanguage->languageText('word_edit', "system", "Edit") . '"';
             $editLink->title = $this->objLanguage->languageText('word_edit', "system", "Edit");
             $featuredAdaptation .="&nbsp;" . $editLink->show();
             //Link delete adaptation
@@ -229,9 +231,9 @@ class viewadaptation extends object {
             $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $productId)));
             $delLink->link = $deleteImg;
             $delLink->cssClass = "confirmdeleteadaptation";
-            $delLink->extra = 'alt="'.$this->objLanguage->languageText('word_delete', 'system').'"';
+            $delLink->extra = 'alt="' . $this->objLanguage->languageText('word_delete', 'system') . '"';
             $delLink->title = $this->objLanguage->languageText('word_delete', 'system');
-            $featuredAdaptation .="&nbsp;" . $delLink->show()."&nbsp;";
+            $featuredAdaptation .="&nbsp;" . $delLink->show() . "&nbsp;";
             //Add mark as featured adaptation
             $featuredImg = '<img src="skins/oer/images/featured.png">';
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
@@ -303,7 +305,7 @@ class viewadaptation extends object {
             $printLink = new link("#dialog");
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            $printLink->extra = 'name="modal" onclick="showDownload(); "alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->extra = 'name="modal" onclick="showDownload(); "alt="' . $this->objLanguage->languageText('mod_oer_download', 'oer') . '"';
             $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             $printLk = "" . $printLink->show();
 
@@ -339,7 +341,7 @@ class viewadaptation extends object {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            $printLink->extra = 'alt="'.$this->objLanguage->languageText('mod_oer_download', 'oer').'"';
+            $printLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_download', 'oer') . '"';
             $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             //$printLink->target = "_blank";
             $printLk = "" . $printLink->show();

@@ -28,13 +28,18 @@ class fullviewadaptation extends object {
     function loadJScript() {
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
 
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery'));
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
+        $this->appendArrayVar('headerParams', $uiAllCSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
+        
+        
+        
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
         $this->appendArrayVar('headerParams', $dialogCSS);
     }
@@ -198,7 +203,7 @@ class fullviewadaptation extends object {
                             </div>
                     	</div>
 
-<div class="productAdaptationViewRightColumnTop">
+                    <div class="productAdaptationViewRightColumnTop">
                         <div class="rightAdaptedByIcon">
                         	<img src="skins/oer/images/icon-managed-by.png" alt="'.$this->objLanguage->languageText('mod_oer_managedby', 'oer').'" width="24" height="24"/><br />
                         	<span class="greenText">'.$this->objLanguage->languageText('mod_oer_adaptedby', 'oer').'</span>

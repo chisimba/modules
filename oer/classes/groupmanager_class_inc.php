@@ -404,13 +404,7 @@ class groupmanager extends object {
      * @return string 
      */
     function buildViewGroupDetails($contextcode) {
-        $loggedInVar = '<script language="JavaScript" type="text/javascript">
-            
-         var loggedIn=' . $this->objUser->isLoggedIn() . ';
-        </script>';
-
-
-        $this->appendArrayVar('headerParams', $loggedInVar);
+       
         $dbGroup = $this->getObject("dbgroups", "oer");
         $dbContext = $this->getObject("dbcontext", "context");
         $group = $dbGroup->getGroupByContextCode($contextcode);

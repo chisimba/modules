@@ -108,14 +108,7 @@ class oer extends controller {
      * load notification js, needed in rest of the module. And the global var loggedIn 
      */
     function loadJS() {
-        $objUser = $this->getObject("user", "security");
-        $isLoggedIn = $objUser->isLoggedIn() ? "true" : "false";
-        $loggedInVar = '<script language="JavaScript" type="text/javascript">
-          
-         var loggedIn = ' . $isLoggedIn . ';
-        </script>';
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery_notification_v.1.js'));
-        $this->appendArrayVar('headerParams', $loggedInVar);
     }
 
     // Beginning of Functions Relating to Actions in the Controller //

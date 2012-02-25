@@ -41,8 +41,7 @@ class sectionmanager extends object {
      */
     function addJS() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
-        //  $this->appendArrayVar('headerParams', '<script type="text/javascript">var loggedIn=' . $this->objUser->isLoggedIn() . ';</script>');
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('sections.js', 'oer'));
+         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('sections.js', 'oer'));
     }
 
     /**
