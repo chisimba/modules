@@ -843,12 +843,10 @@ class productmanager extends object {
      * creates a table and returns the list of current products
      * @return type 
      */
-    public function getOriginalProductListing($mode) {
-        $originalProducts = $this->dbproducts->getOriginalProducts();
+    public function getOriginalProductListing($mode,$filter='') {
+        $originalProducts = $this->dbproducts->getOriginalProducts($filter);
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
-
-
         $controlBand =
                 '<div id="originalproducts_controlband">';
 

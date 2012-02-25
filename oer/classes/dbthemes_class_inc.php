@@ -17,7 +17,7 @@ class dbthemes extends dbtable {
      * this selects themes
      */
     function getThemes() {
-        $sql = "select th.theme as theme,uth.theme as umbrellatheme from tbl_oer_themes th, tbl_oer_umbrella_themes uth where th.umbrellatheme = uth.id";
+        $sql = "select th.id as id,th.theme as theme,uth.theme as umbrellatheme from tbl_oer_themes th, tbl_oer_umbrella_themes uth where th.umbrellatheme = uth.id";
         return $this->getArray($sql);
     }
 

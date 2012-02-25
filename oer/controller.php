@@ -108,8 +108,8 @@ class oer extends controller {
      * load notification js, needed in rest of the module. And the global var loggedIn 
      */
     function loadJS() {
-        $objUser=  $this->getObject("user", "security");
-        $isLoggedIn=$objUser->isLoggedIn() ?"true":"false";
+        $objUser = $this->getObject("user", "security");
+        $isLoggedIn = $objUser->isLoggedIn() ? "true" : "false";
         $loggedInVar = '<script language="JavaScript" type="text/javascript">
           
          var loggedIn = ' . $isLoggedIn . ';
@@ -126,6 +126,7 @@ class oer extends controller {
      */
     private function __home() {
         $this->setVar("mode", "grid");
+        $this->setVar("filteraction", "filteroriginalproduct");
         return "productlisting_tpl.php";
     }
 
@@ -195,6 +196,10 @@ class oer extends controller {
         return "cpanel_tpl.php";
     }
 
+    /**
+     * returns template for themes
+     * @return type 
+     */
     private function __viewthemes() {
         return "themes_tpl.php";
     }
@@ -238,6 +243,20 @@ class oer extends controller {
       ORIGINAL PRODUCT FUNCTIONS
      */
     ///////////////////////////////////////////////////////////////
+
+    /**
+     * returns filtered original product listing depending on the filter
+     * options selected
+     * @return type 
+     */
+    function __filteroriginalproduct() {
+        $filterManager = $this->getObject("filtermanager", "oer");
+        $filter = $filterManager->generateFilter();
+        $this->setVar("mode", "grid");
+        $this->setVar("filteraction", "filteroriginalproduct");
+        $this->setVar("filter", $filter);
+        return "productlisting_tpl.php";
+    }
 
     /**
      * this returns the template for displaying details of the selected product
@@ -1057,7 +1076,7 @@ class oer extends controller {
         } else {
             $dbInstitution->deleteInstitution($id);
         }
-       return $this->nextAction("institutionlisting", $params);
+        return $this->nextAction("institutionlisting", $params);
     }
 
     /**

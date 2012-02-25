@@ -5,7 +5,7 @@ $objFix->fixThree();
 ?>
 <div id="threecolumn">
     <div id="Canvas_Content_Body_Region1">
-         {
+        {
         "display" : "block",
         "module" : "oeruserdata",
         "block" : "myuserdetails"
@@ -13,10 +13,16 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "filteroriginalproduct"
+        "block" : "filteroriginalproduct",
+        <?php
+        echo '"configData":';
+        echo '"' . $filteraction . '"';
+        ?>
         }
 
-        
+
+
+
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>
@@ -33,7 +39,7 @@ $objFix->fixThree();
         "block" : "mostarc"
         }
         <div id="rightdynamic_area" class="rightdynamic_area_layer">
-           
+
         </div>
         <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>
     </div>
@@ -44,15 +50,19 @@ $objFix->fixThree();
         "block" : "originalproductslisting",
         <?php
         echo '"configData":';
-        echo '"' . $mode . '"';
+        if (isset($filter)) {
+            echo '"' . $mode . '__' . $filter . '"';
+        } else {
+            echo '"' . $mode . '"';
+        }
         ?>
         }
-        
+
 
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>
-   
+
 </div>
 
 <?php

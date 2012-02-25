@@ -13,8 +13,9 @@ class block_filteroriginalproduct extends object {
     }
 
     function show() {
+        $action = $this->configData;
         $filtermanager = $this->getObject("filtermanager", "oer");
-        return $filtermanager->buildFilterProductsForm('filteroriginalproduct','mod_oer_typeofproduct');
+        return $filtermanager->buildFilterProductsForm($action, 'mod_oer_typeofproduct');
     }
 
 }

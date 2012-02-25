@@ -92,7 +92,7 @@ class dbgroups extends dbtable {
      */
     function getGroupRegions() {
         $sql =
-                "select distinct region from tbl_oer_groups";
+                "select distinct region from tbl_oer_groups where region is not null";
         return $this->getArray($sql);
     }
 
@@ -101,7 +101,7 @@ class dbgroups extends dbtable {
      */
     function getGroupCountries() {
         $sql =
-                "select distinct country from tbl_oer_groups";
+                "select distinct country from tbl_oer_groups where country is not null";
         return $this->getArray($sql);
     }
 

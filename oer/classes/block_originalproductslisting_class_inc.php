@@ -15,9 +15,15 @@ class block_originalproductslisting extends object {
     }
 
     public function show() {
-        $mode = $this->configData;
+        $modeRaw = $this->configData;
+        $modeParts = explode("__", $modeRaw);
+        $mode = $modeParts[0];
+        $filter = "";
+        if (count($modeParts) == 2) {
+            $filter = $modeParts[1];
+        }
         $objProductManager = $this->getObject("productmanager", "oer");
-        return $objProductManager->getOriginalProductListing($mode);
+        return $objProductManager->getOriginalProductListing($mode, $filter);
     }
 
 }
