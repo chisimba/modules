@@ -897,11 +897,12 @@ class adaptationmanager extends object {
 
         $mode = $this->getParam("mode", "grid");
         $productId = $this->getParam('productid', Null);
+        echo "Prod Id: ".$productId;
         //Get adapted products, if productId not null, fetch for that product only
         if ($productId != Null) {
-            $originalProducts = $this->dbproducts->getProductAdaptations($productId);
+            $productAdaptations = $this->dbproducts->getProductAdaptations($productId);
         } else {
-            $originalProducts = $this->dbproducts->getAdaptedProducts();
+            $productAdaptations = $this->dbproducts->getAdaptedProducts();
         }
 
         $controlBand =
@@ -946,14 +947,14 @@ class adaptationmanager extends object {
         if ($mode == 'list') {
             $maxCol = 1;
         }
-        foreach ($originalProducts as $originalProduct) {
+        foreach ($productAdaptations as $adaptation) {
             if ($startNewRow) {
                 $startNewRow = FALSE;
                 $table->startRow();
             }
             //Get parent product related data(institution, institution type)
-            $parentData = $this->dbproducts->getProduct($originalProduct['parent_id']);
-            $institutionData = $this->dbInstitution->getInstitutionById($originalProduct['institutionid']);
+            $parentData = $this->dbproducts->getProduct($adaptation['parent_id']);
+            $institutionData = $this->dbInstitution->getInstitutionById($adaptation['institutionid']);
 
             //Get institution type
 
@@ -966,14 +967,14 @@ class adaptationmanager extends object {
                 $thumbnail = '';
             }
             $instName = $institutionData['name'];
-            $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $originalProduct['institutionid'])));
+            $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $adaptation['institutionid'])));
             $instNameLink->link = $instName;
             $instNameLink->cssClass = "viewinstitutionlink";
             $instNameLk = $thumbnail . $instNameLink->show();
 
             $institutionTypeName = $this->dbInstitutionType->getInstitutionTypeName($institutionData['type']);
-            $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
-            if ($originalProduct['thumbnail'] == '') {
+            $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+            if ($adaptation['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
             if ($mode == 'list') {
@@ -982,7 +983,7 @@ class adaptationmanager extends object {
             $makeAdaptation = "";
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
                 $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
                 $makeAdaptation = $adaptLink->show();
             }
@@ -993,21 +994,21 @@ class adaptationmanager extends object {
                 $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
                 $adaptImg = '<img src="skins/oer/images/icons/add.png">';
 
-                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
+                $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
                 $mnglinks.="<br />" . $adaptLink->show();
 
-                $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "edit")));
+                $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
                 $mnglinks.="&nbsp;" . $editLink->show();
 
-                $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $originalProduct['id'])));
+                $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $adaptation['id'])));
                 $delLink->link = $deleteImg;
                 $delLink->cssClass = "confirmdeleteadaptation";
                 $mnglinks.="&nbsp;" . $delLink->show() . "<br />";
             }
 
-            $link = new link($this->uri(array("action" => "viewadaptation", "id" => $originalProduct['id'])));
+            $link = new link($this->uri(array("action" => "viewadaptation", "id" => $adaptation['id'])));
             $link->link = $thumbnail; // . $makeAdaptation;
             $product = $link->show();
 
@@ -1020,8 +1021,8 @@ class adaptationmanager extends object {
             $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
             $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
 
-            $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
-            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "id" => $originalProduct['id'])));
+            $adaptionsCount = $this->dbproducts->getProductAdaptationCount($adaptation['id']);
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "id" => $adaptation['id'])));
             $adaptationsLink->link = $adaptionsCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'adaptationcount';
             $product.="<br/>" . $adaptationsLink->show();
