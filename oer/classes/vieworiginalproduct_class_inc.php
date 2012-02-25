@@ -96,7 +96,7 @@ class vieworiginalproduct extends object {
             $objLoginLk->link = $objLanguage->languageText('mod_oer_clicktologin', 'oer');
 
             // Register link
-            $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
+            $objRegisterLk = new link($this->uri(array("action" => "selfregister"), "oeruserdata"));
             $objRegisterLk->cssId = "registerlink";
             $objRegisterLk->link = $objLanguage->languageText('mod_oer_clickhere', 'oer');
             //Dialogue content

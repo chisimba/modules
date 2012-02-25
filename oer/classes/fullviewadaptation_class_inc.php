@@ -77,8 +77,8 @@ class fullviewadaptation extends object {
             $objLoginLk->cssId = "loginlink";
             $objLoginLk->link = $this->objLanguage->languageText('mod_oer_clicktologin', 'oer');
 
-            // Register link
-            $objRegisterLk = new link($this->uri(array("action" => "showregister"), "userregistration"));
+            // Register link 
+            $objRegisterLk = new link($this->uri(array("action" => "selfregister"), "oeruserdata"));
             $objRegisterLk->cssId = "registerlink";
             $objRegisterLk->link = $this->objLanguage->languageText('mod_oer_clickhere', 'oer');
             $buttonTitle = $this->objLanguage->languageText('word_next');
