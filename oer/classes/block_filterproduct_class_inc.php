@@ -5,7 +5,7 @@
  *
  * @author davidwaf
  */
-class block_filteroriginalproduct extends object {
+class block_filterproduct extends object {
 
     function init() {
         $this->objLanguage = $this->getObject('language', 'language');

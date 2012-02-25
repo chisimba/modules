@@ -33,14 +33,14 @@ class oertoolbar extends object {
                 'actioncheck' => array(
                     "home","vieworiginalproduct","filteroriginalproduct",
                     "showproductlistingaslist","editoriginalproductstep1","editoriginalproductstep2",
-                    "editoriginalproductstep3","editoriginalproductstep4"), 
+                    "editoriginalproductstep3","editoriginalproductstep4","filteroriginalproduct"), 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'true'),
             
             array('action' => 'adaptationlist', 
                 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 
                 'actioncheck' => array("adaptationlist","viewadaptation",
                     "editadaptationstep1","editadaptationstep2","editadaptationstep3","editadaptationstep4",
-                    "viewinstitution"
+                    "viewinstitution","filteradaptation"
                     ),
                 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
