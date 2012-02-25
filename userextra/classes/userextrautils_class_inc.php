@@ -72,7 +72,7 @@ class userextrautils extends object {
 
     function addStudentToCourse($userid, $unitCode) {
         $contextGroupId = $this->objGroups->getId($unitCode);
-        $subGroups = $this->objGroups->getSubgroups($contextGroupId);
+        $subGroups = $this->objGroups->getSubgroups($pscontextGroupId);
         $studentGroupId = '';
 
         if (is_array($subGroups)) {
