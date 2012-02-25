@@ -282,11 +282,10 @@ class useredit extends object
         $this->loadClass('hiddeninput', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
+        $id = $this->getParam('id', FALSE);
         
         // If it is an edit, go fetch the data.
-        if ($this->mode == 'edit') {
-           
-            $id = $this->getParam('id', FALSE);
+        if ($this->mode == 'edit') {            
             if ($id) {
                 // See if they are allowed to edit it
                 $eUserId = $this->objUser->getItemFromPkId($id,'userid');
@@ -738,6 +737,11 @@ class useredit extends object
                 'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
         $this->objLanguage->languageText(
                 'mod_oeruserdata_regfailmsg', 'oeruserdata').'</div>';
+        $saveResultsMsg .= '<div id="update_success"  title="'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+        $this->objLanguage->languageText(
+                'mod_oeruserdata_updatesuccessmsg', 'oeruserdata').'</div>';
 
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";

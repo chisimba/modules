@@ -79,8 +79,24 @@ class userblocks extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
+        $this->setupLanguageItems();
+        $this->loadJS();
     }
-
+/**
+     * sets up necessary lang items for use in js
+     */
+    function setupLanguageItems() {
+        // Serialize language items to Javascript
+        $arrayVars['confirm_delete_user'] = "mod_oeruserdata_confirm_delete_user";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oeruserdata');
+    }
+    /**
+     * JS an CSS for product rating and product download
+     */
+    function loadJS() {        
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('userlist.js'));
+    }
     /**
      *
      * Render the input form for the user data.
@@ -212,10 +228,12 @@ class userblocks extends object
                       'mode' => 'edit'), 'oeruserdata');
                     $link = new link($edUrl);
                     $link->link = $editIcon;
-                    $delUrl = 'javascript:void(0);';
+                    $delUrl = $this->uri(array(
+                      'action' => 'delete',
+                      'id' => $record['id']), 'oeruserdata');                    
                     $delLink = new link($delUrl);
                     $delLink->cssId = $record['id'];
-                    $delLink->cssClass = "dellink";
+                    $delLink->cssClass = "confirm_del_user_link";
                     $delLink->link = $deleteIcon;
                     $table->startRow(NULL, "ROW_" . $record['id']);
                     $table->addCell($record['title']);

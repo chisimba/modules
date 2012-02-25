@@ -25,9 +25,15 @@ jQuery(function() {
     jQuery(document).ready(function() {
         jQuery('#register_success').hide();
         jQuery('#register_fail').hide();
+        jQuery('#update_success').hide();
     });
     function showRegisterSuccess(){
         jQuery('#register_success').dialog({
+            width:350
+        });
+    };
+    function showUpdateSuccess(){
+        jQuery('#update_success').dialog({
             width:350
         });
     };
@@ -35,7 +41,7 @@ jQuery(function() {
         jQuery('#register_fail').dialog({
             width:350
         });
-    };
+    };   
     
     //Create an Ajax method to validate user name is not used
     jQuery.validator.addMethod("uniqueUserName", function(value, element) {
@@ -275,7 +281,11 @@ jQuery(function() {
                                 jQuery("#mode").val('edit');
                                 jQuery("#save_results").html("");
                                 //Show success dialog
-                                showRegisterSuccess();
+                                if (jQuery("#edmode").val()!=='edit'){
+                                    showRegisterSuccess();
+                                } else {
+                                    showUpdateSuccess();
+                                }
                             // Redirect after anonymous save
                             //window.location = 'index.php?module=oeruserdata';
                             } else {
@@ -287,12 +297,16 @@ jQuery(function() {
                                 jQuery("#mode").val('edit');
                                 jQuery("#save_results").html("");
                                 //Show success dialog
-                                showRegisterSuccess();
+                                if (jQuery("#edmode").val()!=='edit'){
+                                    showRegisterSuccess();
+                                } else {
+                                    showUpdateSuccess();
+                                }
                             }
                         } else {
                             jQuery("#save_results").html("");
                             showRegisterFail();
-                            //jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
+                        //jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
                         }
                     }
                 });
