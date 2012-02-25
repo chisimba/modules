@@ -479,7 +479,7 @@ class oer extends controller {
         $errors = $this->getParam("errors", "");
         $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
-        $this->setVar("step", "3");
+        $this->setVar("step", "4");
         return "uploadadaptation_tpl.php";
     }
 

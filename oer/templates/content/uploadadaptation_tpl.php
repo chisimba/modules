@@ -8,9 +8,8 @@ $objFix->fixTwo();
          {
         "display" : "block",
         "module" : "oer",
-        "block" : "originalproductformnav",
+        "block" : "adaptationformnav",
         <?php
-
         echo '"configData":';
         echo '"' . $id . '"';
         ?>
@@ -39,8 +38,7 @@ $objFix->fixTwo();
 
 <?php
 // Get the contents for the layout template 
-$this->setVar('errors', $errors);
-$this->setVar('mode', $mode);
+$this->setVar('errors', Null);
 $pageContent = ob_get_contents();
 ob_end_clean();
 $this->setVar('pageContent', $pageContent);

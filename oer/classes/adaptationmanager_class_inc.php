@@ -1049,28 +1049,59 @@ class adaptationmanager extends object {
         $header->cssClass = "build_product_steps_nav";
         $header->str = $this->objLanguage->languageText('mod_oer_jumpto', 'oer');
 
-        $content = $header->show();
 
+        $adaptation = $this->dbproducts->getProduct($id);
+        $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
+        if ($adaptation['thumbnail'] == '') {
+            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+        }
+
+        $viewProductLink = new link($this->uri(array("action" => "viewadaptation", "id" => $id)));
+        $viewProductLink->link = $thumbnail;
+        $content = $viewProductLink->show();
+        $content .= $header->show();
         $content.='<ul id="nav-secondary">';
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $id)));
+        $class = "";
+        $link = new link($this->uri(array("action" => "editadaptationstep1", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step1', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
+
+        if ($step == '1') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep2", "id" => $id)));
+        $link = new link($this->uri(array("action" => "editadaptationstep2", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
+        if ($step == '2') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep3", "id" => $id)));
+        $link = new link($this->uri(array("action" => "editadaptationstep3", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step3', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
-        $link = new link($this->uri(array("action" => "editoriginalproductstep4", "id" => $id)));
+        if ($step == '3') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
+        $link = new link($this->uri(array("action" => "editadaptationstep4", "id" => $id)));
         $link->link = $this->objLanguage->languageText('mod_oer_step4', 'oer');
-        $content.='<li>' . $link->show() . '</li>';
 
+        if ($step == '4') {
+            $class = "current";
+        } else {
+            $class = "";
+        }
+        $content.='<li class="' . $class . '">' . $link->show() . '</li>';
 
         $content.="</ul>";
 
