@@ -80,8 +80,8 @@ class groupedit extends object {
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $objSerialize = $this->getObject('serializevars', 'oer');
-        $objSerialize->serializetojs($arrayVars);
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oer');
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbInstitution = $this->getObject('dbinstitution');
         // Load the jquery validate plugin

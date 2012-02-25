@@ -40,11 +40,12 @@ jQuery(function() {
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
                         // Update the information area 
                         // (msg is the id of the record on success)
-                        jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');
+                       // jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');
                         // Change the id field to be the id that is returned as msg & mode to edit
-                        jQuery("#id").val(msg);
-                        jQuery("#mode").val('edit');
-                        jQuery(".conditional_add").css('visibility', 'visible');
+                        //jQuery("#id").val(msg);
+                       // jQuery("#mode").val('edit');
+                       // jQuery(".conditional_add").css('visibility', 'visible');
+                       window.location="index.php?module=oer&action=institutionlisting";
                     } else {
                         //alert(msg);
                         alert(status_fail);

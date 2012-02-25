@@ -25,8 +25,8 @@ class dbproducts extends dbtable {
     /**
      * this selects original products
      */
-    function getAdaptedProducts() {
-        $sql = "select * from $this->productsTableName where parent_id is not null";
+    function getAdaptedProducts($filter) {
+        $sql = "select * from $this->productsTableName where parent_id is not null $filter";
         return $this->getArray($sql);
     }
 
@@ -173,8 +173,8 @@ class dbproducts extends dbtable {
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
-    function getProductAdaptations($parentId) {
-        $sql = "select * from $this->productsTableName where parent_id = '$parentId'";
+    function getProductAdaptations($parentId,$filter) {
+        $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter";
         $data = $this->getArray($sql);
         return $data;
     }

@@ -13,7 +13,7 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "oer",
-        "block" : "filteroriginalproduct",
+        "block" : "filterproduct",
         <?php
         echo '"configData":';
         echo '"' . $filteraction . '"';

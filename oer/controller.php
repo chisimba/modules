@@ -37,6 +37,7 @@ class oer extends controller {
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
+            "filteradaptation",
             "viewgroups", "viewgroup", "showproductlistingaslist","login");
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -178,6 +179,7 @@ class oer extends controller {
     private function __adaptationlist() {
         $productId = $this->getParam('productid', Null);
         $this->setVar("productid", $productId);
+          $this->setVar("filteraction", "filteradaptation");
         return "adaptationlist_tpl.php";
     }
 
@@ -259,6 +261,21 @@ class oer extends controller {
         return "productlisting_tpl.php";
     }
 
+        /**
+     * returns filtered adaptation listing depending on the filter
+     * options selected
+     * @return type 
+     */
+    function __filteradaptation() {
+        $filterManager = $this->getObject("filtermanager", "oer");
+        $filter = $filterManager->generateFilter();
+        $this->setVar("mode", "grid");
+        $this->setVar("filteraction", "filteradaptation");
+        $this->setVar("filter", $filter);
+        return "adaptationlist_tpl.php";
+    }
+    
+    
     /**
      * this returns the template for displaying details of the selected product
      * @return string

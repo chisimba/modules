@@ -1004,15 +1004,15 @@ class adaptationmanager extends object {
      * creates a table and returns the list of current adaptations
      * @return type
      */
-    public function getAdaptationsListingAsGrid() {
+    public function getAdaptationsListingAsGrid($filter) {
 
         $mode = $this->getParam("mode", "grid");
         $productId = $this->getParam('productid', Null);
         //Get adapted products, if productId not null, fetch for that product only
         if ($productId != Null) {
-            $productAdaptations = $this->dbproducts->getProductAdaptations($productId);
+            $productAdaptations = $this->dbproducts->getProductAdaptations($productId,$filter);
         } else {
-            $productAdaptations = $this->dbproducts->getAdaptedProducts();
+            $productAdaptations = $this->dbproducts->getAdaptedProducts($filter);
         }
 
         $controlBand =

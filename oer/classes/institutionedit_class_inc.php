@@ -84,11 +84,11 @@ class institutionedit extends object {
         // Serialize language items to Javascript
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
-        $objSerialize = $this->getObject('serializevars', 'oer');
-        $objSerialize->serializetojs($arrayVars);
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+          $objSerialize->languagetojs($arrayVars, 'oer');
         $this->objDbInstitutionType = $this->getObject('dbinstitutiontypes');
         $this->objDbInstitution = $this->getObject('dbinstitution');
-        $this->objThumbUploader = $this->getObject('thumbnailuploader');
+        $this->objThumbUploader = $this->getObject('thumbnailuploader');    
         // Load scriptaclous since we can no longer guarantee it is there
         $scriptaculous = $this->getObject('scriptaculous', 'prototype');
         $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
@@ -256,7 +256,7 @@ class institutionedit extends object {
         $table->addCell($objInstitutionTypesdd->show() . $addTypeLink->show());
         $table->endRow();
 
-        // Field for keyword 1
+        // Field for keyword
         $table->startRow();
         $title = $this->objLanguage->languageText(
                         'mod_oer_keyword', 'oer') . " 1";
@@ -274,6 +274,7 @@ class institutionedit extends object {
         $table->endRow();
 
         // Field for keyword 2
+        /*
         $table->startRow();
         $title = $this->objLanguage->languageText(
                         'mod_oer_keyword', 'oer') . " 2";
@@ -289,7 +290,7 @@ class institutionedit extends object {
         $textinput->setValue($value);
         $table->addCell($textinput->show());
         $table->endRow();
-
+*/
         $fieldsetInstitutionInfo = $this->newObject('fieldset', 'htmlelements');
         $fieldsetInstitutionInfo->setLegend('Institution information');
         $fieldsetInstitutionInfo->addContent($table->show());
@@ -314,7 +315,7 @@ class institutionedit extends object {
         $table->endRow();
 
         // Field for address2.
-        $table->startRow();
+  /*      $table->startRow();
         $title = $this->objLanguage->languageText('mod_oer_address2', 'oer');
         $table->addCell($title);
         if ($this->mode == 'edit') {
@@ -342,7 +343,7 @@ class institutionedit extends object {
         $textinput->setValue($value);
         $table->addCell($textinput->show());
         $table->endRow();
-
+*/
         // Field for ZIP code.
         $table->startRow();
         $title = $this->objLanguage->languageText(

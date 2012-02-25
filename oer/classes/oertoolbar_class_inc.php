@@ -40,7 +40,8 @@ class oertoolbar extends object {
                 'text' => $this->objLanguage->languageText('mod_oer_adaptations', 'oer'), 
                 'actioncheck' => array("adaptationlist","viewadaptation",
                     "editadaptationstep1","editadaptationstep2","editadaptationstep3","editadaptationstep4",
-                    "viewinstitution","filteradaptation"
+                    "viewinstitution","filteradaptation","saveadaptationstep1","saveadaptationstep2","saveadaptationstep3",
+                    "saveadaptationstep4"
                     ),
                 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
