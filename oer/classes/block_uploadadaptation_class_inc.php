@@ -21,7 +21,7 @@ class block_uploadadaptation extends object {
         $this->loadClass('iframe', 'htmlelements');
         $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
         //Load Ajax Upload form
-        $content.= $objAjaxUpload->show($id);
+        $content.= $objAjaxUpload->show($id,'uploadproductthumbnail');
 
         //Back button
         $backButton = new button('back', $objLanguage->languageText('word_back'));

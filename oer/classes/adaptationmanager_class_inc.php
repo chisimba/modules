@@ -884,6 +884,122 @@ class adaptationmanager extends object {
         return $header->show() . $formData->show();
     }
 
+    
+    /**
+     * Builds the step 4 adaption form
+     * @param type $id 
+     */
+    public function buildAdaptationFormStep4($id) {
+        $this->addStep4JS();
+        $this->loadClass('link', 'htmlelements');
+        $objLanguage = $this->getObject('language', 'language');
+        $content = $objLanguage->languageText('mod_oer_updateproductpicture', 'oer');
+        $this->loadClass('iframe', 'htmlelements');
+        $objAjaxUpload = $this->newObject('ajaxuploader', 'oer');
+
+
+        $objForm = $this->newObject('form', 'htmlelements');
+        $objForm->name = "form1";
+        $objForm->action = $this->uri(array('action' => 'saveoriginalproductstep4', "id" => $id));
+
+        // Create the selectbox object
+        $objSelectBox = $this->newObject('selectbox', 'htmlelements');
+        // Initialise the selectbox.
+        $objSelectBox->create($objForm, 'availableThemes[]', $this->objLanguage->languageText('mod_oer_availablethemes', 'oer'), 'selectedThemes[]', $this->objLanguage->languageText('mod_oer_selectedthemes', 'oer'));
+
+        // Populate the selectboxes
+        $objDbTheme = $this->getObject("dbthemes", "oer");
+        $objData = $objDbTheme->getThemesFormatted();
+        $objSelectBox->insertLeftOptions($objData, 'id', 'theme');
+
+        $product = $this->dbproducts->getProduct($id);
+
+        $selectedThemes = array();
+        $existingThemesIds = explode(",", $product['themes']);
+        foreach ($existingThemesIds as $existingThemesId) {
+            $selectedThemes[] = $objDbTheme->getTheme($existingThemesId);
+        }
+
+        $objSelectBox->insertRightOptions($selectedThemes, 'id', 'theme');
+
+        // Insert the selectbox into the form object.
+        $objForm->addToForm($objSelectBox->show());
+
+        $objForm->addToForm('<br/><div id="save_results"><div/>');
+
+
+        // Get and insert the save and cancel form buttons
+        $arrFormButtons = $objSelectBox->getFormButtons();
+        $objForm->addToForm(implode(' / ', $arrFormButtons));
+
+        $content.= $objAjaxUpload->show($id, 'uploadproductthumbnail');
+        $link = new link($this->uri(array("")));
+        $link->link = $objLanguage->languageText('word_home', 'system');
+
+
+        $header = new htmlheading();
+        $header->type = 2;
+        $header->cssClass = "original_product_title";
+        $header->str = $product['title'] . '-' . $this->objLanguage->languageText('mod_oer_step4', 'oer');
+
+        return $header->show() . $content . '<br/>' . $objForm->show();
+    }
+
+
+     /**
+     * This includes necessary js for product 4 creation
+     */
+    function addStep4JS() {
+        $this->appendArrayVar('headerParams', "
+
+<script type=\"text/javascript\">
+    //<![CDATA[
+
+    function loadAjaxForm(fileid) {
+        window.setTimeout('loadForm(\"'+fileid+'\");', 1000);
+    }
+
+    function loadForm(fileid) {
+        var pars = \"module=oer&action=ajaxprocess&id=\"+fileid;
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                $('updateform').innerHTML = response;
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+
+    function processConversions() {
+        window.setTimeout('doConversion();', 2000);
+    }
+
+    function doConversion() {
+
+        var pars = \"module=oer&action=ajaxprocessconversions\";
+        new Ajax.Request('index.php',{
+            method:'get',
+            parameters: pars,
+            onSuccess: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert(response);
+            },
+            onFailure: function(transport){
+                var response = transport.responseText || \"no response text\";
+                //alert('Could not download module: '+response);
+            }
+        });
+    }
+    //]]>
+</script>            
+");
+    }
+
     /**
      * creates a table and returns the list of current adaptations
      * @return type
@@ -1036,7 +1152,7 @@ class adaptationmanager extends object {
      * Creates side navigation links for moving in between forms when managing
      * an adaptation
      */
-    function buildAdaptationStepsNav($id) {
+    function buildAdaptationStepsNav($id,$step) {
 
         $header = new htmlheading();
         $header->type = 2;

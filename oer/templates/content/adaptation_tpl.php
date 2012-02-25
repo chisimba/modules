@@ -12,7 +12,7 @@ $objFix->fixTwo();
         <?php
 
         echo '"configData":';
-        echo '"' . $id . '"';
+         echo '"' . $id . '|' . $step . '"';
         ?>
         }
 
