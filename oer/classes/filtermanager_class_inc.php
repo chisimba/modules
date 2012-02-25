@@ -158,7 +158,7 @@ class filtermanager extends object {
         $country = $this->getParam("country");
         $itemsPerPage = $this->getParam("itemsperpage");
         if ($themes != 'all') {
-            $sql = " and themes='" . $themes . "'";
+            $sql = " and themes like '%" . $themes . "%'";
         }
         if ($language != 'all') {
             $sql.= " and language='" . $language . "'";
@@ -167,7 +167,7 @@ class filtermanager extends object {
             $sql.=" and author = '" . $author . "'";
         }
         if ($institution != 'all') {
-            $sql.=" and institutionid = '" . $institution . "'";
+            $sql.=" and institutionid like '%" . $institution . "%'";
         }
         $sql.=" limit " . $itemsPerPage;
         

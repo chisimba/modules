@@ -37,7 +37,7 @@ class oer extends controller {
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
-            "viewgroups", "viewgroup", "showproductlistingaslist");
+            "viewgroups", "viewgroup", "showproductlistingaslist","login");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -121,6 +121,14 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteroriginalproduct");
         return "productlisting_tpl.php";
+    }
+
+    /**
+     * redirects to login form
+     * @return type 
+     */
+    private function  __login(){
+        return "login_tpl.php";
     }
 
     /**

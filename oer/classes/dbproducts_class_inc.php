@@ -18,7 +18,7 @@ class dbproducts extends dbtable {
      */
     function getOriginalProducts($filter='') {
         $sql = "select * from $this->productsTableName where parent_id is null $filter";
-        
+        //echo $sql;
         return $this->getArray($sql);
     }
 

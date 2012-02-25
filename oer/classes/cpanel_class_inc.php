@@ -42,7 +42,7 @@ class cpanel extends object {
         $cPanelTable->startRow();
 
         
-        $cplink = new link($this->uri(array("action" => "oeruserdata"), "oeruserdata"));
+        $cplink = new link($this->uri(array(), "oeruserdata"));
         $cplink->link = '<img  src="skins/' . $skinName . '/images/useradmin.png" align="bottom"><br/>' . $this->objLanguage->languageText('mod_oer_users', 'oer');
         $cPanelTable->addCell($cplink->show(), null, "top");
         
