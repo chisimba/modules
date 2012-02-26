@@ -22,8 +22,8 @@ class fullviewadaptation extends object {
         $this->isLoggedIn = $this->objUser->isLoggedIn();
         $this->loadJScript();
     }
-/**
-     * JS an CSS for product rating
+     /**
+     * JS an CSS for download adaptation
      */
     function loadJScript() {
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';

@@ -145,7 +145,7 @@ class adaptationmanager extends object {
         if ($id != Null) {
             //Get adaptation section data with sectionnode id
             $adaptationSection = $this->dbSectionContent->getSectionContent($id);
-            
+
             $hidNodeId = new hiddeninput('node_id');
             if ($adaptationSection) {
                 $id = $adaptationSection["id"];
@@ -884,7 +884,6 @@ class adaptationmanager extends object {
         return $header->show() . $formData->show();
     }
 
-    
     /**
      * Builds the step 4 adaption form
      * @param type $id 
@@ -945,8 +944,7 @@ class adaptationmanager extends object {
         return $header->show() . $content . '<br/>' . $objForm->show();
     }
 
-
-     /**
+    /**
      * This includes necessary js for product 4 creation
      */
     function addStep4JS() {
@@ -1010,7 +1008,7 @@ class adaptationmanager extends object {
         $productId = $this->getParam('productid', Null);
         //Get adapted products, if productId not null, fetch for that product only
         if ($productId != Null) {
-            $productAdaptations = $this->dbproducts->getProductAdaptations($productId,$filter);
+            $productAdaptations = $this->dbproducts->getProductAdaptations($productId, $filter);
         } else {
             $productAdaptations = $this->dbproducts->getAdaptedProducts($filter);
         }
@@ -1106,15 +1104,21 @@ class adaptationmanager extends object {
 
                 $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
+                $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
+                $adaptLink->title = $this->objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
                 $mnglinks.="<br />" . $adaptLink->show();
 
                 $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
+                $editLink->extra = 'alt="' . $this->objLanguage->languageText('word_edit', "system", "Edit") . '"';
+                $editLink->title = $this->objLanguage->languageText('word_edit', "system", "Edit");
                 $mnglinks.="&nbsp;" . $editLink->show();
 
                 $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $adaptation['id'])));
                 $delLink->link = $deleteImg;
                 $delLink->cssClass = "confirmdeleteadaptation";
+                $delLink->extra = 'alt="' . $this->objLanguage->languageText('word_delete', 'system') . '"';
+                $delLink->title = $this->objLanguage->languageText('word_delete', 'system');
                 $mnglinks.="&nbsp;" . $delLink->show() . "<br />";
             }
 
@@ -1152,7 +1156,7 @@ class adaptationmanager extends object {
      * Creates side navigation links for moving in between forms when managing
      * an adaptation
      */
-    function buildAdaptationStepsNav($id,$step) {
+    function buildAdaptationStepsNav($id, $step) {
 
         $header = new htmlheading();
         $header->type = 2;

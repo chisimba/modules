@@ -665,7 +665,6 @@ class oer extends controller {
 
     ///////////////////////////////////////////////////////////////////////
     /*
-
       AUX product functions : Rate, comment, bookmark etc
 
      */

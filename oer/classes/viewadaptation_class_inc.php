@@ -40,7 +40,7 @@ class viewadaptation extends object {
     }
 
     /**
-     * JS an CSS for product rating
+     * JS an CSS for product rating and product download
      */
     function loadJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
@@ -218,16 +218,27 @@ class viewadaptation extends object {
         }
         $featuredAdaptation = "";
         if ($this->hasPerms) {
+            //Get images
+            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
             $editImg = '<img src="skins/oer/images/icons/edit.png">';
             $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            
+            //Link create an adaptation
+            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
+            $adaptLink->link = $adaptImg;
+            $adaptLink->cssClass = "createanadaptation";
+            $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
+            $adaptLink->title = $this->objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
+            $featuredAdaptation.= $adaptLink->show();
+            
             //Link edit adaptation
             $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
             $editLink->extra = 'alt="' . $this->objLanguage->languageText('word_edit', "system", "Edit") . '"';
             $editLink->title = $this->objLanguage->languageText('word_edit', "system", "Edit");
             $featuredAdaptation .="&nbsp;" . $editLink->show();
-            //Link delete adaptation
 
+            //Link delete adaptation
             $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $productId)));
             $delLink->link = $deleteImg;
             $delLink->cssClass = "confirmdeleteadaptation";
@@ -239,6 +250,8 @@ class viewadaptation extends object {
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
+            $featuredLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_markfeatured', 'oer', 'Mark as Featured') . '"';
+            $featuredLink->title = $this->objLanguage->languageText('mod_oer_markfeatured', 'oer', 'Mark as Featured');
             $featuredAdaptation .= "" . $featuredLink->show();
         }
 

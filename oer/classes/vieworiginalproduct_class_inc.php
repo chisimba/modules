@@ -48,21 +48,29 @@ class vieworiginalproduct extends object {
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
             $adaptLink->link = $adaptImg;
             $adaptLink->cssClass = "adaptoriginalproduct";
+            $adaptLink->extra = 'alt="' . $objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
+            $adaptLink->title = $objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
             $editControls.= $adaptLink->show();
 
             $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
             $editLink->cssClass = "editoriginalproduct";
+            $editLink->extra = 'alt="' . $objLanguage->languageText('word_edit', "system", "Edit") . '"';
+            $editLink->title = $objLanguage->languageText('word_edit', "system", "Edit");
             $editControls.="" . $editLink->show();
 
             $deleteLink = new link($this->uri(array("action" => "deleteoriginalproduct", "id" => $productId)));
             $deleteLink->link = $deleteImg;
             $deleteLink->cssClass = "deleteoriginalproduct";
+            $deleteLink->extra = 'alt="' . $objLanguage->languageText('word_delete', 'system') . '"';
+            $deleteLink->title = $objLanguage->languageText('word_delete', 'system');
             $editControls.="" . $deleteLink->show();
 
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
+            $featuredLink->extra = 'alt="' . $objLanguage->languageText('mod_oer_markfeatured', 'oer', 'Mark as Featured') . '"';
+            $featuredLink->title = $objLanguage->languageText('mod_oer_markfeatured', 'oer', 'Mark as Featured');
             $editControls.="" . $featuredLink->show();
         }
 

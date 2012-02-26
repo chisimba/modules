@@ -198,7 +198,6 @@ class productmanager extends object {
         }
     }
 
-
     /**
      * adds essential js and css
      */
@@ -913,6 +912,8 @@ class productmanager extends object {
                     $adaptImg = '<img src="skins/oer/images/icons/add.png">';
                     $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
                     $adaptLink->link = $adaptImg;
+                    $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
+                    $adaptLink->title = $this->objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
                     $makeAdaptation = $adaptLink->show();
                 }
 
