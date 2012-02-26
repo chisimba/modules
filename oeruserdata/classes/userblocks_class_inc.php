@@ -228,19 +228,22 @@ class userblocks extends object
                       'mode' => 'edit'), 'oeruserdata');
                     $link = new link($edUrl);
                     $link->link = $editIcon;
-                    $delUrl = $this->uri(array(
+                    /*$delUrl = $this->uri(array(
                       'action' => 'delete',
                       'id' => $record['id']), 'oeruserdata');                    
-                    $delLink = new link($delUrl);
+                    $delLink = new link($delUrl);*/
+                    $delLink = new link("#delete_user");
                     $delLink->cssId = $record['id'];
                     $delLink->cssClass = "confirm_del_user_link";
+                    //
+                    $delLink->extra = 'name="modal" onclick="showDelConfirm(\''.$record['id'].'\');" alt="' . $this->objLanguage->languageText('word_delete', 'system') . '"';
                     $delLink->link = $deleteIcon;
                     $table->startRow(NULL, "ROW_" . $record['id']);
                     $table->addCell($record['title']);
                     $table->addCell($record['firstname']);
                     $table->addCell($record['surname']);
                     $table->addCell($record['username']);
-                    $table->addCell($link->show() . ' ' . $delLink->show());
+                    $table->addCell('<div id="confirm_del_user">'.$link->show() ." ". $delLink->show() . '</div> ');
                     $table->endRow();
                 }
             }
