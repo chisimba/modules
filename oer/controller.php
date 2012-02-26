@@ -757,7 +757,6 @@ class oer extends controller {
             $this->setVarByRef("data", $data);
             return "viewproductsection_tpl.php";
         } else {
-
             $this->setVarByRef("id", $productid);
             return "vieworiginalproduct_tpl.php";
         }

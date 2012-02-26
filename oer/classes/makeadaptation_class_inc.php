@@ -37,7 +37,6 @@ class makeadaptation extends object {
             'contributedby' => $this->getParam("contributed_by"),
             'userid' => $this->objUser->userId(),
             'keywords' => $this->getParam("keywords"),
-            'adaptation_notes' => $this->getParam("adaptation_notes"),
             'current_path' => $this->getParam("selectnode")
         );
         $id = $this->dbsectioncontent->addSectionContent($data);
@@ -67,7 +66,6 @@ class makeadaptation extends object {
             'contributedby' => $this->getParam("contributed_by"),
             'userid' => $this->objUser->userId(),
             'keywords' => $this->getParam("keywords"),
-            'adaptation_notes' => $this->getParam("adaptation_notes"),
             'current_path' => $this->getParam("selectnode")
         );
 
@@ -97,7 +95,6 @@ class makeadaptation extends object {
                 "publisher" => $this->getParam("publisher"),
                 "keywords" => $this->getParam("keywords"),
                 "institutionid" => $this->getParam("institution"),
-                "adaptation_notes" => $this->getParam("adaptation_notes"),
                 "language" => $this->getParam("language"));
 
 
@@ -116,7 +113,6 @@ class makeadaptation extends object {
                 "publisher" => $this->getParam("publisher"),
                 "keywords" => $this->getParam("keywords"),
                 "institutionid" => $this->getParam("institution"),
-                "adaptation_notes" => $this->getParam("adaptation_notes"),
                 "language" => $this->getParam("language"),
                 "parent_id" => $parentid,
                 "thumbnail" => $thumbnail,
@@ -183,7 +179,6 @@ class makeadaptation extends object {
                         "contributedby" => $sectionContent["contributedby"],
                         "userid" => $sectionContent["userid"],
                         "keywords" => $sectionContent["keywords"],
-                        "adaptation_notes" => $sectionContent["adaptation_notes"],
                         "current_path" => $sectionContent["current_path"]
                     );
                     $newSectionId = $this->dbsectioncontent->addSectionContent($data);

@@ -16,9 +16,8 @@ class block_viewproductsection extends object {
         $productId = $data[0];
         $sectionId = $data[1];
         $sectionManager = $this->getObject("sectionmanager", "oer");
-        return $sectionManager->getSectionContent($productId, $sectionId);
+        return $sectionManager->buildSectionView($productId, $sectionId);
     }
-
 }
 ?>
 

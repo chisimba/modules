@@ -276,25 +276,7 @@ class adaptationmanager extends object {
         }
         $objTable->addCell($textinput->show());
         $objTable->endRow();
-
-
-        //adaptation notes
-        $objTable->startRow();
-        $objTable->addCell($this->objLanguage->languageText('mod_oer_adaptationotes', 'oer') .
-                " : (" . $this->objLanguage->languageText('mod_oer_required', 'oer') . ")");
-        $objTable->endRow();
-
-        $objTable->startRow();
-        $textarea = new textarea('adaptation_notes', '', 5, 60);
-        $textarea->cssClass = 'required';
-
-        if ($adaptationSection) {
-            $textarea->value = $adaptationSection['adaptation_notes'];
-        }
-
-        $objTable->addCell($textarea->show());
-        $objTable->endRow();
-
+        
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         if ($mode == "new") {
             $fieldset->setLegend($this->objLanguage->languageText('mod_oer_sectionviewaddadaptation', 'oer'));
