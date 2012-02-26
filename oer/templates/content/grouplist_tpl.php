@@ -1,24 +1,10 @@
 <?php
 ob_start(); 
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
-$objFix->fixThree();
+$objFix->fixTwo();
 ?>
-<div id="threecolumn">
-    <div id="Canvas_Content_Body_Region1">
-        {
-            "display" : "block",
-            "module" : "language",
-            "block" : "language"
-        },
-        {
-        "display" : "block",
-        "module" : "oer",
-        "block" : "filteroriginalproduct"
-        }
-       
-        <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
-        <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
-    </div>
+<div id="twocolumn">
+ 
     <div id="Canvas_Content_Body_Region3">
         {
             "display" : "block",

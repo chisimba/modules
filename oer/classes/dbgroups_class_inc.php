@@ -106,6 +106,24 @@ class dbgroups extends dbtable {
     }
 
     /**
+     * returns a list of groups that have adapted products
+     * @return type 
+     */
+    public function getGroupsThatHaveAdapatations() {
+        $sql = "select distinct gr.* from tbl_oer_groups gr, tbl_oer_products pr where gr.contextcode=pr.groupid";
+        return $this->getArray($sql);
+    }
+
+    /**
+     * returns id of a product that matches the supplied latitude and longitude
+     * @param type $lat
+     * @param type $long 
+     */
+    public function getAdapationIdByLocation($lat,$long){
+        $sql=
+        "select distinct pr.id from tbl_oer_products pr,tbl_oer_groups gr where gr.contextcode=pr.groupid and gr.loclat='$lat' and gr.loclong='$long'";
+    }
+    /**
      * 
      * Return an array of all groups
      * 

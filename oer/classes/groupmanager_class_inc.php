@@ -101,6 +101,25 @@ class groupmanager extends object {
     }
 
     /**
+     * geographics info of the groyp
+     * @return type 
+     */
+    function updateGroupStep2() {
+        $contextCode = $this->getParam("contextcode");
+        $loclat = $this->getParam('loclat');
+        $loclong = $this->getParam('loclong');
+        $country = $this->getParam('country');
+        $data = array(
+            "loclat" => $loclat,
+            "loclong" => $loclong,
+            "country" => $country
+        );
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $dbGroups->updateGroup($data, $contextCode);
+        return $contextCode;
+    }
+
+    /**
      * updates the step three of group details: linking selected institutions
      * to a group 
      */
@@ -133,28 +152,28 @@ class groupmanager extends object {
         $controlBand =
                 '<div id="groups_controlband">';
 
-        $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
-        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
-        $gridlink = new link($this->uri(array("action" => "home")));
-        $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
-        $controlBand.=$gridlink->show();
+        /* $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
+          $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+          $gridlink = new link($this->uri(array("action" => "home")));
+          $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
+          $controlBand.=$gridlink->show();
 
-        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
-        $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
-        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
-        $controlBand.=$listlink->show();
+          $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+          $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
+          $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
+          $controlBand.=$listlink->show(); */
 
         if ($this->objUser->isLoggedIn()) {
             $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
-            $controlBand.= '&nbsp;|&nbsp;' . $newthumbnail . $newgrouplink->show();
+            $controlBand.= $newthumbnail . $newgrouplink->show();
         }
 
 
         $sortbydropdown = new dropdown('sortby');
         $sortbydropdown->addOption('', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-        $controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
-        $controlBand.=$sortbydropdown->show();
+        //$controlBand.='<br/><br/>' . $this->objLanguage->languageText('mod_oer_sortby', 'oer');
+        //$controlBand.=$sortbydropdown->show();
 
         $controlBand.= '</div> ';
         $startNewRow = TRUE;
@@ -385,15 +404,14 @@ class groupmanager extends object {
     function getGroupForums($workgroup, $contextcode) {
         $link = new link($this->uri(array(), "forum"));
         $link->link = $this->objLanguage->languageText("mod_forum", "forum");
-        
-        $forum=  $this->getObject("forum", "oer");
-        return '<h1>'. $link->show().'</h1>'.$forum->showLastNPosts(10);
 
-        
-       /* $dbPost = $this->getObject("dbpost", "forum");
-        return $link->show() . '' . $dbPost->getWorkGroupPosts($workgroup, $contextcode);
-    */
-        
+        $forum = $this->getObject("forum", "oer");
+        return '<h1>' . $link->show() . '</h1>' . $forum->showLastNPosts(10);
+
+
+        /* $dbPost = $this->getObject("dbpost", "forum");
+          return $link->show() . '' . $dbPost->getWorkGroupPosts($workgroup, $contextcode);
+         */
     }
 
     /**
@@ -404,7 +422,7 @@ class groupmanager extends object {
      * @return string 
      */
     function buildViewGroupDetails($contextcode) {
-       
+
         $dbGroup = $this->getObject("dbgroups", "oer");
         $dbContext = $this->getObject("dbcontext", "context");
         $group = $dbGroup->getGroupByContextCode($contextcode);
@@ -449,7 +467,7 @@ class groupmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_discussions', 'oer') . '</h2>'
-                . $this->getGroupForums($group['id'],$contextcode) . '
+                . $this->getGroupForums($group['id'], $contextcode) . '
      </div>
 
 

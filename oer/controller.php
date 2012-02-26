@@ -22,6 +22,7 @@ class oer extends controller {
         $this->objMakeAdaptation = $this->getObject("makeadaptation", "oer");
         $this->objDBProducts = $this->getObject("dbproducts", "oer");
         $this->objDBdownloaders = $this->getObject('dboer_downloaders');
+        $this->objLanguage = $this->getObject("language", "language");
         $this->loadJS();
     }
 
@@ -38,7 +39,7 @@ class oer extends controller {
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation",
-            "viewgroups", "viewgroup", "showproductlistingaslist","login");
+            "viewgroups", "viewgroup", "showproductlistingaslist", "login");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -128,7 +129,7 @@ class oer extends controller {
      * redirects to login form
      * @return type 
      */
-    private function  __login(){
+    private function __login() {
         return "login_tpl.php";
     }
 
@@ -137,6 +138,10 @@ class oer extends controller {
      * @return strings
      */
     private function __viewgroups() {
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show(), "oer");
+
         return "grouplist_tpl.php";
     }
 
@@ -179,7 +184,7 @@ class oer extends controller {
     private function __adaptationlist() {
         $productId = $this->getParam('productid', Null);
         $this->setVar("productid", $productId);
-          $this->setVar("filteraction", "filteradaptation");
+        $this->setVar("filteraction", "filteradaptation");
         return "adaptationlist_tpl.php";
     }
 
@@ -261,7 +266,7 @@ class oer extends controller {
         return "productlisting_tpl.php";
     }
 
-        /**
+    /**
      * returns filtered adaptation listing depending on the filter
      * options selected
      * @return type 
@@ -274,8 +279,7 @@ class oer extends controller {
         $this->setVar("filter", $filter);
         return "adaptationlist_tpl.php";
     }
-    
-    
+
     /**
      * this returns the template for displaying details of the selected product
      * @return string
@@ -309,6 +313,19 @@ class oer extends controller {
      */
     function __viewadaptation() {
         $id = $this->getParam("id");
+        $this->setVarByRef("id", $id);
+        return "viewadaptation_tpl.php";
+    }
+
+    /**
+     * displays an adaptation based on location
+     * @return type 
+     */
+    function __viewadaptationbymap() {
+        $lat = $this->getParam('lat');
+        $long = $this->getParam("Lng");
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $id = $dbGroups->getAdapationIdByLocation($lat, $long);
         $this->setVarByRef("id", $id);
         return "viewadaptation_tpl.php";
     }
@@ -933,30 +950,51 @@ class oer extends controller {
      * @return string Template
      */
     function __creategroupstep1() {
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show() . ' &raquo; ' . $this->objLanguage->languageText("mod_oer_creategroupstep1", "oer"), "oer");
+
         $this->setVar("step", "1");
         $this->setVar("contextcode", "");
         return 'groupedit_tpl.php';
     }
 
     function __editgroupstep1() {
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show() . ' &raquo; ' . $this->objLanguage->languageText("mod_oer_creategroupstep1", "oer"), "oer");
+
         $this->setVar("step", "1");
         $this->setVar("contextcode", $this->getParam("contextcode"));
         return 'groupedit_tpl.php';
     }
 
     function __editgroupstep2() {
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show() . ' &raquo; ' . $this->objLanguage->languageText("mod_oer_creategroupstep2", "oer"), "oer");
+
         $this->setVar("step", "2");
         $this->setVar("contextcode", $this->getParam("contextcode"));
         return 'groupedit_tpl.php';
     }
 
     function __editgroupstep3() {
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show() . ' &raquo; ' . $this->objLanguage->languageText("mod_oer_creategroupstep3", "oer"), "oer");
+
         $this->setVar("step", "3");
         $this->setVar("contextcode", $this->getParam("contextcode"));
         return 'groupedit_tpl.php';
     }
 
     function __updategroupstep3() {
+
+        $link = new link($this->uri(array("action" => "viewgroups")));
+        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
+        $this->setSession("breadcrumbs", $link->show() . ' &raquo; ' . $this->objLanguage->languageText("mod_oer_creategroupstep3", "oer"), "oer");
+
         $groupManager = $this->getObject("groupmanager", "oer");
         $groupManager->updateGroupStep3();
         return $this->nextAction("viewgroup", array("contextcode" => $this->getParam("contextcode")));
@@ -982,6 +1020,15 @@ class oer extends controller {
     function __updategroupstep1() {
         $groupManager = $this->getObject("groupmanager", "oer");
         $contextCode = $groupManager->updateGroupStep1();
+        return $this->nextAction("editgroupstep2", array("contextcode" => $contextCode));
+    }
+
+    /**
+     * this save the geoloc info
+     */
+    function __updategroupstep2() {
+        $groupManager = $this->getObject("groupmanager", "oer");
+        $contextCode = $groupManager->updateGroupStep2();
         return $this->nextAction("editgroupstep3", array("contextcode" => $contextCode));
     }
 

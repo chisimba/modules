@@ -270,6 +270,20 @@
         </data>
     </update>
 
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.177</version>
+        <description>
+            <br/>Added group field
+        </description>
+        <data>
+            <add>
+                <name>groupid</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
 
 
 

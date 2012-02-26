@@ -72,8 +72,9 @@ class dbproducts extends dbtable {
         // Prepare to add product to search index
         $objIndexData = $this->getObject('indexdata', 'search');
         $saveDate = date('Y-m-d H:M:S');
-        $name = $data['title'];
         $product = $this->getProduct($id);
+        $name = $product['title'];
+        
         $description =$product['keywords'].' : '. $product['description'];
         $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');

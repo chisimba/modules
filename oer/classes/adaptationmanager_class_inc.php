@@ -276,7 +276,7 @@ class adaptationmanager extends object {
         }
         $objTable->addCell($textinput->show());
         $objTable->endRow();
-        
+
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         if ($mode == "new") {
             $fieldset->setLegend($this->objLanguage->languageText('mod_oer_sectionviewaddadaptation', 'oer'));
@@ -424,6 +424,37 @@ class adaptationmanager extends object {
         $objTable->addCell($textinput->show());
         $objTable->endRow();
 
+        //groups
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_groups', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $group = new dropdown('group');
+        $group->cssClass = 'required';
+
+        $group->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        //Get groups
+        $dbGroups = $this->getObject("dbgroups", "oer");
+        $currentGroups = $dbGroups->getAllGroups();
+        
+        $dbContext=$this->getObject("dbcontext", "context");
+        
+        //Generate dropdown from existing institutions
+        if ($currentGroups != Null) {
+            foreach ($currentGroups as $currentGroup) {
+                $context=$dbContext->getContext($currentGroup['contextcode']);
+                $group->addOption($currentGroup['contextcode'], $context['title']);
+            }
+        }
+
+        //Set selected
+        if ($product != null) {
+            $group->selected = $this->dbInstitution->getInstitutionName($product['institutionid']);
+        }
+        $objTable->addCell($group->show());
+        $objTable->endRow();
+
         //Institution
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_oer_group_institution', 'oer'));
@@ -431,7 +462,7 @@ class adaptationmanager extends object {
 
         $objTable->startRow();
         $institution = new dropdown('institution');
-        $institution->cssClass = 'required';
+        // $institution->cssClass = 'required';
 
         $institution->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         //Get institutions
@@ -906,7 +937,7 @@ class adaptationmanager extends object {
         // Insert the selectbox into the form object.
         $objForm->addToForm($objSelectBox->show());
 
-        $objForm->addToForm('<br/><div id="save_results"><div/>');
+        $objForm->addToForm('<br/><div id="save_results"></div>');
 
 
         // Get and insert the save and cancel form buttons

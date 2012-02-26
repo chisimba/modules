@@ -95,6 +95,7 @@ class makeadaptation extends object {
                 "publisher" => $this->getParam("publisher"),
                 "keywords" => $this->getParam("keywords"),
                 "institutionid" => $this->getParam("institution"),
+                "groupid" => $this->getParam("group"),
                 "language" => $this->getParam("language"));
 
 
@@ -113,6 +114,7 @@ class makeadaptation extends object {
                 "publisher" => $this->getParam("publisher"),
                 "keywords" => $this->getParam("keywords"),
                 "institutionid" => $this->getParam("institution"),
+                "groupid" => $this->getParam("group"),
                 "language" => $this->getParam("language"),
                 "parent_id" => $parentid,
                 "thumbnail" => $thumbnail,

@@ -366,7 +366,7 @@ class productmanager extends object {
         $formData = new form('originalProductForm1', $this->uri(array("action" => $action, "id" => $id)));
         $formData->addToForm($fieldset);
 
-        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $formData->addToForm('<br/><div id="save_results"></div>');
         $button = new button('saveStep1Button', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         //  $button->setToSubmit();
         $button->setOnClick($jsFunction);
@@ -486,7 +486,7 @@ class productmanager extends object {
         $formData = new form('originalProductForm2', $this->uri(array("action" => "saveoriginalproductstep2")));
         $formData->addToForm($fieldset);
 
-        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $formData->addToForm('<br/><div id="save_results"></div>');
         $button = new button('saveStep2Button', $this->objLanguage->languageText('word_save', 'system', 'Save'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
@@ -693,7 +693,7 @@ class productmanager extends object {
         $formData = new form('originalProductForm3', $this->uri(array("action" => "saveoriginalproductstep3")));
         $formData->addToForm($fieldset);
 
-        $formData->addToForm('<br/><div id="save_results"><div/>');
+        $formData->addToForm('<br/><div id="save_results"></div>');
         $button = new button('saveStep3Button', $this->objLanguage->languageText('word_save', 'system', 'Save'), 'javascript:saveStep3();');
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
@@ -758,7 +758,7 @@ class productmanager extends object {
         // Insert the selectbox into the form object.
         $objForm->addToForm($objSelectBox->show());
 
-        $objForm->addToForm('<br/><div id="save_results"><div/>');
+        $objForm->addToForm('<br/><div id="save_results"></div>');
 
 
         // Get and insert the save and cancel form buttons

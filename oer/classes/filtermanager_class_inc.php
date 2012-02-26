@@ -1,7 +1,9 @@
 <?php
 
 /**
- * this contains utils for managing filtering
+ * this contains utils for managing filtering products. This filter is used for
+ * both original products and adaptations. The filter results are displayed
+ * accordingly depending on the action used
  *
  * @author davidwaf
  */
@@ -22,6 +24,19 @@ class filtermanager extends object {
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('filterproducts.js', 'oer'));
+        $this->setupLanguageItems();
+    }
+
+    /**
+     * sets up necessary lang items for use in js
+     */
+    function setupLanguageItems() {
+        // Serialize language items to Javascript
+        $arrayVars['please_wait'] = "mod_oer_pleasewait";
+
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'oer');
     }
 
     /**
@@ -132,7 +147,8 @@ class filtermanager extends object {
 
         $formData = new form('productfilter', $this->uri(array("action" => $action)));
         $formData->addToForm($fieldset1->show() . $themesField . $languageField . $authorField . $institutionsField . $regionsField . $countriesField . $itemsPerPageField);
-        $button = new button('searchproduct', $this->objLanguage->languageText('word_search', 'system'));
+        $formData->addToForm('<br/><div class="pleasewait" id="save_results"></div>');
+        $button = new button('searchProductButton', $this->objLanguage->languageText('word_search', 'system'));
         $button->setToSubmit();
         $formData->addToForm('<br/>' . $button->show());
 
@@ -170,7 +186,7 @@ class filtermanager extends object {
             $sql.=" and institutionid like '%" . $institution . "%'";
         }
         $sql.=" limit " . $itemsPerPage;
-        
+
         return $sql;
     }
 

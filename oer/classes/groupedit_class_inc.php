@@ -85,9 +85,23 @@ class groupedit extends object {
         $this->objThumbUploader = $this->getObject('thumbnailuploader');
         $this->objDbInstitution = $this->getObject('dbinstitution');
         // Load the jquery validate plugin
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
+        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
+        $this->appendArrayVar('headerParams', $uiAllCSS);
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.autocomplete.js', 'jquery'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js', 'jquery'));
         // Load the helper Javascript.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('groupedit.js', 'oer'));
+        $this->appendArrayVar('headerParams', '<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>');
+        $this->appendArrayVar('headerParams', '<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA-O3c-Om9OcvXMOJXreXHAxQGj0PqsCtxKvarsoS-iqLdqZSKfxS27kJqGZajBjvuzOBLizi931BUow"></script>');
+
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('googlemap.js', 'oer'));
         // Load all the required HTML classes from HTMLElements module.
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -101,7 +115,13 @@ class groupedit extends object {
         $this->mode = $this->getParam('mode', 'add');
     }
 
+    /**
+     *  This builds step 1 of the form used for creating/editing a group
+     * @param type $contextcode
+     * @return type 
+     */
     public function buildGroupFormStep1($contextcode) {
+
         $dbGroup = $this->getObject("dbgroups", "oer");
         $group = $dbGroup->getGroupByContextCode($contextcode);
         $objContext = $this->getObject('dbcontext', 'context');
@@ -274,6 +294,7 @@ class groupedit extends object {
                 'mod_oer_group_fieldset2', 'oer');
         $fieldset->contents = $table->show();
         $form->addToForm($fieldset->show());
+
         $form->addToForm('<br />');
 
         $button = new button('saveGroupButton1', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
@@ -294,17 +315,27 @@ class groupedit extends object {
         return$header->show() . $form->show();
     }
 
+    /**
+     * builds a form used for second step when creating/editing a group. This step
+     * generates a google map to help a user visually select thier location
+     * @param type $contextcode
+     * @return type 
+     */
     public function buildGroupFormStep2($contextcode) {
-        $this->addStep4JS();
+
         $dbGroup = $this->getObject("dbgroups", "oer");
         $group = $dbGroup->getGroupByContextCode($contextcode);
-        $objContext = $this->getObject('dbcontext', 'context');
-        $action = "savegroupstep3";
-        if ($group != null) {
-            $action = "updategroupstep3";
-        }
 
-        $form = new form('groupFrom1', $this->uri(array("action" => $action)));
+        /* if($group != null){
+          $this->appendArrayVar('headerParams', '<script type="text/javascript">initialize("'.$group['loclat'].'","'.$group['loclong'].'");</script>');
+          }else{
+          $this->appendArrayVar('headerParams', '<script type="text/javascript">initialize("-26.204444","28.045556000000033");</script>');
+          } */
+
+        $objContext = $this->getObject('dbcontext', 'context');
+        $action = "updategroupstep2";
+
+        $form = new form('groupFrom2', $this->uri(array("action" => $action)));
 
         // Group latitude.
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -314,14 +345,14 @@ class groupedit extends object {
         $table->startRow();
         $table->addCell($hidId->show());
         $table->endRow();
+
         $latitude = new textinput('loclat');
         $latitude->size = 38;
-        if ($this->mode == 'edit') {
-            $latitude->value = $this->loclat;
-        } else {
-            $latitude->value = NULL;
+        if ($group != null) {
+            $latitude->value = $group['loclat'];
         }
         $table->startRow();
+
         $table->addCell($this->objLanguage->languageText(
                         'mod_oer_group_latitude', 'oer'));
         $table->addCell($latitude->show());
@@ -330,10 +361,8 @@ class groupedit extends object {
         // Group longitude.
         $longitude = new textinput('loclong');
         $longitude->size = 38;
-        if ($this->mode == 'edit') {
-            $longitude->value = $this->loclong;
-        } else {
-            $longitude->value = NULL;
+        if ($group != null) {
+            $longitude->value = $group['loclong'];
         }
         $table->startRow();
         $table->addCell($this->objLanguage->languageText(
@@ -343,7 +372,8 @@ class groupedit extends object {
 
         // Group country.
         $table->startRow();
-        $objCountries = &$this->getObject('languagecode', 'language');
+
+        $objCountries = $this->getObject('languagecode', 'language');
         $table->addCell($this->objLanguage->languageText(
                         'word_country', 'system'));
         if ($this->mode == 'edit') {
@@ -354,14 +384,22 @@ class groupedit extends object {
         $table->endRow();
 
         // Put it in a fieldset with a google map.
+        $form->addToForm('');
         $fieldset = $this->newObject('fieldset', 'htmlelements');
         $fieldset->legend = $this->objLanguage->languageText('mod_oer_group_fieldset3', 'oer');
         $fieldset->contents = '<label>Address: </label><input id="address"  type="text"/> 
             ' . $this->objLanguage->languageText('mod_oer_group_locincorrect', 'oer') . '
-            <div id="map_edit" style="width:600px; height:300px"></div><br/>'
+            <div id="map_canvas" style="width:600px; height:300px"></div><br/>
+            
+'
                 . $table->show();
         $form->addToForm($fieldset->show());
+
         $form->addToForm('<br />');
+        $button = new button('saveGroupButton2', $this->objLanguage->languageText('mod_oer_group_save_button', 'oer'));
+        $button->setToSubmit();
+        $form->addToForm($button->show());
+
         return $form->show();
     }
 
@@ -496,7 +534,9 @@ class groupedit extends object {
 
         $link = new link($this->uri(array("action" => "editgroupstep2", "contextcode" => $contextcode)));
         $link->link = $this->objLanguage->languageText('mod_oer_step2', 'oer');
-
+        if ($group != NULL) {
+          //   $link->extra = 'onClick="initialize(\'' . $group['loclat'] . '\',\'' . $group['loclong'] . '\');"';
+        }
         if ($step == '2') {
             $class = "current";
         } else {
