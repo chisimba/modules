@@ -243,7 +243,7 @@ class userblocks extends object
                     $table->addCell($record['firstname']);
                     $table->addCell($record['surname']);
                     $table->addCell($record['username']);
-                    $table->addCell('<div id="confirm_del_user">'.$link->show() ." ". $delLink->show() . '</div> ');
+                    $table->addCell('<div id="manageuser">'.$link->show() ." ". $delLink->show() . '</div> ');
                     $table->endRow();
                 }
             }
