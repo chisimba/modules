@@ -1262,7 +1262,7 @@ class productmanager extends object {
      */
     function getMostAdaptedProducts() {
         $dbProducts = $this->getObject("dbproducts", "oer");
-        $productIds = $dbProducts->getMostAdapatedProducts();
+        $productIds = $dbProducts->getMostAdaptedProducts();
         $content = '<div id="mostadaptedproducts">';
         foreach ($productIds as $productId) {
 
@@ -1299,15 +1299,15 @@ class productmanager extends object {
         return $content;
     }
 
-    
-    /**
-     * this gets the most rated  product
+     /**
+     * this gets the top 5 most commented products. The comments are pulled from
+      * the wall module
      * @return string 
      */
-    function getMostRatedProducts() {
-        $dbProductRating = $this->getObject("dbproductrating", "oer");
-        $productIds = $dbProductRating->getMostRatedProducts();
-        $content = '<div id="mostratedproducts">';
+    function getMostCommentedProducts() {
+        $dbProducts = $this->getObject("dbproducts", "oer");
+        $productIds = $dbProducts->getMostCommentedProducts();
+        $content = '<div id="mostadaptedproducts">';
         foreach ($productIds as $productId) {
 
             $product = $this->dbproducts->getProduct($productId['productid']);
@@ -1327,9 +1327,9 @@ class productmanager extends object {
             $product = $titleLink->show();
 
 
-            $content .= '<div id="mostratedproduct">';
-            $content.='<div id="mostratedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
-            $content.='<div id="mostratedproduct_title">' . $titleLink->show() . '</div>';
+            $content .= '<div id="mostadaptedproduct">';
+            $content.='<div id="mostadaptedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $content.='<div id="mostadaptedproduct_title">' . $titleLink->show() . '</div>';
 
             $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
             $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
@@ -1337,6 +1337,48 @@ class productmanager extends object {
             $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
 
             $content.='<div id="mostratedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
+            $content.="</div>";
+        }
+        $content.="</div>";
+        return $content;
+    }
+    /**
+     * this gets the most rated  product
+     * @return string 
+     */
+    function getMostRatedProducts() {
+        $dbProductRating = $this->getObject("dbproductrating", "oer");
+        $productIds = $dbProductRating->getMostRatedProducts();
+        $content = '<div id="mostcommentedproducts">';
+        foreach ($productIds as $productId) {
+
+            $product = $this->dbproducts->getProduct($productId['productid']);
+            $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            }
+
+            $mode = "";
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+
+
+            $content .= '<div id="mostcommentedproduct">';
+            $content.='<div id="mostcommentedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $content.='<div id="mostcommentedproduct_title">' . $titleLink->show() . '</div>';
+
+            $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
+            $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+
+            $content.='<div id="mostcommentedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
             $content.="</div>";
         }
         $content.="</div>";
@@ -1366,7 +1408,7 @@ class productmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostcommented">' . $this->objLanguage->languageText('mod_oer_mostcommented', 'oer') . '</h2>
-	 ' . $this->getMostRatedProducts() . '
+	 ' . $this->getMostCommentedProducts() . '
      </div>
 
 </div>

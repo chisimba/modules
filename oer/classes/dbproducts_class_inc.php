@@ -34,22 +34,30 @@ class dbproducts extends dbtable {
      * returns the most adapted product ids
      * @return type 
      */
-    function getMostAdapatedProducts(){
-     $sql=
-        "select count(parent_id) as mostadapted, parent_id as productid from tbl_oer_products where parent_id is not null group by parent_id order by mostadapted desc limit 5";
-        return $this->getArray($sql);
-
-     }
-    
-    /**
-     * returns current authors who have created/adapted ay products
-     */
-    function  getProductAuthors(){
-        $sql=
-        "select distinct author from $this->productsTableName";
+    function getMostAdaptedProducts() {
+        $sql =
+                "select count(parent_id) as mostadapted, parent_id as productid from tbl_oer_products where parent_id is not null group by parent_id order by mostadapted desc limit 5";
         return $this->getArray($sql);
     }
 
+    /**
+     * returns the most commented products, limited to 5
+     * @return type 
+     */
+    function getMostCommentedProducts() {
+        $sql =
+                " select count(identifier) as mostcommented, identifier as productid from tbl_wall_posts where identifier is not null and identifier like 'gen%' group by identifier order by mostcommented desc limit 5";
+        return $this->getArray($sql);
+    }
+
+    /**
+     * returns current authors who have created/adapted ay products
+     */
+    function getProductAuthors() {
+        $sql =
+                "select distinct author from $this->productsTableName";
+        return $this->getArray($sql);
+    }
 
     /**
      * saves original product into db
@@ -60,7 +68,7 @@ class dbproducts extends dbtable {
         $saveDate = date('Y-m-d H:M:S');
         $name = $data['title'];
         $product = $this->getProduct($id);
-        $description =$product['keywords'].' : '. $product['description'];
+        $description = $product['keywords'] . ' : ' . $product['description'];
         $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
@@ -85,8 +93,8 @@ class dbproducts extends dbtable {
         $saveDate = date('Y-m-d H:M:S');
         $product = $this->getProduct($id);
         $name = $product['title'];
-        
-        $description =$product['keywords'].' : '. $product['description'];
+
+        $description = $product['keywords'] . ' : ' . $product['description'];
         $url = $this->uri(array('action' => 'vieworiginalproduct', 'id' => $id), 'oer');
         $objTrimStr = $this->getObject('trimstr', 'strings');
         $teaser = $objTrimStr->strTrim(strip_tags($description), 500);
@@ -185,7 +193,7 @@ class dbproducts extends dbtable {
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
-    function getProductAdaptations($parentId,$filter) {
+    function getProductAdaptations($parentId, $filter) {
         $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter";
         $data = $this->getArray($sql);
         return $data;
