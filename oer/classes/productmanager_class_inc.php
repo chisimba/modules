@@ -1349,7 +1349,9 @@ class productmanager extends object {
     function getMostRatedProducts() {
         $dbProductRating = $this->getObject("dbproductrating", "oer");
         $productIds = $dbProductRating->getMostRatedProducts();
-        $content = '<div id="mostcommentedproducts">';
+       
+        $content= '<div id="mostcommentedproducts">';
+        $content.='<table>';
         foreach ($productIds as $productId) {
 
             $product = $this->dbproducts->getProduct($productId['productid']);
@@ -1369,18 +1371,20 @@ class productmanager extends object {
             $product = $titleLink->show();
 
 
-            $content .= '<div id="mostcommentedproduct">';
-            $content.='<div id="mostcommentedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
-            $content.='<div id="mostcommentedproduct_title">' . $titleLink->show() . '</div>';
+            $cell= '<div id="mostcommentedproduct">';
+            $cell.='<div id="mostcommentedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $cell.='<div id="mostcommentedproduct_title">' . $titleLink->show() . '</div>';
 
             $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
             $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
             $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
             $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
 
-            $content.='<div id="mostcommentedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
-            $content.="</div>";
+            $cell.='<div id="mostcommentedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
+            $cell.="</div>";
+            $content.='<tr><td align="left" valign="top">'.$cell.'</td></tr>';
         }
+        $content.="</table>";
         $content.="</div>";
         return $content;
     }
