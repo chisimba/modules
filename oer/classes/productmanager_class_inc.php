@@ -1254,6 +1254,52 @@ class productmanager extends object {
         return $content;
     }
 
+    
+    
+    /**
+     * this gets the top 5 most adapted
+     * @return string 
+     */
+    function getMostAdaptedProducts() {
+        $dbProducts = $this->getObject("dbproducts", "oer");
+        $productIds = $dbProducts->getMostAdapatedProducts();
+        $content = '<div id="mostadaptedproducts">';
+        foreach ($productIds as $productId) {
+
+            $product = $this->dbproducts->getProduct($productId['productid']);
+            $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            }
+
+            $mode = "";
+            $thumbnailLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $thumbnailLink->link = $thumbnail . '<br/>';
+            $thumbnailLink->cssClass = 'featuredproduct_thumbnail';
+
+            $titleLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $productId['productid'], 'module' => 'oer', "id" => $productId['productid'], "mode" => $mode)));
+            $titleLink->cssClass = 'original_product_listing_title';
+            $titleLink->link = $product['title'];
+            $product = $titleLink->show();
+
+
+            $content .= '<div id="mostadaptedproduct">';
+            $content.='<div id="mostadaptedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+            $content.='<div id="mostadaptedproduct_title">' . $titleLink->show() . '</div>';
+
+            $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
+            $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId['productid'])));
+            $adaptationsLink->link = $adaptationCount . '&nbsp;' . $this->objLanguage->languageText('mod_oer_adaptationscount', 'oer');
+            $adaptationsLink->cssClass = 'original_product_listing_adaptation_count';
+
+            $content.='<div id="mostratedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
+            $content.="</div>";
+        }
+        $content.="</div>";
+        return $content;
+    }
+
+    
     /**
      * this gets the most rated  product
      * @return string 
@@ -1308,7 +1354,7 @@ class productmanager extends object {
 
      <div class="tabbertab">
 	  <h2 class="mostadapted">' . $this->objLanguage->languageText('mod_oer_mostadapted', 'oer') . '</h2>
-	  ' . $this->getMostRatedProducts() . '
+	  ' . $this->getMostAdaptedProducts() . '
      </div>
 
 

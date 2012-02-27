@@ -31,6 +31,17 @@ class dbproducts extends dbtable {
     }
 
     /**
+     * returns the most adapted product ids
+     * @return type 
+     */
+    function getMostAdapatedProducts(){
+     $sql=
+        "select count(parent_id) as mostadapted, parent_id as productid from tbl_oer_products where parent_id is not null group by parent_id order by mostadapted desc limit 5";
+        return $this->getArray($sql);
+
+     }
+    
+    /**
      * returns current authors who have created/adapted ay products
      */
     function  getProductAuthors(){
