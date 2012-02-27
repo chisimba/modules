@@ -10,7 +10,7 @@ class block_browsebymap extends object {
     function init() {
         $objLanguage=  $this->getObject("language", "language");
        
-        $this->title = $objLanguage->languageText(" mod_oer_browsebymap","oer");
+        $this->title = $objLanguage->languageText("mod_oer_browsebymap","oer");
     }
 
     function show() {
