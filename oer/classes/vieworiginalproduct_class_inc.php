@@ -199,9 +199,12 @@ class vieworiginalproduct extends object {
         $sectionManager = $this->getObject("sectionmanager", "oer");
         $navigator = $sectionManager->buildSectionsTree($productId, '');
 
+        //Link for - Full view of product
+        $compareAdaptsLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
+        $compareAdaptsLink->link = $objLanguage->languageText('mod_oer_compareadaptation', 'oer', 'Compare adaptations');
+        $compareAdapts = $compareAdaptsLink->show();
 
-
-        $leftContent.='<br/>' . $sections . '<br/>' . $navigator;
+        $leftContent.= '<br/>' . $compareAdapts . '<br/>' . $sections . '<br/>' . $navigator;
 
         $table->startRow();
 

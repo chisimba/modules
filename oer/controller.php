@@ -779,6 +779,14 @@ class oer extends controller {
         }
     }
 
+    function __compareadaptations() {
+        $sectionid = $this->getParam("sectionid", "");
+        $productid = $this->getParam("productid");
+        $data = $productid . '|' . $sectionid;
+        $this->setVarByRef("data", $data);
+        return "compareadaptations_tpl.php";
+    }
+
     /**
      * Creates a new curriculum and returns to view product page
      * @return type 
@@ -1094,7 +1102,7 @@ class oer extends controller {
         $institutionManager = $this->getObject("institutionmanager", "oer");
         if ($id == null) {
             $id = $institutionManager->addInstitution(
-                    'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
+                            'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
         }
         $this->setVarByRef("id", $id);
         return 'institutionedit_tpl.php';

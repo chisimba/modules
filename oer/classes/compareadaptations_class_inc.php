@@ -1,46 +1,24 @@
 <?php
 
 /**
- * This class contains util methods for displaying full view of an adaptation
+ * This method contains util methods for comparing a product's adaptations
  *
  * @author pwando
  */
-class fullviewadaptation extends object {
+class compareadaptations extends object {
 
     function init() {
-        $this->loadClass('textarea', 'htmlelements');
-        $this->loadClass("link", "htmlelements");
-        $this->loadClass("form", "htmlelements");
-        $this->objLanguage = $this->getObject("language", "language");
-        $this->objDbProducts = $this->getObject("dbproducts", "oer");
-        $this->objDbProductComments = $this->getObject("dbproductcomments", "oer");
-        $this->objDbInstitution = $this->getObject("dbinstitution", "oer");
-        $this->objDbInstitutionType = $this->getObject("dbinstitutiontypes", "oer");
-        $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->rootTitle = $this->objLanguage->languageText('mod_oer_none', 'oer');
+        //Load htmlelement classes
+        $this->loadClass('link', 'htmlelements');
+        //Get DB Objects
+        $this->dbProducts = $this->getObject('dbproducts', 'oer');
         $this->objUser = $this->getObject("user", "security");
-        $this->sectionManager = $this->getObject("sectionmanager", "oer");
-        //Flag to check if user is logged in
-        $this->isLoggedIn = $this->objUser->isLoggedIn();
-        $this->loadJScript();
-    }
-
-    /**
-     * JS an CSS for download adaptation
-     */
-    function loadJScript() {
-        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
-
-        $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
-        $this->appendArrayVar('headerParams', $uiAllCSS);
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.core.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.widget.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.mouse.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.draggable.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.position.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.resizable.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('plugins/ui/development-bundle/ui/jquery.ui.dialog.js', 'jquery'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
-        $this->appendArrayVar('headerParams', $dialogCSS);
+        $this->dbSectionNode = $this->getObject("dbsectionnodes", "oer");
+        $this->objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $this->objDbInstitution = $this->getObject("dbinstitution", "oer");
+        $this->sectionManager = $this->getObject('sectionmanager', 'oer');
     }
 
     /**
@@ -49,16 +27,22 @@ class fullviewadaptation extends object {
      * @param String $sectionId
      * @return string
      */
-    function buildFullView($productId) {
+    function buildCompareView($productId, $sectionId, $mode) {
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
-        //Check if Original
-        $isOriginalProduct = $this->objDbProducts->isOriginalProduct($productId);
+        //Get section data
+        //$node = $this->dbSectionNode->getSectionNode($sectionId);
+        $isOriginalProduct = $this->dbProducts->isOriginalProduct($productId);
 
+        //get product data
+        $product = $this->dbProducts->getProduct($productId);
+        
+        //Get product adaptations
+        $productAdaptations = $this->dbProducts->getProductAdaptations($productId, '');
 
-        $product = $this->objDbProducts->getProduct($productId);
         $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
@@ -79,8 +63,52 @@ class fullviewadaptation extends object {
             $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
             $newAdapt = $newAdaptLink->show();
         }
+
+        //Link for - original product title
+        $viewParentProdLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
+        $viewParentProdLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
+        $viewParentProd = $viewParentProdLink->show();
+
+        //Link for - See existing adaptations of this UNESCO Product
+        $viewParentInstLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+        $viewParentInstLink->link = $this->objLanguage->languageText('mod_oer_fullviewinst', 'oer');
+        $viewParentInst = $viewParentInstLink->show();
+
+        //Link for - parent inst title
+        $viewInstTitleLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+        $viewInstTitleLink->link = $instData['name'];
+        $viewInstTitle = $viewInstTitleLink->show();
+
+        //Build navigation path
+        if ($isOriginalProduct) {
+            //Link for - product list
+            $prodListLink = new link($this->uri(array("action" => "home")));
+            $prodListLink->link = $this->objLanguage->languageText('mod_oer_maintitle2', 'oer');
+            $prodListPage = $prodListLink->show();
+            $navpath = $prodListPage . " > " . $product['title'];
+            //Link for - view product for this section
+            $viewProdTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["id"], "mode" => "grid")));
+            $viewProdTitleLink->link = $product['title'];
+            $viewProdTitle = $viewProdTitleLink->show();
+        } else {
+            //Get parent prod data
+            $parentProduct = $this->dbProducts->getProduct($product["parent_id"]);
+
+            //Link for - adaptation list
+            $adaptListLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
+            $adaptListLink->link = $this->objLanguage->languageText('mod_oer_adaptations', 'oer');
+            $adaptListPage = $adaptListLink->show();
+            $navpath = $adaptListPage . " > " . $viewInstTitle . " > " . $product['title'];
+            //Link for - original product for this adaptation
+            $viewParentTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
+            $viewParentTitleLink->link = $parentProduct['title'];
+            $viewParentTitle = $viewParentTitleLink->show();
+        }
+
+        $selected = "";
+
         //Fetch section tree
-        $navigator = $this->sectionManager->buildSectionsTree($productId, "");
+        $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", '', $selected);
 
         $homeLink = new link($this->uri(array("action" => "home")));
         $homeLink->link = $this->objLanguage->languageText('mod_oer_home', 'system');
@@ -90,29 +118,22 @@ class fullviewadaptation extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        $leftCol = "";
-
-        $leftCol .= '<div class="headingHolder">
-            <div class="heading2">
-            <h1 class="greyText">' . $product['title'] . '</h1></div></div>';
-
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
 
         $rightContent = "";
-        $leftContent = '<div class="viewadaptation_leftcontent">'.$leftCol;
-        $leftContent .= '<div class="abstractContent"><p><b>' . $this->objLanguage->languageText('mod_oer_abstract', 'oer') . '</b></p><p>'
-                . $product['abstract'] . '</p></div>';
-        $leftContent .= '<div class="contentDivThreeWider">' . $product['description'] . '</div>';
-
-        $leftContent .= '</div>';
-        $rightContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div>
-            <br/><br/><div class="sectionkeywords"><b>' . $this->objLanguage->languageText('mod_oer_sectionkeywords', 'oer', "Section keywords")
-                . ':</b><p>' . $product['keywords'] . '</p></div></div>';
+        $rightContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div></div>';
         $table->startRow();
-        $table->addCell($leftContent, "", "top", "left", "", 'style="width:75%"');
-        $table->addCell("<br /><br />" . $rightContent, "", "top", "left", "", 'style="width:25%"');
+        $table->addCell($rightContent, "", "top", "left", "", 'style="width:220px"');        
+        //Show navigation for each of the product's adaptations
+        if (count($productAdaptations) > 0) {
+            foreach ($productAdaptations as $prodAdaptation) {
+                $adaptNav = $this->sectionManager->buildSectionsTree($prodAdaptation["id"], '', "false", '', $selected);
+                $adaptContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $adaptNav . '</div></div>';
+                $table->addCell($adaptContent, "", "top", "left", "", 'style="width:220px"');
+            }
+        }
         $table->endRow();
 
         $topStuff = "";
@@ -120,18 +141,6 @@ class fullviewadaptation extends object {
 
         //Heading varies depending on whether its an original product or adaptation
         if ($isOriginalProduct) {
-            //Build navigation path
-            //Link for - product list
-            $prodListLink = new link($this->uri(array("action" => "home")));
-            $prodListLink->link = $this->objLanguage->languageText('mod_oer_maintitle2', 'oer');
-            $prodListPage = $prodListLink->show();
-            $navpath = $prodListPage . " > " . $product['title'];
-
-            //Link for - view product for this section
-            $viewProdTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["id"], "mode" => "grid")));
-            $viewProdTitleLink->link = $product['title'];
-            $viewProdTitle = $viewProdTitleLink->show();
-
             //Get icons
             $prodIconOne = '<img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
@@ -140,7 +149,7 @@ class fullviewadaptation extends object {
             $prodIconThree = '<img src="skins/oer/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
             //Get count of adaptations
-            $adaptationCount = $this->objDbProducts->getProductAdaptationCount($productId);
+            $adaptationCount = $this->dbProducts->getProductAdaptationCount($productId);
             //Get prod thumbnail
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="59" height="76" align="left"/>';
             if ($product['thumbnail'] == '') {
@@ -171,34 +180,6 @@ class fullviewadaptation extends object {
                         <p>' . $fullProdView . '</p>
                             <p>' . $toplinks . '</p></div></div>';
         } else {
-            //Link for - See existing adaptations of this UNESCO Product
-            $viewParentInstLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
-            $viewParentInstLink->link = $this->objLanguage->languageText('mod_oer_fullviewinst', 'oer');
-            $viewParentInst = $viewParentInstLink->show();
-            
-            //Link for - parent inst title
-            $viewInstTitleLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
-            $viewInstTitleLink->link = $instData['name'];
-            $viewInstTitle = $viewInstTitleLink->show();
-            
-            //Link for - original product title
-            $viewParentProdLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
-            $viewParentProdLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
-            $viewParentProd = $viewParentProdLink->show();
-
-            //Get parent prod data
-            $parentProduct = $this->objDbProducts->getProduct($product["parent_id"]);
-
-            //Link for - adaptation list
-            $adaptListLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
-            $adaptListLink->link = $this->objLanguage->languageText('mod_oer_adaptations', 'oer');
-            $adaptListPage = $adaptListLink->show();
-            $navpath = $adaptListPage . " > " . $viewInstTitle . " > " . $product['title'];
-            //Link for - original product for this adaptation
-            $viewParentTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
-            $viewParentTitleLink->link = $parentProduct['title'];
-            $viewParentTitle = $viewParentTitleLink->show();
-
             //Get prod & inst thumbnails
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
@@ -251,11 +232,9 @@ class fullviewadaptation extends object {
         }
 
         return '<div class="navPath">' . $navpath .
-        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
-            <div class="navPath">' . $navpath .
-        '</div>' . $table->show() . '
-            <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
-    }   
+        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/>
+            <div class="mainContentHolder">' . $table->show() . '</div></div>';
+    }
 
 }
 

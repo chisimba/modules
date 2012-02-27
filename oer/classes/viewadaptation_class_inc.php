@@ -134,6 +134,13 @@ class viewadaptation extends object {
         $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_productfullinfo', 'oer');
         $fullProdView = $fullProdViewLink->show();
 
+        //Link for - Full view of product
+        $compareAdaptsLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
+        $compareAdaptsLink->link = $this->objLanguage->languageText('mod_oer_compareadaptation', 'oer', 'Compare adaptations');
+        $compareAdapts = $compareAdaptsLink->show();
+
+        $fullProdView .= "<br/><br/>" . $compareAdapts . "<br/>";
+
         $sections = "";
         $sectionTitle = '<h3>' . $this->objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         if ($this->hasPerms) {
