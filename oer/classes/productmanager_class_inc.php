@@ -1372,7 +1372,7 @@ class productmanager extends object {
 
 
             $cell= '<div id="mostcommentedproduct">';
-            $cell.='<div id="mostcommentedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
+           // $cell.='<div id="mostcommentedproduct_thumbnail">' . $thumbnailLink->show() . '</div>';
             $cell.='<div id="mostcommentedproduct_title">' . $titleLink->show() . '</div>';
 
             $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
@@ -1382,7 +1382,7 @@ class productmanager extends object {
 
             $cell.='<div id="mostcommentedproduct_thumbnail">' . $adaptationsLink->show() . '</div>';
             $cell.="</div>";
-            $content.='<tr><td align="left" valign="top">'.$cell.'</td></tr>';
+            $content.='<tr><td align="left" valign="top">'.$thumbnail.'</td><td align="left" valign="top">'.$cell.'</td></tr>';
         }
         $content.="</table>";
         $content.="</div>";
