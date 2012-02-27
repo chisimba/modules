@@ -16,7 +16,13 @@ $objFix->fixThree();
         "module" : "oer",
         "block" : "featuredadaptation"
         }
-                {
+         {
+        "display" : "block",
+        "module" : "oer",
+        "block" : "browsebymap"
+        
+        }
+        {
         "display" : "block",
         "module" : "calendar",
         "block" : "smallcalendar"

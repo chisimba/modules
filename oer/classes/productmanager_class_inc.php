@@ -1282,7 +1282,7 @@ class productmanager extends object {
             $product = $titleLink->show();
 
 
-            $cell .= '<div id="mostadaptedproduct">';
+            $cell = '<div id="mostadaptedproduct">';
             $cell.='<div id="mostadaptedproduct_title">' . $titleLink->show() . '</div>';
 
             $adaptationCount = $this->dbproducts->getProductAdaptationCount($productId['productid']);
