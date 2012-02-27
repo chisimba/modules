@@ -133,7 +133,7 @@ class dboeruserdata extends dbtable {
      * 
      */
     public function editSave()
-    {
+    {       
         $this->loadData();
         if ($this->id == NULL) {
             return 'ERROR_DATA_INSERT_FAIL';
@@ -226,6 +226,8 @@ class dboeruserdata extends dbtable {
           $userId, $this->username, $this->password, $this->title, 
           $this->firstname, $this->surname, $this->email, $this->sex, 
           $this->country, $this->mobilephone, '', 'useradmin', 1);
+        //Send the user an email
+        $this->objAdmin->sendRegistrationMessage($pkid, $this->password);
         
         // Send the data to the oer users data
         $data = array(
