@@ -20,6 +20,7 @@ class mapfactory extends object {
     function getBrowseByMap() {
         $dbGroups = $this->getObject("dbgroups", "oer");
         $dbContext = $this->getObject("dbcontext", "context");
+        
         $coords = $dbGroups->getGroupsThatHaveAdapatations();
         $titles = $dbGroups->getGroupsThatHaveAdapatations();
         $str='';
