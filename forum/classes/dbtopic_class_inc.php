@@ -659,7 +659,12 @@ GROUP BY tbl_forum_topic.id                ';
         $totalTopics = $this->getNumTopicsInForum($forum_id, $includeTangents);
 
         // Remove Remainder, and divider
-        $numPages = ($totalTopics - ($totalTopics % $limit)) / $limit;
+        // Check to prevent blank values causing a PHP fatal error
+        if (is_numeric($totalTopics) && is_numeric($limit)) {
+            $numPages = ($totalTopics - ($totalTopics % $limit)) / $limit;
+        } else {
+          return 0;
+        }
 
         // If there is a remainder, add another page
         if ($totalTopics % $limit > 0) {
