@@ -26,6 +26,7 @@ class block_widetext33 extends textblockbase
     {
     	parent::init();
         $this->setData("widetext33");
+        $this->wrapStr = FALSE;
     }
     
     /**

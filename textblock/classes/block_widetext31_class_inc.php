@@ -34,6 +34,7 @@ class block_widetext31 extends textblockbase
     function show()
     {
         return $this->blockContents;
+        $this->wrapStr = FALSE;
     }
 }
 ?>
