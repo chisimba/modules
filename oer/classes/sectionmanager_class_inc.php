@@ -788,9 +788,9 @@ class sectionmanager extends object {
         }
 
         return '<div class="navPath">' . $navpath .
-        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
+                '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
-        '</div>' . $table->show() . '
+                '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
     }
 
@@ -942,7 +942,7 @@ class sectionmanager extends object {
         if ($treeType == "compare") {
             if ($selected != '') {
                 //Get the selected item data to compare with other nodes
-                $sectionNode = $dbsections->getSectionNode($selected);                
+                $sectionNode = $dbsections->getSectionNode($selected);
             } else {
                 $sectionNode = $dbsections->getSectionNode($sectionId);
             }
@@ -1026,8 +1026,13 @@ class sectionmanager extends object {
                     $arr_selectedtxt = explode(" ", $selected);
 
                     foreach ($arr_selectedtxt as $selectedtxt) {
-                        $exists = strpos($folderShortText, $selectedtxt);
-                        if ($exists!==false) {
+                        $exists = -1;
+                        if ($selectedtxt != '') {
+                            $exists = strpos($folderShortText, $selectedtxt);
+                        }
+                        
+                       
+                        if ($exists !== false) {
                             $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
                         }
                     }

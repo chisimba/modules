@@ -5,14 +5,16 @@
 jQuery(document).ready(function(){ 
     jQuery("#form_curriculumform").validate();
     jQuery("#form_createsectionnode").validate();
-   
+   var hoverSuccess=false;
     jQuery("a").hover(
-        function () {
+   
+   function () {
             if(loggedIn){
-            
+    hoverSuccess=false;         
                 var link = this.href;
                 if(link.indexOf("viewsection") > 0){
-                    var sectionIdIndex=link.indexOf("sectionid=")+10;
+                  hoverSuccess=true;
+                  var sectionIdIndex=link.indexOf("sectionid=")+10;
                     var productIdIndex=link.indexOf("productid=")+10;
                     var nodeTypeIndex=link.indexOf("nodetype=")+9;
                     var sectionId='-1';
@@ -39,7 +41,7 @@ jQuery(document).ready(function(){
             }
         }, 
         function () {
-            if(loggedIn){
+            if(loggedIn && hoverSuccess){
                 jQuery(this).find("span:first").remove();
             }
         }
