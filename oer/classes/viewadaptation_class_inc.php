@@ -229,7 +229,7 @@ class viewadaptation extends object {
             $adaptImg = '<img src="skins/oer/images/icons/add.png">';
             $editImg = '<img src="skins/oer/images/icons/edit.png">';
             $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-            
+
             //Link create an adaptation
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
             $adaptLink->link = $adaptImg;
@@ -237,7 +237,7 @@ class viewadaptation extends object {
             $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
             $adaptLink->title = $this->objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
             $featuredAdaptation.= $adaptLink->show();
-            
+
             //Link edit adaptation
             $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
@@ -365,7 +365,15 @@ class viewadaptation extends object {
             $printLink->title = $this->objLanguage->languageText('mod_oer_download', 'oer');
             //$printLink->target = "_blank";
             $printLk = "" . $printLink->show();
-            $prodTitle .= '<div class="displaybookmarks">' . $featuredAdaptation . $bookmarks . " " . $printLk . '</div>';
+
+            $shareViaEmail=$this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="'.$shareViaEmail.'" title="'.$shareViaEmail.'"/>';
+            $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
+            $bodyLink->link = $product['title'];
+            $emailLink = '<a  href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
+
+
+            $prodTitle .= '<div class="displaybookmarks">' . $featuredAdaptation . $bookmarks . " " . $printLk . '&nbsp;' . $emailLink . '</div>';
         }
 
         $prodTitle .= '<h1 class="adaptationListingLink">' . $product['title'] . '</h1>';

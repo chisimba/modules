@@ -1,9 +1,28 @@
 <?php
 
 /**
- * This class contains util methods for displaying product details
+ * This class contains util methods for displaying full original product details
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @author davidwaf
+ * @version    0.001
+ * @package    oer
+
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
+ * @author davidwaf davidwaf@gmail.com
  */
 class vieworiginalproduct extends object {
 
@@ -85,12 +104,19 @@ class vieworiginalproduct extends object {
         $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
         if ($this->objUser->isLoggedIn()) {
             $leftContent.=$this->createRatingDiv($productId);
-                        $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'original')));
+            $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'original')));
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
-            //$printLink->target = "_blank";
+
+            $shareViaEmail = $this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="' . $shareViaEmail . '" title="' . $shareViaEmail . '"/>';
+
+            $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
+            $bodyLink->link = $product['title'];
+            $emailLink = '<a href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
+
             $printLk = "" . $printLink->show();
-            $prodTitle .=  " " . $printLk ;
+            $prodTitle .= " " . $printLk . '&nbsp;' . $emailLink;
         } else {
             //Print link
             $printLink = new link("#dialog");
@@ -116,24 +142,28 @@ class vieworiginalproduct extends object {
                     . $objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
             //$buttonNxt = new button('submit', $buttonTitle);
             $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'original')));
-             $objNextLk->cssId = "nextbtnspan";
+            $objNextLk->cssId = "nextbtnspan";
             $objNextLk->link = $objLanguage->languageText('word_next');
 
             $toolTipStr .= " " . $objNextLk->show();
 
-            $dialogTitle = $objLanguage->languageText('mod_oer_downloadproduct','oer')." (".$objLanguage->languageText('mod_oer_adaptation','oer').")";
+            $dialogTitle = $objLanguage->languageText('mod_oer_downloadproduct', 'oer') . " (" . $objLanguage->languageText('mod_oer_adaptation', 'oer') . ")";
 
-            $prodTitle .= " ".$printLk. '</div><div id="downloader"  title="'.$dialogTitle.'">' . $toolTipStr.'</div>';
+            $prodTitle .= " " . $printLk . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
         }
         $leftContent.=$product['description'];
 
         $rightContent = "";
         //Add bookmark
-        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
-        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
-        $objBookMarks->includeTextLink = FALSE;
-        $bookmarks = $objBookMarks->show();
-        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks.$prodTitle.'</div>';
+        $bookmarks = "";
+        if ($this->objUser->isLoggedIn()) {
+            $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+            $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+            $objBookMarks->includeTextLink = FALSE;
+            $bookmarks = $objBookMarks->show();
+        }
+
+        $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks . $prodTitle . '</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_unesco_contacts_label">' . $objLanguage->languageText('mod_oer_unesco_contacts', 'oer') . ': ' . $product['contacts'] . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_publishedby_label">' . $objLanguage->languageText('mod_oer_publishedby', 'oer') . ': ' . $product['publisher'] . '</div><br/><br/>';
@@ -226,8 +256,8 @@ class vieworiginalproduct extends object {
     function loadCSSandJS() {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
-        
-       
+
+
         $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
         $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
         $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';

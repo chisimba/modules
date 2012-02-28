@@ -3,6 +3,25 @@
 /**
  * Contains util methods for managing product
  *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+ * @author     Davidwadf davidwaf@gmail.com
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
  * @author davidwaf
  */
 class productmanager extends object {
@@ -12,6 +31,10 @@ class productmanager extends object {
     public $objConfig;
     private $objUser;
 
+    /**
+     * this function is called whenever a new object of this class is created
+     * we initialize necessary things here, for later use i the code
+     */
     function init() {
         $this->dbproducts = $this->getObject('dbproducts', 'oer');
         $this->objLanguage = $this->getObject('language', 'language');
@@ -35,8 +58,8 @@ class productmanager extends object {
     }
 
     /**
-     * Validates the contents of new product field values in step 1. If all are valid, these
-     * are save, else the form is returned with the errors highlighted
+     * Step 1 details of a new product are saved. It is assumed that these
+     * have already been validaded already
      * @return type 
      */
     function saveNewProductStep1() {
@@ -68,7 +91,8 @@ class productmanager extends object {
     }
 
     /**
-     * updates products step 1 details
+     * Step 1 details of an existing product are updated. It is assumed that these
+     * have already been validaded already
      * @return type 
      */
     function updateProductStep1() {
@@ -88,7 +112,8 @@ class productmanager extends object {
     }
 
     /**
-     * used for deleting an original product 
+     * used for deleting an original product. It is assummed that the delete
+     * confirmation has already been done
      */
     function deleteOriginalProduct() {
         $id = $this->getParam("id");
@@ -833,7 +858,8 @@ class productmanager extends object {
     }
 
     /**
-     * creates a table and returns the list of current products
+     * creates a table and returns the list of current products. This method is actually
+     * what constructs the first page
      * @return type 
      */
     public function getOriginalProductListing($mode, $filter='') {
