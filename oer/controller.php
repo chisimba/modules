@@ -780,9 +780,9 @@ class oer extends controller {
     }
 
     function __compareadaptations() {
-        $selectedid = $this->getParam("selectedid", "");
+        $selectedid = $this->getParam("selected", "");
         $productid = $this->getParam("productid");
-        $data = $productid . '|' . $sectionid;
+        $data = $productid . '|' . $selectedid;
         $this->setVarByRef("data", $data);
         return "compareadaptations_tpl.php";
     }

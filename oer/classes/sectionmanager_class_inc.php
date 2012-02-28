@@ -939,9 +939,19 @@ class sectionmanager extends object {
         $dbProduct = $this->getObject("dbproducts", "oer");
         $product = $dbProduct->getProduct($productId);
 
-        if ($selected == '') {
-            $sectionNode = $dbsections->getSectionNode($sectionId);
+        if ($treeType == "compare") {
+            if ($selected != '') {
+                //Get the selected item data to compare with other nodes
+                $sectionNode = $dbsections->getSectionNode($selected);                
+            } else {
+                $sectionNode = $dbsections->getSectionNode($sectionId);
+            }
             $selected = $sectionNode['title'];
+        } else {
+            if ($selected == '') {
+                $sectionNode = $dbsections->getSectionNode($sectionId);
+                $selected = $sectionNode['title'];
+            }
         }
 
         $icon = 'folder.gif';
@@ -1012,9 +1022,19 @@ class sectionmanager extends object {
                     // echo "css class == $cssClass<br/>";
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $sectionNode['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 } else if ($treeType == "compare") {
+                    //Check if the folderShortText contains some words in selected
+                    $arr_selectedtxt = explode(" ", $selected);
+
+                    foreach ($arr_selectedtxt as $selectedtxt) {
+                        $exists = strpos($folderShortText, $selectedtxt);
+                        if ($exists!==false) {
+                            $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
+                        }
+                    }
+
                     $link = new link($this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $sectionNode['id'])));
                     $link->cssClass = 'sectionlink';
-                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));                    
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
                 } else {
                     $link = new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
                     $link->cssClass = 'sectionlink';
@@ -1043,7 +1063,7 @@ class sectionmanager extends object {
 
         $thumbnail = "";
         $space = "";
-        if ($showThumbNail == 'true') {            
+        if ($showThumbNail == 'true') {
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
             if ($product['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
