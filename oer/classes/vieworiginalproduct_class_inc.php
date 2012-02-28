@@ -149,19 +149,26 @@ class vieworiginalproduct extends object {
 
             $dialogTitle = $objLanguage->languageText('mod_oer_downloadproduct', 'oer') . " (" . $objLanguage->languageText('mod_oer_adaptation', 'oer') . ")";
 
-            $prodTitle .= " " . $printLk . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
+            $shareViaEmail = $objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="' . $shareViaEmail . '" title="' . $shareViaEmail . '"/>';
+
+            $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
+            $bodyLink->link = $product['title'];
+            $emailLink = '<a href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
+
+            $prodTitle .= " " . $printLk . '&nbsp;' . $emailLink . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
         }
         $leftContent.=$product['description'];
 
         $rightContent = "";
         //Add bookmark
         $bookmarks = "";
-        if ($this->objUser->isLoggedIn()) {
+        //if ($this->objUser->isLoggedIn()) {
             $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
             $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
             $objBookMarks->includeTextLink = FALSE;
             $bookmarks = $objBookMarks->show();
-        }
+        //}
 
         $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks . $prodTitle . '</div>';
         $rightContent.='<div id="viewproduct_authors_label">' . $objLanguage->languageText('mod_oer_authors', 'oer') . ': ' . $product['author'] . '</div><br/><br/>';

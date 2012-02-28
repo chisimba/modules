@@ -356,7 +356,13 @@ class viewadaptation extends object {
 
             $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct', 'oer') . " (" . $this->objLanguage->languageText('mod_oer_adaptation', 'oer') . ")";
 
-            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . " " . $printLk . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
+            $shareViaEmail=$this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="'.$shareViaEmail.'" title="'.$shareViaEmail.'"/>';
+            $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
+            $bodyLink->link = $product['title'];
+            $emailLink = '<a  href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
+            
+            $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . " " . $printLk . '&nbsp;' . $emailLink . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
             $printLink->link = $printImg;
