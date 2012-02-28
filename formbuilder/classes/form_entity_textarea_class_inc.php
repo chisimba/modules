@@ -334,7 +334,7 @@ protected function deleteTextAreaEntity($formElementName)
 protected function constructTextAreaEntity($textareaName)
 {
     $taParameters = $this->objDBtaEntity->listTextAreaParameters($textareaName);
-
+$constructedta = "";
 foreach($taParameters as $thistaParameter){
 
    $textareaFormName = $thistaParameter["textareaformname"];

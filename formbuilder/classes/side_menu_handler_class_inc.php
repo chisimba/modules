@@ -143,16 +143,28 @@ class side_menu_handler extends object {
                         )));
         $objHelpButton->setOnClick("parent.location='$objHelpLink'");
         $mngHelpButton = $objHelpButton->showDefault();
+        
+        $objStyleSettingsButton = new button('styleSettingsButton');
+        $objStyleSettingsButton->setValue('Style Settings');
+        $objStyleSettingsButton->setCSS("styleSettingsButton");
+        $mngStyleSettingslink = html_entity_decode($this->uri(array(
+                            'module' => 'formbuilder',
+                            'action' => 'styleSettings'
+                        )));
+        $objStyleSettingsButton->setOnClick("parent.location='$mngStyleSettingslink'");
+        $mngStyleSettingsButton = $objStyleSettingsButton->showDefault();
 
 //----------------------
 //This is the acutal side menu
         $mngHomeButton = "<button class='homeButton' onclick=parent.location='$mngHomelink'>Home</button>";
         $mngListAllFormsButton = "<button class='listAllFormsButton' onclick=parent.location='$objListAllFormsLink'>List All Forms</button>";
         $mngCreateNewFormButton = "<button class='createNewFormButton' onclick=parent.location='$objCreateNewFormLink'>Create A New Form</button>";
+        $mngStyleSettinsButton = "<button class='styleSettingsButton' onclick=parent.location='$mngStyleSettingslink'>Style Settings</button>";
         $mngHelpButton = "<button class='helpButton' onclick=parent.location='$objHelpLink'>Help</button>";
         $sideMenuUnderConstruction = $mngHomeButton
                 . "<br>" . $mngListAllFormsButton
                 . "<br>" . $mngCreateNewFormButton
+                . "<br>" . $mngStyleSettinsButton
                 . "<br>" . $mngHelpButton;
         return $sideMenuUnderConstruction;
     }

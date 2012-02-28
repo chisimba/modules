@@ -1,9 +1,3 @@
-<!--  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>-->
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <?php
 /*! \file test.php
  * \brief The template file exists so developers can test small pieces of code.
@@ -12,6 +6,8 @@
  * with some extra stuff, then this is place to do it. If your code works, then push
  * it in to the actual module.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 ?>
 <style type="text/css">
 		body { font-size: 62.5%; }

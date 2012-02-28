@@ -7,6 +7,8 @@
  * with some extra stuff, then this is place to do it. If your code works, then push
  * it in to the actual module.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 $string = "Here! is some text, and numbers 12345,  !@#$%&**()__++--={}|[]\:><?,./ and symbols !�$%^&";
 
 $new_string = preg_replace("/[^a-zA-Z0-9s]/", "", $string);

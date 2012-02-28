@@ -202,7 +202,7 @@ class add_form_parameters_form extends object {
         $formNumber->extra = "id=formNumberHiddenInput";
         $objForm->addToForm($formNumber->show() . "<br />");
         $submitButton = new button('submitNewFormDetails');
-        $submitButton->setIconClass(decline);
+        $submitButton->setIconClass('decline');
         $submitButton->setValue('Submit General Form Details');
 //$submitButton->setToSubmit();
 //$objForm->addToForm($submitButton->show() . "<br />");

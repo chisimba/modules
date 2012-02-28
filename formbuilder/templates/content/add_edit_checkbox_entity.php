@@ -1,16 +1,15 @@
 <?php
-
-/*! \file add_edit_checkbox_entity.php
+/* ! \file add_edit_checkbox_entity.php
  * \brief The template file is called by an AJAX function to insert a new check box element
  * into the database and produce the html content for this form element in the div WYSIWYGCheckbox
  * \section sec Explanation
  * - Request all the parameters from the post from the
-Ajax function and store them into temporary variables.
+  Ajax function and store them into temporary variables.
  * - Create a new form element and insert these parameters into the database.
  * - If there was a successful insertion of the new form element then construct
  * this new form element in the div WYSIWYGCheckbox so its content
  * can be passed back into WYSIWYG editor through jQuery.
-*/
+ */
 $optionValue = $this->getParam('optionValue');
 $optionLabel = $this->getParam('optionLabel');
 $formElementName = $this->getParam('formElementName');
@@ -28,7 +27,7 @@ if ($defaultSelected == "on") {
 $objCheckboxEntity = $this->getObject('form_entity_checkbox', 'formbuilder');
 
 
-if ($objCheckboxEntity->createFormElement($formElementName, $optionValue, $optionLabel, $defaultSelected, $layoutOption,$formElementLabel,$formElementLabelLayout) == TRUE) {
+if ($objCheckboxEntity->createFormElement($formElementName, $optionValue, $optionLabel, $defaultSelected, $layoutOption, $formElementLabel, $formElementLabelLayout) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;
@@ -36,11 +35,11 @@ if ($objCheckboxEntity->createFormElement($formElementName, $optionValue, $optio
 ?>
 
 <div id="WYSIWYGCheckbox">
-<?php
-if ($postSuccessBoolean == 1) {
-    echo $objCheckboxEntity->showWYSIWYGCheckboxEntity();
-} else {
-    echo $postSuccessBoolean;
-}
-?>
+    <?php
+    if ($postSuccessBoolean == 1) {
+        echo $objCheckboxEntity->showWYSIWYGCheckboxEntity();
+    } else {
+        echo $postSuccessBoolean;
+    }
+    ?>
 </div>

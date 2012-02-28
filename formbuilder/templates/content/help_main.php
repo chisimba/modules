@@ -1,6 +1,3 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
 <style type="text/css">
     .homeButton  {
         WIDTH: 150px;
@@ -17,10 +14,14 @@
     .interactiveFormElementButtons{
         WIDTH: 255px;
     }
+    .styleSettingsButton{
+      WIDTH: 150px;  
+    }
 
 </style>
 <?php
-
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 
@@ -248,6 +249,14 @@ echo $cssLayout->show();
 
             icons: {
                 primary: 'ui-icon-home'
+            },
+            text: true
+        });
+                
+                jQuery(".styleSettingsButton").button({
+
+            icons: {
+                primary: 'ui-icon-gear'
             },
             text: true
         });

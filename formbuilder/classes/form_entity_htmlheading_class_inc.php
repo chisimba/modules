@@ -175,7 +175,7 @@ class form_entity_htmlheading extends form_entity_handler {
     protected function constructHTMLHeadingEntity($HTMLHeadingName) {
 
         $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($HTMLHeadingName);
-
+        $constructedHTMLHeading= "";
         foreach ($HTMLHeadingParameters as $thisHTMLHeadingParameter) {
 
             $headingName = $thisHTMLHeadingParameter["headingname"];

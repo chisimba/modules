@@ -1,10 +1,3 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>  
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
-<!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
-
-
 <style type="" >
 
     input.text {  padding: .4em; margin-bottom: 8px; }
@@ -29,6 +22,9 @@
      * \note The javascript member functions insertFields and testSubmitButton
      * are not used and there are dead code.
 */
+    $jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+    echo ($jqueryUILoader->includeJqueyUI());
+
     $objEditForm = $this->getObject('add_form_parameters_form', 'formbuilder');
     echo $objEditForm->show();
     ?>
@@ -121,7 +117,7 @@ echo $pageContent=$content->showContent('metadata',1);
             "formDescription" : formDescription};
         jQuery('#tempdivcontainer').hide();
          var myurlToStoreFormParameters = "<?php echo html_entity_decode($this->uri(array('action'=>'addNewFormParameters'),'formbuilder')); ?>";
-        //var myurlToStoreFormParameters ="<?php echo $_SERVER[PHP_SELF]; ?>?module=formbuilder&action=addNewFormParameters";
+        
         jQuery('#tempdivcontainer').load(myurlToStoreFormParameters, formParametersToPost ,function postSuccessFunction(html) {
             jQuery('#tempdivcontainer').html(html);
            //             jQuery('#tempdivcontainer').show();
@@ -388,7 +384,7 @@ It already exists in the database. Please choose a unique form name");
             jQuery(':input[name=submitNewFormDetails]').attr("disabled","false");
             jQuery(':input[name=submitNewFormDetails]').children('span').children('span').children('span').html("Complete All Fields");
             jQuery(':input[name=submitNewFormDetails]').children('span').children('span').children('span').removeClass();
-            jQuery(':input[name=submitNewFormDetails]').children('span').children('span').children('span').addClass('decline');
+           // jQuery(':input[name=submitNewFormDetails]').children('span').children('span').children('span').addClass('decline');
         }
 
 

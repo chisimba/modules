@@ -217,7 +217,7 @@ class form_entity_radio extends form_entity_handler {
         $radioParameters = $this->objDBRadioEntity->listRadioParameters($radioName);
 //$radioName = $radioParameters["radioname"]["0"];
 
-
+$constructedRadio = "";
         foreach ($radioParameters as $thisradioParameter) {
 
             $radioName = $thisradioParameter["radioname"];
@@ -274,7 +274,7 @@ class form_entity_radio extends form_entity_handler {
     private function buildWYSIWYGRadioEntity() {
 
         $radioParameters = $this->objDBRadioEntity->listRadioParameters($this->radioName);
-
+        $constructedRadio = "";
         foreach ($radioParameters as $thisradioParameter) {
             $radioName = $thisradioParameter["radioname"];
             $radioOptionLabel = $thisradioParameter["radiooptionlabel"];

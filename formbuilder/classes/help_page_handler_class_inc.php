@@ -108,6 +108,7 @@ title='A simple block diagram of the major module entities and the flow relation
      * \return Constructed meta data help content.
      */
     private function buildFormMetaDataPageContent($isSeperateHelpBool) {
+        $pageContent = "";
         if ($isSeperateHelpBool != 1) {
             $pageContent = $this->buildHelpNavigationMenu();
         }
@@ -134,6 +135,7 @@ title='The form metadata modal window is shown.'>";
      * \return Constructed interactive help div.
      */
     private function buildHTMLFormElementsSection() {
+        
         $pageContent = $this->buildHelpNavigationMenu();
         $pageContent .= "<h2>Interactive HTML Form Elements Section</h2>";
         $pageContent .="<div id='middleColumn' class='ui-accordion-content ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 25px 15px 25px;'> " . $this->buildInteractiveFormElementsSection() . "</div>";
@@ -187,6 +189,7 @@ Select any one of these form elements to learn more about them:</h3>";
      * \return Constructed form editor help content.
      */
     private function buildFormEditorPageContent($isSeperateHelpBool) {
+        $pageContent = "";
         if ($isSeperateHelpBool != 1) {
             $pageContent = $this->buildHelpNavigationMenu();
         }
@@ -243,6 +246,7 @@ title='The form element delete confirmation dialog box is depicted.'>";
      * \return Constructed form publishing help content.
      */
     private function buildFormPublishingPageContent($isSeperateHelpBool) {
+        $pageContent = "";
         if ($isSeperateHelpBool != 1) {
             $pageContent = $this->buildHelpNavigationMenu();
         }
@@ -286,6 +290,7 @@ title='A publishing form modal window is shown with advanced publishing paramete
      * \return Constructed form options help content.
      */
     private function buildFormOptionsPageContent($isSeperateHelpBool) {
+        $pageContent = "";
         if ($isSeperateHelpBool != 1) {
             $pageContent = $this->buildHelpNavigationMenu();
         }
@@ -344,6 +349,7 @@ title='The layout of the view submission records page is shown.'>";
      * \return Constructed text input form element help content.
      */
     private function buildTextInputFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("textinput");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $picContent = "<img src='packages/formbuilder/resources/images/userManual/insert_text_input_window.png'
@@ -365,6 +371,7 @@ title='The insert text input modal window is shown.'>";
      * \return Constructed html forms help content.
      */
     private function buildHTMLFormsFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("html_forms");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $pageContent .= "<div id='secondTab'>" . "This is not a form element and therefore does no have a modal window." . "</div>";
@@ -385,6 +392,7 @@ title='The insert text input modal window is shown.'>";
      * \return Constructed text area form element help content.
      */
     private function buildTextAreaFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("textarea");
         $pic = "<img src='packages/formbuilder/resources/images/userManual/html_area.png'
 alt='A text area with some default text and the forms toolbar is shown.'
@@ -413,6 +421,7 @@ title='The insert text area modal window is shown.'>";
      * \return Constructed checkbox form element help content.
      */
     private function buildCheckBoxFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("cehckbox");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $pic = "<img src='packages/formbuilder/resources/images/userManual/insert_checkbox_confirmation.png'
@@ -443,6 +452,7 @@ title='The insert check box option modal window is shown.'>";
      * \return Constructed drop down list form element help content.
      */
     private function buildDropDownFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("dropdown");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $pic = "<img src='packages/formbuilder/resources/images/userManual/insert_checkbox_confirmation.png'
@@ -473,6 +483,7 @@ title='The insert drop down option modal window is shown.'>";
      * \return Constructed radio button form element help content.
      */
     private function buildRadioFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("radio");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $pic = "<img src='packages/formbuilder/resources/images/userManual/insert_checkbox_confirmation.png'
@@ -503,6 +514,7 @@ title='The insert radio option modal window is shown.'>";
      * \return Constructed ms drop down list form element help content.
      */
     private function buildMSDropDownFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("msdropdown");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $pic = "<img src='packages/formbuilder/resources/images/userManual/insert_checkbox_confirmation.png'
@@ -533,6 +545,7 @@ title='The insert radio option modal window is shown.'>";
      * \return Constructed datepicker object form element help content.
      */
     private function buildDatePickerFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("datepicker");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $picContent = "<img src='packages/formbuilder/resources/images/userManual/insert_datepicker_window.png'
@@ -558,6 +571,7 @@ title='The insert date picker object option modal window is shown.'>";
      * \return Constructed html heading form element help content.
      */
     private function buildHTMLHeadingFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("htmlheading");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $picContent = "<img src='packages/formbuilder/resources/images/userManual/insert_html_heading_window.png'
@@ -583,6 +597,7 @@ title='The insert html heading modal window is shown.'>";
      * \return Constructed label form element help content.
      */
     private function buildLabelFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("label");
         $pageContent .= "<div id='firstTab'>" . $content["0"]['pagecontent'] . "</div>";
         $picContent = "<img src='packages/formbuilder/resources/images/userManual/insert_label_window.png'
@@ -608,6 +623,7 @@ title='The insert label modal window is shown.'>";
      * \return Constructed button form element help content.
      */
     private function buildButtonFormElementPageContent() {
+        $pageContent = "";
         $content = $this->dbUserHelpContent->listPageContent("button");
 
 

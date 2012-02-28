@@ -98,6 +98,7 @@ class form_entity_label extends form_entity_handler {
      * \return A constructed label insert form.
      */
     public function getWYSIWYGLabelInsertForm($formName) {
+        $WYSIWYGLabelInsertForm = "";
         $WYSIWYGLabelInsertForm.="<b>Label HTML ID and Name Menu</b>";
         $WYSIWYGLabelInsertForm.="<div id='labelNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGLabelInsertForm.= $this->buildInsertIdForm('label', $formName, "70") . "<br>";
@@ -132,7 +133,7 @@ class form_entity_label extends form_entity_handler {
     protected function constructLabelEntity($labelName) {
 
         $labelParameters = $this->objDBLabelEntity->listLabelParameters($labelName);
-
+        $constructedLabel = "";
         foreach ($labelParameters as $thislabelParameter) {
 
             $labelFormName = $thislabelParameter["labelname"];

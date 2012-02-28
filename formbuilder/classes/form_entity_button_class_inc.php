@@ -162,7 +162,7 @@ class form_entity_button extends form_entity_handler {
 
         $buttonParameters = $this->objDBbuttonEntity->listButtonParameters($buttonFormName);
 
-
+$constructedButton="";
         foreach ($buttonParameters as $thisbuttonParameter) {
 
 //$checkboxName = $thisCheckboxParameter["checkboxname"];

@@ -23,7 +23,7 @@ $labelLayout= $this->getParam('labelLayout');
 
 
 $objTextAreaEntity = $this->getObject('form_entity_textarea','formbuilder');
-$objTextAreaEntity->createFormElement($textAreaFormName,$textAreaName);
+$objTextAreaEntity->createFormElement($textAreaName,$textAreaName);
 
 if ($objTextAreaEntity->insertTextAreaParameters($formElementName,$textAreaName,$textAreaValue,$ColumnSize,$RowSize,$simpleOrAdvancedHAChoice,$toolbarChoice,$formElementLabel,$labelLayout) == TRUE)
 {

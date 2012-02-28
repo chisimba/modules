@@ -538,11 +538,11 @@ class form_submit_results_handler extends object {
 
 
         foreach ($submitResultsParameters as $thisSubmitResultParameter) {
-            $formNumber = $thisSubmitResultParameter['formnumber'];
+            //$formNumber = $thisSubmitResultParameter['formnumber'];
             $submitNumber = $thisSubmitResultParameter["submitnumber"];
-            $formElementName = $thisSubmitResultParameter["formelementname"];
-            $formElementType = $thisSubmitResultParameter["formelementtype"];
-            $formElementValue = $thisSubmitResultParameter["formelementvalue"];
+           // $formElementName = $thisSubmitResultParameter["formelementname"];
+           // $formElementType = $thisSubmitResultParameter["formelementtype"];
+           // $formElementValue = $thisSubmitResultParameter["formelementvalue"];
             $userIDOfFormSubmitter = $thisSubmitResultParameter["useridofformsubmitter"];
             $timeOfSubmission = $thisSubmitResultParameter["timeofsubmission"];
 

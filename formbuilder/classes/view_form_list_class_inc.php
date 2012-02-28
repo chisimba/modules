@@ -600,7 +600,7 @@ echo $objYourForm->buildForm(' . $formNumber . ');', 3, 80);
         if ($formListMetaDataArray == NULL) {
             return "<h3>There are no forms that can be displayed.</h3>";
         }
-
+        $accordianUnderConstrunction = "";
         $accordianUnderConstrunction .= '<div id="accordion" style="clear:both;">';
         foreach ($formListMetaDataArray as $thisformListMetaData) {
 //Store the values of the array in variables

@@ -192,6 +192,7 @@ class dbformbuilder_form_list extends dbTable {
      */
     function getSearchClobMetadata() {
        $userid = $this->objUser->userId();
+       $searchClobMetaData = "";
         $searchClobMetaData .=  "  " .$userid;
         $userName = $this->objUser->userName();
         $searchClobMetaData .= "  " .$userName;

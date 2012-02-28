@@ -214,7 +214,7 @@ protected function constructDatePickerEntity($dpName)
 {
 
 $dpParameters = $this->objDBdpEntity->listDatePickerParameters($dpName);
-
+$constructedDatePicker = "";
   foreach($dpParameters as $thisDPParameter){
  $dpName = $thisDPParameter["datepickername"];
  $dpValue = $thisDPParameter["datepickervalue"];

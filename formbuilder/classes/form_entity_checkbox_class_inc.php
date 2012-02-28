@@ -196,7 +196,7 @@ class form_entity_checkbox extends form_entity_handler {
      */
     protected function constructCheckBoxEntity($checkboxName) {
         $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($checkboxName);
-
+        $constructedCheckbox = "";
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 
 //$checkboxName = $thisCheckboxParameter["checkboxname"];
@@ -208,8 +208,8 @@ class form_entity_checkbox extends form_entity_handler {
             $labelOrientation = $thisCheckboxParameter["labelorientation"];
 
             $checkboxUnderConstruction = new checkbox($checkboxValue, $checkboxLabel, $isChecked);
-            $labelUnderConstruction = new label($checkboxLabel, $checkboxValue);
-            $currentConstructedCheckbox = $this->getBreakSpaceType($breakspace) . $checkboxUnderConstruction->show() . $labelUnderConstruction->show();
+           // $labelUnderConstruction = new label($checkboxLabel, $checkboxValue);
+            $currentConstructedCheckbox = $this->getBreakSpaceType($breakspace) . $checkboxUnderConstruction->show() ;
             $constructedCheckbox .=$currentConstructedCheckbox;
         }
         if ($checkBoxLabel == NULL) {
@@ -248,6 +248,7 @@ class form_entity_checkbox extends form_entity_handler {
     private function buildWYSIWYGCheckboxEntity() {
 
         $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($this->checkboxName);
+        $constructedCheckbox = "";
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 //Store the values of the array in variables
 //$checkboxName = $thisCheckboxParameter["checkboxname"];
@@ -259,8 +260,8 @@ class form_entity_checkbox extends form_entity_handler {
             $labelOrientation = $thisCheckboxParameter["labelorientation"];
 
             $checkboxUnderConstruction = new checkbox($checkboxValue, $checkboxLabel, $isChecked);
-            $labelUnderConstruction = new label($checkboxLabel, $checkboxValue);
-            $currentConstructedCheckbox = $this->getBreakSpaceType($breakspace) . $checkboxUnderConstruction->show() . $labelUnderConstruction->show();
+            //$labelUnderConstruction = new label($checkboxLabel, $checkboxValue);
+            $currentConstructedCheckbox = $this->getBreakSpaceType($breakspace) . $checkboxUnderConstruction->show();
             $constructedCheckbox .=$currentConstructedCheckbox;
         }
 

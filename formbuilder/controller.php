@@ -190,7 +190,7 @@ class formbuilder extends controller {
 ///Setting the jquery version greater than 1.4 is vital since the jquery UI
 ///does not work below a version of 1.4. If this is not set, chisimba will
 /// set the version to 1.3.2 by default.
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return 'home.php';
     }
 
@@ -378,7 +378,7 @@ class formbuilder extends controller {
      */
 
     private function __listAllForms() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return "list_all_forms.php";
     }
 
@@ -390,8 +390,21 @@ class formbuilder extends controller {
      */
 
     private function __moduleHelp() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return "help_main.php";
+    }
+    
+       /*!
+     * \brief This action goes to the style settings section. It allows you to
+     * set a style from a list of predefined styles.
+     * \note Setting the jquery version greater than 1.4 is
+     * vital since the jquery UI does not work
+     *  \return A template file style_settings_main.php
+     */
+
+    private function __styleSettings() {
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
+        return "style_settings_main.php";
     }
 
     /*!
@@ -406,7 +419,7 @@ class formbuilder extends controller {
      */
 
     private function __searchAllForms() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return "list_all_forms.php";
     }
 
@@ -435,7 +448,7 @@ class formbuilder extends controller {
      */
 
     private function __designWYSIWYGForm() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return 'form_editor.php';
     }
 
@@ -1226,6 +1239,27 @@ class formbuilder extends controller {
         $this->setVar('JQUERY_VERSION', '1.4.2');
         $this->setPageTemplate('ajax_template.php');
         return "get_user_help_content.php";
+    }
+    
+    /*!
+     * \brief This action can allow you to view a selected style without setting it.
+     * \note This action is called via AJAX
+     * \return A template file that includes the relevant css in the header.
+     */
+    private function __viewStyle(){
+        $this->setPageTemplate('ajax_template.php');
+                return "view_style.php";
+        
+    }
+    
+    /*!
+     * \brief This action can allow you to set the style by modifying the xml config file.
+     * \note This action is called via AJAX
+     * \return A template file that includes the relevant css in the header.
+     */
+    private function __setStyle(){
+         $this->setPageTemplate('ajax_template.php');
+         return "set_style.php";
     }
 
 }

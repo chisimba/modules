@@ -1,6 +1,3 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
 <style type="text/css">
     button.ui-button {
         WIDTH: 150px;
@@ -17,6 +14,8 @@
  * - Insert the home page text content in the middle column.
  * - Set up the javascript jQuery UI functions for the side menu.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 
@@ -63,5 +62,15 @@ echo $cssLayout->show();
             },
             text: true
         });
+        
+                jQuery(".styleSettingsButton").button({
+
+            icons: {
+                primary: 'ui-icon-gear'
+            },
+            text: true
+        });
+        
+        
     });
 </script>

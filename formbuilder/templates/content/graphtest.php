@@ -1,12 +1,11 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-
 <?php
 /*! \file graphtest.php
  * \brief The template file is not being used. It exists so if someone want
  * to add graphical and statistical functionality to the submission results,
  * the base functions are here for you to start.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 
 $excanvasLibrary = '<script language="JavaScript" src="' . $this->getResourceUri('js/jqplot/excanvas', 'formbuilder') . '" type="text/javascript"></script>';
 $jqplotLibrary = '<script language="JavaScript" src="' . $this->getResourceUri('js/jqplot/jquery.jqplot.js', 'formbuilder') . '" type="text/javascript"></script>';

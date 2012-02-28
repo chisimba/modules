@@ -288,7 +288,7 @@ protected function constructTextInputEntity($textInputName)
 {
 
     $tiParameters = $this->objDBtiEntity->listTextInputParameters($textInputName);
-
+$constructedti= "";
 foreach($tiParameters as $thistiParameter){
 
    $textInputFormName = $thistiParameter["textinputformname"];

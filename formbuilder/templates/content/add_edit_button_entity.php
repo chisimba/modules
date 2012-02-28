@@ -1,6 +1,4 @@
 <?php
-
-
 ///Request all the parameters from the post from the
 ///Ajx function and store them into temporary variables.
 $formElementName = $this->getParam('formElementName');

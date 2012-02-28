@@ -249,7 +249,7 @@ order by submitnumber asc LIMIT $number_of_entries_per_pagination_request OFFSET
                     'useridofformsubmitter' => $userid,
                     'timeofsubmission' => $this->now()
                 ));
-        return $maxFormNumber;
+        return $id;
     }
 
     /*!

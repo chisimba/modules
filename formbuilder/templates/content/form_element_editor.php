@@ -1,11 +1,3 @@
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>-->
-
-<!--  <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
-
-
-
 <script type="text/javascript" src="core_modules/htmlelements/resources/datepicker/calendarDateInput.js"></script>
 <!--<script type="text/javascript" src="packages/formbuilder/resources/js/add_edit_button_entity.js"></script>-->
 <script type="text/javascript" src="packages/formbuilder/resources/js/add_edit_button_entity.js"></script>
@@ -25,7 +17,8 @@
  * not being used. If you want to revert to the old editor then return this
  * template file inside the action designWYSIWYGEditor. 
 */
-
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 ///Include the jQuery Library
 
 //$this->appendArrayVar('headerParams', $this->getJavascriptFile('1.4.2/jquery-1.4.2.min.js', 'jquery'));

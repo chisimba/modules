@@ -1,6 +1,3 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
 <?php
 
 /*! \file form_editor.php
@@ -8,6 +5,9 @@
  * \todo Comment this file for doxygen. This is a very big file to comment with a lot
  * of intricate logic. The developer Salman Noor will comment it soon.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
+
 $formElementLabel = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertLabel.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementHTMLHeading = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertHTMLHeading.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementTextInput = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertTextInput.js', 'formbuilder') . '" type="text/javascript"></script>';

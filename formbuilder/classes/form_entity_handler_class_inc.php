@@ -294,13 +294,13 @@ class form_entity_handler extends object {
 
 
         $formElements = $this->objDBFormElements->listFormElementsForForm($formNumber);
-
+        $WYSIWYGFormUnderConstruction = "";
         foreach ($formElements as $formElement) {
 
             $formElementType = $formElement["formelementtpye"];
             $formElementName = $formElement["formelementname"];
 
-
+            
             switch ($formElementType) {
 
                 case 'radio':
@@ -387,7 +387,7 @@ It \"will\" be displayed in the built form.]<br></div>";
         $formMetaEmail = $formMetaDataList["0"]['submissionemailaddress'];
         $formMetaSubmissionOption = $formMetaDataList["0"]['submissionoption'];
 
-        if ($formPublishingDataArray['0']['publishoption'] == NULL) {
+        if ($formPublishingDataArray["0"]['publishoption'] == NULL) {
             $publishErrorMessage = "<h3>This form is not published. Please contact the form designer to publish this form.</h3>";
             $publishErrorMessage .= "<b>Form Designer's Details:</b><br>";
             $publishErrorMessage .= "Name: " . $this->objDBFormMetaDataList->getFormAuthorsFullName($formMetaAuthorName) . "<br>";

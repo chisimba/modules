@@ -1,7 +1,3 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>-->
-
 <?php
 /*! \file list_all_forms.php
  * \brief The template file is called by the action listAllForms in the controller.php.
@@ -15,6 +11,8 @@
  * your own user access restriction, you can easily add this functionality at your
  * own discretion.
  */
+$jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
+$this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
 
 //$jQueryUILibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqueryUI/jquery.ui.core.min.js', 'formbuilder').'" type="text/javascript"></script>';
 //$jQueryUICSS = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/jqueryUI/jquery.ui.all.css', 'formbuilder').'"';
@@ -582,7 +580,6 @@ be deleted from the database. Possible reasons:</p><p><span class='ui-icon ui-ic
     {
         FormNumberToPost = {"formNumber":formNumber};
         var myurlToDeleteForm = "<?php echo html_entity_decode($this->uri(array('action' => 'deleteForm'), 'formbuilder')); ?>";
-        //  //var myurlToProduceTextInput = "<?php echo $_SERVER[PHP_SELF]; ?>?module=jqueryajaxproblem&action=produceTextInput";
 
         jQuery('#tempdivcontainer').load(myurlToDeleteForm, FormNumberToPost ,function postSuccessFunction(html) {
             //jQuery('#tempdivcontainer').html(html);
@@ -1044,7 +1041,8 @@ be deleted from the database. Possible reasons:</p><p><span class='ui-icon ui-ic
             if (jQuery('#paginationPageFormer').children().length <= 0)
             {
                 var dataToPost = {"paginationRequestNumber":myIntObject.i, "paginationbatchSize":paginationbatchSize, "searchValue":searchValue};
-                var myurlToProduceMSDropdown="<?php echo $_SERVER[PHP_SELF]; ?>?module=formbuilder&action=listAllFormsPaginated";
+                        var myurlToProduceMSDropdown ="<?php echo html_entity_decode($this->uri(array('action' => 'listAllFormsPaginated'), 'formbuilder')); ?>";
+//                var myurlToProduceMSDropdown="?module=formbuilder&action=listAllFormsPaginated";
                 jQuery('#paginationPageFormer').load(myurlToProduceMSDropdown , dataToPost ,function postSuccessFunction(html) {
                     jQuery('#paginationPageFormer').hide();
                     jQuery('#paginationPageFormer').html(html);
@@ -1067,7 +1065,8 @@ be deleted from the database. Possible reasons:</p><p><span class='ui-icon ui-ic
             else
             {
                 var dataToPost = {"paginationRequestNumber":myIntObject.i,"paginationbatchSize":paginationbatchSize, "searchValue":searchValue};
-                var myurlToProduceMSDropdown="<?php echo $_SERVER[PHP_SELF]; ?>?module=formbuilder&action=listAllFormsPaginated";
+                  var myurlToProduceMSDropdown ="<?php echo html_entity_decode($this->uri(array('action' => 'listAllFormsPaginated'), 'formbuilder')); ?>";
+//                var myurlToProduceMSDropdown="?module=formbuilder&action=listAllFormsPaginated";
                 jQuery('#paginationPageLatter').load(myurlToProduceMSDropdown , dataToPost ,function postSuccessFunction(html) {
                     jQuery('#paginationPageLatter').hide();
                     jQuery('#paginationPageLatter').html(html);
@@ -1092,7 +1091,8 @@ be deleted from the database. Possible reasons:</p><p><span class='ui-icon ui-ic
             if (jQuery('#paginationPageFormer').children().length <= 0)
             {
                 var dataToPost = {"paginationRequestNumber":myIntObject.i, "paginationbatchSize":paginationbatchSize, "searchValue":searchValue};
-                var myurlToProduceMSDropdown="<?php echo $_SERVER[PHP_SELF]; ?>?module=formbuilder&action=listAllFormsPaginated";
+                  var myurlToProduceMSDropdown ="<?php echo html_entity_decode($this->uri(array('action' => 'listAllFormsPaginated'), 'formbuilder')); ?>";
+//                var myurlToProduceMSDropdown="?module=formbuilder&action=listAllFormsPaginated";
                 jQuery('#paginationPageFormer').load(myurlToProduceMSDropdown , dataToPost ,function postSuccessFunction(html) {
                     jQuery('#paginationPageFormer').hide();
                     jQuery('#paginationPageFormer').html(html);
@@ -1113,7 +1113,8 @@ be deleted from the database. Possible reasons:</p><p><span class='ui-icon ui-ic
             else
             {
                 var dataToPost = {"paginationRequestNumber":myIntObject.i, "paginationbatchSize":paginationbatchSize, "searchValue":searchValue};
-                var myurlToProduceMSDropdown="<?php echo $_SERVER[PHP_SELF]; ?>?module=formbuilder&action=listAllFormsPaginated";
+//                var myurlToProduceMSDropdown="?module=formbuilder&action=listAllFormsPaginated";
+                  var myurlToProduceMSDropdown ="<?php echo html_entity_decode($this->uri(array('action' => 'listAllFormsPaginated'), 'formbuilder')); ?>";
                 jQuery('#paginationPageLatter').load(myurlToProduceMSDropdown , dataToPost ,function postSuccessFunction(html) {
                     jQuery('#paginationPageLatter').hide();
                     jQuery('#paginationPageLatter').html(html);
