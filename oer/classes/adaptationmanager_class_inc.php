@@ -437,24 +437,61 @@ class adaptationmanager extends object {
         //Get groups
         $dbGroups = $this->getObject("dbgroups", "oer");
         $currentGroups = $dbGroups->getAllGroups();
-        
-        $dbContext=$this->getObject("dbcontext", "context");
-        
-        //Generate dropdown from existing institutions
+
+        $dbContext = $this->getObject("dbcontext", "context");
+
+        //Generate dropdown from existing groups
         if ($currentGroups != Null) {
             foreach ($currentGroups as $currentGroup) {
-                $context=$dbContext->getContext($currentGroup['contextcode']);
+                $context = $dbContext->getContext($currentGroup['contextcode']);
                 $group->addOption($currentGroup['contextcode'], $context['title']);
             }
         }
 
-        //Set selected
+        //Set selected group
         if ($product != null) {
             $group->selected = $this->dbInstitution->getInstitutionName($product['institutionid']);
         }
         $objTable->addCell($group->show());
         $objTable->endRow();
 
+        //region
+        $objTable->startRow();
+        $objTable->addCell($this->objLanguage->languageText('mod_oer_region', 'oer'));
+        $objTable->endRow();
+
+        $objTable->startRow();
+        $region = new dropdown('region');
+        $region->cssClass = 'required';
+
+        $region->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $region->addOption('Africa','Africa');
+        $region->addOption('Arab States','Arab States');
+        $region->addOption('Asia and the Pacific','Asia and the Pacific');
+        $region->addOption('Europe and North America','Europe and North America');
+        //Set selected region
+        if ($product != null) {
+            $region->selected = $product['region'];
+        }
+        $objTable->addCell($region->show());
+        $objTable->endRow();
+
+      //  country.
+        $objTable->startRow();
+
+        $objCountries = $this->getObject('languagecode', 'language');
+        $objTable->addCell($this->objLanguage->languageText(
+                        'word_country', 'system'));
+        $objTable->endRow();
+        $objTable->startRow();
+        if ($product != null) {
+            $objTable->addCell($objCountries->countryAlpha($product['country']));
+        } else {
+            $objTable->addCell($objCountries->countryAlpha());
+        }
+        $objTable->endRow();
+        
+        
         //Institution
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_oer_group_institution', 'oer'));

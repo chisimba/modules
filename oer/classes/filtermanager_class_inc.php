@@ -110,8 +110,8 @@ class filtermanager extends object {
 
         $regions = new dropdown('region');
         $regions->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
-        $dbGroups = $this->getObject("dbgroups", "oer");
-        $allRegions = $dbGroups->getGroupRegions();
+        $dbProducts = $this->getObject("dbproducts", "oer");
+        $allRegions = $dbProducts->getProductRegions();
         foreach ($allRegions as $region) {
             if ($region != null) {
                 $regions->addOption($region['region'], $region['region']);
@@ -125,13 +125,21 @@ class filtermanager extends object {
         $countries = new dropdown('country');
         $countries->addOption('all', $this->objLanguage->languageText('word_all', 'system'));
 
-        $allCountries = $dbGroups->getGroupCountries();
+        //$allCountries = $dbProducts->getProductCountries();
 
-        foreach ($allCountries as $country) {
+        $languageCode=  $this->getObject("languagecode", "language");
+        $allCountries =$languageCode->countryListArr();
+        /*foreach ($allCountries as $country) {
             if ($country != null) {
                 $countries->addOption($country['country'], $country['country']);
             }
+        }*/
+        
+        foreach ($allCountries as $code=>$country) {
+            $countries->addOption($code, $country);
         }
+        
+        
         $countriesField = $this->objLanguage->languageText('mod_oer_country', 'oer') . '<br/>';
         $countriesField.=$countries->show() . '<br/><br/>';
 
@@ -170,7 +178,7 @@ class filtermanager extends object {
         $language = $this->getParam("language");
         $author = $this->getParam("author");
         $institution = $this->getParam("institution");
-        $region = $this->getParam("regio");
+        $region = $this->getParam("region");
         $country = $this->getParam("country");
         $itemsPerPage = $this->getParam("itemsperpage");
         if ($themes != 'all') {
@@ -181,6 +189,12 @@ class filtermanager extends object {
         }
         if ($author != 'all') {
             $sql.=" and author = '" . $author . "'";
+        }
+         if ($region != 'all') {
+            $sql.=" and region = '" . $region . "'";
+        }
+         if ($country != 'all') {
+            $sql.=" and country = '" . $country . "'";
         }
         if ($institution != 'all') {
             $sql.=" and institutionid like '%" . $institution . "%'";

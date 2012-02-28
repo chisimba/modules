@@ -285,7 +285,34 @@
         </data>
     </update>
 
-
+    <update>
+        <table>tbl_oer_products</table>
+        <version>0.182</version>
+        <description>
+            <br/>Added region field
+        </description>
+        <data>
+            <add>
+                <name>region</name>
+                <type>text</type>
+                <length>64</length>
+            </add>
+        </data>
+    </update>
+   <update>
+        <table>tbl_oer_products</table>
+        <version>0.183</version>
+        <description>
+            <br/>Added country field
+        </description>
+        <data>
+            <add>
+                <name>country</name>
+                <type>text</type>
+                <length>5</length>
+            </add>
+        </data>
+    </update>
 
 </updates>
 

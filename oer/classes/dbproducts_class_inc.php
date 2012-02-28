@@ -59,6 +59,25 @@ class dbproducts extends dbtable {
         return $this->getArray($sql);
     }
 
+      /**
+     * returns distinct countries that are available for all products
+     */
+    function getProductCountries() {
+        $sql =
+                "select distinct country from tbl_oer_products where country is not null";
+        return $this->getArray($sql);
+    }
+
+    
+      /**
+     * returns distinct regions that are available for all products
+     */
+    function getProductRegions() {
+        $sql =
+                "select distinct region from tbl_oer_products where region is not null";
+        return $this->getArray($sql);
+    }
+
     /**
      * saves original product into db
      */
