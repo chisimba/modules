@@ -1029,12 +1029,11 @@ class sectionmanager extends object {
                         $exists = -1;
                         if ($selectedtxt != '') {
                             $exists = strpos($folderShortText, $selectedtxt);
-                        }
-                        
+                        }                      
                        
                         if ($exists !== false) {
                             $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
-                        }
+                        }                        
                     }
 
                     $link = new link($this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $sectionNode['id'])));
