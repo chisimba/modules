@@ -103,12 +103,7 @@ class compareadaptations extends object {
             $viewParentTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
             $viewParentTitleLink->link = $parentProduct['title'];
             $viewParentTitle = $viewParentTitleLink->show();
-        }
-
-        $selected = "";
-
-        //Fetch section tree
-        $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", '', $selected);
+        }       
 
         $homeLink = new link($this->uri(array("action" => "home")));
         $homeLink->link = $this->objLanguage->languageText('mod_oer_home', 'system');
@@ -124,6 +119,11 @@ class compareadaptations extends object {
         $table->cellpadding = 5;
         $table->cellspacing = 5;
 
+        //Flag that holds the selected node
+        $selected = "";
+        //Fetch section for the original product/adaptation tree
+        $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", 'compare', $selected, "", "", $productId);
+
         $rightContent = "";
         $rightContent = '<div class="compareAdaptationsNav"><div class="frame">' . $navigator . '</div></div>';
         $table->startRow();
@@ -131,7 +131,7 @@ class compareadaptations extends object {
         //Show navigation for each of the product's adaptations
         if (count($productAdaptations) > 0) {
             foreach ($productAdaptations as $prodAdaptation) {
-                $adaptNav = $this->sectionManager->buildSectionsTree($prodAdaptation["id"], '', "false", '', $selected);
+                $adaptNav = $this->sectionManager->buildSectionsTree($prodAdaptation["id"], '', "false", 'compare', $selected, "", "", $productId);
                 $adaptContent = '<div class="compareAdaptationsNav"><div class="frame">' . $adaptNav . '</div></div>';
                 $table->addCell($adaptContent, "", "top", "left", "", '');
             }

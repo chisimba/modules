@@ -780,7 +780,7 @@ class oer extends controller {
     }
 
     function __compareadaptations() {
-        $sectionid = $this->getParam("sectionid", "");
+        $selectedid = $this->getParam("selectedid", "");
         $productid = $this->getParam("productid");
         $data = $productid . '|' . $sectionid;
         $this->setVarByRef("data", $data);

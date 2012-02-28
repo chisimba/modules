@@ -14,10 +14,10 @@ class block_compareadaptations extends object {
     function show() {
         $data = explode("|", $this->configData);
         $productId = $data[0];
-        $sectionId = $data[1];
+        $selectedId = $data[1];
         $compareAdaptations = $this->getObject("compareadaptations", "oer");
         $mode = "compare";
-        return $compareAdaptations->buildCompareView($productId, $sectionId, $mode);
+        return $compareAdaptations->buildCompareView($productId, "", "", $mode, $selectedId);
     }
 }
 ?>

@@ -788,7 +788,7 @@ class sectionmanager extends object {
         }
 
         return '<div class="navPath">' . $navpath .
-        '</div><div class="topContentHolder">' . $topStuff .'</div><br/><br/><div class="mainContentHolder">
+        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
         '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
@@ -927,7 +927,7 @@ class sectionmanager extends object {
      * @param type $action
      * @return type 
      */
-    function buildSectionsTree($productId, $sectionId, $showThumbNail=null, $treeType='dhtml', $selected='', $treeMode='side', $action='') {
+    function buildSectionsTree($productId, $sectionId, $showThumbNail=null, $treeType='dhtml', $selected='', $treeMode='side', $action='', $compareProdId='') {
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -935,6 +935,9 @@ class sectionmanager extends object {
 
         $dbsections = $this->getObject("dbsectionnodes", "oer");
         $sectionNodes = $dbsections->getSectionNodes($productId);
+
+        $dbProduct = $this->getObject("dbproducts", "oer");
+        $product = $dbProduct->getProduct($productId);
 
         if ($selected == '') {
             $sectionNode = $dbsections->getSectionNode($sectionId);
@@ -957,6 +960,8 @@ class sectionmanager extends object {
 
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
+        } else if ($treeType == "compare") {
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $selected))));
         } else {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewsection', "productid" => $productId, 'sectionid' => $rootId, 'nodetype' => 'curriculum', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
         }
@@ -1006,6 +1011,10 @@ class sectionmanager extends object {
                 if ($treeType == 'htmldropdown') {
                     // echo "css class == $cssClass<br/>";
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $sectionNode['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
+                } else if ($treeType == "compare") {
+                    $link = new link($this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $sectionNode['id'])));
+                    $link->cssClass = 'sectionlink';
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));                    
                 } else {
                     $link = new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
                     $link->cssClass = 'sectionlink';
@@ -1034,9 +1043,7 @@ class sectionmanager extends object {
 
         $thumbnail = "";
         $space = "";
-        if ($showThumbNail == 'true') {
-            $dbProduct = $this->getObject("dbproducts", "oer");
-            $product = $dbProduct->getProduct($productId);
+        if ($showThumbNail == 'true') {            
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
             if ($product['thumbnail'] == '') {
                 $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
