@@ -116,7 +116,7 @@ class vieworiginalproduct extends object {
                     . $objLanguage->languageText('mod_oer_downloadlnsix', 'oer') . ".<br /><br />" . $objLanguage->languageText('mod_oer_downloadlnseven', 'oer');
             //$buttonNxt = new button('submit', $buttonTitle);
             $objNextLk = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "add", 'producttype' => 'original')));
-            $objNextLk->cssId = "nextbtnspan";
+             $objNextLk->cssId = "nextbtnspan";
             $objNextLk->link = $objLanguage->languageText('word_next');
 
             $toolTipStr .= " " . $objNextLk->show();
