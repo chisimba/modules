@@ -788,9 +788,9 @@ class sectionmanager extends object {
         }
 
         return '<div class="navPath">' . $navpath .
-                '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
+        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
-                '</div>' . $table->show() . '
+        '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
     }
 
@@ -938,11 +938,13 @@ class sectionmanager extends object {
 
         $dbProduct = $this->getObject("dbproducts", "oer");
         $product = $dbProduct->getProduct($productId);
-
+        $selectedTitle = "";
+        $selectedId = $selected;
         if ($treeType == "compare") {
             if ($selected != '') {
                 //Get the selected item data to compare with other nodes
                 $sectionNode = $dbsections->getSectionNode($selected);
+                $selectedTitle = $sectionNode['title'];
             } else {
                 $sectionNode = $dbsections->getSectionNode($sectionId);
             }
@@ -1023,17 +1025,17 @@ class sectionmanager extends object {
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $sectionNode['id'], 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass));
                 } else if ($treeType == "compare") {
                     //Check if the folderShortText contains some words in selected
-                    $arr_selectedtxt = explode(" ", $selected);
-
-                    foreach ($arr_selectedtxt as $selectedtxt) {
-                        $exists = -1;
-                        if ($selectedtxt != '') {
-                            $exists = strpos($folderShortText, $selectedtxt);
-                        }                      
-                       
-                        if ($exists !== false) {
-                            $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
-                        }                        
+                    $arr_selectedtxt = explode(" ", $selectedTitle);
+                    if (!empty($selectedId)) {
+                        foreach ($arr_selectedtxt as $selectedtxt) {
+                            $exists = -1;
+                            if ($selectedtxt != '') {
+                                $exists = strpos($folderShortText, $selectedtxt);
+                            }
+                            if ($exists !== false) {
+                                $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
+                            }
+                        }
                     }
 
                     $link = new link($this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $sectionNode['id'])));
