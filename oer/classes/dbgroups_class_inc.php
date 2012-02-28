@@ -122,7 +122,13 @@ class dbgroups extends dbtable {
     public function getAdapationIdByLocation($lat,$long){
         $sql=
         "select distinct pr.id from tbl_oer_products pr,tbl_oer_groups gr where gr.contextcode=pr.groupid and gr.loclat='$lat' and gr.loclong='$long'";
-    }
+         $result=$this->getArray($sql);
+         if(count($result) > 0){
+             return $result[0]['id'];
+         }else{
+             return NULL;
+         }
+        }
     /**
      * 
      * Return an array of all groups
