@@ -108,7 +108,7 @@ class vieworiginalproduct extends object {
             $printLink->link = $printImg;
             $printLink->cssClass = "downloaderedit";
 
-            $shareViaEmail = $this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $shareViaEmail = $objLanguage->languageText('mod_oer_shareviaemail', 'oer');
             $emailImg = '<img src="skins/_common/icons/em.gif" alt="' . $shareViaEmail . '" title="' . $shareViaEmail . '"/>';
 
             $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
