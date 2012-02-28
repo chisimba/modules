@@ -37,7 +37,7 @@ class compareadaptations extends object {
 
         //get product data
         $product = $this->dbProducts->getProduct($productId);
-        
+
         //Get product adaptations
         $productAdaptations = $this->dbProducts->getProductAdaptations($productId, '');
 
@@ -121,17 +121,19 @@ class compareadaptations extends object {
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
         $table->border = 0;
+        $table->cellpadding = 5;
+        $table->cellspacing = 5;
 
         $rightContent = "";
-        $rightContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $navigator . '</div></div>';
+        $rightContent = '<div class="compareAdaptationsNav"><div class="frame">' . $navigator . '</div></div>';
         $table->startRow();
-        $table->addCell($rightContent, "", "top", "left", "", 'style="width:220px"');        
+        $table->addCell($rightContent, "", "top", "left", "", '');
         //Show navigation for each of the product's adaptations
         if (count($productAdaptations) > 0) {
             foreach ($productAdaptations as $prodAdaptation) {
                 $adaptNav = $this->sectionManager->buildSectionsTree($prodAdaptation["id"], '', "false", '', $selected);
-                $adaptContent = '<div class="rightColumnDivWide rightColumnPadding"><div class="frame">' . $adaptNav . '</div></div>';
-                $table->addCell($adaptContent, "", "top", "left", "", 'style="width:220px"');
+                $adaptContent = '<div class="compareAdaptationsNav"><div class="frame">' . $adaptNav . '</div></div>';
+                $table->addCell($adaptContent, "", "top", "left", "", '');
             }
         }
         $table->endRow();
@@ -233,7 +235,7 @@ class compareadaptations extends object {
 
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/>
-            <div class="mainContentHolder">' . $table->show() . '</div></div>';
+            <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
     }
 
 }
