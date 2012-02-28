@@ -39,7 +39,7 @@ class oer extends controller {
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist", 
-            "login", "compareadaptations");
+            "login", "compareadaptations","viewadaptationbymap");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
