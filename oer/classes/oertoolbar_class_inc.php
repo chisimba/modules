@@ -41,7 +41,7 @@ class oertoolbar extends object {
                 'actioncheck' => array("adaptationlist","viewadaptation",
                     "editadaptationstep1","editadaptationstep2","editadaptationstep3","editadaptationstep4",
                     "viewinstitution","filteradaptation","saveadaptationstep1","saveadaptationstep2","saveadaptationstep3",
-                    "saveadaptationstep4"
+                    "saveadaptationstep4","viewadaptationbymap"
                     ),
                 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
