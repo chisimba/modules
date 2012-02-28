@@ -450,7 +450,8 @@ class adaptationmanager extends object {
 
         //Set selected group
         if ($product != null) {
-            $group->selected = $this->dbInstitution->getInstitutionName($product['institutionid']);
+        
+            $group->setSelected($product['groupid']);
         }
         $objTable->addCell($group->show());
         $objTable->endRow();
@@ -465,10 +466,10 @@ class adaptationmanager extends object {
         $region->cssClass = 'required';
 
         $region->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
-        $region->addOption('Africa','Africa');
-        $region->addOption('Arab States','Arab States');
-        $region->addOption('Asia and the Pacific','Asia and the Pacific');
-        $region->addOption('Europe and North America','Europe and North America');
+        $region->addOption('Africa', 'Africa');
+        $region->addOption('Arab States', 'Arab States');
+        $region->addOption('Asia and the Pacific', 'Asia and the Pacific');
+        $region->addOption('Europe and North America', 'Europe and North America');
         //Set selected region
         if ($product != null) {
             $region->selected = $product['region'];
@@ -476,7 +477,7 @@ class adaptationmanager extends object {
         $objTable->addCell($region->show());
         $objTable->endRow();
 
-      //  country.
+        //  country.
         $objTable->startRow();
 
         $objCountries = $this->getObject('languagecode', 'language');
@@ -490,8 +491,8 @@ class adaptationmanager extends object {
             $objTable->addCell($objCountries->countryAlpha());
         }
         $objTable->endRow();
-        
-        
+
+
         //Institution
         $objTable->startRow();
         $objTable->addCell($this->objLanguage->languageText('mod_oer_group_institution', 'oer'));
@@ -512,7 +513,7 @@ class adaptationmanager extends object {
         }
         //Set selected
         if ($product != null) {
-            $institution->selected = $this->dbInstitution->getInstitutionName($product['institutionid']);
+            $institution->setSelected($product['institutionid']);
         }
         $objTable->addCell($institution->show());
         $objTable->endRow();

@@ -353,15 +353,17 @@ class productmanager extends object {
         $objTable->startRow();
         $language = new dropdown('language');
         $language->cssClass = 'required';
+
+        $language->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
+        $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
         if ($product != null) {
             $language->setSelected($product['language']);
         }
-        $language->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
-        $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+        
         $objTable->addCell($language->show());
         $objTable->endRow();
 
-
+        
 
         //keywords
         $objTable->startRow();
