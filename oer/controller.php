@@ -39,7 +39,8 @@ class oer extends controller {
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist", 
-            "login", "compareadaptations","viewadaptationbymap");
+            "login", "compareadaptations","viewadaptationbymap",
+            "search_compare_adaptations", "compare_selected");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -780,6 +781,20 @@ class oer extends controller {
     }
 
     function __compareadaptations() {
+        $selectedid = $this->getParam("selected", "");
+        $productid = $this->getParam("productid");
+        $data = $productid . '|' . $selectedid;
+        $this->setVarByRef("data", $data);
+        return "compareadaptations_tpl.php";
+    }
+    function __search_compare_adaptations() {
+        $selectedid = $this->getParam("search_text", "");
+        $productid = $this->getParam("productid");
+        $data = $productid . '|' . $selectedid;
+        $this->setVarByRef("data", $data);
+        return "compareadaptations_tpl.php";
+    }
+    function __compare_selected() {
         $selectedid = $this->getParam("selected", "");
         $productid = $this->getParam("productid");
         $data = $productid . '|' . $selectedid;

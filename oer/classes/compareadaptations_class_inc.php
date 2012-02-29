@@ -12,6 +12,8 @@ class compareadaptations extends object {
         $this->rootTitle = $this->objLanguage->languageText('mod_oer_none', 'oer');
         //Load htmlelement classes
         $this->loadClass('link', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
         //Get DB Objects
         $this->dbProducts = $this->getObject('dbproducts', 'oer');
         $this->objUser = $this->getObject("user", "security");
@@ -236,9 +238,44 @@ class compareadaptations extends object {
                     	</div>
                     </div></div>';
         }
+        $seachElements = "";
+        //Create fieldset for compare tools
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_comparetools', 'oer', 'Compare tools'));
+
+        //Link for - compare selected
+        if (!empty($selected)) {
+            $compareIcon = '<img src="skins/oer/images/product_theme.png" class="smallIcons" />';
+            $compareSelectedLink = new link($this->uri(array("action" => "compare_selected", "productid" => $productId, "selected" => $selected)));
+            $compareSelectedLink->link = $this->objLanguage->languageText('mod_oer_compareselected', 'oer', "Compare selected");
+            $seachElements .= $compareIcon . " " . $compareSelectedLink->show();
+        }
+
+        //Link for - clear selection
+        if (!empty($selected)) {
+            $clearSelectionIcon = '<img src="skins/oer/images/template_resources/sort-by-grid.png" class="smallIcons" />';
+            $clearSelectionLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
+            $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
+            $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
+        }
+        //Build search box      
+        $textinput = new textinput('search_text');
+        $textinput->size = 30;
+        $seachElements .= "&nbsp;&nbsp;" . $textinput->show();
+
+        //Search button
+        $button = new button('save', $this->objLanguage->languageText('word_search', 'system', 'Search'));
+        $button->setToSubmit();
+        $seachElements .= '&nbsp;&nbsp;' . $button->show();
+
+        $fieldset->addContent($seachElements);
+        //Form for compare tools
+        $formData = new form('compareadaptations', $this->uri(array("action" => "search_compare_adaptations", "productid" => $productId)));
+        $formData->addToForm($fieldset);
+        $searchForm = $formData->show();
 
         return '<div class="navPath">' . $navpath .
-        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/>
+        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><div class="searchCompare">' . $searchForm . '</div>
             <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
     }
 

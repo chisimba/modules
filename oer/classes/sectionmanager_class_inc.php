@@ -944,7 +944,11 @@ class sectionmanager extends object {
             if ($selected != '') {
                 //Get the selected item data to compare with other nodes
                 $sectionNode = $dbsections->getSectionNode($selectedId);
+                if($sectionNode==Null || empty($sectionNode)){
+                    $selectedTitle = $selectedId;
+                } else {
                 $selectedTitle = $sectionNode['title'];
+                }
             } else {
                 $sectionNode = $dbsections->getSectionNode($sectionId);
             }
@@ -1030,7 +1034,7 @@ class sectionmanager extends object {
                         foreach ($arr_selectedtxt as $selectedtxt) {
                             $exists = -1;
                             if ($selectedtxt != '') {
-                                $exists = strpos($folderShortText, $selectedtxt);
+                                $exists = strpos(strtolower($folderShortText), strtolower($selectedtxt));
                             }
                             if ($exists !== false) {
                                 $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";
