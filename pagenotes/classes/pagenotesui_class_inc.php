@@ -182,7 +182,7 @@ class pagenotesui extends object
         
         // The note editor box.
         $noteText = new textarea('note');
-        $noteText->cols=26;
+        $noteText->cols=23;
         $noteText->setValue($note);
         $noteText->cssClass = 'required';
         $formNote->addToForm($noteText->show());

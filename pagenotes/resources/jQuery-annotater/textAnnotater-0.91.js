@@ -1,5 +1,5 @@
 /*
-	 jQuery Text Annotate Plugin 0.9
+   jQuery Text Annotate Plugin 0.9
    Copyright (C) 2011  Koos van der Kolk (koosvdkolk [at] gmail.com)
 
    This program is free software: you can redistribute it and/or modify
