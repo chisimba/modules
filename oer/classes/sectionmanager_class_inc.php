@@ -917,6 +917,53 @@ class sectionmanager extends object {
     }
 
     /**
+     * Gets the selected section node ids
+     *
+     * @param string $productId
+     * @param string $selected
+     * @return array id of selected nodes
+     */
+    function getSelectedNodes($productId, $selected) {
+        //Get DB object classes
+        $dbProduct = $this->getObject("dbproducts", "oer");
+        $dbsections = $this->getObject("dbsectionnodes", "oer");
+        //Get nodes
+        $sectionNodes = $dbsections->getSectionNodes($productId);        
+        $selectedNodesArr = array();
+        $selectedTitle = "";
+        $selectedId = $selected;
+        if ($selected != '') {
+            //Get the selected item data to compare with other nodes
+            $sectionNode = $dbsections->getSectionNode($selectedId);
+            if ($sectionNode == Null || empty($sectionNode)) {
+                $selectedTitle = $selectedId;
+            } else {
+                $selectedTitle = $sectionNode['title'];
+            }
+            if (count($sectionNodes) > 0) {
+                foreach ($sectionNodes as $sectionNode) {
+                    //Check if the folderShortText contains some words in selected
+                    $arr_selectedtxt = explode(" ", $selectedTitle);
+                    $text = $sectionNode['title'];                    
+                    //Check if the node is selected
+                    if (!empty($selectedId)) {
+                        foreach ($arr_selectedtxt as $selectedtxt) {
+                            $exists = -1;
+                            if ($selectedtxt != '') {
+                                $exists = strpos(strtolower($text), strtolower($selectedtxt));
+                            }                            
+                            if ($exists !== false) {
+                                $selectedNodesArr[] = $sectionNode['id'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $selectedNodesArr;
+    }
+
+    /**
      * Builds a tree structure that represents sections within a product. This method
      * can also build a dropdown-like true, depending on the options passed
      * @param type $productId The product to build sections for
@@ -944,10 +991,10 @@ class sectionmanager extends object {
             if ($selected != '') {
                 //Get the selected item data to compare with other nodes
                 $sectionNode = $dbsections->getSectionNode($selectedId);
-                if($sectionNode==Null || empty($sectionNode)){
+                if ($sectionNode == Null || empty($sectionNode)) {
                     $selectedTitle = $selectedId;
                 } else {
-                $selectedTitle = $sectionNode['title'];
+                    $selectedTitle = $sectionNode['title'];
                 }
             } else {
                 $sectionNode = $dbsections->getSectionNode($sectionId);
@@ -1034,7 +1081,7 @@ class sectionmanager extends object {
                         foreach ($arr_selectedtxt as $selectedtxt) {
                             $exists = -1;
                             if ($selectedtxt != '') {
-                                $exists = strpos(strtolower($folderShortText), strtolower($selectedtxt));
+                                $exists = strpos(strtolower($sectionNode['title']), strtolower($selectedtxt));
                             }
                             if ($exists !== false) {
                                 $folderShortText = '<span class="adaptnodeselect">' . $folderShortText . "</span>";

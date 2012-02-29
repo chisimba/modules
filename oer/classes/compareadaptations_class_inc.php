@@ -258,7 +258,7 @@ class compareadaptations extends object {
             $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
             $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
         }
-        //Build search box      
+        //Build search box
         $textinput = new textinput('search_text');
         $textinput->size = 30;
         $seachElements .= "&nbsp;&nbsp;" . $textinput->show();
@@ -276,6 +276,257 @@ class compareadaptations extends object {
 
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/><div class="searchCompare">' . $searchForm . '</div>
+            <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
+    }
+
+    /**
+     * Build detailed section view
+     * @param String $productId
+     * @param String $sectionId
+     * @return string
+     */
+    function buildCompareSelectedView($productId, $sectionId, $mode, $selected) {
+        //Flag to check if user has perms to manage adaptations
+        $hasPerms = $this->objAdaptationManager->userHasPermissions();
+
+        //Get selected section-node data
+        if (empty($selected)) {
+            $node = $this->dbSectionNode->getSectionNode($selected);
+        }
+        $isOriginalProduct = $this->dbProducts->isOriginalProduct($productId);
+
+        //get product data
+        $product = $this->dbProducts->getProduct($productId);
+
+        //Get product adaptations
+        $productAdaptations = $this->dbProducts->getProductAdaptations($productId, '');
+
+        $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
+
+        //Flag to check if user has perms to manage adaptations
+        $hasPerms = $this->objAdaptationManager->userHasPermissions();
+
+        //Add bookmark
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
+
+        $table = $this->getObject("htmltable", "htmlelements");
+        $table->attributes = "style='table-layout:fixed;'";
+        $table->border = 0;
+
+        $newAdapt = "";
+        if ($hasPerms) {
+            //Link for - adapting product from existing adapatation
+            $newAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, 'mode="new"')));
+            $newAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+            $newAdapt = $newAdaptLink->show();
+        }
+
+        //Link for - original product title
+        $viewParentProdLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
+        $viewParentProdLink->link = $this->objLanguage->languageText('mod_oer_fullprodview', 'oer');
+        $viewParentProd = $viewParentProdLink->show();
+
+        //Link for - See existing adaptations of this UNESCO Product
+        $viewParentInstLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+        $viewParentInstLink->link = $this->objLanguage->languageText('mod_oer_fullviewinst', 'oer');
+        $viewParentInst = $viewParentInstLink->show();
+
+        //Link for - parent inst title
+        $viewInstTitleLink = new link($this->uri(array("action" => "viewinstitution", "id" => $product["institutionid"])));
+        $viewInstTitleLink->link = $instData['name'];
+        $viewInstTitle = $viewInstTitleLink->show();
+
+        //Build navigation path
+        if ($isOriginalProduct) {
+            //Link for - product list
+            $prodListLink = new link($this->uri(array("action" => "home")));
+            $prodListLink->link = $this->objLanguage->languageText('mod_oer_maintitle2', 'oer');
+            $prodListPage = $prodListLink->show();
+            $navpath = $prodListPage . " > " . $product['title'];
+            //Link for - view product for this section
+            $viewProdTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["id"], "mode" => "grid")));
+            $viewProdTitleLink->link = $product['title'];
+            $viewProdTitle = $viewProdTitleLink->show();
+        } else {
+            //Get parent prod data
+            $parentProduct = $this->dbProducts->getProduct($product["parent_id"]);
+
+            //Link for - adaptation list
+            $adaptListLink = new link($this->uri(array("action" => "viewadaptation", "id" => $productId)));
+            $adaptListLink->link = $this->objLanguage->languageText('mod_oer_adaptations', 'oer');
+            $adaptListPage = $adaptListLink->show();
+            $navpath = $adaptListPage . " > " . $viewInstTitle . " > " . $product['title'];
+            //Link for - original product for this adaptation
+            $viewParentTitleLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $product["parent_id"], "mode" => "grid")));
+            $viewParentTitleLink->link = $parentProduct['title'];
+            $viewParentTitle = $viewParentTitleLink->show();
+        }
+
+        $homeLink = new link($this->uri(array("action" => "home")));
+        $homeLink->link = $this->objLanguage->languageText('mod_oer_home', 'system');
+
+
+        $objTools = $this->newObject('tools', 'toolbar');
+        $crumbs = array($homeLink->show());
+        $objTools->addToBreadCrumbs($crumbs);
+
+        $table = $this->getObject("htmltable", "htmlelements");
+        $table->attributes = "style='table-layout:fixed;'";
+        $table->border = 0;
+        $table->cellpadding = 5;
+        $table->cellspacing = 5;
+
+        //Fetch section for the original product/adaptation tree
+        $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", 'compare', $selected, "", "", $productId);
+
+        $rightContent = "";
+        $rightContent = '<div class="compareProductNav"><div class="frame">' . $navigator . '</div></div>';
+        $table->startRow();
+        /*if (count($productAdaptations) < 2) {
+            $table->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
+        } else {
+            $table->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
+        }*/
+        $table->addCell('<div class="compareProductNav">'.$product['title'].'</div>', "", "top", "left", '', 'style="width:190px"');
+        //Show navigation for each of the product's adaptations
+        if (count($productAdaptations) > 0) {
+
+            foreach ($productAdaptations as $prodAdaptation) {
+                //get the selected sections
+                $selectedNodes = $this->sectionManager->getSelectedNodes($prodAdaptation["id"], $selected);
+                
+                //$adaptContent = '<div class="compareAdaptationsNav"><div class="frame"></div></div>';
+                if(count($selectedNodes) > 0) {
+                    foreach($selectedNodes as $selectedNode) {
+                    $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);                    
+                    //var_dump($nData['title']);
+                    $table->addCell('<div class="compareAdaptationsNav">'.$nodeData['title'].'</div>', "", "top", "left", '', '');
+                    }
+                }
+            }
+        }
+        $table->endRow();
+
+        $topStuff = "";
+
+
+        //Heading varies depending on whether its an original product or adaptation
+        if ($isOriginalProduct) {
+            //Get icons
+            $prodIconOne = '<img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                    '" class="smallIcons" />';
+            $prodIconTwo = '<img src="skins/oer/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                    '" class="smallIcons" />';
+            $prodIconThree = '<img src="skins/oer/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                    '" class="smallIcons" />';
+            //Get count of adaptations
+            $adaptationCount = $this->dbProducts->getProductAdaptationCount($productId);
+            //Get prod thumbnail
+            $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="59" height="76" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
+            }
+            //Link for - Full view of product
+            $fullProdViewLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $productId, "identifier" => $productId, "mode" => "grid")));
+            $fullProdViewLink->link = $this->objLanguage->languageText('mod_oer_fullviewofproduct', 'oer');
+            $fullProdView = $prodIconOne . " " . $fullProdViewLink->show();
+            //Link for - make new adaptation
+            $makeAdaptationLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
+            $makeAdaptationLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+            $makeAdaptation = $prodIconTwo . " " . $makeAdaptationLink->show();
+            //Link for - view adaptations if count is >0
+            $viewAdaptations = "";
+            if ($adaptationCount > 0) {
+                $viewAdaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $productId)));
+                $viewAdaptationsLink->link = $this->objLanguage->languageText('mod_oer_existingadaptations', 'oer') . " (" . $adaptationCount . ")";
+                $viewAdaptations = $prodIconThree . " " . $viewAdaptationsLink->show();
+            }
+            $toplinks = $viewAdaptations;
+            //Form title
+            if ($hasPerms) {
+                $toplinks = $makeAdaptation . " " . $viewAdaptations;
+            }
+            $topStuff = '<div class="adaptationListViewTop"><div class="leftTopImage">' . $prodthumbnail .
+                    '</div><div><h3>' . $viewProdTitle . '</h3>
+                        <p>' . $fullProdView . '</p>
+                            <p>' . $toplinks . '</p></div></div>';
+        } else {
+            //Get prod & inst thumbnails
+            $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
+            if ($product['thumbnail'] == '') {
+                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+            }
+            $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
+            if ($instData['thumbnail'] == '') {
+                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+            }
+            $topStuff = '<div class="adaptationListViewTop">
+            <div class="tenPixelLeftPadding tenPixelTopPadding">
+                        <div class="productAdaptationViewLeftColumnTop">
+                            <div class="leftTopImage">' . $prodthumbnail . '</div>
+                            <div class="leftFloatDiv">
+                                <h3>' . $viewParentTitle . '</h3>
+                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                    '" class="smallLisitngIcons" />
+                                <div class="leftTextNextToTheListingIconDiv">' . $viewParentProd . '</a></div>
+                            </div>
+                    	</div>
+                        <div class="middleAdaptedByIcon">
+                        	<img src="skins/oer/images/icon-adapted-by.png" alt="' .
+                    $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" width="24" height="24"/><br />
+                        	<span class="pinkText">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '</span>
+                        </div>
+
+
+                        <div class="productAdaptationViewMiddleColumnTop">
+                            <div class="leftTopImage">' . $instthumbnail . '</div>
+                            <div class="middleFloatDiv">
+                                <h3 class="darkGreyColour">' . $viewInstTitle . '</h3>
+                                <img src="skins/oer/images/icon-product.png" alt="' .
+                    $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" class="smallLisitngIcons" />
+                                <div class="middleTextNextToTheListingIconDiv">' . $viewParentInst . '</div>
+                            </div>
+                    	</div>
+
+                    <div class="productAdaptationViewRightColumnTop">
+                        <div class="rightAdaptedByIcon">
+                        	<img src="skins/oer/images/icon-managed-by.png" alt="' .
+                    $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '" width="24" height="24"/><br />
+                        	<span class="greenText">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '</span>
+                        </div>
+                            <div class="rightFloatDiv">
+                                <h3 class="greenText">' . $instData['name'] . '</h3>
+                                <div class="textNextToTheListingIconDiv"><a href="#" class="greenTextLink">View group</a></div>
+                            </div>
+                    	</div>
+                    </div></div>';
+        }
+        $seachElements = "";
+        //Create fieldset for compare tools
+        $fieldset = $this->newObject('fieldset', 'htmlelements');
+        $fieldset->setLegend($this->objLanguage->languageText('mod_oer_comparetools', 'oer', 'Compare tools'));
+
+        //Link for - compare selected
+        if (!empty($selected)) {
+            $compareIcon = '<img src="skins/oer/images/product_theme.png" class="smallIcons" />';
+            $compareSelectedLink = new link($this->uri(array("action" => "compare_selected", "productid" => $productId, "selected" => $selected)));
+            $compareSelectedLink->link = $this->objLanguage->languageText('mod_oer_compareselected', 'oer', "Compare selected");
+            $seachElements .= $compareIcon . " " . $compareSelectedLink->show();
+        }
+
+        //Link for - clear selection
+        if (!empty($selected)) {
+            $clearSelectionIcon = '<img src="skins/oer/images/template_resources/sort-by-grid.png" class="smallIcons" />';
+            $clearSelectionLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
+            $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
+            $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
+        }
+
+        return '<div class="navPath">' . $navpath .
+        '</div><div class="topContentHolder">' . $topStuff . '</div><br/>
             <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
     }
 

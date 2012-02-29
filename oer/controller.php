@@ -799,7 +799,7 @@ class oer extends controller {
         $productid = $this->getParam("productid");
         $data = $productid . '|' . $selectedid;
         $this->setVarByRef("data", $data);
-        return "compareadaptations_tpl.php";
+        return "compare_selected_adaptations_tpl.php";
     }
 
     /**
