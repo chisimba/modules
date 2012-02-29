@@ -943,7 +943,7 @@ class sectionmanager extends object {
         if ($treeType == "compare") {
             if ($selected != '') {
                 //Get the selected item data to compare with other nodes
-                $sectionNode = $dbsections->getSectionNode($selected);
+                $sectionNode = $dbsections->getSectionNode($selectedId);
                 $selectedTitle = $sectionNode['title'];
             } else {
                 $sectionNode = $dbsections->getSectionNode($sectionId);
@@ -973,7 +973,7 @@ class sectionmanager extends object {
         if ($treeType == 'htmldropdown') {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => '-1'));
         } else if ($treeType == "compare") {
-            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId, 'selected' => $selected))));
+            $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'compareadaptations', "productid" => $compareProdId))));
         } else {
             $allFilesNode = new treenode(array('text' => $this->rootTitle, 'link' => $this->uri(array('action' => 'viewsection', "productid" => $productId, 'sectionid' => $rootId, 'nodetype' => 'curriculum', 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass))));
         }
