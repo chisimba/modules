@@ -190,11 +190,11 @@ class viewadaptation extends object {
             $managedby = "";
             //Get comments
             $comments = "";
-            //Get language
-            $adaptlang = "";
-            if ($product['language'] == "en") {
+            //Get language..Need to translate lang proper 
+            $adaptlang =$product['language'];
+            /*if ($product['language'] == "en") {
                 $adaptlang = "English";
-            }
+            }*/
             //Get inst data
             $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
@@ -207,6 +207,7 @@ class viewadaptation extends object {
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
                 $instNameLk = "" . $instNameLink->show();
+                 $languageCode=  $this->getObject("languagecode", "language");
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
@@ -214,7 +215,7 @@ class viewadaptation extends object {
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ':</div>
             <div id="viewadaptation_unesco_contacts_text"> ' . $instType . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ':</div>
-            <div id="viewadaptation_text">' . $instData['country'] . '</div><br/><br/>';
+            <div id="viewadaptation_text">' . $languageCode->getName($instData['country']) . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_category_label">' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ':</div>
             <div id="viewadaptation_category_text"> ' . $adaptlang . '</div><br/><br/>';
                 $rightContent.='<div id="viewadaptation_keywords_text"> ' . $instNameLk . '</div><br/><br/>';
@@ -437,7 +438,8 @@ class viewadaptation extends object {
                     $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ': </b>' . $instType . '<br /><br />';
                 }
                 if (!empty($instData['country'])) {
-                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ': </b>' . $instData['country'] . '<br /><br />';
+                     $languageCode=  $this->getObject("languagecode", "language");
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ': </b>' .$languageCode->getName($instData['country']) . '<br /><br />';
                 }
                 if (!empty($adaptlang)) {
                     $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ': </b>' . $adaptlang . '<br /><br />';
