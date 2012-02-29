@@ -21,8 +21,9 @@ jQuery(function() {
     function annotaterInit(cssSelector) {
         var options = {};
         options.form = '<ul><li><input type="checkbox" name="errorType" value="1" /> ' + interest + '</li><li><input type="checkbox" name="errorType" value="2" /> ' + noimp + '</li><li><textarea class="annotate_input" name="comment"></textarea></li></ul>';
-        if (window.notes !== undefined) {
-            options.annotations = JSON.parse(notes);
+        if (window.annotation !== undefined) {
+            //alert(annotation);
+            options.annotations = JSON.parse(annotation);
         }
         options.onInit=function(global_annotations){
             annotations = global_annotations;
@@ -45,7 +46,7 @@ jQuery(function() {
     }
     
     function save(){
-        jQuery('#note').val(JSON.stringify(annotations));
+        jQuery('#annotation').val(JSON.stringify(annotations));
         return true;
     }			
 
@@ -141,7 +142,7 @@ jQuery(function() {
         data_string = jQuery("#form_annotations").serialize();
         //alert("DATA: " + data_string);
         jQuery.ajax({
-                url: 'index.php?module=pagenotes&action=save',
+                url: 'index.php?module=pagenotes&action=saveannotations',
                 type: "POST",
                 data: data_string,
                 success: function(msg) {
@@ -150,18 +151,18 @@ jQuery(function() {
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
                         // Update the information area 
                         // (msg is the id of the record on success)
-                        jQuery("#save_results").html('<span class="success">' + status_successa + '</span>').fadeOut(3000, function() {
+                        jQuery("#save_results_annotation").html('<span class="success">' + status_successa + '</span>').fadeOut(3000, function() {
                             // Animation complete, reset the div
-                            jQuery("#save_results").html("").show();
+                            jQuery("#save_results_annotation").html("").show();
                         });
                         // Change the id field to be the id that is returned as msg & mode to edit
                         jQuery("#id").val(msg);
-                        jQuery("#mode").val('edit');
+                        jQuery("#annotation_mode").val('edit');
                     } else {
                         //alert(msg);
-                        jQuery("#save_results").html('<span class="error">' + status_faila + '</span>').fadeOut(3000, function() {
+                        jQuery("#save_results_annotation").html('<span class="error">' + status_faila + '</span>').fadeOut(3000, function() {
                             // Animation complete, reset the div
-                            jQuery("#save_results").html("").show();
+                            jQuery("#save_results_annotation").html("").show();
                         });
                     }
                 }

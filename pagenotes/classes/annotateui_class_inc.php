@@ -98,19 +98,21 @@ class annotateui extends object
             $objSerialize->languagetojs($arrayVars, 'pagenotes');
 
             // Serialize the contents of the existing annotation.
-            $annotDb = $this->getObject('dbpagenotes', 'pagenotes');
+            $annotDb = $this->getObject('dbpageannotations', 'pagenotes');
             $ar = $annotDb->getAnnotations();
             if (!empty($ar)) {
-                $this->note = $ar[0]['note'];
-                $arrayParams['notes'] = $this->note;
-                $objSerialize->varsToJs($arrayParams);
-                $this->mode = 'edit';
+                $this->annotation = $ar[0]['annotation'];
+                $ser = "\n\n<script type='text/javascript'>\n";
+                $ser .= "var annotation= '" . $this->annotation . "';\n";
+                $ser .= "</script>\n\n";
+                $this->appendArrayVar('headerParams', $ser);
+                $this->annotation_mode = 'edit';
                 // Set up other existing params needed
                 $this->id = $ar[0]['id'];
             } else {
-                $this->note = NULL;
+                $this->annotation = NULL;
                 $this->id = NULL;
-                $this->mode = 'add';
+                $this->annotation_mode = 'add';
             }
             // Load the annotator script
             $this->appendArrayVar('headerParams',
@@ -182,28 +184,24 @@ class annotateui extends object
         $hidHash->value = $hash;
         $formNote->addToForm($hidHash->show());
         // The edit or add mode.
-        $hidMode = new hiddeninput('mode');
-        $hidMode->cssId = "mode";
-        $hidMode->value = $this->mode;
+        $hidMode = new hiddeninput('annotation_mode');
+        $hidMode->cssId = "annotation_mode";
+        $hidMode->value = $this->annotation_mode;
         $formNote->addToForm($hidMode->show());
         // The id field comes back from save.
         $hidId = new hiddeninput('id');
         $hidId->cssId = "id";
         $hidId->value = $this->id;
         $formNote->addToForm($hidId->show());
-        // The note type will always be annotation here.
-        $hidType = new hiddeninput('notetype');
-        $hidType->cssId = "notetype";
-        $hidType->value = "annotation";
-        $formNote->addToForm($hidType->show());
-        $hidAnnot = new hiddeninput('note');
-        $hidAnnot->cssId = "note";
-        $hidAnnot->value = $this->note;
+        // The annotation
+        $hidAnnot = new hiddeninput('annotation');
+        $hidAnnot->cssId = "annotation";
+        $hidAnnot->value = $this->annotation;
         $formNote->addToForm($hidAnnot->show());
         // The controls
         $formNote->addToForm($this->getControls());
         // The results area.
-        $formNote->addToForm("<div id='save_results' class='noticearea'></div>");
+        $formNote->addToForm("<div id='save_results_annotation' class='noticearea'></div>");
         // Render the form.
         return $formNote->show();
     }

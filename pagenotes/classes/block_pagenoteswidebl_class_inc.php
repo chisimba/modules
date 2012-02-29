@@ -1,10 +1,9 @@
 <?php
 /**
  *
- * Page note control.
+ * A middle block for Page notes.
  *
- * Provides an input box for adding page notes in the non-annotation style, where
- * the block is for the page and not linked to particular pieces of text.
+ * A middle block for Page notes. Take notes on any page within a Chisimba installation..
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,10 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Page note control.
+ * A middle block for Page notes.
  *
- * Provides an input box for adding page notes in the non-annotation style, where
- * the block is for the page and not linked to particular pieces of text.
+ * A middle block for Page notes. Take notes on any page within a Chisimba installation..
  *
  * @category  Chisimba
  * @author    Derek Keats <derek@dkeats.com>
@@ -52,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_pagenotecontrol extends object
+class block_pagenoteswidebl extends object
 {
     /**
      * The title of the block
@@ -61,6 +59,7 @@ class block_pagenotecontrol extends object
      * @access public
      */
     public $title;
+
     /**
      * Standard init function
      *
@@ -70,7 +69,7 @@ class block_pagenotecontrol extends object
      */
     public function init() 
     {
-        $this->title = "Add page note";
+        $this->title = "Show pagenotes";
     }
     /**
      * Standard block show method.
@@ -79,8 +78,8 @@ class block_pagenotecontrol extends object
      */
     public function show() 
     {
-        $objUi = $this->getObject('pagenotesui', 'pagenotes');
-        return $objUi->showBlock();
+        $objBl = $this->getObject('pagenotesui', 'pagenotes');
+        return $objBl->showWideBlock();
     }
 }
 ?>

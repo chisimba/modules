@@ -87,32 +87,52 @@ class pagenotesui extends object
     {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
-        $arrayVars['noterequired'] = "mod_pagenotes_noterequired";
-        $arrayVars['status_success'] = "mod_pagenotes_status_success";
-        $arrayVars['status_fail'] = "mod_pagenotes_status_fail";
-        $objSerialize = $this->getObject('serializevars', 'utilities');
-        $objSerialize->languagetojs($arrayVars, 'pagenotes');
-        // Load the jquery validate plugin
-        $this->appendArrayVar('headerParams',
-        $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
-          'jquery'));
-        $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('pagenotes.js',
-          'pagenotes'));
+        if ($this->objUser->isLoggedIn()) {
+            $arrayVars['noterequired'] = "mod_pagenotes_noterequired";
+            $arrayVars['status_success'] = "mod_pagenotes_status_success";
+            $arrayVars['status_fail'] = "mod_pagenotes_status_fail";
+            $objSerialize = $this->getObject('serializevars', 'utilities');
+            $objSerialize->languagetojs($arrayVars, 'pagenotes');
+            // Load the jquery validate plugin
+            $this->appendArrayVar('headerParams',
+            $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
+              'jquery'));
+            $this->appendArrayVar('headerParams',
+              $this->getJavaScriptFile('pagenotes.js',
+              'pagenotes'));
+            // Serialize the contents of the existing annotation.
+            $noteDb = $this->getObject('dbpagenotes', 'pagenotes');
+            $ar = $noteDb->getNotes();
+            if (!empty($ar)) {
+                $this->note = $ar[0]['note'];
+                $arrayParams['notes'] = $this->note;
+                $objSerialize->varsToJs($arrayParams);
+                $this->pagenotes_mode = 'edit';
+                // Set up other existing params needed
+                $this->id = $ar[0]['id'];
+            } else {
+                $this->note = NULL;
+                $this->id = NULL;
+                $this->pagenotes_mode = 'add';
+            }
+        }
     }
 
     /**
      *
-     * Get the text of the init_overview that we have in the sample database.
-     *
-     * @return string The text of the init_overview
+     * Wrapper to render the main block
+     * 
+     * @return string The rendered block
      * @access public
-     *
+     * 
      */
-    public function showAddEditBox()
+    public function showBlock()
     {
-        return $this->makeEditForm();
-
+        if ($this->objUser->isLoggedIn()) {
+            return $this->makeEditForm();
+        } else {
+            return $this->getNotLoggedInMessage();
+        }
     }
     
     /**
@@ -140,33 +160,29 @@ class pagenotesui extends object
         $page = $objUrl->curPageURL();
         // Remove passthroughlogin as it will mess up the page.
         $page = str_replace('&passthroughlogin=true', NULL, $page);
-        $hidPage = new hiddeninput('page');
-        $hidPage->cssId = "page";
-        $hidPage->value = $page;
-        $formNote->addToForm($hidPage->show() . $page);
-        
         // The page hash key.
         $hash = md5($page);
         $hidHash = new hiddeninput('hash');
         $hidHash->cssId = "hash";
         $hidHash->value = $hash;
-        $formNote->addToForm($hidHash->show() . "<br />$hash");
+        $formNote->addToForm($hidHash->show());
         
+        // The id field comes back from save.
+        $hidId = new hiddeninput('id');
+        $hidId->cssId = "id";
+        $hidId->value = $this->id;
+        $formNote->addToForm($hidId->show());
+
         // The edit/add mode.
-        $mode = $this->getParam('mode', NULL);
-        $hidMode = new hiddeninput('mode');
-        $hidMode->cssId = "mode";
+        $mode = $this->getParam('pagenotes_mode', NULL);
+        $hidMode = new hiddeninput('pagenotes_mode');
+        $hidMode->cssId = "pagenotes_mode";
         $hidMode->value = $mode;
         $formNote->addToForm($hidMode->show());
         
-        // The note type will always be pagenote.
-        $hidType = new hiddeninput('notetype');
-        $hidType->cssId = "notetype";
-        $hidType->value = "pagenote";
-        $formNote->addToForm($hidType->show());
-        
         // The note editor box.
         $noteText = new textarea('note');
+        $noteText->cols=26;
         $noteText->setValue($note);
         $noteText->cssClass = 'required';
         $formNote->addToForm($noteText->show());
@@ -178,10 +194,35 @@ class pagenotesui extends object
         $formNote->addToForm($button->show());
         
         // The results area.
-        $formNote->addToForm("<div id='save_results' class='noticearea'></div>");
+        $formNote->addToForm("<div id='save_results_note' class='noticearea'></div>");
         
         return $formNote->show();
     }
+    
+    public function showWideBlock()
+    {
+        $annotDb = $this->getObject('dbpagenotes', 'pagenotes');
+        $ar = $annotDb->getNotes();
+        $ret = "";
+        if (!empty($ar)) {
+            $washer = $this->getObject('washout', 'utilities');
+            foreach ($ar as $note) {
+                $dispNote = $washer->parseText($note['note']);
+                $ret .= "\n<div class='pagenote_note'>" 
+                  . $dispNote . "</div>\n";
+            }
+        }
+        return $ret;
+    }
 
+     /**
+     * 
+     * Return a not logged in message
+     * 
+     */
+    private function getNotLoggedInMessage()
+    {
+        return $this->objLanguage->languageText("mod_pagenotes_nlipn", "pagenotes");
+    }
 }
 ?>

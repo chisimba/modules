@@ -1,14 +1,14 @@
 <?php
 /**
 *
-* A sample SQL file for pagenotes. Please adapt this to your requirements.
+* A SQL file for pagenotes annotations.
 *
 */
 // Table Name
-$tablename = 'tbl_pagenotes_notes';
+$tablename = 'tbl_pagenotes_annotations';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Storage of page level notes within the pagenotes module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Storage of page level annotations within the pagenotes module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -31,18 +31,18 @@ $fields = array(
         'length' => 25,
         'notnull' => TRUE,
         ),
-    'note' => array(
+    'annotation' => array(
         'type' => 'clob',
         ),
     );
 
 //create other indexes here...
 
-$name = 'tbl_pagenotes_notes_idx';
+$name = 'tbl_pagenotes_annotations_idx';
 
 $indexes = array(
     'fields' => array(
-         'note' => array(),
+         'annotation' => array(),
     )
 );
 ?>

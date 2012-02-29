@@ -96,8 +96,6 @@ class pagenotes extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
-        // Create an instance of the database class
-        $this->objDbpagenotes = & $this->getObject('dbpagenotes', 'pagenotes');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -187,13 +185,35 @@ class pagenotes extends controller
     * @access private
     * 
     */
-    private function __save()
+    private function __saveannotations()
     {
         // Note that the security is in the dbPageNotes save method.
-        $res = $this->objDbpagenotes->save();
+        $this->objDb = & $this->getObject('dbpageannotations', 'pagenotes');
+        $res = $this->objDb->save();
         if ($res) {
             die($res);
-        }else {
+        } else {
+            die("ERROR_DATA_INSERT_FAIL");
+        }
+    }
+    
+    /**
+    * 
+    * Method corresponding to the save action. It gets the mode from 
+    * the querystring to and saves the data then sets nextAction to be 
+    * null, which returns the {yourmodulename} module in view mode. 
+    * 
+    * @access private
+    * 
+    */
+    private function __savenote()
+    {
+        // Note that the security is in the dbPageNotes save method.
+        $this->objDb = & $this->getObject('dbpagenotes', 'pagenotes');
+        $res = $this->objDb->save();
+        if ($res) {
+            die($res);
+        } else {
             die("ERROR_DATA_INSERT_FAIL");
         }
     }
@@ -232,7 +252,7 @@ class pagenotes extends controller
     {
         $this->setVar('str', "<h3>"
           . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
+          .": " . $this->getParam('action', 'NULL') . "</h3>");
         return 'dump_tpl.php';
     }
     

@@ -49,7 +49,7 @@
 		options.onRemoveAnnotation = options.onRemoveAnnotation || function(){};
 		options.onSaveAnnotation   = options.onSaveAnnotation || function(){};
 
-		/* add event to body, ending all annotateing activities */
+		/* add event to body, ending all annotating activities */
 		$('body').mouseup(function(){
 			onAnnotateEnd();
 		});
@@ -236,7 +236,7 @@
 		}
 	
 		/**
-		 * This function prepares an element for annotateing
+		 * This function prepares an element for annotating
 		 * @param object currentElement A DOM node
 		 * @credits based on JQuery Plugin by Simon Chong (http://www.opensource.csimon.info/JQueryTextHighlighter/index.php)
 		 **/
@@ -303,12 +303,12 @@
 	
 
 	
-		/* this function is called when annotateing starts */
+		/* this function is called when annotating starts */
 		function onAnnotateStart() {
 			textAnnotaterOn = true;
 		}
 
-		/* this function is called when annotateing ends */
+		/* this function is called when annotating ends */
 
 		function onAnnotateEnd() {
 			if (beingAnnotatedElementIdArray.length==0) return;

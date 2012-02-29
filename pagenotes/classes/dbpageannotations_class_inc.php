@@ -1,12 +1,11 @@
 <?php
 /**
  *
- * Database access for Page notes
+ * Database access for Page annotations
  *
  * Database access for Page notes, which allow users
- * to add notes to any page containing one of the pagenotes 
- * blocks or keyelements. A key element is one that when clicked
- * loads a pagenote note taker for the current page.
+ * to add annotations the the margin on any page containing 
+ * the annotation controller block
  *
  *
  * PHP version 5
@@ -53,18 +52,17 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
- * Database access for Page notes
+ * Database access for Page annotations
  *
  * Database access for Page notes, which allow users
- * to add notes to any page containing one of the pagenotes 
- * blocks or keyelements. A key element is one that when clicked
- * loads a pagenote note taker for the current page.
+ * to add annotations the the margin on any page containing 
+ * the annotation controller block
 *
 * @package   pagenotes
 * @author    Derek Keats <derek@dkeats.com>
 *
 */
-class dbpagenotes extends dbtable
+class dbpageannotations extends dbtable
 {
     
     /**
@@ -85,8 +83,8 @@ class dbpagenotes extends dbtable
     public function init()
     {
         //Set the parent table to our demo table
-        parent::init('tbl_pagenotes_notes');
-        $this->fieldsAr = array('id', 'hash', 'mode', 'note');
+        parent::init('tbl_pagenotes_annotations');
+        $this->fieldsAr = array('id', 'hash', 'annotation_mode', 'annotation');
         $this->objUser = $this->getObject('user', 'security');
     }
 
@@ -103,13 +101,13 @@ class dbpagenotes extends dbtable
         if ($this->objUser->isLoggedIn()) {
             $userId = $this->objUser->userId();
             $this->loadData();
-            if ($this->mode == 'edit') {
+            if ($this->annotation_mode == 'edit') {
                 // Make sure only the user can update their annotations
                 if ($this->validUser($userId)) {
                     // Update the note
                     $data = array(
                         'datemodified' => $this->now(),
-                        'note' => $this->note
+                        'annotation' => $this->annotation
                     );
                     $res = $this->update('id', $this->id, $data);
                     return $this->id;
@@ -120,7 +118,7 @@ class dbpagenotes extends dbtable
                 // Add the data notes data.
                 $data = array(
                     'hash' => $this->hash, 
-                    'note' => $this->note, 
+                    'annotation' => $this->annotation, 
                     'datecreated' => $this->now(),
                     'userid' => $userId
                 );
@@ -180,19 +178,22 @@ class dbpagenotes extends dbtable
         }
     }
     
-   
-    public function getNotes()
+    /**
+     *
+     * Get the annotations based on the current page hash and the current
+     * logged in user
+     * 
+     * @return string A JSON string of all the annotations
+     * @access public 
+     * 
+     */
+    public function getAnnotations()
     {
         $hash = $this->getHash();
         $userId = $this->objUser->userId();
         $filter = " WHERE hash = '" . $hash . "' AND userid = '" . $userId . "'";
         $ar = $this->getAll($filter);
         return $ar;
-    }
-    
-    public function countNotes()
-    {
-        
     }
     
     /**
