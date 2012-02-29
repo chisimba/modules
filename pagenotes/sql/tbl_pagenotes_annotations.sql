@@ -36,13 +36,4 @@ $fields = array(
         ),
     );
 
-//create other indexes here...
-
-$name = 'tbl_pagenotes_annotations_idx';
-
-$indexes = array(
-    'fields' => array(
-         'annotation' => array(),
-    )
-);
 ?>
