@@ -458,7 +458,7 @@ class institutionedit extends object {
                 . $msgArea
         );
 
-         $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
+         $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
          if ($this->mode == 'edit') {
                 $thumbnail = '<img src="usrfiles/' . $this->thumbnail . '"  width="136" height="176" align="left"/>';
          }

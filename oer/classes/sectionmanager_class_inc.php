@@ -527,7 +527,7 @@ class sectionmanager extends object {
         $content = "";
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $content.='<div id="sectionheader">';
 
@@ -698,18 +698,18 @@ class sectionmanager extends object {
         //Heading varies depending on whether its an original product or adaptation
         if ($isOriginalProduct) {
             //Get icons
-            $prodIconOne = '<img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconOne = '<img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconTwo = '<img src="skins/oer/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconTwo = '<img src="skins/oeru/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconThree = '<img src="skins/oer/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconThree = '<img src="skins/oeru/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
             //Get count of adaptations
             $adaptationCount = $dbProducts->getProductAdaptationCount($productId);
             //Get prod thumbnail
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="59" height="76" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
             }
             //Link for - Full view of product
             $fullProdViewLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $productId, "identifier" => $productId, "mode" => "grid")));
@@ -739,11 +739,11 @@ class sectionmanager extends object {
             //Get prod & inst thumbnails
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
             $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
             if ($instData['thumbnail'] == '') {
-                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+                $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
             }
             $topStuff = '<div class="adaptationListViewTop">
             <div class="tenPixelLeftPadding tenPixelTopPadding">
@@ -751,13 +751,13 @@ class sectionmanager extends object {
                             <div class="leftTopImage">' . $prodthumbnail . '</div>
                             <div class="leftFloatDiv">
                                 <h3>' . $viewParentTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                                <img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallLisitngIcons" />
                                 <div class="leftTextNextToTheListingIconDiv">' . $viewParentProd . '</a></div>
                             </div>
                     	</div>
                         <div class="middleAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-adapted-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-adapted-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="pinkText">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '</span>
                         </div>
@@ -767,7 +767,7 @@ class sectionmanager extends object {
                             <div class="leftTopImage">' . $instthumbnail . '</div>
                             <div class="middleFloatDiv">
                                 <h3 class="darkGreyColour">' . $viewInstTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' .
+                                <img src="skins/oeru/images/icon-product.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" class="smallLisitngIcons" />
                                 <div class="middleTextNextToTheListingIconDiv">' . $viewParentInst . '</div>
                             </div>
@@ -775,7 +775,7 @@ class sectionmanager extends object {
 
                     <div class="productAdaptationViewRightColumnTop">
                         <div class="rightAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-managed-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-managed-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="greenText">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '</span>
                         </div>
@@ -1123,7 +1123,7 @@ class sectionmanager extends object {
         if ($showThumbNail == 'true') {
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
             }
             $space = '<br/>';
         }

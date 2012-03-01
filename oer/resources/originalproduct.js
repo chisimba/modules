@@ -43,8 +43,8 @@ jQuery(function() {
                         productId= link.substring(productIdIndex);
                     }
                 
-                    var editLink='&nbsp;<a href="?module=oer&action=editoriginalproductstep1&id='+productId+'&mode=edit"><img src="skins/oer/images/icons/edit.png" /></a>';
-                    var deleteLink='&nbsp;<a  class="deletenode" href="?module=oer&action=deleteoriginalproduct&id='+productId+'"><img src="skins/oer/images/icons/delete.png" /></a>';
+                    var editLink='&nbsp;<a href="?module=oer&action=editoriginalproductstep1&id='+productId+'&mode=edit"><img src="skins/oeru/images/icons/edit.png" /></a>';
+                    var deleteLink='&nbsp;<a  class="deletenode" href="?module=oer&action=deleteoriginalproduct&id='+productId+'"><img src="skins/oeru/images/icons/delete.png" /></a>';
                     jQuery(this).append(jQuery('<span class="editsection">'+editLink+deleteLink+"&nbsp;</span>")); 
                 }
             },

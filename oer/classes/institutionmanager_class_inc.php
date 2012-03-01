@@ -113,7 +113,7 @@ class institutionmanager extends object {
 
             $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
             if ($institution['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
             }
 
             $table->addCell($thumbnail);
@@ -127,7 +127,7 @@ class institutionmanager extends object {
 
         $controlBand = '<h1>' . $this->_objLanguage->languageText('mod_oer_institutions', 'oer') . '</h1>'
                 . '<div id="institution_controlband">';
-        $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
+        $newthumbnail = '&nbsp;<img src="skins/oeru/images/document-new.png" width="19" height="15"/>';
         $controlBand.= '<h1>' . $newthumbnail . $addLink->show() . '</h1>';
         $controlBand.= '</div> ';
 
@@ -404,15 +404,15 @@ class institutionmanager extends object {
         $leftContent = "";
         $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"  width="136" height="176" align="left"/>';
         if ($institution['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"   width="136" height="176" align="left"/>';
         }
 
         $editControls = "";
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
-            $editImg = '<img src="skins/oer/images/icons/edit.png">';
-            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-            $featuredImg = '<img src="skins/oer/images/featured.png">';
+            $editImg = '<img src="skins/oeru/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
+            $featuredImg = '<img src="skins/oeru/images/featured.png">';
 
 
             $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $institutionId, "mode" => "edit")));
@@ -454,7 +454,7 @@ class institutionmanager extends object {
 
             $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="45" height="49"  align="left"/>';
             if ($adaptation['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"   width="45" height="49"  align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"   width="45" height="49"  align="left"/>';
             }
 
             $title = $adaptation['title'];

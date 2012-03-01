@@ -54,15 +54,15 @@ class vieworiginalproduct extends object {
         $leftContent = "";
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
 
         $editControls = "";
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
-            $editImg = '<img src="skins/oer/images/icons/edit.png">';
-            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-            $featuredImg = '<img src="skins/oer/images/featured.png">';
+            $editImg = '<img src="skins/oeru/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
+            $featuredImg = '<img src="skins/oeru/images/featured.png">';
 
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
             $adaptLink->link = $adaptImg;
@@ -101,7 +101,7 @@ class vieworiginalproduct extends object {
         // Download link
         $prodTitle = "";
         //Add download link
-        $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
+        $printImg = '<img src="skins/oeru/images/icons/icon-download.png">';
         if ($this->objUser->isLoggedIn()) {
             $leftContent.=$this->createRatingDiv($productId);
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'original')));
@@ -224,7 +224,7 @@ class vieworiginalproduct extends object {
 
         $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         if ($objGroupOps->isGroupMember($groupId, $userId)) {
-            $addSectionIcon = '<img src="skins/oer/images/add-node.png" align="left"/>';
+            $addSectionIcon = '<img src="skins/oeru/images/add-node.png" align="left"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
             $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');
             $sections.=$addNodeLink->show();
@@ -265,9 +265,9 @@ class vieworiginalproduct extends object {
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
 
 
-        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
-        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
-        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
+        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/jquery.ui.stars.min.css">';
+        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/crystal-stars.css">';
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/download-dialog.css">';
 
         $jqUICSS = '<link rel="stylesheet" type="text/css" src="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css') . '"/>';
         $this->appendArrayVar('headerParams', $jqUICSS);

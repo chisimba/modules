@@ -153,18 +153,18 @@ class groupmanager extends object {
                 '<div id="groups_controlband">';
 
         /* $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
-          $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+          $gridthumbnail = '<img src="skins/oeru/images/sort-by-grid.png"/>';
           $gridlink = new link($this->uri(array("action" => "home")));
           $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
           $controlBand.=$gridlink->show();
 
-          $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+          $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oeru/images/sort-by-list.png"/>';
           $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
           $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
           $controlBand.=$listlink->show(); */
 
         if ($this->objUser->isLoggedIn()) {
-            $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
+            $newthumbnail = '&nbsp;<img src="skins/oeru/images/document-new.png" width="19" height="15"/>';
             $controlBand.= $newthumbnail . $newgrouplink->show();
         }
 
@@ -187,8 +187,8 @@ class groupmanager extends object {
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
         $maxCol = 2;
-        $editImg = '<img src="skins/oer/images/icons/edit.png" class="groupedit" align="top" valign="top">';
-        $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+        $editImg = '<img src="skins/oeru/images/icons/edit.png" class="groupedit" align="top" valign="top">';
+        $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
 
         foreach ($groups as $group) {
             if ($startNewRow) {
@@ -209,7 +209,7 @@ class groupmanager extends object {
             $titleLink->link = $context['title'] . $editControls;
             $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($group['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
             }
 
 
@@ -382,7 +382,7 @@ class groupmanager extends object {
             $institution = $dbInstitution->getInstitutionById($xinstitution['institution_id']);
             $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"  width="45" height="49"  align="left"/>';
             if ($institution['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
             }
             $instName = $institution['name'];
             $instNameLink = new link($this->uri(array("action" => "viewinstitution", "id" => $institution['id'])));
@@ -429,7 +429,7 @@ class groupmanager extends object {
         $context = $dbContext->getContext($contextcode);
         $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="left "/>';
         if ($group['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
 
         $table = $this->getObject("htmltable", "htmlelements");
@@ -438,7 +438,7 @@ class groupmanager extends object {
         $table->addCell('<div id="group_thumbnail">' . $thumbnail . '</div>');
         $table->addCell('<div id="group_about">' . $context['about'] . '</div>');
         $table->endRow();
-        $editImg = '<img src="skins/oer/images/icons/edit.png" class="groupedit" align="top" valign="top">';
+        $editImg = '<img src="skins/oeru/images/icons/edit.png" class="groupedit" align="top" valign="top">';
 
         $editControls = "";
         if ($this->objUser->isLoggedIn()) {

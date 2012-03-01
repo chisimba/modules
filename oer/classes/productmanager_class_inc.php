@@ -872,7 +872,7 @@ class productmanager extends object {
                 '<div id="originalproducts_controlband">';
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
-        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+        $gridthumbnail = '<img src="skins/oeru/images/sort-by-grid.png"/>';
         $gridlink = new link($this->uri(array("action" => "home")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
         if ($mode == 'grid') {
@@ -881,7 +881,7 @@ class productmanager extends object {
         $controlBand.=$gridlink->show();
 
 
-        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oeru/images/sort-by-list.png"/>';
         $listlink = new link($this->uri(array("action" => "showproductlistingaslist")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
         if ($mode == 'list') {
@@ -892,7 +892,7 @@ class productmanager extends object {
         $controlBand.='&nbsp;' . $listlink->show();
 
         if ($this->objUser->isLoggedIn()) {
-            $newthumbnail = '&nbsp;<img src="skins/oer/images/document-new.png" width="19" height="15"/>';
+            $newthumbnail = '&nbsp;<img src="skins/oeru/images/document-new.png" width="19" height="15"/>';
             $controlBand.= '&nbsp;|&nbsp;' . $newthumbnail . $newproductlink->show();
         }
 
@@ -933,11 +933,11 @@ class productmanager extends object {
             if ($mode == 'grid') {
                 $thumbnail = '<img src="usrfiles/' . $originalProduct['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
                 if ($originalProduct['thumbnail'] == '') {
-                    $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+                    $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
                 }
                 $makeAdaptation = "";
                 if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                    $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+                    $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
                     $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $originalProduct['id'], "mode" => "new")));
                     $adaptLink->link = $adaptImg;
                     $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
@@ -1002,7 +1002,7 @@ class productmanager extends object {
         $product = $this->dbproducts->getProduct($id);
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
         }
 
         $viewProductLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $id)));
@@ -1116,7 +1116,7 @@ class productmanager extends object {
         $product = $this->dbproducts->getProduct($productId);
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="136" height="176" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="136" height="176" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="136" height="176" align="left"/>';
         }
 
         $mode = "";
@@ -1175,7 +1175,7 @@ class productmanager extends object {
 
         $thumbnail = '<img class="featuredadaptation" src="usrfiles/' . $product['thumbnail'] . '"  width="65" height="85" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img  class="featuredadaptation"  src="skins/oer/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
+            $thumbnail = '<img  class="featuredadaptation"  src="skins/oeru/images/product-cover-placeholder.jpg"  width="65" height="85" align="left"/>';
         }
 
         $thumbnailLink = new link($this->uri(array("action" => "viewadaptation", 'identifier' => $productId, "id" => $productId)));
@@ -1194,7 +1194,7 @@ class productmanager extends object {
 
         $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '" class="featuredadaptation"  width="65" height="85" align="left"/>';
         if ($instData['thumbnail'] == '') {
-            $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" class="featuredadaptation" width="65" height="85" align="left"/>';
+            $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" class="featuredadaptation" width="65" height="85" align="left"/>';
         }
 
         $instThumbnailLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $instData['id'])));
@@ -1240,7 +1240,7 @@ class productmanager extends object {
             $product = $this->dbproducts->getProduct($product['id']);
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
 
             $mode = "";
@@ -1262,7 +1262,7 @@ class productmanager extends object {
 
             $instthumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '" class="institution_thumbnail"  width="65" height="85" align="bottom"/>';
             if ($institution['thumbnail'] == '') {
-                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" class="institution_thumbnail" width="65" height="85" align="bottom"/>';
+                $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" class="institution_thumbnail" width="65" height="85" align="bottom"/>';
             }
 
             $instTitleLink = new link($this->uri(array("action" => "viewinstitution", 'id' => $institution['id'])));
@@ -1296,7 +1296,7 @@ class productmanager extends object {
             $product = $this->dbproducts->getProduct($productId['productid']);
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
 
             $mode = "";
@@ -1343,7 +1343,7 @@ class productmanager extends object {
             $product = $this->dbproducts->getProduct($productId['productid']);
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
 
             $mode = "";
@@ -1389,7 +1389,7 @@ class productmanager extends object {
             $product = $this->dbproducts->getProduct($productId['productid']);
             $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
 
             $mode = "";

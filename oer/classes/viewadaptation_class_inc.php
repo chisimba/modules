@@ -46,9 +46,9 @@ class viewadaptation extends object {
         $ratingUIJs = '<script language="JavaScript" src="' . $this->getResourceUri('jquery.ui.stars.js') . '" type="text/javascript"></script>';
         $ratingEffectJs = '<script language="JavaScript" src="' . $this->getResourceUri('ratingeffect.js') . '" type="text/javascript"></script>';
 
-        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oer/jquery.ui.stars.min.css">';
-        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/crystal-stars.css">';
-        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oer/download-dialog.css">';
+        $ratingUICSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/jquery.ui.stars.min.css">';
+        $crystalCSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/crystal-stars.css">';
+        $dialogCSS = '<link rel="stylesheet" type="text/css" href="skins/oeru/download-dialog.css">';
 
         $uiAllCSS = '<link rel="stylesheet" type="text/css" href="' . $this->getResourceUri('plugins/ui/development-bundle/themes/base/jquery.ui.all.css', 'jquery') . '"/>';
         $this->appendArrayVar('headerParams', $uiAllCSS);
@@ -109,7 +109,7 @@ class viewadaptation extends object {
 
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $leftContent.='<div id="viewadaptation_coverpage">' . $thumbnail . '</div>';
         $ratingDiv = $this->createRatingDiv($productId);
@@ -144,7 +144,7 @@ class viewadaptation extends object {
         $sections = "";
         $sectionTitle = '<h3>' . $this->objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
         if ($this->hasPerms) {
-            $addSectionIcon = '<img src="skins/oer/images/add-node.png"/>';
+            $addSectionIcon = '<img src="skins/oeru/images/add-node.png"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
             $addNodeLink->link = $addSectionIcon . "&nbsp;&nbsp;" . $this->objLanguage->languageText('mod_oer_addnode', 'oer');
             $newNodeLink->extra = 'alt="' . $this->objLanguage->languageText('word_add', 'system') . '"';
@@ -227,9 +227,9 @@ class viewadaptation extends object {
         $featuredAdaptation = "";
         if ($this->hasPerms) {
             //Get images
-            $adaptImg = '<img src="skins/oer/images/icons/add.png">';
-            $editImg = '<img src="skins/oer/images/icons/edit.png">';
-            $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
+            $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
+            $editImg = '<img src="skins/oeru/images/icons/edit.png">';
+            $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
 
             //Link create an adaptation
             $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
@@ -254,7 +254,7 @@ class viewadaptation extends object {
             $delLink->title = $this->objLanguage->languageText('word_delete', 'system');
             $featuredAdaptation .="&nbsp;" . $delLink->show() . "&nbsp;";
             //Add mark as featured adaptation
-            $featuredImg = '<img src="skins/oer/images/featured.png">';
+            $featuredImg = '<img src="skins/oeru/images/featured.png">';
             $featuredLink = new link($this->uri(array("action" => "featureoriginalproduct", "productid" => $productId)));
             $featuredLink->link = $featuredImg;
             $featuredLink->cssClass = "featuredoriginalproduct";
@@ -318,7 +318,7 @@ class viewadaptation extends object {
         $bookmarks = $objBookMarks->show();
 
         //Add download link
-        $printImg = '<img src="skins/oer/images/icons/icon-download.png">';
+        $printImg = '<img src="skins/oeru/images/icons/icon-download.png">';
 
         // Download link
         $prodTitle = "";
@@ -399,7 +399,7 @@ class viewadaptation extends object {
         $leftContent = "";
         $thumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="79" height="101" align="left"/>';
         if ($product['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="left"/>';
         }
         $leftContent.= $thumbnail;
 

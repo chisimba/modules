@@ -511,7 +511,7 @@ class groupedit extends object {
 
         $thumbnail = '<img src="usrfiles/' . $group['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
         if ($group['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
         }
 
         $viewGroupLink = new link($this->uri(array("action" => "viewgroup", "contextcode" => $contextcode)));

@@ -150,18 +150,18 @@ class compareadaptations extends object {
         //Heading varies depending on whether its an original product or adaptation
         if ($isOriginalProduct) {
             //Get icons
-            $prodIconOne = '<img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconOne = '<img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconTwo = '<img src="skins/oer/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconTwo = '<img src="skins/oeru/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconThree = '<img src="skins/oer/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconThree = '<img src="skins/oeru/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
             //Get count of adaptations
             $adaptationCount = $this->dbProducts->getProductAdaptationCount($productId);
             //Get prod thumbnail
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="59" height="76" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
             }
             //Link for - Full view of product
             $fullProdViewLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $productId, "identifier" => $productId, "mode" => "grid")));
@@ -191,11 +191,11 @@ class compareadaptations extends object {
             //Get prod & inst thumbnails
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
             $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
             if ($instData['thumbnail'] == '') {
-                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+                $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
             }
             $topStuff = '<div class="adaptationListViewTop">
             <div class="tenPixelLeftPadding tenPixelTopPadding">
@@ -203,13 +203,13 @@ class compareadaptations extends object {
                             <div class="leftTopImage">' . $prodthumbnail . '</div>
                             <div class="leftFloatDiv">
                                 <h3>' . $viewParentTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                                <img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallLisitngIcons" />
                                 <div class="leftTextNextToTheListingIconDiv">' . $viewParentProd . '</a></div>
                             </div>
                     	</div>
                         <div class="middleAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-adapted-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-adapted-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="pinkText">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '</span>
                         </div>
@@ -219,7 +219,7 @@ class compareadaptations extends object {
                             <div class="leftTopImage">' . $instthumbnail . '</div>
                             <div class="middleFloatDiv">
                                 <h3 class="darkGreyColour">' . $viewInstTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' .
+                                <img src="skins/oeru/images/icon-product.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" class="smallLisitngIcons" />
                                 <div class="middleTextNextToTheListingIconDiv">' . $viewParentInst . '</div>
                             </div>
@@ -227,7 +227,7 @@ class compareadaptations extends object {
 
                     <div class="productAdaptationViewRightColumnTop">
                         <div class="rightAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-managed-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-managed-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="greenText">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '</span>
                         </div>
@@ -245,7 +245,7 @@ class compareadaptations extends object {
 
         //Link for - compare selected
         if (!empty($selected)) {
-            $compareIcon = '<img src="skins/oer/images/product_theme.png" class="smallIcons" />';
+            $compareIcon = '<img src="skins/oeru/images/product_theme.png" class="smallIcons" />';
             $compareSelectedLink = new link($this->uri(array("action" => "compare_selected", "productid" => $productId, "selected" => $selected)));
             $compareSelectedLink->link = $this->objLanguage->languageText('mod_oer_compareselected', 'oer', "Compare selected");
             $seachElements .= $compareIcon . " " . $compareSelectedLink->show();
@@ -253,7 +253,7 @@ class compareadaptations extends object {
 
         //Link for - clear selection
         if (!empty($selected)) {
-            $clearSelectionIcon = '<img src="skins/oer/images/template_resources/sort-by-grid.png" class="smallIcons" />';
+            $clearSelectionIcon = '<img src="skins/oeru/images/template_resources/sort-by-grid.png" class="smallIcons" />';
             $clearSelectionLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
             $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
             $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
@@ -416,18 +416,18 @@ class compareadaptations extends object {
         //Heading varies depending on whether its an original product or adaptation
         if ($isOriginalProduct) {
             //Get icons
-            $prodIconOne = '<img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconOne = '<img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconTwo = '<img src="skins/oer/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconTwo = '<img src="skins/oeru/images/document-new.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
-            $prodIconThree = '<img src="skins/oer/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+            $prodIconThree = '<img src="skins/oeru/images/sort-by-grid.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallIcons" />';
             //Get count of adaptations
             $adaptationCount = $this->dbProducts->getProductAdaptationCount($productId);
             //Get prod thumbnail
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="59" height="76" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="59" height="76" align="left"/>';
             }
             //Link for - Full view of product
             $fullProdViewLink = new link($this->uri(array("action" => "vieworiginalproduct", "id" => $productId, "identifier" => $productId, "mode" => "grid")));
@@ -457,11 +457,11 @@ class compareadaptations extends object {
             //Get prod & inst thumbnails
             $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '"  width="45" height="49" align="left"/>';
             if ($product['thumbnail'] == '') {
-                $prodthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
+                $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49" align="left"/>';
             }
             $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
             if ($instData['thumbnail'] == '') {
-                $instthumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
+                $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="45" height="49"  align="bottom"/>';
             }
             $topStuff = '<div class="adaptationListViewTop">
             <div class="tenPixelLeftPadding tenPixelTopPadding">
@@ -469,13 +469,13 @@ class compareadaptations extends object {
                             <div class="leftTopImage">' . $prodthumbnail . '</div>
                             <div class="leftFloatDiv">
                                 <h3>' . $viewParentTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
+                                <img src="skins/oeru/images/icon-product.png" alt="' . $this->objLanguage->languageText('mod_oer_bookmark', 'oer') .
                     '" class="smallLisitngIcons" />
                                 <div class="leftTextNextToTheListingIconDiv">' . $viewParentProd . '</a></div>
                             </div>
                     	</div>
                         <div class="middleAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-adapted-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-adapted-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="pinkText">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '</span>
                         </div>
@@ -485,7 +485,7 @@ class compareadaptations extends object {
                             <div class="leftTopImage">' . $instthumbnail . '</div>
                             <div class="middleFloatDiv">
                                 <h3 class="darkGreyColour">' . $viewInstTitle . '</h3>
-                                <img src="skins/oer/images/icon-product.png" alt="' .
+                                <img src="skins/oeru/images/icon-product.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . '" class="smallLisitngIcons" />
                                 <div class="middleTextNextToTheListingIconDiv">' . $viewParentInst . '</div>
                             </div>
@@ -493,7 +493,7 @@ class compareadaptations extends object {
 
                     <div class="productAdaptationViewRightColumnTop">
                         <div class="rightAdaptedByIcon">
-                        	<img src="skins/oer/images/icon-managed-by.png" alt="' .
+                        	<img src="skins/oeru/images/icon-managed-by.png" alt="' .
                     $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '" width="24" height="24"/><br />
                         	<span class="greenText">' . $this->objLanguage->languageText('mod_oer_managedby', 'oer') . '</span>
                         </div>
@@ -511,7 +511,7 @@ class compareadaptations extends object {
 
         //Link for - compare selected
         if (!empty($selected)) {
-            $compareIcon = '<img src="skins/oer/images/product_theme.png" class="smallIcons" />';
+            $compareIcon = '<img src="skins/oeru/images/product_theme.png" class="smallIcons" />';
             $compareSelectedLink = new link($this->uri(array("action" => "compare_selected", "productid" => $productId, "selected" => $selected)));
             $compareSelectedLink->link = $this->objLanguage->languageText('mod_oer_compareselected', 'oer', "Compare selected");
             $seachElements .= $compareIcon . " " . $compareSelectedLink->show();
@@ -519,7 +519,7 @@ class compareadaptations extends object {
 
         //Link for - clear selection
         if (!empty($selected)) {
-            $clearSelectionIcon = '<img src="skins/oer/images/template_resources/sort-by-grid.png" class="smallIcons" />';
+            $clearSelectionIcon = '<img src="skins/oeru/images/template_resources/sort-by-grid.png" class="smallIcons" />';
             $clearSelectionLink = new link($this->uri(array("action" => "compareadaptations", "productid" => $productId)));
             $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
             $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();

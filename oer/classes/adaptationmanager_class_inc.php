@@ -1068,7 +1068,7 @@ class adaptationmanager extends object {
                 '<div id="originalproducts_controlband">';
 
         $controlBand.='<br/>&nbsp;' . $this->objLanguage->languageText('mod_oer_viewas', 'oer') . ': ';
-        $gridthumbnail = '<img src="skins/oer/images/sort-by-grid.png"/>';
+        $gridthumbnail = '<img src="skins/oeru/images/sort-by-grid.png"/>';
         $gridlink = new link($this->uri(array("action" => "adaptationlist", "mode" => "grid")));
         $gridlink->link = $gridthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_grid', 'oer');
         if ($mode == 'grid') {
@@ -1076,7 +1076,7 @@ class adaptationmanager extends object {
         }
         $controlBand.=$gridlink->show();
 
-        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oer/images/sort-by-list.png"/>';
+        $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oeru/images/sort-by-list.png"/>';
         $listlink = new link($this->uri(array("action" => "adaptationlist", "mode" => "list")));
         $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
         if ($mode == 'list') {
@@ -1119,7 +1119,7 @@ class adaptationmanager extends object {
 
             $thumbnail = '<img src="usrfiles/' . $institutionData['thumbnail'] . '"  width="45" height="49"  align="left"/>';
             if ($institutionData['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
+                $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" width="45" height="49"  align="left"/>';
             }
 
             if ($mode == 'list') {
@@ -1134,14 +1134,14 @@ class adaptationmanager extends object {
             $institutionTypeName = $this->dbInstitutionType->getInstitutionTypeName($institutionData['type']);
             $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
             if ($adaptation['thumbnail'] == '') {
-                $thumbnail = '<img src="skins/oer/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
+                $thumbnail = '<img src="skins/oeru/images/documentdefault.png"  width="79" height="101" align="bottom"/>';
             }
             if ($mode == 'list') {
                 $thumbnail = '';
             }
             $makeAdaptation = "";
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+                $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
                 $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
                 $makeAdaptation = $adaptLink->show();
@@ -1149,9 +1149,9 @@ class adaptationmanager extends object {
             //Manage links
             $mnglinks = "";
             if ($objGroupOps->isGroupMember($groupId, $userId)) {
-                $editImg = '<img src="skins/oer/images/icons/edit.png">';
-                $deleteImg = '<img src="skins/oer/images/icons/delete.png">';
-                $adaptImg = '<img src="skins/oer/images/icons/add.png">';
+                $editImg = '<img src="skins/oeru/images/icons/edit.png">';
+                $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
+                $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
 
                 $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "new")));
                 $adaptLink->link = $adaptImg;
@@ -1218,7 +1218,7 @@ class adaptationmanager extends object {
         $adaptation = $this->dbproducts->getProduct($id);
         $thumbnail = '<img src="usrfiles/' . $adaptation['thumbnail'] . '"  width="79" height="101" align="bottom"/>';
         if ($adaptation['thumbnail'] == '') {
-            $thumbnail = '<img src="skins/oer/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
+            $thumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg"  width="79" height="101" align="bottom"/>';
         }
 
         $viewProductLink = new link($this->uri(array("action" => "viewadaptation", "id" => $id)));
