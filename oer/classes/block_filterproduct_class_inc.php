@@ -13,9 +13,11 @@ class block_filterproduct extends object {
     }
 
     function show() {
-        $action = $this->configData;
+        $data = explode("__", $this->configData);
+        $action=$data[0];
+        $filterOptions=$data[1];
         $filtermanager = $this->getObject("filtermanager", "oer");
-        return $filtermanager->buildFilterProductsForm($action, 'mod_oer_typeofproduct');
+        return $filtermanager->buildFilterProductsForm($action, 'mod_oer_typeofproduct',$filterOptions);
     }
 
 }

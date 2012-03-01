@@ -2,6 +2,26 @@
 
 /*
  * Entry point of oer module
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+ * @author     JCSE
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
  */
 
 class oer extends controller {
@@ -38,13 +58,69 @@ class oer extends controller {
             "viewsection", "checkusernameajax", "userdetailssave", "viewinstitution",
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
-            "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist", 
-            "login", "compareadaptations","viewadaptationbymap",
+            "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist",
+            "login", "compareadaptations", "viewadaptationbymap",
             "search_compare_adaptations", "compare_selected");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
             return TRUE;
+        }
+    }
+
+    /**
+     * formats an action so that it is correctly displayed in a more friendly
+     * way in a breadcrumb
+     * @param type $action 
+     */
+    function getFormattedAction($action) {
+        $formattedActions = array(
+            "viewgroups" => $this->objLanguage->languageText("mod_oer_groups", "oer"),
+            "home" => $this->objLanguage->languageText("mod_oer_products", "oer"),
+        );
+
+        /**
+         * invalid actions default to home
+         */
+        if ($this->validAction($action)) {
+
+            foreach ($formattedActions as $key => $val) {
+                if ($key == $action) {
+                    return $val;
+                } else {
+                    return $action;
+                }
+            }
+        } else {
+            return $this->objLanguage->languageText("mod_oer_products", "oer");
+        }
+    }
+
+    /**
+     * this returns a formatted final word in the breadcrumb chain
+     * @param type $action
+     * @return type 
+     */
+    function getBreadcrumbEnd($action) {
+        $formattedActions = array(
+            "viewgroups" => $this->objLanguage->languageText("mod_oer_grouplist", "oer"),
+            "home" => $this->objLanguage->languageText("mod_oer_productlist", "oer"),
+        );
+
+        /**
+         * invalid actions default to home
+         */
+        if ($this->validAction($action)) {
+
+            foreach ($formattedActions as $key => $val) {
+                if ($key == $action) {
+                    return $val;
+                } else {
+                    return $action;
+                }
+            }
+        } else {
+            return $this->objLanguage->languageText("mod_oer_products", "oer");
         }
     }
 
@@ -56,6 +132,16 @@ class oer extends controller {
      * @return string Filename of template to be displayed
      */
     public function dispatch($action) {
+
+        /**
+         * generate a more friendly breadcrumb
+         */
+        //$link = new link($this->uri(array("action" => $action)));
+        //$link->link = $this->getFormattedAction($action);
+        //$this->setSession("breadcrumbs", $link->show() . ' &raquo; '.$this->getBreadcrumbEnd($action), "oer");
+
+
+
         /*
          * Convert the action into a method (alternative to
          * using case selections)
@@ -123,6 +209,8 @@ class oer extends controller {
     private function __home() {
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteroriginalproduct");
+        $this->setVar("filteroptions", "none");
+        $this->setVar("filter", " limit 15");
         return "productlisting_tpl.php";
     }
 
@@ -139,10 +227,6 @@ class oer extends controller {
      * @return strings
      */
     private function __viewgroups() {
-        $link = new link($this->uri(array("action" => "viewgroups")));
-        $link->link = $this->objLanguage->languageText("mod_oer_groups", "oer");
-        $this->setSession("breadcrumbs", $link->show(), "oer");
-
         return "grouplist_tpl.php";
     }
 
@@ -186,6 +270,9 @@ class oer extends controller {
         $productId = $this->getParam('productid', Null);
         $this->setVar("productid", $productId);
         $this->setVar("filteraction", "filteradaptation");
+        $this->setVar("filteroptions", "none");
+        $this->setVar("filter", " limit 15");
+
         return "adaptationlist_tpl.php";
     }
 
@@ -261,9 +348,11 @@ class oer extends controller {
     function __filteroriginalproduct() {
         $filterManager = $this->getObject("filtermanager", "oer");
         $filter = $filterManager->generateFilter();
+        $filterOptions = $filterManager->getSelectedFilterOptions();
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteroriginalproduct");
         $this->setVar("filter", $filter);
+        $this->setVar("filteroptions", $filterOptions);
         return "productlisting_tpl.php";
     }
 
@@ -275,9 +364,11 @@ class oer extends controller {
     function __filteradaptation() {
         $filterManager = $this->getObject("filtermanager", "oer");
         $filter = $filterManager->generateFilter();
+        $filterOptions = $filterManager->getSelectedFilterOptions();
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteradaptation");
         $this->setVar("filter", $filter);
+        $this->setVar("filteroptions", $filterOptions);
         return "adaptationlist_tpl.php";
     }
 
@@ -535,7 +626,7 @@ class oer extends controller {
         $this->setVarByRef("errors", $errors);
         $this->setVarByRef("id", $id);
         $this->setVar("step", "4");
-        return "uploadadaptation_tpl.php";
+        return "adaptationstep4_tpl.php";
     }
 
     /**
@@ -586,7 +677,16 @@ class oer extends controller {
         $this->setVarByRef("errors", $errors);
         $this->setVarByRef("mode", $mode);
         $this->setVarByRef("id", $id);
-        return "uploadadaptation_tpl.php";
+        return "adaptationstep4_tpl.php";
+    }
+
+    /**
+     * updates step 4 details of an adaptation
+     * @return type 
+     */
+    function __saveadaptationstep4() {
+                $id =$this->objMakeAdaptation->updateAdaptationStep4();
+        return $this->nextAction("viewadaptation", array("id" => $id));
     }
 
     /**
@@ -787,6 +887,7 @@ class oer extends controller {
         $this->setVarByRef("data", $data);
         return "compareadaptations_tpl.php";
     }
+
     function __search_compare_adaptations() {
         $selectedid = $this->getParam("search_text", "");
         $productid = $this->getParam("productid");
@@ -794,6 +895,7 @@ class oer extends controller {
         $this->setVarByRef("data", $data);
         return "compareadaptations_tpl.php";
     }
+
     function __compare_selected() {
         $selectedid = $this->getParam("selected", "");
         $productid = $this->getParam("productid");
@@ -1117,7 +1219,7 @@ class oer extends controller {
         $institutionManager = $this->getObject("institutionmanager", "oer");
         if ($id == null) {
             $id = $institutionManager->addInstitution(
-                            'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
+                    'Unknown', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '');
         }
         $this->setVarByRef("id", $id);
         return 'institutionedit_tpl.php';

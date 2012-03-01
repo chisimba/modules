@@ -295,7 +295,29 @@ class makeadaptation extends object {
         $this->dbProducts->updateOriginalProduct($data, $id);
         return $id;
     }
+  /**
+     * Updates the product's step 4 details
+     * @return type 
+     */
+    function updateAdaptationStep4() {
+        $id = $this->getParam("id");
+        $selectedThemes = $this->getParam("selectedThemes");
+        $themesStr = '';
+        foreach ($selectedThemes as $theme) {
+            $themesStr.=$theme . ',';
+        }
 
+        $data = array(
+            "themes" => $themesStr,
+        );
+
+        $this->dbProducts->updateOriginalProduct($data, $id);
+
+
+        return $id;
+    }
 }
+
+
 
 ?>

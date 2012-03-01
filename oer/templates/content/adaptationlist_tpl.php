@@ -16,7 +16,7 @@ $objFix->fixThree();
         "block" : "filterproduct",
         <?php
         echo '"configData":';
-        echo '"' . $filteraction . '"';
+        echo '"' . $filteraction .'__'.$filteroptions. '"';
         ?>
         }
 

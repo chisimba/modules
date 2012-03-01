@@ -950,7 +950,7 @@ class adaptationmanager extends object {
 
         $objForm = $this->newObject('form', 'htmlelements');
         $objForm->name = "form1";
-        $objForm->action = $this->uri(array('action' => 'saveoriginalproductstep4', "id" => $id));
+        $objForm->action = $this->uri(array('action' => 'saveadaptationstep4', "id" => $id));
 
         // Create the selectbox object
         $objSelectBox = $this->newObject('selectbox', 'htmlelements');

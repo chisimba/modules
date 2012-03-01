@@ -4,7 +4,7 @@ $pageContent = $this->getVar('pageContent');
 $pageContent = $objBlocks->parse($pageContent);
 
 $objLanguage = $this->getObject('language', 'language');
-
+/*
 if (isset($errors)) {
     $errorTitle = "";
     if (isset($fieldsrequired)) {
@@ -18,6 +18,6 @@ if (isset($errors)) {
     }
     echo '</ul>';
     echo '</div>';
-}
+}*/
 echo $pageContent;
 ?>
