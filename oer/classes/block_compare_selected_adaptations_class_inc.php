@@ -15,9 +15,11 @@ class block_compare_selected_adaptations extends object {
         $data = explode("|", $this->configData);
         $productId = $data[0];
         $selectedId = $data[1];
+        $selAdaptId = $data[2];
+        $selSecId = $data[3];
         $compareAdaptations = $this->getObject("compareadaptations", "oer");
         $mode = "compare";
-        return $compareAdaptations->buildCompareSelectedView($productId, "", $mode, $selectedId);
+        return $compareAdaptations->buildCompareSelectedView($productId, "", $mode, $selectedId, $selSecId, $selAdaptId);
     }
 }
 ?>

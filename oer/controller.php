@@ -897,9 +897,12 @@ class oer extends controller {
     }
 
     function __compare_selected() {
-        $selectedid = $this->getParam("selected", "");
-        $productid = $this->getParam("productid");
-        $data = $productid . '|' . $selectedid;
+        $selectedId = $this->getParam("selected", "");
+        $productId = $this->getParam("productid");
+        $productId = $this->getParam("productid");
+        $adaptationId = $this->getParam("seladaptid", "");
+        $selectedSecId = $this->getParam("selsecid", "");
+        $data = $productId . '|' . $selectedId . '|' . $adaptationId . '|' . $selectedSecId;        
         $this->setVarByRef("data", $data);
         return "compare_selected_adaptations_tpl.php";
     }

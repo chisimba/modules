@@ -566,9 +566,10 @@ class sectionmanager extends object {
      * Build detailed section view
      * @param String $productId
      * @param String $sectionId
+     * @param Boolean $showtopview
      * @return string
      */
-    function buildSectionView($productId, $sectionId) {
+    function buildSectionView($productId, $sectionId, $showTopView=true) {
         //Get DB Objects
         $dbSections = $this->getObject("dbsectioncontent", "oer");
         $dbSectionNode = $this->getObject("dbsectionnodes", "oer");
@@ -786,12 +787,15 @@ class sectionmanager extends object {
                     	</div>
                     </div></div>';
         }
-
+        if($showTopView){
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
         '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
+        } else {
+            return $table->show();
+        }
     }
 
     /**

@@ -117,32 +117,32 @@ class compareadaptations extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        $table = $this->getObject("htmltable", "htmlelements");
-        $table->attributes = "style='table-layout:fixed;'";
-        $table->border = 0;
-        $table->cellpadding = 5;
-        $table->cellspacing = 5;
+        $contentTable = $this->getObject("htmltable", "htmlelements");
+        $contentTable->attributes = "style='table-layout:fixed;'";
+        $contentTable->border = 0;
+        $contentTable->cellpadding = 5;
+        $contentTable->cellspacing = 5;
 
         //Fetch section for the original product/adaptation tree
         $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", 'compare', $selected, "", "", $productId);
 
         $rightContent = "";
         $rightContent = '<div class="compareProductNav"><div class="frame">' . $navigator . '</div></div>';
-        $table->startRow();
+        $contentTable->startRow();
         if (count($productAdaptations) < 2) {
-            $table->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
+            $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
         } else {
-            $table->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
+            $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
         }
         //Show navigation for each of the product's adaptations
         if (count($productAdaptations) > 0) {
             foreach ($productAdaptations as $prodAdaptation) {
                 $adaptNav = $this->sectionManager->buildSectionsTree($prodAdaptation["id"], '', "false", 'compare', $selected, "", "", $productId);
                 $adaptContent = '<div class="compareAdaptationsNav"><div class="frame">' . $adaptNav . '</div></div>';
-                $table->addCell($adaptContent, "", "top", "left", '', 'style="width:190px"');
+                $contentTable->addCell($adaptContent, "", "top", "left", '', 'style="width:190px"');
             }
         }
-        $table->endRow();
+        $contentTable->endRow();
 
         $topStuff = "";
 
@@ -276,7 +276,7 @@ class compareadaptations extends object {
 
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/><div class="searchCompare">' . $searchForm . '</div>
-            <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
+            <div class="mainContentHolder"><div class="frame">' . $contentTable->show() . '</div></div>';
     }
 
     /**
@@ -285,7 +285,7 @@ class compareadaptations extends object {
      * @param String $sectionId
      * @return string
      */
-    function buildCompareSelectedView($productId, $sectionId, $mode, $selected) {
+    function buildCompareSelectedView($productId, $sectionId, $mode, $selected, $selSecId="", $selAdaptId="") {
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
@@ -312,9 +312,9 @@ class compareadaptations extends object {
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
 
-        $table = $this->getObject("htmltable", "htmlelements");
+        /*$table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
-        $table->border = 0;
+        $table->border = 0;*/
 
         $newAdapt = "";
         if ($hasPerms) {
@@ -373,42 +373,45 @@ class compareadaptations extends object {
         $crumbs = array($homeLink->show());
         $objTools->addToBreadCrumbs($crumbs);
 
-        $table = $this->getObject("htmltable", "htmlelements");
-        $table->attributes = "style='table-layout:fixed;'";
-        $table->border = 0;
-        $table->cellpadding = 5;
-        $table->cellspacing = 5;
+        $contentTable = '<table border="0" style="table-layout:fixed;" >';
+        
 
         //Fetch section for the original product/adaptation tree
         $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", 'compare', $selected, "", "", $productId);
 
         $rightContent = "";
         $rightContent = '<div class="compareProductNav"><div class="frame">' . $navigator . '</div></div>';
-        $table->startRow();
-        /*if (count($productAdaptations) < 2) {
-            $table->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
-        } else {
-            $table->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
-        }*/
-        $table->addCell('<div class="compareProductNav">'.$product['title'].'</div>', "", "top", "left", '', 'style="width:190px"');
+        $contentTable .= "<tr>";
+        /* if (count($productAdaptations) < 2) {
+          $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
+          } else {
+          $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
+          } */
+        $contentTable .= '<td style="width:190px" align="left" valign="top"><div class="compareSelectedProductNav">' . $product['title'] . '</div></td>';
+        $selectedSecContent = "";
         //Show navigation for each of the product's adaptations
         if (count($productAdaptations) > 0) {
 
             foreach ($productAdaptations as $prodAdaptation) {
                 //get the selected sections
                 $selectedNodes = $this->sectionManager->getSelectedNodes($prodAdaptation["id"], $selected);
-                
+
                 //$adaptContent = '<div class="compareAdaptationsNav"><div class="frame"></div></div>';
-                if(count($selectedNodes) > 0) {
-                    foreach($selectedNodes as $selectedNode) {
-                    $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);                    
-                    //var_dump($nData['title']);
-                    $table->addCell('<div class="compareAdaptationsNav">'.$nodeData['title'].'</div>', "", "top", "left", '', '');
+                if (count($selectedNodes) > 0) {
+                    foreach ($selectedNodes as $selectedNode) {
+                        $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);
+                        //var_dump($nData['title']);
+                        $contentTable .= '<td align="left" valign="top"><div class="compareSelectedAdaptationNav">' . $nodeData['title'] .
+                                " secId: " . $nodeData['id'] . " adptId: " . $prodAdaptation["id"] . '</div></td>';
+                        if (empty($selSecId) && empty($selAdaptId)) {
+                            $selSecId = $nodeData['id'];
+                            $selAdaptId = $prodAdaptation["id"];                            
+                        }
                     }
                 }
             }
         }
-        $table->endRow();
+        $contentTable .= "</tr></table>";
 
         $topStuff = "";
 
@@ -524,10 +527,14 @@ class compareadaptations extends object {
             $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
             $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
         }
-
+        echo "selSecId: ".$selSecId." selAdaptId: ".$selAdaptId;
+                            $selectedSecContent = $this->sectionManager->buildSectionView($selAdaptId, $selSecId, false);
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/>
-            <div class="mainContentHolder"><div class="frame">' . $table->show() . '</div></div>';
+            <div class="mainContentHolder"><div class="frame">' . $contentTable.
+                '</div></div><br/><br/>
+                <div class="mainContentHolder">' .
+                $selectedSecContent . '</div>';
     }
 
 }
