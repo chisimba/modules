@@ -59,8 +59,8 @@ class oer extends controller {
             "showcaptcha", "verifycaptcha", "viewrootsection", "printpdf",
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist",
-            "login", "compareadaptations", "viewadaptationbymap",
-            "search_compare_adaptations", "compare_selected");
+            "login", "compareadaptations", "viewadaptationbymap", "originalproductlistajax",
+            "search_compare_adaptations", "compare_selected","adaptationlistajax");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -210,7 +210,7 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteroriginalproduct");
         $this->setVar("filteroptions", "none");
-        $this->setVar("filter", " limit 15");
+        //$this->setVar("filter", " limit 15");
         return "productlisting_tpl.php";
     }
 
@@ -244,6 +244,8 @@ class oer extends controller {
 
     private function __showproductlistingaslist() {
         $this->setVar("mode", "list");
+        $this->setVar("filteraction", "filteroriginalproduct");
+        $this->setVar("filteroptions", "none");
         return "productlisting_tpl.php";
     }
 
@@ -271,7 +273,7 @@ class oer extends controller {
         $this->setVar("productid", $productId);
         $this->setVar("filteraction", "filteradaptation");
         $this->setVar("filteroptions", "none");
-        $this->setVar("filter", " limit 15");
+        // $this->setVar("filter", " limit 15");
 
         return "adaptationlist_tpl.php";
     }
@@ -336,9 +338,30 @@ class oer extends controller {
     /////////////////////////////////////////////////////////////////
     /*
 
-      ORIGINAL PRODUCT FUNCTIONS
+      PRODUCT FUNCTIONS
      */
     ///////////////////////////////////////////////////////////////
+
+    /**
+     * gets paginated list of original products
+     */
+    function __originalproductlistajax() {
+        $productManager = $this->getObject("productmanager", "oer");
+        $mode = $this->getParam("mode");
+
+        $filter = $this->getParam("filter");
+        echo $productManager->getOriginalProductListing($mode, $filter);
+    }
+
+    /**
+     *  gets paginated list of original products
+     */
+    function __adaptationlistajax() {
+        $adaptationManager = $this->getObject("adaptationmanager", "oer");
+        $mode = $this->getParam("mode");
+        $filter = $this->getParam("filter");
+        echo $adaptationManager->getAdaptationsListing($mode, $filter);
+    }
 
     /**
      * returns filtered original product listing depending on the filter
@@ -685,7 +708,7 @@ class oer extends controller {
      * @return type 
      */
     function __saveadaptationstep4() {
-                $id =$this->objMakeAdaptation->updateAdaptationStep4();
+        $id = $this->objMakeAdaptation->updateAdaptationStep4();
         return $this->nextAction("viewadaptation", array("id" => $id));
     }
 
@@ -902,7 +925,7 @@ class oer extends controller {
         $productId = $this->getParam("productid");
         $adaptationId = $this->getParam("seladaptid", "");
         $selectedSecId = $this->getParam("selsecid", "");
-        $data = $productId . '|' . $selectedId . '|' . $adaptationId . '|' . $selectedSecId;        
+        $data = $productId . '|' . $selectedId . '|' . $adaptationId . '|' . $selectedSecId;
         $this->setVarByRef("data", $data);
         return "compare_selected_adaptations_tpl.php";
     }

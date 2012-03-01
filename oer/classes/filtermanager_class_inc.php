@@ -181,12 +181,7 @@ class filtermanager extends object {
 
         $languageCode = $this->getObject("languagecode", "language");
         $allCountries = $languageCode->countryListArr();
-        /* foreach ($allCountries as $country) {
-          if ($country != null) {
-          $countries->addOption($country['country'], $country['country']);
-          }
-          } */
-
+ 
         foreach ($allCountries as $code => $country) {
             $countries->addOption($code, $country);
         }
@@ -200,8 +195,8 @@ class filtermanager extends object {
         $countriesField.=$countries->show() . '<br/><br/>';
 
         $itemsPerPage = new dropdown('itemsperpage');
-        $itemsPerPage->addOption('15', '15');
-        $itemsPerPage->addOption('30', '30');
+        $itemsPerPage->addOption('2', '15');
+        $itemsPerPage->addOption('3', '30');
         $itemsPerPage->addOption('60', '60');
         $itemsPerPage->addOption('120', '120');
 
@@ -261,7 +256,7 @@ class filtermanager extends object {
         if ($institution != 'all') {
             $sql.=" and institutionid like '%" . $institution . "%'";
         }
-        $sql.=" limit " . $itemsPerPage;
+      
 
         return $sql;
     }

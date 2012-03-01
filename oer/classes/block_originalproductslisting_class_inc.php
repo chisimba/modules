@@ -19,11 +19,13 @@ class block_originalproductslisting extends object {
         $modeParts = explode("__", $modeRaw);
         $mode = $modeParts[0];
         $filter = "";
-        if (count($modeParts) == 2) {
+        $filterOptions="";
+        if (count($modeParts) == 3) {
             $filter = $modeParts[1];
+            $filterOptions=$modeParts[2];
         }
         $objProductManager = $this->getObject("productmanager", "oer");
-        return $objProductManager->getOriginalProductListing($mode, $filter);
+        return $objProductManager->getOriginalProductListingPaginated($mode,$filterOptions, $filter);
     }
 
 }

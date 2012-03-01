@@ -359,11 +359,11 @@ class productmanager extends object {
         if ($product != null) {
             $language->setSelected($product['language']);
         }
-        
+
         $objTable->addCell($language->show());
         $objTable->endRow();
 
-        
+
 
         //keywords
         $objTable->startRow();
@@ -865,7 +865,19 @@ class productmanager extends object {
      * @return type 
      */
     public function getOriginalProductListing($mode, $filter='') {
-        $originalProducts = $this->dbproducts->getOriginalProducts($filter);
+        $pageSize = $this->getParam("pagesize", "15");
+        // Set up the page navigation.
+        $page = $this->getParam('page', 1);
+
+        $count = $this->dbproducts->getOriginalProductCount($filter);
+        $pages = ceil($count / $pageSize);
+        // Set up the sql elements.
+        $start = (($page) * $pageSize);
+        if ($start < 0) {
+            $start = 0;
+        }
+
+        $originalProducts = $this->dbproducts->getOriginalProducts($start, $pageSize, $filter);
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
         $controlBand =
@@ -985,6 +997,37 @@ class productmanager extends object {
             $table->endRow();
         }
         return $controlBand . $table->show();
+    }
+
+    /**
+     * this returns a paginated list of the products
+     * @param type $mode
+     * @param type $filter
+     * @return type 
+     */
+    function getOriginalProductListingPaginated($mode, $filterOptions, $filter='') {
+        $pages = 0;
+
+        $options = explode("!", $filterOptions);
+        $pageSize = 15;
+        foreach ($options as $option) {
+            $optionArray = explode("=", $option);
+            if ($optionArray[0] == 'itemsperpage') {
+                $pageSize = $optionArray[1];
+            }
+        }
+
+        $objPagination = $this->newObject('pagination', 'navigation');
+        $objPagination->module = 'oer';
+        $objPagination->action = 'originalproductlistajax';
+        $objPagination->extra = array("mode" => $mode, "filter" => $filter,"pagesize"=>$pageSize);
+        $objPagination->id = 'productlist_div';
+        $objDb = $this->getObject('dbproducts', 'oer');
+        $objPagination->currentPage = 0;
+        $count = $objDb->getOriginalProductCount($filter);
+        $pages = ceil($count / $pageSize);
+        $objPagination->numPageLinks = $pages;
+        return $objPagination->show();
     }
 
     /**

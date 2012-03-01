@@ -2,6 +2,26 @@
 
 /**
  * This is a DB layer that manages original products
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+ * @author     JCSE
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
  *
  * @author davidwaf
  */
@@ -16,17 +36,35 @@ class dbproducts extends dbtable {
     /**
      * this selects original products
      */
-    function getOriginalProducts($filter='') {
-        $sql = "select * from $this->productsTableName where parent_id is null $filter";
-        //echo $sql;
+    function getOriginalProducts($start,$pageSize,$filter='') {
+        $sql = "select * from $this->productsTableName where parent_id is null $filter limit $start, $pageSize";
         return $this->getArray($sql);
     }
 
     /**
+     * get a total count of original products
+     * @return type 
+     */
+    function getOriginalProductCount($filter){
+           $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null $filter";
+           $data=$this->getArray($sql);
+           return $data[0]['productcount'];
+    }
+    
+        /**
+     * get a total count of original products
+     * @return type 
+     */
+    function getAdaptationCount($filter){
+           $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null $filter";
+           $data=$this->getArray($sql);
+           return $data[0]['productcount'];
+    }
+    /**
      * this selects original products
      */
-    function getAdaptedProducts($filter) {
-        $sql = "select * from $this->productsTableName where parent_id is not null $filter";
+    function getAdaptedProducts($start,$pageSize, $filter) {
+        $sql = "select * from $this->productsTableName where parent_id is not null $filter limit $start, $pageSize";
         return $this->getArray($sql);
     }
 
@@ -212,8 +250,8 @@ class dbproducts extends dbtable {
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
-    function getProductAdaptations($parentId, $filter) {
-        $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter";
+    function getProductAdaptations($start,$pageSize,$parentId, $filter) {
+        $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter limit $start,$pageSize";
         $data = $this->getArray($sql);
         return $data;
     }

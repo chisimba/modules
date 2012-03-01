@@ -2,6 +2,26 @@
 
 /**
  * Contains util methods for managing adaptations
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+ * @author     JCSE
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
  *
  * @author pwando
  */
@@ -450,7 +470,7 @@ class adaptationmanager extends object {
 
         //Set selected group
         if ($product != null) {
-        
+
             $group->setSelected($product['groupid']);
         }
         $objTable->addCell($group->show());
@@ -1053,15 +1073,25 @@ class adaptationmanager extends object {
      * creates a table and returns the list of current adaptations
      * @return type
      */
-    public function getAdaptationsListingAsGrid($filter) {
+    public function getAdaptationsListing($mode, $filter) {
+        $pageSize = $this->getParam("pagesize", "15");
+        // Set up the page navigation.
+        $page = $this->getParam('page', 1);
 
-        $mode = $this->getParam("mode", "grid");
+        $count = $this->dbproducts->getOriginalProductCount($filter);
+        $pages = ceil($count / $pageSize);
+        // Set up the sql elements.
+        $start = (($page) * $pageSize);
+        if ($start < 0) {
+            $start = 0;
+        }
+
         $productId = $this->getParam('productid', Null);
         //Get adapted products, if productId not null, fetch for that product only
         if ($productId != Null) {
-            $productAdaptations = $this->dbproducts->getProductAdaptations($productId, $filter);
+            $productAdaptations = $this->dbproducts->getProductAdaptations($start, $pageSize, $productId, $filter);
         } else {
-            $productAdaptations = $this->dbproducts->getAdaptedProducts($filter);
+            $productAdaptations = $this->dbproducts->getAdaptedProducts($start, $pageSize, $filter);
         }
 
         $controlBand =
@@ -1078,10 +1108,12 @@ class adaptationmanager extends object {
 
         $listthumbnail = '&nbsp;|&nbsp;<img src="skins/oeru/images/sort-by-list.png"/>';
         $listlink = new link($this->uri(array("action" => "adaptationlist", "mode" => "list")));
-        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
         if ($mode == 'list') {
+            $listthumbnail = "";
             $listlink->cssClass = 'highlight_list';
         }
+        $listlink->link = $listthumbnail . '&nbsp;' . $this->objLanguage->languageText('mod_oer_list', 'oer');
+
         $controlBand.='&nbsp;' . $listlink->show();
 
         $sortbydropdown = new dropdown('sortby');
@@ -1201,6 +1233,37 @@ class adaptationmanager extends object {
             $count++;
         }
         return $controlBand . $table->show();
+    }
+
+    /**
+     * this returns a paginated list of the products
+     * @param type $mode
+     * @param type $filter
+     * @return type 
+     */
+    function getAdaptationListingPaginated($mode, $filterOptions, $filter='') {
+        $pages = 0;
+
+        $options = explode("!", $filterOptions);
+        $pageSize = 15;
+        foreach ($options as $option) {
+            $optionArray = explode("=", $option);
+            if ($optionArray[0] == 'itemsperpage') {
+                $pageSize = $optionArray[1];
+            }
+        }
+
+        $objPagination = $this->newObject('pagination', 'navigation');
+        $objPagination->module = 'oer';
+        $objPagination->action = 'adaptationlistajax';
+        $objPagination->extra = array("mode" => $mode, "filter" => $filter, "pagesize" => $pageSize);
+        $objPagination->id = 'productlist_div';
+        $objDb = $this->getObject('dbproducts', 'oer');
+        $objPagination->currentPage = 0;
+        $count = $objDb->getAdaptationCount($filter);
+        $pages = ceil($count / $pageSize);
+        $objPagination->numPageLinks = $pages;
+        return $objPagination->show();
     }
 
     /**

@@ -47,7 +47,11 @@ $objFix->fixThree();
         
         if (isset($filter)) {
         echo ',"configData":';
-        echo '"' . $filter . '"';
+         if (isset($filter)) {
+            echo '"' . $mode . '__' . $filter .'__'.$filteroptions. '"';
+        } else {
+            echo '"' . $mode . '"';
+        }
         }
         ?>
         }
