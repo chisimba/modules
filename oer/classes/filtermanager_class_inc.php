@@ -195,8 +195,8 @@ class filtermanager extends object {
         $countriesField.=$countries->show() . '<br/><br/>';
 
         $itemsPerPage = new dropdown('itemsperpage');
-        $itemsPerPage->addOption('2', '15');
-        $itemsPerPage->addOption('3', '30');
+        $itemsPerPage->addOption('15', '15');
+        $itemsPerPage->addOption('30', '30');
         $itemsPerPage->addOption('60', '60');
         $itemsPerPage->addOption('120', '120');
 
