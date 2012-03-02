@@ -285,7 +285,7 @@ class compareadaptations extends object {
      * @param String $sectionId
      * @return string
      */
-    function buildCompareSelectedView($productId, $sectionId, $mode, $selected, $selSecId="", $selAdaptId="") {
+    function buildCompareSelectedView($productId, $sectionId, $mode, $selected, $selSecId="", $selAdaptId="") {        
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
@@ -312,9 +312,9 @@ class compareadaptations extends object {
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
 
-        /*$table = $this->getObject("htmltable", "htmlelements");
-        $table->attributes = "style='table-layout:fixed;'";
-        $table->border = 0;*/
+        /* $table = $this->getObject("htmltable", "htmlelements");
+          $table->attributes = "style='table-layout:fixed;'";
+          $table->border = 0; */
 
         $newAdapt = "";
         if ($hasPerms) {
@@ -374,7 +374,7 @@ class compareadaptations extends object {
         $objTools->addToBreadCrumbs($crumbs);
 
         $contentTable = '<table border="0" style="table-layout:fixed;" >';
-        
+
 
         //Fetch section for the original product/adaptation tree
         $navigator = $this->sectionManager->buildSectionsTree($productId, '', "false", 'compare', $selected, "", "", $productId);
@@ -387,7 +387,7 @@ class compareadaptations extends object {
           } else {
           $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
           } */
-        $contentTable .= '<td style="width:190px" align="left" valign="top"><div class="compareSelectedProductNav">' . $product['title'] . '</div></td>';
+        //$contentTable .= '<td style="width:190px" align="left" valign="top"><div class="compareSelectedProductNav">' . $product['title'] . '</div></td>';
         $selectedSecContent = "";
         //Show navigation for each of the product's adaptations
         if (count($productAdaptations) > 0) {
@@ -400,16 +400,44 @@ class compareadaptations extends object {
                 if (count($selectedNodes) > 0) {
                     foreach ($selectedNodes as $selectedNode) {
                         $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);
-                        //var_dump($nData['title']);
-                        $contentTable .= '<td align="left" valign="top"><div class="compareSelectedAdaptationNav">' . $nodeData['title'] .
-                                " secId: " . $nodeData['id'] . " adptId: " . $prodAdaptation["id"] . '</div></td>';
+                        //Link for - adaptation section
+                        $compareLink = new link($this->uri(
+                                                array("action" => "compare_selected",
+                                                    "productid" => $productId,
+                                                    "selected" => $selected,
+                                                    "selsecid" => $nodeData['id'],
+                                                    "seladaptid" => $prodAdaptation['id'])));
+                        $compareLink->link = $nodeData['title'];
+                        $compareLk = $compareLink->show();
+
+                        $newCtAdapt = "";
+                        if ($hasPerms) {
+                            //Link for - adapting product from existing adapatation
+                            $newCtAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $prodAdaptation['id'], 'mode="new"')));
+                            //Check if original product or an adaptation
+                            $isOriginalProduct = $this->dbProducts->isOriginalProduct($prodAdaptation['id']);
+                            if ($isOriginalProduct) {
+                                $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewadaptation', 'oer');
+                            } else {
+                            $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+                            }
+                            $newCtAdapt = $newCtAdaptLink->show();
+                        }
+
+                        $contentTable .= '<td align="left" valign="top"><div class="compareSelectedAdaptationNav">' .
+                                $compareLk . "<br/><br/>" . $newCtAdapt . '</div></td>';
                         if (empty($selSecId) && empty($selAdaptId)) {
                             $selSecId = $nodeData['id'];
-                            $selAdaptId = $prodAdaptation["id"];                            
+                            $selAdaptId = $prodAdaptation["id"];
                         }
-                    }
+                        $nodeData = "";
+                        $compareLk = "";
+                        $newCtAdapt = "";
+                    }                    
                 }
             }
+            //get node data
+            $selectedSecContent = $this->sectionManager->buildSectionView($selAdaptId, $selSecId, false);
         }
         $contentTable .= "</tr></table>";
 
@@ -527,14 +555,13 @@ class compareadaptations extends object {
             $clearSelectionLink->link = $this->objLanguage->languageText('mod_oer_clearselection', 'oer', "Clear selection");
             $seachElements .= "&nbsp;&nbsp;" . $clearSelectionIcon . " " . $clearSelectionLink->show();
         }
-        echo "selSecId: ".$selSecId." selAdaptId: ".$selAdaptId;
-                            $selectedSecContent = $this->sectionManager->buildSectionView($selAdaptId, $selSecId, false);
+
         return '<div class="navPath">' . $navpath .
         '</div><div class="topContentHolder">' . $topStuff . '</div><br/>
-            <div class="mainContentHolder"><div class="frame">' . $contentTable.
-                '</div></div><br/><br/>
+            <div class="contentTableHolder"><div class="frame">' . $contentTable .
+        '</div></div><br/><br/>
                 <div class="mainContentHolder">' .
-                $selectedSecContent . '</div>';
+        $selectedSecContent . '</div>';
     }
 
 }

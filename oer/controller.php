@@ -922,7 +922,6 @@ class oer extends controller {
     function __compare_selected() {
         $selectedId = $this->getParam("selected", "");
         $productId = $this->getParam("productid");
-        $productId = $this->getParam("productid");
         $adaptationId = $this->getParam("seladaptid", "");
         $selectedSecId = $this->getParam("selsecid", "");
         $data = $productId . '|' . $selectedId . '|' . $adaptationId . '|' . $selectedSecId;
