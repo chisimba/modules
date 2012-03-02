@@ -137,7 +137,7 @@ class pbrender extends dbTable
                         $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
                     $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
-                    $ret .= "<br />" . $blockcontent . "<br />";
+                    $ret .= "<div class='personalblock'>" . $blockcontent . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("left");
@@ -174,8 +174,9 @@ class pbrender extends dbTable
                     if ($showName) {
                     	$blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
-                    $blockcontent = $blockname .$this->objWashout->parseText($line['blockcontent']);
-                    $ret .= "<br />" . $blockcontent . "<br />";
+                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
+                    //$blockcontent = htmlentities($line['blockcontent']);
+                    $ret .= "<div class='personalblock'>" . $blockcontent . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("right");
@@ -242,32 +243,35 @@ class pbrender extends dbTable
         $objTable->cellspacing="0";
         $objTable->cellpadding="2";
         $objTable->border=0;
-        $objTable->width="98%";
-        //Create the array for the table header
-        $tableHd=array();
-        $tableHd[]= $this->getBlkInfIconGrey();
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_title','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_location','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_active','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_blocktype','personalblocks');
-        $contextTranslated = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_context',
-          'personalblocks', NULL, '[-context-] code'));
-        $tableHd[]=$contextTranslated;
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_sortorder','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datecreated','personalblocks');
-        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_createdby','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datemodified','personalblocks');
-        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_modifiedby','personalblocks');
-        $tableHd[] = $this->getAddButton();
-        $objTable->addHeader($tableHd, "heading");
+        $objTable->width="100%";
+        // Add the table header
+        $objTable->startHeaderRow();
+        $objTable->addHeaderCell($this->getBlkInfIconGrey(), 18, "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->objLanguage->languageText(
+          'mod_personalblocks_blname','personalblocks'), NULL, "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->objLanguage->languageText(
+          'mod_personalblocks_location','personalblocks'), 80, "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->objLanguage->languageText(
+          'mod_personalblocks_active','personalblocks'), 70, "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->objLanguage->languageText(
+          'mod_personalblocks_blocktype','personalblocks'), 50, "bottom", 'left', 'heading');
+        $contextTranslated = ucfirst($this->objLanguage->code2Txt(
+          'mod_personalblocks_context', 'personalblocks', NULL, 
+          '[-context-] code'));
+        $objTable->addHeaderCell($contextTranslated, 70, 
+          "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->objLanguage->languageText(
+          'mod_personalblocks_sortorder','personalblocks'), 
+          70, "bottom", 'left', 'heading');
+        $objTable->addHeaderCell($this->getAddButton(), 70, "bottom", 'left', 'heading');
+        $objTable->endHeaderRow();
 
         if (isset($ar)) {
             if (count($ar) > 0) {
-                $objDate =  $this->getObject("dateandtime", "utilities");
-                $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
                 $rowcount=0;
                 foreach ($ar as $line) {
                     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                    
                     $id = $line['id'];
 
                     // Insert the name and blockinfo icon
@@ -322,33 +326,6 @@ class pbrender extends dbTable
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
-                    // The date the entry was created
-                    if(!empty($line['datecreated'])){
-                        $humanTime = $objHumanizeDate->getDifference($line['datecreated']);
-                        $tableRow[]= $humanTime;
-                    } else {
-                        $tableRow[]= '&nbsp;';
-                    }
-
-
-                    /*if(!empty($line['creatorid'])){
-                        $creatorid = $line['creatorid'];
-                        $tableRow[] = $this->objUser->fullName($creatorid);
-                    } else {
-                        $tableRow[]= '&nbsp;';
-                    }*/
-                    if(!empty($line['datemodified'])){
-                        $humanTime = $objHumanizeDate->getDifference($line['datemodified']);
-                        $tableRow[]= $humanTime;
-                    } else {
-                        $tableRow[]= '&nbsp;';
-                    }
-                    /*if(!empty($line['modifierid'])){
-                        $modifierid = $line['modifierid'];
-                        $tableRow[] = $this->objUser->fullName($modifierid);
-                    } else {
-                        $tableRow[]= '&nbsp;';
-                    }*/
                     $tableRow[] = $this->getEditButton($id)
                      . " " . $this->getDeleteIcon($id, $blockname);
                     //Add the row to the table for output
