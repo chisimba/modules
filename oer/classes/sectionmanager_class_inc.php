@@ -1,4 +1,18 @@
 <?php
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 /**
  * This method contains util methods for managing product sections
@@ -59,7 +73,7 @@ class sectionmanager extends object {
 
     /**
      * Saves new curriculum 
-     * @return type 
+     * @return string productId
      */
     function saveCurriculum() {
         $productId = $this->getParam("productid");
@@ -84,7 +98,7 @@ class sectionmanager extends object {
 
     /**
      * updates existing curriculum
-     * @return type 
+     * @return string productId
      */
     function updateCurriculum() {
         $productId = $this->getParam("productid");
@@ -121,7 +135,7 @@ class sectionmanager extends object {
 
     /**
      * Saves a given section, depending on the type of node selected
-     * @return type 
+     * @return string id
      */
     function saveSectionNode() {
 
@@ -158,7 +172,7 @@ class sectionmanager extends object {
 
     /**
      * Saves section content to the db
-     * @return type 
+     * @return string id
      */
     function saveSectionContent() {
         $data = array(
@@ -175,6 +189,11 @@ class sectionmanager extends object {
         $id = $dbSectionContent->addSectionContent($data);
         return $id;
     }
+    /**
+     * Function that updates section node
+     *
+     * @return String id
+     */
 
     function updateSectionNode() {
 
@@ -212,7 +231,7 @@ class sectionmanager extends object {
 
     /**
      * Updates section info by setting deleted to false
-     * @return type 
+     * @return String id
      */
     function deleteSectionNode() {
         $sectionId = $this->getParam("id");
@@ -227,7 +246,7 @@ class sectionmanager extends object {
 
     /**
      * updates section content
-     * @return type 
+     * @return string id
      */
     function updateSectionContent() {
         $data = array(
@@ -246,7 +265,7 @@ class sectionmanager extends object {
 
     /**
      * Builds a form for managing section
-     * @return type 
+     * @return form
      */
     function buildAddEditCuriculumForm($productId, $id=null, $parentid=null, $isOriginalProduct = null) {
 
@@ -407,9 +426,12 @@ class sectionmanager extends object {
     }
 
     /**
-     * builds a forms for creating a new node
-     * @param type $name
-     * @return type 
+     * builds a forms for adding and editing section nodes
+     *
+     * @param String $productId
+     * @param String $sectionId
+     * @param String $isOriginalProduct
+     * @return form
      */
     function getAddEditNodeForm($productId, $sectionId, $isOriginalProduct) {
         $dbSections = $this->getObject("dbsectionnodes", "oer");
@@ -513,8 +535,8 @@ class sectionmanager extends object {
     /**
      * this formats and presents content of a selected node on sections tree of
      * a product
-     * @param type $productId
-     * @param type $sectionId
+     * @param string $productId
+     * @param string $sectionId
      * @return string 
      */
     function getSectionContent($productId, $sectionId) {
@@ -800,9 +822,9 @@ class sectionmanager extends object {
 
     /**
      * this creates a form for filling in section details
-     * @param type $productId
-     * @param type $sectionId
-     * @return type 
+     * @param string $productId
+     * @param string $sectionId
+     * @return string
      */
     function getAddEditSectionForm($productId, $sectionId) {
         $dbSections = $this->getObject("dbsectioncontent", "oer");
@@ -892,9 +914,9 @@ class sectionmanager extends object {
     /**
      * Returns the parent of a given node. If the node is the top one, the title
      * ofthe curriculum is returned instead
-     * @param type $path
-     * @param type $productId
-     * @return type 
+     * @param string $path
+     * @param string $productId
+     * @return array
      */
     function getParent($path, $productId) {
 
@@ -974,13 +996,13 @@ class sectionmanager extends object {
     /**
      * Builds a tree structure that represents sections within a product. This method
      * can also build a dropdown-like true, depending on the options passed
-     * @param type $productId The product to build sections for
-     * @param type $sectionId 
-     * @param type $treeType Type of tree to build: could be dropdown or dhtml
-     * @param type $selected The preselected node
-     * @param type $treeMode
-     * @param type $action
-     * @return type 
+     * @param string $productId The product to build sections for
+     * @param string $sectionId
+     * @param string $treeType Type of tree to build: could be dropdown or dhtml
+     * @param string $selected The preselected node
+     * @param string $treeMode
+     * @param string $action
+     * @return string
      */
     function buildSectionsTree($productId, $sectionId, $showThumbNail=null, $treeType='dhtml', $selected='', $treeMode='side', $action='', $compareProdId='') {
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');

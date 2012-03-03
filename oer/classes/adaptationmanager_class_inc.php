@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contains util methods for managing adaptations
  * 
@@ -18,7 +17,7 @@
  *
  * @version    0.001
  * @package    oer
- * @author     JCSE
+ * @author     pwando paulwando@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -332,8 +331,11 @@ class adaptationmanager extends object {
     }
 
     /**
-     * this constructs the  form for managing an adaptation
-     * @return type FORM
+     * Function constructs the  form for managing an adaptation - step 1
+     * 
+     * @param string $id adaptation id
+     * @param string $mode add/edit mode
+     * @return form
      */
     public function buildAdaptationFormStep1($id, $mode) {
 
@@ -601,6 +603,12 @@ class adaptationmanager extends object {
 
         return $header->show() . $formData->show();
     }
+    /**
+     * Function constructs form for managing adapatations - step 2
+     *
+     * @param string $id adaptation id
+     * @return form
+     */
 
     public function buildAdaptationFormStep2($id) {
 
@@ -728,8 +736,10 @@ class adaptationmanager extends object {
     }
 
     /**
-     * Builds the step 3 adaptation form
+     * Builds the step 3 manage adaptation form
+     * 
      * @param type $id
+     * @return form
      */
     public function buildAdaptationFormStep3($id) {
 
@@ -956,8 +966,10 @@ class adaptationmanager extends object {
     }
 
     /**
-     * Builds the step 4 adaption form
-     * @param type $id 
+     * Builds the step 4 manage adaptation form
+     *
+     * @param string $id adaptation id
+     * @return form
      */
     public function buildAdaptationFormStep4($id) {
         $this->addStep4JS();
@@ -1070,8 +1082,8 @@ class adaptationmanager extends object {
     }
 
     /**
-     * creates a table and returns the list of current adaptations
-     * @return type
+     * Function constructs a list of current adaptations
+     * @return form
      */
     public function getAdaptationsListing($mode, $filter) {
         $pageSize = $this->getParam("pagesize", "15");
@@ -1236,10 +1248,10 @@ class adaptationmanager extends object {
     }
 
     /**
-     * this returns a paginated list of the products
-     * @param type $mode
-     * @param type $filter
-     * @return type 
+     * Function constructs a paginated list of the products
+     * @param string $mode add/edit
+     * @param string $filter
+     * @return form
      */
     function getAdaptationListingPaginated($mode, $filterOptions, $filter='') {
         $pages = 0;
@@ -1267,8 +1279,12 @@ class adaptationmanager extends object {
     }
 
     /**
-     * Creates side navigation links for moving in between forms when managing
+     * Function creates side navigation links for moving in between forms when managing
      * an adaptation
+     *
+     * @param string $id adaptation id
+     * @param string $step manage adaptation step
+     * @return form
      */
     function buildAdaptationStepsNav($id, $step) {
 

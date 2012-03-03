@@ -15,15 +15,14 @@
  *
  * @version    0.001
  * @package    oer
- * @author     JCSE
+ * @author     pwando paulwando@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
  */
-$this->loadClass('link', 'htmlelements');
 
 /**
- * This class lists the adaptations
+ * This class lists the adaptatable products
  *
  * @author pwando
  */
@@ -32,6 +31,11 @@ class block_adaptableproductslist extends object {
     public function init() {
         $this->loadClass("link", "htmlelements");
     }
+    /**
+     * Function constructs a list of adaptable products
+     *
+     * @return form
+     */
 
     public function show() {
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");

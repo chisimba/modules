@@ -15,7 +15,7 @@
  *
  * @version    0.001
  * @package    oer
- * @author     JCSE
+ * @author     pwando paulwando@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -34,6 +34,11 @@ class block_adaptationslisting extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = "";
     }
+    /**
+     * Function renders a list of paginated adaptations
+     *
+     * @return form
+     */
 
     public function show() {
          $modeRaw = $this->configData;

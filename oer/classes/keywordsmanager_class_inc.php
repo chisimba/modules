@@ -15,6 +15,11 @@ class keywordsmanager extends object {
         $this->objLanguage = $this->getObject('language', 'language');
     }
 
+    /**
+     * Function returns keyword template
+     *
+     * @return string template
+     */
     
     function addNewKeyWord() {
         $errors = array();

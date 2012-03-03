@@ -23,7 +23,6 @@ class institutionmanager extends object {
     private $_objDbInstitutionType;
     private $_objCountry;
     private $_validation;
-
     /**
      * @var object $objLanguage Language Object
      */
@@ -107,8 +106,8 @@ class institutionmanager extends object {
             $deleteLink->cssClass = "deleteinstitution";
             $deleteLink->link = $objIcon->show();
 
-            $viewLink=new link($this->uri(array("action"=>"viewinstitution", "id" => $institution['id'])));
-            $viewLink->link=$institution['name'];
+            $viewLink = new link($this->uri(array("action" => "viewinstitution", "id" => $institution['id'])));
+            $viewLink->link = $institution['name'];
 
 
             $thumbnail = '<img src="usrfiles/' . $institution['thumbnail'] . '"   width="45" height="49"  align="bottom"/>';
@@ -143,7 +142,7 @@ class institutionmanager extends object {
                     </script>
 ';
         }
-        return $controlBand . $table->show().$notification;
+        return $controlBand . $table->show() . $notification;
     }
 
     private function constructInstitution($id) {

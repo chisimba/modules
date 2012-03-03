@@ -34,8 +34,8 @@ class vieworiginalproduct extends object {
 
     /**
      * this creates the detailed view of the prodcut details
-     * @param type $productId
-     * @return type 
+     * @param string $productId
+     * @return string
      */
     function buildProductDetails($productId) {
         $this->loadClass("link", "htmlelements");

@@ -153,6 +153,14 @@ class downloaderedit extends object {
         }
         return $header->show();
     }
+    /**
+     * Function builds download form for users who are not logged in
+     *
+     * @param string $productId
+     * @param string $id
+     * @param string $producttype
+     * @return string
+     */
 
     private function buildForm($productId, $id, $producttype) {
         $mode = $this->getParam('mode', 'add');
@@ -326,6 +334,13 @@ class downloaderedit extends object {
             return "<div id='downloadprodform'>" . $buildDownloadForm . "</div>";
         }
     }
+    /**
+     * Function builds the download form
+     *
+     * @param string $productId
+     * @param string $id
+     * @return string
+     */
 
         function buildDownloadForm($productId, $id) {
             // Create the form.

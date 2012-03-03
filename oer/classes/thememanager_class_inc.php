@@ -1,4 +1,18 @@
 <?php
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 /**
  * contains util methods for managing themes
@@ -49,12 +63,12 @@ class thememanager extends object {
         $arrayVars['status_success'] = "mod_oer_status_success";
         $arrayVars['status_fail'] = "mod_oer_status_fail";
         $objSerialize = $this->getObject('serializevars', 'utilities');
-         $objSerialize->languagetojs($arrayVars, 'oer');
+        $objSerialize->languagetojs($arrayVars, 'oer');
     }
 
     /**
      * Saves a new umbtrella theme 
-     * @return type 
+     * @return string
      */
     function addNewUmbrellaTheme() {
         $title = $this->getParam("title");
@@ -72,9 +86,9 @@ class thememanager extends object {
      */
     function addNewTheme() {
         $title = $this->getParam('title');
-        $umbrellaTheme=  $this->getParam('umbrellatheme');
-        $id=$this->objDbThemes->addTheme($title, $umbrellaTheme);
-         if ($id !== NULL && $id !== FALSE) {
+        $umbrellaTheme = $this->getParam('umbrellatheme');
+        $id = $this->objDbThemes->addTheme($title, $umbrellaTheme);
+        if ($id !== NULL && $id !== FALSE) {
             die($id);
         } else {
             die("ERROR_DATA_INSERT_FAIL");
@@ -83,7 +97,7 @@ class thememanager extends object {
 
     /**
      * Creates a table listing of current themes
-     * @return type 
+     * @return string
      */
     function createThemeListingTable() {
 
@@ -131,6 +145,7 @@ class thememanager extends object {
     }
 
     /**
+     * Function creates form for editing themes
      *
      * @return type 
      */
@@ -230,8 +245,9 @@ class thememanager extends object {
     }
 
     /**
+     * Function creates a list of existing themes
      *
-     * @return type 
+     * @return string
      */
     function createThemeListing() {
         $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -260,7 +276,8 @@ class thememanager extends object {
 
     /**
      * Builds a form used to creating umbrella theme
-     * @return type 
+     * 
+     * @return string
      */
     function createAddEditUmbrellaThemeForm() {
         $objTable = $this->getObject('htmltable', 'htmlelements');

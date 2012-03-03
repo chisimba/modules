@@ -1,4 +1,28 @@
 <?php
+/**
+ * This class contains util methods for displaying full original product details
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
+ * @author     pwando paulwando@gmail.com
+ */
 
 /**
  * This class contains util methods for displaying adaptations
@@ -98,6 +122,12 @@ class viewadaptation extends object {
         return $div;
     }
 
+    /**
+     * Function that creates a view of existing adaptations
+     *
+     * @param string $productId
+     * @return form
+     */
     function buildAdaptationView($productId) {
         $product = $this->objDbProducts->getProduct($productId);
 
@@ -191,10 +221,10 @@ class viewadaptation extends object {
             //Get comments
             $comments = "";
             //Get language..Need to translate lang proper 
-            $adaptlang =$product['language'];
-            /*if ($product['language'] == "en") {
-                $adaptlang = "English";
-            }*/
+            $adaptlang = $product['language'];
+            /* if ($product['language'] == "en") {
+              $adaptlang = "English";
+              } */
             //Get inst data
             $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
             if (!empty($instData)) {
@@ -207,7 +237,7 @@ class viewadaptation extends object {
                 $instNameLink->link = $instName;
                 $instNameLink->cssClass = "viewinstitutionlink";
                 $instNameLk = "" . $instNameLink->show();
-                 $languageCode=  $this->getObject("languagecode", "language");
+                $languageCode = $this->getObject("languagecode", "language");
                 /* $rightContent.='<div id="viewadaptation_author_label"></div>
                   <div id="viewadaptation_author_text"></div><br/><br/>'; */
                 $rightContent.='<div id="viewadaptation_label">' . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ': </div>
@@ -285,10 +315,6 @@ class viewadaptation extends object {
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $existingAdaptations . '</div>', "", "top", "left", "", 'style="width:55%"');
         $table->endRow();
-        /* $table->startRow();
-          $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
-          $table->addCell('<div id="viewadaptation_leftcontent">' . $featuredAdaptation . '</div>', "", "top", "left", "", 'style="width:55%"');
-          $table->endRow(); */
         $table->startRow();
         $table->addCell('&nbsp;', "", "top", "left", "", 'style="width:15%"');
         $table->addCell('<div id="viewadaptation_leftcontent">' . $ratingDiv . '</div>', "", "top", "left", "", 'style="width:55%"');
@@ -357,12 +383,12 @@ class viewadaptation extends object {
 
             $dialogTitle = $this->objLanguage->languageText('mod_oer_downloadproduct', 'oer') . " (" . $this->objLanguage->languageText('mod_oer_adaptation', 'oer') . ")";
 
-            $shareViaEmail=$this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
-            $emailImg = '<img src="skins/_common/icons/em.gif" alt="'.$shareViaEmail.'" title="'.$shareViaEmail.'"/>';
+            $shareViaEmail = $this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="' . $shareViaEmail . '" title="' . $shareViaEmail . '"/>';
             $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
             $bodyLink->link = $product['title'];
             $emailLink = '<a  href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
-            
+
             $prodTitle .= '<div class="displaybookmarks">' . $bookmarks . " " . " " . $printLk . '&nbsp;' . $emailLink . '</div><div id="downloader"  title="' . $dialogTitle . '">' . $toolTipStr . '</div>';
         } else {
             $printLink = new link($this->uri(array("action" => "downloaderedit", "productid" => $productId, "mode" => "edit", 'producttype' => 'adaptation')));
@@ -373,8 +399,8 @@ class viewadaptation extends object {
             //$printLink->target = "_blank";
             $printLk = "" . $printLink->show();
 
-            $shareViaEmail=$this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
-            $emailImg = '<img src="skins/_common/icons/em.gif" alt="'.$shareViaEmail.'" title="'.$shareViaEmail.'"/>';
+            $shareViaEmail = $this->objLanguage->languageText('mod_oer_shareviaemail', 'oer');
+            $emailImg = '<img src="skins/_common/icons/em.gif" alt="' . $shareViaEmail . '" title="' . $shareViaEmail . '"/>';
             $bodyLink = new link($this->uri(array("action" => "vieworiginalproduct", 'identifier' => $product['id'], 'module' => 'oer', "id" => $product['id'])));
             $bodyLink->link = $product['title'];
             $emailLink = '<a  href="mailto:?subject=' . $product['title'] . '&body=' . $bodyLink->href . '">' . $emailImg . '</a>';
@@ -438,8 +464,8 @@ class viewadaptation extends object {
                     $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_typeofinstitution_label', 'oer') . ': </b>' . $instType . '<br /><br />';
                 }
                 if (!empty($instData['country'])) {
-                     $languageCode=  $this->getObject("languagecode", "language");
-                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ': </b>' .$languageCode->getName($instData['country']) . '<br /><br />';
+                    $languageCode = $this->getObject("languagecode", "language");
+                    $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_group_country', 'oer') . ': </b>' . $languageCode->getName($instData['country']) . '<br /><br />';
                 }
                 if (!empty($adaptlang)) {
                     $rightContent.='<b>' . $this->objLanguage->languageText('mod_oer_adaptedin', 'oer') . ': </b>' . $adaptlang . '<br /><br />';
