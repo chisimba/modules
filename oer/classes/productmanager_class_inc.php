@@ -965,11 +965,10 @@ class productmanager extends object {
                 $product = $thumbnailLink->show() . $titleLink->show();
             }
 
-            $languageField = '<h7 class="expand">' .
-                    $this->objLanguage->languageText('mod_oer_languages', 'oer')
-                    . '</h7>
-                        <div class="collapse">' . $this->objLanguage->languageText('mod_oer_english', 'oer') . '</div>';
-            $product.= $languageField;
+            $languageField = new dropdown('lagnguage');
+            $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+            $languageField->cssClass="product_language_dd";
+            $product.='<br/><br/><h7>'. $this->objLanguage->languageText('mod_oer_languages', 'oer').':</h7>'. $languageField->show();
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $originalProduct['id'])));
@@ -996,7 +995,9 @@ class productmanager extends object {
 
             $table->endRow();
         }
-        return $controlBand . $table->show();
+
+        $expandCollapseJS = '<script type="text/javascript" src="packages/oer/resources/expand.js"></script>';
+        return $expandCollapseJS . $controlBand . $table->show();
     }
 
     /**
@@ -1020,7 +1021,7 @@ class productmanager extends object {
         $objPagination = $this->newObject('pagination', 'navigation');
         $objPagination->module = 'oer';
         $objPagination->action = 'originalproductlistajax';
-        $objPagination->extra = array("mode" => $mode, "filter" => $filter,"pagesize"=>$pageSize);
+        $objPagination->extra = array("mode" => $mode, "filter" => $filter, "pagesize" => $pageSize);
         $objPagination->id = 'productlist_div';
         $objDb = $this->getObject('dbproducts', 'oer');
         $objPagination->currentPage = 0;
