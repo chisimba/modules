@@ -268,6 +268,7 @@ class oeruserdata extends controller
     public function __userdetailssave() {
         $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
         $mode = $this->getParam('mode', 'add');
+      
         if ($mode == 'add' || $mode == 'selfregister') {
             $result = $objDb->addSave();
         } elseif ($mode == 'edit') {
@@ -320,7 +321,7 @@ class oeruserdata extends controller
      */
     public function __checkusernameajax() {
         $userName = $this->getParam('username', FALSE);
-        if ($userName) {
+       if ($userName) {
             $objUserAdmin = $this->getObject('useradmin_model2', 'security');
             if ($objUserAdmin->userNameAvailable($userName) == FALSE) {
                 die('true');

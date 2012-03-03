@@ -218,7 +218,7 @@ class useredit extends object
 
 
 
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('downloader.js','oer'));
         $this->appendArrayVar('headerParams', $dialogCSS);
     }
     /**
@@ -387,6 +387,7 @@ class useredit extends object
             $un = '<div class="fake_input">' . $this->username . "</div>";
         }
         $table->addCell($un);
+        $table->addCell('<div class="error" id="usernameerror"></div>');
         $table->endRow();
         unset($unLabel);
         if ($this->mode !== 'edit') {

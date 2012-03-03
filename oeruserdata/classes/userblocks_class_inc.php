@@ -158,8 +158,8 @@ class userblocks extends object
           'action' => $linkType), 
           'oeruserdata');
         $link = new link($uri);
-        $icon='<img src="skins/oer/images/person.png"   align="left" />';
-        $link->link =$icon.'&nbsp;'. $linkText;
+       
+        $link->link = $linkText;
         return $link->show();
     }
     

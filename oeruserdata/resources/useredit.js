@@ -57,8 +57,10 @@ jQuery(function() {
                     //If username exists, set response to true
                     if (msg == 'true') {
                         response = false;
+                        jQuery("#usernameerror").text(usernametaken);
                     } else {
                         response = true;
+                        jQuery("#usernameerror").text("");
                     }
                 }
             })
@@ -226,7 +228,7 @@ jQuery(function() {
         });
     });
 
-    // Function for saving the institutional data
+    // Function for saving the user data
     jQuery("#form_edituser").submit(function(e) {
         if(jQuery("#form_edituser").valid()){ 
             e.preventDefault();
@@ -273,35 +275,47 @@ jQuery(function() {
                     url: 'index.php?module=oeruserdata&action=userdetailssave',
                     type: "POST",
                     data: data_string,
-                    success: function(msg) {                        
+                    success: function(msg) {    
+                        //if the result is this wrong, then there is trouble
+                        if(msg.length > 100){
+                            jQuery("#save_results").html("");
+                            showRegisterFail();
+                            return;
+                        }
                         jQuery("#submitUser").attr("disabled", "");
-                        if(msg !== "ERROR_DATA_INSERT_FAIL" && msg != null) {
+                        if(msg == 'SUCCESS') {
                             if (redirect == true) {
                                 jQuery("#id").val(msg);
-                                jQuery("#mode").val('edit');
+                               
                                 jQuery("#save_results").html("");
+                               
+                                jQuery("#mode").val('edit');
                                 //Show success dialog
                                 if (jQuery("#edmode").val()!=='edit'){
                                     showRegisterSuccess();
                                 } else {
                                     showUpdateSuccess();
                                 }
+                                
                             // Redirect after anonymous save
-                            //window.location = 'index.php?module=oeruserdata';
+                            window.location = 'index.php?module=oer&action=login';
                             } else {
                                 // Update the information area 
                                 // (msg is the id of the record on success)
                                 //jQuery("#save_results").html('<span class="success">' + status_success + ": " + msg + '</span>');//.fadeOut('5000');
                                 // Change the id field to be the id that is returned as msg & mode to edit
                                 jQuery("#id").val(msg);
-                                jQuery("#mode").val('edit');
+                              
                                 jQuery("#save_results").html("");
                                 //Show success dialog
+                               
+                                jQuery("#mode").val('edit');
                                 if (jQuery("#edmode").val()!=='edit'){
                                     showRegisterSuccess();
                                 } else {
                                     showUpdateSuccess();
                                 }
+                                
                             }
                         } else {
                             jQuery("#save_results").html("");

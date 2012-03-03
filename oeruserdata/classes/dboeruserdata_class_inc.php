@@ -184,7 +184,7 @@ class dboeruserdata extends dbtable {
                 $res = $this->insert($data);
             }
             if ($res) {
-                return $this->id;
+                return 'SUCCESS';//$this->id;
             } else {
                 return 'ERROR_DATA_INSERT_FAIL';
             }
@@ -219,6 +219,12 @@ class dboeruserdata extends dbtable {
         if ($this->objAdmin->userNameAvailable($this->username) == FALSE) {
             return 'usernametaken';
         }
+        
+        $objCaptcha = $this->getObject('captcha', 'login');
+        $res= $objCaptcha->verifyCaptcha();
+        if($res != 'ok'){
+            return $res;
+        }
         // Generate a userId for the user
         $userId = $this->objAdmin->generateUserId();
         // Add the user and get the id back
@@ -245,7 +251,7 @@ class dboeruserdata extends dbtable {
             'description' => $this->description
         );
         $this->insert($data);
-        return $pkid;
+        return "SUCCESS";//$pkid;
     }
     
     /**
