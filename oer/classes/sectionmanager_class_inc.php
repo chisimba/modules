@@ -787,11 +787,11 @@ class sectionmanager extends object {
                     	</div>
                     </div></div>';
         }
-        if($showTopView){
-        return '<div class="navPath">' . $navpath .
-        '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
+        if ($showTopView) {
+            return '<div class="navPath">' . $navpath .
+            '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
-        '</div>' . $table->show() . '
+            '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
         } else {
             return $table->show();
@@ -932,34 +932,38 @@ class sectionmanager extends object {
         $dbProduct = $this->getObject("dbproducts", "oer");
         $dbsections = $this->getObject("dbsectionnodes", "oer");
         //Get nodes
-        $sectionNodes = $dbsections->getSectionNodes($productId);        
+        $sectionNodes = $dbsections->getSectionNodes($productId);
         $selectedNodesArr = array();
         $selectedTitle = "";
         $selectedId = $selected;
+
         if ($selected != '') {
             //Get the selected item data to compare with other nodes
             $sectionNode = $dbsections->getSectionNode($selectedId);
+
             if ($sectionNode == Null || empty($sectionNode)) {
                 $selectedTitle = $selectedId;
             } else {
                 $selectedTitle = $sectionNode['title'];
             }
+
             if (count($sectionNodes) > 0) {
                 foreach ($sectionNodes as $sectionNode) {
                     //Check if the folderShortText contains some words in selected
                     $arr_selectedtxt = explode(" ", $selectedTitle);
+                    $arr_count = count($arr_selectedtxt);
                     $text = $sectionNode['title'];                    
                     //Check if the node is selected
                     if (!empty($selectedId)) {
-                        foreach ($arr_selectedtxt as $selectedtxt) {
-                            $exists = -1;
-                            if ($selectedtxt != '') {
-                                $exists = strpos(strtolower($text), strtolower($selectedtxt));
-                            }                            
-                            if ($exists !== false) {
-                                $selectedNodesArr[] = $sectionNode['id'];
-                            }
-                        }
+                        $cnt = 0;
+                        $exists == false;
+                        do {
+                            $exists = strpos(strtolower($text), strtolower($arr_selectedtxt[$cnt]));                            
+                            $cnt++;
+                        } while ($exists === false && $cnt <= $arr_count);
+                    }
+                    if ($exists !== false) {
+                        $selectedNodesArr[] = $sectionNode['id'];
                     }
                 }
             }

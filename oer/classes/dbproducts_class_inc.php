@@ -255,6 +255,16 @@ class dbproducts extends dbtable {
         $data = $this->getArray($sql);
         return $data;
     }
+    /**
+     * returns array of adaptations for a specific product
+     * @param  $id the product id
+     * @return NULL if product not found, else an array of product adaptations if any
+     */
+    function getAllProductAdaptations($parentId, $filter) {
+        $sql = "select * from $this->productsTableName where parent_id = '".$parentId."'". $filter;
+        $data = $this->getArray($sql);
+        return $data;
+    }
 
     /**
      * returns count of adaptations for every original product

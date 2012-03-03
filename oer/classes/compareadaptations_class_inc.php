@@ -43,7 +43,7 @@ class compareadaptations extends object {
         $product = $this->dbProducts->getProduct($productId);
 
         //Get product adaptations
-        $productAdaptations = $this->dbProducts->getProductAdaptations($productId, '');
+        $productAdaptations = $this->dbProducts->getAllProductAdaptations($productId, '');
 
         $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
 
@@ -285,7 +285,7 @@ class compareadaptations extends object {
      * @param String $sectionId
      * @return string
      */
-    function buildCompareSelectedView($productId, $sectionId, $mode, $selected, $selSecId="", $selAdaptId="") {        
+    function buildCompareSelectedView($productId, $sectionId, $mode, $selected, $selSecId="", $selAdaptId="") {
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $this->objAdaptationManager->userHasPermissions();
 
@@ -299,7 +299,7 @@ class compareadaptations extends object {
         $product = $this->dbProducts->getProduct($productId);
 
         //Get product adaptations
-        $productAdaptations = $this->dbProducts->getProductAdaptations($productId, '');
+        $productAdaptations = $this->dbProducts->getAllProductAdaptations($productId, '');
 
         $instData = $this->objDbInstitution->getInstitutionById($product["institutionid"]);
 
@@ -311,10 +311,6 @@ class compareadaptations extends object {
         $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
         $objBookMarks->includeTextLink = FALSE;
         $bookmarks = $objBookMarks->show();
-
-        /* $table = $this->getObject("htmltable", "htmlelements");
-          $table->attributes = "style='table-layout:fixed;'";
-          $table->border = 0; */
 
         $newAdapt = "";
         if ($hasPerms) {
@@ -382,33 +378,39 @@ class compareadaptations extends object {
         $rightContent = "";
         $rightContent = '<div class="compareProductNav"><div class="frame">' . $navigator . '</div></div>';
         $contentTable .= "<tr>";
-        /* if (count($productAdaptations) < 2) {
-          $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:60px"');
-          } else {
-          $contentTable->addCell($rightContent, "", "top", "left", "", 'style="width:190px"');
-          } */
-        //$contentTable .= '<td style="width:190px" align="left" valign="top"><div class="compareSelectedProductNav">' . $product['title'] . '</div></td>';
         $selectedSecContent = "";
-        //Show navigation for each of the product's adaptations
-        if (count($productAdaptations) > 0) {
+        //Show selected product nodes nav
+        if (!empty($productId)) {
+                //get the selected product sections
+                $selectedProdNodes = $this->sectionManager->getSelectedNodes($productId, $selected);
 
-            foreach ($productAdaptations as $prodAdaptation) {
-                //get the selected sections
-                $selectedNodes = $this->sectionManager->getSelectedNodes($prodAdaptation["id"], $selected);
+                if (count($selectedProdNodes) > 0) {
+                    foreach ($selectedProdNodes as $selectedNode) {
+                        //product thumbnail
+                        $prodthumbnail = '<img src="usrfiles/' . $product['thumbnail'] . '" class="featuredadaptation" width="45" height="49" align="left"/>';
+                        if ($product['thumbnail'] == '') {
+                            $prodthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" class="featuredadaptation"  width="45" height="49" align="left"/>';
+                        }
+                        //product thumbnail link
+                        $prodThumbnailLink = new link($this->uri(array("action" => "compare_selected",
+                                            "productid" => $productId,
+                                            "selected" => $selected,
+                                            "selsecid" => $nodeData['id'],
+                                            "seladaptid" => $prodAdaptation['id'])));
+                        $prodThumbnailLink->link = $prodthumbnail;
+                        $prodThumbnail = $prodThumbnailLink->show();
+                        //Inst title link
+                        $prodTitleLink = new link($this->uri(array("action" => "compare_selected",
+                                            "productid" => $productId,
+                                            "selected" => $selected,
+                                            "selsecid" => $nodeData['id'],
+                                            "seladaptid" => $prodAdaptation['id'])));
+                        $prodTitleLink->link = $product['title'];
+                        $prodTitle = $prodTitleLink->show();
 
-                //$adaptContent = '<div class="compareAdaptationsNav"><div class="frame"></div></div>';
-                if (count($selectedNodes) > 0) {
-                    foreach ($selectedNodes as $selectedNode) {
+                        $compareLk = $prodThumbnail . "" . $prodTitle;
+                        //Get node data
                         $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);
-                        //Link for - adaptation section
-                        $compareLink = new link($this->uri(
-                                                array("action" => "compare_selected",
-                                                    "productid" => $productId,
-                                                    "selected" => $selected,
-                                                    "selsecid" => $nodeData['id'],
-                                                    "seladaptid" => $prodAdaptation['id'])));
-                        $compareLink->link = $nodeData['title'];
-                        $compareLk = $compareLink->show();
 
                         $newCtAdapt = "";
                         if ($hasPerms) {
@@ -419,13 +421,13 @@ class compareadaptations extends object {
                             if ($isOriginalProduct) {
                                 $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewadaptation', 'oer');
                             } else {
-                            $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+                                $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewadaptation', 'oer');
                             }
-                            $newCtAdapt = $newCtAdaptLink->show();
+                            $newCtAdapt = "<br/><br/>" . $newCtAdaptLink->show();
                         }
 
                         $contentTable .= '<td align="left" valign="top"><div class="compareSelectedAdaptationNav">' .
-                                $compareLk . "<br/><br/>" . $newCtAdapt . '</div></td>';
+                                $compareLk . $newCtAdapt . '</div></td>';
                         if (empty($selSecId) && empty($selAdaptId)) {
                             $selSecId = $nodeData['id'];
                             $selAdaptId = $prodAdaptation["id"];
@@ -433,7 +435,70 @@ class compareadaptations extends object {
                         $nodeData = "";
                         $compareLk = "";
                         $newCtAdapt = "";
-                    }                    
+                    }
+                }
+            }
+        //Show selected section nodes for this product adaptations
+        if (count($productAdaptations) > 0) {
+            foreach ($productAdaptations as $prodAdaptation) {
+
+                //get the selected sections
+                $selectedNodes = $this->sectionManager->getSelectedNodes($prodAdaptation["id"], $selected);
+
+                if (count($selectedNodes) > 0) {
+                    foreach ($selectedNodes as $selectedNode) {
+                        //Get institution data
+                        $instData = $this->objDbInstitution->getInstitutionById($prodAdaptation['institutionid']);
+                        //Inst thumbnail
+                        $instthumbnail = '<img src="usrfiles/' . $instData['thumbnail'] . '" class="featuredadaptation" width="45" height="49" align="left"/>';
+                        if ($instData['thumbnail'] == '') {
+                            $instthumbnail = '<img src="skins/oeru/images/product-cover-placeholder.jpg" class="featuredadaptation"  width="45" height="49" align="left"/>';
+                        }
+                        //Inst thumbnail link
+                        $instThumbnailLink = new link($this->uri(array("action" => "compare_selected",
+                                            "productid" => $productId,
+                                            "selected" => $selected,
+                                            "selsecid" => $nodeData['id'],
+                                            "seladaptid" => $prodAdaptation['id'])));
+                        $instThumbnailLink->link = $instthumbnail;
+                        $instThumbnail = $instThumbnailLink->show();
+                        //Inst title link
+                        $instTitleLink = new link($this->uri(array("action" => "compare_selected",
+                                            "productid" => $productId,
+                                            "selected" => $selected,
+                                            "selsecid" => $nodeData['id'],
+                                            "seladaptid" => $prodAdaptation['id'])));
+                        $instTitleLink->link = $instData['name'];
+                        $instTitle = $instTitleLink->show();
+
+                        $compareLk = $instThumbnail . "" . $instTitle;
+                        //Get node data
+                        $nodeData = $this->dbSectionNode->getSectionNode($selectedNode);
+                        
+                        $newCtAdapt = "";
+                        if ($hasPerms) {
+                            //Link for - adapting product from existing adapatation
+                            $newCtAdaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $prodAdaptation['id'], 'mode="new"')));
+                            //Check if original product or an adaptation
+                            $isOriginalProduct = $this->dbProducts->isOriginalProduct($prodAdaptation['id']);
+                            if ($isOriginalProduct) {
+                                $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewadaptation', 'oer');
+                            } else {
+                                $newCtAdaptLink->link = $this->objLanguage->languageText('mod_oer_makenewfromadaptation', 'oer');
+                            }
+                            $newCtAdapt = "<br/><br/>" . $newCtAdaptLink->show();
+                        }
+
+                        $contentTable .= '<td align="left" valign="top"><div class="compareSelectedAdaptationNav">' .
+                                $compareLk . $newCtAdapt . '</div></td>';
+                        if (empty($selSecId) && empty($selAdaptId)) {
+                            $selSecId = $nodeData['id'];
+                            $selAdaptId = $prodAdaptation["id"];
+                        }
+                        $nodeData = "";
+                        $compareLk = "";
+                        $newCtAdapt = "";
+                    }
                 }
             }
             //get node data
