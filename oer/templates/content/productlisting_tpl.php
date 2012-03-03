@@ -5,11 +5,7 @@ $objFix->fixThree();
 ?>
 <div id="threecolumn">
     <div id="Canvas_Content_Body_Region1">
-        {
-        "display" : "block",
-        "module" : "oeruserdata",
-        "block" : "myuserdetails"
-        }
+        
         {
         "display" : "block",
         "module" : "oer",
