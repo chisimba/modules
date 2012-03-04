@@ -1,5 +1,29 @@
 <?php
-
+/**
+ * This class contructs the tool bar used  in the platform. Each menu forms 
+ * a tab, which has associated actions makes the tab selected if they 
+ * correspond to current action
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    0.001
+ * @package    oer
+ * @author     JCSE
+ * @copyright  2011 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://www.chisimba.com
+ */
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -33,7 +57,8 @@ class oertoolbar extends object {
                 'actioncheck' => array(
                     "home","vieworiginalproduct","filteroriginalproduct",
                     "showproductlistingaslist","editoriginalproductstep1","editoriginalproductstep2",
-                    "editoriginalproductstep3","editoriginalproductstep4","filteroriginalproduct"), 
+                    "editoriginalproductstep3","editoriginalproductstep4","filteroriginalproduct",
+                    "deleteoriginalproduct"), 
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'true'),
             
             array('action' => 'adaptationlist', 
@@ -58,9 +83,11 @@ class oertoolbar extends object {
                 'text' => $this->objLanguage->languageText('mod_oer_about', 'oer'),
                 'actioncheck' => array("about","view","edit"), 
                 'module' => 'about', 'status' => 'both', 'isDefaultSelected' => 'false'),
+            
             array('action' => 'contacts', 
                 'text' => $this->objLanguage->languageText('mod_oer_contacts', 'oer'), 
                 'actioncheck' => array("contacts"), 
+                
                 'module' => 'oer', 'status' => 'both', 'isDefaultSelected' => 'false'),
             array('action' => 'cpanel',
                 'text' => $this->objLanguage->languageText('mod_oer_admin', 'oer'), 
@@ -129,6 +156,14 @@ class oertoolbar extends object {
         return '<div id="modernbricksmenu"><ul>' . $str . '</ul></div>';
     }
 
+    /**
+     * this generates a menu with is displayed as a tab in the platform
+     * @param type $action the action hooked to tab when clicked
+     * @param type $module the module to map action to
+     * @param type $text what to display in tab
+     * @param type $isActive whether this tab should be selected or not
+     * @return type 
+     */
     private function generateItem($action = '', $module = 'oer', $text, $isActive = FALSE) {
         switch ($module) {
             case '_default' : $isRegistered = TRUE;

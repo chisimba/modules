@@ -43,6 +43,7 @@ class oer extends controller {
         $this->objDBProducts = $this->getObject("dbproducts", "oer");
         $this->objDBdownloaders = $this->getObject('dboer_downloaders');
         $this->objLanguage = $this->getObject("language", "language");
+        $this->permissionsManager = $this->getObject("permissionsmanager", "oer");
         $this->loadJS();
     }
 
@@ -60,7 +61,7 @@ class oer extends controller {
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist",
             "login", "compareadaptations", "viewadaptationbymap", "originalproductlistajax",
-            "search_compare_adaptations", "compare_selected","adaptationlistajax");
+            "search_compare_adaptations", "compare_selected", "adaptationlistajax");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -210,7 +211,7 @@ class oer extends controller {
         $this->setVar("mode", "grid");
         $this->setVar("filteraction", "filteroriginalproduct");
         $this->setVar("filteroptions", "none");
-        //$this->setVar("filter", " limit 15");
+
         return "productlisting_tpl.php";
     }
 
@@ -456,12 +457,18 @@ class oer extends controller {
     }
 
     /**
-     * this returns a template for creating a new product
+     * this returns a template for creating a new product. But first we check
+     * the permissions of this user. Must belong to groupd named OER_Editors or
+     * must be admin.
      */
     function __newproductstep1() {
-        $this->setVar("step", "1");
-        $this->setVar("id", "");
-        return "addeditproduct_tpl.php";
+        if ($this->permissionsManager->isEditor()) {
+            $this->setVar("step", "1");
+            $this->setVar("id", "");
+            return "addeditproduct_tpl.php";
+        } else {
+            return "accessdenied_tpl.php";
+        }
     }
 
     /**
@@ -541,32 +548,68 @@ class oer extends controller {
         return $this->nextAction('makeadaptation', $params);
     }
 
+    /**
+     * returns  step1 form for editing an original product. First, we check if the 
+     * user has permissions to edit a product
+     * @return type 
+     */
     function __editoriginalproductstep1() {
-        $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "1");
-        return "addeditproduct_tpl.php";
+        if ($this->permissionsManager->isEditor()) {
+            $id = $this->getParam("id");
+            $this->setVarByRef("id", $id);
+            $this->setVar("step", "1");
+            return "addeditproduct_tpl.php";
+        } else {
+            return "accessdenied_tpl.php";
+        }
     }
 
+    /**
+     * returns step2 form for editing a product. We check if the user has permissions
+     * to edit the product first
+     * @return type 
+     */
     function __editoriginalproductstep2() {
-        $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "2");
-        return "addeditproduct_tpl.php";
+        if ($this->permissionsManager->isEditor()) {
+            $id = $this->getParam("id");
+            $this->setVarByRef("id", $id);
+            $this->setVar("step", "2");
+            return "addeditproduct_tpl.php";
+        } else {
+            return "accessdenied_tpl.php";
+        }
     }
 
+    /**
+     * After checking that a user has the permissions, a form for editing 
+     * step 3 product details is displayed
+     * @return type 
+     */
     function __editoriginalproductstep3() {
-        $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "3");
-        return "addeditproduct_tpl.php";
+        if ($this->permissionsManager->isEditor()) {
+            $id = $this->getParam("id");
+            $this->setVarByRef("id", $id);
+            $this->setVar("step", "3");
+            return "addeditproduct_tpl.php";
+        } else {
+            return "accessdenied_tpl.php";
+        }
     }
 
+    /**
+     * checks the permissions of the current user. If the user is allowed, then
+     * step 4 form for editing product details is displayed
+     * @return type 
+     */
     function __editoriginalproductstep4() {
-        $id = $this->getParam("id");
-        $this->setVarByRef("id", $id);
-        $this->setVar("step", "4");
-        return "productstep4_tpl.php";
+        if ($this->permissionsManager->isEditor()) {
+            $id = $this->getParam("id");
+            $this->setVarByRef("id", $id);
+            $this->setVar("step", "4");
+            return "productstep4_tpl.php";
+        } else {
+            return "accessdenied_tpl.php";
+        }
     }
 
     // Adaptations home
@@ -724,12 +767,15 @@ class oer extends controller {
     //DELETE Functions
 
     /**
-     * deletes a product. Assumes the deletion is already confirmed
+     * deletes a product. Assumes the deletion is already confirmed. After successfuly
+     * deletion, redirects to product list
      */
     function __deleteoriginalproduct() {
         $id = $this->getParam("id");
         $objProductManager = $this->getObject("productmanager", "oer");
         $objProductManager->deleteOriginalProduct();
+        $this->setVar("filteroptions", "none");
+        $this->setVar("filteraction", "filteroriginalproduct");
         $this->setVar("mode", "grid");
         return "productlisting_tpl.php";
     }

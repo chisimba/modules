@@ -40,6 +40,7 @@ class productmanager extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
+        $this->permissionsManager=  $this->getObject("permissionsmanager","oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -253,10 +254,11 @@ class productmanager extends object {
     }
 
     /**
-     * this constructs the  form for creating a new produc
+     * this constructs the  form for creating a new product. First, we check permissions
      * @return type FORM
      */
     public function buildProductFormStep1($id) {
+        
         $objTable = $this->getObject('htmltable', 'htmlelements');
         $product = null;
         if ($id != null) {
@@ -419,6 +421,11 @@ class productmanager extends object {
         return $header->show() . $formData->show();
     }
 
+    /**
+     * this build the second form when creating an original product
+     * @param type $id
+     * @return type 
+     */
     public function buildProductFormStep2($id) {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
@@ -861,7 +868,8 @@ class productmanager extends object {
 
     /**
      * creates a table and returns the list of current products. This method is actually
-     * what constructs the first page
+     * what constructs the first page, but is not called directly. Rather, the paginator
+     * calls it via ajax, depending on the  page the user is navigating to
      * @return type 
      */
     public function getOriginalProductListing($mode, $filter='') {
@@ -922,6 +930,7 @@ class productmanager extends object {
         $table->attributes = "style='table-layout:fixed;'";
         $table->cellspacing = 10;
         $table->cellpadding = 10;
+        
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
