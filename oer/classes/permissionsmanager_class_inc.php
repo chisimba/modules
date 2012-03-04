@@ -31,7 +31,7 @@
 class permissionsmanager extends object {
 
     
-    private $EDITOR = "OER_EDITOR";
+    private $EDITOR = "OER_EDITORS";
 
     function init() {
         $this->objUser = $this->getObject("user", "security");
@@ -51,7 +51,7 @@ class permissionsmanager extends object {
      * @return type 
      */
     public function isMember() {
-        return $this->isLoggedIn();
+        return $this->objUser->isLoggedIn();
     }
 
     /**
@@ -63,7 +63,7 @@ class permissionsmanager extends object {
      */
     private function hasPermissions($groupName) {
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroups->getId("ProductCreators");
+        $groupId = $objGroups->getId($groupName);
         $objGroupOps = $this->getObject("groupops", "groupadmin");
         $userId = $this->objUser->userId();
         if ($objGroupOps->isGroupMember($groupId, $userId) || $this->objUser->isAdmin()) {

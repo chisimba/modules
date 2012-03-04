@@ -28,6 +28,7 @@ class vieworiginalproduct extends object {
 
     function init() {
         $this->objUser = $this->getObject("user", "security");
+        $this->permissionsManager = $this->getObject("permissionsmanager", "oer");
         $this->loadCSSandJS();
         $this->setupLanguageItems();
     }
@@ -44,10 +45,6 @@ class vieworiginalproduct extends object {
         $product = $objDbProducts->getProduct($productId);
         $table = $this->getObject("htmltable", "htmlelements");
 
-        $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroups->getId("ProductCreators");
-        $objGroupOps = $this->getObject("groupops", "groupadmin");
-        $userId = $this->objUser->userId();
 
         $table->attributes = "style='table-layout:fixed;'";
 
@@ -58,18 +55,11 @@ class vieworiginalproduct extends object {
         }
 
         $editControls = "";
-        if ($objGroupOps->isGroupMember($groupId, $userId)) {
-            $editImg = '<img src="skins/oeru/images/icons/edit.png">';
-            $deleteImg = '<img src="skins/oeru/images/icons/delete.png">';
-            $adaptImg = '<img src="skins/oeru/images/icons/add.png">';
-            $featuredImg = '<img src="skins/oeru/images/featured.png">';
-
-            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
-            $adaptLink->link = $adaptImg;
-            $adaptLink->cssClass = "adaptoriginalproduct";
-            $adaptLink->extra = 'alt="' . $objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
-            $adaptLink->title = $objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
-            $editControls.= $adaptLink->show();
+        if ($this->permissionsManager->isEditor()) {
+       
+            $editImg = '<img src="skins/oeru/images/icons/edit.png"/>';
+            $deleteImg = '<img src="skins/oeru/images/icons/delete.png"/>';
+            $featuredImg = '<img src="skins/oeru/images/featured.png"/>';
 
             $editLink = new link($this->uri(array("action" => "editoriginalproductstep1", "id" => $productId, "mode" => "edit")));
             $editLink->link = $editImg;
@@ -93,6 +83,17 @@ class vieworiginalproduct extends object {
             $editControls.="" . $featuredLink->show();
         }
 
+       
+        if ($this->permissionsManager->isMember()) {
+            $adaptImg = '<img src="skins/oeru/images/icons/add.png"/>';
+
+            $adaptLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $productId, "mode" => "new")));
+            $adaptLink->link = $adaptImg;
+            $adaptLink->cssClass = "adaptoriginalproduct";
+            $adaptLink->extra = 'alt="' . $objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
+            $adaptLink->title = $objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
+            $editControls.= $adaptLink->show();
+        }
 
 
         $leftContent.='<h1 class="viewproduct_title">' . $product['title'] . '</h1>';
@@ -164,10 +165,10 @@ class vieworiginalproduct extends object {
         //Add bookmark
         $bookmarks = "";
         //if ($this->objUser->isLoggedIn()) {
-            $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
-            $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
-            $objBookMarks->includeTextLink = FALSE;
-            $bookmarks = $objBookMarks->show();
+        $objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+        $objBookMarks->options = array('stumbleUpon', 'delicious', 'newsvine', 'reddit', 'muti', 'facebook', 'addThis');
+        $objBookMarks->includeTextLink = FALSE;
+        $bookmarks = $objBookMarks->show();
         //}
 
         $rightContent.='<div id="viewproduct_editcontrols">' . $editControls . $bookmarks . $prodTitle . '</div>';
@@ -223,7 +224,7 @@ class vieworiginalproduct extends object {
         $sections = '<div id="nodeband">';
 
         $sections.='<h3 class="original_product_section_title">' . $objLanguage->languageText('mod_oer_sections', 'oer') . '</h3>';
-        if ($objGroupOps->isGroupMember($groupId, $userId)) {
+        if ($this->permissionsManager->isEditor()) {
             $addSectionIcon = '<img src="skins/oeru/images/add-node.png" align="left"/>';
             $addNodeLink = new link($this->uri(array("action" => "addsectionnode", "productid" => $productId)));
             $addNodeLink->link = $addSectionIcon . $objLanguage->languageText('mod_oer_addnode', 'oer');

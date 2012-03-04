@@ -448,7 +448,8 @@ class productmanager extends object {
         $translation->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-        $originalProducts = $this->dbproducts->getOriginalProducts();
+        $count=  $this->dbproducts->getOriginalProductCount("");
+        $originalProducts = $this->dbproducts->getOriginalProducts(0,$count);
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
                 $translation->addOption($originalProduct['id'], $originalProduct['title']);
@@ -679,7 +680,8 @@ class productmanager extends object {
         $relatedproduct = new dropdown('relatedproduct');
         $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-        $originalProducts = $this->dbproducts->getOriginalProducts();
+         $count=  $this->dbproducts->getOriginalProductCount("");
+        $originalProducts = $this->dbproducts->getOriginalProducts(0,$count);
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
                 $relatedproduct->addOption($originalProduct['id'], $originalProduct['title']);
@@ -911,7 +913,7 @@ class productmanager extends object {
 
         $controlBand.='&nbsp;' . $listlink->show();
 
-        if ($this->objUser->isLoggedIn()) {
+        if ($this->permissionsManager->isEditor()) {
             $newthumbnail = '&nbsp;<img src="skins/oeru/images/document-new.png" width="19" height="15"/>';
             $controlBand.= '&nbsp;|&nbsp;' . $newthumbnail . $newproductlink->show();
         }
