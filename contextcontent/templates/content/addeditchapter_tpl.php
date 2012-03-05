@@ -23,7 +23,7 @@ if ($mode == 'edit') {
 $header->str=$areaTitle;
 //echo '<p>Todo: Allow User to place order of chapter</p>';
 
-$form = new form ('addchapter', $this->uri(array('action'=>$formaction, 'prevaction'=>$prevaction)));
+$form = new form ('addchapter', $this->uri(array('action'=>$formaction)));
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $title = new textinput('chapter');
@@ -70,14 +70,23 @@ $startLabel=$this->objLanguage->languageText('mod_contextcontent_releasedate','c
 $closeLabel=$this->objLanguage->languageText('mod_contextcontent_enddate','contextcontent',"End date");
 /* *** start date & time *** */
 // Set start date of test
-$startField = $objPopupcal->show('startdate', 'yes', 'no', $chapter['releasedate']);
+if ($mode == 'edit') {
+    $startField = $objPopupcal->show('startdate', 'yes', 'no', $chapter['releasedate']);
+} else {
+    $startField = $objPopupcal->show('startdate', 'yes', 'no', '');
+}
 $objLabel = new label('<b>'.$startLabel.':</b>', 'input_start');
 $table->addRow(array(
     $objLabel->show() ,
     $startField
 ));
 // Set closing date of test
-$closeField = $objPopupcal->show('enddate', 'yes', 'no', $chapter['enddate']);
+
+if ($mode == 'edit') {
+    $closeField = $objPopupcal->show('enddate', 'yes', 'no', $chapter['enddate']);
+} else {
+    $closeField = $objPopupcal->show('enddate', 'yes', 'no', '');
+}
 $objLabel = new label('<b>'.$closeLabel.':</b>', 'input_close');
 $table->addRow(array(
     $objLabel->show() ,
