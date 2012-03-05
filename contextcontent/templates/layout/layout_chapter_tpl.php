@@ -84,6 +84,7 @@ if (isset($currentChapter)) {
     $left = $header->show();
 
     $pageId = isset($currentPage) ? $currentPage : '';
+    $id = isset($currentChapter) ? $currentChapter : '';
     $left .= $heading->show();
 
     $navigationType = $this->getSession('navigationType', 'tree');
@@ -127,7 +128,7 @@ if (isset($currentChapter)) {
         $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$currentChapter)));
         $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile', 'contextcontent', 'Create page from file');
 
-        $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$chapter['id'])));
+        $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter)));
         $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
 
         $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
