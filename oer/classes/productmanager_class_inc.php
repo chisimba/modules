@@ -145,10 +145,13 @@ class productmanager extends object {
         $id = $this->getParam("id");
         $data = array(
             "accreditation_date" => $this->getParam("accreditationdate"),
+            "accreditation_body"=>  $this->getParam("accreditation_body"),
             "contacts" => $this->getParam("contacts"),
             "relation_type" => $this->getParam("relationtype"),
             "relation" => $this->getParam("relatedproduct"),
             "coverage" => $this->getParam("coverage"),
+            "oerresource"=>  $this->getParam("oerresource"),
+            "accredited"=>  $this->getParam("accredited"),
             "status" => $this->getParam("status"),
             "rights" => $this->getParam("creativecommons")
         );
@@ -448,8 +451,8 @@ class productmanager extends object {
         $translation->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-        $count=  $this->dbproducts->getOriginalProductCount("");
-        $originalProducts = $this->dbproducts->getOriginalProducts(0,$count);
+    
+        $originalProducts = $this->dbproducts->getOriginalProducts();
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
                 $translation->addOption($originalProduct['id'], $originalProduct['title']);
@@ -573,6 +576,9 @@ class productmanager extends object {
         $oerresource->cssClass = 'required';
         $oerresource->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
+        
+        $oerresource->setSelected($product['oerresource']);
+        
         $objTable->addCell($oerresource->show());
         $objTable->endRow();
 
@@ -584,8 +590,10 @@ class productmanager extends object {
         $objDisplayLicense = $this->getObject('licensechooserdropdown', 'creativecommons');
 
         $license = $product['rights'] == '' ? 'copyright' : $product['rights'];
-        $rightCell = $objDisplayLicense->show($license);
-
+        $objDisplayLicense->defaultValue=$license;
+        $rightCell = $objDisplayLicense->show();
+       
+        
         $objTable->startRow();
         $objTable->addCell($rightCell);
         $objTable->endRow();
@@ -614,7 +622,7 @@ class productmanager extends object {
 
         $objTable->startRow();
 
-        $textinput = new textinput('accreditationbody');
+        $textinput = new textinput('accreditation_body');
         $textinput->size = 60;
         if ($product != null) {
             $textinput->value = $product['accreditation_body'];
@@ -680,8 +688,8 @@ class productmanager extends object {
         $relatedproduct = new dropdown('relatedproduct');
         $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-         $count=  $this->dbproducts->getOriginalProductCount("");
-        $originalProducts = $this->dbproducts->getOriginalProducts(0,$count);
+     
+        $originalProducts = $this->dbproducts->getOriginalProducts();
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
                 $relatedproduct->addOption($originalProduct['id'], $originalProduct['title']);
@@ -887,7 +895,7 @@ class productmanager extends object {
             $start = 0;
         }
 
-        $originalProducts = $this->dbproducts->getOriginalProducts($start, $pageSize, $filter);
+        $originalProducts = $this->dbproducts->getOriginalProducts($filter,$start, $pageSize);
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
         $controlBand =

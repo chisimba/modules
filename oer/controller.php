@@ -497,7 +497,7 @@ class oer extends controller {
     function __saveoriginalproductstep3() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep3();
-        die($id);
+        return $this->nextAction("editoriginalproductstep4", array("id"=>$id));
     }
 
     /**

@@ -36,8 +36,12 @@ class dbproducts extends dbtable {
     /**
      * this selects original products
      */
-    function getOriginalProducts($start,$pageSize,$filter='') {
-        $sql = "select * from $this->productsTableName where parent_id is null $filter limit $start, $pageSize";
+    function getOriginalProducts($filter='',$start=null, $pageSize=null) {
+        $limit = "";
+        if ($start != null && $pageSize != null) {
+            $limit = " limit $start, $pageSize";
+        }
+        $sql = "select * from $this->productsTableName where parent_id is null $filter $limit";
         return $this->getArray($sql);
     }
 
@@ -45,26 +49,31 @@ class dbproducts extends dbtable {
      * get a total count of original products
      * @return type 
      */
-    function getOriginalProductCount($filter){
-           $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null $filter";
-           $data=$this->getArray($sql);
-           return $data[0]['productcount'];
+    function getOriginalProductCount($filter) {
+        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null $filter";
+        $data = $this->getArray($sql);
+        return $data[0]['productcount'];
     }
-    
-        /**
+
+    /**
      * get a total count of original products
      * @return type 
      */
-    function getAdaptationCount($filter){
-           $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null $filter";
-           $data=$this->getArray($sql);
-           return $data[0]['productcount'];
+    function getAdaptationCount($filter) {
+        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null $filter";
+        $data = $this->getArray($sql);
+        return $data[0]['productcount'];
     }
+
     /**
      * this selects original products
      */
-    function getAdaptedProducts($start,$pageSize, $filter) {
-        $sql = "select * from $this->productsTableName where parent_id is not null $filter limit $start, $pageSize";
+    function getAdaptedProducts($filter,$start=null, $pageSize=null) {
+         $limit = "";
+        if ($start != null && $pageSize != null) {
+            $limit = " limit $start, $pageSize";
+        }
+        $sql = "select * from $this->productsTableName where parent_id is not null $filter $limit";
         return $this->getArray($sql);
     }
 
@@ -97,7 +106,7 @@ class dbproducts extends dbtable {
         return $this->getArray($sql);
     }
 
-      /**
+    /**
      * returns distinct countries that are available for all products
      */
     function getProductCountries() {
@@ -106,8 +115,7 @@ class dbproducts extends dbtable {
         return $this->getArray($sql);
     }
 
-    
-      /**
+    /**
      * returns distinct regions that are available for all products
      */
     function getProductRegions() {
@@ -250,18 +258,23 @@ class dbproducts extends dbtable {
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
-    function getProductAdaptations($start,$pageSize,$parentId, $filter) {
-        $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter limit $start,$pageSize";
+    function getProductAdaptations($parentId, $filter,$start=null, $pageSize=null) {
+           $limit = "";
+        if ($start != null && $pageSize != null) {
+            $limit = " limit $start, $pageSize";
+        }
+        $sql = "select * from $this->productsTableName where parent_id = '$parentId' $filter $limit";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns array of adaptations for a specific product
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
     function getAllProductAdaptations($parentId, $filter) {
-        $sql = "select * from $this->productsTableName where parent_id = '".$parentId."'". $filter;
+        $sql = "select * from $this->productsTableName where parent_id = '" . $parentId . "'" . $filter;
         $data = $this->getArray($sql);
         return $data;
     }
