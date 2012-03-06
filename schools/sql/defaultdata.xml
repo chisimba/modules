@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+
+  <!-- MODULE: schools, Table tbl_schools_info create data used by this module -->
+    <tbl_schools_provinces>
+        <id>1</id>
+        <province_name>Western Cape</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>2</id>
+        <province_name>Northern Cape</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>3</id>
+        <province_name>North West</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>4</id>
+        <province_name>Eastern Cape</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>5</id>
+        <province_name>Free State</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>6</id>
+        <province_name>Gauteng</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>7</id>
+        <province_name>Kwazulu Natal</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>8</id>
+        <province_name>Mpumalanga</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>9</id>
+        <province_name>Limpopo</province_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    
+    <tbl_schools_districts>
+        <id>1</id>
+        <province_id>1</province_id>
+        <district_name>Central</district_name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_districts>
+    
+</defaultdata>
