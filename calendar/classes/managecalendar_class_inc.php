@@ -436,10 +436,6 @@ class managecalendar extends object
 	function getEventsCalendar($user=NULL, $context=NULL, $month, $year)
 	{
 		$sql = $this->objCalendar->getCalendarSQL($user, $context, $month, $year);
-
-//echo $context;
-
-
 		return $this->objCalendar->generateCalendar('user', $user, $month, $year, $sql);
 	}
 

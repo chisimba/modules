@@ -19,29 +19,83 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class calendarinterface extends object
 {
-    
+    /**
+     * An array of events formatted for rendering
+     * 
+     * @var string array
+     * @access private
+     * 
+     */
     private $preparedEventsArray = array();
+    /**
+     *
+     * An array listing events formatted for rendering
+     * 
+     * @var string array
+     * @access private
+     *  
+     */
     private $preparedListArray = array();
-    
+    /**
+     * The month of the calendar to render
+     * @var string
+     * @access public
+     * 
+     */
     public $month;
+    /**
+     *
+     * The year of the calendar to render
+     * 
+     * @var string
+     * @access public
+     * 
+     */
     public $year;
-    
+    /**
+     * The calendar size big, medium or small
+     * @var string
+     * @access public
+     * 
+     */
     public $calendarSize = 'big';
-    
+    /**
+     * If the lecturer is a lecturer in the current context
+     * @var boolean
+     * @access public
+     * 
+     */
     public $isContextLecturer = FALSE;
+    /**
+     *
+     * If the person can manage the site calendar or not
+     *  
+     * @var boolean
+     * @access public
+     * 
+     */
     public $manageSiteCalendar = FALSE;
+    /**
+     * The code of the current context
+     * @var string
+     * @access public
+     */
     public $contextCode;
     
     
     /**
-    * Constructor method to define the table
+    * Standard constructor methos, set up commonly used
+    * objects and parameters.
+    * 
+    * @return void
+    * @access public
+    * 
     */
-    function init()
+    public function init()
     {
         $this->objCalendar = $this->getObject('dbcalendar', 'calendarbase');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDateFunctions = $this->getObject('dateandtime','utilities');
-        
         $this->loadClass('link', 'htmlelements');
         
         $this->month = date('m');
@@ -83,30 +137,23 @@ class calendarinterface extends object
         
         $siteEvents = $this->getSiteEvents($month, $year);
         $userEvents = $this->getUserEvents($this->userId, $month, $year);
-        
         if ($this->contextCode == 'root') {
             $contextEvents = array();
         } else {
             $contextEvents = $this->getContextEvents($this->contextCode, $month, $year);
         }
         $userContextsArray = array(); 
-        //$objManageGroups = $this->getObject('managegroups', 'contextgroups');
-        //$userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));       
-        
         $otherEvents = array();
         if (count($userContextsArray) > 0) {
-            foreach ($userContextsArray as $context)
-            {
+            foreach ($userContextsArray as $context) {
                 if ($context['contextcode'] != $this->contextCode) {
                     $otherContextEvents = $this->getContextEvents($context['contextcode'], $month, $year);
-                    
                     if (count($otherContextEvents) > 0) {
                         $otherEvents = array_merge($otherEvents, $otherContextEvents);
                     }
                 }
             }
         }
-        
         $this->prepareEventsForCalendar($userEvents, 'user');
         $this->prepareEventsForCalendar($siteEvents, 'site');
         $this->prepareEventsForCalendar($contextEvents, 'context');
@@ -125,14 +172,11 @@ class calendarinterface extends object
         if (!isset($month)) {
             $month = $this->month;
         }
-
         if (!isset($year)) {
             $year = $this->year;
         }
-        
         $startDate = $year.'-'.$month.'-01';
         $endDate = $this->objDateFunctions->lastDateMonth($month, $year);
-        
         return $this->objCalendar->getEvents($origin, $id, $startDate, $endDate);
     }
     
@@ -152,7 +196,7 @@ class calendarinterface extends object
     }
     
     /**
-    * Method to take a list of events and prepare them in a format for adding to the calendar class.
+    * Take a list of events and prepare them in a format for adding to the calendar class.
     * Amongst others, it removed duplication in events, etc.
     *
     * @param array $events List of Events
@@ -162,26 +206,26 @@ class calendarinterface extends object
     {
         $objTrim = $this->getObject('trimstr', 'strings');
         $objWashout = $this->getObject('washout', 'utilities');
-        
-        
-        foreach ($events as $event)
-        {
+        foreach ($events as $event) {
+            // Convert to day of the month.
             $day = $this->objDateFunctions->dayofMonth($event['eventdate']);
-            
+            // Initialize variables.
             $edit = '';
             $delete = '';
             $contextInfo = '';
-            
+            // Do different things depending on what type of calendar it is.
             switch ($type)
             {
                 case 'user':
                     $css = 'event_user';
                     if ($event['userfirstentry'] == $this->objUser->userId()) {
-                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link = new link ($this->uri(array('action'=>'edit', 
+                          'id'=>$event['id'])));
                         $link->link = $this->editIcon;
-                        
                         $edit = $link->show();
-                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                        $delete = $this->objIcon->getDeleteIconWithConfirm(
+                          '', array('action' => 'delete', 'id'=>$event['id']), 
+                          'calendar', $this->confirmDel);
                     }
                     break;
                 case 'context':
@@ -190,78 +234,92 @@ class calendarinterface extends object
                         $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
                         $link->link = $this->editIcon;
                         $edit = $link->show();
-                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                        $delete = $this->objIcon->getDeleteIconWithConfirm(
+                          '', array('action' => 'delete', 'id'=>$event['id']), 
+                          'calendar', $this->confirmDel);
                     }
-                    
-                    $contextInfo = '<strong>'.ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]')).':</strong> '.$this->objContext->getTitle($event['context']).'<br />';
-                    
+                    $contextInfo = '<strong>' 
+                      . ucwords($this->objLanguage->code2Txt('mod_context_context', 
+                          'context', NULL, '[-context-]')) .':</strong> '
+                      . $this->objContext->getTitle($event['context']) . '<br />';
                     break;
                 case 'site':
                     $css = 'event_site';
                     if ($this->objUser->isAdmin()) {
-                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link = new link ($this->uri(array('action'=>'edit', 
+                          'id'=>$event['id'])));
                         $link->link = $this->editIcon;
                         $edit = $link->show();
-                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                        $delete = $this->objIcon->getDeleteIconWithConfirm(
+                          '', array('action' => 'delete', 'id'=>$event['id']), 
+                          'calendar', $this->confirmDel);
                     }
                     break;
                 case 'other':
                     $css = 'event_othercontext';
-                    if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
-                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                    if ($this->objUser->isContextLecturer(
+                      $this->objUser->userId(), $event['context']) || 
+                      $this->objUser->isAdmin()) {
+                        $link = new link ($this->uri(array('action'=>'edit', 
+                          'id'=>$event['id'])));
                         $link->link = $this->editIcon;
                         $edit = $link->show();
-                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                        $delete = $this->objIcon->getDeleteIconWithConfirm(
+                          '', array('action' => 'delete', 'id'=>$event['id']), 
+                          'calendar', $this->confirmDel);
                     }
-                    $contextInfo = '<strong>'.ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]')).':</strong> '.$this->objContext->getTitle($event['context']).'<br />';
+                    $contextInfo = '<strong>'
+                      . ucwords($this->objLanguage->code2Txt('mod_context_context', 
+                      'context', NULL, '[-context-]')).':</strong> '
+                      .$this->objContext->getTitle($event['context']).'<br />';
                     break;
                 case 'workgroup':  $css = 'event_workgroup'; break;
                 default:           $css = ''; break;
             }
-            
-            
-            //var_dump($event);
             
             if ($this->calendarSize == 'small') {
                 
             } else {
                 
             }
-            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> ';
+            $eventList = '<div class="eventlist ' . $css
+              . '"><strong>' . $event['eventtitle'] . '</strong>';
             
             if ($event['timefrom'] != '') {
-                $eventList .= '('.$event['timefrom'].' - '.$event['timeto'].')';
+                $eventList .= '('. $event['timefrom'] . ' - ' 
+                  . $event['timeto'] . ')';
             }
-            
-            //$eventList .= '<br /><div>'.$objWashout->parseText($contextInfo.$event['eventdetails']).'</div>'.$edit.' '.$delete.'';
-            $eventList .= '<br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
+            $eventList .= '<div>'. $contextInfo . $event['eventdetails']
+              .'</div>'. $edit . ' ' . $delete . '';
             if ($event['eventurl'] != NULL) {
                 $link = new link($event['eventurl']);
                 $link->link = $event['eventurl'];
-                
-                $eventList .= '<p>'.$link->show().'</p>';
+                $eventList .= '<p>' . $link->show() . '</p>';
             }
             
             $eventList .= '</div>';
-            
-            
-            
-            //var_dump($event);
-            
+
             if (array_key_exists($day, $this->preparedEventsArray)) {
                 $temp = rtrim ($this->preparedEventsArray[$day], '</ul>');
-                $this->preparedEventsArray[$day] = $temp.'<li class="'.$css.'" title="'.stripslashes($event['eventtitle']).'">'.$objTrim->strTrim(stripslashes($event['eventtitle']), 8).'</li></ul>';
+                $this->preparedEventsArray[$day] = $temp.'<li class="'
+                  .$css.'" title="'.stripslashes($event['eventtitle'])
+                  .'">'.$objTrim->strTrim(stripslashes($event['eventtitle']), 8)
+                  .'</li></ul>';
                 $this->preparedListArray[$day] .= '<hr />'.$eventList;
             } else {
                 $this->preparedEventsArray[$day] = '<ul><li class="'.$css.'">'.stripslashes($event['eventtitle']).'</li></ul>';
                 $this->preparedListArray[$day] = $eventList;
             }
-            
-            //var_dump($this->preparedEventsArray);
-            //var_dump($this->preparedListArray);
         }
     }
     
+    /**
+     *
+     * Get a list of events
+     * 
+     * @return type 
+     * 
+     */
     public function getEventsList()
     {
         
@@ -272,12 +330,13 @@ class calendarinterface extends object
             $table->cssClass = 'eventslist';
             
             ksort($this->preparedListArray);
-            $monthYear = $this->objDateFunctions->monthFull($this->month).' '.$this->year;
+// Temporary thing until I can figure out why it is doing all the SQL twice
+            array_unique($this->preparedListArray);
+            $monthYear = $this->objDateFunctions->monthFull($this->month).'<br />'.$this->year;
             
-            foreach ($this->preparedListArray as $day=>$events)
-            {
+            foreach ($this->preparedListArray as $day=>$events) {
                 $table->startRow();
-                $table->addCell('<a name="'.$day.'" class="bigDayNum">'.$day.'</a><br />'.$monthYear, '100');
+                $table->addCell('<a name="'.$day.'" class="bigDayNum">'.$day.'</a><br />'.$monthYear, '50');
                 $table->addCell($events);
                 $table->endRow();
             }
@@ -299,7 +358,7 @@ class calendarinterface extends object
             foreach ($this->preparedEventsArray as $day=>$events)
             {
                 $table->startRow();
-                $table->addCell('<strong>'.$day.'</strong><br />', '30');
+                $table->addCell('<strong>'.$day.'</strong>', '30');
                 $table->addCell($events);
                 $table->endRow();
             }
@@ -358,40 +417,34 @@ class calendarinterface extends object
     * Method to check whether the user has access to edit an event
     * @param array $event Event Details
     * @return True if user has access, or redirects to screen with pop up message
+     * @access public
     */
-    function checkEventEditPermission($event)
+    public function checkEventEditPermission($event)
     {
         // If the event does not exists, return to the Calendar
         if ($event == FALSE) {
             return FALSE;
         }
-
         // Default to Access
         $okToEdit = TRUE;
-
-
         // Check if User has access to edit the event
         if ($event['userorcontext'] == 0 && $event['userFirstEntry'] != $this->userId) {
             $okToEdit = FALSE;
         }
-        //echo $okToEdit;
         // Check that event is either for the current context or a site event
         if ($event['userorcontext'] == 1 && ($event['context'] == $this->contextCode || $event['context'] == 'root')) {
             $okToEdit = TRUE;
         } else if ($event['userorcontext'] == 1) { // Additional if to only use context events
             $okToEdit = FALSE;
         }
-        
         // If event is for current event - check if user is lecturer
         if ($event['userorcontext'] == 1 && $event['context'] == $this->contextCode && !$this->isContextLecturer) {
             $okToEdit = FALSE;
         }
-        
         // If event is a site event - check if user is admin
         if ($event['userorcontext'] == 1 && $event['context'] == 'root' && !$this->manageSiteCalendar) {
             $okToEdit = FALSE;
         }
-        
         // Redirect if no permission
         if ($okToEdit == FALSE) {
             return FALSE;
@@ -399,6 +452,5 @@ class calendarinterface extends object
             return TRUE;
         }
     }
-
-} #end of class
+}
 ?>

@@ -358,13 +358,10 @@ class dbcalendar extends dbTable
 
         // Add a limit filter
         if (isset($limit)) {
-            $where .= ' LIMIT '.$limit;
+            $where .= ' LIMIT '. $limit;
         }
-
-        //echo $sql.$where.'<br /><br />';
-
         // Get the events
-        return $this->getArray($sql.$where);
+        return $this->getArray($sql . $where);
     }
 
 
@@ -430,7 +427,7 @@ class dbcalendar extends dbTable
     * Amongst others, it removed duplication in events, etc.
     *
     * @param array $events List of Events
-    * @return array $preparedArray List of events ready to be sent to the calendar class
+    * @return array $preparedArray List of ready to be sent to the calendar class
     */
     public function prepareEventsForCalendar (&$events)
     {

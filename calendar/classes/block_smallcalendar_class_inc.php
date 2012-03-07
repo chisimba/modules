@@ -8,7 +8,7 @@ class block_smallcalendar extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         
-        $this->title = $this->objLanguage->languageText('word_calendar', 'system', 'Calendar');
+        $this->title = $this->objLanguage->languageText('mod_calendar_sidecal', 'system', 'Side calendar');
         $this->objCalendarInterface = $this->getObject('calendarinterface');
     }
     
@@ -16,23 +16,17 @@ class block_smallcalendar extends object
     {
         $month = $this->getParam('month', date('m'));
         $year = $this->getParam('year', date('Y'));
-        
         $this->objCalendarInterface->calendarSize = 'small';
-        
         $this->objCalendarInterface->setupCalendar($month, $year);
-        
-        $str = $this->objCalendarInterface->getCalendar('small').$this->objCalendarInterface->getSmallEventsList();
-        
+        $str = $this->objCalendarInterface->getCalendar('small')
+          . $this->objCalendarInterface->getSmallEventsList();
         $this->loadClass('link', 'htmlelements');
-        
         $calendarLink = new link ($this->uri(NULL, 'calendar'));
         $calendarLink->link = $this->title ;
-        
         $addEvent = new link ($this->uri(array('action'=>'add'), 'calendar'));
         $addEvent->link = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase', 'Add an Event');
-        
-        $str .= '<p>'.$calendarLink->show().' / '.$addEvent->show().'</p>';
-        
+        $str .= '<p>' . $calendarLink->show() . ' / ' 
+           .$addEvent->show() . '</p>';
         return $str;
     }
 }
