@@ -51,7 +51,8 @@ does not exist. Please contact your software administrator.</p>');
         var formElementText = jQuery(':input[name=formElementDesiredText]');
   formElementLayout.button();
   //formElementLayout.css('width','200px');
-  jQuery('.ui-button-text').css('width','150px');
+//  jQuery('.ui-button-text').css('width','150px');
+  jQuery("#labelSizeContainer").children().children('.ui-button-text').css('width','250px');
         var allFields = jQuery([]).add(formElementID).add(formElementText);
         filterInput(formElementID);
         jQuery( "#dialog-box-formElements" ).dialog( "option", "buttons", {

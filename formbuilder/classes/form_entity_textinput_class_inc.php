@@ -188,7 +188,7 @@ return $textInputArray;
            $WYSIWYGTextInputInsertForm .= $this->insertCharacterSizeForm()."";
                        $WYSIWYGTextInputInsertForm.= "</div>";
            $WYSIWYGTextInputInsertForm.="<b>Text Input Properties Menu</b>";
-           $WYSIWYGTextInputInsertForm.="<div id='textInputSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
+           $WYSIWYGTextInputInsertForm.="<div id='textInputPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
        $WYSIWYGTextInputInsertForm.= $this->insertTextInputOptionsForm(2,68)."";
          $WYSIWYGTextInputInsertForm.= "</div>";
            return $WYSIWYGTextInputInsertForm;

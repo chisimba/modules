@@ -60,7 +60,10 @@ does not exist. Please contact your software administrator.</p>');
             formElementLabelLayout.button();
  
  //  formElementLabelLayout.button();
-            jQuery('.ui-button-text').css('width','250px');
+//            jQuery('.ui-button-text').css('width','250px');
+            jQuery("#textInputLabelContainer").children().children('.ui-button-text').css('width','250px');
+            jQuery("#textInputPropertiesContainer").children().children('.ui-button-text').css('width','250px');
+            jQuery("#textInputPropertiesContainer").children("#additionalTextProperties").children().children('.ui-button-text').css('width','250px');
             var allFields = jQuery([]).add(formElementID).add(formElementText).add(formElementSize);
             filterInput(formElementID);
             //filterInput(formElementName);

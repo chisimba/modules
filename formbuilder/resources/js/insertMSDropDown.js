@@ -65,7 +65,10 @@ does not exist. Please contact your software administrator.</p>');
 
             defaultOption.button();
             menuSizeRadio.button();
-            jQuery('.ui-button-text').css('width','250px');
+//            jQuery('.ui-button-text').css('width','250px');
+            jQuery("#msdropdownLabelContainer").children().children('.ui-button-text').css('width','250px');
+             jQuery("#msdropdownSizeContainer").children().children('.ui-button-text').css('width','250px');
+              jQuery("#msddOptionAndValueContainer").children().children('.ui-button-text').css('width','250px');
             var allFields = jQuery([]).add(formElementID).add(optionValue).add(optionLabel);
             filterInput(formElementID);
           //  filterInput(optionValue);

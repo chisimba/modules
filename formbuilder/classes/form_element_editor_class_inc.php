@@ -154,13 +154,13 @@ class form_element_editor extends object {
      * form_editor.php template.
      */
     private function buildWYSIWYGToolBar() {
-        $toolBarUnderConstrunction = '<span id="toolbar" class="ui-state-default ui-corner-all"style="border:1px solid #CCCCCC;padding:15px 15px 15px 15px; margin: 50px 50px 50px 50px; ">';
-        $toolBarUnderConstrunction .= "<b>WYSIWYG Form Editor Toolbar</b>
+        $toolBarUnderConstrunction = '<span id="toolbar" class="ui-state-default ui-corner-all"style="border:1px solid #CCCCCC;padding:30px 15px 15px 15px; margin: 50px 50px 50px 50px; ">';
+        $toolBarUnderConstrunction .= "<span style='padding-bottom:155px;'><b >WYSIWYG Form Editor Toolbar</b>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         $toolBarUnderConstrunction .= "Insert A:   ";
         $toolBarUnderConstrunction .=$this->formElementDropDown->showFormElementInserterDropDown() . "
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        $toolBarUnderConstrunction .= "Rearrange Form Elements : <input type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle</label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>";
+        $toolBarUnderConstrunction .= "Rearrange Form Elements : <span style='margin:35px' id='sortFormElementsToggleContainer'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle</label></span>
 &nbsp;&nbsp;&nbsp;Delete Form Elements : <input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle</label>
 &nbsp;&nbsp;&nbsp;<button class='finishDesigningForm' id='toolBarDoneButton'>Done</button>";
         $toolBarUnderConstrunction .= '</span>';

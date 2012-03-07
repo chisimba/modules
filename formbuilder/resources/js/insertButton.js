@@ -55,7 +55,7 @@ does not exist. Please contact your software administrator.</p>');
             var buttonLabel = jQuery(':input[name=buttonLabel]');
 
             resetOrSubmitButton.button();
-            jQuery('.ui-button-text').css('width','250px');
+            jQuery("#buttonPropertiesContainer").children().children('.ui-button-text').css('width','250px');
             var allFields = jQuery([]).add(formElementID).add(formElementName).add(buttonLabel);
             filterInput(formElementID);
             filterInput(formElementName);

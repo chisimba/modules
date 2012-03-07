@@ -114,7 +114,7 @@ class form_entity_dropdown extends form_entity_handler {
         $WYSIWYGDropDownInsertForm.= $this->buildInsertIdForm('dropdown', $formName, "70") . "";
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "<b>Drop Down Label Menu</b>";
-        $WYSIWYGDropDownInsertForm.= "<div id='dropdownLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGDropDownInsertForm.= "<div id='ddLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGDropDownInsertForm.= $this->insertFormLabelOptions("dropdown", "labelOrientation");
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "<div id='optionAndValueContainer'>";

@@ -126,7 +126,7 @@ class form_entity_button extends form_entity_handler {
         $WYSIWYGButtonInsertForm.= $this->buildInsertFormElementNameForm('button', "70") . "<br>";
         $WYSIWYGButtonInsertForm.="</div>";
         $WYSIWYGButtonInsertForm.="<b>Button Properties Menu</b>";
-        $WYSIWYGButtonInsertForm.="<div id='labelNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGButtonInsertForm.="<div id='buttonPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGButtonInsertForm.= $this->insertButtonParametersForm() . "<br>";
         $WYSIWYGButtonInsertForm.="</div>";
         return $WYSIWYGButtonInsertForm;

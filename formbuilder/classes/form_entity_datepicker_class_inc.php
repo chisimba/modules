@@ -147,7 +147,10 @@ public function getWYSIWYGDatePickerInsertForm($formName)
   $WYSIWYGDatePickerInsertForm.= $this->buildInsertIdForm('datepicker',$formName,"70")."<br>";
   $WYSIWYGDatePickerInsertForm.= $this->buildInsertFormElementNameForm('datepicker', "70")."<br>";
     $WYSIWYGDatePickerInsertForm.= "</div>";
+    $WYSIWYGDatePickerInsertForm.="<b>Date Picker Date Settings</b>";
+      $WYSIWYGDatePickerInsertForm.="<div id='dpPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
   $WYSIWYGDatePickerInsertForm.= $this->insertDatePickerFormParameters();
+  $WYSIWYGDatePickerInsertForm.= "</div>";
            return   $WYSIWYGDatePickerInsertForm;
     }
 

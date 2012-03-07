@@ -324,7 +324,12 @@ echo $formNumber = $this->getParam('formNumber', NULL);
                 Cancel: function() {
                     jQuery(this).dialog('close');
                 }
-            }
+            },
+close: function(event, ui) {
+ jQuery("#sortFormElementsButton .ui-button").css('width','50px');
+ jQuery("#deleteFormElementsButton .ui-button").css('width','50px');
+ jQuery('#sortFormElementsButton .ui-button-text').css('width','50px');
+}
         });
 
         jQuery("#dialog-box-formElementsAdvanced").dialog({
@@ -461,6 +466,9 @@ echo $formNumber = $this->getParam('formNumber', NULL);
         jQuery("#getFormNumber").hide();
         setUpDialogueBox();
         insertFormElement();
+ jQuery("#sortFormElementsButton .ui-button").css('margin','50px');
+ jQuery("#deleteFormElementsButton .ui-button").css('margin','50px');
+ jQuery("#toolbar").children("#sortFormElementsToggleContainer").children(".ui-button").css('margin-top','15px');
     });
 
 

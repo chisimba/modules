@@ -138,7 +138,7 @@ class form_entity_htmlheading extends form_entity_handler {
         $WYSIWYGLabelInsertForm.= $this->buildInsertIdForm('Heading', $formName, "70") . "";
         $WYSIWYGLabelInsertForm.= "</div>";
         $WYSIWYGLabelInsertForm.="<b>Text Heading Properties Menu</b>";
-        $WYSIWYGLabelInsertForm.="<div id='HeadingNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGLabelInsertForm.="<div id='HeadingPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGLabelInsertForm.= $this->insertFontSizeForm() . "<br><br>";
         $WYSIWYGLabelInsertForm.= $this->insertTextAlignmentType() . "<br><br>";
         $WYSIWYGLabelInsertForm.= $this->insertTextForm('HTML Heading', 2, 68);
