@@ -526,7 +526,7 @@ class compareadaptations extends object {
                 }
             }
             //get node data
-            $selectedSecContent = $this->sectionManager->buildSectionView($selAdaptId, $selSecId, false);
+            $selectedSecContent = $this->sectionManager->buildSectionView($selAdaptId, $selSecId,null, false);
         }
         $contentTable .= "</tr></table>";
 

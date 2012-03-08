@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,12 +190,12 @@ class sectionmanager extends object {
         $id = $dbSectionContent->addSectionContent($data);
         return $id;
     }
+
     /**
      * Function that updates section node
      *
      * @return String id
      */
-
     function updateSectionNode() {
 
         $parentid = $this->getParam('selectednode');
@@ -591,13 +592,14 @@ class sectionmanager extends object {
      * @param Boolean $showtopview
      * @return string
      */
-    function buildSectionView($productId, $sectionId, $showTopView=true) {
+    function buildSectionView($productId, $sectionId, $nodeType, $showTopView=true) {
         //Get DB Objects
         $dbSections = $this->getObject("dbsectioncontent", "oer");
         $dbSectionNode = $this->getObject("dbsectionnodes", "oer");
         $dbProducts = $this->getObject("dbproducts", "oer");
         $objDbInstitution = $this->getObject("dbinstitution", "oer");
         $objAdaptationManager = $this->getObject("adaptationmanager", "oer");
+        $dbCurriculum = $this->getObject("dbcurriculums", "oer");
 
         //Flag to check if user has perms to manage adaptations
         $hasPerms = $objAdaptationManager->userHasPermissions();
@@ -606,6 +608,11 @@ class sectionmanager extends object {
         $node = $dbSectionNode->getSectionNode($sectionId);
         $section = $dbSections->getSectionContent($sectionId);
         $isOriginalProduct = $dbProducts->isOriginalProduct($productId);
+
+        $curriculum = null;
+        if ($nodeType == 'curriculum') {
+            $curriculum = $dbCurriculum->getCurriculum($productId);
+        }
 
 
         $product = $dbProducts->getProduct($productId);
@@ -691,9 +698,12 @@ class sectionmanager extends object {
 
         $leftCol .= '<div class="headingHolder">            
             <div class="heading2">
-            <h1 class="greyText">' . $section['title'] . '</h1></div>            
-            <p class="greyText">' . $this->objLanguage->languageText('mod_oer_contributedby', 'oer') . " : " .
-                $section['contributedby'] . '</p></div>';
+            <h1 class="greyText">' . $section['title'] . '</h1></div>';
+        if ($curriculum == null) {
+            $leftCol.='    <p class="greyText">' . $this->objLanguage->languageText('mod_oer_contributedby', 'oer') . " : " .
+                    $section['contributedby'] . '</p>';
+        }
+        $leftCol.='      </div>';
 
         $table = $this->getObject("htmltable", "htmlelements");
         $table->attributes = "style='table-layout:fixed;'";
@@ -701,7 +711,11 @@ class sectionmanager extends object {
 
         $leftContent = "";
         $rightContent = "";
-        $leftContent = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $section['content'] . '</div>';
+        $sectContent=$section['content'];
+        if($curriculum != null){
+            $sectContent=$curriculum['forward'].'<p/>'.$curriculum['background'].'<p/>'.$curriculum['introduction'];
+        }
+        $leftContent = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $sectContent . '</div>';
         if (!$isOriginalProduct) {
             $leftContent .= '<div class="adaptationNotesContent"><p><b>' . $this->objLanguage->languageText('mod_oer_adaptationotes', 'oer') . '</b></p><p>'
                     . $section['adaptation_notes'] . '</p></div>';
@@ -811,9 +825,9 @@ class sectionmanager extends object {
         }
         if ($showTopView) {
             return '<div class="navPath">' . $navpath .
-            '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
+                    '</div><div class="topContentHolder">' . $topStuff . '</div><br/><br/><div class="mainContentHolder">
             <div class="navPath">' . $navpath .
-            '</div>' . $table->show() . '
+                    '</div>' . $table->show() . '
             <div class="hunderedPercentGreyHorizontalLine">' . '</div></div></div>';
         } else {
             return $table->show();
@@ -974,13 +988,13 @@ class sectionmanager extends object {
                     //Check if the folderShortText contains some words in selected
                     $arr_selectedtxt = explode(" ", $selectedTitle);
                     $arr_count = count($arr_selectedtxt);
-                    $text = $sectionNode['title'];                    
+                    $text = $sectionNode['title'];
                     //Check if the node is selected
                     if (!empty($selectedId)) {
                         $cnt = 0;
                         $exists == false;
                         do {
-                            $exists = strpos(strtolower($text), strtolower($arr_selectedtxt[$cnt]));                            
+                            $exists = strpos(strtolower($text), strtolower($arr_selectedtxt[$cnt]));
                             $cnt++;
                         } while ($exists === false && $cnt <= $arr_count);
                     }
@@ -1123,9 +1137,14 @@ class sectionmanager extends object {
                     $link->cssClass = 'sectionlink';
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
                 } else {
+
                     $link = new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
                     $link->cssClass = 'sectionlink';
-                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $link->href, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
+                    $txtLink = $link->href;
+                    if ($sectionNode['nodetype'] == 'folder') {
+                        $txtLink = '';
+                    }
+                    $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $txtLink, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
                 }
 
                 $parent = $this->getParent($sectionNode['path'], $productId);

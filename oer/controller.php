@@ -497,7 +497,7 @@ class oer extends controller {
     function __saveoriginalproductstep3() {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $objProductManager->updateProductStep3();
-        return $this->nextAction("editoriginalproductstep4", array("id"=>$id));
+        return $this->nextAction("editoriginalproductstep4", array("id" => $id));
     }
 
     /**
@@ -935,18 +935,18 @@ class oer extends controller {
         }
     }
 
+    /**
+     * displays section content. Nodes of type folder never reach here
+     * since they never have active links
+     * @return type 
+     */
     function __viewsection() {
         $sectionid = $this->getParam("sectionid");
         $productid = $this->getParam("productid");
         $nodeType = $this->getParam("nodetype");
-        if ($nodeType == 'section') {
-            $data = $productid . '|' . $sectionid;
-            $this->setVarByRef("data", $data);
-            return "viewproductsection_tpl.php";
-        } else {
-            $this->setVarByRef("id", $productid);
-            return "vieworiginalproduct_tpl.php";
-        }
+        $data = $productid . '|' . $sectionid.'|'.$nodeType;
+        $this->setVarByRef("data", $data);
+        return "viewproductsection_tpl.php";
     }
 
     function __compareadaptations() {

@@ -15,8 +15,10 @@ class block_viewproductsection extends object {
         $data = explode("|", $this->configData);
         $productId = $data[0];
         $sectionId = $data[1];
+        $nodeType=$data[2];
+        
         $sectionManager = $this->getObject("sectionmanager", "oer");
-        return $sectionManager->buildSectionView($productId, $sectionId);
+        return $sectionManager->buildSectionView($productId, $sectionId,$nodeType);
     }
 }
 ?>
