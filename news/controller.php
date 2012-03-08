@@ -59,7 +59,7 @@ class news extends controller {
      * @return boolean Whether the action requires the user to be logged in or not
      */
     function requiresLogin($action='home') {
-        $allowedActions = array(NULL, 'home', 'storyview', 'showmap', 'viewtimeline', 'generatetimeline', 'themecloud', 'generatekml', 'viewcategory', 'viewstory', 'viewbykeyword', 'generatekeywordtimeline', 'search', 'topstoriesfeed');
+        $allowedActions = array(NULL, 'home', 'storyview', 'showmap', 'viewtimeline', 'generatetimeline', 'themecloud', 'generatekml', 'viewcategory', 'viewstory', 'viewbykeyword', 'generatekeywordtimeline', 'search', 'topstoriesfeed', 'liststories');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
