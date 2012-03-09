@@ -132,13 +132,6 @@ $button->cssId = 'leftbutton';
 
 $leftButton = $button->show();
 
-
-$editOnButton = new button ('editonbutton', $objLanguage->languageText('mod_context_turneditingon', 'context', 'Turn Editing On'));
-$editOnButton->cssId = 'editmodeswitchbutton';
-$editOnButton->setOnClick("switchEditMode();");
-
-
-
 $header = new htmlheading();
 $header->type = 3;
 $header->str = $objLanguage->languageText('mod_context_addablock', 'context', 'Add a Block');
@@ -162,7 +155,11 @@ $objCssLayout->leftColumnContent .= '</div>';
 $objCssLayout->rightColumnContent = '';
 
 
-$objCssLayout->rightColumnContent .= '<div id="editmode">'.$editOnButton->show().'</div>';
+$value = $objLanguage->languageText('mod_context_turneditingon', 
+      'context', 'Turn Editing On');
+$objEdBut = $this->getObject('buildcanvas', 'canvas');
+$editBut = $objEdBut->getSwitchButton($value);
+$objCssLayout->rightColumnContent .= '<div id="editmode">'. $editBut .'</div>';
 
 $objCssLayout->rightColumnContent .= '<div id="rightblocks">'.$rightBlocksStr.'</div>';
 
