@@ -102,7 +102,7 @@ class block_friends extends object
             $uri = $this->uri($linkData, 'myprofile');
             $link = "<a href=" . $uri . " class='profilelink'>"
               . $friend['firstname'] . " " . $friend['surname']
-              . "</a>";
+              . "</a><br />" . $friend['friends'];
             $ret .= "<li class='myprofile_friend'>"
               . $img . "<br />"
               . $link;
