@@ -188,7 +188,6 @@ class dboeruserdata extends dbtable {
             } else {
                 return 'ERROR_DATA_INSERT_FAIL';
             }
-            
         }
     }
     
