@@ -160,8 +160,8 @@ class schools extends controller
         $this->objOps = $this->getObject('schoolsops', 'schools');
         
         $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('schools.js',
-          'schools'));
+            $this->getJavaScriptFile('schools.js',
+            'schools'));
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -221,7 +221,7 @@ class schools extends controller
     * @access private
     * 
     */
-    private function __edit()
+    private function __editdetail()
     {
         return 'edit_tpl.php';
     }
@@ -233,7 +233,7 @@ class schools extends controller
     * @access private
     * 
     */
-    private function __add()
+    private function __adddetail()
     {
         return 'add_tpl.php';
     }
@@ -265,7 +265,7 @@ class schools extends controller
     * @access private
     * 
     */
-    private function __delete()
+    private function __deletedetail()
     {
         $id = $this->getParam('id');
         $this->objDBdetail->deleteDetail($id);
@@ -345,7 +345,7 @@ class schools extends controller
         
         if ($errorsFound == FALSE)
         {
-            $this->objOps->saveEditDetails($data);
+            $this->objOps->saveAddDetails($data);
             return $this->nextAction('view');
         }
         else
@@ -393,6 +393,210 @@ class schools extends controller
         }
     }
 
+    /**
+     *
+     * Method to return the templates for managing either districts or principals
+     * 
+     * @access public
+     * @return 
+     */
+    public function __manage()
+    {
+        $type = $this->getParam('type');
+        switch ($type)
+        {
+            case 's':
+                return 'main_tpl.php';
+            case 'd':
+                return 'district_tpl.php';
+            case 'p':
+                return 'principal_tpl.php';
+            case 'c':
+                return 'contacts_tpl.php';
+        }
+        
+        if ($type == 'd')
+        {
+            return 'district_tpl.php';
+        }
+        else
+        {
+            return 'principal_tpl.php';
+        }
+    }
+    
+    /**
+     *
+     * Method to return the templates for managing districts
+     * @access public
+     * @return 
+     */
+    public function __ajaxManageDistricts()
+    {
+        return $this->objOps->ajaxManageDistricts();
+    }
+    
+    /**
+     *
+     * Method to return the templates for adding districts
+     * @access public
+     * @return 
+     */
+    public function __ajaxAddEditDistrict()
+    {
+        return $this->objOps->ajaxAddEditDistrict();
+    }
+    
+    /**
+     *
+     * Method to delete districts
+     * 
+     * @access public
+     * @return void 
+     */
+     public function __deletedistrict()
+     {
+        $id = $this->getParam('id');
+        $pid = $this->getParam('pid');
+        $this->objDBdistricts->deleteDistrict($id);
+
+        return $this->nextAction('manage', array('type' => 'd', 'pid' => $pid));
+     }
+     
+     /**
+      *
+      * Method to add a district
+      * 
+      * @access public
+      * @return VOID 
+      */
+     public function __district()
+     {
+        $data = array();
+        $id = $this->getParam('id');
+        $pid = $this->getParam('province_id');
+        $data['province_id'] = $pid;
+        $data['district_name'] = $this->getParam('district_name');
+
+        if (!empty($id))
+        {
+            $data['modified_by'] = $this->objUser->PKId();
+            $data['date_modified'] = date('Y-m-d H:i:s');
+            $this->objDBdistricts->updateDistrict($id, $data);             
+        }
+        else
+        {
+            $data['created_by'] = $this->objUser->PKId();
+            $data['date_created'] = date('Y-m-d H:i:s');
+            $this->objDBdistricts->addDistrict($data);
+        }
+         
+         return $this->nextAction('manage', array('type' => 'd', 'pid' => $pid));         
+     }
+    
+    /**
+     *
+     * Method to return the templates for editing districts
+     * @access public
+     * @return 
+     */
+    public function __ajaxManageContacts()
+    {
+        return $this->objOps->ajaxManageContacts();
+    }
+    
+    /**
+     *
+     * Method to return the templates for adding contacts
+     * @access public
+     * @return 
+     */
+    public function __ajaxAddEditContact()
+    {
+        $mode = $this->getParam('mode');
+        return $this->objOps->ajaxAddEditContact($mode);
+    }
+    
+    /**
+     *
+     * Method to delete contacts
+     * 
+     * @access public
+     * @return void 
+     */
+     public function __deletecontact()
+     {
+        $id = $this->getParam('id');
+        $sid = $this->getParam('sid');
+        $this->objDBcontacts->deleteContact($id);
+
+        return $this->nextAction('manage', array('type' => 'c', 'sid' => $sid));
+     }
+     
+    /**
+     * Method to validate the add cobtact form
+     * 
+     * @access private 
+     */
+    private function __validateContact()
+    {
+        $data = array();
+        $data['id'] = $this->getParam('id');
+        $data['school_id'] = $this->getParam('school_id');
+        $data['contact_position'] = $this->getParam('contact_position');
+        $data['contact_name'] = $this->getParam('contact_name');
+        $data['contact_address_one'] = $this->getParam('contact_address_one');
+        $data['contact_address_two'] = $this->getParam('contact_address_two');
+        $data['contact_address_three'] = $this->getParam('contact_address_three');
+        $data['contact_address_four'] = $this->getParam('contact_address_four');
+        $data['contact_email_address'] = $this->getParam('contact_email_address');
+        $data['contact_telephone_number'] = $this->getParam('contact_telephone_number');
+        $data['contact_mobile_number'] = $this->getParam('contact_mobile_number');
+        $data['contact_fax_number'] = $this->getParam('contact_fax_number');
+        $data['contact_fax_number'] = $this->getParam('contact_fax_number');
+        $data['contact_fax_number'] = $this->getParam('contact_fax_number');
+        $data['contact_fax_number'] = $this->getParam('contact_fax_number');
+        
+        $errorsFound = $this->objOps->validateContact($data);
+        
+        if ($errorsFound == FALSE)
+        {
+            if (empty($data['id']))
+            {
+                $this->objOps->saveContact($data);
+            }
+            else
+            {
+                $this->objOps->updateContact($data);
+            }
+        }
+        if (empty($data['id']))
+        {
+            $mode = 'add';
+        }
+        else
+        {
+            $mode = 'edit';
+        }
+
+        return $this->nextAction('manage', array('type' => 'c', 'id' => $data['id'], 'sid' => $data['school_id'], 'mode' => $mode));
+    }
+    
+    /**
+    * 
+    * Method to return an error when the action is not a valid 
+    * action method
+    * 
+    * @access private
+    * @return string The dump template populated with the error message
+    * 
+    */
+    private function __ajaxResetSession()
+    {
+        $this->setSession('schools', array());
+        die();
+    }
+    
     /**
     * 
     * Method to return an error when the action is not a valid 

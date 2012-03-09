@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * A left block for schools.
+ * A middle block for schools.
  *
- * A left block for schools. Simple facility to store school basic data.
+ * A middle block for schools. Simple facility to store school basic data.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A left block for schools.
+ * A middle block for schools.
  *
- * A left block for schools. Simple facility to store school basic data.
+ * A middle block for schools. Simple facility to store school basic data.
  *
  * @category  Chisimba
  * @author    Kevin Cyster kcyster@gmail.com
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_schoolsleft extends object
+class block_schoolsprincipal extends object
 {
     /**
      * The title of the block
@@ -59,6 +59,7 @@ class block_schoolsleft extends object
      * @access public
      */
     public $title;
+
     /**
      * Standard init function
      *
@@ -70,12 +71,15 @@ class block_schoolsleft extends object
     {
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_schools_manage', 'schools', 'TEXT: mod_schools_manage, not found');
+        $this->title = $this->objLanguage->languageText('mod_schools_managedistricts', 'schools', 'TEXT: mod_schools_managedistricts, not found');
         
         // Load operations class for schools.
         $this->objOps = $this->getObject('schoolsops', 'schools');
         
+        // Load db class from schools.
+        $this->objDBdetail = $this->getObject('dbschools_detail', 'schools');
     }
+
     /**
      * Standard block show method.
      *
@@ -83,7 +87,7 @@ class block_schoolsleft extends object
      */
     public function show() 
     {
-        return $this->objOps->showManage();
+        return $this->objOps->manageDistricts();           
     }
 }
 ?>

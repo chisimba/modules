@@ -99,5 +99,43 @@ class dbschools_districts extends dbtable
     {
         return $this->getRow('id', $id);
     }
+
+    /**
+     *
+     * Method to delete school districts
+     * 
+     * @access public
+     * @param string $id The id of the district to delete
+     * return boolean 
+     */
+    public function deleteDistrict($id)
+    {
+        return $this->delete('id', $id);
+    }
+    
+    /**
+     * Method to a district to the database
+     * 
+     * @access public
+     * @param array @data The array of district data
+     * @return string $id The id of the district added
+     */
+    public function addDistrict($data)
+    {
+        return $this->insert($data);
+    }    
+
+    /**
+     * Method to edit a districton the database
+     * 
+     * @access public
+     * @param array @data The array of district data
+     * @return string $id The id of the district edited
+     */
+    public function updateDistrict($id, $data)
+    {
+        return $this->update('id', $id, $data);
+    }
+    
 }
 ?>

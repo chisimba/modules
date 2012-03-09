@@ -90,7 +90,7 @@ class dbschools_contacts extends dbtable
 
     /**
      *
-     * Method to delete school details
+     * Method to delete school contacts
      * 
      * @access public
      * @param string $id The id of the school to delete
@@ -100,5 +100,59 @@ class dbschools_contacts extends dbtable
     {
         return $this->delete('school_id', $id);
     }
-}
+
+    /**
+     * Method to return the contacts for a school
+     * 
+     * @access public
+     * @param integer $id The id of the school to get contact for
+     * @return array The array of contacts for a school
+     */
+    public function getContacts($sid)
+    {
+        return $this->fetchAll(" WHERE `school_id` = '$sid'" );
+    }
+
+    /**
+     * Method to return the a contact
+     * 
+     * @access public
+     * @param integer $id The id of contact to get
+     * @return array The array of contact data
+     */
+    public function getContact($id)
+    {
+        $data = $this->fetchAll(" WHERE `id` = '$id'" );
+        if (!empty($data))
+        {
+            return $data[0];
+        }
+        return FALSE;
+    }
+
+    /**
+     *
+     * Method to delete school contact
+     * 
+     * @access public
+     * @param string $id The id of the contact to delete
+     * return boolean 
+     */
+    public function deleteContact($id)
+    {
+        return $this->delete('id', $id);
+    }
+    
+    /**
+     * Method to update contacts to the database
+     * 
+     * @access public
+     * @param array @data The array of contact data
+     * @return string $id The id of contact edited
+     */
+    public function updateContact($id, $data)
+    {
+        return $this->update('id', $id, $data);
+    }
+    }
 ?>

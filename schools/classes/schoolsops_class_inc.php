@@ -117,12 +117,12 @@ class schoolsops extends object
         // get schools detail data.
         $details = $this->objDBdetail->getDetails();
 
-        $this->objIcon->title = $addSchool;
-        $this->objIcon->alt = $addSchool;
+        $this->objIcon->title = $add;
+        $this->objIcon->alt = $add;
         $this->objIcon->setIcon('add', 'png');
         $addIcon = $this->objIcon->show();
         
-        $objLink = new link($this->uri(array('action' => 'add')));
+        $objLink = new link($this->uri(array('action' => 'adddetail')));
         $objLink->link = $addIcon . '&nbsp' . $addSchool;
         $addLink = $objLink->show();
                
@@ -148,14 +148,14 @@ class schoolsops extends object
             $this->objIcon->alt = $deleteSchool;
             $icon = $this->objIcon->show();
 
-            $location = $this->uri(array('action' => 'delete', 'id' => $value['id']));
+            $location = $this->uri(array('action' => 'deletedetail', 'id' => $value['id']));
 
             $this->objConfirm->setConfirm($icon, $location, $deleteconfirm);
             $deleteIcon = $this->objConfirm->show();
             
             $this->objIcon->title = $editSchool;
             $this->objIcon->alt = $editSchool;
-            $editIcon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'edit', 'id' => $value['id'])), 'edit', 'png');
+            $editIcon = $this->objIcon->getLinkedIcon($this->uri(array('action' => 'editdetail', 'id' => $value['id'])), 'edit', 'png');
 
             $objTable->startRow();
             $objTable->addCell($value['school_name'], '', '', '', '');
@@ -205,16 +205,6 @@ class schoolsops extends object
         $usernameValue = !empty($schools) ? $schools['data']['username'] : NULL;
         $passwordValue = !empty($schools) ? $schools['data']['password'] : NULL;
         $confirmPasswordValue = !empty($schools) ? $schools['data']['confirm_password'] : NULL;
-        $contactPositionValue = !empty($schools) ? $schools['data']['contact_position'] : NULL;
-        $contactNameValue = !empty($schools) ? $schools['data']['contact_name'] : NULL;
-        $contactAddressOneValue = !empty($schools) ? $schools['data']['contact_address_one'] : NULL;
-        $contactAddressTwoValue = !empty($schools) ? $schools['data']['contact_address_two'] : NULL;
-        $contactAddressThreeValue = !empty($schools) ? $schools['data']['contact_address_three'] : NULL;
-        $contactAddressFourValue = !empty($schools) ? $schools['data']['contact_address_four'] : NULL;
-        $contacEmailAddressValue = !empty($schools) ? $schools['data']['contact_email_address'] : NULL;
-        $contactTelephoneNumberValue = !empty($schools) ? $schools['data']['contact_telephone_number'] : NULL;
-        $contactMobileNumberValue = !empty($schools) ? $schools['data']['contact_mobile_number'] : NULL;
-        $contactFaxNumberValue = !empty($schools) ? $schools['data']['contact_fax_number'] : NULL;
 
         $provinceIdError = (!empty($schools) && array_key_exists('province_id', $schools['errors'])) ? $schools['errors']['province_id'] : NULL;
         $districtIdError = (!empty($schools) && array_key_exists('district_id', $schools['errors'])) ? $schools['errors']['district_id'] : NULL;
@@ -229,11 +219,6 @@ class schoolsops extends object
         $userEmailAddressError = (!empty($schools) && array_key_exists('principal_email_address', $schools['errors'])) ? $schools['errors']['principal_email_address'] : NULL;
         $usernameError = (!empty($schools) && array_key_exists('username', $schools['errors'])) ? $schools['errors']['username'] : NULL;
         $passwordError = (!empty($schools) && array_key_exists('password', $schools['errors'])) ? $schools['errors']['password'] : NULL;
-        $contactPositionError = (!empty($schools) && array_key_exists('contact_position', $schools['errors'])) ? $schools['errors']['contact_position'] : NULL;
-        $contactNameError = (!empty($schools) && array_key_exists('contact_name', $schools['errors'])) ? $schools['errors']['contact_name'] : NULL;
-        $contactAddressOneError = (!empty($schools) && array_key_exists('contact_address_one', $schools['errors'])) ? $schools['errors']['contact_address_one'] : NULL;
-        $contactEmailAddressError = (!empty($schools) && array_key_exists('contact_email_address', $schools['errors'])) ? $schools['errors']['contact_email_address'] : NULL;
-        $contactTelephoneNumberError = (!empty($schools) && array_key_exists('contact_telephone_number', $schools['errors'])) ? $schools['errors']['contact_telephone_number'] : NULL;
 
         // get data from the database.
         $provinces = $this->objDBprovinces->getAll();        
@@ -269,9 +254,6 @@ class schoolsops extends object
         $password = $this->objLanguage->languageText('word_password', 'system', 'WORD: word_password, not found');
         $confirmPassword = $this->objLanguage->languageText('phrase_confirmpassword', 'system', 'PHRASE: phrase_confirmpassword, not found');
         $mobileNumber = $this->objLanguage->languageText('phrase_mobilenumber', 'system', 'PHRASE: phrase_mobilenumber, not found');
-        $contactPerson = $this->objLanguage->languageText('mod_schools_contactperson', 'schools', 'TEXT: mod_schools_contactperson, not found');
-        $position = $this->objLanguage->languageText('mod_schools_position', 'schools', 'TEXT: mod_schools_position, not found');
-        $fullName = $this->objLanguage->languageText('mod_schools_fullname', 'schools', 'TEXT: mod_schools_fullname, not found');
         $save = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
         $cancel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
         $passwordNotAlike = $this->objLanguage->languageText('mod_schools_passwordsnotalike', 'schools', 'TEXT: mod_schools_passwordsnotalike, not found');
@@ -387,36 +369,6 @@ class schoolsops extends object
         $objInput = new textinput('confirm_password', $confirmPasswordValue, 'password', '50');
         $confirmPasswordInput = $objInput->show();
         
-        $objInput = new textinput('contact_position', $contactPositionValue, '', '50');
-        $contactPositionInput = $objInput->show();
-
-        $objInput = new textinput('contact_name', $contactNameValue, '', '50');
-        $contactNameInput = $objInput->show();
-
-        $objInput = new textinput('contact_address_one', $contactAddressOneValue, '', '50');
-        $contactAddressOneInput = $objInput->show();
-
-        $objInput = new textinput('contact_address_two', $contactAddressTwoValue, '', '50');
-        $contactAddressTwoInput = $objInput->show();
-
-        $objInput = new textinput('contact_address_three', $contactAddressThreeValue, '', '50');
-        $contactAddressThreeInput = $objInput->show();
-
-        $objInput = new textinput('contact_address_four', $contactAddressFourValue, '', '50');
-        $contactAddressFourInput = $objInput->show();
-
-        $objInput = new textinput('contact_email_address', $contacEmailAddressValue, '', '50');
-        $contactEmailAddressInput = $objInput->show();
-
-        $objInput = new textinput('contact_telephone_number', $contactTelephoneNumberValue, '', '50');
-        $contactTelephoneNumberInput = $objInput->show();
-
-        $objInput = new textinput('contact_mobile_number', $contactMobileNumberValue, '', '50');
-        $contactMobileNumberInput = $objInput->show();
-
-        $objInput = new textinput('contact_fax_number', $contactFaxNumberValue, '', '50');
-        $contactFaxNumberInput = $objInput->show();
-        
         $objButton = new button('save', $save);
         $objButton->setToSubmit();
         $saveButton = $objButton->show();
@@ -485,55 +437,6 @@ class schoolsops extends object
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
         $objTable->startRow();
-        $objTable->addCell($position . ': ', '200px', '', '', '', '');
-        $objTable->addCell($contactPositionError . $contactPositionInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($fullName . ': ', '', '', '', '', '');
-        $objTable->addCell($contactNameError . $contactNameInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($address . ': ', '', '', '', '', '');
-        $objTable->addCell($contactAddressOneError . $contactAddressOneInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell('', '', '', '', '', '');
-        $objTable->addCell($contactAddressTwoInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell('', '', '', '', '', '');
-        $objTable->addCell($contactAddressThreeInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell('', '', '', '', '', '');
-        $objTable->addCell($contactAddressFourInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($emailAddress . ': ', '', '', '', '', '');
-        $objTable->addCell($contactEmailAddressError . $contactEmailAddressInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($telephoneNumber . ': ', '', '', '', '', '');
-        $objTable->addCell($contactTelephoneNumberError . $contactTelephoneNumberInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($mobileNumber . ': ', '', '', '', '', '');
-        $objTable->addCell($contactMobileNumberInput, '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($faxNumber . ': ', '', '', '', '', '');
-        $objTable->addCell($contactFaxNumberInput, '', '', '', '', '');
-        $objTable->endRow();
-        $contactTable = $objTable->show();
-        
-        $objFieldset = new fieldset();
-        $objFieldset->legend = '<b>'.$contactPerson.'</b>';
-        $objFieldset->contents = $contactTable;
-        $contactFieldset = $objFieldset->show();
-        
-        $objTable = new htmltable();
-        $objTable->cellpadding = '4';
-        $objTable->startRow();
         $objTable->addCell($schoolName . ': ', '200px', '', '', '', '');
         $objTable->addCell($schoolNameError . $schoolNameInput, '', '', '', '', '');
         $objTable->endRow();
@@ -567,9 +470,6 @@ class schoolsops extends object
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($principalFieldset, '', '', '', '', 'colspan="2"');
-        $objTable->endRow();
-        $objTable->startRow();
-        $objTable->addCell($contactFieldset, '', '', '', '', 'colspan="2"');
         $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell($saveButton . '&nbsp' . $cancelButton, '', '', '', '', 'colspan="2"');
@@ -710,12 +610,10 @@ class schoolsops extends object
         $errors = array();
         foreach ($data as $fieldname => $value)
         {
-            if ($fieldname != 'province_id' && $fieldname != 'district_id' && $fieldname != 'title' && $fieldname != 'gender'
-                && $fieldname != 'address_one' && $fieldname != 'address_two' && $fieldname != 'address_three'
-                && $fieldname != 'address_four' && $fieldname != 'contact_address_one' && $fieldname != 'contact_address_two' 
-                && $fieldname != 'contact_address_three' && $fieldname != 'contact_address_four' && $fieldname != 'password'
-                && $fieldname != 'confirm_password' && $fieldname != 'contact_fax_number' && $fieldname != 'fax_number'
-                && $fieldname != 'mobile_number' && $fieldname != 'contact_telephone_number' && $fieldname != 'contact_mobile_number')
+            if ($fieldname != 'province_id' && $fieldname != 'district_id' && $fieldname != 'title'
+                && $fieldname != 'gender' && $fieldname != 'address_one' && $fieldname != 'address_two'
+                && $fieldname != 'address_three' && $fieldname != 'address_four' && $fieldname != 'password' 
+                && $fieldname != 'confirm_password' && $fieldname != 'fax_number' && $fieldname != 'mobile_number' )
             {
                 if ($value == NULL)
                 {
@@ -733,7 +631,7 @@ class schoolsops extends object
                         $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
                     }
                 }
-                elseif ($fieldname == 'email_address' || $fieldname == 'principal_email_address' || $fieldname == 'contact_email_address')
+                elseif ($fieldname == 'email_address' || $fieldname == 'principal_email_address')
                 {
                     if (filter_var($value, FILTER_VALIDATE_EMAIL) == FALSE)
                     {
@@ -755,17 +653,6 @@ class schoolsops extends object
             {
                 if ($data['address_one'] == NULL && $data['address_two'] == NULL
                     && $data['address_three'] == NULL && $data['address_three'] == NULL)
-                {
-                    $address = $this->objLanguage->languageText('word_address', 'system', 'WORD: word_address, not found');
-                    $array = array('fieldname' => $address);
-                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
-                    $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
-                }
-            }
-            elseif ($fieldname == 'contact_address_one')
-            {
-                if ($data['contact_address_one'] == NULL && $data['contact_address_two'] == NULL
-                    && $data['contact_address_three'] == NULL && $data['contact_address_three'] == NULL)
                 {
                     $address = $this->objLanguage->languageText('word_address', 'system', 'WORD: word_address, not found');
                     $array = array('fieldname' => $address);
@@ -807,22 +694,6 @@ class schoolsops extends object
                     $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
                 }
             } 
-            elseif ($fieldname == 'contact_telephone_number')
-            {
-                if ($data['contact_telephone_number'] == NULL && $data['contact_mobile_number'] == NULL)
-                {
-                    $errorText = $this->objLanguage->languageText('mod_schools_contactnumbers', 'schools', 'TEXT: mod_schools_contactnumbers, not found');
-                    $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
-                }
-            }
-            elseif ($fieldname == 'contact_mobile_number')
-            {
-                if ($data['contact_telephone_number'] == NULL && $data['contact_mobile_number'] == NULL)
-                {
-                    $errorText = $this->objLanguage->languageText('mod_schools_contactnumbers', 'schools', 'TEXT: mod_schools_contactnumbers, not found');
-                    $errors['contact_telephone_number'] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
-                }
-            }
         }
         $schools = array();
         $schools['data'] = $data;
@@ -870,19 +741,8 @@ class schoolsops extends object
         $details['created_by'] = $this->objUser->PKId();
         $details['date_created'] = date('Y-m-d H:i:s');
         $detailId = $this->objDBdetail->addSchool($details);
-        
-        $contactDetails = array();
-        $contactDetails['school_id'] = $detailId;
-        $contactDetails['position'] = $data['contact_position'];
-        $contactDetails['name'] = $data['contact_name'];
-        $contactDetails['address'] = implode('|', array($data['contact_address_one'], $data['contact_address_two'], $data['contact_address_three'], $data['contact_address_four']));
-        $contactDetails['email_address'] = $data['contact_email_address'];
-        $contactDetails['telephone_number'] = $data['contact_telephone_number'];
-        $contactDetails['mobile_number'] = $data['contact_mobile_number'];
-        $contactDetails['fax_number'] = $data['contact_fax_number'];
-        $contactDetails['created_by'] = $this->objUser->PKId();
-        $contactDetails['date_created'] = date('Y-m-d H:i:s');
-        $contactId = $this->objDBcontacts->addContact($contactDetails);
+
+        $this->setSession('schools', array());
     }
     
     /**
@@ -1218,5 +1078,813 @@ class schoolsops extends object
         $details['date_modified'] = date('Y-m-d H:i:s');
         $detailId = $this->objDBdetail->updateSchool($data['id'], $details);
     }
+    
+    /**
+     *
+     * Method to show the left block to manage schools components
+     * 
+     * @access public 
+     * @return string The string to display in the block 
+     */
+    public function showManage()
+    {
+        $manageSchools = $this->objLanguage->languageText('mod_schools_manageschools', 'schools', 'TEXT: mod_schools_manageschools, not found');
+        $manageDistricts = $this->objLanguage->languageText('mod_schools_managedistricts', 'schools', 'TEXT: mod_schools_managedistricts, not found');
+        $managePrincipals = $this->objLanguage->languageText('mod_schools_manageprincipals', 'schools', 'TEXT: mod_schools_managerincipals, not found');
+        $manageContacts = $this->objLanguage->languageText('mod_schools_managecontacts', 'schools', 'TEXT: mod_schools_managecontacts, not found');
+        
+        $this->objIcon->title = $manageSchools;
+        $this->objIcon->alt = $manageSchools;
+        $this->objIcon->setIcon('house_two', 'png');
+        $manageIcon = $this->objIcon->show();
+        
+        $objLink = new link($this->uri(array('action' => 'manage', 'type' => 's')));
+        $objLink->link = $manageIcon . '&nbsp' . $manageSchools;
+        $schoolsLink = $objLink->show();
+
+        $this->objIcon->title = $manageDistricts;
+        $this->objIcon->alt = $manageDistricts;
+        $this->objIcon->setIcon('map', 'png');
+        $manageIcon = $this->objIcon->show();
+        
+        $objLink = new link($this->uri(array('action' => 'manage', 'type' => 'd')));
+        $objLink->link = $manageIcon . '&nbsp' . $manageDistricts;
+        $districtLink = $objLink->show();
+
+        $this->objIcon->title = $managePrincipals;
+        $this->objIcon->alt = $managePrincipals;
+        $this->objIcon->setIcon('user_business_boss', 'png');
+        $manageIcon = $this->objIcon->show();
+        
+        $objLink = new link($this->uri(array('action' => 'manage', 'type' => 'p')));
+        $objLink->link = $manageIcon . '&nbsp' . $managePrincipals;
+        $principalLink = $objLink->show();
+  
+        $this->objIcon->title = $manageContacts;
+        $this->objIcon->alt = $manageContacts;
+        $this->objIcon->setIcon('users', 'png');
+        $manageIcon = $this->objIcon->show();
+        
+        $objLink = new link($this->uri(array('action' => 'manage', 'type' => 'c')));
+        $objLink->link = $manageIcon . '&nbsp' . $manageContacts;
+        $contactsLink = $objLink->show();
+  
+        $objLayer = new layer();
+        $objLayer->id = 'manage';
+        $objLayer->str = $schoolsLink . '<br /><br />' . $districtLink. '<br /><br />' . $principalLink . '<br /><br />' . $contactsLink;
+        $manageLayer = $objLayer->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->contents = $manageLayer;
+        
+        return $objFieldset->show();
+    }
+    
+    /**
+     *
+     * Method to show the manage schools districts template
+     * 
+     * @access puclic
+     * @return string The template stricng
+     */
+    public function manageDistricts()
+    {
+        // set up language elements.
+        $province = $this->objLanguage->languageText('mod_schools_province', 'schools', 'TEXT: mod_schools_province, not found');
+        $selectProvince = $this->objLanguage->languageText('mod_schools_selectprovince', 'schools', 'TEXT: mod_schools_selectprovince, not found');
+        $districtName = $this->objLanguage->languageText('mod_schools_districtname', 'schools', 'TEXT: mod_schools_districtname, not found');
+        
+        $noName = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', array('fieldname' => $districtName));
+        
+        $arrayVars = array();
+        $arrayVars['no_district'] = $noName;
+
+        // pass password error to javascript.
+        $this->objSvars->varsToJs($arrayVars);
+
+        $pid = $this->getParam('pid');
+        
+        // get data from the database.
+        $provinces = $this->objDBprovinces->getAll();        
+
+        // set up htmlelements.
+        $objDrop = new dropdown('province');
+        $objDrop->addOption('', $selectProvince);
+        $objDrop->addFromDB($provinces, 'province_name', 'id');
+        $objDrop->setSelected($pid);
+        $provinceDrop = $objDrop->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . $province . '</b>';
+        $objFieldset->contents = $provinceDrop;
+        $provinceFieldset = $objFieldset->show();
+
+        $str = '';
+        if ($pid != NULL)
+        {
+            $str = $this->ajaxManageDistricts(FALSE);
+        }
+ 
+        $objLayer = new layer();
+        $objLayer->id = 'district';
+        $objLayer->str = $str;
+        $districtLayer = $objLayer->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'manage';
+        $objLayer->str = $provinceFieldset . '<br />' . $districtLayer ;
+        $manageLayer = $objLayer->show();
+        
+        return $manageLayer;
+    }
+    
+    /**
+     *
+     * Method to display the ajax call on province change for managing districts
+     * 
+     * @access public
+     * @param boolean $isAjax TRUE if this is called via ajax | FALSE if not
+     * @return void 
+     */
+    public function ajaxManageDistricts($isAjax = TRUE)
+    {
+        $districtName = $this->objLanguage->languageText('mod_schools_districtname', 'schools', 'TEXT: mod_schools_districtname, not found');
+        $noDistricts = $this->objLanguage->languageText('mod_schools_nodistricts', 'schools', 'TEXT: mod_schools_nodistricts, not found');
+        $addDistrict = $this->objLanguage->languageText('mod_schools_adddistrict', 'schools', 'TEXT: mod_schools_adddistrict, not found');
+        $editDistrict = $this->objLanguage->languageText('mod_schools_editdistrict', 'schools', 'TEXT: mod_schools_editdistrict, not found');
+        $deleteDistrict = $this->objLanguage->languageText('mod_schools_deletedistrict', 'schools', 'TEXT: mod_schools_deletedistrict, not found');
+        $deleteConfirm = $this->objLanguage->languageText('mod_schools_deleteconfirm', 'schools', 'TEXT: mod_schools_deleteconfirm, not found');
+        $districts = $this->objLanguage->languageText('mod_schools_districts', 'schools', 'TEXT: mod_schools_districts, not found');
+        $add = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
+        $edit = $this->objLanguage->languageText('word_edit', 'system', 'WORD: word_edit, not found');
+        $delete = $this->objLanguage->languageText('word_delete', 'system', 'WORD: word_delete, not found');        
+
+        $provinceId = $this->getParam('pid');
+        
+        $districtArray = $this->objDBdistricts->getDistricts($provinceId);
+        
+        $this->objIcon->title = $add;
+        $this->objIcon->alt = $add;
+        $this->objIcon->setIcon('map_add', 'png');
+        $addIcon = $this->objIcon->show();
+
+        $addLink = '<a href="#" id="adddistrict">' . $addIcon . '&nbsp' . $addDistrict . '</a>';
+            
+        $objLayer = new layer();
+        $objLayer->id = 'adddistrictdiv';
+        $addLayer = $objLayer->show();
+        $str = $addLayer;
+
+        if (empty($districtArray))
+        {
+            $str .= '<span class="error"><b>' . $noDistricts . '</b></span>';
+            $str .= '<br />' . $addLink . '<br />';
+        }
+        else
+        {
+            $str .= $addLink . '<br />';
+            
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startRow();
+            $objTable->addCell('<b>' . $districtName . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $edit . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $delete . '</b>', '', '', '', '');
+            $objTable->endRow();
+            foreach ($districtArray as $key => $value)
+            {
+                $this->objIcon->setIcon('map_delete', 'png');
+                $this->objIcon->title = $deleteDistrict;
+                $this->objIcon->alt = $deleteDistrict;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletedistrict', 'id' => $value['id'], 'pid' => $value['province_id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteConfirm);
+                $deleteIcon = $this->objConfirm->show();
+
+                $this->objIcon->title = $editDistrict;
+                $this->objIcon->alt = $editDistrict;
+                $this->objIcon->setIcon('map_edit', 'png');
+                $editIcon = '<a href="#" id="editdistrict" class="' . $value['id'] . '">' . $this->objIcon->show() . '</a>';
+
+                $objTable->startRow();
+                $objTable->addCell($value['district_name'], '', '', '', '');
+                $objTable->addCell($editIcon, '', '', '', '');
+                $objTable->addCell($deleteIcon, '', '', '', '');
+                $objTable->endRow();
+            }
+            $districtTable = $objTable->show();   
+            $str .= $districtTable;
+        }
+                
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . $districts . '</b>';
+        $objFieldset->contents = $str;
+        $districtFieldset = $objFieldset->show();
+        
+        if ($isAjax)
+        {           
+            echo $districtFieldset;
+            die();
+        }
+        else
+        {
+            return $districtFieldset;
+        }
+    }
+    
+    /**
+     *
+     * Method to display the add district form
+     * 
+     * @access public
+     * @return VOID 
+     */
+    public function ajaxAddEditDistrict()
+    {
+        $id = $this->getParam('id');
+        $pid = $this->getParam('pid');
+        $districtNameValue = NULL;
+        if (!empty($id))
+        {
+            $district = $this->objDBdistricts->getDistrict($id);
+            $districtNameValue = $district['district_name'];
+            $pid = $district['province_id'];
+        }
+        
+        $districtName = $this->objLanguage->languageText('mod_schools_districtname', 'schools', 'TEXT: mod_schools_districtname, not found');
+        $save = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
+        $cancel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
+
+        $objInput = new textinput('district_name', $districtNameValue, '', '50');
+        $districtInput = $objInput->show();
+  
+        $objInput = new textinput('province_id', $pid, 'hidden', '50');
+        $provinceInput = $objInput->show();
+
+        $objInput = new textinput('id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $save);
+        $objButton->setId('save_district');
+        $objButton->setToSubmit();
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancel);
+        $objButton->setId('cancel_district');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($districtName, '200px', '', '', 'colspan="7"');
+        $objTable->addCell($districtInput, '', '', '', 'colspan="7"');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $provinceInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'colspan="7"');
+        $objTable->endRow();
+        $addTable = $objTable->show();
+
+        $objForm = new form('district', $this->uri(array(
+            'action' => 'district'
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($addTable);
+        $addForm = $objForm->show();
+        
+        echo $addForm;
+        die();
+    }
+
+    /**
+     *
+     * Method to show the manage schools contacts template
+     * 
+     * @access puclic
+     * @return string The template stricng
+     */
+    public function manageContacts()
+    {
+        $this->appendArrayVar('headerParams',
+            $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
+            'jquery'));
+        $cssUri = $this->getResourceUri('plugins/ui/css/ui-lightness/jquery-ui-1.8.7.custom.css',
+            'jquery');
+        $this->appendArrayVar('headerParams', 
+            "<link href='$cssUri' rel='stylesheet' type='text/css'/>");
+
+        $data = $this->objDBdetail->autocompleteDetails();
+ 
+        // pass array to javascript.
+        $this->objSvars->arrayFromPhpToJs('schools', $data, TRUE);
+        
+        $sid = $this->getParam('sid');
+        $schoolArray = $this->objDBdetail->getDetail($sid);
+        $schoolInputValue = !empty($schoolArray) ? $schoolArray['school_name'] : NULL;
+        $schoolInputIdValue = !empty($schoolArray) ? $schoolArray['id'] : NULL;        
+
+        // set up language elements.
+        $schools = $this->objLanguage->languageText('mod_schools_schools', 'schools', 'TEXT: mod_schools_schools, not found');
+        $schoolName = $this->objLanguage->languageText('mod_schools_schoolname', 'schools', 'TEXT: mod_schools_schoolname, not found');
+        
+        // set up htmlelements.
+        $objInput = new textinput('schools', $schoolInputValue, '', '50');
+        $schoolInput = $objInput->show();
+
+        $objInput = new textinput('id', $schoolInputIdValue, 'hidden', '50');
+        $schoolInputId = $objInput->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($schoolName, '200px', '', '', '');
+        $objTable->addCell($schoolInput . $schoolInputId, '', '', '', '');
+        $objTable->endRow();
+        $schoolTable = $objTable->show();
+        
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . $schools . '</b>';
+        $objFieldset->contents = $schoolTable;
+        $schoolsFieldset = $objFieldset->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'schools';
+        $objLayer->str = $schoolsFieldset;
+        $manageLayer = $objLayer->show();
+        
+        $str = NULL;
+        if (!empty($sid))
+        {
+            $str = $this->ajaxManageContacts(FALSE);
+        }
+        $objLayer = new layer();
+        $objLayer->id = 'contacts';
+        $objLayer->str = $str;
+        $manageLayer .= '<br />' . $objLayer->show();
+        
+        return $manageLayer;
+    }
+    
+    /**
+     *
+     * Method to display the contacts for a school
+     * 
+     * @access public
+     * @param boolean $isAjax TRUE if this is called via ajax | FALSE if not
+     * @return VOID 
+     */
+    public function ajaxManageContacts($isAjax = TRUE)
+    {
+        $schools = $this->getSession('schools');
+
+        $address = $this->objLanguage->languageText('word_address', 'system', 'WORD: word_address, niot found');
+        $emailAddress = $this->objLanguage->languageText('phrase_emailaddress', 'system', 'PHRASE: phrase_eamiladdress, not found');
+        $telephoneNumber = $this->objLanguage->languageText('phrase_telephonenumber', 'system', 'PHRASE: phrase_telephonenumber, not found');
+        $faxNumber = $this->objLanguage->languageText('phrase_faxnumber', 'system', 'PHRASE: phrase_faxnumber');
+        $mobileNumber = $this->objLanguage->languageText('phrase_mobilenumber', 'system', 'PHRASE: phrase_mobilenumber, not found');
+        $position = $this->objLanguage->languageText('mod_schools_position', 'schools', 'TEXT: mod_schools_position, not found');
+        $fullName = $this->objLanguage->languageText('mod_schools_fullname', 'schools', 'TEXT: mod_schools_fullname, not found');
+        $contacts = $this->objLanguage->languageText('mod_schools_contacts', 'schools', 'TEXT: mod_schools_contacts, not found');
+        $noContacts = $this->objLanguage->languageText('mod_schools_nocontacts', 'schools', 'TEXT: mod_schools_nocontacts, not found');
+        $addContact = $this->objLanguage->languageText('mod_schools_addcontact', 'schools', 'TEXT: mod_schools_addcontact, not found');
+        $editContact = $this->objLanguage->languageText('mod_schools_editcontact', 'schools', 'TEXT: mod_schools_editcontact, not found');
+        $deleteContact = $this->objLanguage->languageText('mod_schools_deletecontact', 'schools', 'TEXT: mod_schools_deletecontact, not found');
+        $deleteConfirm = $this->objLanguage->languageText('mod_schools_deleteconfirm', 'schools', 'TEXT: mod_schools_deleteconfirm, not found');
+        $contacts = $this->objLanguage->languageText('mod_schools_contacts', 'schools', 'TEXT: mod_schools_contacts, not found');
+        $add = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
+        $edit = $this->objLanguage->languageText('word_edit', 'system', 'WORD: word_edit, not found');
+        $delete = $this->objLanguage->languageText('word_delete', 'system', 'WORD: word_delete, not found');        
+
+        $sid =$this->getParam('sid');
+        
+        $contactArray = $this->objDBcontacts->getContacts($sid);
+                
+        $this->objIcon->title = $add;
+        $this->objIcon->alt = $add;
+        $this->objIcon->setIcon('user_plus', 'png');
+        $addIcon = $this->objIcon->show();
+
+        if (!empty($schools))
+        {
+            $addLink = '<a href="#" id="addcontact" style="display: none">' . $addIcon . '&nbsp' . $addContact . '</a>';
+        }
+        else
+        {
+            $addLink = '<a href="#" id="addcontact">' . $addIcon . '&nbsp' . $addContact . '</a>';
+        }
+        
+        $objLayer = new layer();
+        $objLayer->id = 'addcontactdiv';
+        if (!empty($schools))
+        {
+            if (!empty($schools['data']['id']))
+            {
+                $objLayer->str = $this->ajaxAddEditContact('edit', FALSE);                
+            }
+            else
+            {
+                $objLayer->str = $this->ajaxAddEditContact('add', FALSE);                
+            }
+        }
+        $addLayer = $objLayer->show();
+        $str = $addLayer;
+
+        if (empty($contactArray))
+        {
+            $str .= '<span class="error"><b>' . $noContacts. '</b></span>';
+            $str .= '<br />' . $addLink . '<br />';
+        }
+        else
+        {
+            $str .= $addLink . '<br />';
+            
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startRow();
+            $objTable->addCell('<b>' . $position . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $fullName . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $address . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $emailAddress . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $telephoneNumber . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $mobileNumber . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $faxNumber . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $edit . '</b>', '', '', '', '');
+            $objTable->addCell('<b>' . $delete . '</b>', '', '', '', '');
+            $objTable->endRow();
+            foreach ($contactArray as $key => $value)
+            {
+                $this->objIcon->setIcon('user_minus', 'png');
+                $this->objIcon->title = $deleteContact;
+                $this->objIcon->alt = $deleteContact;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletecontact', 'id' => $value['id'], 'sid' => $value['school_id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteConfirm);
+                $deleteIcon = $this->objConfirm->show();
+
+                $this->objIcon->title = $editContact;
+                $this->objIcon->alt = $editContact;
+                $this->objIcon->setIcon('user_pencil', 'png');
+                $editIcon = '<a href="#" id="editcontact" class="' . $value['id'] . '">' . $this->objIcon->show() . '</a>';
+
+                $array = explode('|', $value['address']);
+                $address = array();
+                foreach($array as $line)
+                {
+                    if (!empty($line))
+                    {
+                        $address[] = $line;
+                    }
+                }
+                $address = implode(',<br />', $address);
+                $objTable->startRow();
+                $objTable->addCell($value['position'], '', '', '', '');
+                $objTable->addCell($value['name'], '', '', '', '');
+                $objTable->addCell($address, '', '', '', '');
+                $objTable->addCell($value['email_address'], '', '', '', '');
+                $objTable->addCell($value['telephone_number'], '', '', '', '');
+                $objTable->addCell($value['mobile_number'], '', '', '', '');
+                $objTable->addCell($value['fax_number'], '', '', '', '');
+                $objTable->addCell($editIcon, '', '', '', '');
+                $objTable->addCell($deleteIcon, '', '', '', '');
+                $objTable->endRow();
+            }
+            $districtTable = $objTable->show();   
+            $str .= $districtTable;
+        }
+                
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . $contacts . '</b>';
+        $objFieldset->contents = $str;
+        $contactsFieldset = $objFieldset->show();
+
+        if ($isAjax)
+        {
+            echo $contactsFieldset;
+            die();
+        }
+        else
+        {
+            return $contactsFieldset;
+        }
+    }    
+
+    /**
+     *
+     * Method to display the add contact form
+     * 
+     * @access public
+     * @param boolean $isAjax TRUE if the meathod was called via Ajax | FALSE if not
+     * @return VOID 
+     */
+    public function ajaxAddEditContact($mode, $isAjax = TRUE)
+    {
+        if ($mode == 'edit')
+        {
+            $id = $this->getParam('id');            
+            $contact = $this->objDBcontacts->getContact($id);
+            $sid = $contact['school_id'];
+
+            $address = explode('|', $contact['address']);
+
+            $contactPositionValue = $contact['position'];
+            $contactNameValue = $contact['name'];
+            $contactAddressOneValue = $address[0];
+            $contactAddressTwoValue = $address[1];
+            $contactAddressThreeValue = $address[2];
+            $contactAddressFourValue = $address[3];
+            $contacEmailAddressValue = $contact['email_address'];
+            $contactTelephoneNumberValue = $contact['telephone_number'];
+            $contactMobileNumberValue = $contact['mobile_number'];
+            $contactFaxNumberValue = $contact['fax_number'];
+        }
+        else
+        {
+            $id = NULL;
+            $sid = $this->getParam('sid');
+
+            $contactPositionValue = NULL;
+            $contactNameValue = NULL;
+            $contactAddressOneValue = NULL;
+            $contactAddressTwoValue = NULL;
+            $contactAddressThreeValue = NULL;
+            $contactAddressFourValue = NULL;
+            $contacEmailAddressValue = NULL;
+            $contactTelephoneNumberValue = NULL;
+            $contactMobileNumberValue = NULL;
+            $contactFaxNumberValue = !empty($schools) ? $schools['data']['contact_fax_number'] : NULL;
+        }
+
+        $schools = $this->getSession('schools');
+
+        $contactPositionValue = !empty($schools) ? $schools['data']['contact_position'] : $contactPositionValue;
+        $contactNameValue = !empty($schools) ? $schools['data']['contact_name'] : $contactNameValue;
+        $contactAddressOneValue = !empty($schools) ? $schools['data']['contact_address_one'] : $contactAddressOneValue;
+        $contactAddressTwoValue = !empty($schools) ? $schools['data']['contact_address_two'] : $contactAddressTwoValue;
+        $contactAddressThreeValue = !empty($schools) ? $schools['data']['contact_address_three'] : $contactAddressThreeValue;
+        $contactAddressFourValue = !empty($schools) ? $schools['data']['contact_address_four'] : $contactAddressFourValue;
+        $contacEmailAddressValue = !empty($schools) ? $schools['data']['contact_email_address'] : $contacEmailAddressValue;
+        $contactTelephoneNumberValue = !empty($schools) ? $schools['data']['contact_telephone_number'] : $contactTelephoneNumberValue;
+        $contactMobileNumberValue = !empty($schools) ? $schools['data']['contact_mobile_number'] : $contactMobileNumberValue;
+        $contactFaxNumberValue = !empty($schools) ? $schools['data']['contact_fax_number'] : $contactFaxNumberValue;
+
+        $contactPositionError = (!empty($schools) && array_key_exists('contact_position', $schools['errors'])) ? $schools['errors']['contact_position'] : NULL;
+        $contactNameError = (!empty($schools) && array_key_exists('contact_name', $schools['errors'])) ? $schools['errors']['contact_name'] : NULL;
+        $contactAddressOneError = (!empty($schools) && array_key_exists('contact_address_one', $schools['errors'])) ? $schools['errors']['contact_address_one'] : NULL;
+        $contactEmailAddressError = (!empty($schools) && array_key_exists('contact_email_address', $schools['errors'])) ? $schools['errors']['contact_email_address'] : NULL;
+        $contactTelephoneNumberError = (!empty($schools) && array_key_exists('contact_telephone_number', $schools['errors'])) ? $schools['errors']['contact_telephone_number'] : NULL;
+
+        $position = $this->objLanguage->languageText('mod_schools_position', 'schools', 'TEXT: mod_schools_position, not found');
+        $fullName = $this->objLanguage->languageText('mod_schools_fullname', 'schools', 'TEXT: mod_schools_fullname, not found');
+        $address = $this->objLanguage->languageText('word_address', 'system', 'WORD: word_address, niot found');
+        $emailAddress = $this->objLanguage->languageText('phrase_emailaddress', 'system', 'PHRASE: phrase_eamiladdress, not found');
+        $telephoneNumber = $this->objLanguage->languageText('phrase_telephonenumber', 'system', 'PHRASE: phrase_telephonenumber, not found');
+        $faxNumber = $this->objLanguage->languageText('phrase_faxnumber', 'system', 'PHRASE: phrase_faxnumber');
+        $mobileNumber = $this->objLanguage->languageText('phrase_mobilenumber', 'system', 'PHRASE: phrase_mobilenumber, not found');
+        $save = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
+        $cancel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
+
+        $objInput = new textinput('contact_position', $contactPositionValue, '', '50');
+        $contactPositionInput = $objInput->show();
+
+        $objInput = new textinput('contact_name', $contactNameValue, '', '50');
+        $contactNameInput = $objInput->show();
+
+        $objInput = new textinput('contact_address_one', $contactAddressOneValue, '', '50');
+        $contactAddressOneInput = $objInput->show();
+
+        $objInput = new textinput('contact_address_two', $contactAddressTwoValue, '', '50');
+        $contactAddressTwoInput = $objInput->show();
+
+        $objInput = new textinput('contact_address_three', $contactAddressThreeValue, '', '50');
+        $contactAddressThreeInput = $objInput->show();
+
+        $objInput = new textinput('contact_address_four', $contactAddressFourValue, '', '50');
+        $contactAddressFourInput = $objInput->show();
+
+        $objInput = new textinput('contact_email_address', $contacEmailAddressValue, '', '50');
+        $contactEmailAddressInput = $objInput->show();
+
+        $objInput = new textinput('contact_telephone_number', $contactTelephoneNumberValue, '', '50');
+        $contactTelephoneNumberInput = $objInput->show();
+
+        $objInput = new textinput('contact_mobile_number', $contactMobileNumberValue, '', '50');
+        $contactMobileNumberInput = $objInput->show();
+
+        $objInput = new textinput('contact_fax_number', $contactFaxNumberValue, '', '50');
+        $contactFaxNumberInput = $objInput->show();
+
+        $objInput = new textinput('school_id', $sid, 'hidden', '50');
+        $schoolInput = $objInput->show();
+
+        $objInput = new textinput('id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $save);
+        $objButton->setId('save_contact');
+        $objButton->setToSubmit();
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancel);
+        $objButton->setId('cancel_contact');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($position . ': ', '200px', '', '', '', '');
+        $objTable->addCell($contactPositionError . $contactPositionInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($fullName . ': ', '', '', '', '', '');
+        $objTable->addCell($contactNameError . $contactNameInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($address . ': ', '', '', '', '', '');
+        $objTable->addCell($contactAddressOneError . $contactAddressOneInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell('', '', '', '', '', '');
+        $objTable->addCell($contactAddressTwoInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell('', '', '', '', '', '');
+        $objTable->addCell($contactAddressThreeInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell('', '', '', '', '', '');
+        $objTable->addCell($contactAddressFourInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($emailAddress . ': ', '', '', '', '', '');
+        $objTable->addCell($contactEmailAddressError . $contactEmailAddressInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($telephoneNumber . ': ', '', '', '', '', '');
+        $objTable->addCell($contactTelephoneNumberError . $contactTelephoneNumberInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($mobileNumber . ': ', '', '', '', '', '');
+        $objTable->addCell($contactMobileNumberInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($faxNumber . ': ', '', '', '', '', '');
+        $objTable->addCell($contactFaxNumberInput, '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $schoolInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', '', '');
+        $objTable->endRow();
+        $contactTable = $objTable->show();
+
+        $objForm = new form('contact', $this->uri(array(
+            'action' => 'validateContact'
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($contactTable);
+        $addForm = $objForm->show();
+        
+        if ($isAjax)
+        {
+            echo $addForm;
+            die();
+        }
+        else
+        {
+            return $addForm;
+        }
+    }
+    
+    /**
+     *
+     * Method to validate the contact data
+     * 
+     * @access public
+     * @param array $data The data to validate
+     * @return  
+     */
+    public function validateContact($data)
+    {
+        $errors = array();
+        foreach ($data as $fieldname => $value)
+        {
+            if ($fieldname != 'id' && $fieldname != 'school_id' && $fieldname != 'contact_address_one'
+                && $fieldname != 'contact_address_two' && $fieldname != 'contact_address_three'
+                && $fieldname != 'contact_address_four' && $fieldname != 'contact_fax_number' 
+                && $fieldname != 'contact_telephone_number' && $fieldname != 'contact_mobile_number')
+            {
+                if ($value == NULL)
+                {
+                    $name = explode('_', $fieldname);
+                    $name = implode(' ', $name);
+                    $array = array('fieldname' => $name);
+                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                    $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
+                }
+                elseif ($fieldname == 'contact_email_address')
+                {
+                    if (filter_var($value, FILTER_VALIDATE_EMAIL) == FALSE)
+                    {
+                        $errorText = $this->objLanguage->languageText('mod_schools_invalidemail', 'schools', 'TEXT: mod_schools_invalidemail, not found');
+                        $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
+                    }
+                }
+            }
+            elseif ($fieldname == 'contact_address_one')
+            {
+                if ($data['contact_address_one'] == NULL && $data['contact_address_two'] == NULL
+                    && $data['contact_address_three'] == NULL && $data['contact_address_three'] == NULL)
+                {
+                    $address = $this->objLanguage->languageText('word_address', 'system', 'WORD: word_address, not found');
+                    $array = array('fieldname' => $address);
+                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                    $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
+                }
+            }
+            elseif ($fieldname == 'contact_telephone_number')
+            {
+                if ($data['contact_telephone_number'] == NULL && $data['contact_mobile_number'] == NULL)
+                {
+                    $errorText = $this->objLanguage->languageText('mod_schools_contactnumbers', 'schools', 'TEXT: mod_schools_contactnumbers, not found');
+                    $errors[$fieldname] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
+                }
+            }
+            elseif ($fieldname == 'contact_mobile_number')
+            {
+                if ($data['contact_telephone_number'] == NULL && $data['contact_mobile_number'] == NULL)
+                {
+                    $errorText = $this->objLanguage->languageText('mod_schools_contactnumbers', 'schools', 'TEXT: mod_schools_contactnumbers, not found');
+                    $errors['contact_telephone_number'] = '<div><span class="error"><b>' . ucfirst(strtolower($errorText)) . '</b></span></div>';
+                }
+            }
+        }
+        $schools = array();
+        $schools['data'] = $data;
+        $schools['errors'] = $errors;
+
+        $this->setSession('schools', $schools);
+        if (empty($errors))
+        {
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }        
+    }    
+
+    /**
+     *
+     * Method to save the contact on adding.
+     * 
+     * @access public
+     * @param array $data The array of data to save
+     * @return void 
+     */
+    public function saveContact($data)
+    {
+        $contactDetails = array();
+        $contactDetails['school_id'] = $data['school_id'];
+        $contactDetails['position'] = $data['contact_position'];
+        $contactDetails['name'] = $data['contact_name'];
+        $contactDetails['address'] = implode('|', array($data['contact_address_one'], $data['contact_address_two'], $data['contact_address_three'], $data['contact_address_four']));
+        $contactDetails['email_address'] = $data['contact_email_address'];
+        $contactDetails['telephone_number'] = $data['contact_telephone_number'];
+        $contactDetails['mobile_number'] = $data['contact_mobile_number'];
+        $contactDetails['fax_number'] = $data['contact_fax_number'];
+        $contactDetails['created_by'] = $this->objUser->PKId();
+        $contactDetails['date_created'] = date('Y-m-d H:i:s');
+        $contactId = $this->objDBcontacts->addContact($contactDetails);
+        
+        $this->setSession('schools', array());
+    }
+
+    /**
+     *
+     * Method to save the contact on adding.
+     * 
+     * @access public
+     * @param array $data The array of data to save
+     * @return void 
+     */
+    public function updateContact($data)
+    {
+        $contactDetails = array();
+        $contactDetails['school_id'] = $data['school_id'];
+        $contactDetails['position'] = $data['contact_position'];
+        $contactDetails['name'] = $data['contact_name'];
+        $contactDetails['address'] = implode('|', array($data['contact_address_one'], $data['contact_address_two'], $data['contact_address_three'], $data['contact_address_four']));
+        $contactDetails['email_address'] = $data['contact_email_address'];
+        $contactDetails['telephone_number'] = $data['contact_telephone_number'];
+        $contactDetails['mobile_number'] = $data['contact_mobile_number'];
+        $contactDetails['fax_number'] = $data['contact_fax_number'];
+        $contactDetails['modified_by'] = $this->objUser->PKId();
+        $contactDetails['date_modified'] = date('Y-m-d H:i:s');
+        $contactId = $this->objDBcontacts->updateContact($data['id'], $contactDetails);
+        
+        $this->setSession('schools', array());
+    }
+
 }
 ?>

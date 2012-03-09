@@ -108,7 +108,7 @@ class dbschools_detail extends dbtable
      */
     public function getDetails()
     {
-        $sql = 'SELECT *, d.id AS id, u.id AS uid, dis.id AS disid, prov.id AS provid FROM tbl_schools_detail AS d';
+        $sql = "SELECT *, d.id AS id, u.id AS uid, dis.id AS disid, prov.id AS provid FROM $this->table AS d";
         $sql .= ' LEFT JOIN tbl_users AS u ON (d.principal_id = u.id)';
         $sql .= ' LEFT JOIN tbl_schools_districts AS dis ON (d.district_id = dis.id)';
         $sql .= ' LEFT JOIN tbl_schools_provinces AS prov ON (dis.province_id = prov.id)';
@@ -142,15 +142,38 @@ class dbschools_detail extends dbtable
     }
 
     /**
-     * Method to a school details to the database
+     * Method to add school details to the database
      * 
      * @access public
      * @param array @data The array of school detail data
-     * @return string $id The id of the school detail added
+     * @return string $id The id of the school detail edited
      */
-    public function updateSchool($id, $data)
+    public function updateDetail($id, $data)
     {
         return $this->update('id', $id, $data);
+    }
+    
+    /**
+     *
+     * Method to get a list of schools for the autocompleter
+     * 
+     * @access public
+     * @return array $the array of school data 
+     */
+    public function autocompleteDetails()
+    {
+        $sql = "SELECT id, school_name FROM $this->table";
+        $data = $this->getArray($sql);
+        
+        $array = array();
+        if ($this->getRecordCount() > 0)
+        {
+            foreach ($data as $line)
+            {
+                $array[$line['id']] = $line['school_name'];
+            }
+        }
+        return $array;
     }
     
 }
