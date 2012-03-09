@@ -36,7 +36,7 @@ class dbproducts extends dbtable {
     /**
      * this selects original products
      */
-    function getOriginalProducts($filter='',$start=null, $pageSize=null) {
+    function getOriginalProducts($filter='', $start=null, $pageSize=null) {
         $limit = "";
         if ($start != null && $pageSize != null) {
             $limit = " limit $start, $pageSize";
@@ -50,9 +50,16 @@ class dbproducts extends dbtable {
      * @return type 
      */
     function getOriginalProductCount($filter) {
-        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null $filter";
+        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null";
+        if ($filter != null) {
+            $sql.= ' ' . $filter;
+        }
+
         $data = $this->getArray($sql);
-        return $data[0]['productcount'];
+
+        $result = $data[0]['productcount'];
+
+        return $result;
     }
 
     /**
@@ -60,7 +67,11 @@ class dbproducts extends dbtable {
      * @return type 
      */
     function getAdaptationCount($filter) {
-        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null $filter";
+        $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null ";
+        if ($filter != null) {
+            $sql.= ' ' . $filter;
+        }
+
         $data = $this->getArray($sql);
         return $data[0]['productcount'];
     }
@@ -68,11 +79,16 @@ class dbproducts extends dbtable {
     /**
      * this selects original products
      */
-    function getAdaptedProducts($filter,$start=null, $pageSize=null) {
-         $limit = "";
+    function getAdaptedProducts($xfilter, $start=null, $pageSize=null) {
+        $limit = "";
         if ($start != null && $pageSize != null) {
             $limit = " limit $start, $pageSize";
         }
+        $filter = "";
+        if ($xfilter != null) {
+            $filter = $xfilter;
+        }
+
         $sql = "select * from $this->productsTableName where parent_id is not null $filter $limit";
         return $this->getArray($sql);
     }
@@ -217,7 +233,11 @@ class dbproducts extends dbtable {
      */
     function getRandomAdaptationsByInstitution($fragment, $limit) {
         //$sql='SELECT * FROM tbl_oer_products WHERE RAND()<='.$fragment.' and parent_id is not null limit '.$limit.';';
-        $sql = 'SELECT * FROM  tbl_oer_products where  parent_id IS NOT NULL ORDER BY RAND() LIMIT ' . $limit . ';';
+        $sql = 'SELECT * FROM  tbl_oer_products where  parent_id IS NOT NULL ORDER BY RAND()';
+
+        if ($limit) {
+            $sql.=' LIMIT ' . $limit . ';';
+        }
         return $this->getArray($sql);
     }
 
@@ -258,8 +278,8 @@ class dbproducts extends dbtable {
      * @param  $id the product id
      * @return NULL if product not found, else an array of product adaptations if any
      */
-    function getProductAdaptations($parentId, $filter,$start=null, $pageSize=null) {
-           $limit = "";
+    function getProductAdaptations($parentId, $filter, $start=null, $pageSize=null) {
+        $limit = "";
         if ($start != null && $pageSize != null) {
             $limit = " limit $start, $pageSize";
         }

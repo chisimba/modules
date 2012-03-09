@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains util methods for managing adaptations
  * 
@@ -603,13 +604,13 @@ class adaptationmanager extends object {
 
         return $header->show() . $formData->show();
     }
+
     /**
      * Function constructs form for managing adapatations - step 2
      *
      * @param string $id adaptation id
      * @return form
      */
-
     public function buildAdaptationFormStep2($id) {
 
         $objTable = $this->getObject('htmltable', 'htmlelements');
@@ -1089,7 +1090,9 @@ class adaptationmanager extends object {
         $pageSize = $this->getParam("pagesize", "15");
         // Set up the page navigation.
         $page = $this->getParam('page', 1);
-
+        if ($filter == null) {
+            $filter = "";
+        }
         $count = $this->dbproducts->getOriginalProductCount($filter);
         $pages = ceil($count / $pageSize);
         // Set up the sql elements.
