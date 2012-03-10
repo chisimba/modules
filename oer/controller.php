@@ -61,7 +61,8 @@ class oer extends controller {
             "downloaderedit", "printproduct", "downloadersave", "filteroriginalproduct",
             "filteradaptation", "viewgroups", "viewgroup", "showproductlistingaslist",
             "login", "compareadaptations", "viewadaptationbymap", "originalproductlistajax",
-            "search_compare_adaptations", "compare_selected", "adaptationlistajax");
+            "search_compare_adaptations", "compare_selected", "adaptationlistajax",
+            "viewreports");
         if (in_array($action, $allowedActions)) {
             return FALSE;
         } else {
@@ -241,6 +242,14 @@ class oer extends controller {
         $dbContent->joinContext($contextCode);
         $this->setVarByRef("contextcode", $contextCode);
         return "viewgroup_tpl.php";
+    }
+
+    /**
+     * renders oer product and adaptation reports
+     * @return string
+     */
+    private function __viewreports() {
+        return "viewreports_tpl.php";
     }
 
     private function __showproductlistingaslist() {

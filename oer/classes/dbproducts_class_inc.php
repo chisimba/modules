@@ -130,6 +130,24 @@ class dbproducts extends dbtable {
                 "select distinct country from tbl_oer_products where country is not null";
         return $this->getArray($sql);
     }
+    /**
+     * returns count of distinct languages for original products
+     */
+    function getOriginalProductLanguageCount() {
+        $sql =
+                "select distinct language from ".$this->productsTableName." where language is not null and parent_id is null";
+        $data = $this->getArray($sql);
+        return count($data);
+    }
+    /**
+     * returns count of distinct languages for adaptations
+     */
+    function getAdaptationsLanguageCount() {
+        $sql =
+                "select distinct language from ".$this->productsTableName." where language is not null and parent_id is not null";
+        $data = $this->getArray($sql);
+        return count($data);
+    }
 
     /**
      * returns distinct regions that are available for all products

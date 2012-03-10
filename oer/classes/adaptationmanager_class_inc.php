@@ -55,7 +55,6 @@ class adaptationmanager extends object {
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
-        $this->loadClass('fieldset', 'htmlelements');
         $this->addJS();
         $this->setupLanguageItems();
     }
