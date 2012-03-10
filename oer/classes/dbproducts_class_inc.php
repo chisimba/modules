@@ -131,22 +131,39 @@ class dbproducts extends dbtable {
         return $this->getArray($sql);
     }
     /**
-     * returns count of distinct languages for original products
+     * returns distinct languages for original products
      */
-    function getOriginalProductLanguageCount() {
+    function getOriginalProductLanguages() {
         $sql =
                 "select distinct language from ".$this->productsTableName." where language is not null and parent_id is null";
         $data = $this->getArray($sql);
-        return count($data);
+        return $data;
     }
     /**
-     * returns count of distinct languages for adaptations
+     * returns distinct products using specified language
      */
-    function getAdaptationsLanguageCount() {
+    function getLanguageOriginalProducts($lang) {
+        
+        $sql = "select * from $this->productsTableName where parent_id is null and language='".$lang."'";        
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
+     * returns distinct adaptations using specified language
+     */
+    function getLanguageAdaptations($lang) {
+        $sql = "select * from $this->productsTableName where parent_id is not null and language='".$lang."'";
+        $data = $this->getArray($sql);        
+        return $data;
+    }
+    /**
+     * returns distinct languages for adaptations
+     */
+    function getAdaptationsLanguages() {
         $sql =
                 "select distinct language from ".$this->productsTableName." where language is not null and parent_id is not null";
         $data = $this->getArray($sql);
-        return count($data);
+        return $data;
     }
 
     /**
@@ -278,6 +295,42 @@ class dbproducts extends dbtable {
         $sql = "select count(*) as adaptationcount from $this->productsTableName where institutionid = '$institutionId'";
         $data = $this->getArray($sql);
         return $data[0]['adaptationcount'];
+    }
+    /**
+     * Get distinct products institutions
+     * @return array
+     */
+    function getDistinctProductsInstitutions() {
+        $sql = "select distinct institutionid, count(*) as institutioncount from ".$this->productsTableName." where institutionid is not null and parent_id is null";
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
+     * Get distinct adaptations institutions
+     * @return array
+     */
+    function getDistinctAdaptationsInstitutions() {
+        $sql = "select distinct institutionid, count(*) as institutioncount from ".$this->productsTableName." where institutionid is not null and parent_id is not null";
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
+     * Get distinct products oersource
+     * @return array
+     */
+    function getDistinctProductsOerResource() {
+        $sql = "select distinct oerresource, count(*) as oerresourcecount from ".$this->productsTableName." where oerresource is not null and parent_id is null";
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
+     * Get distinct adaptations oersource
+     * @return array
+     */
+    function getDistinctAdaptationsOerResource() {
+        $sql = "select distinct oerresource, count(*) as oerresourcecount from ".$this->productsTableName." where oerresource is not null and parent_id is not null";
+        $data = $this->getArray($sql);
+        return $data;
     }
 
     /**
