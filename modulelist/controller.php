@@ -27,14 +27,18 @@ class modulelist extends controller
     function dispatch($action)
     {
         $this->requiresLogin();
+        // See if we want packages or core_modules
+        $whichDir = $this->getParam('moduletype', 'packages');
+        
         
         // ignore action at moment as we only do one thing - list modules
-        foreach(glob($this->objConfig->getSiteRootPath().'packages/*') as $dirs) {
-            $chkdirs = str_replace($this->objConfig->getSiteRootPath().'packages/', "", $dirs);
+        foreach(glob($this->objConfig->getSiteRootPath() 
+          . $whichDir .'/*') as $dirs) {
+            $chkdirs = str_replace($this->objConfig->getSiteRootPath()
+              . $whichDir . '/', "", $dirs);
             if($chkdirs == 'COPYING' || $chkdirs == 'build.xml'|| $chkdirs == 'build.xml~' || $chkdirs == 'chisimba_modules.txt' || $chkdirs == 'modlist.php') {
                 continue;
-            }
-            else {
+            } else {
                 $dirname = $dirs;
                 if(file_exists(("$dirs/register.conf"))) {
                     $moddata = file_get_contents("$dirs/register.conf");

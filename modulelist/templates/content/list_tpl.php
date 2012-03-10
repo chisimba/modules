@@ -23,24 +23,111 @@ $countheader->type = 2;
 $middleColumn .= $header->show();
 $middleColumn .= $countheader->show();
 
-if ($moduleList)
-{
+$packageLinkUri = $this->uri(array("moduletype" => "packages"), "modulelist");
+$packageLink = new link($packageLinkUri);
+$packageLink->link = "Packages";
+
+$coreLinkUri = $this->uri(array("moduletype" => "core_modules"), "modulelist");
+$coreLink = new link($coreLinkUri);
+$coreLink->link = "Core modules";
+$middleColumn .= $coreLink->show() . " | " . $packageLink->show();
+
+if ($moduleList) {
     $objFb = $this->newObject('featurebox', 'navigation');
     $modIcon = $this->getObject('getIcon', 'htmlelements');
-    foreach($moduleList as $moduleRow)
-    {
+    $noIconCount = 0;
+    $noIconModules = array();
+    
+    $stable=0;
+    $beta=0;
+    $marked_for_removal=0;
+    $invisible = 0;
+    $alpha = 0;
+    $prealpha = 0;
+    $deprecated = 0;
+    $other = 0;
+    $unset = 0;
+    $illegalStatuses = array();
+    
+    foreach($moduleList as $moduleRow) {
+        $noIcon = NULL;
         $header = new htmlHeading();
         $theModule = $moduleRow['modname'];
         $modIcon->setModuleIcon($theModule);
         $icon = $modIcon->show();
+        $mStatus = trim(strtolower($moduleRow['status']));
+        //echo "|" . $mStatus . "|<br/>";
+        switch($mStatus) {
+            case 'pre-alpha':
+                $prealpha++;
+                break;
+            case 'alpha':
+                $alpha++;
+                break;
+            case 'beta':
+                $beta++;
+                break;
+            case 'invisible':
+                $invisible++;
+                break;
+            case 'marked_for_removal':
+                $marked_for_removal++;
+                break;
+            case 'deprecated':
+                $deprecated++;
+                break;
+            case 'stable':
+                $stable++;
+                break;
+            case 'unset':
+                $unset++;
+                break;
+            default:
+                $other++;
+                $illegalStatuses[] = $mStatus;
+                break;
+        }
+        if (strstr($icon, "skins/_common/icons/default.gif")) {
+            // The module has no icon
+            $noIcon = "<span class='noicon'>No icon for this module</span>";
+            $noIconCount++;
+            $noIconModules[] = $theModule;
+        }
         $header->str =  $icon . " Module: ".ucwords($moduleRow['modname']);
         $header->type = 3;
         $middleColumn .= $objFb->show($header->show(), 
           "<div class='" . trim($moduleRow['status'])
           . "'>" . $moduleRow['description'] 
-          . "</div><br /><b>Status</b>: " . $moduleRow['status']);
+          . "</div><br />" . $noIcon 
+          . "<br /><b>Status</b>: " . $moduleRow['status']);
     }
-}
+    if ($noIconCount > 0) {
+        // Print a warning about modules with no icons
+        if ($this->getParam('moduletype', 'packages') == "core_modules") {
+            //  We have core modules with no icons.
+            $spanType = "error";
+            $extra = " All core modules should be represented by an icon, even if they have no user interface.";
+        } else {
+            $spanType = "warning";
+            $extra = " Developers should get into the habit of creating module icons when they create their module.";
+        }
+        $middleColumn .= "<br /><br />";
+        $middleColumn .= "<span class='$spanType'>There are <b>$noIconCount</b> modules with no icon. $extra</span><br /><br /><br />";
+    }
+    $middleColumn .= "Pre-alpha: $prealpha <br />";
+    $middleColumn .= "Alpha: $alpha <br />";
+    $middleColumn .= "Beta: $beta <br />";
+    $middleColumn .= "Stable: $stable <br />";
+    $middleColumn .= "Marked for removal: $marked_for_removal <br />";
+    $middleColumn .= "Other: $other <br />";
+    if (count($illegalStatuses) > 0) {
+        array_unique($illegalStatuses);
+        $middleColumn .= "<br />The following illegal statuses are used:<br />";
+        foreach ($illegalStatuses as $illegalStatus) {
+            $middleColumn .= "[" . $illegalStatus . "] ";
+        }
+    }
+}   
 
 if($this->objUser->isLoggedIn()) {
     $leftColumn .= $this->leftMenu->show();
