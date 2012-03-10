@@ -118,7 +118,10 @@ if ($moduleList) {
     $middleColumn .= "Alpha: $alpha <br />";
     $middleColumn .= "Beta: $beta <br />";
     $middleColumn .= "Stable: $stable <br />";
+    $middleColumn .= "Deprecated: $deprecated <br />";
     $middleColumn .= "Marked for removal: $marked_for_removal <br />";
+    $middleColumn .= "Invisible: $invisible <br />";
+    $middleColumn .= "Unset: $unset <br />";
     $middleColumn .= "Other: $other <br />";
     if (count($illegalStatuses) > 0) {
         array_unique($illegalStatuses);
