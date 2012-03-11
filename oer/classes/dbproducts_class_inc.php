@@ -130,38 +130,42 @@ class dbproducts extends dbtable {
                 "select distinct country from tbl_oer_products where country is not null";
         return $this->getArray($sql);
     }
+
     /**
      * returns distinct languages for original products
      */
     function getOriginalProductLanguages() {
         $sql =
-                "select distinct language from ".$this->productsTableName." where language is not null and parent_id is null";
+                "select distinct language from " . $this->productsTableName . " where language is not null and parent_id is null";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns distinct products using specified language
      */
     function getLanguageOriginalProducts($lang) {
-        
-        $sql = "select * from $this->productsTableName where parent_id is null and language='".$lang."'";        
+
+        $sql = "select * from $this->productsTableName where parent_id is null and language='" . $lang . "'";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns distinct adaptations using specified language
      */
     function getLanguageAdaptations($lang) {
-        $sql = "select * from $this->productsTableName where parent_id is not null and language='".$lang."'";
-        $data = $this->getArray($sql);        
+        $sql = "select * from $this->productsTableName where parent_id is not null and language='" . $lang . "'";
+        $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * returns distinct languages for adaptations
      */
     function getAdaptationsLanguages() {
         $sql =
-                "select distinct language from ".$this->productsTableName." where language is not null and parent_id is not null";
+                "select distinct language from " . $this->productsTableName . " where language is not null and parent_id is not null";
         $data = $this->getArray($sql);
         return $data;
     }
@@ -296,39 +300,43 @@ class dbproducts extends dbtable {
         $data = $this->getArray($sql);
         return $data[0]['adaptationcount'];
     }
+
     /**
      * Get distinct products institutions
      * @return array
      */
     function getDistinctProductsInstitutions() {
-        $sql = "select distinct institutionid, count(*) as institutioncount from ".$this->productsTableName." where institutionid is not null and parent_id is null";
+        $sql = "select distinct institutionid, count(*) as institutioncount from " . $this->productsTableName . " where institutionid is not null and parent_id is null";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * Get distinct adaptations institutions
      * @return array
      */
     function getDistinctAdaptationsInstitutions() {
-        $sql = "select distinct institutionid, count(*) as institutioncount from ".$this->productsTableName." where institutionid is not null and parent_id is not null";
+        $sql = "select distinct institutionid, count(*) as institutioncount from " . $this->productsTableName . " where institutionid is not null and parent_id is not null";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * Get distinct products oersource
      * @return array
      */
     function getDistinctProductsOerResource() {
-        $sql = "select distinct oerresource, count(*) as oerresourcecount from ".$this->productsTableName." where oerresource is not null and parent_id is null";
+        $sql = "select distinct oerresource, count(*) as oerresourcecount from " . $this->productsTableName . " where oerresource is not null and parent_id is null";
         $data = $this->getArray($sql);
         return $data;
     }
+
     /**
      * Get distinct adaptations oersource
      * @return array
      */
     function getDistinctAdaptationsOerResource() {
-        $sql = "select distinct oerresource, count(*) as oerresourcecount from ".$this->productsTableName." where oerresource is not null and parent_id is not null";
+        $sql = "select distinct oerresource, count(*) as oerresourcecount from " . $this->productsTableName . " where oerresource is not null and parent_id is not null";
         $data = $this->getArray($sql);
         return $data;
     }
@@ -421,6 +429,15 @@ class dbproducts extends dbtable {
      */
     function deleteOriginalProduct($id) {
         $this->delete("id", $id);
+    }
+
+    /**
+     * returns an array of countries with adapatations
+     */
+    function getCountriesWithAdaptations() {
+        $sql =
+                "select distinct country from tbl_oer_products where parent_id is not null and country is not null";
+        return $this->getArray($sql);
     }
 
 }

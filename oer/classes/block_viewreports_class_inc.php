@@ -1,9 +1,7 @@
 <?php
 /**
  *
- * Block for viewing institution info
- *
- * A block for viewing institution info that can be rendered using a JSON
+ * Block for viewing report and is rendered using a JSON
  * template.
  *
  * This program is free software; you can redistribute it and/or modify

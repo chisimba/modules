@@ -839,8 +839,7 @@ class oer extends controller {
         $objProductManager = $this->getObject("productmanager", "oer");
         $id = $this->getParam("id");
         $this->objMakeAdaptation->deleteAdaptation($id);
-        $this->setVar("mode", "grid");
-        return "adaptationlist_tpl.php";
+        return $this->nextAction("adaptationlist");
     }
 
     /**
@@ -1406,6 +1405,21 @@ class oer extends controller {
         return 'thumbnailuploadresults_tpl.php';
     }
 
+    
+    /****
+     * REPORTING ACTIONS
+     */
+
+    /**
+     * this returns basic report
+     */
+    function __viewbasicreport(){
+       $reportManager=$this->getObject("reportmanager", "oer");
+       return $reportManager->generateFilteredBasicReport();
+    }
+    
+    
 }
+
 
 ?>

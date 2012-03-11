@@ -1203,31 +1203,30 @@ class adaptationmanager extends object {
                 $adaptLink->link = $adaptImg;
                 $adaptLink->extra = 'alt="' . $this->objLanguage->languageText('mod_oer_makeadaptation', "oer", "Create an adaptation") . '"';
                 $adaptLink->title = $this->objLanguage->languageText('mod_oer_createadaptation', "oer", "Create an adaptation");
-                $mnglinks.="<br />" . $adaptLink->show();
+                $mnglinks.=  $adaptLink->show();
 
                 $editLink = new link($this->uri(array("action" => "editadaptationstep1", "id" => $adaptation['id'], "mode" => "edit")));
                 $editLink->link = $editImg;
                 $editLink->extra = 'alt="' . $this->objLanguage->languageText('word_edit', "system", "Edit") . '"';
                 $editLink->title = $this->objLanguage->languageText('word_edit', "system", "Edit");
-                $mnglinks.="&nbsp;" . $editLink->show();
+               // $mnglinks.="&nbsp;" . $editLink->show();
 
                 $delLink = new link($this->uri(array("action" => "deleteadaptation", "id" => $adaptation['id'])));
                 $delLink->link = $deleteImg;
                 $delLink->cssClass = "confirmdeleteadaptation";
                 $delLink->extra = 'alt="' . $this->objLanguage->languageText('word_delete', 'system') . '"';
                 $delLink->title = $this->objLanguage->languageText('word_delete', 'system');
-                $mnglinks.="&nbsp;" . $delLink->show() . "<br />";
+               // $mnglinks.="&nbsp;" . $delLink->show() . "<br />";
             }
 
             $link = new link($this->uri(array("action" => "viewadaptation", "id" => $adaptation['id'])));
             $link->link = $thumbnail; // . $makeAdaptation;
             $product = $link->show();
 
-            $link->link = "<div id='adaptationtitle'>" . $parentData['title'] . "</div>";
+            $link->link = "<div id='adaptationtitle'>" . $adaptation['title'] .$mnglinks. "</div>";
             $link->cssClass = 'adaptation_listing_title';
             $product.= $link->show();
-            $product.=$mnglinks;
-
+         
             $product.= "<br/><div id='adaptationtitle'>" . $this->objLanguage->languageText('mod_oer_adaptedby', 'oer') . ":</div><br/>";
             $product.= "<div id='institutionva'>" . $instNameLk . "</div>";
             $product.= "<div id='institutiontype'>" . $institutionTypeName . " | " . $institutionData['country'] . "</div>";
