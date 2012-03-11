@@ -305,6 +305,48 @@ class reportmanager extends object {
         }
         $adaptationBreakdownTable .= "</table>";
 
+        //country breakdown table
+        $countryBreakdownTable = "<b>".$this->objLanguage->languageText("mod_oer_breakdownbycountry", "oer", "Breakdown by country - adaptations")."</b>";
+        $countryBreakdownTable .= '<table border="0" style="table-layout:fixed;" width="335">';
+        $countryBreakdownTable .= "<tr>";
+        $countryBreakdownTable .= '<td align="left" valign="top" width="280">' .
+                '<div class="reportPropertyTitle">' .
+                $this->objLanguage->languageText("mod_oer_countryadaptation", "oer", "Country of adaptation") . '</div></td>';
+        $countryBreakdownTable .= '<td align="right" valign="top">' .
+                '<div class="reportPropertyTitle">' .
+                $this->objLanguage->languageText("mod_oer_total", "oer", "Total") . '</div></td>';
+        $countryBreakdownTable .= "</tr>";
+        if (!empty($adaptInsts)) {
+            $allNulls = true;
+            foreach ($adaptInsts as $adaptInst) {
+                if (!empty($adaptInst['institutionid'])) {
+                    $instData = $this->dbInstitution->getInstitutionById($adaptInst['institutionid']);
+                    $allNulls = false;
+                    $instCount = $adaptInst["institutioncount"];
+                    $countryBreakdownTable .= "<tr>";
+                    $countryBreakdownTable .= '<td align="left" valign="top">' .
+                            '<div class="reportPropertyValue">' .
+                            ucfirst($instData['country']) . '</div></td>';
+                    $countryBreakdownTable .= '<td align="right" valign="top">' .
+                            '<div class="reportPropertyValue">' . $instCount .
+                            '</div></td>';
+                    $countryBreakdownTable .= "</tr>";
+                }
+            }
+            if ($allNulls) {
+                $countryBreakdownTable .= '<tr><td align="left" valign="top" colspan="2">' .
+                        '<div class="reportPropertyValue">' .
+                        $this->objLanguage->languageText("mod_oer_noadaptationinst", "oer", "No Institutions are specified for adaptations") .
+                        '</div></td></tr>';
+            }
+        } else {
+            $countryBreakdownTable .= '<tr><td align="left" valign="top" colspan="2">' .
+                    '<div class="reportPropertyValue">' .
+                    $this->objLanguage->languageText("mod_oer_noadaptationinst", "oer", "No Institutions are specified for adaptations") .
+                    '</div></td></tr>';
+        }
+        $countryBreakdownTable .= "</table>";
+
         //main table        
         $supportTable = '<table border="0" style="table-layout:fixed;" width="680">';
         $supportTable .= "<tr>";
@@ -333,7 +375,7 @@ class reportmanager extends object {
         $supportTable .= '</tr>';
         $supportTable .= "<tr>";
         $supportTable .= '<td align="left" valign="top">' .$instBreakdownTable.'</td>';
-        $supportTable .= '<td align="left" valign="top">' .'</td>';
+        $supportTable .= '<td align="left" valign="top">' .$countryBreakdownTable.'</td>';
         $supportTable .= '</tr>';
         $supportTable .= "<tr>";
         $supportTable .= '<td align="left" valign="top">' .'</td>';
