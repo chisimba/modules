@@ -40,7 +40,7 @@ class productmanager extends object {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
-        $this->permissionsManager=  $this->getObject("permissionsmanager","oer");
+        $this->permissionsManager = $this->getObject("permissionsmanager", "oer");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('fieldset', 'htmlelements');
@@ -145,13 +145,13 @@ class productmanager extends object {
         $id = $this->getParam("id");
         $data = array(
             "accreditation_date" => $this->getParam("accreditationdate"),
-            "accreditation_body"=>  $this->getParam("accreditation_body"),
+            "accreditation_body" => $this->getParam("accreditation_body"),
             "contacts" => $this->getParam("contacts"),
             "relation_type" => $this->getParam("relationtype"),
             "relation" => $this->getParam("relatedproduct"),
             "coverage" => $this->getParam("coverage"),
-            "oerresource"=>  $this->getParam("oerresource"),
-            "accredited"=>  $this->getParam("accredited"),
+            "oerresource" => $this->getParam("oerresource"),
+            "accredited" => $this->getParam("accredited"),
             "status" => $this->getParam("status"),
             "rights" => $this->getParam("creativecommons")
         );
@@ -261,7 +261,7 @@ class productmanager extends object {
      * @return type FORM
      */
     public function buildProductFormStep1($id) {
-        
+
         $objTable = $this->getObject('htmltable', 'htmlelements');
         $product = null;
         if ($id != null) {
@@ -361,6 +361,17 @@ class productmanager extends object {
 
         $language->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $language->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
+
+        $langs = $this->objLanguage->getLangs();
+        $hiddenlangs = $this->getObject("dbhiddenlangs", "langadmin");
+
+        foreach ($langs as $id => $name) {
+            if (!$hiddenlangs->isHidden($id)) {
+                 $language->addOption($id, $name);
+            }
+        }
+
+
         if ($product != null) {
             $language->setSelected($product['language']);
         }
@@ -451,7 +462,7 @@ class productmanager extends object {
         $translation->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $translation->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-    
+
         $originalProducts = $this->dbproducts->getOriginalProducts();
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
@@ -576,9 +587,9 @@ class productmanager extends object {
         $oerresource->cssClass = 'required';
         $oerresource->addOption('', $this->objLanguage->languageText('mod_oer_select', 'oer'));
         $oerresource->addOption('curriculum', $this->objLanguage->languageText('mod_oer_curriculum', 'oer'));
-        
+
         $oerresource->setSelected($product['oerresource']);
-        
+
         $objTable->addCell($oerresource->show());
         $objTable->endRow();
 
@@ -590,10 +601,10 @@ class productmanager extends object {
         $objDisplayLicense = $this->getObject('licensechooserdropdown', 'creativecommons');
 
         $license = $product['rights'] == '' ? 'copyright' : $product['rights'];
-        $objDisplayLicense->defaultValue=$license;
+        $objDisplayLicense->defaultValue = $license;
         $rightCell = $objDisplayLicense->show();
-       
-        
+
+
         $objTable->startRow();
         $objTable->addCell($rightCell);
         $objTable->endRow();
@@ -688,7 +699,7 @@ class productmanager extends object {
         $relatedproduct = new dropdown('relatedproduct');
         $relatedproduct->addOption('none', $this->objLanguage->languageText('mod_oer_none', 'oer'));
 
-     
+
         $originalProducts = $this->dbproducts->getOriginalProducts();
         foreach ($originalProducts as $originalProduct) {
             if ($originalProduct['id'] != $id) {
@@ -895,7 +906,7 @@ class productmanager extends object {
             $start = 0;
         }
 
-        $originalProducts = $this->dbproducts->getOriginalProducts($filter,$start, $pageSize);
+        $originalProducts = $this->dbproducts->getOriginalProducts($filter, $start, $pageSize);
         $newproductlink = new link($this->uri(array("action" => "newproductstep1")));
         $newproductlink->link = $this->objLanguage->languageText('mod_oer_newproduct', 'oer');
         $controlBand =
@@ -940,7 +951,7 @@ class productmanager extends object {
         $table->attributes = "style='table-layout:fixed;'";
         $table->cellspacing = 10;
         $table->cellpadding = 10;
-        
+
         $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $groupId = $objGroups->getId("ProductCreators");
         $objGroupOps = $this->getObject("groupops", "groupadmin");
@@ -986,8 +997,8 @@ class productmanager extends object {
 
             $languageField = new dropdown('lagnguage');
             $languageField->addOption('en', $this->objLanguage->languageText('mod_oer_english', 'oer'));
-            $languageField->cssClass="product_language_dd";
-            $product.='<br/><br/><h7>'. $this->objLanguage->languageText('mod_oer_languages', 'oer').':</h7>'. $languageField->show();
+            $languageField->cssClass = "product_language_dd";
+            $product.='<br/><br/><h7>' . $this->objLanguage->languageText('mod_oer_languages', 'oer') . ':</h7>' . $languageField->show();
 
             $adaptionsCount = $this->dbproducts->getProductAdaptationCount($originalProduct['id']);
             $adaptationsLink = new link($this->uri(array("action" => "adaptationlist", "productid" => $originalProduct['id'])));
