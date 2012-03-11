@@ -49,7 +49,7 @@ class dbproducts extends dbtable {
      * get a total count of original products
      * @return type 
      */
-    function getOriginalProductCount($filter) {
+    function getOriginalProductCount($filter=null) {
         $sql = "select count(id) as productcount from $this->productsTableName where parent_id is null";
         if ($filter != null) {
             $sql.= ' ' . $filter;
@@ -66,7 +66,7 @@ class dbproducts extends dbtable {
      * get a total count of original products
      * @return type 
      */
-    function getAdaptationCount($filter) {
+    function getAdaptationCount($filter=null) {
         $sql = "select count(id) as productcount from $this->productsTableName where parent_id is not null ";
         if ($filter != null) {
             $sql.= ' ' . $filter;
