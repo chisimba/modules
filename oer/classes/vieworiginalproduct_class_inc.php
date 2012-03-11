@@ -56,7 +56,7 @@ class vieworiginalproduct extends object {
 
         $editControls = "";
         if ($this->permissionsManager->isEditor()) {
-       
+
             $editImg = '<img src="skins/oeru/images/icons/edit.png"/>';
             $deleteImg = '<img src="skins/oeru/images/icons/delete.png"/>';
             $featuredImg = '<img src="skins/oeru/images/featured.png"/>';
@@ -83,7 +83,7 @@ class vieworiginalproduct extends object {
             $editControls.="" . $featuredLink->show();
         }
 
-       
+
         if ($this->permissionsManager->isMember()) {
             $adaptImg = '<img src="skins/oeru/images/icons/add.png"/>';
 
@@ -187,8 +187,9 @@ class vieworiginalproduct extends object {
         $rightContent.='<div id="viewproduct_keywords_label">' . $objLanguage->languageText('mod_oer_keywords', 'oer') . ': ' . $product['keywords'] . '</div><br/><br/>';
 
         $language = new dropdown('language');
-        $language->addOption('', $objLanguage->languageText('mod_oer_select', 'oer'));
-        $language->addOption('en', $objLanguage->languageText('mod_oer_english', 'oer'));
+        $languageCode = $this->getObject("languagecode", "language");
+        $language->addOption($originalProduct['language'], $languageCode->getLanguage($product['language']));
+
 
         $rightContent.='<div id="viewproduct_selectlanguages_label">' . $objLanguage->languageText('mod_oer_selectlangversions', 'oer') . ':<br/>' . $language->show() . '</div><br/><br/>';
         $rightContent.='<div id="viewproduct_relatednews_label">' . $objLanguage->languageText('mod_oer_relatednews', 'oer') . ': </div><br/><br/>';
