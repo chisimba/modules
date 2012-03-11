@@ -193,9 +193,13 @@ if ($isInContext && $isContextLecturer) {
 
 $objModules = $this->getObject('modules', 'modulecatalogue');
 
-if (!is_null($groupid)) {
 
-    $eventfor->addOption('2', $this->objLanguage->languageText('mod_calendar_groupcalendar', 'calendar', 'Group Calendar'));
+if ($mode == 'add')
+{
+    if (!is_null($groupid)) {
+        
+        $eventfor->addOption('2', $this->objLanguage->languageText('mod_calendar_groupcalendar', 'calendar', 'Group Calendar'));
+    }
 }
 
 
@@ -274,10 +278,13 @@ $table->endRow();
 $form = new form('eventform', $this->uri(array('action' => $action)));
 $form->addToForm($table->show());
 
-$gInput = new textinput('groupid');
-$gInput->value = $groupid;
-$gInput->fldType = 'hidden';
-$form->addToForm($gInput->show());
+if ($mode == 'add')
+{
+    $gInput = new textinput('groupid');
+    $gInput->value = $groupid;
+    $gInput->fldType = 'hidden';
+    $form->addToForm($gInput->show());
+}
 if ($mode == 'edit') {
     $idInput = new textinput('id');
     $idInput->value = $event['id'];
