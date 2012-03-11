@@ -84,6 +84,20 @@ class calendarinterface extends object
     
     
     /**
+     * An array to hold events
+     * @var string
+     * @access public
+     */
+    public $rawEventsList;
+    
+    /**
+     * An array to hold events
+     * @var string
+     * @access public
+     */
+    public $eventsList;
+    
+    /**
     * Standard constructor methos, set up commonly used
     * objects and parameters.
     * 
@@ -96,6 +110,8 @@ class calendarinterface extends object
         $this->objCalendar = $this->getObject('dbcalendar', 'calendarbase');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDateFunctions = $this->getObject('dateandtime','utilities');
+        $this->objJqDialog = $this->getObject('jqdialogue','jquery');
+        
         $this->loadClass('link', 'htmlelements');
         
         $this->month = date('m');
@@ -126,6 +142,7 @@ class calendarinterface extends object
     
     public function resetEventsArray()
     {
+        $this->eventsList = array();
         $this->preparedEventsArray = array();
         $this->preparedListArray = array();
     }
@@ -282,6 +299,8 @@ class calendarinterface extends object
             } else {
                 
             }
+            
+            $this->rawEventsList[$day][] = $event; 
             $eventList = '<div class="eventlist ' . $css
               . '"><strong>' . $event['eventtitle'] . '</strong>';
             
@@ -343,29 +362,30 @@ class calendarinterface extends object
             return $table->show();
         }
     }
-    
+
     public function getSmallEventsList()
     {
+        $jq = $this->getCalenderEvents();
         
-        if (count($this->preparedEventsArray) == 0) {
+        if (count($this->eventsList) == 0) {
             return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendar_noeventsinmonth', 'calendar').'</div>';
         } else {
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->cssClass = 'eventslist';
-            
-            ksort($this->preparedEventsArray);
-            
-            foreach ($this->preparedEventsArray as $day=>$events)
+            $table->cellspacing = '1';
+            $table->cellpadding = '0';
+
+            foreach ($this->eventsList as $day=>$events)
             {
                 $table->startRow();
-                $table->addCell('<strong>'.$day.'</strong>', '30');
-                $table->addCell($events);
+                $table->addCell('<strong>'.$day.'</strong>', '14.29%', 'top', 'center', '', '');
+                $table->addCell($events, '', 'top', '', '', 'colspan="6"');
                 $table->endRow();
             }
-            return $table->show();
+            return $table->show() . $jq;
         }
     }
-    
+
     public function getEventsArray()
     {
         return $this->preparedEventsArray;
@@ -451,6 +471,98 @@ class calendarinterface extends object
         } else {
             return TRUE;
         }
+    }
+    
+    /**
+     *
+     * Method to get the event for display in the small calender
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function getCalenderEvents()
+    {
+        $objTrim = $this->getObject('trimstr', 'strings');
+
+        $timeLabel = $this->objLanguage->languageText('word_from', 'system');
+        $titleLabel = $this->objLanguage->languageText('word_title', 'system');
+        $detailsLabel = $this->objLanguage->languageText('word_details', 'system');
+
+        ksort($this->rawEventsList);
+        foreach ($this->rawEventsList as $day => $events)
+        {
+            if (count($events) > 1)
+            {
+                $events = $this->rawEventsList[$day];
+                foreach ($events as $key => $line)
+                {
+                    $startTime[$key] = $line['timefrom'];
+                }
+                array_multisort($startTime, SORT_ASC, $events);
+                $this->rawEventsList[$day] = $events;
+            }
+        }
+        
+        $str = '';
+        foreach ($this->rawEventsList as $day => $events)
+        {
+            if (count($events) > 1)
+            {
+                $array = array('date' => date('l, j F Y', strtotime($events[0]['eventdate'])));
+                $title = $this->objLanguage->code2Txt('mod_calendar_events', 'calendar', $array);
+            
+                $array = array('number' => count($events));
+                $this->eventsList[$day] = '<a href="#" id="event_'.$day.'" onclick="jQuery(\'#jqdialogue_'.$day.'\').dialog(\'open\')">'.$this->objLanguage->code2Txt('mod_calendar_eventsfound', 'calendar', $array).'</a>' ;
+                
+                $content = '';
+                foreach ($events as $key => $event)
+                {
+                    $table = $this->newObject('htmltable', 'htmlelements');
+                    $table->startRow();
+                    $table->addCell($titleLabel . ': ', '10%');
+                    $table->addCell($event['eventtitle']);
+                    $table->endRow();
+                    $table->startRow();
+                    $table->addCell($timeLabel . ': ', '10%');
+                    $table->addCell(date('g:i a', strtotime($event['timefrom'])).'&nbsp;-&nbsp;'.date('g:i a', strtotime($event['timeto'])));
+                    $table->endRow();
+                    $table->startRow();
+                    $table->addCell($detailsLabel . ': ', '10%');
+                    $table->addCell(strip_tags($objTrim->strTrim(stripslashes($event['eventdetails'])), 120));
+                    $table->endRow();                   
+                    $content .= $table->show().'<br /><br />';
+                }
+            }
+            else
+            {
+                $array = array('date' => date('l, j F Y', strtotime($events[0]['eventdate'])));
+                $title = $this->objLanguage->code2Txt('mod_calendar_event', 'calendar', $array);
+
+                $this->eventsList[$day] = '<a href="#" id="event_'.$day.'" onclick="jQuery(\'#jqdialogue_'.$day.'\').dialog(\'open\')">'.$this->rawEventsList[$day][0]['eventtitle'].'</a>' ;
+
+                $table = $this->newObject('htmltable', 'htmlelements');
+                $table->startRow();
+                $table->addCell($titleLabel . ': ', '10%');
+                $table->addCell($events[0]['eventtitle']);
+                $table->endRow();
+                $table->startRow();
+                $table->addCell($timeLabel . ': ', '10%');
+                $table->addCell(date('g:i a', strtotime($events[0]['timefrom'])).'&nbsp;-&nbsp;'.date('g:i a', strtotime($events[0]['timeto'])));
+                $table->endRow();
+                $table->startRow();
+                $table->addCell($detailsLabel . ': ', '10%');
+                $table->addCell(strip_tags($objTrim->strTrim(stripslashes($events[0]['eventdetails'])), 120));
+                $table->endRow();                   
+                $content = $table->show().'<br /><br />';
+            }            
+            $jqDialogue = $this->newObject('jqdialogue', 'jquery');
+            $jqDialogue->setCssId('jqdialogue_'.$day);
+            $jqDialogue->setTitle($title);
+            $jqDialogue->setContent($content);
+            $jqDialogue->addOption('autoOpen: false');
+            $str .= $jqDialogue->show();
+        }
+        return $str;
     }
 }
 ?>
