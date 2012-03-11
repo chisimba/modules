@@ -188,7 +188,7 @@ class vieworiginalproduct extends object {
 
         $language = new dropdown('language');
         $languageCode = $this->getObject("languagecode", "language");
-        $language->addOption($originalProduct['language'], $languageCode->getLanguage($product['language']));
+        $language->addOption($product['language'], $languageCode->getLanguage($product['language']));
 
 
         $rightContent.='<div id="viewproduct_selectlanguages_label">' . $objLanguage->languageText('mod_oer_selectlangversions', 'oer') . ':<br/>' . $language->show() . '</div><br/><br/>';

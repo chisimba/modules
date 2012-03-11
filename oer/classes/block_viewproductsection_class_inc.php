@@ -15,11 +15,16 @@ class block_viewproductsection extends object {
         $data = explode("|", $this->configData);
         $productId = $data[0];
         $sectionId = $data[1];
-        $nodeType=$data[2];
-        
+        $nodeType = $data[2];
+
         $sectionManager = $this->getObject("sectionmanager", "oer");
-        return $sectionManager->buildSectionView($productId, $sectionId,$nodeType);
+        if ($nodeType == 'folder') {
+            return $sectionManager->viewFolderNode($productId);
+        } else {
+            return $sectionManager->buildSectionView($productId, $sectionId, $nodeType);
+        }
     }
+
 }
 ?>
 

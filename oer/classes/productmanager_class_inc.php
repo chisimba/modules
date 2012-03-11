@@ -998,15 +998,7 @@ class productmanager extends object {
             $languageField = new dropdown('lagnguage');
             $languageCode = $this->getObject("languagecode", "language");
             $languageField->addOption($originalProduct['language'], $languageCode->getLanguage($originalProduct['language']));
-            /*
-              $langs = $this->objLanguage->getLangs();
-              $hiddenlangs = $this->getObject("dbhiddenlangs", "langadmin");
-
-              foreach ($langs as $id => $name) {
-              if (!$hiddenlangs->isHidden($id)) {
-              $languageField->addOption($id, $name);
-              }
-              } */
+         
 
             $languageField->cssClass = "product_language_dd";
             $product.='<br/><br/><h7>' . $this->objLanguage->languageText('mod_oer_languages', 'oer') . ':</h7>' . $languageField->show();

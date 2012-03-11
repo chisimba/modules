@@ -711,9 +711,9 @@ class sectionmanager extends object {
 
         $leftContent = "";
         $rightContent = "";
-        $sectContent=$section['content'];
-        if($curriculum != null){
-            $sectContent=$curriculum['forward'].'<p/>'.$curriculum['background'].'<p/>'.$curriculum['introduction'];
+        $sectContent = $section['content'];
+        if ($curriculum != null) {
+            $sectContent = $curriculum['forward'] . '<p/>' . $curriculum['background'] . '<p/>' . $curriculum['introduction'];
         }
         $leftContent = '<div class="viewadaptation_leftcontent">' . $leftCol . '<div class="contentDivThreeWider">' . $sectContent . '</div>';
         if (!$isOriginalProduct) {
@@ -1141,9 +1141,10 @@ class sectionmanager extends object {
                     $link = new link($this->uri(array('action' => 'viewsection', "productid" => $sectionNode['product_id'], 'sectionid' => $sectionNode['id'], 'nodetype' => $sectionNode['nodetype'])));
                     $link->cssClass = 'sectionlink';
                     $txtLink = $link->href;
-                    if ($sectionNode['nodetype'] == 'folder') {
-                        $txtLink = '';
-                    }
+                    /*
+                      if ($sectionNode['nodetype'] == 'folder') {
+                      $txtLink = '#';
+                      } */
                     $node = & new treenode(array('title' => $folderText, 'text' => $folderShortText, 'link' => $txtLink, 'icon' => $icon, 'expandedIcon' => $expandedIcon, 'cssClass' => $cssClass, 'expanded' => true));
                 }
 
@@ -1177,6 +1178,22 @@ class sectionmanager extends object {
             $space = '<br/>';
         }
         return '<div id="navthumbnail">' . $thumbnail . '</div>' . '<div id="sectionstree">' . $space . $treeMenu->getMenu() . '</div>';
+    }
+
+    /**
+     * notifies the user theat s/he selected a folder node, which doesnt cannot 
+     * be displayed
+     * @return type 
+     */
+    function viewFolderNode($productId) {
+        $text = $this->objLanguage->languageText('mod_oer_viewsection', 'oer');
+        $back = $this->objLanguage->languageText('word_back', 'system');
+
+        $button = new button('cancel', $back);
+        $uri = $this->uri(array("action" => "vieworiginalproduct", "id" => $productId));
+        $button->setOnClick('javascript: window.location=\'' . $uri . '\'');
+
+        return '<div class="error">' . $text . '<br/>'.$button->show().'</div>';
     }
 
 }
