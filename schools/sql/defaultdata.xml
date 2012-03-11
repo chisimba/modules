@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+
+  <!-- MODULE: schools, Table tbl_schools_info create data used by this module -->
+    <tbl_schools_provinces>
+        <id>1</id>
+        <name>Western Cape</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>2</id>
+        <name>Northern Cape</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>3</id>
+        <name>North West</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>4</id>
+        <name>Eastern Cape</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>5</id>
+        <name>Free State</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>6</id>
+        <name>Gauteng</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>7</id>
+        <name>Kwazulu Natal</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>8</id>
+        <name>Mpumalanga</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    <tbl_schools_provinces>
+        <id>9</id>
+        <name>Limpopo</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_provinces>
+    
+    <tbl_schools_districts>
+        <id>1</id>
+        <province_id>1</province_id>
+        <name>Central</name>
+        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_districts>
+    
+</defaultdata>
