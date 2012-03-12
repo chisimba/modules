@@ -225,8 +225,8 @@ class switchboardui extends object
         // Serialize language items to Javascript.
         $arrayVars['status_success'] = "mod_switchboard_status_success";
         $arrayVars['status_fail'] = "mod_switchboard_status_fail";
-        $objSerialize = $this->getObject('serializevars', 'oer');
-        $objSerialize->serializetojs($arrayVars, 'switchboard');
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'switchboard');
         // Load the jquery validate plugin.
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
