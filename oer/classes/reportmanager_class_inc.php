@@ -72,9 +72,9 @@ class reportmanager extends object {
         //General table
 
         //$genTable = "<fieldset><legend>" . $this->objLanguage->languageText("mod_oer_wordgeneral", "oer", "General") . "</legend>";
-        $genTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $genTable .= "<tr>";
-        $genTable .= '<td align="left" valign="top"  width="280">' .
+        $genTable = '<table>';
+        $genTable .= '<tr class="reportheader">';
+        $genTable .= '<td align="left" valign="top"  width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_wordproperty", "oer", "Property") . '</div></td>';
         $genTable .= '<td align="right" valign="top">' .
@@ -117,12 +117,12 @@ class reportmanager extends object {
         //Create fieldset for general report
         $genFieldset = $this->newObject('fieldset', 'htmlelements');
         $genFieldset->setLegend($this->objLanguage->languageText("mod_oer_wordgeneral", "oer", "General"));
-        $genFieldset->addContent($genTable);
+        $genFieldset->addContent('<div class="reporttable">'.$genTable.'</div>');
         $genFieldset = $genFieldset->show();
         //Original language table        
-        $oriLangTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $oriLangTable .= "<tr>";
-        $oriLangTable .= '<td align="left" valign="top" width="280">' .
+        $oriLangTable = '<table>';
+        $oriLangTable .= '<tr class="reportheader">';
+        $oriLangTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_language", "oer", "Language") . '</div></td>';
         $oriLangTable .= '<td align="right" valign="top">' .
@@ -157,12 +157,12 @@ class reportmanager extends object {
         //Create fieldset for original products languages report
         $oriLangFieldset = $this->newObject('fieldset', 'htmlelements');
         $oriLangFieldset->setLegend($this->objLanguage->languageText("mod_oer_originallangbreakdown", "oer", "Language breakdown - originals"));
-        $oriLangFieldset->addContent($oriLangTable);
+        $oriLangFieldset->addContent('<div class="reporttable">'.$oriLangTable.'</div>');
         $oriLangFieldset = $oriLangFieldset->show();
         //Adaptation language table
-        $adaptLangTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $adaptLangTable .= "<tr>";
-        $adaptLangTable .= '<td align="left" valign="top" width="280">' .
+        $adaptLangTable = '<table>';
+        $adaptLangTable .= '<tr class="reportheader">';
+        $adaptLangTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_language", "oer", "Language") . '</div></td>';
         $adaptLangTable .= '<td align="right" valign="top">' .
@@ -197,12 +197,12 @@ class reportmanager extends object {
         //Create fieldset for adaptations languages report
         $adaptLangFS = $this->newObject('fieldset', 'htmlelements');
         $adaptLangFS->setLegend($this->objLanguage->languageText("mod_oer_adaptationlangbreakdown", "oer", "Language breakdown - adaptations"));
-        $adaptLangFS->addContent($adaptLangTable);
+        $adaptLangFS->addContent('<div class="reporttable">'.$adaptLangTable.'</div>');
         $oriLangFS = $adaptLangFS->show();
         //Institution breakdown table
-        $instBreakdownTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $instBreakdownTable .= "<tr>";
-        $instBreakdownTable .= '<td align="left" valign="top" width="280">' .
+        $instBreakdownTable = '<table>';
+        $instBreakdownTable .= '<tr class="reportheader">';
+        $instBreakdownTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_typeofadaptation", "oer", "Type of adaptation") . '</div></td>';
         $instBreakdownTable .= '<td align="right" valign="top">' .
@@ -242,12 +242,12 @@ class reportmanager extends object {
         //Create fieldset for Breakdown by type - institutions
         $instBdownFS = $this->newObject('fieldset', 'htmlelements');
         $instBdownFS->setLegend($this->objLanguage->languageText("mod_oer_breakdownbyinst", "oer", "Breakdown by type - institutions"));
-        $instBdownFS->addContent($instBreakdownTable);
+        $instBdownFS->addContent('<div class="reporttable">'.$instBreakdownTable.'</div>');
         $instBdownFS = $instBdownFS->show();
         //product type breakdown table
-        $originalsBreakdownTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $originalsBreakdownTable .= "<tr>";
-        $originalsBreakdownTable .= '<td align="left" valign="top" width="280">' .
+        $originalsBreakdownTable = '<table>';
+        $originalsBreakdownTable .= '<tr class="reportheader">';
+        $originalsBreakdownTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_typeofproduct", "oer", "Type of product") . '</div></td>';
         $originalsBreakdownTable .= '<td align="right" valign="top">' .
@@ -285,12 +285,12 @@ class reportmanager extends object {
         //Create fieldset for Breakdown by type - originals
         $originalBdownFS = $this->newObject('fieldset', 'htmlelements');
         $originalBdownFS->setLegend($this->objLanguage->languageText("mod_oer_breakdownbyoriginals", "oer", "Breakdown by type - originals"));
-        $originalBdownFS->addContent($originalsBreakdownTable);
+        $originalBdownFS->addContent('<div class="reporttable">'.$originalsBreakdownTable.'</div>');
         $originalBdownFS = $originalBdownFS->show();
         //adaptation type breakdown table        
-        $adaptationBreakdownTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $adaptationBreakdownTable .= "<tr>";
-        $adaptationBreakdownTable .= '<td align="left" valign="top" width="280">' .
+        $adaptationBreakdownTable = '<table>';
+        $adaptationBreakdownTable .= '<tr class="reportheader">';
+        $adaptationBreakdownTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_typeofadaptation", "oer", "Type of adaptation") . '</div></td>';
         $adaptationBreakdownTable .= '<td align="right" valign="top">' .
@@ -328,13 +328,13 @@ class reportmanager extends object {
         //Create fieldset for Breakdown by type - adaptations
         $adaptBdownFS = $this->newObject('fieldset', 'htmlelements');
         $adaptBdownFS->setLegend($this->objLanguage->languageText("mod_oer_breakdownbyadaptations", "oer", "Breakdown by type - adaptations"));
-        $adaptBdownFS->addContent($adaptationBreakdownTable);
+        $adaptBdownFS->addContent('<div class="reporttable">'.$adaptationBreakdownTable.'</div>');
         $adaptBdownFS = $adaptBdownFS->show();
 
         //country breakdown table
-        $countryBreakdownTable = '<table border="0" style="table-layout:fixed;" width="325">';
-        $countryBreakdownTable .= "<tr>";
-        $countryBreakdownTable .= '<td align="left" valign="top" width="280">' .
+        $countryBreakdownTable = '<table>';
+        $countryBreakdownTable .= '<tr class="reportheader">';
+        $countryBreakdownTable .= '<td align="left" valign="top" width="255">' .
                 '<div class="reportPropertyTitle">' .
                 $this->objLanguage->languageText("mod_oer_countryadaptation", "oer", "Country of adaptation") . '</div></td>';
         $countryBreakdownTable .= '<td align="right" valign="top">' .
@@ -374,11 +374,11 @@ class reportmanager extends object {
         //Create fieldset for Breakdown by country - adaptations
         $countryBdownFS = $this->newObject('fieldset', 'htmlelements');
         $countryBdownFS->setLegend($this->objLanguage->languageText("mod_oer_breakdownbycountry", "oer", "Breakdown by country - adaptations"));
-        $countryBdownFS->addContent($countryBreakdownTable);
+        $countryBdownFS->addContent('<div class="reporttable">'.$countryBreakdownTable.'</div>');
         $countryBdownFS = $countryBdownFS->show();
 
         //main table        
-        $supportTable = '<table border="0" style="table-layout:fixed;" width="680">';
+        $supportTable = '<div class="allreportstable"><table border="0" style="table-layout:fixed;" width="680">';
         $supportTable .= "<tr>";
         $supportTable .= '<td align="left" valign="top">' . $genFieldset . '</td>';
         $supportTable .= '<td align="left" valign="top">' . '</td>';
@@ -411,7 +411,7 @@ class reportmanager extends object {
         $supportTable .= '<td align="left" valign="top">' . '</td>';
         $supportTable .= '<td align="left" valign="top">' . '</td>';
         $supportTable .= '</tr>';
-        $supportTable .= "</table>";
+        $supportTable .= "</table></div>";
 
         $tabber = '<div id="reports">
 <div class="tabber">
