@@ -32,5 +32,7 @@ jQuery(function() {
       jQuery(".featurebox").css("margin-top", "14px");
       jQuery(".featureboxheader").css("background", "transparent");
       jQuery(".featureboxheader").css("visibility", "hidden");
+      jQuery("#input_username").css("width", "130px");
+      jQuery("#input_password").css("width", "130px");
     });
 });
