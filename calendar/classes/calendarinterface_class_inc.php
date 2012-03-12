@@ -528,8 +528,11 @@ class calendarinterface extends object
                 {
                     if ($type == 'wide')
                     {
-                        $string .= '<div style="padding: 0.5em;"><b>'.date('H:i', strtotime($this->rawEventsList[$day][$key]['timefrom'])).'</b>';
-                        $string .= ' - '.strip_tags(wordwrap(stripslashes($this->rawEventsList[$day][$key]['eventtitle']), '15', '&#8203;', true)).'</div>';
+                        $temp = str_replace(' ', '~', strip_tags(stripcslashes($this->rawEventsList[$day][$key]['eventtitle'])));
+                        $temp = wordwrap($temp, 15, '&#8203;', TRUE);
+                        $temp = str_replace('~', ' ', $temp);
+                        $string .= '<div style="padding: 0.25em;"><b>'.date('H:i', strtotime($this->rawEventsList[$day][$key]['timefrom'])).'</b>';
+                        $string .= ' - '.$temp.'</div>';
                     }   
                     else
                     {
