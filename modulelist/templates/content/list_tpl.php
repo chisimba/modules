@@ -96,7 +96,13 @@ if ($moduleList) {
         $header->str =  $icon . " Module: ".ucwords($moduleRow['modname']);
         $header->type = 3;
         $middleColumn .= $objFb->show($header->show(), 
-          "<div class='" . trim($moduleRow['status'])
+          "<span class='module_title'><em>Title:</em> " 
+          . ucfirst(trim($moduleRow['longname'])) . "</span><br />"
+          . "<span class='module_version'><em>Version:</em> " 
+          . ucfirst(trim($moduleRow['version'])) . "</span><br />"
+          . "<span class='module_authors'><em>Authors:</em> " 
+          . ucfirst(trim($moduleRow['authors'])) . "</span>"
+          . "<div class='" . trim($moduleRow['status'])
           . "'>" . $moduleRow['description'] 
           . "</div><br />" . $noIcon 
           . "<br /><b>Status</b>: " . $moduleRow['status']);

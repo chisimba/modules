@@ -53,10 +53,32 @@ class modulelist extends controller
                 } else {
                     $status = "unset";
                 }
+                preg_match_all('/(MODULE_NAME:(.*))/', $moddata, $results);
+                if(isset($results[2][0])) {
+                    $modName = strtolower($results[2][0]);
+                } else {
+                    $modName = "unset";
+                }
+                
+                preg_match_all('/(MODULE_VERSION:(.*))/', $moddata, $results);
+                if(isset($results[2][0])) {
+                    $modVer = strtolower($results[2][0]);
+                } else {
+                    $modVer = "unset";
+                }
+                preg_match_all('/(MODULE_AUTHORS:(.*))/', $moddata, $results);
+                if(isset($results[2][0])) {
+                    $modAuthors = $results[2][0];
+                } else {
+                    $modAuthors = "unset";
+                }
                 
                 $moduleList[] = array(
                   'modname' => $chkdirs, 
+                  'longname' => $modName,
+                  'version' => $modVer,
                   'description' => $descrip,
+                  'authors' => $modAuthors,
                   'status' => $status);
             }
         }
