@@ -44,6 +44,7 @@ class reportmanager extends object {
         $this->dbOERAdaptations = $this->getObject("dboer_adaptations", "oer");
         $this->dbSectionContent = $this->getObject("dbsectioncontent", "oer");
         $this->dbSectionNodes = $this->getObject("dbsectionnodes", "oer");
+        $this->languageCode = $this->getObject("languagecode", "language");
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
     }
@@ -135,8 +136,8 @@ class reportmanager extends object {
                 //Get originals with this language
                 $orLangProds = $this->dbproducts->getLanguageOriginalProducts($orLang);
                 $orLangProdsCount = count($orLangProds);
-                if ($orLang == "en") {
-                    $orLang = "English";
+                if (!empty($orLang)) {
+                    $orLang = $this->languageCode->getLanguage($orLang);
                 }
                 $oriLangTable .= "<tr>";
                 $oriLangTable .= '<td align="left" valign="top">' .
