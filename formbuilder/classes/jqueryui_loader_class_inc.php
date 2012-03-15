@@ -21,12 +21,28 @@ class jqueryui_loader extends object {
     private $xml_style_settings;
     private $CSS_type;
     private $css_head;
+    private $pathToMainStyleSettings;
 
     public function init() {
         $this->jquery_lib = "<script language='JavaScript' src='" . $this->getResourceUri('js/jqueryui/lib/01.jquery.js', 'formbuilder') . "' type='text/javascript'></script>";
         $this->jqueryui_lib = "<script language='JavaScript' src='" . $this->getResourceUri('js/jqueryui/lib/02.jqueryui.js', 'formbuilder') . "' type='text/javascript'></script>";
         $path_to_style_settings = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
-        $this->xml_style_settings = simplexml_load_file($path_to_style_settings) or die("Error: Cannot load jquery ui XML style settings file.");
+        
+         $objAltConfig = $this->getObject('altconfig','config');
+            $siteRoot=$objAltConfig->getsiteRootPath();
+            $this->pathToMainStyleSettings=$siteRoot.'config/formbuilder_style_settings.xml';
+
+        if (!file_exists($this->pathToMainStyleSettings)) {
+        $path_to_style_settings = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
+        $this->xml_style_settings = simplexml_load_file($path_to_style_settings) or die("Error: Cannot load jquery ui XML style settings file.");    
+        $this->xml_style_settings->asXML($this->pathToMainStyleSettings);
+        $this->xml_style_settings = simplexml_load_file($this->pathToMainStyleSettings) or die("Error: Cannot load jquery ui XML style settings file.");
+        
+        } else {
+         $this->xml_style_settings = simplexml_load_file($this->pathToMainStyleSettings) or die("Error: Cannot load jquery ui XML style settings file.");   
+        }
+        
+//        $this->xml_style_settings = simplexml_load_file($path_to_style_settings) or die("Error: Cannot load jquery ui XML style settings file.");
 
         $this->getSelectedStyle();
         $this->setStyle();

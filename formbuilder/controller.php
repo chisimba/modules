@@ -277,7 +277,7 @@ class formbuilder extends controller {
      */
 
     private function __buildCurrentForm() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         $formNumber = $this->getParam("formNumber");
         $this->setVar('formNumber', $formNumber);
         return "construct_current_form.php";
@@ -731,7 +731,7 @@ class formbuilder extends controller {
      */
 
     private function __editWYSIWYGForm() {
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
         return "form_editor.php";
 
 ///If developers want to revert to the old WYSIWYG form editor, just uncomment

@@ -277,6 +277,8 @@ class form_entity_handler extends object {
         }
         return $deleteSuccess;
     }
+    
+    
 
     /*!
      * \brief This member function contructs a form with all the form elements for
@@ -353,6 +355,11 @@ It \"will\" be displayed in the built form.]<br></div>";
             }
         }
         return $WYSIWYGFormUnderConstruction;
+    }
+    
+    public function getFormName($formNumber){
+       $formElements = $this->objDBFormElements->listFormElementsForForm($formNumber);
+       return $formElements["0"]['formname'];
     }
 
     /*!
@@ -791,16 +798,23 @@ It \"will\" be displayed in the built form.]<br></div>";
 //  $objElement->setBreakSpace("<br>");
         $TIOptionsUnderConstruction .= $objElement->show() . "<br>";
         $TIOptionsUnderConstruction .="<div id=additionalTextProperties>";
-        $TIOptionsUnderConstruction .= "<br>Select and Set Input Mask:<br>";
+        $TIOptionsUnderConstruction .= "<br>Select and Set Validation Option:<br>";
         $objElement = new radio('maskedInputChoice');
-        $objElement->addOption('default', 'No Masked Input');
-        $objElement->addOption('text input_mask mask_number', 'Number');
-        $objElement->addOption('text input_mask mask_date_us', 'Date (US Format) : day/month/year');
-        $objElement->addOption('text input_mask mask_date_iso', 'Date (ISO Format) : year-month-day');
-        $objElement->addOption('text input_mask mask_time', 'Time : hour:minute');
-        $objElement->addOption('text input_mask mask_phone', 'Phone Number : (000)000-0000');
-// $objElement->addOption('text input_mask mask_ssn', 'Social Security Number : 000-00-0000');
-        $objElement->addOption('text input_mask mask_visa', 'Credit Card Number : 0000-0000-0000-0000');
+        $objElement->addOption('default', 'No Validation');
+        $objElement->addOption('numeric', 'Numeric : Whole Numbers');
+        $objElement->addOption('decimal', 'Decimal Numbers : 123.1234');
+        $objElement->addOption('alphanumeric', 'Alphanumeric: Alphabets and numbers');
+        $objElement->addOption('alpha', 'Alpha: Only alphabets');    
+        $objElement->addOption('date_us', 'Date (US Format) : day/month/year');
+        $objElement->addOption('date_iso', 'Date (ISO Format) : year-month-day');
+        $objElement->addOption('time', 'Time : hour:minute');
+        $objElement->addOption('phone', 'Phone Number : 000-000-0000');
+        $objElement->addOption('document', 'Document Filenames : file.(pdf,doc,csv,txt)');
+        $objElement->addOption('image', 'Image Filenames : image.(jpg,gif,png)');
+        $objElement->addOption('ip', 'IP Address : 192.168.0.1');
+        $objElement->addOption('html_hex', 'HTML Color Codes : #00ccff');
+        $objElement->addOption('email', 'Email Address : salman.noor@wits.ac.za');
+        $objElement->addOption('url', 'Internet Address : http://www.google.co.za');
         $objElement->setSelected('default');
 //$objElement->setBreakSpace("<br>");
         $TIOptionsUnderConstruction .= $objElement->show();

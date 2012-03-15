@@ -187,6 +187,7 @@ function produceTextInput(formElementID,formElementName,formElementSize,textOrPa
         var postSuccessBoolean =jQuery('#tempdivcontainer #postSuccess').html();
 
         jQuery('#tempdivcontainer').empty();
+
         if (postSuccessBoolean == 1)//1
         {
             var textInputDataToPost = {
@@ -203,7 +204,7 @@ function produceTextInput(formElementID,formElementName,formElementSize,textOrPa
             var myurlToCreateTextInput = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceTextInput]").val();
             jQuery('#tempdivcontainer').load(myurlToCreateTextInput, textInputDataToPost ,function postSuccessFunction(html) {
                 jQuery('#tempdivcontainer').html(html);
-                var textInput = jQuery('#tempdivcontainer #WYSIWYGTextInput').html();
+                var textInput = jQuery('#tempdivcontainer').children('#WYSIWYGTextInput').html();
                 if (textInput == 0)
                 {
                     updateErrorMessage("A text input with the ID \""+formElementID+"\" and name \""+formElementName+"\" already exists in the database.\n\

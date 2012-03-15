@@ -275,6 +275,57 @@ protected function deleteTextInputEntity($formElementName)
     return $deleteSuccess;
 }
 
+    public function buildTextInput($id,$type, $default_text, $class, $with_label_bool, $label_text, $label_orientation, $size='35') {
+
+        if ($id == null) {
+            return "Error. Text Input Parameters not defined.";
+        }
+
+        if ($with_label_bool == true) {
+            if ($class == null) {
+                $textInputUnderConstruction = "<input type=\"$type\" name=\"$id\" id=\"$id\" size=$size value=\"$default_text\" />";
+            } else {
+                $textInputUnderConstruction = "<input type=\"$type\" name=\"$id\" class=\"$class\" size=$size id=\"$id\" value=\"$default_text\" />";
+            }
+            $labelUnderConstruction = "<label for='".$id."'>".$label_text."</label>";
+switch ($label_orientation) {
+                case 'top':
+$currentConstructedti= "<div id='textInputLabelContainer' style='clear:both;'> ".$labelUnderConstruction."</div>"
+        ."<div id='textInputContainer'style='clear:left;'> ".$textInputUnderConstruction."</div>";
+                    return $currentConstructedti;
+break;
+                case 'bottom':
+$currentConstructedti= "<div id='textInputContainer'style='clear:both;'> ".$textInputUnderConstruction."</div>".
+                        "<div id='textInputLabelContainer' style='clear:both;'> ".$labelUnderConstruction."</div>";
+                        return $currentConstructedti;
+break;
+                case 'left':
+$currentConstructedti= "<div style='clear:both;overflow:auto;'><div id='textInputLabelContainer' style='float:left;clear:left;'> ".$labelUnderConstruction."</div>"
+        ."<div id='textInputContainer'style='float:left; clear:right;'> ".$textInputUnderConstruction."</div></div>";
+                        return $currentConstructedti;
+break;
+                case 'right':
+$currentConstructedti= "<div style='clear:both;overflow:auto;'><div id='textInputContainer'style='float:left;clear:left;'> ".$textInputUnderConstruction."</div>".
+                        "<div id='textInputLabelContainer' style='float:left;clear:right;'> ".$labelUnderConstruction."</div></div>";
+                        return $currentConstructedti;
+break;
+default:
+   $currentConstructedti= "<div style='clear:both;overflow:auto;'><div id='textInputLabelContainer' style='float:left;clear:left;'> ".$labelUnderConstruction."</div>"
+        ."<div id='textInputContainer'style='float:left; clear:right;'> ".$textInputUnderConstruction."</div></div>";
+        return $currentConstructedti;
+break; 
+                 }
+                 
+                 
+        } else {
+            if ($class == null) {
+                return "<input type=\"$type\" name=\"$id\" id=\"$id\" size=$size value=\"$default_text\" />";
+            } else {
+                return "<input type=\"$type\" name=\"$id\" class=\"$class\" size=$size id=\"$id\" value=\"$default_text\" />";
+            }
+        }
+    }
+
     /*!
      * \brief This member function constructs a text input form element for a the actual form
      * rendering from the database.
@@ -295,6 +346,7 @@ foreach($tiParameters as $thistiParameter){
   $textInputName = $thistiParameter["textinputname"];
   $textValue = $thistiParameter["textvalue"];
       $textType = $thistiParameter["texttype"];
+
       $textSize = $thistiParameter["textsize"];
       $maskedInputChoice = $thistiParameter["maskedinputchoice"];
 
@@ -302,51 +354,66 @@ foreach($tiParameters as $thistiParameter){
       $labelOrientation = $thistiParameter["labelorientation"];
 
 
-      if ($textInputLabel == NULL)
-      {
-$tiUnderConstruction = new textinput($textInputName, $textValue, $textType, $textSize);
-    if ($maskedInputChoice != "default")
-    {
-        $tiUnderConstruction->setCss($maskedInputChoice);
-    }
-
-    $inputMasksUnderConstruction = $this->getObject('inputmasks', 'htmlelements');
-
-$currentConstructedti = "<div style='clear:both;'>".$inputMasksUnderConstruction->show().$tiUnderConstruction->show()."</div>";
-
-$constructedti .= $currentConstructedti;
+      if ($textInputLabel == NULL){
+          $with_label_bool =false;
+      } else {
+         $with_label_bool =true; 
       }
- else {
-  $textInputLabelUnderConstruction = new label ($textInputLabel, $textInputName);
-     $tiUnderConstruction = new textinput($textInputName, $textValue, $textType, $textSize);
-    if ($maskedInputChoice != "default")
-    {
-        $tiUnderConstruction->setCss($maskedInputChoice);
-    }
-
-    $inputMasksUnderConstruction = $this->getObject('inputmasks', 'htmlelements');
-
-switch ($labelOrientation) {
-                case 'top':
-$currentConstructedti= $inputMasksUnderConstruction->show()."<div id='textInputLabelContainer' style='clear:both;'> ".$textInputLabelUnderConstruction->show()."</div>"
-        ."<div id='textInputContainer'style='clear:left;'> ".$tiUnderConstruction->show()."</div>";
-break;
-                case 'bottom':
-$currentConstructedti= $inputMasksUnderConstruction->show()."<div id='textInputContainer'style='clear:both;'> ".$tiUnderConstruction->show()."</div>".
-                        "<div id='textInputLabelContainer' style='clear:both;'> ".$textInputLabelUnderConstruction->show()."</div>";
-break;
-                case 'left':
-$currentConstructedti= "<div style='clear:both;overflow:auto;'>".$inputMasksUnderConstruction->show()."<div id='textInputLabelContainer' style='float:left;clear:left;'> ".$textInputLabelUnderConstruction->show()."</div>"
-        ."<div id='textInputContainer'style='float:left; clear:right;'> ".$tiUnderConstruction->show()."</div></div>";
-break;
-                case 'right':
-$currentConstructedti= "<div style='clear:both;overflow:auto;'>".$inputMasksUnderConstruction->show()."<div id='textInputContainer'style='float:left;clear:left;'> ".$tiUnderConstruction->show()."</div>".
-                        "<div id='textInputLabelContainer' style='float:left;clear:right;'> ".$textInputLabelUnderConstruction->show()."</div></div>";
-break;
-                 }
-
- $constructedti .= $currentConstructedti;
-      }
+      $currentConstructedti= $this->buildTextInput($textInputName,$textType, $textValue, $maskedInputChoice, $with_label_bool, $textInputLabel, $labelOrientation, $textSize);
+      $constructedti .= $currentConstructedti;
+      
+//      if ($textInputLabel == NULL)
+//      {
+//$tiUnderConstruction = new textinput($textInputName, $textValue, $textType, $textSize);
+//    if ($maskedInputChoice != "default")
+//    {
+//        $tiUnderConstruction->setCss($maskedInputChoice);
+//         $inputMasksUnderConstruction = $this->getObject('inputmasks', 'htmlelements');
+//    } else {
+//        $inputMasksUnderConstruction = $this->getObject('inputmasks', 'htmlelements');
+//    }
+//
+//   
+//
+//$currentConstructedti = "<div style='clear:both;'>".$inputMasksUnderConstruction->show().$tiUnderConstruction->show()."</div>";
+//
+//$constructedti .= $currentConstructedti;
+//      }
+// else {
+//  $textInputLabelUnderConstruction = new label ($textInputLabel, $textInputName);
+//     $tiUnderConstruction = new textinput($textInputName, $textValue, $textType, $textSize);
+//
+//    if ($maskedInputChoice != "default")
+//    {
+//        $tiUnderConstruction->setCss($maskedInputChoice);
+//        $inputMasksUnderConstruction = $this->getObject('inputmasks', 'htmlelements');
+//    } else {
+//        $inputMasksUnderConstruction = null;
+//    }
+//
+//    
+//
+//switch ($labelOrientation) {
+//                case 'top':
+//$currentConstructedti= $inputMasksUnderConstruction->show()."<div id='textInputLabelContainer' style='clear:both;'> ".$textInputLabelUnderConstruction->show()."</div>"
+//        ."<div id='textInputContainer'style='clear:left;'> ".$tiUnderConstruction->show()."</div>";
+//break;
+//                case 'bottom':
+//$currentConstructedti= $inputMasksUnderConstruction->show()."<div id='textInputContainer'style='clear:both;'> ".$tiUnderConstruction->show()."</div>".
+//                        "<div id='textInputLabelContainer' style='clear:both;'> ".$textInputLabelUnderConstruction->show()."</div>";
+//break;
+//                case 'left':
+//$currentConstructedti= "<div style='clear:both;overflow:auto;'>".$inputMasksUnderConstruction->show()."<div id='textInputLabelContainer' style='float:left;clear:left;'> ".$textInputLabelUnderConstruction->show()."</div>"
+//        ."<div id='textInputContainer'style='float:left; clear:right;'> ".$tiUnderConstruction->show()."</div></div>";
+//break;
+//                case 'right':
+//$currentConstructedti= "<div style='clear:both;overflow:auto;'>".$inputMasksUnderConstruction->show()."<div id='textInputContainer'style='float:left;clear:left;'> ".$tiUnderConstruction->show()."</div>".
+//                        "<div id='textInputLabelContainer' style='float:left;clear:right;'> ".$textInputLabelUnderConstruction->show()."</div></div>";
+//break;
+//                 }
+//
+// $constructedti .= $currentConstructedti;
+//      }
 
 }
 
@@ -363,45 +430,55 @@ break;
      */
 private function buildWYSIWYGTextInputEntity()
 {
-  if ($this->tiLabel == NULL)
-  {
-      $this->objTextInput = new textinput($this->tiName,  $this->tiTextValue, $this->tiType, $this->tiSize);
-    if ($this->tiTextMask != "default")
-    {
-        $this->objTextInput->setCss($this->tiTextMask);
-    }
-
-$objInputMasks = $this->getObject('inputmasks', 'htmlelements');
-return "<div style='clear:both;>".$objInputMasks->show().$this->objTextInput->show()."</div>";
- }
- else {
-                                 $textInputLabel = new label ($this->tiLabel,  $this->tiName);
-    $this->objTextInput = new textinput($this->tiName,  $this->tiTextValue, $this->tiType, $this->tiSize);
-    if ($this->tiTextMask != "default")
-    {
-        $this->objTextInput->setCss($this->tiTextMask);
-    }
-$objInputMasks = $this->getObject('inputmasks', 'htmlelements');
-
-     switch ($this->tiLabelLayout) {
-                case 'top':
-return $objInputMasks->show()."<div class='textInputLabelContainer' style='clear:both;'> ".$textInputLabel->show()."</div>"
-        ."<div class='textInputContainer'style='clear:left;'> ".$this->objTextInput->show()."</div>";
-break;
-                case 'bottom':
-return $objInputMasks->show()."<div class='textInputContainer'style='clear:both;'> ".$this->objTextInput->show()."</div>".
-                        "<div class='textInputLabelContainer' style='clear:both;'> ".$textInputLabel->show()."</div>";
-break;
-                case 'left':
-return "<div style='clear:both;overflow:auto;'>".$objInputMasks->show()."<div class='textInputLabelContainer' style='float:left;clear:left;'> ".$textInputLabel->show()."</div>"
-        ."<div class='textInputContainer'style='float:left; clear:right;'> ".$this->objTextInput->show()."</div></div>";
-break;
-                case 'right':
-return "<div style='clear:both;overflow:auto;'>".$objInputMasks->show()."<div class='textInputContainer'style='float:left;clear:left;'> ".$this->objTextInput->show()."</div>".
-                        "<div class='textInputLabelContainer' style='float:left;clear:right;'> ".$textInputLabel->show()."</div></div>";
-break;
-                 }
- }
+ 
+          if ($this->tiLabel  == NULL){
+          $with_label_bool =false;
+      } else {
+         $with_label_bool =true; 
+      }
+      
+      return $currentConstructedti= $this->buildTextInput($this->tiName,$this->tiType, $this->tiTextValue, $this->tiTextMask, $with_label_bool, $this->tiLabel, $this->tiLabelLayout, $this->tiSize);
+//      $constructedti .= $currentConstructedti;
+//    if ($this->tiLabel == NULL)
+//  {
+//      $this->objTextInput = new textinput($this->tiName,  $this->tiTextValue, $this->tiType, $this->tiSize);
+//    if ($this->tiTextMask != "default")
+//    {
+//        $this->objTextInput->setCss($this->tiTextMask);
+//    }
+//
+//$objInputMasks = $this->getObject('inputmasks', 'htmlelements');
+//return "<div style='clear:both;>".$objInputMasks->show().$this->objTextInput->show()."</div>";
+// }
+// else {
+//                                 $textInputLabel = new label ($this->tiLabel,  $this->tiName);
+//    $this->objTextInput = new textinput($this->tiName,  $this->tiTextValue, $this->tiType, $this->tiSize);
+//   
+//    if ($this->tiTextMask != "default")
+//    {
+//        $this->objTextInput->setCss($this->tiTextMask);
+//    }
+//$objInputMasks = $this->getObject('inputmasks', 'htmlelements');
+//
+//     switch ($this->tiLabelLayout) {
+//                case 'top':
+//return $objInputMasks->show()."<div class='textInputLabelContainer' style='clear:both;'> ".$textInputLabel->show()."</div>"
+//        ."<div class='textInputContainer'style='clear:left;'> ".$this->objTextInput->show()."</div>";
+//break;
+//                case 'bottom':
+//return $objInputMasks->show()."<div class='textInputContainer'style='clear:both;'> ".$this->objTextInput->show()."</div>".
+//                        "<div class='textInputLabelContainer' style='clear:both;'> ".$textInputLabel->show()."</div>";
+//break;
+//                case 'left':
+//return "<div style='clear:both;overflow:auto;'>".$objInputMasks->show()."<div class='textInputLabelContainer' style='float:left;clear:left;'> ".$textInputLabel->show()."</div>"
+//        ."<div class='textInputContainer'style='float:left; clear:right;'> ".$this->objTextInput->show()."</div></div>";
+//break;
+//                case 'right':
+//return "<div style='clear:both;overflow:auto;'>".$objInputMasks->show()."<div class='textInputContainer'style='float:left;clear:left;'> ".$this->objTextInput->show()."</div>".
+//                        "<div class='textInputLabelContainer' style='float:left;clear:right;'> ".$textInputLabel->show()."</div></div>";
+//break;
+//                 }
+// }
 }
 
     /*!

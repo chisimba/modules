@@ -15,36 +15,52 @@
  *  \date    March 1, 2012
  */
 class style_settings_handler extends object {
-/**
+
+    /**
      * \brief Object to be able use the html_builder class functionality.
      */
     private $html_buillder;
+
     /**
      * \brief Object reading XML theme roller file.
      */
     private $xml_style_settings;
+
     /**
      * \brief Object writing to XML theme roller file.
      */
     private $xml_style_editor;
+
     /**
      * \brief Variable string to store chosen theme from theme roller.
      */
     private $chosen_style;
-    
     private $stylesListDropdown;
+    private $pathToMainStyleSettings;
 
     /**
      * \brief Constructor instatiating private data members of the class
      * admin_page_handler.
      */
     public function init() {
-        $path_to_style_settings = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
-        $this->xml_style_settings = simplexml_load_file($path_to_style_settings) or die("Error: Cannot load jquery ui XML style settings file.");
+
+        $objAltConfig = $this->getObject('altconfig', 'config');
+        $siteRoot = $objAltConfig->getsiteRootPath();
+        $this->pathToMainStyleSettings = $siteRoot . 'config/formbuilder_style_settings.xml';
+
+        if (!file_exists($this->pathToMainStyleSettings)) {
+            $path_to_style_settings = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
+            $this->xml_style_settings = simplexml_load_file($path_to_style_settings) or die("Error: Cannot load jquery ui XML style settings file.");
+            $this->xml_style_settings->asXML($this->pathToMainStyleSettings);
+            $this->xml_style_settings = simplexml_load_file($this->pathToMainStyleSettings) or die("Error: Cannot load jquery ui XML style settings file.");
+        } else {
+            $this->xml_style_settings = simplexml_load_file($this->pathToMainStyleSettings) or die("Error: Cannot load jquery ui XML style settings file.");
+        }
+
 
         $this->getCurrentStyle();
         $this->loadXMLFileString();
-                $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
 
 ///Instatiate an object from the class dropdown belonging to the module
 ///htmlelements.
@@ -71,15 +87,15 @@ class style_settings_handler extends object {
      * \note the file being read is ThemeRoller.xml
      */
     private function loadXMLFileString() {
-        $file = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
-        $fp = fopen($file, "rb") or die("Error: Cannot load jquery ui XML style settings file.");
-        $str = fread($fp, filesize($file));
+
+//        $file = $this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder');
+        $fp = fopen($this->pathToMainStyleSettings, "rb") or die("Error: Cannot load jquery ui XML style settings file.");
+        $str = fread($fp, filesize($this->pathToMainStyleSettings));
         $this->xml_style_editor = new DOMDocument();
         $this->xml_style_editor->formatOutput = true;
         $this->xml_style_editor->preserveWhiteSpace = false;
         $this->xml_style_editor->loadXML($str) or die("Error: Cannot load jquery ui XML style settings file.");
     }
-    
 
     /**
      * \brief Private member function setting new Theme from the theme roller.
@@ -89,25 +105,33 @@ class style_settings_handler extends object {
     public function setNewTheme($newTheme) {
 /// get document element
         if (is_dir($this->getResourceUri("js/jqueryui/styles/$newTheme/"))) {
-        $root = $this->xml_style_editor->documentElement;
-        $fnode = $root->firstChild;
+//        $settingDirectory = $this->getResourceUri('js/jqueryui/settings/', 'formbuilder');
+//        print_r($settingDirectory);
+//        chmod("$settingDirectory", 0600);
+//        if (is_writable($settingDirectory)){
+//            chmod("$settingDirectory", 0600);
+//        }
+
+            $root = $this->xml_style_editor->documentElement;
+            $fnode = $root->firstChild;
 
 ///get a node
-        $ori = $fnode->childNodes->item(0);
+            $ori = $fnode->childNodes->item(0);
 
-        $name = $this->xml_style_editor->createElement("name");
-        $nameText = $this->xml_style_editor->createTextNode("$newTheme");
-        $name->appendChild($nameText);
+            $name = $this->xml_style_editor->createElement("name");
+            $nameText = $this->xml_style_editor->createTextNode("$newTheme");
+            $name->appendChild($nameText);
 
 
-        $theme = $this->xml_style_editor->createElement("chosenTheme");
-        $theme->appendChild($name);
-        $fnode->replaceChild($theme, $ori);
-        $this->xml_style_editor->save($this->getResourceUri('js/jqueryui/settings/style_settings.xml', 'formbuilder'));
-        "<xmp>NEW:\n" . $this->xml_style_editor->saveXML() . "</xmp>";
-        return true;
-                }
-                return false;
+            $theme = $this->xml_style_editor->createElement("chosenTheme");
+            $theme->appendChild($name);
+            $fnode->replaceChild($theme, $ori);
+
+            $this->xml_style_editor->save($this->pathToMainStyleSettings);
+            "<xmp>NEW:\n" . $this->xml_style_editor->saveXML() . "</xmp>";
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -144,32 +168,29 @@ class style_settings_handler extends object {
         }
         $themRoller = "<div id='themeRollerContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:20px 20px 20px 20px;'> ";
         $themRoller .= "<h3>Style Selector</h3>";
-        $themRoller .= "<label for='input_stylelist_dropdown'>Set a style for formbuilder</label><br>".$this->stylesListDropdown->show();
+        $themRoller .= "<label for='input_stylelist_dropdown'>Set a style for formbuilder</label><br>" . $this->stylesListDropdown->show();
         $themRoller .= "&nbsp;&nbsp;&nbsp;<button id='selectTheme'>Set Style</button>";
         $themRoller .= "<div id='themeLoaderContainer'></div>";
-     //   $themRoller .= $this->html_buillder->buildButton("selectTheme", "Set Theme", "themeSelector");
+        //   $themRoller .= $this->html_buillder->buildButton("selectTheme", "Set Theme", "themeSelector");
         $themRoller .= "<div id='themeViewerContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:20px 20px 20px 20px;'>";
         $themRoller .= "<h3>Theme Viewer</h3>";
         $themRoller .= $this->buildThemeViewer();
-        
+
         $themRoller .= "</div>";
         $themRoller .= "</div>";
         return $themRoller;
     }
 
-        /**
+    /**
      * \brief Memeber function that builds custom action links for controller.
      * \note Only one parameter for the action is allowed.
      * \return A built html link to be able to run on the controller.
      */
     private function getActionLinkWithParamter($actionParameter, $lnkText) {
         return '<a href="server_side_communication_interface.php'
-        . '?action=' . $actionParameter
-        . '">' . $lnkText . '</a>';
+                . '?action=' . $actionParameter
+                . '">' . $lnkText . '</a>';
     }
-
-
-
 
 }
 

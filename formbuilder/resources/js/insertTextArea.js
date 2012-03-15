@@ -59,8 +59,10 @@ does not exist. Please contact your software administrator.</p>');
             var formElementLengthAdvanced = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#advancedInsertForm").children("#textAreaSizeMenuContainer").children(':input[name=textAreaLength]');
             var formElementLengthSimple = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#simpleInsertForm").children("#textAreaSizeMenuContainer").children(':input[name=textAreaLength]');
             var formElementHeightSimple = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#simpleInsertForm").children("#textAreaSizeMenuContainer").children(':input[name=textAreaHeight]');
+            
             var formElementHeightAdvanced = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#advancedInsertForm").children("#textAreaSizeMenuContainer").children(':input[name=textAreaHeight]');
-            var formElementTextSimple = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#simpleInsertForm").children("#textAreaPropertiesContainer").children(':input[name=formElementDesiredText]');
+            //var formElementTextSimple = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#simpleInsertForm").children("#textAreaPropertiesContainer").children(':input[name=formElementDesiredText]');
+            var formElementTextSimple = jQuery("textarea#input_formElementDesiredText");
             var formElementTextAdvanced = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#advancedInsertForm").children("#textAreaPropertiesContainer").children(':input[name=formElementDesiredText]');
 
 //            var formElementTextSimple = jQuery("#dialog-box-formElementsAdvanced").children("#FormElementInserterTabs").children("#simpleInsertForm").children("#textAreaPropertiesContainer").children('#input_formElementDesiredText');
@@ -121,30 +123,56 @@ does not exist. Please contact your software administrator.</p>');
                     else
                     {
                         var bValid = true;
-                        bValid = bValid && checkRegexp(formElementIDAdvanced,/^([0-9a-zA-Z])+$/,"The advanced text area ID field only allows alphanumeric characters (a-z 0-9).");
-                        bValid = bValid && checkLength(formElementIDAdvanced,'unique advanced text area ID',5,150);
-                        bValid = bValid && checkRegexp(formElementNameAdvanced,/^([0-9a-zA-Z])+$/,"The advanced text area name only allows alphanumeric characters (a-z 0-9).");
-                        bValid = bValid && checkLength(formElementNameAdvanced,'advanced text area name',5,150);
-                        bValid = bValid && checkValue(formElementLengthAdvanced,'advanced text area column size',1,140);
-                        bValid = bValid && checkRegexp(formElementLengthAdvanced,/^\d+$/,"The advanced text area column size only allows digits (0-9).");
-                        bValid = bValid && checkValue(formElementHeightAdvanced,'advanced text area row size',1,140);
-                        bValid = bValid && checkRegexp(formElementHeightAdvanced,/^\d+$/,"The advanced text area row size only allows digits (0-9).");
+                        bValid = bValid && checkRegexp(formElementIDSimple,/^([0-9a-zA-Z])+$/,"The simple text area ID field only allows alphanumeric characters (a-z 0-9).");
+                        bValid = bValid && checkLength(formElementIDSimple,'unique simple text area ID',5,150);
+                        bValid = bValid && checkRegexp(formElementNameSimple,/^([0-9a-zA-Z])+$/,"The simple text area name only allows alphanumeric characters (a-z 0-9).")
+                        bValid = bValid && checkLength(formElementNameSimple,'simple text area name',5,150);
+                        bValid = bValid && checkValue(formElementLengthSimple,'simple text area column size',1,140);
+                        bValid = bValid && checkRegexp(formElementLengthSimple,/^\d+$/,"The simple text area column size only allows digits (0-9).");
+                        bValid = bValid && checkValue(formElementHeightSimple,'simple text area row size',1,140);
+                        bValid = bValid && checkRegexp(formElementHeightSimple,/^\d+$/,"The simple text area row size only allows digits (0-9).");
                         if (bValid) {
-                            var formElementIDAdvanceds = formElementIDAdvanced.val();
-                            var formElementNameAdvanceds = formElementNameAdvanced.val();
-                            var formElementValueAdvanced = formElementTextAdvanced.val();
-                            var rowSizeAdvanced = formElementHeightAdvanced.val();
-                            var columnSizeAdvanced = formElementLengthAdvanced.val();
-                            var simpleOrAdvancedChoiceAdvanced = "htmlarea";
-                            var toolbarChoiceAdvanced = jQuery('input:radio[name=toolBarChoice]:checked').val();
-                           var formElementLabelAdvanceds= formElementLabelAdvanced.val();
-                             var formElementLabelLayouts = jQuery('input:radio[name=labelOrientationAdvanced]:checked').val();
-                            produceTextArea(formElementIDAdvanceds,formElementNameAdvanceds,formElementValueAdvanced,rowSizeAdvanced,columnSizeAdvanced,simpleOrAdvancedChoiceAdvanced,toolbarChoiceAdvanced,formElementLabelAdvanceds,formElementLabelLayouts);
-                        }
+                            var formElementIDSimples = formElementIDSimple.val();
+                            var formElementNameSimples = formElementNameSimple.val();
+                            var formElementValueSimples = formElementTextSimple.val();
+                            var rowSizeSimple = formElementHeightSimple.val();
+                            var columnSizeSimple = formElementLengthSimple.val();
+                            var simpleOrAdvancedChoiceSimple = "textarea";
+                            var toolbarChoiceSimple = jQuery('input:radio[name=toolBarChoice]:checked').val();
+                            var formElementLabelSimples= formElementLabelSimple.val();
+                            var formElementLabelLayouts = jQuery('input:radio[name=labelOrientationSimple]:checked').val();
+                            produceTextArea(formElementIDSimples,formElementNameSimples,formElementValueSimples,rowSizeSimple,columnSizeSimple,simpleOrAdvancedChoiceSimple,toolbarChoiceSimple,formElementLabelSimples,formElementLabelLayouts);
+                        }                        
+//                        
+//                        
+//                        
+//                        var bValid = true;
+//                        bValid = bValid && checkRegexp(formElementIDAdvanced,/^([0-9a-zA-Z])+$/,"The advanced text area ID field only allows alphanumeric characters (a-z 0-9).");
+//                        bValid = bValid && checkLength(formElementIDAdvanced,'unique advanced text area ID',5,150);
+//                        bValid = bValid && checkRegexp(formElementNameAdvanced,/^([0-9a-zA-Z])+$/,"The advanced text area name only allows alphanumeric characters (a-z 0-9).");
+//                        bValid = bValid && checkLength(formElementNameAdvanced,'advanced text area name',5,150);
+//                        bValid = bValid && checkValue(formElementLengthAdvanced,'advanced text area column size',1,140);
+//                        bValid = bValid && checkRegexp(formElementLengthAdvanced,/^\d+$/,"The advanced text area column size only allows digits (0-9).");
+//                        bValid = bValid && checkValue(formElementHeightAdvanced,'advanced text area row size',1,140);
+//                        bValid = bValid && checkRegexp(formElementHeightAdvanced,/^\d+$/,"The advanced text area row size only allows digits (0-9).");
+//                        if (bValid) {
+//                            var formElementIDAdvanceds = formElementIDAdvanced.val();
+//                            var formElementNameAdvanceds = formElementNameAdvanced.val();
+//                            var formElementValueAdvanced = formElementTextAdvanced.text();
+//                            var rowSizeAdvanced = formElementHeightAdvanced.val();
+//                            var columnSizeAdvanced = formElementLengthAdvanced.val();
+//                            var simpleOrAdvancedChoiceAdvanced = "htmlarea";
+//                            var toolbarChoiceAdvanced = jQuery('input:radio[name=toolBarChoice]:checked').val();
+//                           var formElementLabelAdvanceds= formElementLabelAdvanced.val();
+//                             var formElementLabelLayouts = jQuery('input:radio[name=labelOrientationAdvanced]:checked').val();
+//                            produceTextArea(formElementIDAdvanceds,formElementNameAdvanceds,formElementValueAdvanced,rowSizeAdvanced,columnSizeAdvanced,simpleOrAdvancedChoiceAdvanced,toolbarChoiceAdvanced,formElementLabelAdvanceds,formElementLabelLayouts);
+//                        }
                     }
                 }
             });
         }
+        
+        
         jQuery("#dialog-box-formElementsAdvanced").dialog("open");
                       jQuery(".ui-dialog-buttonset").css('width','1025px');
             jQuery(".ui-dialog-buttonpane").find("button").css('float', 'right');
