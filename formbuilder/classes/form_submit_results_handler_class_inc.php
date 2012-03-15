@@ -135,219 +135,224 @@ class form_submit_results_handler extends object {
         $submitNumbersArray = $this->objDBFormSubmitResults->getOnlyFormSubmitNumbers($formNumber);
         $formPartCSVFileHeader = "\"Submit Number\"~\"Name of Submitter\"~\"Email Address\"~\"Time of Submission\"~";
         $relativeSubmitNumber = 1;
+//print_r($submitNumbersArray);
 //Old Code for Back Up
-//foreach($submitNumbersArray as $indexOfSubmitNumber=>$thisSubmitNumber){
-//   //Store the values of the array in variables
-//
-//      $submitNumber = $thisSubmitNumber["submitnumber"];
-//
-//    if ($indexOfSubmitNumber==0)
-//{
-// $previousSubmitNumber =$submitNumber;
-//$formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
-// $numItems = count($formElementTypesArray);
-//foreach($formElementTypesArray as $key=>$thisFormElementType){
-//
-// $formElementName= $thisFormElementType["formelementname"];
-// $formElementType = $thisFormElementType["formelementtype"];
-//
-//$singleHeaderCSVField = "\"".$formElementName." ( ". $formElementType ." )\"";
-//$formFieldNamesAndTypeHeaderCSVField .= $singleHeaderCSVField;
-//if ($key!=$numItems-1)
-//{
-// $formFieldNamesAndTypeHeaderCSVField .="~";
-//}
-//
-//}
-//$CSVFileContent.=$formPartCSVFileHeader.$formFieldNamesAndTypeHeaderCSVField."\n";
-//}
-//
-//
-//
-//   $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
-//    $numItems = count($formElementTypesArray);
-//$previousFormElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($previousSubmitNumber);
-//if ($formElementTypesArray!=$previousFormElementTypesArray)
-//{
-//foreach($formElementTypesArray as $key=>$thisFormElementType){
-//
-// $formElementName= $thisFormElementType["formelementname"];
-// $formElementType = $thisFormElementType["formelementtype"];
-//
-//$singleHeaderCSVField = $formElementName." ( ". $formElementType ." )";
-//$changedFormFieldNamesAndTypeHeaderCSVField .= " ".$singleHeaderCSVField;
-//if ($key!=$numItems-1)
-//{
-// $changedFormFieldNamesAndTypeHeaderCSVField .="~";
-//}
-//}
-//$CSVFileContent.="\n\"Form Element Content Has Been Changed.\"\n\n".$formPartCSVFileHeader.$changedFormFieldNamesAndTypeHeaderCSVField."\n";
-//}
-//
-//      $previousSubmitNumber =$submitNumber;
-//
-//         $submitResultsParameters = $this->objDBFormSubmitResults->getParticularSubmitResults($submitNumber);
-//        $userIDOfFormSubmitter = $submitResultsParameters["0"]["useridofformsubmitter"];
-//        $timeOfSubmission = $submitResultsParameters["0"]["timeofsubmission"];
-//
-//$metaDataResults= "\"".$relativeSubmitNumber."\"~"
-//        ."\"".$this->objDBFormSubmitResults->getSubmitUsersFullName($userIDOfFormSubmitter)."\"~"
-//        ."\"".$this->objDBFormSubmitResults->getSubmitUsersEmail($userIDOfFormSubmitter)."\"~"
-//        ."\"".$timeOfSubmission."\"~";
-//$resultsContent=null;
-//    $numItems = count($submitResultsParameters);
-//foreach ($submitResultsParameters as $key=>$thisSubmitResultParameter) {
-//            $formNumber = $thisSubmitResultParameter['formnumber'];
-//            $submitNumber = $thisSubmitResultParameter["submitnumber"];
-//            $formElementName = $thisSubmitResultParameter["formelementname"];
-//            $formElementType = $thisSubmitResultParameter["formelementtype"];
-//            $formElementValue = $thisSubmitResultParameter["formelementvalue"];
-//            $userIDOfFormSubmitter = $thisSubmitResultParameter["useridofformsubmitter"];
-//            $timeOfSubmission = $thisSubmitResultParameter["timeofsubmission"];
-//
-//
-//
-//            $resultsContent .=  "\"".$formElementValue."\"";
-//if ($key!=$numItems-1)
-//{
-//  $resultsContent .="~";
-//}
-//        }
-//
-//$CSVFileContent.=$metaDataResults.$resultsContent."\n";
-//
-//$relativeSubmitNumber++;
-//}
+foreach($submitNumbersArray as $indexOfSubmitNumber=>$thisSubmitNumber){
+   //Store the values of the array in variables
+
+      $submitNumber = $thisSubmitNumber["submitnumber"];
+
+    if ($indexOfSubmitNumber==0)
+{
+ $previousSubmitNumber =$submitNumber;
+ //print_r($previousSubmitNumber);
+$formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($previousSubmitNumber);
+ $numItems = count($formElementTypesArray);
+ //print_r($formElementTypesArray);
+foreach($formElementTypesArray as $key=>$thisFormElementType){
+
+ $formElementName= $thisFormElementType["formelementname"];
+ $formElementType = $thisFormElementType["formelementtype"];
+
+$singleHeaderCSVField = "\"".$formElementName." ( ". $formElementType ." )\"";
+$formFieldNamesAndTypeHeaderCSVField .= $singleHeaderCSVField;
+if ($key!=$numItems-1)
+{
+ $formFieldNamesAndTypeHeaderCSVField .="~";
+}
+
+}
+
+$CSVFileContent.=$formPartCSVFileHeader.$formFieldNamesAndTypeHeaderCSVField."\n";
+}
+
+
+
+   $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
+    $numItems = count($formElementTypesArray);
+$previousFormElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($previousSubmitNumber);
+if ($formElementTypesArray!=$previousFormElementTypesArray)
+{
+foreach($formElementTypesArray as $key=>$thisFormElementType){
+
+ $formElementName= $thisFormElementType["formelementname"];
+ $formElementType = $thisFormElementType["formelementtype"];
+
+$singleHeaderCSVField = $formElementName." ( ". $formElementType ." )";
+$changedFormFieldNamesAndTypeHeaderCSVField .= " ".$singleHeaderCSVField;
+if ($key!=$numItems-1)
+{
+ $changedFormFieldNamesAndTypeHeaderCSVField .="~";
+}
+}
+$CSVFileContent.="\n\"Form Element Content Has Been Changed.\"\n\n".$formPartCSVFileHeader.$changedFormFieldNamesAndTypeHeaderCSVField."\n";
+}
+
+      $previousSubmitNumber =$submitNumber;
+
+         $submitResultsParameters = $this->objDBFormSubmitResults->getParticularSubmitResults($submitNumber);
+        $userIDOfFormSubmitter = $submitResultsParameters["0"]["useridofformsubmitter"];
+        $timeOfSubmission = $submitResultsParameters["0"]["timeofsubmission"];
+
+$metaDataResults= "\"".$relativeSubmitNumber."\"~"
+        ."\"".$this->objDBFormSubmitResults->getSubmitUsersFullName($userIDOfFormSubmitter)."\"~"
+        ."\"".$this->objDBFormSubmitResults->getSubmitUsersEmail($userIDOfFormSubmitter)."\"~"
+        ."\"".$timeOfSubmission."\"~";
+$resultsContent=null;
+    $numItems = count($submitResultsParameters);
+foreach ($submitResultsParameters as $key=>$thisSubmitResultParameter) {
+            $formNumber = $thisSubmitResultParameter['formnumber'];
+            $submitNumber = $thisSubmitResultParameter["submitnumber"];
+            $formElementName = $thisSubmitResultParameter["formelementname"];
+            $formElementType = $thisSubmitResultParameter["formelementtype"];
+            $formElementValue = $thisSubmitResultParameter["formelementvalue"];
+            $userIDOfFormSubmitter = $thisSubmitResultParameter["useridofformsubmitter"];
+            $timeOfSubmission = $thisSubmitResultParameter["timeofsubmission"];
+
+
+
+            $resultsContent .=  "\"".$formElementValue."\"";
+if ($key!=$numItems-1)
+{
+  $resultsContent .="~";
+}
+        }
+
+$CSVFileContent.=$metaDataResults.$resultsContent."\n";
+
+$relativeSubmitNumber++;
+}
 ///Construct the Header for the CSV file content
-        foreach ($submitNumbersArray as $indexOfSubmitNumber => $thisSubmitNumber) {
-//Store the values of the array in variables
-
-            $submitNumber = $thisSubmitNumber["submitnumber"];
-
-            if ($indexOfSubmitNumber == 0) {
-                $previousSubmitNumber = $submitNumber;
-                $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
-                $numOfFormElements = count($formElementTypesArray);
-                foreach ($formElementTypesArray as $key => $thisFormElementType) {
-
-                    $formElementName = $thisFormElementType["formelementname"];
-                    $formElementType = $thisFormElementType["formelementtype"];
-
-                    $singleHeaderCSVField = "\"" . $formElementName . " ( " . $formElementType . " )\"";
-                    $formFieldNamesAndTypeHeaderCSVField .= $singleHeaderCSVField;
-                    if ($key != $numOfFormElements - 1) {
-                        $formFieldNamesAndTypeHeaderCSVField .="~";
-                    }
-                }
-                $CSVFileContent.=$formPartCSVFileHeader . $formFieldNamesAndTypeHeaderCSVField . "\n";
-            }
-
-
-
-//   $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
-//    $currentumItems = count($formElementTypesArray);
-//$previousFormElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($previousSubmitNumber);
-//if ($formElementTypesArray!=$previousFormElementTypesArray)
-//{
-//foreach($formElementTypesArray as $key=>$thisFormElementType){
+//        //COMMENTING POINT
+//        foreach ($submitNumbersArray as $indexOfSubmitNumber => $thisSubmitNumber) {
+////Store the values of the array in variables
 //
-// $formElementName= $thisFormElementType["formelementname"];
-// $formElementType = $thisFormElementType["formelementtype"];
+//            $submitNumber = $thisSubmitNumber["submitnumber"];
 //
-//$singleHeaderCSVField = $formElementName." ( ". $formElementType ." )";
-//$changedFormFieldNamesAndTypeHeaderCSVField .= " ".$singleHeaderCSVField;
-//if ($key!=$numItems-1)
-//{
-// $changedFormFieldNamesAndTypeHeaderCSVField .="~";
-//}
-//}
-//$CSVFileContent.="\n\"Form Element Content Has Been Changed.\"\n\n".$formPartCSVFileHeader.$changedFormFieldNamesAndTypeHeaderCSVField."\n";
-//}
+//            if ($indexOfSubmitNumber == 0) {
+//                $previousSubmitNumber = $submitNumber;
+//                $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
+//                $numOfFormElements = count($formElementTypesArray);
+//                foreach ($formElementTypesArray as $key => $thisFormElementType) {
 //
-//      $previousSubmitNumber =$submitNumber;
-        }
-        $index = 0;
-///Contruct the content for the actual submit results.
-        foreach ($submitNumbersArray as $indexOfSubmitNumber => $thisSubmitNumber) {
-//Store the values of the array in variables
-
-            $submitNumber = $thisSubmitNumber["submitnumber"];
-
-            $submitResultsParameters = $this->objDBFormSubmitResults->getParticularSubmitResults($submitNumber);
-            $userIDOfFormSubmitter = $submitResultsParameters["0"]["useridofformsubmitter"];
-            $timeOfSubmission = $submitResultsParameters["0"]["timeofsubmission"];
-
-            $metaDataResults = "\"" . $relativeSubmitNumber . "\"~"
-                    . "\"" . $this->objDBFormSubmitResults->getSubmitUsersFullName($userIDOfFormSubmitter) . "\"~"
-                    . "\"" . $this->objDBFormSubmitResults->getSubmitUsersEmail($userIDOfFormSubmitter) . "\"~"
-                    . "\"" . $timeOfSubmission . "\"~";
-            $resultsContent = null;
-            $numItems = count($submitResultsParameters);
-            $nullFormElements = 0;
-            foreach ($submitResultsParameters as $key => $thisSubmitResultParameter) {
-                $formNumber = $thisSubmitResultParameter['formnumber'];
-                $submitNumber = $thisSubmitResultParameter["submitnumber"];
-                $formElementName = $submitResultsParameters[$key - $nullFormElements]["formelementname"];
-                $formElementType = $thisSubmitResultParameter["formelementtype"];
-                $formElementValue = $submitResultsParameters[$key - $nullFormElements]["formelementvalue"];
-                $userIDOfFormSubmitter = $thisSubmitResultParameter["useridofformsubmitter"];
-                $timeOfSubmission = $thisSubmitResultParameter["timeofsubmission"];
-
-
-                $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($formNumber);
-                $formElementNameHeader = $formElementTypesArray[$key]["formelementname"];
-                if ($formElementName == $formElementNameHeader) {
-                    $resultsContent .= "\"" . $formElementValue . "\"";
-                } else {
-//     $resultsContent .="|$formElementNameHeader"." NULL".$formElementName."|";
-                    $resultsContent .="NULL";
-                    $nullFormElements++;
-                }
-
-                if ($key != $numItems - 1) {
-                    $resultsContent .="~";
-                } else {
-
-                    if (($numOfFormElements - $numItems) > 0) {
-                        $difference = $numOfFormElements - $numItems;
-                        $resultsContent .="~";
-                        for ($i = 0; $i < $difference; $i++) {
-                            $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($formNumber);
-                            end($formElementTypesArray);         // move the internal pointer to the end of the array
-                            $keyOfFormElementTypesArray = key($formElementTypesArray);  // fetches the key of the element pointed to by the internal
-                            $formElementNameHeader = $formElementTypesArray[($keyOfFormElementTypesArray + 1) - $difference + $i]["formelementname"];
-                            end($submitResultsParameters);         // move the internal pointer to the end of the array
-                            $keyOfSubmitResultsParameters = key($submitResultsParameters);  // fetches the key of the element pointed to by the internal
-                            $formElementName = $submitResultsParameters[($keyOfSubmitResultsParameters + 1) - $nullFormElements + $i]["formelementname"];
-                            $formElementValue = $submitResultsParameters[($keyOfSubmitResultsParameters + 1) - $nullFormElements + $i]["formelementvalue"];
-//  $resultsContent .=" $formElementNameHeader"."   ".$formElementName."^";
-                            if ($formElementName == $formElementNameHeader) {
-                                $resultsContent .= "\"" . $formElementValue . "\"";
-                            } else {
-//     $resultsContent .="|$formElementNameHeader"." NULL".$formElementName."|";
-                                $resultsContent .="NULL";
-                                $nullFormElements++;
-                            }
-
-                            if ($i < ($difference - 1)) {
-                                $resultsContent .="~";
-                            }
-                        }
-//     for ($i=1; $i<=$difference; $i++)
-//  {
-//  $resultsContent .="\"NULL\"";
-//  if($i == $difference){break;}
-//  $resultsContent .="~";
-//  }
-                    }
-                }
-                $index++;
-            }
-
-            $CSVFileContent.=$metaDataResults . $resultsContent . "\n";
-
-            $relativeSubmitNumber++;
-        }
+//                    $formElementName = $thisFormElementType["formelementname"];
+//                    $formElementType = $thisFormElementType["formelementtype"];
+//
+//                    $singleHeaderCSVField = "\"" . $formElementName . " ( " . $formElementType . " )\"";
+//                    $formFieldNamesAndTypeHeaderCSVField .= $singleHeaderCSVField;
+//                    if ($key != $numOfFormElements - 1) {
+//                        $formFieldNamesAndTypeHeaderCSVField .="~";
+//                    }
+//                }
+//                $CSVFileContent.=$formPartCSVFileHeader . $formFieldNamesAndTypeHeaderCSVField . "\n";
+//            }
+//
+//
+//
+////   $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($submitNumber);
+////    $currentumItems = count($formElementTypesArray);
+////$previousFormElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($previousSubmitNumber);
+////if ($formElementTypesArray!=$previousFormElementTypesArray)
+////{
+////foreach($formElementTypesArray as $key=>$thisFormElementType){
+////
+//// $formElementName= $thisFormElementType["formelementname"];
+//// $formElementType = $thisFormElementType["formelementtype"];
+////
+////$singleHeaderCSVField = $formElementName." ( ". $formElementType ." )";
+////$changedFormFieldNamesAndTypeHeaderCSVField .= " ".$singleHeaderCSVField;
+////if ($key!=$numItems-1)
+////{
+//// $changedFormFieldNamesAndTypeHeaderCSVField .="~";
+////}
+////}
+////$CSVFileContent.="\n\"Form Element Content Has Been Changed.\"\n\n".$formPartCSVFileHeader.$changedFormFieldNamesAndTypeHeaderCSVField."\n";
+////}
+////
+////      $previousSubmitNumber =$submitNumber;
+//        }
+//        $index = 0;
+/////Contruct the content for the actual submit results.
+//        foreach ($submitNumbersArray as $indexOfSubmitNumber => $thisSubmitNumber) {
+////Store the values of the array in variables
+//
+//            $submitNumber = $thisSubmitNumber["submitnumber"];
+//
+//            $submitResultsParameters = $this->objDBFormSubmitResults->getParticularSubmitResults($submitNumber);
+//            $userIDOfFormSubmitter = $submitResultsParameters["0"]["useridofformsubmitter"];
+//            $timeOfSubmission = $submitResultsParameters["0"]["timeofsubmission"];
+//
+//            $metaDataResults = "\"" . $relativeSubmitNumber . "\"~"
+//                    . "\"" . $this->objDBFormSubmitResults->getSubmitUsersFullName($userIDOfFormSubmitter) . "\"~"
+//                    . "\"" . $this->objDBFormSubmitResults->getSubmitUsersEmail($userIDOfFormSubmitter) . "\"~"
+//                    . "\"" . $timeOfSubmission . "\"~";
+//            $resultsContent = null;
+//            $numItems = count($submitResultsParameters);
+//            $nullFormElements = 0;
+//            foreach ($submitResultsParameters as $key => $thisSubmitResultParameter) {
+//                $formNumber = $thisSubmitResultParameter['formnumber'];
+//                $submitNumber = $thisSubmitResultParameter["submitnumber"];
+//                $formElementName = $submitResultsParameters[$key - $nullFormElements]["formelementname"];
+//                $formElementType = $thisSubmitResultParameter["formelementtype"];
+//                $formElementValue = $submitResultsParameters[$key - $nullFormElements]["formelementvalue"];
+//                $userIDOfFormSubmitter = $thisSubmitResultParameter["useridofformsubmitter"];
+//                $timeOfSubmission = $thisSubmitResultParameter["timeofsubmission"];
+//
+//
+//                $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($formNumber);
+//                $formElementNameHeader = $formElementTypesArray[$key]["formelementname"];
+//                if ($formElementName == $formElementNameHeader) {
+//                    $resultsContent .= "\"" . $formElementValue . "\"";
+//                } else {
+////     $resultsContent .="|$formElementNameHeader"." NULL".$formElementName."|";
+//                    $resultsContent .="NULL";
+//                    $nullFormElements++;
+//                }
+//
+//                if ($key != $numItems - 1) {
+//                    $resultsContent .="~";
+//                } else {
+//
+//                    if (($numOfFormElements - $numItems) > 0) {
+//                        $difference = $numOfFormElements - $numItems;
+//                        $resultsContent .="~";
+//                        for ($i = 0; $i < $difference; $i++) {
+//                            $formElementTypesArray = $this->objDBFormSubmitResults->getOnlyFormElementTypes($formNumber);
+//                            end($formElementTypesArray);         // move the internal pointer to the end of the array
+//                            $keyOfFormElementTypesArray = key($formElementTypesArray);  // fetches the key of the element pointed to by the internal
+//                            $formElementNameHeader = $formElementTypesArray[($keyOfFormElementTypesArray + 1) - $difference + $i]["formelementname"];
+//                            end($submitResultsParameters);         // move the internal pointer to the end of the array
+//                            $keyOfSubmitResultsParameters = key($submitResultsParameters);  // fetches the key of the element pointed to by the internal
+//                            $formElementName = $submitResultsParameters[($keyOfSubmitResultsParameters + 1) - $nullFormElements + $i]["formelementname"];
+//                            $formElementValue = $submitResultsParameters[($keyOfSubmitResultsParameters + 1) - $nullFormElements + $i]["formelementvalue"];
+////  $resultsContent .=" $formElementNameHeader"."   ".$formElementName."^";
+//                            if ($formElementName == $formElementNameHeader) {
+//                                $resultsContent .= "\"" . $formElementValue . "\"";
+//                            } else {
+////     $resultsContent .="|$formElementNameHeader"." NULL".$formElementName."|";
+//                                $resultsContent .="NULL";
+//                                $nullFormElements++;
+//                            }
+//
+//                            if ($i < ($difference - 1)) {
+//                                $resultsContent .="~";
+//                            }
+//                        }
+////     for ($i=1; $i<=$difference; $i++)
+////  {
+////  $resultsContent .="\"NULL\"";
+////  if($i == $difference){break;}
+////  $resultsContent .="~";
+////  }
+//                    }
+//                }
+//                $index++;
+//            }
+//
+//            $CSVFileContent.=$metaDataResults . $resultsContent . "\n";
+//
+//            $relativeSubmitNumber++;
+//        }
 ///Write to content to the file
         fwrite($fh, $CSVFileContent);
 ///Close the CSV file
