@@ -154,16 +154,26 @@ class form_element_editor extends object {
      * form_editor.php template.
      */
     private function buildWYSIWYGToolBar() {
-        $toolBarUnderConstrunction = '<span id="toolbar" class="ui-state-default ui-corner-all"style="border:1px solid #CCCCCC;padding:30px 15px 15px 15px; margin: 50px 50px 50px 50px; ">';
-        $toolBarUnderConstrunction .= "<span style='padding-bottom:155px;'><b >WYSIWYG Form Editor Toolbar</b>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        $toolBarUnderConstrunction .= "Insert A:   ";
-        $toolBarUnderConstrunction .=$this->formElementDropDown->showFormElementInserterDropDown() . "
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>";
-        $toolBarUnderConstrunction .= "Rearrange Form Elements : <span style='margin:35px' id='sortFormElementsToggleContainer'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle</label></span>
-&nbsp;&nbsp;&nbsp;Delete Form Elements : <input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle</label>
-&nbsp;&nbsp;&nbsp;<button class='finishDesigningForm' id='toolBarDoneButton'>Done</button>";
-        $toolBarUnderConstrunction .= '</span>';
+//        $toolBarUnderConstrunction = '<div id="toolbar" class=" ui-state-default ui-corner-all"style="height:50px; border:1px solid #CCCCCC;padding:30px 15px 15px 15px; margin: 10px 50px 10px 50px; ">';
+//        $toolBarUnderConstrunction .= "<div style='float:left;'>";
+//        $toolBarUnderConstrunction .= "<h2>WYSIWYG Form Editor Toolbar</h2>";
+//         $toolBarUnderConstrunction .= "</div>";
+//         $toolBarUnderConstrunction .= "<div style='float:left;'>";
+//         $toolBarUnderConstrunction .= "<div style='margin-bottom:10px;  position:relative;top:-5px;' id='sortFormElementsToggleContainer'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle Rearrange of Form Elements</label></div>";
+//         $toolBarUnderConstrunction .= "<div style='margin-bottom:10px;' id='deleteFormElementsToggleContainer'><input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle Delete of Form Elements</label></div>";
+//         $toolBarUnderConstrunction .= "</div>";
+//        $toolBarUnderConstrunction .= "</div>";
+        $toolBarUnderConstrunction = '<div id="toolbar" class="ui-state-default ui-corner-all"style=" min-height:35px; border:1px solid #CCCCCC;padding:15px 15px 15px 15px; margin: 10px 70px 10px 70px; ">';
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;'><b style='font-size:12px;'>WYSIWYG Form Editor Toolbar</b></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px; font-size:10px;'>Insert A:&nbsp;&nbsp;   ";
+        $toolBarUnderConstrunction .=$this->formElementDropDown->showFormElementInserterDropDown() . "</span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle Rearrangement of Form Elements</label></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle Deletion of Form Elements</label></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;'><button class='finishDesigningForm' id='toolBarDoneButton'>Done</button></span>";
+//        $toolBarUnderConstrunction .= "Rearrange Form Elements : <span style='margin:35px' id='sortFormElementsToggleContainer'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle</label></span>
+//&nbsp;&nbsp;&nbsp;Delete Form Elements : <input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle</label>
+//&nbsp;&nbsp;&nbsp;<button class='finishDesigningForm' id='toolBarDoneButton'>Done</button>";
+        $toolBarUnderConstrunction .= '</div>';
         return $toolBarUnderConstrunction;
     }
 

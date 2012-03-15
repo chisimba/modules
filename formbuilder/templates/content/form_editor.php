@@ -868,8 +868,18 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
 
         jQuery("#sortFormElementsButton").unbind();
         jQuery("#deleteFormElementsButton").unbind();
-        jQuery("#sortFormElementsButton").button();
-        jQuery("#deleteFormElementsButton").button();
+        jQuery("#sortFormElementsButton").button({icons: {
+                primary: "ui-icon-arrowthick-2-n-s"
+            }});
+//        $( ".demo button:first" ).button({
+//            icons: {
+//                primary: "ui-icon-locked"
+//            },
+//            text: false
+//        })
+        jQuery("#deleteFormElementsButton").button({icons: {
+                primary: "ui-icon-scissors"
+            }});
 
         jQuery( "#sortFormElementsButton" ).button({ disabled: false });
         jQuery( "#sortFormElementsButton" ).attr('checked',false);
