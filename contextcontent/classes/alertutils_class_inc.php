@@ -62,7 +62,7 @@ class alertutils extends object {
         $this->objManageGroups = $this->getObject('managegroups', 'contextgroups');
     }
     function sendEmailAlert($contextcode, $title) {
-        $students = $this->objManageGroups->contextUsers('Students', $this->contextCode, array( 'tbl_users.userid','emailaddress', 'firstname', 'surname'));
+        $students = $this->objManageGroups->contextUsers('Students', $contextcode, array( 'tbl_users.userid','emailaddress', 'firstname', 'surname'));
         $subject = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_SUB', 'contextcontent');
         $subject = str_replace("{course}", $title, $subject);
         $objMailer = $this->getObject('email', 'mail');
@@ -75,6 +75,12 @@ class alertutils extends object {
             $body = str_replace("{lastname}", $student['surname'], $body);
             $body = str_replace("{course}", "'".$title."'", $body);
             $body = str_replace("{instructor}", $this->objUser->getTitle().'. '.$this->objUser->fullname().',', $body);
+            //trigger_error($student['emailaddress']);
+            //$addressArr = ;
+            //trigger_error(var_export($addressArr, TRUE));
+            $objMailer->clearAddresses();
+            $objMailer->clearCCs();
+            $objMailer->clearBCCs();
             $objMailer->setValue('to', array($student['emailaddress']));
             $objMailer->setValue('from', $this->objUser->email());
             $objMailer->setValue('fromName', $this->objUser->fullname());
