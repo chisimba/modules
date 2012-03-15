@@ -76,17 +76,30 @@ class dbschools_schools extends dbtable
         $this->table = 'tbl_schools_schools';
         $this->objUser = $this->getObject('useradmin_model2', 'security');
     }
+    
+    /**
+     *
+     * MEthod to get the number of records in the table
+     * 
+     * @access public
+     * @return integer $count The number of records in the table 
+     */
+    public function getCount()
+    {
+        return $this->getRecordCount();
+    }
 
     /**
      *
      * Method to get a list of schools for the autocompleter
      * 
      * @access public
+     * @param string $search The seach term
      * @return array|boolean $array The array of school data | FALSE if empty
      */
-    public function autocompleteDetails()
+    public function autocomplete($search)
     {
-        $sql = "SELECT id, name FROM `$this->table`";
+        $sql = "SELECT id, name FROM `$this->table` WHERE `name` LIKE '%$search%'";
         $data = $this->getArray($sql);
         
         $array = array();
@@ -94,7 +107,9 @@ class dbschools_schools extends dbtable
         {
             foreach ($data as $line)
             {
-                $array[$line['id']] = $line['name'];
+                $list['label'] = $line['name'];
+                $list['value'] = $line['id'];
+                $array[] = $list;
             }
             return $array;
         }

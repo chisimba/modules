@@ -100,5 +100,42 @@ class dbschools_provinces extends dbtable
     {
         return $this->getRow('id', $id);
     }
+
+    /**
+     *
+     * Method to delete a provincd
+     * 
+     * @access public
+     * @param string $id The id of the province to delete
+     * return boolean 
+     */
+    public function deleteProvince($id)
+    {
+        return $this->delete('id', $id);
+    }
+    
+    /**
+     * Method to add a province to the database
+     * 
+     * @access public
+     * @param array @data The array of province data
+     * @return string $id The id of the province  added
+     */
+    public function insertProvince($data)
+    {
+        return $this->insert($data);
+    }    
+
+    /**
+     * Method to edit a province on the database
+     * 
+     * @access public
+     * @param array @data The array of province data
+     * @return string $id The id of the province edited
+     */
+    public function updateProvince($id, $data)
+    {
+        return $this->update('id', $id, $data);
+    }
 }
 ?>

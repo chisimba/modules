@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Database access for schools districts
+ * Database access for schools countries
  *
  * Database access for schools. This is a sample database model class
  * that you will need to edit in order for it to work.
@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Kevin Cyster kcyster@gmail.com
 *
 */
-class dbschools_districts extends dbtable
+class dbschools_countries extends dbtable
 {
 
     /**
@@ -72,69 +72,34 @@ class dbschools_districts extends dbtable
     public function init()
     {
         //Set the parent table to our demo table
-        parent::init('tbl_schools_districts');
-        $this->table = 'tbl_schools_districts';
-    }
-   
-    /**
-     * Method to return the districts for a province
-     * 
-     * @access public
-     * @param integer $id The id of the province to get districts for
-     * @return array The array of provinces for a district 
-     */
-    public function getDistrictsForProvince($pid)
-    {
-        return $this->fetchAll(" WHERE `province_id` = '$pid'" );
-    }
-
-    /**
-     * Method to return a district
-     * 
-     * @access public
-     * @param string $id The id of the disctrict to get
-     * @return array The array of provinces for a district 
-     */
-    public function getDistrict($id)
-    {
-        return $this->getRow('id', $id);
+        parent::init('tbl_schools_countries');
+        $this->table = 'tbl_schools_countries';
     }
 
     /**
      *
-     * Method to delete school districts
-     * 
+     * Get all of the provinces fo the schools module.
+     *
+     * @return array The array of province entries
      * @access public
-     * @param string $id The id of the district to delete
-     * return boolean 
+     *
      */
-    public function deleteDistrict($id)
+    public function getAll()
     {
-        return $this->delete('id', $id);
+        return $this->fetchAll('ORDER BY `country` ASC');
     }
-    
-    /**
-     * Method to add a district to the database
-     * 
-     * @access public
-     * @param array @data The array of district data
-     * @return string $id The id of the district added
-     */
-    public function insertDistrict($data)
-    {
-        return $this->insert($data);
-    }    
 
     /**
-     * Method to edit a district on the database
+     * Method to return a country
      * 
      * @access public
-     * @param array @data The array of district data
-     * @return string $id The id of the district edited
+     * @param string $code The code of the country to get
+     * @return string The country
      */
-    public function updateDistrict($id, $data)
+    public function getCountry($code)
     {
-        return $this->update('id', $id, $data);
+        return $this->getRow('code', $code);
     }
+
 }
 ?>

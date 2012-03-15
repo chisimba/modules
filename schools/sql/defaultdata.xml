@@ -3,66 +3,1873 @@
 
   <!-- MODULE: schools, Table tbl_schools_info create data used by this module -->
     <tbl_schools_provinces>
-        <id>1</id>
+        <id>init_1</id>
         <name>Western Cape</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>2</id>
+        <id>init_2</id>
         <name>Northern Cape</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>3</id>
+        <id>init_3</id>
         <name>North West</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>4</id>
+        <id>init_4</id>
         <name>Eastern Cape</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>5</id>
+        <id>init_5</id>
         <name>Free State</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>6</id>
+        <id>init_6</id>
         <name>Gauteng</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>7</id>
+        <id>init_7</id>
         <name>Kwazulu Natal</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>8</id>
+        <id>init_8</id>
         <name>Mpumalanga</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     <tbl_schools_provinces>
-        <id>9</id>
+        <id>init_9</id>
         <name>Limpopo</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_provinces>
     
     <tbl_schools_districts>
-        <id>1</id>
-        <province_id>1</province_id>
+        <id>init_1</id>
+        <province_id>init_1</province_id>
         <name>Central</name>
-        <date_created>February 29, 2012, 8:26 pm</date_created>
+        <date_created>2012-03-01 00:00:00</date_created>
         <created_by>init_1</created_by>
     </tbl_schools_districts>
-    
+
+    <tbl_schools_countries>
+        <id>init_1</id>
+        <code>AF</code>
+        <country>Afghanistan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_2</id>
+        <code>AX</code>
+        <country>Aland Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_258</id>
+        <code>AL</code>
+        <country>Albania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_3</id>
+        <code>DZ</code>
+        <country>Algeria</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_4</id>
+        <code>AS</code>
+        <country>American Samoa</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_5</id>
+        <code>AD</code>
+        <country>Andorra</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_6</id>
+        <code>AO</code>
+        <country>Angola</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_7</id>
+        <code>AI</code>
+        <country>Anguilla</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_8</id>
+        <code>AQ</code>
+        <country>Antarctica</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_9</id>
+        <code>AG</code>
+        <country>Antigua and Barbuda</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_10</id>
+        <code>AR</code>
+        <country>Argentina</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_11</id>
+        <code>AM</code>
+        <country>Armenia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_12</id>
+        <code>AW</code>
+        <country>Aruba</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_13</id>
+        <code>AU</code>
+        <country>Australia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_14</id>
+        <code>AT</code>
+        <country>Austria</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_15</id>
+        <code>AZ</code>
+        <country>Azerbaijan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_16</id>
+        <code>BS</code>
+        <country>Bahamas</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_17</id>
+        <code>BH</code>
+        <country>Bahrain</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_18</id>
+        <code>BD</code>
+        <country>Bangladesh</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_19</id>
+        <code>BB</code>
+        <country>Barbados</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_20</id>
+        <code>BY</code>
+        <country>Belarus</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_21</id>
+        <code>BE</code>
+        <country>Belgium</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_22</id>
+        <code>BZ</code>
+        <country>Belize</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_23</id>
+        <code>BJ</code>
+        <country>Benin</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_24</id>
+        <code>BM</code>
+        <country>Bermuda</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_25</id>
+        <code>BT</code>
+        <country>Bhutan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_26</id>
+        <code>BO</code>
+        <country>Bolivia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_27</id>
+        <code>BA</code>
+        <country>Bosnia and Herzegovina</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_28</id>
+        <code>BW</code>
+        <country>Botswana</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_29</id>
+        <code>BV</code>
+        <country>Bouvet Island</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_30</id>
+        <code>BR</code>
+        <country>Brazil</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_31</id>
+        <code>BQ</code>
+        <country>British Antarctic Territory</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_32</id>
+        <code>IO</code>
+        <country>British Indian Ocean Territory</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_33</id>
+        <code>VG</code>
+        <country>British Virgin Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_34</id>
+        <code>BN</code>
+        <country>Brunei</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_35</id>
+        <code>BG</code>
+        <country>Bulgaria</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_36</id>
+        <code>BF</code>
+        <country>Burkina Faso</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_37</id>
+        <code>BI</code>
+        <country>Burundi</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_38</id>
+        <code>KH</code>
+        <country>Cambodia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_39</id>
+        <code>CM</code>
+        <country>Cameroon</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_40</id>
+        <code>CA</code>
+        <country>Canada</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_41</id>
+        <code>CT</code>
+        <country>Canton and Enderbury Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_42</id>
+        <code>CV</code>
+        <country>Cape Verde</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_43</id>
+        <code>KY</code>
+        <country>Cayman Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_44</id>
+        <code>CF</code>
+        <country>Central African Republic</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_45</id>
+        <code>TD</code>
+        <country>Chad</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_46</id>
+        <code>CL</code>
+        <country>Chile</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_47</id>
+        <code>CN</code>
+        <country>China</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_48</id>
+        <code>CX</code>
+        <country>Christmas Island</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_49</id>
+        <code>CC</code>
+        <country>Cocos (Keeling) Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_50</id>
+        <code>CO</code>
+        <country>Colombia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_51</id>
+        <code>KM</code>
+        <country>Comoros</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_52</id>
+        <code>CG</code>
+        <country>Congo (Brazzaville)</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_53</id>
+        <code>CD</code>
+        <country>Congo (Kinshasa)</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_54</id>
+        <code>CK</code>
+        <country>Cook Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_55</id>
+        <code>CR</code>
+        <country>Costa Rica</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_56</id>
+        <code>HR</code>
+        <country>Croatia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_57</id>
+        <code>CU</code>
+        <country>Cuba</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_58</id>
+        <code>CY</code>
+        <country>Cyprus</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_59</id>
+        <code>CZ</code>
+        <country>Czech Republic</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_60</id>
+        <code>DK</code>
+        <country>Denmark</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_61</id>
+        <code>DJ</code>
+        <country>Djibouti</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_62</id>
+        <code>DM</code>
+        <country>Dominica</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_63</id>
+        <code>DO</code>
+        <country>Dominican Republic</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_64</id>
+        <code>NQ</code>
+        <country>Dronning Maud Land</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_65</id>
+        <code>DD</code>
+        <country>East Germany</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_66</id>
+        <code>TL</code>
+        <country>East Timor</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_67</id>
+        <code>EC</code>
+        <country>Ecuador</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_68</id>
+        <code>EG</code>
+        <country>Egypt</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_69</id>
+        <code>SV</code>
+        <country>El Salvador</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_70</id>
+        <code>GQ</code>
+        <country>Equatorial Guinea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_71</id>
+        <code>ER</code>
+        <country>Eritrea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_72</id>
+        <code>EE</code>
+        <country>Estonia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_73</id>
+        <code>ET</code>
+        <country>Ethiopia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_74</id>
+        <code>FK</code>
+        <country>Falkland Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_75</id>
+        <code>FO</code>
+        <country>Faroe Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_76</id>
+        <code>FJ</code>
+        <country>Fiji</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_77</id>
+        <code>FI</code>
+        <country>Finland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_78</id>
+        <code>FR</code>
+        <country>France</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_79</id>
+        <code>GF</code>
+        <country>French Guiana</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_80</id>
+        <code>PF</code>
+        <country>French Polynesia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_81</id>
+        <code>TF</code>
+        <country>French Southern Territories</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_82</id>
+        <code>FQ</code>
+        <country>French Southern and Antarctic Territories</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_83</id>
+        <code>GA</code>
+        <country>Gabon</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_84</id>
+        <code>GM</code>
+        <country>Gambia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_85</id>
+        <code>GE</code>
+        <country>Georgia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_86</id>
+        <code>DE</code>
+        <country>Germany</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_87</id>
+        <code>GH</code>
+        <country>Ghana</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_88</id>
+        <code>GI</code>
+        <country>Gibraltar</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_89</id>
+        <code>GR</code>
+        <country>Greece</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_90</id>
+        <code>GL</code>
+        <country>Greenland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_91</id>
+        <code>GD</code>
+        <country>Grenada</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_92</id>
+        <code>GP</code>
+        <country>Guadeloupe</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_93</id>
+        <code>GU</code>
+        <country>Guam</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_94</id>
+        <code>GT</code>
+        <country>Guatemala</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_95</id>
+        <code>GN</code>
+        <country>Guinea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_96</id>
+        <code>GW</code>
+        <country>Guinea-Bissau</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_97</id>
+        <code>GY</code>
+        <country>Guyana</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_98</id>
+        <code>HT</code>
+        <country>Haiti</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_99</id>
+        <code>HM</code>
+        <country>Heard Island and McDonald Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_100</id>
+        <code>HN</code>
+        <country>Honduras</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_101</id>
+        <code>HK</code>
+        <country>Hong Kong S.A.R., China</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_102</id>
+        <code>HU</code>
+        <country>Hungary</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_103</id>
+        <code>IS</code>
+        <country>Iceland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_104</id>
+        <code>IN</code>
+        <country>India</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_105</id>
+        <code>ID</code>
+        <country>Indonesia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_106</id>
+        <code>IR</code>
+        <country>Iran</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_107</id>
+        <code>IQ</code>
+        <country>Iraq</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_108</id>
+        <code>IE</code>
+        <country>Ireland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_109</id>
+        <code>IL</code>
+        <country>Israel</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_110</id>
+        <code>IT</code>
+        <country>Italy</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_111</id>
+        <code>CI</code>
+        <country>Ivory Coast</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_112</id>
+        <code>JM</code>
+        <country>Jamaica</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_113</id>
+        <code>JP</code>
+        <country>Japan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_114</id>
+        <code>JT</code>
+        <country>Johnston Island</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_115</id>
+        <code>JO</code>
+        <country>Jordan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_116</id>
+        <code>KZ</code>
+        <country>Kazakhstan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_117</id>
+        <code>KE</code>
+        <country>Kenya</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_118</id>
+        <code>KI</code>
+        <country>Kiribati</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_119</id>
+        <code>KW</code>
+        <country>Kuwait</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_120</id>
+        <code>KG</code>
+        <country>Kyrgyzstan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_121</id>
+        <code>LA</code>
+        <country>Laos</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_122</id>
+        <code>LV</code>
+        <country>Latvia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_123</id>
+        <code>LB</code>
+        <country>Lebanon</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_124</id>
+        <code>LS</code>
+        <country>Lesotho</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_125</id>
+        <code>LR</code>
+        <country>Liberia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_126</id>
+        <code>LY</code>
+        <country>Libya</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_127</id>
+        <code>LI</code>
+        <country>Liechtenstein</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_128</id>
+        <code>LT</code>
+        <country>Lithuania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_129</id>
+        <code>LU</code>
+        <country>Luxembourg</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_130</id>
+        <code>MO</code>
+        <country>Macao S.A.R., China</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_131</id>
+        <code>MK</code>
+        <country>Macedonia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_132</id>
+        <code>MG</code>
+        <country>Madagascar</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_133</id>
+        <code>MW</code>
+        <country>Malawi</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_134</id>
+        <code>MY</code>
+        <country>Malaysia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_135</id>
+        <code>MV</code>
+        <country>Maldives</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_136</id>
+        <code>ML</code>
+        <country>Mali</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_137</id>
+        <code>MT</code>
+        <country>Malta</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_138</id>
+        <code>MH</code>
+        <country>Marshall Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_139</id>
+        <code>MQ</code>
+        <country>Martinique</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_140</id>
+        <code>MR</code>
+        <country>Mauritania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_141</id>
+        <code>MU</code>
+        <country>Mauritius</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_142</id>
+        <code>YT</code>
+        <country>Mayotte</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_143</id>
+        <code>FX</code>
+        <country>Metropolitan France</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_144</id>
+        <code>MX</code>
+        <country>Mexico</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_145</id>
+        <code>FM</code>
+        <country>Micronesia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_146</id>
+        <code>MI</code>
+        <country>Midway Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_147</id>
+        <code>MD</code>
+        <country>Moldova</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_148</id>
+        <code>MC</code>
+        <country>Monaco</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_149</id>
+        <code>MN</code>
+        <country>Mongolia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_150</id>
+        <code>MS</code>
+        <country>Montserrat</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_151</id>
+        <code>MA</code>
+        <country>Morocco</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_152</id>
+        <code>MZ</code>
+        <country>Mozambique</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_153</id>
+        <code>MM</code>
+        <country>Myanmar</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_154</id>
+        <code>NA</code>
+        <country>Namibia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_155</id>
+        <code>NR</code>
+        <country>Nauru</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_156</id>
+        <code>NP</code>
+        <country>Nepal</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_157</id>
+        <code>NL</code>
+        <country>Netherlands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_158</id>
+        <code>AN</code>
+        <country>Netherlands Antilles</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_159</id>
+        <code>NT</code>
+        <country>Neutral Zone</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_160</id>
+        <code>NC</code>
+        <country>New Caledonia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_161</id>
+        <code>NZ</code>
+        <country>New Zealand</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_162</id>
+        <code>NI</code>
+        <country>Nicaragua</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_163</id>
+        <code>NE</code>
+        <country>Niger</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_164</id>
+        <code>NG</code>
+        <country>Nigeria</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_165</id>
+        <code>NU</code>
+        <country>Niue</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_166</id>
+        <code>NF</code>
+        <country>Norfolk Island</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_167</id>
+        <code>KP</code>
+        <country>North Korea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_168</id>
+        <code>VD</code>
+        <country>North Vietnam</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_169</id>
+        <code>MP</code>
+        <country>Northern Mariana Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_170</id>
+        <code>NO</code>
+        <country>Norway</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_171</id>
+        <code>OM</code>
+        <country>Oman</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_172</id>
+        <code>QO</code>
+        <country>Outlying Oceania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_173</id>
+        <code>PC</code>
+        <country>Pacific Islands Trust Territory</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_174</id>
+        <code>PK</code>
+        <country>Pakistan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_175</id>
+        <code>PW</code>
+        <country>Palau</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_176</id>
+        <code>PS</code>
+        <country>Palestinian Territory</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_177</id>
+        <code>PA</code>
+        <country>Panama</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_178</id>
+        <code>PZ</code>
+        <country>Panama Canal Zone</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_179</id>
+        <code>PG</code>
+        <country>Papua New Guinea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_180</id>
+        <code>PY</code>
+        <country>Paraguay</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_181</id>
+        <code>YD</code>
+        <country>Peoples Democratic Republic of Yemen</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_182</id>
+        <code>PE</code>
+        <country>Peru</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_183</id>
+        <code>PH</code>
+        <country>Philippines</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_184</id>
+        <code>PN</code>
+        <country>Pitcairn</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_185</id>
+        <code>PL</code>
+        <country>Poland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_186</id>
+        <code>PT</code>
+        <country>Portugal</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_187</id>
+        <code>PR</code>
+        <country>Puerto Rico</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_188</id>
+        <code>QA</code>
+        <country>Qatar</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_189</id>
+        <code>RE</code>
+        <country>Reunion</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_190</id>
+        <code>RO</code>
+        <country>Romania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_191</id>
+        <code>RU</code>
+        <country>Russia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_192</id>
+        <code>RW</code>
+        <country>Rwanda</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_193</id>
+        <code>SH</code>
+        <country>Saint Helena</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_194</id>
+        <code>KN</code>
+        <country>Saint Kitts and Nevis</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_195</id>
+        <code>LC</code>
+        <country>Saint Lucia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_196</id>
+        <code>PM</code>
+        <country>Saint Pierre and Miquelon</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_197</id>
+        <code>VC</code>
+        <country>Saint Vincent and the Grenadines</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_198</id>
+        <code>WS</code>
+        <country>Samoa</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_199</id>
+        <code>SM</code>
+        <country>San Marino</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_200</id>
+        <code>ST</code>
+        <country>Sao Tome and Principe</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_201</id>
+        <code>SA</code>
+        <country>Saudi Arabia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_202</id>
+        <code>SN</code>
+        <country>Senegal</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_203</id>
+        <code>CS</code>
+        <country>Serbia And Montenegro</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_204</id>
+        <code>SC</code>
+        <country>Seychelles</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_205</id>
+        <code>SL</code>
+        <country>Sierra Leone</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_206</id>
+        <code>SG</code>
+        <country>Singapore</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_207</id>
+        <code>SK</code>
+        <country>Slovakia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_208</id>
+        <code>SI</code>
+        <country>Slovenia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_209</id>
+        <code>SB</code>
+        <country>Solomon Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_210</id>
+        <code>SO</code>
+        <country>Somalia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_211</id>
+        <code>ZA</code>
+        <country>South Africa</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_212</id>
+        <code>GS</code>
+        <country>South Georgia and the South Sandwich Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_213</id>
+        <code>KR</code>
+        <country>South Korea</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_214</id>
+        <code>ES</code>
+        <country>Spain</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_215</id>
+        <code>LK</code>
+        <country>Sri Lanka</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_216</id>
+        <code>SS</code>
+        <country>Republic of South Sudan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_217</id>
+        <code>SD</code>
+        <country>Sudan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_218</id>
+        <code>SR</code>
+        <country>Suriname</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_219</id>
+        <code>SJ</code>
+        <country>Svalbard and Jan Mayen</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_220</id>
+        <code>SZ</code>
+        <country>Swaziland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_221</id>
+        <code>SE</code>
+        <country>Sweden</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_222</id>
+        <code>CH</code>
+        <country>Switzerland</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_223</id>
+        <code>SY</code>
+        <country>Syria</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_224</id>
+        <code>TW</code>
+        <country>Taiwan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_225</id>
+        <code>TJ</code>
+        <country>Tajikistan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_226</id>
+        <code>TZ</code>
+        <country>Tanzania</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_227</id>
+        <code>TH</code>
+        <country>Thailand</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_228</id>
+        <code>TG</code>
+        <country>Togo</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_229</id>
+        <code>TK</code>
+        <country>Tokelau</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_230</id>
+        <code>TO</code>
+        <country>Tonga</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_231</id>
+        <code>TT</code>
+        <country>Trinidad and Tobago</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_232</id>
+        <code>TN</code>
+        <country>Tunisi</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_233</id>
+        <code>TR</code>
+        <country>Turkey</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_234</id>
+        <code>TM</code>
+        <country>Turkmenistan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_235</id>
+        <code>TC</code>
+        <country>Turks and Caicos Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_236</id>
+        <code>TV</code>
+        <country>Tuvalu</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_237</id>
+        <code>PU</code>
+        <country>U.S. Miscellaneous Pacific Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_238</id>
+        <code>VI</code>
+        <country>U.S. Virgin Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_239</id>
+        <code>UG</code>
+        <country>Uganda</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_240</id>
+        <code>UA</code>
+        <country>Ukraine</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_241</id>
+        <code>SU</code>
+        <country>Union of Soviet Socialist Republics</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_242</id>
+        <code>AE</code>
+        <country>United Arab Emirates</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_243</id>
+        <code>GB</code>
+        <country>United Kingdom</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_244</id>
+        <code>US</code>
+        <country>United States</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_245</id>
+        <code>UM</code>
+        <country>United States Minor Outlying Islands</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_246</id>
+        <code>UY</code>
+        <country>Uruguay</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_247</id>
+        <code>UZ</code>
+        <country>Uzbekistan</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_248</id>
+        <code>VU</code>
+        <country>Vanuatu</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_249</id>
+        <code>VA</code>
+        <country>Vatican</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_250</id>
+        <code>VE</code>
+        <country>Venezuela</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_251</id>
+        <code>VN</code>
+        <country>Vietnam</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_252</id>
+        <code>WK</code>
+        <country>Wake Island</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_253</id>
+        <code>WF</code>
+        <country>Wallis and Futuna</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_254</id>
+        <code>EH</code>
+        <country>Western Sahara</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_255</id>
+        <code>YE</code>
+        <country>Yemen</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_256</id>
+        <code>ZM</code>
+        <country>Zambia</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+    <tbl_schools_countries>
+        <id>init_257</id>
+        <code>ZW</code>
+        <country>Zimbabwe</country>
+        <date_created>2012-03-01 00:00:00</date_created>
+        <created_by>init_1</created_by>
+    </tbl_schools_countries>
+
 </defaultdata>

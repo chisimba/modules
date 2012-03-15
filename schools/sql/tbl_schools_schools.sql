@@ -62,13 +62,13 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_schools_detail_idx';
+$name = 'tbl_schools_schools_idx';
 
 $indexes = array(
     'fields' => array(
         'id' => array(),
         'principal_id' => array(),
-        'school_name' => array(),
+        'name' => array(),
         'district_id' => array(),
         'created_by' => array(),
         'modified_by' => array(),

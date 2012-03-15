@@ -5,10 +5,10 @@
 *
 */
 // Table Name
-$tablename = 'tbl_schools_districts';
+$tablename = 'tbl_schools_countries';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Storage of districts for the schools module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Storage of countries for the schools module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -16,13 +16,13 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-        'province_id' => array(
+        'code' => array(
                 'type' => 'text',
-                'length' => 32,
+                'length' => 5
                 ),
-        'name' => array(
+        'country' => array(
                 'type' => 'text',
-                'length' => 100
+                'length' => 150
                 ),
 	'created_by' => array(
 		'type' => 'text',
@@ -42,12 +42,12 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_schools_districts_idx';
+$name = 'tbl_schools_countries_idx';
 
 $indexes = array(
     'fields' => array(
         'id' => array(),
-        'province_id' => array(),
+        'country' => array(),
     )
 );
 ?>

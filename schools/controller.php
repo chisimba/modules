@@ -101,7 +101,7 @@ class schools extends controller
         $this->objDBprovinces = $this->getObject('dbschools_provinces', 'schools');
         $this->objDBdistricts = $this->getObject('dbschools_districts', 'schools');
         $this->objDBcontacts = $this->getObject('dbschools_contacts', 'schools');
-        $this->objDBdetail = $this->getObject('dbschools_schools', 'schools');
+        $this->objDBschools = $this->getObject('dbschools_schools', 'schools');
         $this->objOps = $this->getObject('schoolsops', 'schools');
         
         $this->objOps = & $this->getObject('schoolsops', 'schools');
@@ -156,9 +156,21 @@ class schools extends controller
     private function __view()
     {
         // All the action is in the blocks
+        $this->setSession('schools', array());
         return "find_tpl.php";
     }
     
+    /**
+     *
+     * Method to return the data for finding principals
+     * @access private
+     * @return 
+     */
+    private function __ajaxFindSchools()
+    {
+        return $this->objOps->ajaxFindSchools();
+    }
+         
     /**
     * 
     * Method corresponding to the add school action. It shows the default
@@ -264,6 +276,7 @@ class schools extends controller
     */
     private function __showschool()
     {
+        $this->setSession('schools', array());
         return 'showschool_tpl.php';
     }
             
@@ -376,16 +389,19 @@ class schools extends controller
      *
      * Method to return the templates for managing either districts or principals
      * 
-     * @access public
+     * @access private
      * @return 
      */
-    public function __manage()
+    private function __manage()
     {
+        $this->setSession('schools', array());
         $type = $this->getParam('type');
         switch ($type)
         {
             case 's':
                 return 'find_tpl.php';
+            case 'p':
+                return 'province_tpl.php';
             case 'd':
                 return 'district_tpl.php';
         }
@@ -394,10 +410,10 @@ class schools extends controller
     /**
      *
      * Method to return the templates for managing districts
-     * @access public
+     * @access private
      * @return 
      */
-    public function __ajaxManageDistricts()
+    private function __ajaxManageDistricts()
     {
         return $this->objOps->ajaxManageDistricts();
     }
@@ -405,10 +421,10 @@ class schools extends controller
     /**
      *
      * Method to return the templates for adding/editing districts
-     * @access public
+     * @access private
      * @return 
      */
-    public function __ajaxAddEditDistrict()
+    private function __ajaxAddEditDistrict()
     {
         return $this->objOps->ajaxAddEditDistrict();
     }
@@ -417,10 +433,10 @@ class schools extends controller
      *
      * Method to delete districts
      * 
-     * @access public
+     * @access private
      * @return void 
      */
-     public function __deletedistrict()
+     private function __deletedistrict()
      {
         $id = $this->getParam('id');
         $pid = $this->getParam('pid');
@@ -433,10 +449,10 @@ class schools extends controller
       *
       * Method to add a district
       * 
-      * @access public
+      * @access private
       * @return VOID 
       */
-     public function __district()
+     private function __district()
      {
         $data = array();
         $id = $this->getParam('id');
@@ -461,68 +477,171 @@ class schools extends controller
      }
     
     /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
-    * edit and returns the edit template.
-    * @access private
-    * 
-    */
-    private function __edit()
+     *
+     * Method to return the templates for adding/editing provinces
+     * @access private
+     * @return 
+     */
+    private function __ajaxAddEditProvince()
     {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
+        return $this->objOps->ajaxAddEditProvince();
     }
+    
+     /**
+      *
+      * Method to add a district
+      * 
+      * @access private
+      * @return VOID 
+      */
+     private function __province()
+     {
+        $data = array();
+        $id = $this->getParam('id');
+        $data['name'] = $this->getParam('name');
 
-    /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
-    * add and returns the edit content template.
-    * @access private
-    * 
-    */
-    private function __add()
-    {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
-    }
-    
-   
-    /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbschools->save($mode);
-        return $this->nextAction(NULL);
-    }
+        if (!empty($id))
+        {
+            $data['modified_by'] = $this->objUser->PKId();
+            $data['date_modified'] = date('Y-m-d H:i:s');
+            $this->objDBprovinces->updateProvince($id, $data);             
+        }
+        else
+        {
+            $data['created_by'] = $this->objUser->PKId();
+            $data['date_created'] = date('Y-m-d H:i:s');
+            $this->objDBprovinces->insertProvince($data);
+        }
+
+        return $this->nextAction('manage', array('type' => 'p'));         
+     }
     
     /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __delete()
+     *
+     * Method to delete province
+     * 
+     * @access private
+     * @return void 
+     */
+     private function __deleteprovince()
+     {
+        $id = $this->getParam('id');
+        $this->objDBprovinces->deleteProvince($id);
+
+        return $this->nextAction('manage', array('type' => 'p'));
+     }
+     
+    /**
+     *
+     * Method to return the principals template
+     * 
+     * @access private
+     * @return void 
+     */
+     private function __principals()
+     {
+        return 'principals_tpl.php';
+     }
+     
+    /**
+     *
+     * Method to return the data for finding principals
+     * @access private
+     * @return 
+     */
+    private function __ajaxFindPrincipals()
     {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
+        return $this->objOps->ajaxFindPrincipals();
+    }
+    
+    /**
+     *
+     * Method to link an existing user as a principal
+     * 
+     * @access private 
+     * @return VOID
+     */
+    private function __addprincipal()
+    {
+        $sid = $this->getParam('sid');
+        $id = $this->getParam('id');
+        $data['id'] = $sid;
+        $data['principal_id'] = $id;
+        $data['modified_by'] = $this->objUser->PKId();
+        $data['date_modified'] = date('Y-m-d H:i:s');
+        $this->objDBschools->updateSchool($sid, $data);
+        
+        return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+    }
+    
+    /**
+     *
+     * Method to delete a principal
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __deleteprincipal()
+    {
+        $sid = $this->getParam('sid');
+        $data['principal_id'] = '';
+        $this->objDBschools->updateSchool($sid, $data);
+        
+        return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+    }
+    
+    /**
+     *
+     * Method to validate principal data
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __validateprincipal()
+    {
+        $sid = $this->getParam('sid');
+        $cancel = $this->getParam('cancel');
+        if ($cancel == 'Cancel')
+        {
+            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+        }
+        
+        $data = array();
+        $data['sid'] = $sid;
+        $data['country'] = $this->getParam('country');
+        $data['email_address'] = $this->getParam('email_address');
+        $data['title'] = $this->getParam('title');
+        $data['first_name'] = $this->getParam('first_name');
+        $data['last_name'] = $this->getParam('last_name');
+        $data['gender'] = $this->getParam('gender');
+        $data['mobile_number'] = $this->getParam('mobile_number');
+        $data['username'] = $this->getParam('username');
+        $data['password'] = $this->getParam('password');
+        $data['confirm_password'] = $this->getParam('confirm_password');
+       
+        $errorsFound = $this->objOps->validatePrincipal($data);
+
+        if ($errorsFound == FALSE)
+        {
+            $this->objOps->savePrincipal($data);
+            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+        }
+        else
+        {
+            return $this->nextAction('principals', array('sid' => $sid));
         }
     }
-    
+         
+    /**
+     *
+     * Method to validate the username
+     * @access private
+     * @return 
+     */
+    private function __ajaxUsername()
+    {
+        return $this->objOps->ajaxUsername();
+    }
     
     /**
     * 
@@ -553,7 +672,7 @@ class schools extends controller
     * @return boolean TRUE|FALSE
     * 
     */
-    function __validAction(& $action)
+    private function __validAction(& $action)
     {
         if (method_exists($this, "__".$action)) {
             return TRUE;
@@ -572,7 +691,7 @@ class schools extends controller
     * @return stromg the name of the method
     * 
     */
-    function __getMethod(& $action)
+    private function __getMethod(& $action)
     {
         if ($this->__validAction($action)) {
             return "__" . $action;
