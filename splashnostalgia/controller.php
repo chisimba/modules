@@ -135,8 +135,15 @@ class splashnostalgia extends controller
     */
     private function __view()
     {
-        $this->setVar('pageSuppressBanner', TRUE);
-        return "main_tpl.php";
+        if ($this->objUser->isLoggedIn()) {
+            $objConfig = $this->getObject('altconfig', 'config');
+            $md = $objConfig->getdefaultModuleName("POSTLOGIN");
+            $url = $this->uri(array(), $md);
+            header('location: ' . $url);
+        } else {
+            $this->setVar('pageSuppressBanner', TRUE);
+            return "main_tpl.php";
+        }
     }
     
     
