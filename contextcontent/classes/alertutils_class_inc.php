@@ -40,6 +40,10 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+define('WINDOWS', 'WINDOWS');
+define('LINUX', 'LINUX');
+define('UNKNOWN', 'UNKNOWN');
+
 /**
  * Class the records the pages a user has visited.
  *
@@ -55,41 +59,77 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class alertutils extends object {
     function init() {
+        $uname = php_uname('s');
+        switch ($uname) {
+        	case "Windows":
+        	case "Windows NT":
+        		define('OS', WINDOWS);
+        		break;
+        	case "Linux":
+        	case "Unix":
+        		define('OS', LINUX);
+        		break;
+        	default:
+        	    define('OS', UNKNOWN);
+        		//exit ("This program requires Microsoft ® Windows or Linux.");
+        }
+        $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser=$this->getObject('user','security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objGroupOps=$this->getObject('groupops','groupadmin');
         $this->objGroups = $this->getObject('groupadminmodel','groupadmin');
         $this->objManageGroups = $this->getObject('managegroups', 'contextgroups');
     }
-    function sendEmailAlert($contextcode, $title) {
-        $students = $this->objManageGroups->contextUsers('Students', $contextcode, array( 'tbl_users.userid','emailaddress', 'firstname', 'surname'));
-        $subject = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_SUB', 'contextcontent');
-        $subject = str_replace("{course}", $title, $subject);
-        $objMailer = $this->getObject('email', 'mail');
+    function sendEmailAlert($contextCode, $contextTitle) {
+        // Student list
+        $students = $this->objManageGroups->contextUsers('Students', $contextCode, array( 'tbl_users.userid','emailaddress', 'firstname', 'surname'));
+        // Subject
+        $subjectTemplate = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_SUB', 'contextcontent');
+        $subjectTemplate = $this->objLanguage->abstractText($subjectTemplate);
+        $subjectTemplate = str_replace("[-course-]", $contextTitle, $subjectTemplate);
+        $subjectTemplate = str_replace('\n', "\n", $subjectTemplate);
+        // Body
+        $bodyTemplate = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_BDY', 'contextcontent');
+        // click on the link below or \n\n[-link-]
+        $bodyTemplate = $this->objLanguage->abstractText($bodyTemplate);
+        //trigger_error($bodyTemplate);
+        //--$url = $this->uri(array('action'=>'joincontext', 'contextcode'=>$contextCode, 'passthroughlogin'=>'true'), 'contextcontent', '', FALSE, TRUE, TRUE);
+        //$url = str_replace('&amp;', '&', $url);
+        //--$bodyTemplate = str_replace("[-link-]", $url, $bodyTemplate);
+        //trigger_error($bodyTemplate);
+        $bodyTemplate = str_replace("[-course-]", '\''.$contextTitle.'\'', $bodyTemplate);
+        //trigger_error($bodyTemplate);
+        $bodyTemplate = str_replace("[-instructor-]", $this->objUser->getTitle().' '.$this->objUser->fullname(), $bodyTemplate);
+        //trigger_error($bodyTemplate);
+        $bodyTemplate = str_replace('\n', chr(0x0A), $bodyTemplate); //"\n"
+        //trigger_error($bodyTemplate);
+        if (OS == WINDOWS) {
+            $bodyTemplate = str_replace("\n.", "\n..", $bodyTemplate);
+            //trigger_error($bodyTemplate);
+        }
+        // Send out the emails
+        $objMailer = $this->newObject('email', 'mail');
         foreach ($students as $student) {
-            $body = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_BDY', 'contextcontent');
-            $linkUrl = $this->uri(array('action'=>'joincontext', 'contextcode'=>$contextcode, 'passthroughlogin'=>'true'));
-            $linkUrl = str_replace('&amp;', '&', $linkUrl);
-            $body = str_replace("{link}", $linkUrl, $body);
-            $body = str_replace("{firstname}", $student['firstname'], $body);
-            $body = str_replace("{lastname}", $student['surname'], $body);
-            $body = str_replace("{course}", "'".$title."'", $body);
-            $body = str_replace("{instructor}", $this->objUser->getTitle().'. '.$this->objUser->fullname().',', $body);
+            $subject = $subjectTemplate;
+            $body = $bodyTemplate;
+            //
+            $body = str_replace("[-firstname-]", $student['firstname'], $body);
+            $body = str_replace("[-lastname-]", $student['surname'], $body);
+            $body = strip_tags($body);
             //trigger_error($student['emailaddress']);
             //$addressArr = ;
             //trigger_error(var_export($addressArr, TRUE));
-            $objMailer->clearAddresses();
-            $objMailer->clearCCs();
-            $objMailer->clearBCCs();
+            //$objMailer->clearAddresses();
+            //$objMailer->clearCCs();
+            //$objMailer->clearBCCs();
             $objMailer->setValue('to', array($student['emailaddress']));
             $objMailer->setValue('from', $this->objUser->email());
             $objMailer->setValue('fromName', $this->objUser->fullname());
             $objMailer->setValue('subject', $subject);
-            $objMailer->setValue('body', strip_tags($body));
-            $objMailer->setValue('AltBody', strip_tags($body));
+            $objMailer->setValue('body', $body);
+            $objMailer->setValue('AltBody', $body);
             $objMailer->send();
         }
     }
-
 }
 ?>
