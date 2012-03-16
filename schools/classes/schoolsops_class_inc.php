@@ -1998,6 +1998,9 @@ class schoolsops extends object
         $searchLabel = $this->objLanguage->languageText('word_search', 'system', 'WORD: word_search, not found');
         $addLabel = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
         $selectPrincipalLabel = $this->objLanguage->languageText('mod_schools_selectprincipal', 'schools', 'TEXT: mod_schools_selectprincipal, not found');
+        $firstNameLabel = $this->objLanguage->languageText('phrase_firstname', 'system', 'PHRASE: phrase_firstname, not found');
+        $lastNameLabel = $this->objLanguage->languageText('phrase_lastname', 'system', 'PHRASE: phrase_lastname, not found');
+        $fieldLabel = $this->objLanguage->languageText('word_field', 'system', 'WORD: word_field, not found');
         
         $arrayVars = array();
         $arrayVars['password_not_alike'] = $passwordNotAlike;
@@ -2006,9 +2009,15 @@ class schoolsops extends object
         // pass password error to javascript.
         $this->objSvars->varsToJs($arrayVars);
         
+        $objRadio = new radio('field');
+        $objRadio->addOption('firstname', $firstNameLabel);
+        $objRadio->addOption('surname', $lastNameLabel);
+        $objRadio->setSelected('surname');
+        $fieldRadio = $objRadio->show();        
+        
         $objInput = new textinput('principal', '', '', '50');
         $searchInput = $objInput->show();
-        
+
         $objInput = new textinput('id', '', 'hidden', '50');
         $idInput = $objInput->show();
         
@@ -2025,11 +2034,15 @@ class schoolsops extends object
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
         $objTable->startRow();
-        $objTable->addCell($searchLabel . ': ', '200px', '', '', 'odd', '', '');
-        $objTable->addCell($searchInput, '', '', '', 'odd', '', '');
+        $objTable->addCell($fieldLabel . ': ', '200px', '', '', 'odd', '', '');
+        $objTable->addCell($fieldRadio, '', '', '', 'odd', '', '');
         $objTable->endRow();
         $objTable->startRow();
-        $objTable->addCell($sidInput . $idInput . $addButton . '&nbsp;' . $cancelButton, '', '', '', 'even', 'colspan="2"', '');
+        $objTable->addCell($searchLabel . ': ', '200px', '', '', 'even', '', '');
+        $objTable->addCell($searchInput, '', '', '', 'even', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($sidInput . $idInput . $addButton . '&nbsp;' . $cancelButton, '', '', '', 'odd', 'colspan="2"', '');
         $objTable->endRow();
         $findTable = $objTable->show();
 
@@ -2212,7 +2225,9 @@ class schoolsops extends object
     public function ajaxFindPrincipals()
     {
         $search = $this->getParam('term');
-        $userArray = $this->objUserAdmin->searchUsers('surname', $search, 'contains', 'firstname');
+        $field = $this->getParam('field');
+        
+        $userArray = $this->objUserAdmin->searchUsers($field, $search, 'contains', 'firstname');
 
         foreach ($userArray as $key => $user)
         {
