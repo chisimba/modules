@@ -21,80 +21,80 @@ class tutorials extends controller
 {
     /**
     * @var object $objUser: The user class in the security module
-    * @access private
+    * @access public
     */
-    private $objUser;
+    public $objUser;
 
     /**
     * @var string $userId: The userId of the current user
-    * @access private
+    * @access public
     */
-    private $userId;
+    public $userId;
 
     /**
     * @var string $name: The full name of the current user
-    * @access private
+    * @access public
     */
-    private $name;
+    public $name;
 
     /**
     * @var boolean $isAdmin: TRUE if the user is in the site admin group, FALSE if not
-    * @access private
+    * @access public
     */
-    private $isAdmin;
+    public $isAdmin;
 
     /**
     * @var object $objContext: The dbcontext class in the context module
-    * @access private
+    * @access public
     */
-    private $objContext;
+    public $objContext;
 
     /**
     * @var string $contextCode: The context code if the user is in a context
-    * @access private
+    * @access public
     */
-    private $contextCode;
+    public $contextCode;
 
     /**
     * @var boolean $isLecturer: TRUE if the user is a lecturer for this context, FALSE if not
-    * @access private
+    * @access public
     */
-    private $isLecturer;
+    public $isLecturer;
 
     /**
     * @var boolean $isStudent: TRUE if the user is a student for this context, FALSE if not
-    * @access private
+    * @access public
     */
-    private $isStudent;
+    public $isStudent;
 
    /**
     * @var object $objTutDisplay: The display class in the messaging module
     * @access protected
     */
-    private $objTutDisplay;
+    public $objTutDisplay;
 
     /**
     * @var object $objDatetime: The dateandtime class in the utilities module
-    * @access private
+    * @access public
     */
-    private $objDatetime;
+    public $objDatetime;
 
     /**
     * @var object $objLanguage: The language class in the language module
-    * @access private
+    * @access public
     */
-    private $objLanguage;
+    public $objLanguage;
 
     /**
     * @var object $objDbTut: The dbtutorial class in the tutorial module
-    * @access private
+    * @access public
     */
-    private $objDbTutorials;
+    public $objDbTutorials;
 
     /**
     * Method to construct the class
     *
-    * @access private
+    * @access public
     * @return
     */
     public function init()
@@ -136,7 +136,7 @@ class tutorials extends controller
     * This is the main method of the class
     * It calls other functions depending on the value of $action
     *
-    * @access private
+    * @access public
     * @param string $action
     * @return
     */
