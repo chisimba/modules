@@ -1,0 +1,12 @@
+FIELDS:
+
+surname
+middlenames
+firstname
+sex
+email
+cell_number
+school
+grade
+homeroom_teacher
+something_about_yourself
