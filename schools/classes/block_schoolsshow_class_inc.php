@@ -71,7 +71,7 @@ class block_schoolsshow extends object
     {
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_schools_schooldetails', 'schools', 'TEXT: mod_schools_schooldetails, not found');
+        $this->title = ucfirst($this->objLanguage->code2Txt('mod_schools_schooldetails', 'schools', NULL, 'TEXT: mod_schools_schooldetails, not found'));
         
         // Load operations class for schools.
         $this->objOps = $this->getObject('schoolsops', 'schools');

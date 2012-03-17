@@ -71,7 +71,7 @@ class block_schoolsfind extends object
     {
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_schools_findschool', 'schools', 'TEXT: mod_schools_findschool, not found');
+        $this->title = $this->objLanguage->code2Txt('mod_schools_findschool', 'schools', NULL, 'TEXT: mod_schools_findschool, not found');
         
         // Load operations class for schools.
         $this->objOps = $this->getObject('schoolsops', 'schools');

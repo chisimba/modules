@@ -74,11 +74,11 @@ class block_schoolsaddedit extends object
         $this->mode = $this->getParam('mode');
         if ($this->mode == 'add')
         {
-            $this->title = $this->objLanguage->languageText('mod_schools_addschool', 'schools', 'TEXT: mod_schools_addschool, not found');
+            $this->title = $this->objLanguage->code2Txt('mod_schools_addschool', 'schools', NULL, 'TEXT: mod_schools_addschool, not found');
         }
         else
         {
-            $this->title = $this->objLanguage->languageText('mod_schools_editschool', 'schools', 'TEXT: mod_schools_editschool, not found');
+            $this->title = $this->objLanguage->code2Txt('mod_schools_editschool', 'schools', NULL, 'TEXT: mod_schools_editschool, not found');
         }
         // Load operations class for schools.
         $this->objOps = $this->getObject('schoolsops', 'schools');

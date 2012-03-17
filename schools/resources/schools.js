@@ -30,7 +30,7 @@ jQuery(function() {
         jQuery('#input_schools').focus(function() {
             jQuery('#input_sid').val('');
         });
-    };
+    }
         
     if (jQuery('#input_schools').length > 0)
     {
@@ -44,7 +44,7 @@ jQuery(function() {
                 return false;
             }
         });
-    };    
+    }    
     
     if (jQuery('[name=select]').length > 0)
     {
@@ -59,7 +59,7 @@ jQuery(function() {
                 jQuery('#form_detail').submit();
             }
         });
-    };
+    }
 
     if (jQuery('#input_province_id').length > 0)
     {
@@ -83,7 +83,7 @@ jQuery(function() {
                 jQuery("#district").html(''); 
             }
         });
-    };
+    }
     
     if (jQuery('#input_province').length > 0)
     {
@@ -107,139 +107,115 @@ jQuery(function() {
                 jQuery("#district").html(''); 
             }
         });
-    };
+    }
 
-    if (jQuery('#adddistrict').length > 0)
-    {
-        // jQuery ajax function to return the add district form.
-        jQuery('#adddistrict').live("click", function() {
-            var pid = jQuery("#input_province").val();
-            var mydata = "pid=" + pid;
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=schools&action=ajaxAddEditDistrict",
-                data: mydata,
-                success: function(ret) {
-                    jQuery("#adddistrictdiv").html(ret); 
-                    jQuery('#districtdiv').toggle();
-                }
-            });
+    // jQuery ajax function to return the add district form.
+    jQuery('#adddistrict').live("click", function() {
+        var pid = jQuery("#input_province").val();
+        var mydata = "pid=" + pid;
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=schools&action=ajaxAddEditDistrict",
+            data: mydata,
+            success: function(ret) {
+                jQuery("#adddistrictdiv").html(ret); 
+                jQuery('#districtdiv').toggle();
+            }
         });
-    };    
+    });
     
-    if (jQuery('#cancel_district').length > 0)
-    {
-        // jQuery function to cancel the district form.
-        jQuery('#cancel_district').live("click", function() {
-            jQuery("#adddistrictdiv").html(''); 
-            jQuery('#districtdiv').toggle();
+    // jQuery function to cancel the district form.
+    jQuery('#cancel_district').live("click", function() {
+        jQuery("#adddistrictdiv").html(''); 
+        jQuery('#districtdiv').toggle();
+        return false;
+    });
+
+    // jQuery function to submit the district form.
+    jQuery('#form_district').live("submit", function() {
+        if (!jQuery.trim(jQuery('#input_name').val()))
+        {
+            alert(no_district);
+            jQuery('#input_name').val('');
+            jQuery('#input_name').focus();
             return false;
-        });
-    };
+        }
+        else
+        {
+            return true;
+        }
+    });
 
-    if (jQuery('#form_district').length > 0)
-    {
-        // jQuery function to submit the district form.
-        jQuery('#form_district').live("submit", function() {
-            var district = jQuery("#input_district_name").val();
-            if (district == "")
-            {
-                alert(no_district);
-                jQuery('#input_district_name').focus();
-                return false;
+    // jQuery ajax function to return the edit district form.
+    jQuery('#editdistrict').live("click", function() {
+        var id = jQuery(this).attr('class');
+        var mydata = 'id=' + id;
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=schools&action=ajaxAddEditDistrict",
+            data: mydata,
+            success: function(ret) {
+                jQuery("#adddistrictdiv").html(ret); 
+                jQuery("#districtdiv").toggle(); 
             }
-            else
-            {
-                return true;
+        });
+    });
+
+    // jQuery ajax function to return the add province form.
+    jQuery('#addprovince').live("click", function() {
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=schools&action=ajaxAddEditProvince",
+            success: function(ret) {
+                jQuery("#addprovincediv").html(ret); 
+                jQuery('#provincediv').toggle();
             }
         });
-    };
+    });
 
-    if (jQuery('#editdistrict').length > 0)
-    {
-        // jQuery ajax function to return the edit district form.
-        jQuery('#editdistrict').live("click", function() {
-            var id = jQuery(this).attr('class');
-            var mydata = 'id=' + id;
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=schools&action=ajaxAddEditDistrict",
-                data: mydata,
-                success: function(ret) {
-                    jQuery("#adddistrictdiv").html(ret); 
-                    jQuery("#districtdiv").toggle(); 
-                }
-            });
-        });
-    };
+    // jQuery function to cancel the province form.
+    jQuery('#cancel_province').live("click", function() {
+        jQuery("#addprovincediv").html(''); 
+        jQuery('#provincediv').toggle();
+        return false;
+    });
 
-    if (jQuery('#addprovince').length > 0)
-    {
-        // jQuery ajax function to return the add province form.
-        jQuery('#addprovince').live("click", function() {
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=schools&action=ajaxAddEditProvince",
-                success: function(ret) {
-                    jQuery("#addprovincediv").html(ret); 
-                    jQuery('#provincediv').toggle();
-                }
-            });
-        });
-    };
-
-    if (jQuery('#cancel_province').length > 0)
-    {
-        // jQuery function to cancel the province form.
-        jQuery('#cancel_province').live("click", function() {
-            jQuery("#addprovincediv").html(''); 
-            jQuery('#provincediv').toggle();
+    // jQuery function to submit the province form.
+    jQuery('#form_province').live("submit", function() {
+        if (!jQuery.trim(jQuery("#input_name").val()))
+        {
+            alert(no_province);
+            jQuery('#input_name').val('');
+            jQuery('#input_name').focus();
             return false;
-        });
-    };
+        }
+        else
+        {
+            return true;
+        }
+    });
 
-    if (jQuery('#form_province').length > 0)
-    {
-        // jQuery function to submit the province form.
-        jQuery('#form_province').live("submit", function() {
-            var district = jQuery("#input_province_name").val();
-            if (district == "")
-            {
-                alert(no_province);
-                jQuery('#input_province_name').focus();
-                return false;
-            }
-            else
-            {
-                return true;
+    // jQuery ajax function to return the edit district form.
+    jQuery('#editprovince').live("click", function() {
+        var id = jQuery(this).attr('class');
+        var mydata = 'id=' + id;
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=schools&action=ajaxAddEditProvince",
+            data: mydata,
+            success: function(ret) {
+                jQuery("#addprovincediv").html(ret); 
+                jQuery("#provincediv").toggle(); 
             }
         });
-    };
-
-    if (jQuery('#editprovince').length > 0)
-    {
-        // jQuery ajax function to return the edit district form.
-        jQuery('#editprovince').live("click", function() {
-            var id = jQuery(this).attr('class');
-            var mydata = 'id=' + id;
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=schools&action=ajaxAddEditProvince",
-                data: mydata,
-                success: function(ret) {
-                    jQuery("#addprovincediv").html(ret); 
-                    jQuery("#provincediv").toggle(); 
-                }
-            });
-        });
-    };
+    });
 
     if (jQuery('#input_principal').length > 0)
     {
         jQuery('#input_principal').focus(function() {
             jQuery('#input_id').val('');
         });
-    };
+    }
     
     if (jQuery('#input_principal').length > 0)
     {
@@ -275,11 +251,11 @@ jQuery(function() {
                 return false;
             }
         });
-    };
+    }
 
-    if (jQuery('[name=add]').length > 0)
+    if (jQuery('[name=add_save]').length > 0)
     {
-        jQuery('[name=add]').click(function() {
+        jQuery('[name=add_save]').click(function() {
             if (jQuery('#input_id').val() == '')
             {
                 alert(select_principal);
@@ -290,7 +266,7 @@ jQuery(function() {
                 jQuery('#form_findprincipal').submit();
             }
         });
-    };
+    }
     
     if (jQuery('#addprincipal').length > 0)
     {
@@ -298,7 +274,7 @@ jQuery(function() {
             jQuery('#form_findprincipal').toggle();
             jQuery('#form_addprincipal').toggle();
         });
-    };
+    }
 
     if (jQuery('#findprincipal').length > 0)
     {
@@ -306,7 +282,7 @@ jQuery(function() {
             jQuery('#form_findprincipal').toggle();
             jQuery('#form_addprincipal').toggle();
         });
-    };
+    }
     
     if (jQuery('#input_username').length > 0)
     {
@@ -327,7 +303,7 @@ jQuery(function() {
                 }
             });
         });
-    };
+    }
 
     if (jQuery('#input_confirm_password').length > 0)
     {
@@ -342,6 +318,6 @@ jQuery(function() {
                 jQuery('#input_password').select();
             }
         });
-    };
+    }
 
 });

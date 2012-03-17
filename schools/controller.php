@@ -156,7 +156,7 @@ class schools extends controller
     private function __view()
     {
         // All the action is in the blocks
-        $this->setSession('schools', array());
+        $this->setSession('errors', array());
         return "find_tpl.php";
     }
     
@@ -179,7 +179,7 @@ class schools extends controller
     * @access private
     * 
     */
-    private function __addeditschool()
+    private function __addoredit()
     {
         // All the action is in the blocks
         return "addeditschool_tpl.php";
@@ -215,14 +215,14 @@ class schools extends controller
         $cancel = $this->getParam('cancel');
         if ($cancel == 'Cancel')
         {
-            $this->setSession('schools', array());
+            $this->setSession('errors', array());
             if ($mode == 'add')
             {
                 return $this->nextAction('view');
             }
             else
             {
-                return $this->nextAction('showschool', array('sid' => $sid));
+                return $this->nextAction('show', array('sid' => $sid));
             }
         }
 
@@ -251,18 +251,18 @@ class schools extends controller
             {
                 $sid = $this->objOps->insertSchool($data);
             }
-            $this->setSession('schools', array());
-            return $this->nextAction('showschool', array('sid' => $sid));
+            $this->setSession('errors', array());
+            return $this->nextAction('show', array('sid' => $sid));
         }
         else
         {
             if ($mode == 'edit')
             {
-                return $this->nextAction('addeditschool', array('mode' => $mode, 'sid' => $sid));
+                return $this->nextAction('addoredit', array('mode' => $mode, 'sid' => $sid));
             }
             else
             {
-                return $this->nextAction('addeditschool', array('mode' => $mode));
+                return $this->nextAction('addoredit', array('mode' => $mode));
             }
         }
     }
@@ -274,9 +274,9 @@ class schools extends controller
     * @access private
     * 
     */
-    private function __showschool()
+    private function __show()
     {
-        $this->setSession('schools', array());
+        $this->setSession('errors', array());
         return 'showschool_tpl.php';
     }
             
@@ -324,8 +324,8 @@ class schools extends controller
         $cancel = $this->getParam('cancel');
         if ($cancel == 'Cancel')
         {
-            $this->setSession('schools', array());
-            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 2));
+            $this->setSession('errors', array());
+            return $this->nextAction('show', array('sid' => $sid, 'tab' => 2));
         }
 
         $data = array();
@@ -354,8 +354,8 @@ class schools extends controller
             {
                 $cid = $this->objOps->insertContact($data);
             }
-            $this->setSession('schools', array());
-            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 2));
+            $this->setSession('errors', array());
+            return $this->nextAction('show', array('sid' => $sid, 'tab' => 2));
         }
         else
         {
@@ -382,7 +382,7 @@ class schools extends controller
         $sid = $this->getParam('sid');
         
         $this->objOps->deleteContact();        
-        return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 2));
+        return $this->nextAction('show', array('sid' => $sid, 'tab' => 2));
     }
             
     /**
@@ -394,7 +394,7 @@ class schools extends controller
      */
     private function __manage()
     {
-        $this->setSession('schools', array());
+        $this->setSession('errors', array());
         $type = $this->getParam('type');
         switch ($type)
         {
@@ -564,6 +564,12 @@ class schools extends controller
     private function __addprincipal()
     {
         $sid = $this->getParam('sid');
+        $cancel = $this->getParam('add_cancel');
+        if ($cancel == 'Cancel')
+        {
+            return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
+        }
+
         $id = $this->getParam('id');
         $data['id'] = $sid;
         $data['principal_id'] = $id;
@@ -571,7 +577,7 @@ class schools extends controller
         $data['date_modified'] = date('Y-m-d H:i:s');
         $this->objDBschools->updateSchool($sid, $data);
         
-        return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+        return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
     }
     
     /**
@@ -587,7 +593,7 @@ class schools extends controller
         $data['principal_id'] = '';
         $this->objDBschools->updateSchool($sid, $data);
         
-        return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+        return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
     }
     
     /**
@@ -600,10 +606,10 @@ class schools extends controller
     private function __validateprincipal()
     {
         $sid = $this->getParam('sid');
-        $cancel = $this->getParam('cancel');
+        $cancel = $this->getParam('new_cancel');
         if ($cancel == 'Cancel')
         {
-            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+            return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
         }
         
         $data = array();
@@ -624,7 +630,7 @@ class schools extends controller
         if ($errorsFound == FALSE)
         {
             $this->objOps->savePrincipal($data);
-            return $this->nextAction('showschool', array('sid' => $sid, 'tab' => 1));
+            return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
         }
         else
         {

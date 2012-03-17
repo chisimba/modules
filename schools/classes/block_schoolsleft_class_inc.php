@@ -69,7 +69,7 @@ class block_schoolsleft extends object
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
-        $manageComponentsLabel = $this->objLanguage->languageText('mod_schools_manage', 'schools', 'TEXT: mod_schools_manage, not found');
+        $manageComponentsLabel = $this->objLanguage->code2Txt('mod_schools_manage', 'schools', NULL, 'TEXT: mod_schools_manage, not found');
         $this->title = $manageComponentsLabel;
 
         $this->objOps = $this->getObject('schoolsops', 'schools');
