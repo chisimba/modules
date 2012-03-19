@@ -108,7 +108,7 @@ class schoolsops extends object
         
         $this->objIcon->title = $error;
         $this->objIcon->alt = $error;
-        $this->objIcon->setIcon('exclamation', 'gif');
+        $this->objIcon->setIcon('exclamation', 'png');
         $errorIcon = $this->objIcon->show();
         
         $string = '<span style="color: red">' . $errorIcon . '&nbsp;<b>' . $errorText . '</b></span>';
@@ -2172,6 +2172,8 @@ class schoolsops extends object
         $usernameExists = $this->objLanguage->languageText('mod_schools_usernameexists', 'schools', 'TEXT: mod_schools_usernameexists, not found');
         $invalidUsername = $this->objLanguage->languageText('mod_schools_invalidusername', 'schools', 'TEXT: mod_schools_invalidusername, not found');
         $usernameShort = $this->objLanguage->languageText('mod_schools_usernameshort', 'schools', 'TEXT: mod_schools_usernameshort, not found');
+        $usernameAvaliable = $this->objLanguage->languageText('mod_schools_usernameavailable', 'schools', 'TEXT: mod_schools_usernameavailable, not found');
+        $success = $this->objLanguage->languageText('word_success', 'system', 'WORD: word_success, not found');
         
         // Get parameter.
         $username = $this->getParam('username', FALSE);
@@ -2188,7 +2190,12 @@ class schoolsops extends object
                 $users = $this->objUserAdmin->usernameAvailable($username);
                 if ($users === TRUE)
                 {
-                    $string = '';
+                    $this->objIcon->title = $success;
+                    $this->objIcon->alt = $success;
+                    $this->objIcon->setIcon('accept', 'png');
+                    $successIcon = $this->objIcon->show();
+
+                    $string = '<span class="success">' . $successIcon . '&nbsp;<b>' . $usernameAvaliable . '</b></span>';
                 }
                 else
                 {
