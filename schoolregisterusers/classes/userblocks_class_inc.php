@@ -116,7 +116,7 @@ class userblocks extends object
               'schoolregisterusers');
             $link = new link($uri);
             $link->link = $this->objLanguage->languageText(
-              'mod_oeruserdata_edityou', 'schoolregisterusers');
+              'mod_schoolregisterusers_edityou', 'schoolregisterusers');
             $ret = $link->show();
             
             // Put a register link for admins
@@ -230,7 +230,7 @@ class userblocks extends object
                     $link->link = $editIcon;
                     /*$delUrl = $this->uri(array(
                       'action' => 'delete',
-                      'id' => $record['id']), 'oeruserdata');                    
+                      'id' => $record['id']), 'schoolregisterusers');                    
                     $delLink = new link($delUrl);*/
                     $delLink = new link("#delete_user");
                     $delLink->cssId = $record['id'];
@@ -284,7 +284,7 @@ class userblocks extends object
             $objPagination->module = 'schoolregisterusers';
             $objPagination->action = 'userlistajax';
             $objPagination->id = 'schoolregisterusers_div';
-            $objDb = $this->getObject('dboerusermain', 'schoolregisterusers');
+            $objDb = $this->getObject('dbschumusermain', 'schoolregisterusers');
             $objPagination->currentPage = 0;
             $count = $objDb->getUserCount();
             $pages = ceil($count/$pageSize);

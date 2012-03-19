@@ -49,7 +49,7 @@ jQuery(function() {
         if (jQuery("#edmode").val()!=='edit') {
             jQuery.ajax({
                 type: "POST",
-                url: "index.php?module=oeruserdata&action=checkusernameajax",
+                url: "index.php?module=schoolregisterusers&action=checkusernameajax",
                 data: "username="+value,
                 dataType:"html",
                 success: function(msg)
@@ -72,7 +72,7 @@ jQuery(function() {
         function(value, element) {
             return (value != 'none');
         }, 'Please select an option.'
-        );
+    );
 
 
 
@@ -135,19 +135,7 @@ jQuery(function() {
                 country: {
 
                 },
-                orgcomp: {
-                    required: true,
-                    minlength: 2
-                },
-                jobtitle: {
-                    required: true,
-                    minlength: 2
-                },
-                occupationtype: {
-                    required: true,
-                    minlength: 2
-                },
-                workphone: {
+                school: {
                     required: true,
                     minlength: 2
                 },
@@ -206,16 +194,7 @@ jQuery(function() {
                 postalcode: {
                     required: required_field
                 },
-                orgcomp: {
-                    required: required_field
-                },
-                jobtitle: {
-                    required: required_field
-                },
-                occupationtype: {
-                    required: required_field
-                },
-                workphone: {
+                school: {
                     required: required_field
                 },
                 mobilephone: {
@@ -246,7 +225,7 @@ jQuery(function() {
                     captcha = jQuery("#captcha").val();
 
                     jQuery.ajax({
-                        url: 'index.php?module=oeruserdata&action=verifycaptcha',
+                        url: 'index.php?module=schoolregisterusers&action=verifycaptcha',
                         type: "POST",
                         data: 'captcha='+captcha,
                         success: function(msg) {
@@ -254,7 +233,7 @@ jQuery(function() {
                                 allow_submit=false;
                                 jQuery("#save_results").html('<span class="error">Invalid captcha: ' + msg + '. Please try again.</span>');//.fadeOut('5000');
                                 // Reset the captcha.
-                                captcha_img = "index.php?module=oeruserdata&action=showcaptcha";
+                                captcha_img = "index.php?module=schoolregisterusers&action=showcaptcha";
                                 jQuery("#img_captcha").attr("src", captcha_img);
                                 jQuery("#captcha").val("");
                             // Now how do I stop the form from submitting???????/
@@ -272,14 +251,14 @@ jQuery(function() {
                 jQuery("#save_results").html('<img src="skins/_common/icons/loading_bar.gif" alt=""Saving..." />');
                 data_string = jQuery("#form_edituser").serialize();
                 jQuery.ajax({
-                    url: 'index.php?module=oeruserdata&action=userdetailssave',
+                    url: 'index.php?module=schoolregisterusers&action=userdetailssave',
                     type: "POST",
                     data: data_string,
                     success: function(msg) {    
                         //if the result is this wrong, then there is trouble
                         if(msg.length > 100){
-                            jQuery("#save_results").html("");
-                            showRegisterFail();
+                            jQuery("#save_results").html(msg);
+                            //showRegisterFail();
                             return;
                         }
                         jQuery("#submitUser").attr("disabled", "");
@@ -297,8 +276,8 @@ jQuery(function() {
                                     showUpdateSuccess();
                                 }
                                 
-                            // Redirect after anonymous save
-                            window.location = 'index.php?module=oer&action=login';
+                                // Redirect after anonymous save
+                                window.location = 'index.php?module=schoolregisterusers&action=login';
                             } else {
                                 // Update the information area 
                                 // (msg is the id of the record on success)
@@ -319,8 +298,8 @@ jQuery(function() {
                             }
                         } else {
                             jQuery("#save_results").html("");
-                            showRegisterFail();
-                        //jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
+                            //showRegisterFail();
+                            jQuery("#save_results").html('<span class="error">' + status_fail + ": " + msg + '</span>');//.fadeOut('5000');
                         }
                     }
                 });

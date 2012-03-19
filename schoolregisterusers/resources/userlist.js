@@ -1,5 +1,5 @@
 /* 
- * Javascript to support oeruserdata for delete action
+ * Javascript to support schoolregisterusers for delete action
  * on user list
  *
  * Written by Derek Keats derek@dkeats.com
@@ -21,7 +21,7 @@ function showDelConfirm(id){
             }
         },
         type: "POST",
-        url: "index.php?module=oeruserdata&action=delete&id=" + id,
+        url: "index.php?module=schoolregisterusers&action=delete&id=" + id,
         cache: false,
         success: function(ret){
             if(ret == "RECORD_DELETED") {
@@ -51,7 +51,7 @@ jQuery(function() {
         //alert(next);
         jQuery.ajax({
             type: "POST",
-            url: "index.php?module=oeruserdata&action=userlistajax&page=" + next,
+            url: "index.php?module=schoolregisterusers&action=userlistajax&page=" + next,
             cache: false,
             success: function(ret){
                 jQuery("#userlisting").html(ret);
@@ -70,7 +70,7 @@ jQuery(function() {
         alert(prev);
         jQuery.ajax({
             type: "POST",
-            url: "index.php?module=oeruserdata&action=userlistajax&page=" + prev,
+            url: "index.php?module=schoolregisterusers&action=userlistajax&page=" + prev,
             cache: false,
             success: function(ret){
                 jQuery("#userlisting").html(ret);

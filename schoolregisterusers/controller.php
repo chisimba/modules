@@ -22,7 +22,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  * @category  Chisimba
- * @package   oeruserdata
+ * @package   schoolregisterusers
  * @author    Derek Keats derek@dkeats.com
  * @copyright 2011 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -57,7 +57,7 @@ $GLOBALS['kewl_entry_point_run'])
 * 
 *
 * @author Derek Keats
-* @package oeruserdata
+* @package schoolregisterusers
 *
 */
 class schoolregisterusers extends controller
@@ -91,7 +91,7 @@ class schoolregisterusers extends controller
 
     /**
     * 
-    * Intialiser for the oeruserdata controller
+    * Intialiser for the schoolregisterusers controller
     * @access public
     * 
     */
@@ -103,8 +103,8 @@ class schoolregisterusers extends controller
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the database class
         $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('oeruserdata.js',
-          'oeruserdata'));
+          $this->getJavaScriptFile('schoolregisterusers.js',
+          'schoolregisterusers'));
         // Set the jQuery version to the one required
         $this->setVar('JQUERY_VERSION', '1.6.1');
         //Get the activity logger class
@@ -116,7 +116,7 @@ class schoolregisterusers extends controller
     
     /**
      * 
-     * The standard dispatch method for the oeruserdata module.
+     * The standard dispatch method for the schoolregisterusers module.
      * The dispatch method uses methods determined from the action 
      * parameter of the  querystring and executes the appropriate method, 
      * returning its appropriate template. This template contains the code 
@@ -269,7 +269,7 @@ class schoolregisterusers extends controller
      * 
      */
     public function __userdetailssave() {
-        $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
+        $objDb = $this->getObject('dbschumuserdata', 'schoolregisterusers');
         $mode = $this->getParam('mode', 'add');
       
         if ($mode == 'add' || $mode == 'selfregister') {
@@ -352,7 +352,7 @@ class schoolregisterusers extends controller
         $userId = $this->objUser->userId();
         if ($this->objUser->isAdmin() || 
           $objGroupOps->isGroupMember($groupId, $userId )) {
-            $objDb = $this->getObject('dboeruserdata', 'oeruserdata');
+            $objDb = $this->getObject('dbschumuserdata', 'schoolregisterusers');
             $id = $this->getParam('id', FALSE);
             if ($id) {
                 die($objDb->deleteUser($id));
@@ -374,7 +374,7 @@ class schoolregisterusers extends controller
      */
     public function __userlistajax()
     {
-        $objList = $this->getObject('userblocks', 'oeruserdata');
+        $objList = $this->getObject('userblocks', 'schoolregisterusers');
         echo $objList->showUserList(FALSE);
         die();
     }

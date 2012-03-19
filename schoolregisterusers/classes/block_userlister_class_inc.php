@@ -77,7 +77,7 @@ class block_userlister extends object
     {
         // We don't need a title in this block.
         $this->title = NULL;
-        //mod_oeruserdata_linksttl
+        //mod_schoolregisterusers_linksttl
     }
     /**
      *

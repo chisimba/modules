@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* A sample SQL file for oeruserdata. Please adapt this to your requirements.
+* A sample SQL file for schoolregisterusers. Please adapt this to your requirements.
 *
 */
 // Table Name
@@ -30,7 +30,7 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_oeruserdata_text_idx';
+$name = 'tbl_schoolregisterusers_text_idx';
 
 $indexes = array(
     'fields' => array(

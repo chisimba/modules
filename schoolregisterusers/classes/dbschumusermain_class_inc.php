@@ -1,8 +1,8 @@
 <?php
 /**
- * Database access to manage users in the oeruserdata module
+ * Database access to manage users in the schoolregisterusers module
  *
- * Database access to manage users in the oeruserdata module. It works with
+ * Database access to manage users in the schoolregisterusers module. It works with
  * primary user data, as well as the userextra data that is created
  * by the OER module.
  * 
@@ -39,9 +39,9 @@ $GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
- * Database access to manage users in the oeruserdata module
+ * Database access to manage users in the schoolregisterusers module
  *
- * Database access to manage users in the oeruserdata module. It works with
+ * Database access to manage users in the schoolregisterusers module. It works with
  * primary user data, as well as the userextra data that is created
  * by the OER project.
  * 

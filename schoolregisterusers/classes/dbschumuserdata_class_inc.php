@@ -49,7 +49,7 @@ $GLOBALS['kewl_entry_point_run'])
  * @author    Derek Keats derek@dkeats.com
  * 
  */
-class dbschoolregisterusers extends dbtable {
+class dbschumuserdata extends dbtable {
 
     /**
      * 
@@ -88,11 +88,10 @@ class dbschoolregisterusers extends dbtable {
         $this->objUser = $this->getObject('user', 'security');
         $this->ObjDbUserGroups = $this->getObject('dbusergroups', 'oer');
         $this->fieldsAr = array(
-            'id', 'userid', 'title', 'firstname', 'surname', 'username', 'password', 
-            'confirmpassword', 'email', 'sex', 'birthdate', 'address', 'city', 
-            'state', 'postalcode', 'country', 'orgcomp', 'jobtitle', 
-            'occupationtype', 'workphone', 'mobilephone', 'website', 
-            'description', 'mode');
+            'id', 'userid', 'title', 'firstname','middlename', 'surname', 
+            'username', 'password', 'confirmpassword', 'email', 'sex', 
+            'birthdate', 'address', 'city', 'state', 'postalcode', 'country',  
+            'school', 'mobilephone', 'description', 'mode');
     }
     
     /**
@@ -152,16 +151,13 @@ class dbschoolregisterusers extends dbtable {
             if (!empty($res)) {
                 // Send the data to the oer users data
                 $data = array(
+                    'middlename' => $this->middlename,
                     'birthdate' => $this->birthdate, 
                     'address' => $this->address, 
                     'city' => $this->city, 
                     'state' => $this->state, 
                     'postalcode' => $this->postalcode, 
-                    'orgcomp' => $this->orgcomp, 
-                    'jobtitle' => $this->jobtitle, 
-                    'occupationtype' => $this->occupationtype, 
-                    'workphone' => $this->workphone, 
-                    'website' => $this->website, 
+                    'school' => $this->school, 
                     'description' => $this->description
                 );
                 $res = $this->update('parentid', $this->id, $data);
@@ -169,16 +165,14 @@ class dbschoolregisterusers extends dbtable {
                 // Add the data to the oer users data
                 $data = array(
                     'parentid' => $this->id,
+                    'middlename' => $this->middlename,
                     'birthdate' => $this->birthdate, 
                     'address' => $this->address, 
                     'city' => $this->city, 
                     'state' => $this->state, 
                     'postalcode' => $this->postalcode, 
-                    'orgcomp' => $this->orgcomp, 
+                    'school' => $this->school, 
                     'jobtitle' => $this->jobtitle, 
-                    'occupationtype' => $this->occupationtype, 
-                    'workphone' => $this->workphone, 
-                    'website' => $this->website, 
                     'description' => $this->description
                 );
                 $res = $this->insert($data);
@@ -204,7 +198,7 @@ class dbschoolregisterusers extends dbtable {
     {
         // Add sanity checks and disallow loggedin users from adding
         if ($this->objUser->isLoggedIn()) {
-            if ($this->objUser-isAdmin()) {
+            if ($this->objUser->isAdmin()) {
                 $sanityCheck=FALSE;
             } else {
                 return 'ERROR_DATA_INSERT_FAIL';
@@ -213,20 +207,23 @@ class dbschoolregisterusers extends dbtable {
             $sanityCheck=TRUE;
         }
         $this->loadData($sanityCheck);
-        // Send the data to the primary users table
+
         // Check if the username already exists, if so, return an error
         if ($this->objAdmin->userNameAvailable($this->username) == FALSE) {
             return 'usernametaken';
         }
         
-        $objCaptcha = $this->getObject('captcha', 'login');
-        $res= $objCaptcha->verifyCaptcha();
-        if($res != 'ok'){
-            return $res;
+        if ($sanityCheck) {
+            $objCaptcha = $this->getObject('captcha', 'login');
+            $res= $objCaptcha->verifyCaptcha();
+            if($res != 'ok'){
+                return $res;
+            }
         }
+        
         // Generate a userId for the user
         $userId = $this->objAdmin->generateUserId();
-        // Add the user and get the id back
+        // Add the user to the primary tbl_users and get the id back
         $pkid = $this->objAdmin->addUser(
           $userId, $this->username, $this->password, $this->title, 
           $this->firstname, $this->surname, $this->email, $this->sex, 
@@ -237,16 +234,13 @@ class dbschoolregisterusers extends dbtable {
         // Send the data to the oer users data
         $data = array(
             'parentid' => $pkid,
+            'middlename' => $this->middlename,
             'birthdate' => $this->birthdate, 
             'address' => $this->address, 
             'city' => $this->city, 
             'state' => $this->state, 
             'postalcode' => $this->postalcode, 
-            'orgcomp' => $this->orgcomp, 
-            'jobtitle' => $this->jobtitle, 
-            'occupationtype' => $this->occupationtype, 
-            'workphone' => $this->workphone, 
-            'website' => $this->website, 
+            'school' => $this->school, 
             'description' => $this->description
         );
         $this->insert($data);
@@ -267,17 +261,15 @@ class dbschoolregisterusers extends dbtable {
     {
         $sql = "SELECT tbl_users.*, " 
             . "tbl_schoolregisterusers_userextra.parentid, "
+            . "tbl_schoolregisterusers_userextra.middlename, "
             . "tbl_schoolregisterusers_userextra.birthdate, "
             . "tbl_schoolregisterusers_userextra.address, "
             . "tbl_schoolregisterusers_userextra.city, "
             . "tbl_schoolregisterusers_userextra.state, "
             . "tbl_schoolregisterusers_userextra.postalcode, "
-            . "tbl_schoolregisterusers_userextra.orgcomp, "
-            . "tbl_schoolregisterusers_userextra.jobtitle, "
-            . "tbl_schoolregisterusers_userextra.occupationtype, "
+            . "tbl_schoolregisterusers_userextra.school, "
             . "tbl_schoolregisterusers_userextra.workphone, "
             . "tbl_schoolregisterusers_userextra.description, "
-            . "tbl_schoolregisterusers_userextra.website "
             . "FROM tbl_users LEFT OUTER JOIN "
             . "tbl_schoolregisterusers_userextra ON tbl_schoolregisterusers_userextra.parentid "
             . "= tbl_users.id WHERE tbl_users.id = '$id';";

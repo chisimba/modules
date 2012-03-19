@@ -82,23 +82,23 @@ class useredit extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         // Serialize language items to Javascript
-        $arrayVars['status_success'] = "mod_oeruserdata_status_success";
-        $arrayVars['status_fail'] = "mod_oeruserdata_status_fail";
-        $arrayVars['required_field'] = "mod_oeruserdata_requiredfield";
-        $arrayVars['min2'] = "mod_oeruserdata_min2chars";
-        $arrayVars['min6'] = "mod_oeruserdata_min6chars";
-        $arrayVars['min8'] = "mod_oeruserdata_min8chars";
-        $arrayVars['min100'] = "mod_oeruserdata_say100";
-        $arrayVars['validemail'] = "mod_oeruserdata_validemail";
-        $arrayVars['validdate'] = "mod_oeruserdata_validdate";
-        $arrayVars['makeselection'] = "mod_oeruserdata_makeselection";
-        $arrayVars['firstchoiceno'] = "mod_oeruserdata_firstchoiceno";
-        $arrayVars['passnomatch'] = "mod_oeruserdata_passwdnotmatch";
-        $arrayVars['nofirstchoice'] = "mod_oeruserdata_nofirstchoice";
-        $arrayVars['usernametaken'] = "mod_oeruserdata_usernametaken";
+        $arrayVars['status_success'] = "mod_schoolregisterusers_status_success";
+        $arrayVars['status_fail'] = "mod_schoolregisterusers_status_fail";
+        $arrayVars['required_field'] = "mod_schoolregisterusers_requiredfield";
+        $arrayVars['min2'] = "mod_schoolregisterusers_min2chars";
+        $arrayVars['min6'] = "mod_schoolregisterusers_min6chars";
+        $arrayVars['min8'] = "mod_schoolregisterusers_min8chars";
+        $arrayVars['min100'] = "mod_schoolregisterusers_say100";
+        $arrayVars['validemail'] = "mod_schoolregisterusers_validemail";
+        $arrayVars['validdate'] = "mod_schoolregisterusers_validdate";
+        $arrayVars['makeselection'] = "mod_schoolregisterusers_makeselection";
+        $arrayVars['firstchoiceno'] = "mod_schoolregisterusers_firstchoiceno";
+        $arrayVars['passnomatch'] = "mod_schoolregisterusers_passwdnotmatch";
+        $arrayVars['nofirstchoice'] = "mod_schoolregisterusers_nofirstchoice";
+        $arrayVars['usernametaken'] = "mod_schoolregisterusers_usernametaken";
         $objSerialize = $this->getObject('serializevars', 'utilities');
-        $objSerialize->languagetojs($arrayVars, 'oeruserdata');
-        $this->objDbUser = $this->getObject('dboeruserdata','oeruserdata');
+        $objSerialize->languagetojs($arrayVars, 'schoolregisterusers');
+        $this->objDbUser = $this->getObject('dbschumuserdata','schoolregisterusers');
          // Load the jquery validate plugin
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
@@ -108,7 +108,7 @@ class useredit extends object
         // Load the helper Javascript
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('useredit.js',
-          'oeruserdata'));
+          'schoolregisterusers'));
         // Get the mode from the querystring
         $this->mode = $this->getParam('mode', 'add');
     }
@@ -237,24 +237,24 @@ class useredit extends object
         switch($this->mode) {
             case 'edit':
                 $h = $this->objLanguage->languageText(
-                  'mod_oeruserdata_hd_edit',
-                  'oeruserdata');
+                  'mod_schoolregisterusers_hd_edit',
+                  'schoolregisterusers');
                 $ex = "";
                 break;
             case 'selfregister':
                 $h = $this->objLanguage->languageText(
-                  'mod_oeruserdata_hd_selfreg',
-                  'oeruserdata');
+                  'mod_schoolregisterusers_hd_selfreg',
+                  'schoolregisterusers');
                 $ex = $this->objLanguage->languageText(
-                  'mod_oeruserdata_youcanopenid',
-                  'oeruserdata');
+                  'mod_schoolregisterusers_youcanopenid',
+                  'schoolregisterusers');
                 $ex = "<br /><span class='infonote'>$ex</span><br /><br /><br />";
                 break;
             case 'add':
             default:
                 $h = $this->objLanguage->languageText(
-                  'mod_oeruserdata_hd_new',
-                  'oeruserdata');
+                  'mod_schoolregisterusers_hd_new',
+                  'schoolregisterusers');
                 $ex = "";
                 break;
         }
@@ -291,7 +291,7 @@ class useredit extends object
                 $eUserId = $this->objUser->getItemFromPkId($id,'userid');
                 $myUserId = $this->objUser->userId();
                 if ($eUserId == $myUserId || $this->objUser->isAdmin()) {
-                    $objDbUsr = $this->getObject('dboeruserdata','oeruserdata');
+                    $objDbUsr = $this->getObject('dbschumuserdata','schoolregisterusers');
                     $res = $objDbUsr->getForEdit($id);
                     if (is_array($res) && !empty ($res)) {
                         $this->loadData($res);
@@ -349,6 +349,25 @@ class useredit extends object
         $table->addCell($textinput->show());
         $table->endRow();
         unset($fnLabel);
+
+        // Middle name input options.
+        $mnLabel = new label($this->objLanguage->languageText(
+          'phrase_middlenames'), 'middlename');
+        $table->startRow();
+        $table->addCell($mnLabel->show());
+        $textinput = new textinput('middlename');
+        $textinput->size = 40;
+        if ($this->mode == 'edit') {
+            if (isset($this->middlename)){ 
+                $value = $this->middlename;
+                $textinput->setValue($value);
+            }
+        }
+        $textinput->cssId = 'middlename';
+        $table->addCell($textinput->show());
+        $table->endRow();
+        unset($fnLabel);
+        
         
         // Surname input options.
         $snLabel = new label($this->objLanguage->languageText(
@@ -387,7 +406,7 @@ class useredit extends object
             $un = '<div class="fake_input">' . $this->username . "</div>";
         }
         $table->addCell($un);
-        $table->addCell('<div class="error" id="usernameerror"></div>');
+        $table->addCell(''); //<div class="error" id="usernameerror"></div>
         $table->endRow();
         unset($unLabel);
         if ($this->mode !== 'edit') {
@@ -560,79 +579,24 @@ class useredit extends object
         $table->endRow();
         unset($label);
         
-        // Organization or company input options.
+        // School input options.
         $label = new label($this->objLanguage->languageText(
-          'phrase_orgcomp'), 'orgcomp');
+          'word_school'), 'school');
         $table->startRow();
         $table->addCell($label->show());
-        $textinput = new textinput('orgcomp');
+        $textinput = new textinput('school');
         $textinput->size = 40;
         if ($this->mode == 'edit') {
-            if (isset($this->orgcomp)){
-                $value = $this->orgcomp;
+            if (isset($this->school)){
+                $value = $this->school;
                 $textinput->setValue($value);
             }
         }
-        $textinput->cssId = 'orgcomp';
+        $textinput->cssId = 'school';
         $table->addCell($textinput->show());
         $table->endRow();
         unset($label);
-        
-        // Job title input options.
-        $label = new label($this->objLanguage->languageText(
-          'phrase_jobtitle'), 'jobtitle');
-        $table->startRow();
-        $table->addCell($label->show());
-        $textinput = new textinput('jobtitle');
-        $textinput->size = 40;
-        if ($this->mode == 'edit') {
-            if (isset($this->jobtitle)){
-                $value = $this->jobtitle;
-                $textinput->setValue($value);
-            }
-        }
-        $textinput->cssId = 'jobtitle';
-        $table->addCell($textinput->show());
-        $table->endRow();
-        unset($label);
-        
-        // Occupation input options.
-        $label = new label($this->objLanguage->languageText(
-          'phrase_occupationtype'), 'occupationtype');
-        $table->startRow();
-        $table->addCell($label->show());
-        $textinput = new textinput('occupationtype');
-        $textinput->size = 40;
-        if ($this->mode == 'edit') {
-            if (isset($this->occupationtype)){
-                $value = $this->occupationtype;
-                $textinput->setValue($value);
-            }
-        }
-        $textinput->cssId = 'occupationtype';
-        $table->addCell($textinput->show());
-        $table->endRow();
-        unset($label);
-        
-        // Workphone input options.
-        $label = new label($this->objLanguage->languageText(
-          'phrase_workphone'), 'workphone');
-        $table->startRow();
-        $phoneIcon = "<span class='phone'></span>";
-        $table->addCell($label->show());
-        $textinput = new textinput('workphone');
-        $textinput->size = 40;
-        if ($this->mode == 'edit') {
-            if (isset($this->workphone)){
-                $value = $this->workphone;
-                $textinput->setValue($value);
-            }
-        }
-        $textinput->cssId = 'workphone';
-        $table->addCell($textinput->show() . $phoneIcon);
-        $table->endRow();
-        unset($label);
-        
+               
         // Mobile phone input options.
         $label = new label($this->objLanguage->languageText(
           'phrase_mobilephone'), 'mobilephone');
@@ -651,24 +615,7 @@ class useredit extends object
         $table->addCell($textinput->show() . $phoneIcon);
         $table->endRow();
         unset($label);
-        
-        // Website URL input options.
-        $label = new label($this->objLanguage->languageText(
-          'word_website'), 'website');
-        $table->startRow();
-        $table->addCell($label->show());
-        $textinput = new textinput('website');
-        $textinput->size = 40;
-        if ($this->mode == 'edit') {
-            if (isset($this->website)){
-                $value = $this->website;
-                $textinput->setValue($value);
-            }
-        }
-        $table->addCell($textinput->show());
-        $table->endRow();
-        unset($label);
-        
+               
         // About yourself input options.
         $label = new label($this->objLanguage->languageText(
           'phrase_aboutyou'), 'description');
@@ -696,11 +643,11 @@ class useredit extends object
 
            
             // Add the captcha to the form
-            $img = '<br /><img id="img_captcha" src="index.php?module=oeruserdata&action=showcaptcha" />';
+            $img = '<br /><img id="img_captcha" src="index.php?module=schoolregisterusers&action=showcaptcha" />';
             $table->startRow();
             // About yourself input options.
             $label = new label($this->objLanguage->languageText(
-              'mod_oeruserdata_caplab', 'oeruserdata'), 'captcha');
+              'mod_schoolregisterusers_caplab', 'schoolregisterusers'), 'captcha');
             $table->addCell($label->show());
             // Get a text input for the captcha
             $objInput = new textinput('captcha', '', 'text','15');
@@ -730,19 +677,19 @@ class useredit extends object
         // Default success message upon saving. Shown on a dialog window
         $saveResultsMsg = '<div id="register_success"  title="'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+                'mod_schoolregisterusers_regstatus', 'schoolregisterusers').'">'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_regsuccessmsg', 'oeruserdata').'</div>';
+                'mod_schoolregisterusers_regsuccessmsg', 'schoolregisterusers').'</div>';
         $saveResultsMsg .= '<div id="register_fail"  title="'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+                'mod_schoolregisterusers_regstatus', 'schoolregisterusers').'">'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_regfailmsg', 'oeruserdata').'</div>';
+                'mod_schoolregisterusers_regfailmsg', 'schoolregisterusers').'</div>';
         $saveResultsMsg .= '<div id="update_success"  title="'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_regstatus', 'oeruserdata').'">'.
+                'mod_schoolregisterusers_regstatus', 'schoolregisterusers').'">'.
         $this->objLanguage->languageText(
-                'mod_oeruserdata_updatesuccessmsg', 'oeruserdata').'</div>';
+                'mod_schoolregisterusers_updatesuccessmsg', 'schoolregisterusers').'</div>';
 
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";

@@ -51,7 +51,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * group called Usermanagers
  * 
  * @category  Chisimba
- * @package   oeruserdata
+ * @package   schoolregisterusers
  * @author    Derek Keats <derek@dkeats.com>
  * @copyright 2010 Derek Keats
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://chisimba.com/
  * @see       http://wurfl.sourceforge.net/
  */
-class oeruserdata_installscripts extends dbtable
+class schoolregisterusers_installscripts extends dbtable
 {
     /**
      * Instance of the altconfig class in the config module.
