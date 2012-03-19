@@ -87,7 +87,7 @@ class contextcontent extends controller {
 
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
-            
+
 
 
             $this->objLanguage = $this->getObject('language', 'language');
@@ -136,7 +136,7 @@ class contextcontent extends controller {
      * @return boolean
      */
     function requiresLogin($action) {
-        $actions = array('viewchapter', 'viewpage', 'rss', 'rsscall', 'notincontext', '');
+        $actions = array('viewchapter', 'viewpage', 'rss', 'rsscall', 'notincontext', ''); //
         if (in_array($action, $actions)) {
             return FALSE;
             //var_dump($action);

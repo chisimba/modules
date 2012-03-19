@@ -90,10 +90,18 @@ class alertutils extends object {
         $subjectTemplate = str_replace('\n', "\n", $subjectTemplate);
         // Body
         $bodyTemplate = $this->objSysConfig->getValue('CONTEXTCONTENT_EMAIL_ALERT_BDY', 'contextcontent');
-        // click on the link below or \n\n[-link-]
+        //click on the link below or \n\n[-link-]
         $bodyTemplate = $this->objLanguage->abstractText($bodyTemplate);
         //trigger_error($bodyTemplate);
-        //--$url = $this->uri(array('action'=>'joincontext', 'contextcode'=>$contextCode, 'passthroughlogin'=>'true'), 'contextcontent', '', FALSE, TRUE, TRUE);
+        //--$contextredirecturi = html_entity_decode($this->uri(array(), 'contextcontent'));
+        //--$url = $this->uri(array('action'=>'joincontext', 'contextcode'=>$contextCode, 'contextredirecturi'=> $contextredirecturi), 'context', '', FALSE, TRUE, TRUE); // , 'passthroughlogin'=>'true' //contextcontent
+        //http://..localhost/chisimba/app/index.php?module=contextcontent
+
+        /*
+        $contextredirecturi = html_entity_decode($this->uri(array('action'=>'view', 'id'=>$id), 'assignment'));
+        $link = new link($this->uri(array('action'=>'joincontext', 'contextcode'=>$this->objContext->getContextCode(), 'contextredirecturi'=> $contextredirecturi), 'context'));
+        */
+
         //$url = str_replace('&amp;', '&', $url);
         //--$bodyTemplate = str_replace("[-link-]", $url, $bodyTemplate);
         //trigger_error($bodyTemplate);
