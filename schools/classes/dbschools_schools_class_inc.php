@@ -166,6 +166,37 @@ class dbschools_schools extends dbtable
     }
     
     /**
+     *
+     * Method to return all schools by district
+     * 
+     * @access public
+     * @param string $districtId The id of the district
+     * @return array The array of school data 
+     */
+    public function getSchoolsByDistrict($districtId)
+    {
+        return $this->fetchAll(" WHERE `district_id` = '$districtId'" );        
+    }
+    
+    /**
+     *
+     * Method to get all schools by province
+     * 
+     * @access public
+     * @param string @provinceId The id of the province to get schools for
+     * @return array 
+     */
+    public function getSchoolsByProvince($provinceId)
+    {
+        $sql = "SELECT *, s.id AS id, d.id AS districtId, p.id AS provinceId FROM $this->table AS s";
+        $sql .= ' LEFT JOIN tbl_schools_districts AS d ON (s.district_id = d.id)';
+        $sql .= ' LEFT JOIN tbl_schools_provinces AS p ON (d.province_id = p.id)';
+        $sql .= " WHERE p.id = $provinceId";
+
+        return $this->getArray($sql);       
+    }
+    
+    /**
      * This module gets the record count in the schools detail table
      *
      * @return string The text of the init_overview

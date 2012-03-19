@@ -80,11 +80,10 @@ class dbschools_provinces extends dbtable
      *
      * Get all of the provinces fo the schools module.
      *
-     * @return array The array of province entries
      * @access public
-     *
+     * @return array The array of provinces
      */
-    public function getAll()
+    public function getAllProvinces()
     {
         return $this->fetchAll();
     }

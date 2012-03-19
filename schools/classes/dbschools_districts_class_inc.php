@@ -77,6 +77,18 @@ class dbschools_districts extends dbtable
     }
    
     /**
+     *
+     * Get all of the districts fo the schools module.
+     *
+     * @access public
+     * @return array The array of districts
+     */
+    public function getAllDistricts()
+    {
+        return $this->fetchAll();
+    }
+
+    /**
      * Method to return the districts for a province
      * 
      * @access public

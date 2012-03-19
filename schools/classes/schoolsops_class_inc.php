@@ -310,7 +310,7 @@ class schoolsops extends object
         $faxNumberLabel = $this->objLanguage->languageText('phrase_faxnumber', 'system', 'phrase_faxnumber, not found');
         $noDistrictsLabel = $this->objLanguage->languageText('mod_schools_nodistricts', 'schools', 'TEXT: mod_schools_nodistricts, not found');
 
-        $provincesArray = $this->objDBprovinces->getAll();
+        $provincesArray = $this->objDBprovinces->getAllProvinces();
         
         // set up htmlelements.
         $objDrop = new dropdown('province_id');
@@ -1380,7 +1380,7 @@ class schoolsops extends object
         $pid = $this->getParam('pid');
         
         // get data from the database.
-        $provincesArray = $this->objDBprovinces->getAll();        
+        $provincesArray = $this->objDBprovinces->getAllProvinces();        
 
         // set up htmlelements.
         $objDrop = new dropdown('province');
@@ -1607,7 +1607,7 @@ class schoolsops extends object
         // pass error to javascript.
         $this->objSvars->varsToJs($arrayVars);
 
-        $provinceArray = $this->objDBprovinces->getAll();
+        $provinceArray = $this->objDBprovinces->getAllProvinces();
 
         $this->objIcon->title = $addLabel;
         $this->objIcon->alt = $addLabel;
