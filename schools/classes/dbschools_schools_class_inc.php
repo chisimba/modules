@@ -194,49 +194,6 @@ class dbschools_schools extends dbtable
         $sql .= " WHERE p.id = $provinceId";
 
         return $this->getArray($sql);       
-    }
-    
-    /**
-     * This module gets the record count in the schools detail table
-     *
-     * @return string The text of the init_overview
-     * @access public
-     *
-     *
-    public function getCount()
-    {
-        return $this->getRecordCount();
-    }
-
-    /**
-     * Method to get the schools detail data
-     * $join, $tblJoin
-     * @access public
-     * @return array $data The array of details for schools
-     *
-    public function getDetails()
-    {
-        $sql = "SELECT *, d.id AS id, u.id AS uid, dis.id AS disid, prov.id AS provid FROM $this->table AS d";
-        $sql .= ' LEFT JOIN tbl_users AS u ON (d.principal_id = u.id)';
-        $sql .= ' LEFT JOIN tbl_schools_districts AS dis ON (d.district_id = dis.id)';
-        $sql .= ' LEFT JOIN tbl_schools_provinces AS prov ON (dis.province_id = prov.id)';
-
-        return $this->getArray($sql);       
-    }
-    
-    /**
-     * Method to return the principal of a school
-     * 
-     * @access public
-     * @param integer $id The id of school to get the principal for
-     * @return array The array of principal data
-     *
-    public function getPrincipal($id)
-    {
-        $school = $this->getRow('id', $id);
-        $principal = $this->objUser->getUserDetails($school['principal_id']);
-        return $principal;
-    }
-    */
+    }    
 }
 ?>
