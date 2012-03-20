@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Kevin Cyster kcyster@gmail.com
 *
 */
-class dbclasses extends dbtable
+class dbsubjectcontext extends dbtable
 {
 
     /**
@@ -72,16 +72,18 @@ class dbclasses extends dbtable
     public function init()
     {
         //Set the parent table to our demo table
-        parent::init('tbl_grades_classes');
-        $this->table = 'tbl_grades_classes';
+        parent::init('tbl_grades_subjectcontext');
+        $this->table = 'tbl_grades_subjectcontext';
+        
+        $this->objDBcontext = $this->getObject('dbcontext', 'context');
     }
 
     /**
      *
-     * Method to return all grades
+     * Method to return all links
      *
      * @access public
-     * @return array $result An array of all the grades
+     * @return array $result An array of all the links
      *
      */
     public function getAll()
@@ -93,23 +95,58 @@ class dbclasses extends dbtable
 
     /**
      *
-     * Method to return a class
+     * Method to get links
      * 
      * @access public
-     * @param string $id The id of the class to retrieve
-     * @return array The class data array 
+     * @param string $id The id of the item to get links for
+     * @return array 
      */
-    public function getClass($id)
+    public function getLinkedContexts($id)
     {
-        return $this->getRow('id', $id);
-    }
+        $sql = "SELECT *, l.id AS id, c.id AS cid FROM $this->table AS l";
+        $sql .= ' LEFT JOIN tbl_context AS c ON (l.context_id = c.id)';
+        $sql .= " WHERE l.subject_id = '$id'";
 
+        return $this->getArray($sql);   
+    }
+    
     /**
-     * Method to add a class to the database
+     *
+     * Method to get links
      * 
      * @access public
-     * @param array @data The array of class data
-     * @return string The id of the class added
+     * @param string $id The id of the item to get links for
+     * @return array 
+     */
+    public function getUnlinkedContexts($id)
+    {
+        $linkedContexts = $this->getLinkedContexts($id);
+        if (!empty($linkedContexts))
+        {
+            $ids = array();
+            foreach ($linkedContexts as $grade)
+            {
+                $ids[] = "'" . $grade['cid'] . "'";
+            }
+            $idString = implode(',', $ids);
+        
+            $sql = " SELECT * FROM tbl_context ";
+            $sql .= "WHERE id NOT IN ($idString)";
+            
+            return $this->getArray($sql);
+        }
+        else
+        {
+            return $this->objDBcontext->fetchAll();
+        }
+    }
+    
+    /**
+     * Method to add a link to the database
+     * 
+     * @access public
+     * @param array @data The array of link data
+     * @return string The id of the link added
      */
     public function insertData($data)
     {
@@ -118,50 +155,29 @@ class dbclasses extends dbtable
     
     /**
      *
-     * Method to delete a class
+     * Method to delete a link
      * 
      * @access public
-     * @param string $sid The id of the class to delete
+     * @param string $sid The id of the link to delete
      * return boolean 
      */
-    public function deleteData($id)
+    public function deleteLink($id)
     {
         return $this->delete('id', $id);
     }
 
     /**
-     * Method to edit a class on the database
-     * 
-     * @access public
-     * @param array @data The array of class data
-     * @return string The id of the class edited
-     */
-    public function updateData($id, $data)
-    {
-        return $this->update('id', $id, $data);
-    }
-
-    /**
      *
-     * Method to return classes not in an array
+     * Method to delete links
      * 
      * @access public
-     * @param array $ids The array of ids
-     * @return array The array of class data 
+     * @param string $field The type of the linked component to delete
+     * @param string $sid The id of the component to delete
+     * return boolean 
      */
-    public function notInArray($ids = array())
+    public function deleteLinks($field, $id)
     {
-        $temp = array();
-        foreach ($ids as $id)
-        {
-            $temp[] = "'" . $id . "'";
-        }
-        $idString = implode(',', $temp);
-        
-        $sql = " SELECT * FROM $this->table ";
-        $sql .= "WHERE id NOT IN ($idString)";
-        
-        return $this->getArray($sql);
+        return $this->delete($field, $id);
     }
 }
 ?>

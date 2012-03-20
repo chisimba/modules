@@ -22,8 +22,100 @@ jQuery(function() {
     
     // Things to do on loading the page.
     jQuery(document).ready(function() {
-      // Load some demo content into the middle dynamic area.
-      jQuery("#middledynamic_area").load('packages/grades/resources/sample.txt');
+        
+    });
+
+    jQuery('#addgradelink').click(function() {
+       jQuery('#gradesformdiv').toggle();
+       jQuery('#addgradesdiv').toggle();
+       if (jQuery('#gradestablediv').length > 0)
+       {
+           jQuery('#gradestablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_grade').live('click', function() {
+       
+       jQuery('#gradesformdiv').toggle();
+       jQuery('#addgradesdiv').toggle();
+       if (jQuery('#gradestablediv').length > 0)
+       {
+           jQuery('#gradestablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_grade').live('click', function() {
+       if (jQuery('#input_grade_id').val() == '')
+       {
+           alert (no_grade);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_grade').submit();
+       }
+    });
+
+    jQuery('#addclasslink').click(function() {
+       jQuery('#classesformdiv').toggle();
+       jQuery('#addclassesdiv').toggle();
+       if (jQuery('#classestablediv').length > 0)
+       {
+           jQuery('#classestablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_class').live('click', function() {
+       
+       jQuery('#classesformdiv').toggle();
+       jQuery('#addclassesdiv').toggle();
+       if (jQuery('#classestablediv').length > 0)
+       {
+           jQuery('#classestablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_class').live('click', function() {
+       if (jQuery('#input_class_id').val() == '')
+       {
+           alert (no_class);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_class').submit();
+       }
+    });
+
+    jQuery('#addcontextlink').click(function() {
+       jQuery('#contextsformdiv').toggle();
+       jQuery('#addcontextsdiv').toggle();
+       if (jQuery('#contextstablediv').length > 0)
+       {
+           jQuery('#contextstablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_context').live('click', function() {
+       
+       jQuery('#contextsformdiv').toggle();
+       jQuery('#addcontextsdiv').toggle();
+       if (jQuery('#contextstablediv').length > 0)
+       {
+           jQuery('#contextstablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_context').live('click', function() {
+       if (jQuery('#input_context_id').val() == '')
+       {
+           alert (no_context);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_context').submit();
+       }
     });
 
 });

@@ -96,11 +96,16 @@ class grades extends controller
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
+        
         // Create an instance of the database class
         $this->objDBgrades = $this->getObject('dbgrades', 'grades');
         $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
         $this->objDBclasses = $this->getObject('dbclasses', 'grades');
+        $this->objDBgradesubject = $this->getObject('dbgradesubject', 'grades');
+        $this->objDBsubjectclass = $this->getObject('dbsubjectclass', 'grades');
+        $this->objDBsubjectcontext = $this->getObject('dbsubjectcontext', 'grades');
         $this->objOps = $this->getObject('gradesops', 'grades');
+
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('grades.js',
           'grades'));
@@ -241,7 +246,6 @@ class grades extends controller
     * in view mode. 
     * 
     * @access private
-    * 
     */
     private function __delete()
     {
@@ -251,20 +255,111 @@ class grades extends controller
         switch ($type)
         {
             case 'g':
-                $dbClass = $this->objDBgrades;
+                $this->objDBgrades->deleteData($id);
                 break;
             case 's':
-                $dbClass = $this->objDBsubjects;
+                $this->objDBsubjects->deleteData($id);
+                $this->objDBgradesubject->deleteLinks('subject_id', $id);
+                $this->objDBsubjectclass->deleteLinks('subject_id', $id);
+                $this->objDBsubjectcontext->deleteLinks('subject_id', $id);
                 break;
             case 'c':
-                $dbClass = $this->objDBclasses;
+                $this->objDBclasses->deleteData($id);
                 break;
-        }
-        $dbClass->deleteData($id);
-        
+        }       
         return $this->nextAction('list', array('type' => $type));
     }
     
+    /**
+     *
+     * Method that corresponds to the link action. It returns the 
+     * page to link vaarious lerning components
+     * 
+     * @access private 
+     */
+    private function __link()
+    {
+        return 'link_tpl.php';
+    }
+    
+    /**
+     *
+     * Method that corresponds to the savelink action. It returns the 
+     * page to link various learning components after saving a link
+     * 
+     * @access private 
+     */
+    private function __savelink()
+    {
+        $type = $this->getParam('type');
+        $link = $this->getParam('link');
+        
+        switch ($type)
+        {
+            case 's':
+                $id = $this->getParam('subject_id');
+                $data['subject_id'] = $id;
+                $data['created_by'] = $this->objUser->PKId();
+                $data['date_created'] = date('Y-m-d H:i:s');
+                switch ($link)
+                {
+                    case 'g':
+                        $data['grade_id'] = $this->getParam('grade_id');
+                        $this->objDBgradesubject->insertData($data);
+                        $tab = 0;
+                        break;
+                    case 'c':
+                        $data['class_id'] = $this->getParam('class_id');
+                        $this->objDBsubjectclass->insertData($data);
+                        $tab = 1;
+                        break;
+                    case 'x':
+                        $data['context_id'] = $this->getParam('context_id');
+                        $this->objDBsubjectcontext->insertData($data);
+                        $tab = 2;
+                        break;
+                }
+                break;
+        }
+        return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));        
+    }
+    
+    /**
+     *
+     * Method that corresponds to the savelink action. It returns the 
+     * page to link various learning components after saving a link
+     * 
+     * @access private 
+     */
+    private function __deletelink()
+    {
+        $type = $this->getParam('type');
+        $link = $this->getParam('link');
+        $id = $this->getParam('id');
+        $del = $this->getParam('del');
+
+        switch ($type)
+        {
+            case 's':
+                switch ($link)
+                {
+                    case 'g':
+                        $this->objDBgradesubject->deleteLink($del);
+                        $tab = 0;
+                        break;
+                    case 'c':
+                        $this->objDBsubjectclass->deleteLink($del);
+                        $tab = 1;
+                        break;
+                    case 'x':
+                        $this->objDBsubjectcontext->deleteLink($del);
+                        $tab = 2;
+                        break;
+                }
+                break;
+        }
+        return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));
+    }
     
     /**
     * 

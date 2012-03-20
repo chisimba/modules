@@ -140,6 +140,28 @@ class dbgrades extends dbtable
     {
         return $this->update('id', $id, $data);
     }
-    
+  
+    /**
+     *
+     * Method to return grades not in an array
+     * 
+     * @access public
+     * @param array $ids The array of ids
+     * @return array The array of grades data 
+     */
+    public function notInArray($ids = array())
+    {
+        $temp = array();
+        foreach ($ids as $id)
+        {
+            $temp[] = "'" . $id . "'";
+        }
+        $idString = implode(',', $temp);
+        
+        $sql = " SELECT * FROM $this->table ";
+        $sql .= "WHERE id NOT IN ($idString)";
+        
+        return $this->getArray($sql);
+    }
 }
 ?>
