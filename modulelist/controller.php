@@ -32,10 +32,9 @@ class modulelist extends controller
         
         
         // ignore action at moment as we only do one thing - list modules
-        foreach(glob($this->objConfig->getSiteRootPath() 
-          . $whichDir .'/*') as $dirs) {
-            $chkdirs = str_replace($this->objConfig->getSiteRootPath()
-              . $whichDir . '/', "", $dirs);
+        $siteRootPath = $this->objConfig->getSiteRootPath();
+        foreach(glob($siteRootPath . $whichDir .'/*') as $dirs) {
+            $chkdirs = str_replace($siteRootPath . $whichDir . '/', "", $dirs);
             if($chkdirs == 'COPYING' || $chkdirs == 'build.xml'|| $chkdirs == 'build.xml~' || $chkdirs == 'chisimba_modules.txt' || $chkdirs == 'modlist.php') {
                 continue;
             } else {
@@ -73,19 +72,57 @@ class modulelist extends controller
                     $modAuthors = "unset";
                 }
                 
+                $dirSize = $this->foldersize($dirname);
+                
                 $moduleList[] = array(
                   'modname' => $chkdirs, 
                   'longname' => $modName,
                   'version' => $modVer,
                   'description' => $descrip,
                   'authors' => $modAuthors,
-                  'status' => $status);
+                  'status' => $status,
+                  'dirsize' => $dirSize);
             }
         }
         
         $this->setVar('moduleList', $moduleList);
         return "list_tpl.php";
     }
+    
+    public function foldersize($path) {
+        $cmd = "du -h -s " . $path;
+        return "<pre>" . shell_exec ( $cmd ) . "</pre>";
+        
+        $total_size = 0;
+        $files = scandir($path);
+        $cleanPath = rtrim($path, '/'). '/';
+
+        foreach($files as $t) {
+            if ($t<>"." && $t<>"..") {
+                $currentFile = $cleanPath . $t;
+                if (is_dir($currentFile)) {
+                    $size = $this->foldersize($currentFile);
+                    $total_size += $size;
+                }
+                else {
+                    $size = filesize($currentFile);
+                    $total_size += $size;
+                }
+            }   
+        }
+        return $this->formatSize($total_size);
+    }
+    
+    public function formatSize($size) {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+        $mod = 1024;
+        for ($i = 0; $size > $mod; $i++) {
+            $size /= $mod;
+        }
+        $endIndex = strpos($size, ".")+3;
+        return substr( $size, 0, $endIndex).' '.$units[$i];
+    }
+
     
     /**
      * Overide the login object in the parent class
