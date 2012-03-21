@@ -86,7 +86,7 @@ class schoolsops extends object
             $this->objDBdistricts = $this->getObject('dbschools_districts', 'schools');
             $this->objDBcontacts = $this->getObject('dbschools_contacts', 'schools');
             $this->objDBschools = $this->getObject('dbschools_schools', 'schools');
-            $this->objDBcountries = $this->getObject('dbschools_countries', 'schools');
+            $this->objCountries = $this->getObject('languagecode' , 'language');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -123,6 +123,9 @@ class schoolsops extends object
      */
     public function findSchool()
     {
+
+var_dump($objCountries->countryAlpha());
+        
         $this->appendArrayVar('headerParams',
             $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
             'jquery'));
@@ -776,7 +779,7 @@ class schoolsops extends object
 
         if (!empty($principalArray))
         {
-            $countryArray = $this->objDBcountries->getCountry($principalArray['country']);
+            $country = $this->objCountries->getName($principalArray['country']);
             
             $sex = $principalArray['sex'] == 'M' ? $maleLabel : $femaleLabel;
 
@@ -819,7 +822,7 @@ class schoolsops extends object
             $objTable->startRow();
             $objTable->startRow();
             $objTable->addCell($countryLabel . ': ', '', '', '', 'odd', '', '');
-            $objTable->addCell($countryArray['country'], '', '', '', 'odd', '', '');
+            $objTable->addCell($country, '', '', '', 'odd', '', '');
             $objTable->endRow();
             $objTable->addCell($deletePrincipalIcon, '', '', '', 'even', 'colspan="2"', '');
             $objTable->endRow();
@@ -1799,7 +1802,6 @@ class schoolsops extends object
         $emailAddressLabel = $this->objLanguage->languageText('phrase_emailaddress', 'system', 'PHRASE: phrase_emailaddress, not found');
         $mobileNumberLabel = $this->objLanguage->languageText('phrase_mobilenumber', 'system', 'PHRASE: phrase_mobilenumber, not found');
         $countryLabel = $this->objLanguage->languageText('word_country', 'system', 'WORD: word_country, not found');
-        $selectCountryLabel = $this->objLanguage->languageText('phrase_selectcountry', 'system', 'PHRASE: phrase_selectcountry, not found');
         $passwordNotAlike = $this->objLanguage->languageText('mod_schools_passwordsnotalike', 'schools', 'TEXT: mod_schools_passwordsnotalike, not found');
         $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
@@ -1885,8 +1887,6 @@ class schoolsops extends object
 
         $string = $findForm;
 
-        $countriesArray = $this->objDBcountries->getAll();
-
         // set up html elements
         $objDrop = new dropdown('title');
         $objDrop->addOption('', $selectTitleLabel);
@@ -1907,11 +1907,7 @@ class schoolsops extends object
         $objInput = new textinput('last_name', $lastNameValue, '', '50');
         $lastNameInput = $objInput->show();
         
-        $objDrop = new dropdown('country');
-        $objDrop->addOption('', $selectCountryLabel);
-        $objDrop->addFromDB($countriesArray, 'country', 'code');
-        $objDrop->setSelected($countryValue);
-        $countryDrop = $objDrop->show();
+        $countryDrop = $this->objCountries->countryAlpha($countryValue);
 
         $objRadio = new radio('gender');
         $objRadio->addOption('M', $maleLabel);
