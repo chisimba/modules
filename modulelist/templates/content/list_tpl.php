@@ -105,7 +105,8 @@ if ($moduleList) {
           . "<div class='" . trim($moduleRow['status'])
           . "'>" . $moduleRow['description'] 
           . "</div><br />" . $noIcon 
-          . "<br /><b>Status</b>: " . $moduleRow['status']);
+          . "<br /><b>Status</b>: " . $moduleRow['status']
+          . "<br /><b>Directory size</b>: " . $moduleRow['dirsize']);
     }
     if ($noIconCount > 0) {
         // Print a warning about modules with no icons
