@@ -1,7 +1,9 @@
 <?php
 /**
  *
- * The list block for grades to list grades.
+ * A side block for grades.
+ *
+ * A middle block for grades. Module to hold grades - can be used in conjunction with the schools module.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * The main block for grades.
+ * A left block for grades.
+ *
+ * A left block for grades. Module to hold grades - can be used in conjunction with the schools module.
  *
  * @category  Chisimba
  * @author    Kevin Cyster kcyster@gmail.com
@@ -46,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_gradeslink extends object
+class block_entergrade extends object
 {
     /**
      * The title of the block
@@ -55,7 +59,6 @@ class block_gradeslink extends object
      * @access public
      */
     public $title;
-
     /**
      * Standard init function
      *
@@ -68,36 +71,17 @@ class block_gradeslink extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objOps = $this->getObject('gradesops', 'grades');
         
-        $gradesLabel = $this->objLanguage->code2Txt('mod_grades_linkgrade', 'grades', NULL, 'ERROR: mod_grades_linkgrade');
-        $subjectsLabel = $this->objLanguage->code2Txt('mod_grades_linksubject', 'grades', NULL, 'ERROR: mod_grades_linksubject');
-        $classesLabel = $this->objLanguage->code2Txt('mod_grades_linkclass', 'grades', NULL, 'ERROR: mod_grades_linkclass');
-        
-        $type = $this->getParam('type');
-        switch ($type)
-        {
-            case 'g':
-                $this->title = ucfirst(strtolower($gradesLabel));
-                $this->string = $this->objOps->showGradeLink();
-                break;
-            case 's':
-                $this->title = ucfirst(strtolower($subjectsLabel));
-                $this->string = $this->objOps->showSubjectLink();
-                break;
-            case 'c':
-                $this->title = ucfirst(strtolower($classesLabel));
-                $this->string = $this->objOps->showClassLink();
-                break;
-        }
+        $enterLabel = $this->objLanguage->code2Txt('mod_context_entercourse', 'context', NULL, 'ERROR: mod_context_entercourse');
+        $this->title = $enterLabel;
     }
-    
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
     public function show() 
-    {
-        return $this->string;
+    {        
+        return $this->objOps->showEnter();
     }
 }
 ?>

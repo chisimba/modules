@@ -118,4 +118,66 @@ jQuery(function() {
        }
     });
 
+    jQuery('#addsubjectlink').click(function() {
+       jQuery('#subjectsformdiv').toggle();
+       jQuery('#addsubjectsdiv').toggle();
+       if (jQuery('#subjectstablediv').length > 0)
+       {
+           jQuery('#subjectstablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_subject').live('click', function() {
+       
+       jQuery('#subjectsformdiv').toggle();
+       jQuery('#addsubjectsdiv').toggle();
+       if (jQuery('#subjectstablediv').length > 0)
+       {
+           jQuery('#subjectstablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_subject').live('click', function() {
+       if (jQuery('#input_subject_id').val() == '')
+       {
+           alert (no_subject);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_subject').submit();
+       }
+    });
+
+    jQuery('#addschoollink').click(function() {
+       jQuery('#schoolsformdiv').toggle();
+       jQuery('#addschoolsdiv').toggle();
+       if (jQuery('#schoolstablediv').length > 0)
+       {
+           jQuery('#schoolstablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_school').live('click', function() {
+       
+       jQuery('#schoolsformdiv').toggle();
+       jQuery('#addschoolsdiv').toggle();
+       if (jQuery('#schoolstablediv').length > 0)
+       {
+           jQuery('#schoolstablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_school').live('click', function() {
+       if (jQuery('#input_school_id').val() == '')
+       {
+           alert (no_school);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_school').submit();
+       }
+    });
+    
 });

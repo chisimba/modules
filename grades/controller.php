@@ -101,9 +101,7 @@ class grades extends controller
         $this->objDBgrades = $this->getObject('dbgrades', 'grades');
         $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
         $this->objDBclasses = $this->getObject('dbclasses', 'grades');
-        $this->objDBgradesubject = $this->getObject('dbgradesubject', 'grades');
-        $this->objDBsubjectclass = $this->getObject('dbsubjectclass', 'grades');
-        $this->objDBsubjectcontext = $this->getObject('dbsubjectcontext', 'grades');
+        $this->objDBbridging = $this->getObject('dbbridging', 'grades');
         $this->objOps = $this->getObject('gradesops', 'grades');
 
         $this->appendArrayVar('headerParams',
@@ -234,8 +232,9 @@ class grades extends controller
                 $dbClass->insertData($data);
             }
             $this->setSession('errors', array());
+            return $this->nextAction('list', array('type' => $type));
         }
-        return $this->nextAction('list', array('type' => $type));
+        return $this->nextAction('form', array('type' => $type, 'id' => $id));
     }
        
     /**
@@ -256,15 +255,15 @@ class grades extends controller
         {
             case 'g':
                 $this->objDBgrades->deleteData($id);
+                $this->objDBbridging->deleteLinks('grade_id', $id);
                 break;
             case 's':
                 $this->objDBsubjects->deleteData($id);
-                $this->objDBgradesubject->deleteLinks('subject_id', $id);
-                $this->objDBsubjectclass->deleteLinks('subject_id', $id);
-                $this->objDBsubjectcontext->deleteLinks('subject_id', $id);
+                $this->objDBbridging->deleteLinks('subject_id', $id);
                 break;
             case 'c':
                 $this->objDBclasses->deleteData($id);
+                $this->objDBbridging->deleteLinks('class_id', $id);
                 break;
         }       
         return $this->nextAction('list', array('type' => $type));
@@ -303,25 +302,94 @@ class grades extends controller
                 $data['date_created'] = date('Y-m-d H:i:s');
                 switch ($link)
                 {
+                    case 'h':
+                        $data['school_id'] = $this->getParam('school_id');
+                        $tab = 0;
+                        break;
                     case 'g':
                         $data['grade_id'] = $this->getParam('grade_id');
-                        $this->objDBgradesubject->insertData($data);
-                        $tab = 0;
+                        $tab = 1;
                         break;
                     case 'c':
                         $data['class_id'] = $this->getParam('class_id');
-                        $this->objDBsubjectclass->insertData($data);
-                        $tab = 1;
+                        $tab = 2;
                         break;
                     case 'x':
                         $data['context_id'] = $this->getParam('context_id');
-                        $this->objDBsubjectcontext->insertData($data);
+                        $tab = 3;
+                        break;
+                }
+                break;
+            case 'g':
+                $id = $this->getParam('grade_id');
+                $data['grade_id'] = $id;
+                $data['created_by'] = $this->objUser->PKId();
+                $data['date_created'] = date('Y-m-d H:i:s');
+                switch ($link)
+                {
+                    case 'h':
+                        $data['school_id'] = $this->getParam('school_id');
+                        $tab = 0;
+                        break;
+                    case 's':
+                        $data['subject_id'] = $this->getParam('subject_id');
+                        $tab = 1;
+                        break;
+                    case 'c':
+                        $data['class_id'] = $this->getParam('class_id');
+                        $tab = 2;
+                        break;
+                }
+                break;
+            case 'c':
+                $id = $this->getParam('class_id');
+                $data['class_id'] = $id;
+                $data['created_by'] = $this->objUser->PKId();
+                $data['date_created'] = date('Y-m-d H:i:s');
+                switch ($link)
+                {
+                    case 'h':
+                        $data['school_id'] = $this->getParam('school_id');
+                        $tab = 0;
+                        break;
+                    case 's':
+                        $data['subject_id'] = $this->getParam('subject_id');
+                        $tab = 1;
+                        break;
+                    case 'g':
+                        $data['grade_id'] = $this->getParam('grade_id');
                         $tab = 2;
                         break;
                 }
                 break;
         }
+        $this->objDBbridging->insertData($data);
+        
         return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));        
+    }
+    
+    /**
+     *
+     * Method that corresponds to the ajaxShowSubject action.
+     * It returns the html for the ajax request
+     * 
+     * @access private 
+     */
+    private function __ajaxShowSubject()
+    {
+        return $this->objOps->ajaxShowSubject();
+    }
+    
+    /**
+     *
+     * Method that corresponds to the ajaxShowContext action.
+     * It returns the html for the ajax request
+     * 
+     * @access private 
+     */
+    private function __ajaxShowContext()
+    {
+        return $this->objOps->ajaxShowContext();
     }
     
     /**
@@ -343,21 +411,51 @@ class grades extends controller
             case 's':
                 switch ($link)
                 {
-                    case 'g':
-                        $this->objDBgradesubject->deleteLink($del);
+                    case 'h':
                         $tab = 0;
                         break;
-                    case 'c':
-                        $this->objDBsubjectclass->deleteLink($del);
+                    case 'g':
                         $tab = 1;
                         break;
+                    case 'c':
+                        $tab = 2;
+                        break;
                     case 'x':
-                        $this->objDBsubjectcontext->deleteLink($del);
+                        $tab = 3;
+                        break;
+                }
+                break;
+            case 'g':
+                switch ($link)
+                {
+                    case 'h':
+                        $tab = 0;
+                        break;
+                    case 's':
+                        $tab = 1;
+                        break;
+                    case 'c':
+                        $tab = 2;
+                        break;
+                }
+                break;
+            case 'c':
+                switch ($link)
+                {
+                    case 'h':
+                        $tab = 0;
+                        break;
+                    case 's':
+                        $tab = 1;
+                        break;
+                    case 'g':
                         $tab = 2;
                         break;
                 }
                 break;
         }
+        $this->objDBbridging->deleteLink($del);
+
         return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));
     }
     

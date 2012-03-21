@@ -83,9 +83,7 @@ class gradesops extends object
             $this->objDBgrades = $this->getObject('dbgrades', 'grades');
             $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
             $this->objDBclasses = $this->getObject('dbclasses', 'grades');
-            $this->objDBgradesubject = $this->getObject('dbgradesubject', 'grades');
-            $this->objDBsubjectclass = $this->getObject('dbsubjectclass', 'grades');
-            $this->objDBsubjectcontext = $this->getObject('dbsubjectcontext', 'grades');
+            $this->objDBbridging = $this->getObject('dbbridging', 'grades');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -497,12 +495,12 @@ class gradesops extends object
     
     /**
      *
-     * Method to return the links template
+     * Method to return the subject links template
      * 
      * @access public
      * @return string $string The display string 
      */
-    public function showLink()
+    public function showSubjectLink()
     {
         $nameLabel = $this->objLanguage->languageText('word_name', 'system', 'ERROR: word_name');
         $subjectLabel = $this->objLanguage->code2Txt('mod_grades_subject', 'grades', NULL, 'ERROR: mod_grades_subject');
@@ -535,17 +533,29 @@ class gradesops extends object
         $addClassLabel = $this->objLanguage->code2Txt('mod_grades_addclass', 'grades', NULL, 'ERROR: mod_grades_addclass');
         $addContextLabel = $this->objLanguage->code2Txt('mod_grades_addcontext', 'grades', NULL, 'ERROR: mod_grades_addcontext');
         
+        $addSchoolLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktoschool', 'grades', NULL, 'ERROR: mod_grades_linktoschool');
+        $linkedSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_linkedschools', 'grades', NULL, 'ERROR: mod_grades_linkedschools');
+        $selectSchoolLabel = $this->objLanguage->code2Txt('mod_grades_selectschool', 'grades', NULL, 'ERROR: mod_grades_selectschool');
+        $schoolLabel = $this->objLanguage->code2Txt('mod_schools_school', 'schools', NULL, 'ERROR: mod_schools_school');
+        $errorSchoolLabel = $this->objLanguage->code2Txt('mod_grades_errorschool', 'grades', NULL, 'ERROR: mod_grades_errorschool');
+        $addSchoolLabel = $this->objLanguage->code2Txt('mod_grades_addschool', 'grades', NULL, 'ERROR: mod_grades_addschool');
+        $noSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_noschools', 'grades', NULL, 'ERROR: mod_grades_noschools');
+        $addressLabel = $this->objLanguage->languageText('word_address', 'system', 'ERROR: word_address');
+
         $array = array('item' => $gradeLabel);
         $deleteGradeLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
         $array = array('item' => $classLabel);
         $deleteClassLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
         $array = array('item' => $contextLabel);
         $deleteContextLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        $array = array('item' => $schoolLabel);
+        $deleteSchoolLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
         
         $arrayVars = array();
         $arrayVars['no_grade'] = $errorGradeLabel;
         $arrayVars['no_class'] = $errorClassLabel;
         $arrayVars['no_context'] = $errorContextLabel;
+        $arrayVars['no_school'] = $errorSchoolLabel;
         
         // pass error to javascript.
         $this->objSvars->varsToJs($arrayVars);
@@ -554,12 +564,14 @@ class gradesops extends object
         $type = $this->getParam('type');
         $tab = $this->getParam('tab', 0);
         $subjectArray = $this->objDBsubjects->getSubject($id);
-        $linkedGradesArray = $this->objDBgradesubject->getLinkedGrades($id);
-        $unlinkedGradesArray = $this->objDBgradesubject->getUnlinkedGrades($id);
-        $linkedClassesArray = $this->objDBsubjectclass->getLinkedClasses($id);
-        $unlinkedClassesArray = $this->objDBsubjectclass->getUnlinkedClasses($id);
-        $linkedContextsArray = $this->objDBsubjectcontext->getLinkedContexts($id);
-        $unlinkedContextsArray = $this->objDBsubjectcontext->getUnlinkedContexts($id);
+        $linkedGradesArray = $this->objDBbridging->getLinkedItems('subject_id', 'grade_id', $id);
+        $unlinkedGradesArray = $this->objDBbridging->getUnlinkedItems('subject_id', 'grade_id', $id);
+        $linkedClassesArray = $this->objDBbridging->getLinkedItems('subject_id', 'class_id', $id);
+        $unlinkedClassesArray = $this->objDBbridging->getUnlinkedItems('subject_id', 'class_id', $id);
+        $linkedContextsArray = $this->objDBbridging->getLinkedItems('subject_id', 'context_id', $id);
+        $unlinkedContextsArray = $this->objDBbridging->getUnlinkedItems('subject_id', 'context_id', $id);
+        $linkedSchoolsArray = $this->objDBbridging->getLinkedItems('subject_id', 'school_id', $id);
+        $unlinkedSchoolsArray = $this->objDBbridging->getUnlinkedItems('subject_id', 'school_id', $id);
         
         //-- subject fieldset --//        
         $objTable = new htmltable();
@@ -899,7 +911,7 @@ class gradesops extends object
             'content' => $classesLayer,
         );
 
-        //-- contexttab --//
+        //-- context tab --//
         $objDrop = new dropdown('context_id');
         $objDrop->addOption('', $selectContextLabel);
         $objDrop->addFromDB($unlinkedContextsArray, 'title', 'id');
@@ -1014,13 +1026,13 @@ class gradesops extends object
 
                 $this->objIcon->title = $addLabel;
                 $this->objIcon->alt = $addLabel;
-                $this->objIcon->setIcon('group_add', 'png');
+                $this->objIcon->setIcon('add', 'png');
                 $addIcon = $this->objIcon->show();
 
-                $objLink = new link($this->uri(array('action' => 'form', 'type' => 'c')));
+                $objLink = new link($this->uri(array('action' => 'add'), 'contextadmin'));
                 $objLink->link = $addIcon . '&nbsp;' . $addContextLabel;
                 $addLink = $objLink->show();
-            
+                
                 $objLayer = new layer();
                 $objLayer->id = 'contextsdiv';
                 $objLayer->str = $noLinks . '<br />' . $noContexts . '<br />' . $addLink;
@@ -1058,9 +1070,180 @@ class gradesops extends object
             'content' => $contextsLayer,
         );
 
+        //-- school tab --//
+        $objDrop = new dropdown('school_id');
+        $objDrop->addOption('', $selectSchoolLabel);
+        $objDrop->addFromDB($unlinkedSchoolsArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $schoolsDrop = $objDrop->show();
+  
+        $objInput = new textinput('subject_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_school');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_school');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($schoolLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($schoolsDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('school', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 'h',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $schoolForm = $objForm->show();
+
+        if (!empty($linkedSchoolsArray))
+        {
+            if (!empty($unlinkedSchoolsArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($schoolLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $addressLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedSchoolsArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 'h', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteSchoolLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $temp = explode('|', $value['address']);
+                $addressArray = array();
+                foreach($temp as $line)
+                {
+                    if (!empty($line))
+                    {
+                        $addressArray[] = $line;
+                    }
+                }
+                $addressString = implode(',<br />', $addressArray);
+                
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', 'top', '', $class, '', '');
+                $objTable->addCell($addressString, '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'schoolstablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'schoolsdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $schoolsLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedSchoolsArray))
+            {
+                $noSchools = $this->error($noSchoolsLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'addoredit', 'mode' => 'add'), 'schools'));
+                $objLink->link = $addIcon . '&nbsp;' . $addSchoolLabel;
+                $addLink = $objLink->show();
+                
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $noSchools . '<br />' . $addLink;
+                $schoolsLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addSchoolLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $schoolsLayer = $objLayer->show();
+            }
+        }
+        
+        $schoolTabArray = array(
+            'name' => ucfirst(strtolower($linkedSchoolsLabel)),
+            'content' => $schoolsLayer,
+        );
+
         $this->objTab->init();
         $this->objTab->tabId = 'links_tab';
         $this->objTab->setSelected = $tab;
+        $this->objTab->addTab($schoolTabArray);
         $this->objTab->addTab($gradeTabArray);
         $this->objTab->addTab($classTabArray);
         $this->objTab->addTab($contextTabArray);
@@ -1069,6 +1252,1328 @@ class gradesops extends object
         $string .= $linkTab;        
 
         return $string;
+    }
+
+    /**
+     * Method to return the grades links template
+     * 
+     * @access public
+     * @return string $string The display string 
+     */
+    public function showGradeLink()
+    {
+        $nameLabel = $this->objLanguage->languageText('word_name', 'system', 'ERROR: word_name');
+        $gradeLabel = $this->objLanguage->code2Txt('mod_grades_grade', 'grades', NULL, 'ERROR: mod_grades_grade');
+        $descriptionLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
+        $noLinkLabel = $this->objLanguage->languageText('mod_grades_nolinks', 'grades', 'ERROR: mod_grades_nolinks');
+        $deleteLinkLabel = $this->objLanguage->languageText('mod_grades_deletelink', 'grades', 'ERROR: mod_grades_deletelink');
+        $addSubjectLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktosubject', 'grades', NULL, 'ERROR: mod_grades_linktosubject');
+        $addClassLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktoclass', 'grades', NULL, 'ERROR: mod_grades_linktoclass');
+        $linkedSubjectLabel = $this->objLanguage->code2Txt('mod_grades_linkedsubjects', 'grades', NULL, 'ERROR: mod_grades_linkedsubjects');
+        $linkedClassLabel = $this->objLanguage->code2Txt('mod_grades_linkedclasses', 'grades', NULL, 'ERROR: mod_grades_linkedclasses');
+        $addLabel = $this->objLanguage->languageText('word_add', 'system', 'ERROR: word_add');
+        $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
+        $selectSubjectLabel = $this->objLanguage->code2Txt('mod_grades_selectsubject', 'grades', NULL, 'ERROR: mod_grades_selectsubject');
+        $selectClassLabel = $this->objLanguage->code2Txt('mod_grades_selectclass', 'grades', NULL, 'ERROR: mod_grades_selectclass');
+        $subjectLabel = $this->objLanguage->code2Txt('mod_grades_subject', 'grades', NULL, 'ERROR: mod_grades_subject');
+        $classLabel = $this->objLanguage->code2Txt('mod_grades_class', 'grades', NULL, 'ERROR: mod_grades_class');
+        $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'ERROR: word_save');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'ERROR: word_cancel');
+        $noSubjectsLabel =$this->objLanguage->code2Txt('mod_grades_nosubjects', 'grades', NULL, 'ERROR: mod_grades_nosubjects');
+        $noClassesLabel =$this->objLanguage->code2Txt('mod_grades_noclasses', 'grades', NULL, 'ERROR: mod_grades_noclasses');
+        $errorSubjectLabel = $this->objLanguage->code2Txt('mod_grades_errorsubject', 'grades', NULL, 'ERROR: mod_grades_errorsubject');
+        $errorClassLabel = $this->objLanguage->code2Txt('mod_grades_errorclass', 'grades', NULL, 'ERROR: mod_grades_errorclass');
+        $addSubjectLabel = $this->objLanguage->code2Txt('mod_grades_addsubject', 'grades', NULL, 'ERROR: mod_grades_addsubject');
+        $addClassLabel = $this->objLanguage->code2Txt('mod_grades_addclass', 'grades', NULL, 'ERROR: mod_grades_addclass');
+        
+        $addSchoolLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktoschool', 'grades', NULL, 'ERROR: mod_grades_linktoschool');
+        $linkedSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_linkedschools', 'grades', NULL, 'ERROR: mod_grades_linkedschools');
+        $selectSchoolLabel = $this->objLanguage->code2Txt('mod_grades_selectschool', 'grades', NULL, 'ERROR: mod_grades_selectschool');
+        $schoolLabel = $this->objLanguage->code2Txt('mod_schools_school', 'schools', NULL, 'ERROR: mod_schools_school');
+        $errorSchoolLabel = $this->objLanguage->code2Txt('mod_grades_errorschool', 'grades', NULL, 'ERROR: mod_grades_errorschool');
+        $addSchoolLabel = $this->objLanguage->code2Txt('mod_grades_addschool', 'grades', NULL, 'ERROR: mod_grades_addschool');
+        $addressLabel = $this->objLanguage->languageTExt('word_address', 'system', 'ERROR: word_address');
+        $noSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_noschools', 'grades', NULL, 'ERROR: mod_grades_noschools');
+
+        $array = array('item' => $subjectLabel);
+        $deleteSubjectLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        $array = array('item' => $classLabel);
+        $deleteClassLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        $array = array('item' => $schoolLabel);
+        $deleteSchoolLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');        
+        
+        $arrayVars = array();
+        $arrayVars['no_subject'] = $errorSubjectLabel;
+        $arrayVars['no_class'] = $errorClassLabel;
+        $arrayVars['no_school'] = $errorSchoolLabel;
+                
+        // pass error to javascript.
+        $this->objSvars->varsToJs($arrayVars);
+
+        $id = $this->getParam('id');
+        $type = $this->getParam('type');
+        $tab = $this->getParam('tab', 0);
+        $gradeArray = $this->objDBgrades->getGrade($id);
+        $linkedSubjectsArray = $this->objDBbridging->getLinkedItems('grade_id', 'subject_id', $id);
+        $unlinkedSubjectsArray = $this->objDBbridging->getUnlinkedItems('grade_id', 'subject_id', $id);
+        $linkedClassesArray = $this->objDBbridging->getLinkedItems('grade_id', 'class_id', $id);
+        $unlinkedClassesArray = $this->objDBbridging->getUnlinkedItems('grade_id', 'class_id', $id);
+        $linkedSchoolsArray = $this->objDBbridging->getLinkedItems('grade_id', 'school_id', $id);
+        $unlinkedSchoolsArray = $this->objDBbridging->getUnlinkedItems('grade_id', 'school_id', $id);
+        
+        //-- grade fieldset --//        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($nameLabel, '200px', '', '', 'odd', '', '');
+        $objTable->addCell($gradeArray['name'], '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($descriptionLabel, '200px', 'top', '', 'even', '', '');
+        $objTable->addCell($gradeArray['description'], '', '', '', 'even', '', '');
+        $objTable->endRow();
+        $gradeTable = $objTable->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . ucfirst(strtolower($gradeLabel)) . '</b>';
+        $objFieldset->contents = $gradeTable;
+        $gradeFieldset = $objFieldset->show();
+
+        $string = $gradeFieldset;
+        
+        //-- subject tab --//
+        $objDrop = new dropdown('subject_id');
+        $objDrop->addOption('', $selectSubjectLabel);
+        $objDrop->addFromDB($unlinkedSubjectsArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $subjectsDrop = $objDrop->show();
+  
+        $objInput = new textinput('grade_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_subject');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_subject');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($subjectLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($subjectsDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('subject', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 's',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $subjectForm = $objForm->show();
+
+        if (!empty($linkedSubjectsArray))
+        {
+            if (!empty($unlinkedSubjectsArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $subjectForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addsubjectlink">' . $linkIcon . '&nbsp;' . $addSubjectLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addsubjetcsdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($subjectLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $descriptionLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedSubjectsArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 's', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteSubjectLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', '', '', $class, '', '');
+                $objTable->addCell($value['description'], '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'subjectstablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'subjectsdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $subjectsLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedSubjectsArray))
+            {
+                $noSubjects = $this->error($noSubjectsLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('book_add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'form', 'type' => 's')));
+                $objLink->link = $addIcon . '&nbsp;' . $addSubjectLabel;
+                $addLink = $objLink->show();
+            
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsdiv';
+                $objLayer->str = $noLinks . '<br />' . $noSubjects . '<br />' . $addLink;
+                $subjectsLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $subjectForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addsubjectlink">' . $linkIcon . '&nbsp;' . $addSubjectLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addsubjectsdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $subjectsLayer = $objLayer->show();
+            }
+        }
+
+        $subjectTabArray = array(
+            'name' => ucfirst(strtolower($linkedSubjectLabel)),
+            'content' => $subjectsLayer,
+        );
+
+        //-- class tab --//
+        $objDrop = new dropdown('class_id');
+        $objDrop->addOption('', $selectClassLabel);
+        $objDrop->addFromDB($unlinkedClassesArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $classesDrop = $objDrop->show();
+  
+        $objInput = new textinput('grade_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_class');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_class');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($classLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($classesDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('class', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 'c',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $classForm = $objForm->show();
+
+        if (!empty($linkedClassesArray))
+        {
+            if (!empty($unlinkedClassesArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'classesformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $classForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addclasslink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addclassesdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($classLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $descriptionLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedClassesArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 'c', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteClassLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', '', '', $class, '', '');
+                $objTable->addCell($value['description'], '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'classestablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'classesdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $classesLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedClassesArray))
+            {
+                $noClasses = $this->error($noClassesLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('group_add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'form', 'type' => 'c')));
+                $objLink->link = $addIcon . '&nbsp;' . $addClassLabel;
+                $addLink = $objLink->show();
+            
+                $objLayer = new layer();
+                $objLayer->id = 'classesdiv';
+                $objLayer->str = $noLinks . '<br />' . $noClasses . '<br />' . $addLink;
+                $classesLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'classesformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $classForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addclasslink">' . $linkIcon . '&nbsp;' . $addClassLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addclassesdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'classesdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $classesLayer = $objLayer->show();
+            }
+        }
+        
+        $classTabArray = array(
+            'name' => ucfirst(strtolower($linkedClassLabel)),
+            'content' => $classesLayer,
+        );
+
+        //-- school tab --//
+        $objDrop = new dropdown('school_id');
+        $objDrop->addOption('', $selectSchoolLabel);
+        $objDrop->addFromDB($unlinkedSchoolsArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $schoolsDrop = $objDrop->show();
+  
+        $objInput = new textinput('grade_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_school');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_school');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($schoolLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($schoolsDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('school', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 'h',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $schoolForm = $objForm->show();
+
+        if (!empty($linkedSchoolsArray))
+        {
+            if (!empty($unlinkedSchoolsArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($schoolLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $addressLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedSchoolsArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 'h', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteSchoolLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $temp = explode('|', $value['address']);
+                $addressArray = array();
+                foreach($temp as $line)
+                {
+                    if (!empty($line))
+                    {
+                        $addressArray[] = $line;
+                    }
+                }
+                $addressString = implode(',<br />', $addressArray);
+                
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', 'top', '', $class, '', '');
+                $objTable->addCell($addressString, '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'schoolstablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'schoolsdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $schoolsLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedSchoolsArray))
+            {
+                $noSchools = $this->error($noSchoolsLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'addoredit', 'mode' => 'add'), 'schools'));
+                $objLink->link = $addIcon . '&nbsp;' . $addSchoolLabel;
+                $addLink = $objLink->show();
+                
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $noSchools . '<br />' . $addLink;
+                $schoolsLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addSchoolLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $schoolsLayer = $objLayer->show();
+            }
+        }
+        
+        $schoolTabArray = array(
+            'name' => ucfirst(strtolower($linkedSchoolsLabel)),
+            'content' => $schoolsLayer,
+        );
+
+        $this->objTab->init();
+        $this->objTab->tabId = 'links_tab';
+        $this->objTab->setSelected = $tab;
+        $this->objTab->addTab($schoolTabArray);
+        $this->objTab->addTab($subjectTabArray);
+        $this->objTab->addTab($classTabArray);
+        $linkTab = $this->objTab->show();
+
+        $string .= $linkTab;        
+
+        return $string;
+    }    
+
+    /**
+     * Method to return the grades links template
+     * 
+     * @access public
+     * @return string $string The display string 
+     */
+    public function showClassLink()
+    {
+        $nameLabel = $this->objLanguage->languageText('word_name', 'system', 'ERROR: word_name');
+        $classLabel = $this->objLanguage->code2Txt('mod_grades_class', 'grades', NULL, 'ERROR: mod_grades_class');
+        $descriptionLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
+        $noLinkLabel = $this->objLanguage->languageText('mod_grades_nolinks', 'grades', 'ERROR: mod_grades_nolinks');
+        $deleteLinkLabel = $this->objLanguage->languageText('mod_grades_deletelink', 'grades', 'ERROR: mod_grades_deletelink');
+        $addSubjectLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktosubject', 'grades', NULL, 'ERROR: mod_grades_linktosubject');
+        $addGradeLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktograde', 'grades', NULL, 'ERROR: mod_grades_linktograde');
+        $linkedSubjectLabel = $this->objLanguage->code2Txt('mod_grades_linkedsubjects', 'grades', NULL, 'ERROR: mod_grades_linkedsubjects');
+        $linkedGradeLabel = $this->objLanguage->code2Txt('mod_grades_linkedgrades', 'grades', NULL, 'ERROR: mod_grades_linkedgrades');
+        $addLabel = $this->objLanguage->languageText('word_add', 'system', 'ERROR: word_add');
+        $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
+        $selectSubjectLabel = $this->objLanguage->code2Txt('mod_grades_selectsubject', 'grades', NULL, 'ERROR: mod_grades_selectsubject');
+        $selectGradeLabel = $this->objLanguage->code2Txt('mod_grades_selectgrade', 'grades', NULL, 'ERROR: mod_grades_selectgrade');
+        $subjectLabel = $this->objLanguage->code2Txt('mod_grades_subject', 'grades', NULL, 'ERROR: mod_grades_subject');
+        $gradeLabel = $this->objLanguage->code2Txt('mod_grades_grade', 'grades', NULL, 'ERROR: mod_grades_grade');
+        $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'ERROR: word_save');
+        $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'ERROR: word_cancel');
+        $noSubjectsLabel =$this->objLanguage->code2Txt('mod_grades_nosubjects', 'grades', NULL, 'ERROR: mod_grades_nosubjects');
+        $noGradesLabel =$this->objLanguage->code2Txt('mod_grades_nogrades', 'grades', NULL, 'ERROR: mod_grades_nogrades');
+        $errorSubjectLabel = $this->objLanguage->code2Txt('mod_grades_errorsubject', 'grades', NULL, 'ERROR: mod_grades_errorsubject');
+        $errorGradeLabel = $this->objLanguage->code2Txt('mod_grades_errorgrade', 'grades', NULL, 'ERROR: mod_grades_errorgrade');
+        $addSubjectLabel = $this->objLanguage->code2Txt('mod_grades_addsubject', 'grades', NULL, 'ERROR: mod_grades_addsubject');
+        $addGradeLabel = $this->objLanguage->code2Txt('mod_grades_addgrade', 'grades', NULL, 'ERROR: mod_grades_addgrade');
+        
+        $addSchoolLinkLabel = $this->objLanguage->code2Txt('mod_grades_linktoschool', 'grades', NULL, 'ERROR: mod_grades_linktoschool');
+        $linkedSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_linkedschools', 'grades', NULL, 'ERROR: mod_grades_linkedschools');
+        $selectSchoolLabel = $this->objLanguage->code2Txt('mod_grades_selectschool', 'grades', NULL, 'ERROR: mod_grades_selectschool');
+        $schoolLabel = $this->objLanguage->code2Txt('mod_schools_school', 'schools', NULL, 'ERROR: mod_schools_school');
+        $errorSchoolLabel = $this->objLanguage->code2Txt('mod_grades_errorschool', 'grades', NULL, 'ERROR: mod_grades_errorschool');
+        $addSchoolLabel = $this->objLanguage->code2Txt('mod_grades_addschool', 'grades', NULL, 'ERROR: mod_grades_addschool');
+        $addressLabel = $this->objLanguage->languageText('word_address', 'system', 'ERROR: word_address');
+        $noSchoolsLabel = $this->objLanguage->code2Txt('mod_grades_noschools', 'grades', NULL, 'ERROR: mod_grades_noschools');
+
+        $array = array('item' => $subjectLabel);
+        $deleteSubjectLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        $array = array('item' => $gradeLabel);
+        $deleteGradeLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        $array = array('item' => $schoolLabel);
+        $deleteSchoolLabel = $this->objLanguage->code2Txt('mod_grades_deleteconfirm', 'grades', $array, 'ERROR: mod_grades_deleteconfirm');
+        
+        $arrayVars = array();
+        $arrayVars['no_subject'] = $errorSubjectLabel;
+        $arrayVars['no_grade'] = $errorGradeLabel;
+        $arrayVars['no_school'] = $errorSchoolLabel;
+        
+        // pass error to javascript.
+        $this->objSvars->varsToJs($arrayVars);
+
+        $id = $this->getParam('id');
+        $type = $this->getParam('type');
+        $tab = $this->getParam('tab', 0);
+        $classArray = $this->objDBclasses->getClass($id);
+        $linkedSubjectsArray = $this->objDBbridging->getLinkedItems('class_id', 'subject_id', $id);
+        $unlinkedSubjectsArray = $this->objDBbridging->getUnlinkedItems('class_id', 'subject_id', $id);
+        $linkedGradesArray = $this->objDBbridging->getLinkedItems('class_id', 'grade_id', $id);
+        $unlinkedGradesArray = $this->objDBbridging->getUnlinkedItems('class_id', 'grade_id', $id);
+        $linkedSchoolsArray = $this->objDBbridging->getLinkedItems('class_id', 'school_id', $id);
+        $unlinkedSchoolsArray = $this->objDBbridging->getUnlinkedItems('class_id', 'school_id', $id);
+        
+        //-- class fieldset --//        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($nameLabel, '200px', '', '', 'odd', '', '');
+        $objTable->addCell($classArray['name'], '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($descriptionLabel, '200px', 'top', '', 'even', '', '');
+        $objTable->addCell($classArray['description'], '', '', '', 'even', '', '');
+        $objTable->endRow();
+        $classTable = $objTable->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . ucfirst(strtolower($classLabel)) . '</b>';
+        $objFieldset->contents = $classTable;
+        $classFieldset = $objFieldset->show();
+
+        $string = $classFieldset;
+        
+        //-- subject tab --//
+        $objDrop = new dropdown('subject_id');
+        $objDrop->addOption('', $selectSubjectLabel);
+        $objDrop->addFromDB($unlinkedSubjectsArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $subjectsDrop = $objDrop->show();
+  
+        $objInput = new textinput('class_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_subject');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_subject');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($subjectLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($subjectsDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('subject', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 's',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $subjectForm = $objForm->show();
+
+        if (!empty($linkedSubjectsArray))
+        {
+            if (!empty($unlinkedSubjectsArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $subjectForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addsubjectlink">' . $linkIcon . '&nbsp;' . $addSubjectLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addsubjetcsdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($subjectLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $descriptionLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedSubjectsArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 's', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteSubjectLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', '', '', $class, '', '');
+                $objTable->addCell($value['description'], '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'subjectstablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'subjectsdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $subjectsLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedSubjectsArray))
+            {
+                $noSubjects = $this->error($noSubjectsLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('book_add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'form', 'type' => 's')));
+                $objLink->link = $addIcon . '&nbsp;' . $addSubjectLabel;
+                $addLink = $objLink->show();
+            
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsdiv';
+                $objLayer->str = $noLinks . '<br />' . $noSubjects . '<br />' . $addLink;
+                $subjectsLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $subjectForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addsubjectlink">' . $linkIcon . '&nbsp;' . $addSubjectLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addsubjectsdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'subjectsdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $subjectsLayer = $objLayer->show();
+            }
+        }
+
+        $subjectTabArray = array(
+            'name' => ucfirst(strtolower($linkedSubjectLabel)),
+            'content' => $subjectsLayer,
+        );
+
+        //-- grade tab --//
+        $objDrop = new dropdown('grade_id');
+        $objDrop->addOption('', $selectGradeLabel);
+        $objDrop->addFromDB($unlinkedGradesArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $gradesDrop = $objDrop->show();
+  
+        $objInput = new textinput('class_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_grade');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_grade');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($gradeLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($gradesDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('grade', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 'g',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $gradeForm = $objForm->show();
+
+        if (!empty($linkedGradesArray))
+        {
+            if (!empty($unlinkedGradesArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'gradesformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $gradeForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addgradelink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addgradesdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($gradeLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $descriptionLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedGradesArray as $value)
+            {
+                $grade = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 'g', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteGradeLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', '', '', $grade, '', '');
+                $objTable->addCell($value['description'], '', '', '', $grade, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $grade, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'gradestablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'gradesdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $gradesLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedGradesArray))
+            {
+                $noGrades = $this->error($noGradesLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('group_add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'form', 'type' => 'g')));
+                $objLink->link = $addIcon . '&nbsp;' . $addGradeLabel;
+                $addLink = $objLink->show();
+            
+                $objLayer = new layer();
+                $objLayer->id = 'gradesdiv';
+                $objLayer->str = $noLinks . '<br />' . $noGrades . '<br />' . $addLink;
+                $gradesLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'gradesformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $gradeForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addgradelink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addgradesdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'gradesdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $gradesLayer = $objLayer->show();
+            }
+        }
+        
+        $gradeTabArray = array(
+            'name' => ucfirst(strtolower($linkedGradeLabel)),
+            'content' => $gradesLayer,
+        );
+
+          //-- school tab --//
+        $objDrop = new dropdown('school_id');
+        $objDrop->addOption('', $selectSchoolLabel);
+        $objDrop->addFromDB($unlinkedSchoolsArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $schoolsDrop = $objDrop->show();
+  
+        $objInput = new textinput('class_id', $id, 'hidden', '50');
+        $idInput = $objInput->show();
+
+        $objButton = new button('save', $saveLabel);
+        $objButton->setId('save_school');
+        $saveButton = $objButton->show();
+        
+        $objButton = new button('cancel', $cancelLabel);
+        $objButton->setId('cancel_school');
+        $cancelButton = $objButton->show();
+
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell(ucfirst(strtolower($schoolLabel)), '200px', '', '', 'odd', '', '');
+        $objTable->addCell($schoolsDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($idInput . $saveButton . '&nbsp' . $cancelButton, '', '', '', 'even', 'colspan="7"', '');
+        $objTable->endRow();
+        $formTable = $objTable->show();
+
+        $objForm = new form('school', $this->uri(array(
+            'action' => 'savelink', 'type' => $type, 'link' => 'h',
+        )));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($formTable);
+        $schoolForm = $objForm->show();
+
+        if (!empty($linkedSchoolsArray))
+        {
+            if (!empty($unlinkedSchoolsArray))
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+                
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addGradeLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $addLink;
+                $addLayer = $objLayer->show();
+            }
+            else
+            {
+                $formLayer = NULL;
+                $addLayer = NULL;
+            }
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell('<b>' . ucfirst(strtolower($schoolLabel)) . '</b>', '15%', '', 'left', 'heading', '');
+            $objTable->addHeaderCell('<b>' . $addressLabel . '</b>', '55%', '', 'left', 'heading', '');            
+            $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
+            $objTable->endHeaderRow();
+            
+            $i = 0;
+            foreach ($linkedSchoolsArray as $value)
+            {
+                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
+                
+                $this->objIcon->setIcon('link_delete', 'png');
+                $this->objIcon->title = $deleteLinkLabel;
+                $this->objIcon->alt = $deleteLinkLabel;
+                $icon = $this->objIcon->show();
+
+                $location = $this->uri(array('action' => 'deletelink', 'type' => $type, 'link' => 'h', 'id' => $id, 'del' => $value['id']));
+
+                $this->objConfirm->setConfirm($icon, $location, $deleteSchoolLabel);
+                $deleteIcon = $this->objConfirm->show();
+
+                $temp = explode('|', $value['address']);
+                $addressArray = array();
+                foreach($temp as $line)
+                {
+                    if (!empty($line))
+                    {
+                        $addressArray[] = $line;
+                    }
+                }
+                $addressString = implode(',<br />', $addressArray);
+                
+                $objTable->startRow();
+                $objTable->addCell($value['name'], '', 'top', '', $class, '', '');
+                $objTable->addCell($addressString, '', '', '', $class, '', '');
+                $objTable->addCell($deleteIcon, '', '', '', $class, '', '');
+                $objTable->endRow();
+            }
+            $linkTable = $objTable->show();
+            
+            $objLayer = new layer();
+            $objLayer->id = 'schoolstablediv';
+            $objLayer->str = $linkTable;
+            $tableLayer = $objLayer->show();            
+
+            $objLayer = new layer();
+            $objLayer->id = 'schoolsdiv';
+            $objLayer->str = $formLayer . $addLayer . $tableLayer;
+            $schoolsLayer = $objLayer->show();            
+        }
+        else
+        {   
+            $noLinks = $this->error($noLinkLabel);
+            
+            if (empty($unlinkedSchoolsArray))
+            {
+                $noSchools = $this->error($noSchoolsLabel);
+
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('add', 'png');
+                $addIcon = $this->objIcon->show();
+
+                $objLink = new link($this->uri(array('action' => 'addoredit', 'mode' => 'add'), 'schools'));
+                $objLink->link = $addIcon . '&nbsp;' . $addSchoolLabel;
+                $addLink = $objLink->show();
+                
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $noSchools . '<br />' . $addLink;
+                $schoolsLayer = $objLayer->show();
+            }
+            else
+            {
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsformdiv';
+                $objLayer->display = 'none';
+                $objLayer->str = $schoolForm;
+                $formLayer = $objLayer->show();
+                
+                $this->objIcon->title = $addLabel;
+                $this->objIcon->alt = $addLabel;
+                $this->objIcon->setIcon('link_add', 'png');
+                $linkIcon = $this->objIcon->show();
+
+                $addLink = '<a href="#" id="addschoollink">' . $linkIcon . '&nbsp;' . $addSchoolLinkLabel . '</a>';
+
+                $objLayer = new layer();
+                $objLayer->id = 'addschoolsdiv';
+                $objLayer->str = $noLinks . '<br />' . $addLink;
+                $addLayer = $objLayer->show();
+
+                $objLayer = new layer();
+                $objLayer->id = 'schoolsdiv';
+                $objLayer->str = $formLayer . $addLayer;
+                $schoolsLayer = $objLayer->show();
+            }
+        }
+        
+        $schoolTabArray = array(
+            'name' => ucfirst(strtolower($linkedSchoolsLabel)),
+            'content' => $schoolsLayer,
+        );
+
+        $this->objTab->init();
+        $this->objTab->tabId = 'links_tab';
+        $this->objTab->setSelected = $tab;
+        $this->objTab->addTab($schoolTabArray);
+        $this->objTab->addTab($subjectTabArray);
+        $this->objTab->addTab($gradeTabArray);
+        $linkTab = $this->objTab->show();
+
+        $string .= $linkTab;        
+
+        return $string;
+    }        
+
+    /**
+     *
+     * Method to return the enter context template
+     * 
+     * @access public
+     * @return string $string The display string 
+     */
+    public function showEnter()
+    {
+        $this->appendArrayVar('headerParams',
+            $this->getJavaScriptFile('grade_block.js',
+            'grades'));
+
+        $selectGradeLabel = $this->objLanguage->code2Txt('mod_grades_selectgrade', 'grades', NULL, 'ERROR: mod_grades_selectgrade');
+        $gradeLabel = $this->objLanguage->code2Txt('mod_grades_grade', 'grades', NULL, 'ERROR: mod_grades_grade');
+        $enterContextLabel = $this->objLanguage->code2Txt('mod_context_entercourse', 'context', NULL, 'ERROR: mod_context_entercourse');
+      
+        $gradeArray = $this->objDBgrades->getAll();
+
+        $objDrop = new dropdown('grade_id');
+        $objDrop->addOption('', $selectGradeLabel);
+        $objDrop->addFromDB($gradeArray, 'name', 'id');
+        $objDrop->setSelected('');
+        $gradeDrop = $objDrop->show();
+  
+        $objButton = new button('enter', $enterContextLabel);
+        $objButton->setId('enter');
+        $objButton->setToSubmit();
+        $enterButton = $objButton->show();
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($gradeDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $gradeTable = $objTable->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . ucfirst(strtolower($gradeLabel)) . '</b>';
+        $objFieldset->contents = $gradeTable;
+        $gradeFieldset = $objFieldset->show();
+        
+        $objLayer = new layer();
+        $objLayer->id = 'gradediv';
+        $objLayer->str = $gradeFieldset;
+        $gradeLayer = $objLayer->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'subjectdiv';
+        $subjectLayer = $objLayer->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'contextdiv';
+        $contextLayer = $objLayer->show();
+
+        $objLayer = new layer();
+        $objLayer->id = 'buttondiv';
+        $objLayer->display = 'none';
+        $objLayer->str = $enterButton;
+        $buttonLayer = $objLayer->show();
+
+        $objForm = new form('enter', $this->uri(array(
+            'action' => 'joincontext',
+        ), 'context'));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($contextLayer);
+        $objForm->addToForm($buttonLayer);
+        $enterForm = $objForm->show();
+
+        return $gradeLayer . $subjectLayer . $enterForm;
+    }
+
+    /**
+     *
+     * Method to return the subject dropdown via ajax
+     * 
+     * @access public
+     * @return string $string The display string 
+     */
+    public function ajaxShowSubject()
+    {
+        $selectSubjectLabel = $this->objLanguage->code2Txt('mod_grades_selectsubject', 'grades', NULL, 'ERROR: mod_grades_selectsubject');
+        $subjectLabel = $this->objLanguage->code2Txt('mod_grades_subject', 'grades', NULL, 'ERROR: mod_grades_subject');
+        
+        $gradeId = $this->getParam('grade_id');
+        $subjectArray = $this->objDBbridging->getLinkedItems('grade_id', 'subject_id', $gradeId);
+
+        $objDrop = new dropdown('subject_id');
+        $objDrop->addOption('', $selectSubjectLabel);
+        $objDrop->addFromDB($subjectArray, 'name', 'subject_id');
+        $objDrop->setSelected('');
+        $subjectDrop = $objDrop->show();
+  
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($subjectDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $subjectTable = $objTable->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . ucfirst(strtolower($subjectLabel)) . '</b>';
+        $objFieldset->contents = $subjectTable;
+        $subjectFieldset = $objFieldset->show();
+        
+        echo $subjectFieldset;
+        die();
+    }
+    
+    /**
+     *
+     * Method to return the context dropdown via ajax
+     * 
+     * @access public
+     * @return string $string The display string 
+     */
+    public function ajaxShowContext()
+    {
+        $selectContextLabel = $this->objLanguage->code2Txt('mod_grades_selectcontext', 'grades', NULL, 'ERROR: mod_grades_selectcontext');
+        $contextLabel = $this->objLanguage->code2Txt('word_context', 'system', NULL, 'ERROR: word_context');
+        
+        $subjectId = $this->getParam('subject_id');
+        $contextArray = $this->objDBbridging->getLinkedItems('subject_id', 'context_id', $subjectId);
+
+        $objDrop = new dropdown('contextcode');
+        $objDrop->addOption('', $selectContextLabel);
+        $objDrop->addFromDB($contextArray, 'title', 'contextcode');
+        $objDrop->setSelected('');
+        $contextDrop = $objDrop->show();
+  
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($contextDrop, '', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $contextTable = $objTable->show();
+
+        $objFieldset = new fieldset();
+        $objFieldset->legend = '<b>' . ucfirst(strtolower($contextLabel)) . '</b>';
+        $objFieldset->contents = $contextTable;
+        $contextFieldset = $objFieldset->show();
+        
+        echo $contextFieldset;
+        die();
     }
 }
 ?>
