@@ -123,9 +123,6 @@ class schoolsops extends object
      */
     public function findSchool()
     {
-
-var_dump($objCountries->countryAlpha());
-        
         $this->appendArrayVar('headerParams',
             $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
             'jquery'));
