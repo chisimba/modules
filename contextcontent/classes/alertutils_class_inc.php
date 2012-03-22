@@ -107,7 +107,7 @@ class alertutils extends object {
         //trigger_error($bodyTemplate);
         $bodyTemplate = str_replace("[-course-]", '\''.$contextTitle.'\'', $bodyTemplate);
         //trigger_error($bodyTemplate);
-        $bodyTemplate = str_replace("[-instructor-]", $this->objUser->getTitle().' '.$this->objUser->fullname(), $bodyTemplate);
+        $bodyTemplate = str_replace("[-instructor-]", $this->objUser->getTitle($this->objUser->userId()).' '.$this->objUser->fullname(), $bodyTemplate);
         //trigger_error($bodyTemplate);
         $bodyTemplate = str_replace('\n', chr(0x0A), $bodyTemplate); //"\n"
         //trigger_error($bodyTemplate);
