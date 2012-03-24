@@ -15,7 +15,7 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "schoolusers",
-            "block" : "schoolusersinvalid"
+            "block" : "schoolusersselfregister"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>

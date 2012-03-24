@@ -68,6 +68,8 @@ class schoolusersops extends object
             $this->objSvars = $this->getObject('serializevars', 'utilities');
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
+            $this->objCaptcha = $this->getObject('captcha', 'utilities');
+            $this->objPagination = $this->newObject ('pagination', 'navigation');
 
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -135,7 +137,17 @@ class schoolusersops extends object
         $displayUserLabel = $this->objLanguage->languageText('phrase_displayuser', 'system', 'ERROR: phrase_displayuser');
         $deleteConfirmLabel = $this->objLanguage->languageText('mod_schoolusers_deleteconfirm', 'schoolusers', 'ERROR: mod_schoolusers_deleteconfirm');
         
-        $userArray = $this->objDBusers->getAllUsers();
+        $pageSize = 10;
+        $page = $this->getParam('page', 1);
+           
+        $count = $this->objDBusers->getCount();
+        $pages = ceil($count / $pageSize);
+        // Set up the sql elements.
+        $start = ($page * $pageSize);
+        if($start < 0){
+            $start = 0;
+        }
+        $userArray = $this->objDBusers->getUsers($start, $pageSize);
         
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
@@ -204,7 +216,7 @@ class schoolusersops extends object
         
         $string = $userLayer;
         
-        return $string;
+        return $string. '<br />';
     }
 
     /**
@@ -319,7 +331,8 @@ class schoolusersops extends object
         
         $userArray = $this->objUserAdmin->searchUsers($field, $search, 'contains', 'firstname');
 
-        foreach ($userArray as $key => $user)
+        $list = array();
+        foreach ($userArray as $user)
         {
             $array['label'] = $user['firstname'] . ' ' . $user['surname'];
             $array['value'] = $user['id'];
@@ -487,6 +500,14 @@ class schoolusersops extends object
      */
     public function showForm()
     {
+        $this->appendArrayVar('headerParams',
+            $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
+            'jquery'));
+        $cssUri = $this->getResourceUri('plugins/ui/css/ui-lightness/jquery-ui-1.8.7.custom.css',
+            'jquery');
+        $this->appendArrayVar('headerParams', 
+            "<link href='$cssUri' rel='stylesheet' type='text/css'/>");
+
         $idValue = $this->getParam('id', NULL);
         
         if (empty($idValue))
@@ -522,13 +543,21 @@ class schoolusersops extends object
             $firstNameValue = $userArray['firstname'];
             $middleNameValue = $userArray['middle_name'];
             $lastNameValue = $userArray['surname'];
-            $genderValue = $userArray['sex'];
-            $dayValue = date('j', strtotime($userArray['date_of_birth']));
-            $monthValue = date('n', strtotime($userArray['date_of_birth']));
-            $yearValue = date('Y', strtotime($userArray['date_of_birth']));
-            $address = explode('|', $userArray['address']);
-            $addressOneValue = $address[0];
-            $addressTwoValue = $address[1];
+            $genderValue = $userArray['sex'];            
+            $dayValue = !empty($userArray['date_of_birth']) ? date('j', strtotime($userArray['date_of_birth'])) : NULL;
+            $monthValue = !empty($userArray['date_of_birth']) ? date('n', strtotime($userArray['date_of_birth'])) : NULL;
+            $yearValue = !empty($userArray['date_of_birth']) ? date('Y', strtotime($userArray['date_of_birth'])) : NULL;
+            if (!empty($userArray['address']))
+            {
+                $address = explode('|', $userArray['address']);
+                $addressOneValue = $address[0];
+                $addressTwoValue = $address[1];
+            }
+            else
+            {
+                $addressOneValue = NULL;
+                $addressTwoValue = NULL;
+            }
             $cityValue = $userArray['city'];
             $stateValue = $userArray['state'];
             $countryValue = $userArray['country'];
@@ -587,6 +616,7 @@ class schoolusersops extends object
         $descriptionError = (!empty($errors) && array_key_exists('description', $errors['errors'])) ? $errors['errors']['description'] : NULL;
         $usernameError = (!empty($errors) && array_key_exists('username', $errors['errors'])) ? $errors['errors']['username'] : NULL;
         $passwordError = (!empty($errors) && array_key_exists('password', $errors['errors'])) ? $errors['errors']['password'] : NULL;
+        $captchaError = (!empty($errors) && array_key_exists('captcha', $errors['errors'])) ? $errors['errors']['captcha'] : NULL;
         
         $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
         $selectTitleLabel = $this->objLanguage->languageText('phrase_selecttitle', 'system', 'ERROR: phrase_selecttitle');
@@ -620,7 +650,9 @@ class schoolusersops extends object
         $passwordNotAlike = $this->objLanguage->languageText('mod_schoolusers_passwordsnotalike', 'schoolusers', 'TEXT: mod_schoolusers_passwordsnotalike');
         $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'ERROR: word_save');
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'ERROR: word_cancel');
-        
+        $redrawLabel = $this->objLanguage->languageText('mod_schoolusers_redraw', 'schoolusers', 'ERROR: mod_schoolusers_redraw');
+        $verifyLabel = $this->objLanguage->languageText('mod_schoolusers_verify', 'schoolusers', 'ERROR: mod_schoolusers_verify');
+
         $arrayVars = array();
         $arrayVars['password_not_alike'] = $passwordNotAlike;
        
@@ -740,6 +772,23 @@ class schoolusersops extends object
         $objInput = new textinput('id', $idValue, 'hidden', '');
         $idInput = $objInput->show();
         
+        $objLayer = new layer();
+        $objLayer->id = 'username';
+        $usernameLayer = $objLayer->show();
+
+        $objLink = new link('#input_captcha');
+        $objLink->cssId = 'redraw';
+        $objLink->link = $redrawLabel;
+        $redrawLink = $objLink->show();
+            
+        $objLayer = new layer();
+        $objLayer->id = 'captcha';
+        $objLayer->str = $this->objCaptcha->show();
+        $captchaLayer = $objLayer->show();
+
+        $objInput = new textinput('request_captcha', '', '', '50');
+        $captchaInput = $objInput->show();
+
         $objButton = new button('save', $saveLabel);
         $objButton->setToSubmit();
         $saveButton = $objButton->show();
@@ -747,10 +796,6 @@ class schoolusersops extends object
         $objButton = new button('cancel', $cancelLabel);
         $objButton->setToSubmit();
         $cancelButton = $objButton->show();
-
-        $objLayer = new layer();
-        $objLayer->id = 'username';
-        $usernameLayer = $objLayer->show();
 
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
@@ -830,8 +875,23 @@ class schoolusersops extends object
         $objTable->addCell('<b>' . $confirmPasswordLabel . ': </b>', '', '', '', 'even', '', '');
         $objTable->addCell($confirmPasswordInput, '', '', '', 'even', '', '');
         $objTable->endRow();
+        if (!$this->objUser->isLoggedIn())
+        {
+            $objTable->startRow();
+            $objTable->addCell('<span style="font-weight: bold; color: brown;">' . $verifyLabel . '</span>', '', '', '', '', 'colspan="2"', '');
+            $objTable->endRow();
+            $objTable->startRow();
+            $objTable->addCell($captchaError, '', '', '', '', 'colspan="2"', '');
+            $objTable->endRow();
+            $objTable->startRow();           
+            $objTable->addCell($captchaLayer . '<b>' . $redrawLink . '</b>', '', '', '', '', 'colspan="2"', '');
+            $objTable->endRow();
+            $objTable->startRow();
+            $objTable->addCell($captchaInput, '', '', '', '', 'colspan="2"', '');
+            $objTable->endRow();
+        }
         $objTable->startRow();
-        $objTable->addCell($idInput . $saveButton . '&nbsp;' . $cancelButton, '', '', '', 'odd', 'colspan="2"', '');
+        $objTable->addCell($idInput . $saveButton . '&nbsp;' . $cancelButton, '', '', '', '', 'colspan="2"', '');
         $objTable->endRow();
         $userTable = $objTable->show();
         
@@ -843,7 +903,7 @@ class schoolusersops extends object
         $addForm = $objForm->show();
 
         $string = $addForm;
-
+        
         return $string;        
     }
 
@@ -886,7 +946,7 @@ class schoolusersops extends object
                     $this->objIcon->setIcon('accept', 'png');
                     $successIcon = $this->objIcon->show();
 
-                    $string = '<span class="success">' . $successIcon . '&nbsp;<b>' . $usernameAvaliable . '</b></span>';
+                    $string = '<span style="color: green;">' . $successIcon . '&nbsp;<b>' . $usernameAvaliable . '</b></span>';
                 }
                 else
                 {
@@ -907,7 +967,7 @@ class schoolusersops extends object
         {
             if (!$users)
             {
-                return $string;
+                return '<div id="username_error">' . $string . '</div>';
             }
         }
     }
@@ -944,7 +1004,8 @@ class schoolusersops extends object
             if ($fieldname != 'id' && $fieldname != 'school_id' && $fieldname != 'title'
                 && $fieldname != 'middle_name' && $fieldname != 'gender' && $fieldname != 'date_of_birth'
                 && $fieldname != 'address' && $fieldname != 'country' && $fieldname != 'contact_number'
-                && $fieldname != 'username' && $fieldname != 'password' && $fieldname != 'confirm_password')
+                && $fieldname != 'username' && $fieldname != 'password' && $fieldname != 'confirm_password'
+                && $fieldname != 'captcha' && $fieldname != 'request_captcha')
             {
                 if (empty($value))
                 {
@@ -958,7 +1019,7 @@ class schoolusersops extends object
                 {
                     if (filter_var($value, FILTER_VALIDATE_EMAIL) == FALSE)
                     {
-                        $errorText = $this->objLanguage->languageText('mod_schools_invalidemail', 'schools', 'TEXT: mod_schools_invalidemail, not found');
+                        $errorText = $this->objLanguage->languageText('mod_schoolusers_invalidemail', 'schoolusers', 'TEXT: mod_schoolusers_invalidemail, not found');
                         $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                     }
                 }
@@ -968,7 +1029,7 @@ class schoolusersops extends object
                 if (empty($value))
                 {
                     $array = array('fieldname' => $this->objLanguage->code2Txt('mod_schools_school', 'schools', NULL, 'ERROR: mod_schools_school'));
-                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                    $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_1', 'schoolusers', $array);
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                 }
             }
@@ -977,7 +1038,7 @@ class schoolusersops extends object
                 if (empty($value))
                 {
                     $array = array('fieldname' => $fieldname);
-                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_2', 'schools', $array);
+                    $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_2', 'schoolusers', $array);
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                 }
             }
@@ -988,7 +1049,7 @@ class schoolusersops extends object
                     $name = explode('_', $fieldname);
                     $name = implode(' ', $name);
                     $array = array('fieldname' => $name);
-                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                    $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_1', 'schoolusers', $array);
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                 }
             }
@@ -997,7 +1058,7 @@ class schoolusersops extends object
                 if (empty($value[0]) && empty($value[1]))
                 {
                     $array = array('fieldname' => $fieldname);
-                    $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                    $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_1', 'schoolusers', $array);
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                 }
             }
@@ -1009,7 +1070,7 @@ class schoolusersops extends object
                     {
                         $array = array('fieldname' => $fieldname);
                         $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_1', 'schoolusers', $array);
-                        $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';                
+                        $errors[$fieldname] = '<div id="username_error">' . $this->error(ucfirst(strtolower($errorText))) . '</div>';                
                     }
                     else
                     {
@@ -1039,16 +1100,27 @@ class schoolusersops extends object
                     if (empty($value) && empty($data['confirm_password']))
                     {
                         $array = array('fieldname' => $fieldname);
-                        $errorText = $this->objLanguage->code2Txt('mod_schools_error_1', 'schools', $array);
+                        $errorText = $this->objLanguage->code2Txt('mod_schoolusers_error_1', 'schoolusers', $array);
                         $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                     }
                 }
                 if ($value != $data['confirm_password'])
                 {
-                    $errorText = $this->objLanguage->languageText('mod_schools_passwordsnotalike','schools', $array);
+                    $errorText = $this->objLanguage->languageText('mod_schoolusers_passwordsnotalike','schoolusers', 'ERROR: mod_schoolusers_passwordsnotalike');
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
                 }
-            } 
+            }
+            if (!$this->objUser->isLoggedIn())
+            {
+                if ($fieldname == 'captcha')
+                {
+                    if (md5(strtoupper($data['request_captcha'])) != $data['captcha'])
+                    {
+                        $errorText = $this->objLanguage->languageText('mod_schoolusers_imageincorrect','schoolusers', 'ERROR: mod_schoolusers_imageincorrect');
+                        $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
+                    }
+                }
+            }
         }
         $errorArray = array();
         $errorArray['data'] = $data;
@@ -1132,6 +1204,26 @@ class schoolusersops extends object
 
             $this->objDBdata->updateData($data['id'], $extra);
         }
+    }
+    
+    /**
+     *
+     * Method to return the pagination object for display
+     * 
+     * @access public
+     * @return string $string The html string for display 
+     */
+    public function showPagination($pageSize = 10)
+    {
+        $this->objPagination->module = 'schoolusers';
+        $this->objPagination->action = 'ajaxUsers';
+        $this->objPagination->id = 'users_div';
+        $this->objPagination->currentPage = 0;
+        $count = $this->objDBusers->getCount();
+        $pages = ceil($count / $pageSize);
+        $this->objPagination->numPageLinks = $pages;
+        
+        return $this->objPagination->show();
     }
 }
 ?>

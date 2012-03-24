@@ -91,6 +91,19 @@ class dbusers extends dbtable
     
     /**
      *
+     * Get the text of the init_overview that we have in the sample database.
+     *
+     * @return string The text of the init_overview
+     * @access public
+     *
+     */
+    public function getUsers($start, $records)
+    {
+        return $this->fetchAll("WHERE isactive = '1' LIMIT $start, $records");
+    }
+    
+    /**
+     *
      * Method to get a user and the associated extra school data
      * 
      * @access public
@@ -119,6 +132,18 @@ class dbusers extends dbtable
     public function updateUser($id, $data)
     {
         return $this->update('id', $id, $data);
+    }
+    
+    /**
+     *
+     * Method to get the number of records
+     * 
+     * @access public
+     * @return integer The number of records in the table 
+     */
+    public function getCount()
+    {
+        return $this->getRecordCount();
     }
 }
 ?>

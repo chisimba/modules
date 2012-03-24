@@ -25,8 +25,8 @@ jQuery(function() {
 
     });
 
-    // jQuery autocomplet function to return schools.
-    jQuery( "#input_name" ).autocomplete({
+    // jQuery autocomplet function to return schools.   
+   jQuery( "#input_name" ).autocomplete({
         minLength: 3,
         source: function( request, response )
         {                     
@@ -78,10 +78,17 @@ jQuery(function() {
                 url: "index.php?module=schoolusers&action=ajaxUsername",
                 data: mydata,
                 success: function(ret) {
-                    jQuery("#username").html(ret);
-                    if (jQuery("#username > span").hasClass("error"))
+                    if (jQuery('#username_error').length > 0)
                     {
-                        jQuery('#input_username').select();
+                        jQuery("#username_error").html(ret);
+                    }
+                    else
+                    {
+                        jQuery("#username").html(ret);
+                        if (jQuery("#username > span").hasClass("error"))
+                        {
+                            jQuery('#input_username').select();
+                        }
                     }
                 }
             });
@@ -114,6 +121,18 @@ jQuery(function() {
             jQuery('#input_school_id').val(ui.item.value);
             return false;
         }
+    });
+    
+    jQuery('#redraw').click( function() {
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=schoolusers&action=ajaxCaptcha",
+            success: function(ret) {
+                jQuery("#captcha").html(ret);
+                jQuery('#input_captcha').val('');
+                jQuery('#input_captcha').focus();
+            }
+        });
     });
 
 });

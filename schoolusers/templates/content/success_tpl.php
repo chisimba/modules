@@ -10,12 +10,21 @@ $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
 ?>
 
-<div id="onecolumn">
+<div id="twocolumn">
+    <div id="Canvas_Content_Body_Region1">
+        {
+            "display" : "block",
+            "module" : "security",
+            "block" : "login"
+        }
+        <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
+        <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
+    </div>
     <div id="Canvas_Content_Body_Region2">
         {
             "display" : "block",
             "module" : "schoolusers",
-            "block" : "schoolusersinvalid"
+            "block" : "schooluserssuccess"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>

@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_schoolusersmain extends object
+class block_schooluserssuccess extends object
 {
     /**
      * The title of the block
@@ -71,7 +71,7 @@ class block_schoolusersmain extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objOps = $this->getObject('schoolusersops', 'schoolusers');
-        $titleLabel = $this->objLanguage->languageText('mod_schoolusers_listusers', 'schoolusers', 'ERROR: mod_schoolusers_listusers');
+        $titleLabel = $this->objLanguage->languageText('mod_schoolusers_registrationsuccess', 'schoolusers', 'ERROR: mod_schoolusers_registrationsuccess');
         
         $this->title = ucfirst(strtolower($titleLabel));
     }
@@ -82,7 +82,9 @@ class block_schoolusersmain extends object
      */
     public function show() 
     {
-        return $this->objOps->showPagination();
+        $string = '<span class="success">' . $this->objLanguage->languageText('mod_schoolusers_success', 'schoolusers', 'ERROR: mod_schoolusers_success') .'</span>';
+        
+        return $string;
     }
 }
 ?>

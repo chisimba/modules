@@ -92,11 +92,14 @@ class schoolusers extends controller
     */
     public function init()
     {
+        $this->objGroupOps = $this->getObject('groupops', 'groupadmin');
+        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDBusers = $this->getObject('dbusers', 'schoolusers');
         $this->objDBdata = $this->getObject('dbdata', 'schoolusers');
         $this->objOps = $this->getObject('schoolusersops', 'schoolusers');
+        $this->objCaptcha = $this->getObject('captcha', 'utilities');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
 
@@ -124,12 +127,12 @@ class schoolusers extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $this->action = $this->getParam('action', 'view');
         /*
         * Convert the action into a method (alternative to 
         * using case selections)
         */
-        $method = $this->__getMethod($action);
+        $method = $this->__getMethod($this->action);
         // Set the layout template to compatible one
         $this->setLayoutTemplate('layout_tpl.php');
         /*
@@ -211,7 +214,7 @@ class schoolusers extends controller
         
     /**
      * 
-     * Method corresponding to the delete action. It shows the default
+     * Method corresponding to the form action. It shows the default
      * dynamic canvas template, showing you how to create block based
      * view templates
      * 
@@ -224,7 +227,7 @@ class schoolusers extends controller
 
     /**
      * 
-     * Method corresponding to the ajaxFindUser action
+     * Method corresponding to the ajaxUsername action
      *
      * @access private
      */
@@ -236,7 +239,7 @@ class schoolusers extends controller
         
     /**
      *
-     * Method to return the data for finding principals
+     * Method corresponding to the ajaxFindSchools action
      * @access private
      * @return 
      */
@@ -258,7 +261,8 @@ class schoolusers extends controller
         $cancel = $this->getParam('cancel');
         if ($cancel == 'Cancel')
         {
-            return $this->nextAction('view');
+            $this->setSession('errors', array());
+            return $this->objUser->isLoggedIn() ? $this->nextAction('view') : $this->nextAction('view', '', 'prelogin');            
         }
         
         $data = array();
@@ -281,18 +285,71 @@ class schoolusers extends controller
         $data['username'] = $this->getParam('username');
         $data['password'] = $this->getParam('password');
         $data['confirm_password'] = $this->getParam('confirm_password');
+        $data['captcha'] = $this->getParam('captcha');
+        $data['request_captcha'] = $this->getParam('request_captcha');
        
         $errorsFound = $this->objOps->validate($data);
 
         if ($errorsFound == FALSE)
         {
             $this->objOps->save($data);
-            return $this->nextAction('view');
+            $this->setSession('errors', array());
+            return $this->objUser->isLoggedIn() ? $this->nextAction('view') : $this->nextAction('success');
         }
         else
         {
-            return $this->nextAction('form', array('id' => $id));
+            return $this->objUser->isLoggedIn() ? $this->nextAction('form', array('id' => $id)) : $this->nextAction('selfregister');
         }
+    }
+         
+    /**
+     * 
+     * Method corresponding to the selfregister action. It shows the default
+     * dynamic canvas template, showing you how to create block based
+     * view templates
+     * 
+     * @access private
+     */
+    private function __selfregister()
+    {
+        return 'selfregister_tpl.php';
+    }
+
+    /**
+     * 
+     * Method corresponding to the success action. It shows the default
+     * dynamic canvas template, showing you how to create block based
+     * view templates
+     * 
+     * @access private
+     */
+    private function __success()
+    {
+        return 'success_tpl.php';
+    }
+
+    /**
+     *
+     * Method to return the data for finding principals
+     * @access private
+     * @return 
+     */
+    private function __ajaxCaptcha()
+    {
+        echo $this->objCaptcha->show();
+        die();
+    }
+         
+    /**
+     *
+     * Method corresponding to the ajaxUsers action
+     * @access private
+     * @return 
+     */
+    private function __ajaxUsers()
+    {
+        echo $this->objOps->showMain();
+        die();
     }
          
     /**
@@ -306,9 +363,6 @@ class schoolusers extends controller
     */
     private function __actionError()
     {
-        $this->setVar('str', "<h3>"
-          . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
     
@@ -326,6 +380,21 @@ class schoolusers extends controller
     */
     function __validAction(& $action)
     {
+        if ($this->objUser->isLoggedIn())
+        {
+            $groupId = $this->objGroups->getId("School Managers");
+            $userId = $this->objUser->userId();
+            if ($this->objUser->isAdmin() || 
+                $this->objGroupOps->isGroupMember($groupId, $userId ))
+            {
+                return TRUE;
+            }
+            else
+            {
+                return FALSE;
+            }
+        }
+
         if (method_exists($this, "__".$action)) {
             return TRUE;
         } else {
@@ -372,7 +441,22 @@ class schoolusers extends controller
         $action=$this->getParam('action','NULL');
         switch ($action)
         {
-            case 'view':
+            case 'selfregister':
+                return FALSE;
+                break;
+            case 'validate':
+                return FALSE;
+                break;
+            case 'ajaxFindSchools':
+                return FALSE;
+                break;
+            case 'ajaxUsername':
+                return FALSE;
+                break;
+            case 'ajaxCaptcha':
+                return FALSE;
+                break;
+            case 'success':
                 return FALSE;
                 break;
             default:
