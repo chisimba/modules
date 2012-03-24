@@ -56,26 +56,24 @@ jQuery(function() {
                 {
                     //If username exists, set response to true
                     if (msg == 'true') {
-                        response = false;
                         jQuery("#usernameerror").text(usernametaken);
-                    } else {
-                        response = true;
+                        jQuery("#usernameerror").attr("class", "error");
+                        response = false;
+                    } else {                        
                         jQuery("#usernameerror").text("");
+                        jQuery("#usernameerror").attr("class", "errors");
+                        response = true;
                     }
                 }
             })
         }
         return response;
     }, "Username is already taken.");
-    
     jQuery.validator.addMethod('notNone', 
         function(value, element) {
             return (value != 'none');
         }, 'Please select an option.'
         );
-
-
-
     // Things to do on loading the page.
     jQuery(document).ready(function() {        
         // Add jQuery Validation to form
@@ -297,8 +295,8 @@ jQuery(function() {
                                     showUpdateSuccess();
                                 }
                                 
-                            // Redirect after anonymous save
-                            window.location = 'index.php?module=oer&action=login';
+                                // Redirect after anonymous save
+                                window.location = 'index.php?module=oer&action=login';
                             } else {
                                 // Update the information area 
                                 // (msg is the id of the record on success)

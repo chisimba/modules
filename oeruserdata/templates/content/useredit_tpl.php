@@ -21,6 +21,7 @@ $objFix->fixThree();
 </div>
 <?php
 // Get the contents for the layout template
+$this->setVar('errors', Null);
 $pageContent = ob_get_contents();
 ob_end_clean();
 $this->setVar('pageContent', $pageContent);
