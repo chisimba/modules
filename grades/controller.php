@@ -92,6 +92,8 @@ class grades extends controller
     */
     public function init()
     {
+        $this->objGroupOps = $this->getObject('groupops', 'groupadmin');
+        $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
@@ -470,9 +472,6 @@ class grades extends controller
     */
     private function __actionError()
     {
-        $this->setVar('str', "<h3>"
-          . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
     
@@ -490,6 +489,21 @@ class grades extends controller
     */
     function __validAction(& $action)
     {
+        if ($this->objUser->isLoggedIn())
+        {
+            $groupId = $this->objGroups->getId("School Managers");
+            $userId = $this->objUser->userId();
+            if ($this->objUser->isAdmin() || 
+                $this->objGroupOps->isGroupMember($groupId, $userId ))
+            {
+                return TRUE;
+            }
+            else
+            {
+                return FALSE;
+            }
+        }
+
         if (method_exists($this, "__".$action)) {
             return TRUE;
         } else {
