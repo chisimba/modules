@@ -1,4 +1,5 @@
 <?php
+
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -14,7 +15,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @licence GNU GPL
  * @package cms
  */
-
 class cmslayouts extends object {
 
     /**
@@ -42,7 +42,7 @@ class cmslayouts extends object {
             $this->_objMenuStyles = $this->newObject('dbmenustyles', 'cmsadmin');
             $this->_objHtmlBlock = $this->newObject('dbhtmlblock', 'cmsadmin');
             $this->_objCmsUtils = $this->newObject('cmsutils', 'cmsadmin');
-            $this->objModule = $this->getObject('modules','modulecatalogue');
+            $this->objModule = $this->getObject('modules', 'modulecatalogue');
 
             $this->objUser = $this->newObject('user', 'security');
             $this->objDate = $this->getObject('dateandtime', 'utilities');
@@ -59,8 +59,7 @@ class cmslayouts extends object {
             $this->loadClass('link', 'htmlelements');
             $this->loadClass('htmltable', 'htmlelements');
             $this->loadClass('layer', 'htmlelements');
-
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             throw customException($e->getMessage());
             exit();
         }
@@ -107,27 +106,27 @@ class cmslayouts extends object {
 
         $adminLn = $this->objLanguage->languageText('mod_cms_cmsadmin', 'cms');
         /*
-		   if ($this->objModule->checkIfRegistered('context', 'context')){
-		   $objContextUtils =  $this->getObject('utilities','context');
-		   $leftSide = $objContextUtils->getHiddenContextMenu('cms','none','show');
-		   } else {
-        */
+          if ($this->objModule->checkIfRegistered('context', 'context')){
+          $objContextUtils =  $this->getObject('utilities','context');
+          $leftSide = $objContextUtils->getHiddenContextMenu('cms','none','show');
+          } else {
+         */
         // Create menu
         $leftSide = $this->getMenu($style, $currentNode);
         //}
         // Add admin link
-        if($this->objUser->isAdmin() || $this->_objCmsUtils->checkPermission()) {
+        if ($this->objUser->isAdmin() || $this->_objCmsUtils->checkPermission()) {
             $objAdminLink = new link($this->uri(array(NULL), 'cmsadmin'));
             $objAdminLink->link = $adminLn;
 
             $leftSide .= '<br />';
             $leftSide .= $objAdminLink->show();
-        } else if ($this->getParam('id','')=='') {
+        } else if ($this->getParam('id', '') == '') {
             $objMenu = $this->getObject('dbpagemenu', 'cmsadmin');
-            $menuKey = $this->getParam('menustate','');
+            $menuKey = $this->getParam('menustate', '');
             $menucontent = $objMenu->getMenuText($menuKey);
-            if($menucontent == '') {
-                $leftSide='';
+            if ($menucontent == '') {
+                $leftSide = '';
             }
         }
 
@@ -146,7 +145,7 @@ class cmslayouts extends object {
      * @return string html
      */
     public function getMenu($style, $currentNode = '') {
-        switch($style) {
+        switch ($style) {
             case 'buttons':
                 $menu = $this->showButtonsMenu($currentNode);
                 break;
@@ -176,16 +175,13 @@ class cmslayouts extends object {
      */
     public function getMenuStyle($reset = FALSE) {
         $active = $this->getSession('menuStyle');
-        if(!empty($active) && !$reset) {
+        if (!empty($active) && !$reset) {
             return $active;
         }
         $active = $this->_objMenuStyles->getActive();
         $this->setSession('menuStyle', $active);
         return $active;
     }
-
-
-
 
     /**
      * Method to display the jQuery Super Fish menu
@@ -212,26 +208,27 @@ class cmslayouts extends object {
         ob_start();
         ?>
 
-<script type="text/javascript"> 
-    // initialise Superfish
-    jQuery(document).ready(function(){
-        jQuery("ul.sf-menu").superfish({
-            animation: {opacity:'show'},   // slide-down effect without fade-in
-            width: 300,
-            delay:     0,               // 1.2 second delay on mouseout
-            speed: 'fast',
-            dropShadows: false
-        });
-    });
+        <script type="text/javascript"> 
+            // initialise Superfish
+            jQuery(document).ready(function(){
+                jQuery("ul.sf-menu").superfish({
+                    animation: {opacity:'show'},   // slide-down effect without fade-in
+                    width: 300,
+                    delay:     0,               // 1.2 second delay on mouseout
+                    speed: 'fast',
+                    dropShadows: false
+                });
+            });
 
-</script>
+        </script>
 
 
         <?PHP
+
         $script = ob_get_contents();
         ob_end_clean();
 
-        $this->appendArrayVar('headerParams',$script);
+        $this->appendArrayVar('headerParams', $script);
 
 
         $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
@@ -249,12 +246,6 @@ class cmslayouts extends object {
 //$display = $objTreeMenu->getSimpleCMSTree($currentNode);
 //return $display;
     }
-
-
-
-
-
-
 
     /**
      * Method to display the jquery Tree style menu
@@ -292,8 +283,8 @@ alert(jQuery(el).text());
 //Insert script for generating tree menu
 //    $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery.js', 'cmsadmin'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
-        $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="'.$this->objConfig->getsiteRoot().'packages/cmsadmin/resources/tree_uwc/style.css" />');
-        $this->appendArrayVar('headerParams',$script);
+        $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="' . $this->objConfig->getsiteRoot() . 'packages/cmsadmin/resources/tree_uwc/style.css" />');
+        $this->appendArrayVar('headerParams', $script);
 
         $objLayer = new layer();
         $objLayer->str = $objTreeMenu->getSimpleCMSTree($currentNode);
@@ -302,10 +293,6 @@ alert(jQuery(el).text());
 //$display = $objTreeMenu->getSimpleCMSTree($currentNode);
 //return $display;
     }
-
-
-
-
 
     /**
      * Method to display the Custom Style Menu
@@ -330,7 +317,7 @@ alert(jQuery(el).text());
         $css = '';
 
         $this->appendArrayVar('headerParams', $css);
-        $this->appendArrayVar('headerParams',$javascript);
+        $this->appendArrayVar('headerParams', $javascript);
 
         $objLayer = new layer();
         $objLayer->str = $objPageMenu->show($menuKey, $currentNode);
@@ -338,10 +325,6 @@ alert(jQuery(el).text());
 
         return $objLayer->show();
     }
-
-
-
-
 
     /**
      * Method to display the Tree style menu
@@ -359,7 +342,7 @@ alert(jQuery(el).text());
 
         $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
 
-        $script ='	<script type="text/javascript">
+        $script = '	<script type="text/javascript">
 		//<![CDATA[
 		// Initialize and render the menu when it is available in the DOM
 
@@ -399,14 +382,14 @@ duration: 0.25
 ';
 
 //Insert script for generating tree menu
-        $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
+        $css = '<link rel="stylesheet" type="text/css" media="all" href="' . $this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib') . '" />';
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container_core.js', 'yahoolib'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
-        $this->setVar('bodyParams','class=" yui-skin-sam"');
+        $this->setVar('bodyParams', 'class=" yui-skin-sam"');
         $this->appendArrayVar('headerParams', $css);
-        $this->appendArrayVar('headerParams',$script);
+        $this->appendArrayVar('headerParams', $script);
 
         $objLayer = new layer();
         $objLayer->str = $objTreeMenu->getCMSTree($currentNode);
@@ -428,16 +411,16 @@ duration: 0.25
 
         // home link
         $sel = FALSE;
-        if(empty($currentNode)) {
+        if (empty($currentNode)) {
             $sel = TRUE;
         }
         $linkText = $this->objLanguage->languageText('word_home');
         $html = $this->createButton(array(), $linkText, $sel);
 
-        if(!empty($sectionData)) {
-            foreach($sectionData as $item) {
+        if (!empty($sectionData)) {
+            foreach ($sectionData as $item) {
                 $selected = FALSE;
-                if($item['id'] == $currentNode) {
+                if ($item['id'] == $currentNode) {
                     $selected = TRUE;
                 }
 
@@ -449,7 +432,7 @@ duration: 0.25
         $objLayer = new layer();
         $objLayer->str = $html;
         $objLayer->id = 'cmsnavigation';
-        return $objLayer->show().'<br />';
+        return $objLayer->show() . '<br />';
     }
 
     /**
@@ -465,10 +448,10 @@ duration: 0.25
         $objLink->link = $text;
 
         $class = 'menuBtn';
-        if($selected) {
+        if ($selected) {
             $class = 'menuBtnOn';
         }
-        $str = "<div class='{$class}'>".$objLink->show().'</div>';
+        $str = "<div class='{$class}'>" . $objLink->show() . '</div>';
         return $str;
     }
 
@@ -481,13 +464,12 @@ duration: 0.25
      */
     private function additionalMenuItems($rss) {
         $str = '';
-        if(!empty($rss)) {
-            foreach($rss as $feeds) {
+        if (!empty($rss)) {
+            foreach ($rss as $feeds) {
                 $timenow = time();
-                if($timenow - $feeds['rsstime'] > 43200) {
+                if ($timenow - $feeds['rsstime'] > 43200) {
                     $url = $feeds['url'];
-                }
-                else {
+                } else {
                     $url = $feeds['rsscache'];
                 }
                 $str .= $this->rssBox($url, $feeds['name']);
@@ -511,29 +493,29 @@ duration: 0.25
      *
      * @param string $id the id of the post we're dealing with
      */
-    public function getEditLink($id,$a_param = null) {
+    public function getEditLink($id, $a_param = null) {
         //Security Check for write access to this content item
         if (!$this->_objSecurity->canUserWriteContent($id)) {
             return "";
         }
 
         $myid = $this->objUser->userId();
-        $ret ='';
+        $ret = '';
         //if (($this->objUser->inAdminGroup($myid,'CMSAuthors')) || ($this->objUser->inAdminGroup($myid,'Site Admin'))) {
         if ($a_param && !empty($a_param)) {
             $s_param = serialize($a_param);
         }
-        if(!isset($s_param)) {
+        if (!isset($s_param)) {
             $s_param = NULL;
         }
 
-        $icon = $this->getObject('geticon','htmlelements');
+        $icon = $this->getObject('geticon', 'htmlelements');
         $icon->setIcon('edit');
         $icon->alt = $this->objLanguage->languageText('word_edit');
-        $link = $this->getObject('link','htmlelements');
-        $link->link($this->uri(array('action'=>'addcontent','id'=>$id,'frommodule'=>$this->getParam('module'),'fromaction'=>$this->getParam('action'),'s_param'=>$s_param),'cmsadmin'));
+        $link = $this->getObject('link', 'htmlelements');
+        $link->link($this->uri(array('action' => 'addcontent', 'id' => $id, 'frommodule' => $this->getParam('module'), 'fromaction' => $this->getParam('action'), 's_param' => $s_param), 'cmsadmin'));
         $link->link = $icon->show();
-        $ret = " ".$link->show();
+        $ret = " " . $link->show();
         //}
 
         return $ret;
@@ -547,34 +529,34 @@ duration: 0.25
      * @return string The content to be displayed on the front page
      * @access public
      */
-    public function getFrontPageContent($displayId=NULL) {
+    public function getFrontPageContent($displayId = NULL) {
         $lbRead = $this->objLanguage->languageText('phrase_readmore');
         $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
         $arrFrontPages = $this->_objFrontPage->getFrontPages(TRUE);
 
         $str = '';
         //set a counter for the records .. display on the first 2  the rest will be dsiplayed as links
-        $cnt = 0 ;
+        $cnt = 0;
 
         $numPages = count($arrFrontPages);
         // If only 1 page is on the front - display the full page
-        if($numPages == 1) {
+        if ($numPages == 1) {
             $page = $this->_objContent->getContentPage($arrFrontPages[0]['content_id']);
 
             // Adding Title
-            $this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('id'=>$page['id']));
-            if(isset($page['show_title'])) {
+            $this->objHead->str = $page['title'] . $this->getEditLink($page['id'], array('id' => $page['id']));
+            if (isset($page['show_title'])) {
                 if ($page['show_title'] == 'g') {
                     //Checking the global sys config
                     $globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
                     if ($globalShowTitle == 'n') {
                         //Only showing edit button
-                        $this->objHead->str = $this->getEditLink($page['id'],array('id'=>$page['id']));
+                        $this->objHead->str = $this->getEditLink($page['id'], array('id' => $page['id']));
                     }
                 }
                 if ($page['show_title'] == 'n') {
                     //Only showing edit button
-                    $this->objHead->str = $this->getEditLink($page['id'],array('id'=>$page['id']));
+                    $this->objHead->str = $this->getEditLink($page['id'], array('id' => $page['id']));
                 }
             }
 
@@ -585,10 +567,10 @@ duration: 0.25
             }
 
             // Adding Author
-            $showAuthorText = '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+            $showAuthorText = '<p><span class="date">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span>';
             $showAuthorText .= '</p>';
 
-            if(isset($page['show_author'])) {
+            if (isset($page['show_author'])) {
                 if ($page['show_author'] == 'g') {
                     //Checking the global sys config
                     $globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
@@ -605,9 +587,9 @@ duration: 0.25
 
 
             // Adding Date
-            $showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span></em><br />';
+            $showDateText = '<em><span class="date">' . $this->objDate->formatDate($page['created']) . '</span></em><br />';
 
-            if(isset($page['show_date'])) {
+            if (isset($page['show_date'])) {
                 if ($page['show_date'] == 'g') {
                     //Checking the global sys config
                     $globalShowDate = $this->_objSysConfig->getValue('SHOW_DATE', 'cmsadmin');
@@ -628,18 +610,19 @@ duration: 0.25
             }
 
             $pageStr .= $page['body'];
+            
             $objLayer = new layer();
-            $objLayer->str = $pageStr;
+            $objLayer->str = "<div class='CMS-frontpage-item'>" 
+              . $pageStr . "<div>";
             $objLayer->id = 'cmscontent';
-
+            
             return $objLayer->show();
-
         }
 
         // Display the selected page above the others
-        if(!empty($displayId) && !empty($arrFrontPages)) {
+        if (!empty($displayId) && !empty($arrFrontPages)) {
             foreach ($arrFrontPages as $frontPage) {
-                if($displayId == $frontPage['content_id']) {
+                if ($displayId == $frontPage['content_id']) {
                     $str .= $this->showBody();
                     break;
                 }
@@ -654,33 +637,32 @@ duration: 0.25
                 $show_content = $frontPage['show_content'];
 
                 // Check it's not the page displayed at the top.
-                if(!empty($displayId) && $displayId == $frontPage['content_id']) {
+                if (!empty($displayId) && $displayId == $frontPage['content_id']) {
                     // do nothing
-                }else {
+                } else {
                     $pageStr = '';
                     $cnt++;
 
                     // Page heading - hide if set
-                    if(isset($page['show_title']) && $page['show_title'] == 1) {
+                    if (isset($page['show_title']) && $page['show_title'] == 1) {
                         $pageStr = $this->getEditLink($page['id']);
-                    }else {
+                    } else {
                         $this->objHead->type = '2';
-                        $this->objHead->str = $page['title'].$this->getEditLink($page['id']);
+                        $this->objHead->str = $page['title'] . $this->getEditLink($page['id']);
 
                         $pageStr = $this->objHead->show();
                     }
 
-                    if($show_content) {
+                    if ($show_content) {
                         // Adding Written By
-                        if(isset($page['show_author']) && $page['show_author'] != 1) {
-                            $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span></p>';
-
+                        if (isset($page['show_author']) && $page['show_author'] != 1) {
+                            $pageStr .= '<p><span class="user">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span></p>';
                         }
 
                         // Adding Date
-                        if(isset($page['show_date']) && $page['show_date'] != 1) {
-                            if(isset($page['created']) && !empty($page['created'])) {
-                                $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                        if (isset($page['show_date']) && $page['show_date'] != 1) {
+                            if (isset($page['created']) && !empty($page['created'])) {
+                                $pageStr .= '<span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
                             }
                         }
 
@@ -689,40 +671,40 @@ duration: 0.25
                         $pageStr .= '<br />';
                     }
 
-                    if($show_content) {
+                    if ($show_content) {
                         $pageStr .= $page['body'];
                         $str .= $pageStr;
-                    }else {
+                    } else {
                         // Read more link
                         $moreLink = $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $page['sectionid']), 'cms');
                         //array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
                         $readMoreLink = new link($moreLink);
-                        $readMoreLink->link = $lbRead.'...';
+                        $readMoreLink->link = $lbRead . '...';
                         $readMoreLink->title = $page['title'];
                         $readMoreLink->cssClass = 'morelink';
 
                         // Display the page title and introduction
                         // Adding Written By
-                        if(isset($page['show_author']) && $page['show_author'] != 1) {
-                            $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span></p>';
+                        if (isset($page['show_author']) && $page['show_author'] != 1) {
+                            $pageStr .= '<p><span class="user">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span></p>';
                         }
 
                         // Adding Date
-                        if(isset($page['show_date']) && $page['show_date'] != 1) {
-                            if(isset($page['created']) && !empty($page['created'])) {
-                                $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                        if (isset($page['show_date']) && $page['show_date'] != 1) {
+                            if (isset($page['created']) && !empty($page['created'])) {
+                                $pageStr .= '<span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
                             }
                         }
 
                         $pageStr .= '<br />';
-                        $pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
+                        $pageStr .= stripslashes($page['introtext']) . '<br />' . $readMoreLink->show();
                         $pageStr .= '<br />';
 
-                        if(isset($page['modified']) && !empty($page['modified'])) {
-                            $pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
+                        if (isset($page['modified']) && !empty($page['modified'])) {
+                            $pageStr .= '<p> <span class="date">Last updated : ' . $this->objDate->formatDate($page['modified']) . '</span></p>';
                         }
 
-                        $str .= $pageStr;
+                        $str .= "<div class='CMS-frontpage-item'>" . $pageStr . "</div>";
                     }
                 }
             }
@@ -733,9 +715,7 @@ duration: 0.25
         $objLayer->id = 'cmscontent';
 
         return $objLayer->show();
-
     }
-
 
     /**
      * Method to generate the content for a section
@@ -750,7 +730,7 @@ duration: 0.25
             $arrSection = $this->_objSections->getSection($sectionId);
         }
 
-        switch(strtolower($arrSection['layout'])) {
+        switch (strtolower($arrSection['layout'])) {
 
             case 'previous':
                 return $this->_layoutPrevious($arrSection, $module);
@@ -809,7 +789,7 @@ duration: 0.25
                 break;
         }
 
-        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+        $arrPages = $this->_objContent->getAll('WHERE sectionid = \'' . $arrSection['id'] . '\' AND published=1 AND trash=0 ' . $filter);
 
         $cnt = 0;
         $returnStr = '';
@@ -822,24 +802,24 @@ duration: 0.25
 
         $foundPage = FALSE;
 
-        if(!empty($arrPages)) {
+        if (!empty($arrPages)) {
             $str = '<ul>';
             foreach ($arrPages as $page) {
                 if ($foundPage == TRUE) {
                     $link = new link($this->uri(array('action' => 'showsection', 'id' => $arrSection['id'], 'pageid' => $page['id'], 'sectionid' => $page['sectionid']), $module));
                     $link->link = $page['title'];
-                    if($showDate) {
-                        $str .= '<li>'. $this->objDate->formatDate($page['created']).' - '.$link->show() .'</li> ';
+                    if ($showDate) {
+                        $str .= '<li>' . $this->objDate->formatDate($page['created']) . ' - ' . $link->show() . '</li> ';
                     } else {
-                        $str .= '<li>'. $link->show() .'</li> ';
+                        $str .= '<li>' . $link->show() . '</li> ';
                     }
                 }
 
                 if ($pageId == $page['id']) {
                     // hide the title if set
-                    if(isset($page['show_title']) && $page['show_title'] == 1) {
+                    if (isset($page['show_title']) && $page['show_title'] == 1) {
                         $strBody = '';
-                    }else {
+                    } else {
                         $this->objHead->str = $page['title'];
                         $this->objHead->type = 2;
                         $strBody = $this->objHead->show();
@@ -848,23 +828,21 @@ duration: 0.25
                     $foundPage = TRUE;
 
                     $strBody = $this->objRound->show($strBody);
-
                 }
             }
             $str .= '</ul>';
         }
 
-        if($showIntro && !empty($description)) {
-            $returnStr = '<hr /><em>'.$description.'</em><hr />';
+        if ($showIntro && !empty($description)) {
+            $returnStr = '<hr /><em>' . $description . '</em><hr />';
         }
 
-        $returnStr .= '<p>'.$strBody.'</p><p>'.$str.'</p>';
+        $returnStr .= '<p>' . $strBody . '</p><p>' . $str . '</p>';
         $objLayer = new layer();
         $objLayer->str = $returnStr;
         $objLayer->id = 'cmscontent';
 
         return $objLayer->show();
-
     }
 
     /**
@@ -889,17 +867,17 @@ duration: 0.25
         $sectionTitle = $arrSection['title'];
 
         //Add section title
-        if($hideTitle) {
+        if ($hideTitle) {
             $headStr = '';
-        }else {
+        } else {
             $this->objHead->type = 2;
             $this->objHead->str = $sectionTitle;
             $headStr = $this->objHead->show();
         }
 
         //Check if section intro should be displayed and act accordingly
-        if($showIntro && !empty($description)) {
-            $headStr .= '<br />'.$description.'<hr />';
+        if ($showIntro && !empty($description)) {
+            $headStr .= '<br />' . $description . '<hr />';
         }
         $str .= $headStr;
 
@@ -925,15 +903,15 @@ duration: 0.25
                 $filter = 'ORDER BY ordering';
                 break;
         }
-        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+        $arrPages = $this->_objContent->getAll('WHERE sectionid = \'' . $arrSection['id'] . '\' AND published=1 AND trash=0 ' . $filter);
 
-        if(!empty($arrPages)) {
+        if (!empty($arrPages)) {
             foreach ($arrPages as $page) {
                 $pageStr = '';
 
-                if(isset($page['show_title']) && $page['show_title'] == 1) {
+                if (isset($page['show_title']) && $page['show_title'] == 1) {
                     $pageStr = '';
-                }else {
+                } else {
                     $this->objHead->type = '4';
                     $this->objHead->str = $page['title'];
                     $pageStr .= $this->objHead->show();
@@ -941,31 +919,31 @@ duration: 0.25
                     $pageStr .= '<p>';
 
                     // Adding Written By
-                    if(isset($page['show_author']) && $page['show_author'] != 1) {
+                    if (isset($page['show_author']) && $page['show_author'] != 1) {
                         if (isset($page['created_by'])) {
-                            $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+                            $pageStr .= '<span class="minute">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span>';
                         }
                     }
 
                     // Adding Written By
-                    if(isset($page['show_date']) && $page['show_date'] != 1) {
+                    if (isset($page['show_date']) && $page['show_date'] != 1) {
                         $creationDate = $this->objDate->formatDate($page['created']);
-                        $pageStr .= '<span class="date">'.$creationDate.'</span>';
+                        $pageStr .= '<span class="date">' . $creationDate . '</span>';
                     }
                     $pageStr .= '</p>';
                 }
 
                 // introduction text
-                $pageStr .= '<p>'.stripslashes($page['introtext']);
+                $pageStr .= '<p>' . stripslashes($page['introtext']);
 
                 // Read more link
                 $uri = $this->uri(array('action' => 'showfulltext', 'sectionid' => $arrSection['id'], 'id' => $page['id']), $module);
                 $readMoreLink = new link($uri);
-                $readMoreLink->link = $lbRead.'...';
+                $readMoreLink->link = $lbRead . '...';
                 $readMoreLink->title = $page['title'];
                 $readMoreLink->cssClass = 'morelink';
 
-                $pageStr .= '<br />'.$readMoreLink->show().'</p><hr />';
+                $pageStr .= '<br />' . $readMoreLink->show() . '</p><hr />';
                 $str .= $pageStr;
             }
         }
@@ -974,7 +952,6 @@ duration: 0.25
         $objLayer->id = 'cmscontent';
 
         return $objLayer->show();
-
     }
 
     /**
@@ -987,7 +964,7 @@ duration: 0.25
      */
     function _layoutPage($arrSection, $module) {
         $pageId = $this->getParam('pageid', '');
-        if(empty($arrSection)) {
+        if (empty($arrSection)) {
             $showIntro = Null;
             $description = Null;
             $orderType = Null;
@@ -995,7 +972,7 @@ duration: 0.25
             $imagesrc = Null;
             $intId = Null;
             $intTitle = Null;
-        }else {
+        } else {
             $showIntro = $arrSection['showintroduction'];
             $description = $arrSection['description'];
             $orderType = $arrSection['ordertype'];
@@ -1029,7 +1006,7 @@ duration: 0.25
                 break;
         }
 
-        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$intId.'\' AND published=1 AND trash=0 '.$filter);
+        $arrPages = $this->_objContent->getAll('WHERE sectionid = \'' . $intId . '\' AND published=1 AND trash=0 ' . $filter);
 
         $cnt = 0;
         $topStr = '';
@@ -1042,21 +1019,21 @@ duration: 0.25
         }
 
 
-        if(!empty($description)) {
+        if (!empty($description)) {
             $introStr = null;
-            $introStr .= '<p><hr /><span>'.$intTitle.'</span></p>';
-            $introStr .=  '<em><span>'.$description.'</span></em><br /><hr />';
+            $introStr .= '<p><hr /><span>' . $intTitle . '</span></p>';
+            $introStr .= '<em><span>' . $description . '</span></em><br /><hr />';
         }
 
         // Display the selected page
         // Display links to the other pages
-        if(!empty($arrPages)) {
+        if (!empty($arrPages)) {
             $pgCnt = count($arrPages);
             foreach ($arrPages as $page) {
                 if ($pageId == $page['id']) {
-                    if(isset($page['show_title']) && $page['show_title'] == 1) {
+                    if (isset($page['show_title']) && $page['show_title'] == 1) {
                         $pageStr = '';
-                    }else {
+                    } else {
                         $this->objHead->type = 2;
                         $this->objHead->str = $page['title'];
                         $pageStr = $this->objHead->show();
@@ -1064,13 +1041,13 @@ duration: 0.25
                     $pageStr .= stripslashes($page['body']);
 
                     $topStr = $this->objRound->show($pageStr);
-                    if($pgCnt > 1) {
-                        $str .= $page['title'].' | ';
+                    if ($pgCnt > 1) {
+                        $str .= $page['title'] . ' | ';
                     }
                 } else {
                     $link = new link($this->uri(array('action' => 'showsection', 'pageid' => $page['id'], 'id' => $page['sectionid'], 'sectionid' => $page['sectionid']), $module));
                     $link->link = $page['title'];
-                    $str .= $link->show() .' | ';
+                    $str .= $link->show() . ' | ';
                 }
             }
         }
@@ -1081,7 +1058,7 @@ duration: 0.25
         }
 
         $objLayer = new layer();
-        $objLayer->str = $introStr.'<br />'.$topStr.'<p>'.$str.'</p>';
+        $objLayer->str = $introStr . '<br />' . $topStr . '<p>' . $str . '</p>';
         $objLayer->id = 'cmscontent';
 
         return $objLayer->show();
@@ -1152,26 +1129,26 @@ duration: 0.25
                 $filter = 'ORDER BY ordering';
                 break;
         }
-        $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+        $arrPages = $this->_objContent->getAll('WHERE sectionid = \'' . $arrSection['id'] . '\' AND published=1 AND trash=0 ' . $filter);
 
-        if(!empty($arrPages)) {
+        if (!empty($arrPages)) {
             $str .= '<ul>';
             foreach ($arrPages as $page) {
-                $link = new link ($this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module));
+                $link = new link($this->uri(array('action' => 'showcontent', 'id' => $page['id'], 'sectionid' => $page['sectionid']), $module));
                 $link->link = $page['title'];
                 $listStr = '';
-                if($showDate) {
-                    $listStr = $this->objDate->formatDate($page['created']).' - ';
+                if ($showDate) {
+                    $listStr = $this->objDate->formatDate($page['created']) . ' - ';
                 }
                 $listStr .= $link->show();
-                $str .= '<li>'.$listStr.'</li>';
+                $str .= '<li>' . $listStr . '</li>';
             }
             $str .= '</ul>';
         }
 
-        if($hideTitle) {
+        if ($hideTitle) {
             $introStr = '';
-        }else {
+        } else {
             $this->objHead->str = $title;
             $this->objHead->type = 2;
             $introStr = $this->objHead->show();
@@ -1181,16 +1158,15 @@ duration: 0.25
         $objMindMap->parse($description);
         $objMath->parseAll($description);
 
-        if($showIntro && !empty($description)) {
-            $introStr .= '<p><span>'.$description.'</span></p>';
+        if ($showIntro && !empty($description)) {
+            $introStr .= '<p><span>' . $description . '</span></p>';
         }
 
         $objLayer = new layer();
-        $objLayer->str = $introStr.'<p>'.$str.'</p>';
+        $objLayer->str = $introStr . '<p>' . $str . '</p>';
         $objLayer->id = 'cmscontent';
 
         return $objLayer->show();
-
     }
 
     /**
@@ -1202,6 +1178,7 @@ duration: 0.25
      * @return string The page content to be displayed
      */
     public function showBody($isPreview = false, $content = false) {
+        $lbWritten = NULL;
         if (!$content) {
             $contentId = $this->getParam('id');
             $page = $this->_objContent->getContentPageFiltered($contentId);
@@ -1246,13 +1223,13 @@ duration: 0.25
         if ($this->_objSysConfig->getValue('SHOW_BOOKMARKS', 'cmsadmin') != 'n') {
             //Build Footer Items
             $bmurl = $this->uri(array(
-                    'action' => 'showsection',
-                    'module' => 'cms',
-                    'sectionid' => $page['sectionid']
-            ));
+                'action' => 'showsection',
+                'module' => 'cms',
+                'sectionid' => $page['sectionid']
+                    ));
             $bmurl = urlencode($bmurl);
-            $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
-            $bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
+            $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=" . $bmurl . "&amp;title=" . urlencode(addslashes($page['title']));
+            $bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="' . $this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms") . '"/>';
             $bookmark = new href($bmlink, $bmtext, NULL);
 
             //do the cc licence part
@@ -1265,10 +1242,10 @@ duration: 0.25
             }
             $iconList = $this->objCC->show($cclic);
 
-            if(isset($page['show_flag'])) {
+            if (isset($page['show_flag'])) {
                 switch ($page['show_flag']) {
                     case 'g':
-                    //Checking the global sys config
+                        //Checking the global sys config
                         $globalShowFlag = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
                         if ($globalShowFlag == 'n') {
                             $flagContent = '';
@@ -1277,7 +1254,7 @@ duration: 0.25
                             $objIcon->setIcon('redflag');
                             $objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
                             $objIcon->extra = 'id="hover_redflag"';
-                            $flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
+                            $flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id=' . $page['id'] . '" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id=' . $page['id'] . '">' . $objIcon->show();
 
                             $script = "<script type='text/javascript'>
 										jQuery(document).ready(function(){
@@ -1298,7 +1275,7 @@ duration: 0.25
                         $objIcon->setIcon('redflag');
                         $objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
                         $objIcon->extra = 'id="hover_redflag"';
-                        $flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
+                        $flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id=' . $page['id'] . '" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id=' . $page['id'] . '">' . $objIcon->show();
 
                         $script = "<script type='text/javascript'>
 									jQuery(document).ready(function(){
@@ -1320,23 +1297,23 @@ duration: 0.25
             $tblnl->width = "100%";
             $tblnl->align = "center";
             $tblnl->startRow();
-            $tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
-            $tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');
+            $tblnl->addCell($bookmark->show(), null, null, 'left'); //bookmark link(s)
+            $tblnl->addCell('<em class="date">' . $this->objLanguage->languageText("mod_cms_lastupdated", "cms") . ':' . $this->objDate->formatDate($page['modified']) . '</em>', null, null, 'left');
             $tblnl->addCell($iconList); //cc licence//Build Footer Items
             $tblnl->endRow();
 
-            $table_bookmark = "<center>".$tblnl->show() . "</center>";
+            $table_bookmark = "<center>" . $tblnl->show() . "</center>";
         } else {
             $table_bookmark = '';
         }
 
         //pdf url
         $pdfurl = $this->uri(array(
-                'action' => 'makepdf',
-                'sectionid' => $page['sectionid'],
-                'module' => 'cms',
-                'id' => $page['id']
-        ));
+            'action' => 'makepdf',
+            'sectionid' => $page['sectionid'],
+            'module' => 'cms',
+            'id' => $page['id']
+                ));
         //PDF Icon
         $pdficon = $this->newObject('geticon', 'htmlelements');
         $pdficon->setIcon('filetypes/pdf');
@@ -1360,7 +1337,7 @@ duration: 0.25
         $printlink = new href('javascript:void(0)', $printicon->show(), 'onclick="javascript:window.print();"');
 
         //Checking to display pdf icon
-        if(isset($page['show_pdf'])) {
+        if (isset($page['show_pdf'])) {
             if ($page['show_pdf'] == 'g') {
                 //Checking the global sys config
                 $globalShowPdf = $this->_objSysConfig->getValue('SHOW_PDF', 'cmsadmin');
@@ -1376,7 +1353,7 @@ duration: 0.25
         }
 
         //Checking to display mail 2 friend icon
-        if(isset($page['show_email'])) {
+        if (isset($page['show_email'])) {
             if ($page['show_email'] == 'g') {
                 //Checking the global sys config
                 $globalShowMtf = $this->_objSysConfig->getValue('SHOW_MAIL', 'cmsadmin');
@@ -1392,7 +1369,7 @@ duration: 0.25
         }
 
         //Checking to display print icon
-        if(isset($page['show_print'])) {
+        if (isset($page['show_print'])) {
             if ($page['show_print'] == 'g') {
                 //Checking the global sys config
                 $globalShowPrint = $this->_objSysConfig->getValue('SHOW_PRINT', 'cmsadmin');
@@ -1408,13 +1385,13 @@ duration: 0.25
         }
 
         // Adding Title
-        $btnEditLink = $this->getEditLink($page['id'],array('sectionid'=>$page['sectionid'],'id'=>$page['id']));
+        $btnEditLink = $this->getEditLink($page['id'], array('sectionid' => $page['sectionid'], 'id' => $page['id']));
         $lblPageTitle = $page['title'];
 
-        if(isset($page['show_title'])) {
+        if (isset($page['show_title'])) {
             switch ($page['show_title']) {
                 case 'g':
-                //Checking the global sys config
+                    //Checking the global sys config
                     $globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
                     if ($globalShowTitle == 'n') {
                         //Only showing edit button
@@ -1438,7 +1415,7 @@ duration: 0.25
 
         //Title and Edit Button
         $this->objHead->type = 2;
-        $this->objHead->str = $lblPageTitle.$btnEditLink;
+        $this->objHead->str = $lblPageTitle . $btnEditLink;
 
         $tblh->startRow();
 
@@ -1446,41 +1423,41 @@ duration: 0.25
             $tblh->addCell($this->objHead->show());
         }
 
-        $tblh->addCell($pdflink->show() . $mtflink->show() . $printlink->show(),null,null,'right', 'printpdfmailicons'); //pdf icon
+        $tblh->addCell($pdflink->show() . $mtflink->show() . $printlink->show(), null, null, 'right', 'printpdfmailicons'); //pdf icon
         $tblh->endRow();
 
         $strBody = '';
 
         // Adding Author
-        if(isset($page['show_author'])) {
+        if (isset($page['show_author'])) {
             switch ($page['show_author']) {
                 case 'n':
                     $tblShowAuthor = false;
                     break;
 
                 case 'g':
-                //Checking the global sys config
+                    //Checking the global sys config
                     $globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
                     if ($globalShowAuthor == 'n') {
                         $tblShowAuthor = false;
                     } else {
-                        $strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
+                        $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
                     }
                     break;
 
                 default:
-                    $strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
+                    $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
                     break;
             }
         } else {
-            $strBody = "<p><span class='date'>$lbWritten ".$this->objUser->fullname($page['created_by']).'</span></p>';
+            $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
         }
 
         // Adding Date
-        $showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+        $showDateText = '<em><span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
         $showDateText .= '<br /></em>';
 
-        if(isset($page['show_date'])) {
+        if (isset($page['show_date'])) {
             if ($page['show_date'] == 'g') {
                 //Checking the global sys config
                 $globalShowDate = $this->_objSysConfig->getValue('SHOW_DATE', 'cmsadmin');
@@ -1516,7 +1493,6 @@ duration: 0.25
 
         $objLayer->str = $strHeader . $strBody . $table_bookmark . "<hr />";
         return $objLayer->show();
-
     }
 
     /**
@@ -1529,10 +1505,9 @@ duration: 0.25
     public function sendMail2FriendForm($m2fdata) {
 
         $this->objUser = $this->getObject('user', 'security');
-        if($this->objUser->isLoggedIn()) {
+        if ($this->objUser->isLoggedIn()) {
             $theuser = $this->objUser->fullName($this->objUser->userid());
-        }
-        else {
+        } else {
             $theuser = $this->objLanguage->languageText("mod_cms_word_anonymous", "cms");
         }
         //start a form object
@@ -1540,8 +1515,8 @@ duration: 0.25
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $mform = new form('mail2friend', $this->uri(array(
-                'action' => 'mail2friend', 'id' => $m2fdata['id']
-        )));
+                            'action' => 'mail2friend', 'id' => $m2fdata['id']
+                        )));
         $mfieldset = $this->newObject('fieldset', 'htmlelements');
         //$mfieldset->setLegend($this->objLanguage->languageText('mod_blog_sendmail2friend', 'blog'));
         $mtable = $this->newObject('htmltable', 'htmlelements');
@@ -1552,7 +1527,7 @@ duration: 0.25
         $mtable->endHeaderRow();
         //your name
         $mtable->startRow();
-        $mynamelabel = new label($this->objLanguage->languageText('mod_cms_myname', 'cms') .':', 'input_myname');
+        $mynamelabel = new label($this->objLanguage->languageText('mod_cms_myname', 'cms') . ':', 'input_myname');
         $myname = new textinput('sendername');
         $myname->size = '80%';
         $myname->setValue($theuser);
@@ -1562,10 +1537,10 @@ duration: 0.25
 
         //Friend(s) email addresses
         $mtable->startRow();
-        $femaillabel = new label($this->objLanguage->languageText('mod_cms_emailadd', 'cms') .':', 'input_femail');
+        $femaillabel = new label($this->objLanguage->languageText('mod_cms_emailadd', 'cms') . ':', 'input_femail');
         $emailadd = new textinput('emailadd');
         $emailadd->size = '80%';
-        if(isset($m2fdata['user'])) {
+        if (isset($m2fdata['user'])) {
             $emailadd->setValue($m2fdata['user']);
         }
         $mtable->addCell($femaillabel->show());
@@ -1573,14 +1548,14 @@ duration: 0.25
         $mtable->endRow();
         //message for friends (optional)
         $mtable->startRow();
-        $fmsglabel = new label($this->objLanguage->languageText('mod_cms_emailmsg', 'cms') .':', 'input_femailmsg');
-        $msg = new textarea('msg','',4,68);
+        $fmsglabel = new label($this->objLanguage->languageText('mod_cms_emailmsg', 'cms') . ':', 'input_femailmsg');
+        $msg = new textarea('msg', '', 4, 68);
         $mtable->addCell($fmsglabel->show());
         $mtable->addCell($msg->show());
         $mtable->endRow();
 
         //add a rule
-        $mform->addRule('emailadd', $this->objLanguage->languageText("mod_cms_phrase_emailreq", "cms") , 'required');
+        $mform->addRule('emailadd', $this->objLanguage->languageText("mod_cms_phrase_emailreq", "cms"), 'required');
         $mfieldset->addContent($mtable->show());
         $mform->addToForm($mfieldset->show());
         $this->objMButton = new button($this->objLanguage->languageText('mod_cms_word_sendmail', 'cms'));
@@ -1591,9 +1566,8 @@ duration: 0.25
 
         //bust out a featurebox for consistency
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_cms_sendmail2friend", "cms") , $mform);
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_cms_sendmail2friend", "cms"), $mform);
         return $ret;
-
     }
 
     /**
@@ -1608,7 +1582,7 @@ duration: 0.25
         $this->objUser = $this->getObject('user', 'security');
 
         $leftCol = NULL;
-        if($featurebox == FALSE) {
+        if ($featurebox == FALSE) {
             $leftCol .= "<em>" . $this->objLanguage->languageText("mod_cms_feedheader", "cms") . "</em><br />";
         }
 
@@ -1622,49 +1596,49 @@ duration: 0.25
         //RSS0.91
         $rss091 = $this->getObject('geticon', 'htmlelements');
         $rss091->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss091', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_rss091", "cms"));
-        $leftCol .= $rss091->show() . "&nbsp;" .$link->show() . "<br />";
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss091', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_rss091", "cms"));
+        $leftCol .= $rss091->show() . "&nbsp;" . $link->show() . "<br />";
 
         //RSS1.0
         $rss1 = $this->getObject('geticon', 'htmlelements');
         $rss1->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss1', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_rss1", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'rss1', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_rss1", "cms"));
         $leftCol .= $rss1->show() . "&nbsp;" . $link->show() . "<br />";
 
         //PIE
         $pie = $this->getObject('geticon', 'htmlelements');
         $pie->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'pie', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_pie", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'pie', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_pie", "cms"));
         $leftCol .= $pie->show() . "&nbsp;" . $link->show() . "<br />";
 
         //MBOX
         $mbox = $this->getObject('geticon', 'htmlelements');
         $mbox->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'mbox', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_mbox", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'mbox', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_mbox", "cms"));
         $leftCol .= $mbox->show() . "&nbsp;" . $link->show() . "<br />";
 
         //OPML
         $opml = $this->getObject('geticon', 'htmlelements');
         $opml->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'opml', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_opml", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'opml', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_opml", "cms"));
         $leftCol .= $opml->show() . "&nbsp;" . $link->show() . "<br />";
 
         //ATOM
         $atom = $this->getObject('geticon', 'htmlelements');
         $atom->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_atom", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'atom', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_atom", "cms"));
         $atomfeed = $atom->show() . "&nbsp;" . $link->show() . "<br />";
 
         //Plain HTML
         $html = $this->getObject('geticon', 'htmlelements');
         $html->setIcon('rss', 'gif', 'icons/filetypes');
-        $link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'pageid' => $pageid)),$this->objLanguage->languageText("mod_cms_word_html", "cms"));
+        $link = new href($this->uri(array('action' => 'feed', 'format' => 'html', 'pageid' => $pageid)), $this->objLanguage->languageText("mod_cms_word_html", "cms"));
         $leftCol .= $html->show() . "&nbsp;" . $link->show() . "<br />";
 
         $icon = $this->getObject('geticon', 'htmlelements');
-        $objIcon =&$this->getObject('geticon', 'htmlelements');
+        $objIcon = &$this->getObject('geticon', 'htmlelements');
         $objIcon->setIcon('toggle');
-        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">".$objIcon->show()."</a>";
+        $str = "<a href=\"javascript:;\" onclick=\"Effect.toggle('feedmenu','slide', adjustLayout());\">" . $objIcon->show() . "</a>";
 
         $topper = $rss2feed . $atomfeed;
 
@@ -1675,15 +1649,13 @@ duration: 0.25
         //$str .= '</div>';
 
 
-        if($featurebox == FALSE) {
+        if ($featurebox == FALSE) {
             return $str;
-        }else {
+        } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_cms_feedheader","cms"), $topper . "<br />" . $str);
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_cms_feedheader", "cms"), $topper . "<br />" . $str);
             return $ret;
         }
-
-
     }
 
     /**
@@ -1701,12 +1673,12 @@ duration: 0.25
         $head .= " " . $name;
         $content = "<ul>\n";
         foreach ($objRss->getRssItems() as $item) {
-            if(!isset($item['link'])) {
+            if (!isset($item['link'])) {
                 $item['link'] = NULL;
             }
             @$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
         }
-        $content .=  "</ul>\n";
+        $content .= "</ul>\n";
         return $objFeatureBox->show($head, $content);
     }
 
@@ -1725,9 +1697,9 @@ duration: 0.25
         curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        if(!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
-            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'].":".$proxyArr['proxy_port']);
-            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'].":".$proxyArr['proxy_pass']);
+        if (!empty($proxyArr) && $proxyArr['proxy_protocol'] != '') {
+            curl_setopt($ch, CURLOPT_PROXY, $proxyArr['proxy_host'] . ":" . $proxyArr['proxy_port']);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyArr['proxy_user'] . ":" . $proxyArr['proxy_pass']);
         }
         $rsscache = curl_exec($ch);
         curl_close($ch);
@@ -1739,19 +1711,17 @@ duration: 0.25
         //write the file down for caching
         $path = $this->objConfig->getContentBasePath() . "/cms/rsscache/";
         $rsstime = time();
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
 
             mkdir($path);
             chmod($path, 0777);
             $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
-            if(!file_exists($filename)) {
+            if (!file_exists($filename)) {
                 touch($filename);
-
             }
             $handle = fopen($filename, 'wb');
             fwrite($handle, $rsscache);
-        }
-        else {
+        } else {
             $filename = $path . $this->objUser->userId() . "_" . $rsstime . ".xml";
             $handle = fopen($filename, 'wb');
             fwrite($handle, $rsscache);
@@ -1766,14 +1736,13 @@ duration: 0.25
         $head .= " " . $name;
         $content = "<ul>\n";
         foreach ($objRss->getRssItems() as $item) {
-            if(!isset($item['link'])) {
+            if (!isset($item['link'])) {
                 $item['link'] = NULL;
             }
             @$content .= "<li><a href=\"" . htmlentities($item['link']) . "\">" . htmlentities($item['title']) . "</a></li>\n";
         }
-        $content .=  "</ul>\n";
+        $content .= "</ul>\n";
         return $objFeatureBox->show($head, $content);
-
     }
 
     public function rssEditor($featurebox = FALSE, $rdata = NULL) {
@@ -1784,20 +1753,19 @@ duration: 0.25
         $this->loadClass('textarea', 'htmlelements');
 
         $this->objUser = $this->getObject('user', 'security');
-        if($rdata == NULL) {
+        if ($rdata == NULL) {
             $rssform = new form('addrss', $this->uri(array(
-                    'action' => 'addrss'
-            )));
-        }
-        else {
+                                'action' => 'addrss'
+                            )));
+        } else {
             $rdata = $rdata[0];
             $rssform = new form('addrss', $this->uri(array(
-                    'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
-            )));
+                                'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
+                            )));
         }
         //add rules
-        $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_cms_phrase_rssurlreq", "cmsadmin") , 'required');
-        $rssform->addRule('name', $this->objLanguage->languageText("mod_cms_phrase_rssnamereq", "cmsadmin") , 'required');
+        $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_cms_phrase_rssurlreq", "cmsadmin"), 'required');
+        $rssform->addRule('name', $this->objLanguage->languageText("mod_cms_phrase_rssnamereq", "cmsadmin"), 'required');
         //start a fieldset
         $rssfieldset = $this->getObject('fieldset', 'htmlelements');
         $rssadd = $this->newObject('htmltable', 'htmlelements');
@@ -1805,12 +1773,11 @@ duration: 0.25
 
         //url textfield
         $rssadd->startRow();
-        $rssurllabel = new label($this->objLanguage->languageText('mod_cms_rssurl', 'cmsadmin') .':', 'input_rssuser');
+        $rssurllabel = new label($this->objLanguage->languageText('mod_cms_rssurl', 'cmsadmin') . ':', 'input_rssuser');
         $rssurl = new textinput('rssurl');
-        if(isset($rdata['url'])) {
+        if (isset($rdata['url'])) {
             $rssurl->setValue($rdata['url']);
             // $rssurl->setValue('url');
-
         }
         $rssadd->addCell($rssurllabel->show());
         $rssadd->addCell($rssurl->show());
@@ -1818,9 +1785,9 @@ duration: 0.25
 
         //name
         $rssadd->startRow();
-        $rssnamelabel = new label($this->objLanguage->languageText('mod_cms_rssname', 'cmsadmin') .':', 'input_rssname');
+        $rssnamelabel = new label($this->objLanguage->languageText('mod_cms_rssname', 'cmsadmin') . ':', 'input_rssname');
         $rssname = new textinput('name');
-        if(isset($rdata['name'])) {
+        if (isset($rdata['name'])) {
             $rssname->setValue($rdata['name']);
         }
         $rssadd->addCell($rssnamelabel->show());
@@ -1829,9 +1796,9 @@ duration: 0.25
 
         //description
         $rssadd->startRow();
-        $rssdesclabel = new label($this->objLanguage->languageText('mod_cms_rssdesc', 'cmsadmin') .':', 'input_rssname');
+        $rssdesclabel = new label($this->objLanguage->languageText('mod_cms_rssdesc', 'cmsadmin') . ':', 'input_rssname');
         $rssdesc = new textarea('description');
-        if(isset($rdata['description'])) {
+        if (isset($rdata['description'])) {
             //var_dump($rdata['description']);
             $rssdesc->setValue($rdata['description']);
         }
@@ -1862,7 +1829,7 @@ duration: 0.25
 
         //set up the rows and display
         if (!empty($efeeds)) {
-            foreach($efeeds as $rows) {
+            foreach ($efeeds as $rows) {
                 $ftable->startRow();
                 $feedlink = new href($rows['url'], $rows['name']);
                 $ftable->addCell($feedlink->show());
@@ -1870,26 +1837,25 @@ duration: 0.25
                 $ftable->addCell(($rows['description']));
                 $this->objIcon = &$this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                        'action' => 'addrss',
-                        'mode' => 'edit',
-                        'id' => $rows['id'],
-                        //'url' => $rows['url'],
-                        //'description' => $rows['description'],
-                        'module' => 'cmsadmin'
-                )));
+                            'action' => 'addrss',
+                            'mode' => 'edit',
+                            'id' => $rows['id'],
+                            //'url' => $rows['url'],
+                            //'description' => $rows['description'],
+                            'module' => 'cmsadmin'
+                        )));
                 $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
-                        'module' => 'cmsadmin',
-                        'action' => 'deleterss',
-                        'id' => $rows['id']
-                        ) , 'cmsadmin');
-                $ftable->addCell($edIcon.$delIcon);
+                    'module' => 'cmsadmin',
+                    'action' => 'deleterss',
+                    'id' => $rows['id']
+                        ), 'cmsadmin');
+                $ftable->addCell($edIcon . $delIcon);
                 $ftable->endRow();
             }
             //$ftable = $ftable->show();
         }
 
         return $rssform . $ftable->show();
-
     }
 
     /**
@@ -1900,6 +1866,7 @@ duration: 0.25
         $this->objComApi = $this->getObject('commentapi', 'cmscomments');
         return $this->objComApi->commentAddForm($postid, 'cms', 'tbl_cms_content', $userid, TRUE, TRUE, FALSE, $captcha, $comment, $useremail);
     }
+
     /**
      *
      */
@@ -1907,10 +1874,10 @@ duration: 0.25
         //COMMENTS
         if ($icon == TRUE) {
             $objLink = new link($this->uri(array(
-                    'action' => 'viewsingle',
-                    'postid' => $post['id'],
-                    'userid' => $post['userid']
-                    ) , 'blog'));
+                                'action' => 'viewsingle',
+                                'postid' => $post['id'],
+                                'userid' => $post['userid']
+                                    ), 'blog'));
             $comment_icon = $this->newObject('geticon', 'htmlelements');
             $comment_icon->setIcon('comment');
             $lblView = $this->objLanguage->languageText("mod_blog_addcomment", "blog");
@@ -1920,10 +1887,10 @@ duration: 0.25
             return $objLink->show();
         } else {
             $objLink = new href($this->uri(array(
-                    'action' => 'viewsingle',
-                    'postid' => $post['id'],
-                    'userid' => $post['userid']
-                    )) , $this->objLanguage->languageText("mod_blog_comments", "blog") , NULL);
+                                'action' => 'viewsingle',
+                                'postid' => $post['id'],
+                                'userid' => $post['userid']
+                            )), $this->objLanguage->languageText("mod_blog_comments", "blog"), NULL);
             return $objLink->show();
         }
     }

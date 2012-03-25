@@ -1,6 +1,6 @@
 <?php
 
-echo $content;
+echo "<div class='CMS-frontpage-item'>" . $content . "</div>";
 if($fromadmin)
 {
     $objLanguage = $this->newObject('language', 'language');
