@@ -14,7 +14,7 @@
 jQuery(function() {
     jQuery(document).ready(function() {
         // Apply annotations to this css id only.
-        annotaterInit("#Canvas_Content_Body_Region2");
+        annotaterInit("#Canvas_Content_Body_Region2 p");
     });
     
     var annotations;
