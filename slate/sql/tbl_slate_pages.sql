@@ -27,6 +27,9 @@ $fields = array(
 		'type' => 'text',
 		'length' => 250,
 		),
+	'description' => array(
+		'type' => 'clob',
+		),
 	);
 
 //create other indexes here...

@@ -56,7 +56,7 @@ $GLOBALS['kewl_entry_point_run'])
  * slate pages.
  *
 *
-* @package   switchboard
+* @package   slate
 * @author    Derek Keats derek@dkeats.com
 *
 */
@@ -101,8 +101,12 @@ class dbslatepages extends dbtable
      * @return boolean TRUE|FALSE
      * 
      */
-    public function savePage($id, $page, $title, $description)
+    public function savePage()
     {
+        $id = $this->getParam('id', NULL);
+        $page = $this->getParam('page', NULL);
+        $title = $this->getParam('title', NULL);
+        $description = $this->getParam('description', NULL);
         $result = $this->update(
           'id', $id, array(
           'page' => $page,
@@ -116,19 +120,19 @@ class dbslatepages extends dbtable
      *
      * Save a page when coming from add
      * 
-     * @param string $page The URL for the page
-     * @param string $title The title of the page
-     * @param string $description The description of the switch item
      * @access public
      * @return string The id of the saved record
      * 
      */
-    public function addPage($iconurl, $page, $title, $description)
+    public function addPage()
     {
+        $page = $this->getParam('page', NULL);
+        $title = $this->getParam('title', NULL);
+        $description = $this->getParam('description', NULL);
         $data = array(
-          'iconurl' => $iconurl,
           'page' => $page,
           'title' => $title,
+          'datecreated' => $this->now(),
           'description' => $description
         );
         return $this->insert($data);

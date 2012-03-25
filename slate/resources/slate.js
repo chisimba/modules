@@ -22,8 +22,33 @@ jQuery(function() {
     
     // Things to do on loading the page.
     jQuery(document).ready(function() {
-      
-      
+        
     });
-
+    
+    // The function for deleting a post
+    jQuery(".dellink").click(function(e) {
+        var dId = jQuery(this).attr("id");
+        //alert('clicked ' + dId);
+        jQuery.ajax({
+           beforeSend: function (request) {
+                if (!confirm("You really want to delete?")) {
+                    return FALSE;
+                }
+           },
+           type: "POST",
+           url: "index.php?module=slate&action=delete&id=" + dId,
+           cache: false,
+           success: function(ret){
+               if(ret == "RECORD_DELETED") {
+                   //alert("#ROW_"+dId);
+                   jQuery("#ROW_"+dId).slideUp('slow', function() {
+                       jQuery("#ROW_"+dId).remove();
+                   })
+               } else {
+                   alert(ret);
+               }
+          }
+        });
+        return false;
+    });
 });

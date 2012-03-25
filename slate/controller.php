@@ -141,6 +141,88 @@ class slate extends controller
 
     /**
     *
+    * Method corresponding to the manage action. It shows the manage
+    * JSON template and any blocks that are found on it.
+    *
+    * @return string The populated template
+    * @access private
+    *
+    */
+    private function __manage()
+    {
+        $this->setLayoutTemplate('layout_tpl.php');
+        return "manage_tpl.php";
+    }
+    
+    /**
+    *
+    * Method corresponding to the edit action. It shows the edit
+    * JSON template and any blocks that are found on it.
+    *
+    * @return string The populated template
+    * @access private
+    *
+    * @return string 
+    */
+    private function __edit()
+    {
+        $this->setLayoutTemplate('layout_tpl.php');
+        return "edit_tpl.php";
+    }
+
+    /**
+    *
+    * Method corresponding to the save action. It returns the results
+    * for use by ajax
+    *
+    * @return string The populated template
+    * @access private
+    *
+    * @return void
+    * @access private 
+    * 
+    */
+    private function __pagesave()
+    {
+        $objDb = $this->getObject('dbslatepages', 'slate');
+        $mode = $this->getParam('mode', 'add');
+        if ($mode == 'edit') {
+            $ret = $objDb->addPage();
+            die($ret);
+        } else {
+            $ret = $objDb->addPage();
+            die($ret);
+        }
+    }
+    
+    /**
+    *
+    * Method corresponding to the delete action. It deletes the item
+    * via ajax and removes the row from the display table.
+    *
+    * @return string The populated template
+    * @access private
+    *
+    * @return string 
+    */
+    private function __delete()
+    {
+        if ($this->objUser->isAdmin()) {
+            // Initialise the object that will do the saving.
+            $objDb = $this->getObject('dbslatepages', 'slate');
+            // retrieve the confirmation code from the querystring
+            $id=$this->getParam("id", FALSE);
+            if ($id) {
+                $objDb->delete('id', $id);
+            }
+            die("RECORD_DELETED");
+        } else {
+            die("ILLEGAL_DELETE_NOTADMIN");
+        }
+    }
+    
+    /**
+    *
     * Method to render a block for use by the ajax methods when
     * 'Turn editing on' is enabled.
     *
@@ -213,7 +295,7 @@ class slate extends controller
         $objLanguage = $this->getObject('language', 'language');
         $this->setVar('str', "<h3>"
           . $objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
+          .": " . $this->getParam('action', NULL) . "</h3>");
         return 'dump_tpl.php';
     }
 

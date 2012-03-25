@@ -22,7 +22,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  Chisimba
- * @package   switchboard
+ * @package   slate
  * @author    Derek Keats derek@dkeats.com
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -89,7 +89,7 @@ class slateui extends object
             $id = $this->getParam('id', NULL);
             $this->loadData($id);
         } else {
-            $this->iconurl = NULL;
+            $this->page = NULL;
             $this->link = NULL;
             $this->title = NULL;
             $this->description = NULL;
@@ -112,8 +112,8 @@ class slateui extends object
     {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $link =  $this->uri(
-           array("action" => "edit"),
-           'switchboard');
+           array("action" => "edit", "mode" => "add"),
+           'slate');
         $addlink = new link($link);
         $objIcon->setIcon('add');
         $addlink->link = $objIcon->show();
@@ -145,7 +145,7 @@ class slateui extends object
               'mod_slate_heading_edit', 'slate', "Edit page");
         } else {
             $h = $this->objLanguage->languageText(
-              'mod_slate_heading_new','switchboard', "New page");
+              'mod_slate_heading_new','slate', "New page");
         }
         // Setup and show heading.
         $header = new htmlHeading();
@@ -162,13 +162,16 @@ class slateui extends object
      * @access public
      *  
      */
-    public function showSlates()
+    public function showPages()
     {
+        $this->appendArrayVar('headerParams',
+        $this->getJavaScriptFile('slate.js',
+          'slate'));
         $objData = $this->getObject("dbslatepages", "slate");
         $arData = $objData->getPages();
         $this->loadClass('htmltable','htmlelements');
         $this->loadClass('link','htmlelements');
-        $this->loadClass('button','htmlelements');
+        //----------$this->loadClass('button','htmlelements');
         // Setup table for display layout.
         $table = $this->newObject('htmltable', 'htmlelements');
         // Edit & delete icons
@@ -178,21 +181,23 @@ class slateui extends object
         $delIcon->setIcon('delete');
         foreach ($arData as $linkItem) {
             $id = $linkItem['id'];
-            $title = $linkItem['title'];
             $linkPage = $linkItem['page'];
+            $linkUrl = $this->uri(array('page' => $linkPage), 'slate');
             $pageTitle = $linkItem['title'];
             $pageDesc = $linkItem['description'];
-            $activeLink = new link($linkPage);
+            $activeLink = new link($linkUrl);
             $activeLink->cssClass = "slate_page_link";
             $activeLink->link = $pageTitle;
 
-            $description =  "<div class='sb_desc'>" . $pageDesc . "</div>";
+            $description =  "<div class='slate_desc'>" . $pageDesc . "</div>";
             $table->startRow(NULL, "ROW_" . $id);
             $table->addCell($activeLink->show());
-            $table->addCell($title . '<br />' . $description);
+            $table->addCell($linkPage);
+            $table->addCell($description);
+            unset($activeLink);
             if ($this->objUser->isAdmin()) {
                 $edUrl = $this->uri(array(
-                    'action' => 'linkedit',
+                    'action' => 'edit',
                     'mode' => 'edit',
                     'id' => $id
                     )
@@ -213,22 +218,25 @@ class slateui extends object
     }
 
     
-//    -=-=-=-=
     /**
      * 
-     * Show the form for adding / editing a link
+     * Show the form for adding / editing a slate page
      *
      * @return string The formatted form
      * @access public
      * 
      */
-    public function showLinkEditForm()
+    public function showPageEditForm()
     {
+        $this->appendArrayVar('headerParams',
+        $this->getJavaScriptFile('editor.js',
+          'slate'));
         // Serialize language items to Javascript.
-        $arrayVars['status_success'] = "mod_switchboard_status_success";
-        $arrayVars['status_fail'] = "mod_switchboard_status_fail";
-        $objSerialize = $this->getObject('serializevars', 'oer');
-        $objSerialize->serializetojs($arrayVars, 'switchboard');
+        $arrayVars = array();
+        $arrayVars['status_success'] = "mod_slate_status_success";
+        $arrayVars['status_fail'] = "mod_slate_status_fail";
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->languagetojs($arrayVars, 'slate');
         // Load the jquery validate plugin.
         $this->appendArrayVar('headerParams',
         $this->getJavaScriptFile('plugins/validate/jquery.validate.min.js',
@@ -239,8 +247,7 @@ class slateui extends object
         $this->loadClass('hiddeninput', 'htmlelements');
         $mode = $this->mode;
         $id = $this->getParam('id', NULL);
-        $iconurl = $this->iconurl;
-        $link = $this->link;
+        $page = $this->page;
         $title = $this->title;
         $description = $this->description;
         // Table for the form.
@@ -248,7 +255,7 @@ class slateui extends object
         
         // Input for the title.
         $label = $this->objLanguage->languageText(
-          'mod_switchboard_linktitle', 'switchboard', "Link title");
+          'mod_slate_pagetitle', 'slate', "Page title");
         $table->startRow();
         $table->addCell($label);
         $textinput = new textinput('title');
@@ -260,31 +267,19 @@ class slateui extends object
         
         // Input for the title.
         $label = $this->objLanguage->languageText(
-          'mod_switchboard_linkurl', 'switchboard', "URL for link");
+          'mod_slate_page', 'slate', "Page number for link");
         $table->startRow();
         $table->addCell($label);
-        $textinput = new textinput('link');
+        $textinput = new textinput('page');
         $textinput->size = 60;
-        $textinput->setValue($link);
+        $textinput->setValue($page);
          $textinput->cssClass = 'required';
         $table->addCell($textinput->show());
         $table->endRow();
-        
-        // Input for the title.
-        $label = $this->objLanguage->languageText(
-          'mod_switchboard_iconurl', 'switchboard', "Icon URL");
-        $table->startRow();
-        $table->addCell($label);
-        $textinput = new textinput('iconurl');
-        $textinput->size = 60;
-        $textinput->setValue($iconurl);
-         $textinput->cssClass = 'required';
-        $table->addCell($textinput->show());
-        $table->endRow();
-        
+               
         // Input for the description
         $label = $this->objLanguage->languageText(
-          'mod_switchboard_description', 'switchboard', "Link description");
+          'mod_slate_description', 'slate', "Page description");
         $table->startRow();
         $table->addCell($label);
         $textinput = new textinput('description');
@@ -298,7 +293,7 @@ class slateui extends object
         $table->startRow();
         $table->addCell("&nbsp;");
         $buttonTitle = $this->objLanguage->languageText('word_save');
-        $button = new button('submitLink', $buttonTitle);
+        $button = new button('savePage', $buttonTitle);
         $button->setToSubmit();
         $table->addCell($button->show());
         $table->endRow();
@@ -318,7 +313,7 @@ class slateui extends object
         $hiddenFields .= $hidId->show() . "\n\n";
         
          // Createform, add fields to it and display.
-        $formData = new form('linkEditor', NULL);
+        $formData = new form('slatepageEditor', NULL);
         $formData->addToForm(
             $this->makeHeading()
           . $table->show()
@@ -339,8 +334,8 @@ class slateui extends object
      */
     private function loadData($id)
     {
-        $objDb = $this->getObject('dbswitchboardlinks', 'switchboard');
-        $arData = $objDb->getLinkById($id);
+        $objDb = $this->getObject('dbslatepages', 'slate');
+        $arData = $objDb->getPageById($id);
         if (!empty($arData)) {
             foreach ($arData[0] as $key=>$value) {
                 $this->$key =  $value;
