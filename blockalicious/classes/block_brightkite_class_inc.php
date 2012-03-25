@@ -8,10 +8,9 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* The class provides a hello world block to demonstrate
-* how to use blockalicious
+* Brightkite block
 *
-* @author Derek Keats
+* @author Autor left DWK as author
 *
 */
 class block_brightkite extends object
@@ -45,7 +44,7 @@ class block_brightkite extends object
     * 
     */
     public function show()
-	{
+    {
        return $this->fetchBrightKiteFeed(4);
     }
     

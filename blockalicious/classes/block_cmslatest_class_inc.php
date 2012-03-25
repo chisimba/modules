@@ -8,8 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* The class provides a hello world block to demonstrate
-* how to use blockalicious
+* The latest content in CMS
 *
 * @author Derek Keats
 *
@@ -58,7 +57,7 @@ class block_cmslatest extends object
     * Method to output a block with information on how help works
     */
     function show()
-	{
+    {
        return $this->messageForBlock;
     }
 }
