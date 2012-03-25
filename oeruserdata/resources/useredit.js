@@ -250,7 +250,7 @@ jQuery(function() {
                         success: function(msg) {
                             if (msg !== 'ok') {
                                 allow_submit=false;
-                                jQuery("#save_results").html('<span class="error">Invalid captcha: ' + msg + '. Please try again.</span>');//.fadeOut('5000');
+                                jQuery("#save_results").html('<span class="error">Invalid captcha: Please try again.</span>');//.fadeOut('5000');
                                 // Reset the captcha.
                                 captcha_img = "index.php?module=oeruserdata&action=showcaptcha";
                                 jQuery("#img_captcha").attr("src", captcha_img);
