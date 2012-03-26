@@ -2069,10 +2069,10 @@ class schoolsops extends object
                     $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';                }
                 elseif ($fieldname == 'username')
                 {
-                    if (strlen($value) <= 2)
+                    $error = $this->ajaxUsername(FALSE, $value);
+                    if (!empty($error))
                     {
-                        $errorText = $this->objLanguage->languageText('mod_schools_usernameshort', 'schools', 'TEXT: mod_schools_usernameshort, not found');
-                        $errors[$fieldname] = '<div>' . $this->error(ucfirst(strtolower($errorText))) . '</div>';
+                        $errors[$fieldname] = $error;
                     }
                 }
                 elseif ($fieldname == 'email_address')
@@ -2159,7 +2159,7 @@ class schoolsops extends object
      * @access public
      * @return string The string to display 
      */
-    public function ajaxUsername()
+    public function ajaxUsername($isAjax = TRUE, $username = NULL)
     {
         // Set up text elements.
         $usernameExists = $this->objLanguage->languageText('mod_schools_usernameexists', 'schools', 'TEXT: mod_schools_usernameexists, not found');
@@ -2169,8 +2169,12 @@ class schoolsops extends object
         $success = $this->objLanguage->languageText('word_success', 'system', 'WORD: word_success, not found');
         
         // Get parameter.
-        $username = $this->getParam('username', FALSE);
+        if (!$username)
+        {
+            $username = $this->getParam('username', FALSE);
+        }
         
+        $users = FALSE;
         if (strlen($username) >= 3)
         {
             if (preg_match('/[^0-9A-Za-z]/',$username) != 0)
@@ -2188,7 +2192,7 @@ class schoolsops extends object
                     $this->objIcon->setIcon('accept', 'png');
                     $successIcon = $this->objIcon->show();
 
-                    $string = '<span class="success">' . $successIcon . '&nbsp;<b>' . $usernameAvaliable . '</b></span>';
+                    $string = '<span style="color: green;">' . $successIcon . '&nbsp;<b>' . $usernameAvaliable . '</b></span>';
                 }
                 else
                 {
@@ -2200,10 +2204,18 @@ class schoolsops extends object
         {
             $string = $this->error($usernameShort);
         }
-
-        echo $string;
-        die();
-    }
-    
+        if ($isAjax)
+        {
+            echo $string;
+            die();
+        }
+        else
+        {
+            if (!$users)
+            {
+                return '<div id="username_error">' . $string . '</div>';
+            }
+        }
+    }    
 }
 ?>

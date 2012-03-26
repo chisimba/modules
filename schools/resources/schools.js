@@ -288,20 +288,30 @@ jQuery(function() {
     {
         // jQuery ajax function to check the username.
         jQuery('#input_username').blur(function() {
-            var username = jQuery('#input_username').val();
-            var mydata = "username=" + username;
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=schools&action=ajaxUsername",
-                data: mydata,
-                success: function(ret) {
-                    jQuery("#username").html(ret);
-                    if (jQuery("#username > span").hasClass("error"))
-                    {
-                        jQuery('#input_username').select();
+            if (jQuery('#input_username').val() != '')
+            {
+                var username = jQuery('#input_username').val();
+                var mydata = "username=" + username;
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=schools&action=ajaxUsername",
+                    data: mydata,
+                    success: function(ret) {
+                        if (jQuery('#username_error').length > 0)
+                        {
+                            jQuery("#username_error").html(ret);
+                        }
+                        else
+                        {
+                            jQuery("#username").html(ret);
+                            if (jQuery("#username > span").hasClass("error"))
+                            {
+                                jQuery('#input_username').select();
+                            }
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     }
 
