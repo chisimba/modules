@@ -156,10 +156,12 @@ jQuery(function() {
         if(comment_text.length == 0) {
             return;
         } else {
-
             jQuery("#ct_"+id).attr("disabled", "disabled");
             var tmpHolder = jQuery("#c__"+fixedid).html();
             jQuery("#c__"+fixedid).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
+            comment_text = stripHTML(comment_text); // clean all html tags
+            comment_text = replaceURLWithHTMLLinks(comment_text); // replace links with HTML anchor tags.
+            comment_text = comment_text.replace(/\n/g,'<br />');
             jQuery.ajax({
                 type: "POST",
                 url: "index.php?module=wall&action=addcomment&id=" + id,
@@ -168,18 +170,19 @@ jQuery(function() {
                     if(ret == "true") {
                         // The comment blocks have ids starting with wct_
                         if ( jQuery("#wct_"+fixedid).length > 0 ) {
-                            jQuery("#wct_"+fixedid).prepend('<li><b><span class="wall_comment_author">'+youSaid+'</span></b>&nbsp;'+comment_text+'&nbsp;<div class="wall_comment_when"><strong>'+secsAgo+'</strong></div></li>');
+                            jQuery("#wct_"+fixedid).prepend('<li><b><span class="wall_comment_author">'+youSaid+'</span></b>&nbsp;<div id=cmt_'+fixedid+'>'+comment_text+'<div>&nbsp;<div class="wall_comment_when"><strong>'+secsAgo+'</strong></div></li>');
                             jQuery("#c__"+fixedid).slideToggle(300);
+                            jQuery("#cmt_"+fixedid+":first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
                         } else {
                             if ( jQuery("#wpr__"+fixedid).length > 0 ) {
                                 jQuery("#wpr__"+fixedid).append('<br /><br /><div class="wall_comments_top"></div><ol class="wall_replies" id="wct_'+fixedid+'"><li><b><span class="wall_comment_author">'+youSaid+'</span></b>&nbsp;'+comment_text+'<div class="wall_comment_when"><strong>'+secsAgo+'</strong></div></li></ol>');
                                 jQuery("#c__"+fixedid).slideToggle(300);
+                                jQuery("#cmt_"+fixedid+":first a").oembed(null, {maxWidth: 480, embedMethod: "append"});
                             } else {
                                 // We should never be able to get here
                                 alert(nothingApppendTo);
                             }
                         }
-
                     } else {
                         alert(ret);
                     }

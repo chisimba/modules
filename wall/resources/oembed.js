@@ -8,9 +8,15 @@
 jQuery(function() {
 
     // Function to do the oembed magic
-    jQuery(".msg a").oembed(null, {
+    jQuery(".wall_post_content a").oembed(null, {
         embedMethod: "append",
         maxWidth: 480
     });
+    jQuery(".wall_comment_content a").oembed(null, {
+        embedMethod: "append",
+        maxWidth: 480
+    });
+    
+    
     
 });

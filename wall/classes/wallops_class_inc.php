@@ -440,8 +440,8 @@ class wallops extends object {
             // Render the content for display.
             $ret .= "<div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
                     . "<span class='wallposter'>" . $fullName
-                    . "</span><br />"
-                    . $post['wallpost'] . "</div><div class='wall_post_info'>" . $when
+                    . "</span><br /><div class='wall_post_content'>"
+                    . $post['wallpost'] . "</div></div><div class='wall_post_info'>" . $when
                     . "&nbsp;&nbsp;&nbsp;&nbsp;" . $repliesNotice . "&nbsp;&nbsp;&nbsp;&nbsp;";
 
 
@@ -494,8 +494,8 @@ class wallops extends object {
                 $commentFn = '<a href="' . $cfnLink . '">' . $commentFn . '</a>';
             }
             $comments .= "<li id='cmt__" . $targetId . "'>" . $del . "<span class='wall_comment_author'>"
-                    . $commentFn . "</span>&nbsp;&nbsp;" . $comment['wallcomment']
-                    . "<br /><div class='wall_comment_when'>"
+                    . $commentFn . "</span>&nbsp;&nbsp;<div class='wall_comment_content'>" . $comment['wallcomment']
+                    . "</div><br /><div class='wall_comment_when'>"
                     . $commentWhen . "</div></li>";
         }
         return $comments;
