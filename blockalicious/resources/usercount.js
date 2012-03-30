@@ -24,7 +24,7 @@ jQuery(function() {
     jQuery(document).ready(function() {
         var refreshId = setInterval(function() {
             jQuery("#usercount").load("index.php?module=blockalicious&action=usercount");
-        }, 9000);
+        }, 10000);
         jQuery.ajaxSetup({ cache: false });
     });
     

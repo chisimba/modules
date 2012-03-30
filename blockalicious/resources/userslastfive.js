@@ -24,7 +24,7 @@ jQuery(function() {
     jQuery(document).ready(function() {
         var refreshId = setInterval(function() {
             jQuery("#userslastfive").load("index.php?module=blockalicious&action=userslastfive");
-        }, 9000);
+        }, 10000);
         jQuery.ajaxSetup({ cache: false });
     });
     
