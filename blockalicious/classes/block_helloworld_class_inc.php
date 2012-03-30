@@ -16,12 +16,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class block_helloworld extends object
 {
-    var $title;
+    public $title;
     
     /**
     * Constructor for the class
     */
-    function init()
+    public function init()
     {
         //Set the title - 
         $this->title='Hello world';
@@ -30,7 +30,7 @@ class block_helloworld extends object
     /**
     * Method to output a block with information on how help works
     */
-    function show()
+    public function show()
     {
        return "Hello world";
     }
