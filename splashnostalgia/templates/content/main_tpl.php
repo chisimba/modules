@@ -17,8 +17,8 @@ $objFix->fixThree();
                 <div class="splashcontents">
                 {
                     "display" : "block",
-                    "module" : "login",
-                    "block" : "ajaxlogin"
+                    "module" : "security",
+                    "block" : "login"
                 }
                 </div>
             </div>
