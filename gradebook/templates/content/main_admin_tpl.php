@@ -63,10 +63,10 @@ $this->TableOptions->width=($dropdownAssessments && $dropdownAssessments!="View 
 //$this->TableOptions->attributes="align=\"left\"";
 
 //view by assessment
-$objLink = new link($this->uri(array('action'=>'viewByAssessment','dropdownAssessments'=>$dropdownAssessments)));
-$objLink->link=$objLanguage->languageText('mod_gradebook_viewByAssessment','gradebook');
+$objLinkViewByAssessment = new link($this->uri(array('action'=>'viewByAssessment','dropdownAssessments'=>$dropdownAssessments)));
+$objLinkViewByAssessment->link=$objLanguage->languageText('mod_gradebook_viewByAssessment','gradebook');
 $this->TableOptions->startRow();
-$this->TableOptions->addCell($objLink->show(),NULL,NULL,NULL,NULL," colspan=\"3\"");
+$this->TableOptions->addCell($objLinkViewByAssessment->show(),NULL,NULL,NULL,NULL," colspan=\"3\"");
 $this->TableOptions->endRow();
 
 $this->TableOptions->startRow();
@@ -84,7 +84,7 @@ if($dropdownAssessments) {
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_assignments','gradebook'),$objLanguage->languageText('mod_gradebook_assignments','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_essays','gradebook'),$objLanguage->languageText('mod_gradebook_essays','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_test','gradebook'),$objLanguage->languageText('mod_gradebook_test','gradebook'));
-$objAssessments->addOption($objLanguage->languageText('mod_gradebook_worksheet','gradebook'),$objLanguage->languageText('mod_gradebook_worksheet','gradebook'));
+$objAssessments->addOption($objLanguage->languageText('mod_gradebook_worksheet','gradebook'),$objLanguage->languageText('mod_gradebook_wordworksheet','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_viewAll','gradebook'),$objLanguage->languageText('mod_gradebook_viewAll','gradebook'));
 $this->TableOptions->addCell($objAssessments->show(),"20%");
 $this->TableOptions->addCell("&nbsp;","27%");
@@ -105,7 +105,7 @@ if(!$dropdownAssessments || $dropdownAssessments=="View All") {
 	$this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_assignments','gradebook'),"5%");
 	$this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_essays','gradebook'),"5%");
 	$this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_test','gradebook'),"10%");
-	$this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_worksheet','gradebook'),"20%");
+	$this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_wordworksheet','gradebook'),"20%");
 }
 $this->TableInstructions->addHeaderCell($objLanguage->languageText('mod_gradebook_yearMark','gradebook'),"10%");
 $this->TableInstructions->endHeaderRow();
@@ -357,8 +357,9 @@ $this->TableInstructions->endRow();
 //upload marks for offline assessment
 $objLinkUpload = new link($this->uri(array('action'=>'uploadMarks')));
 $objLinkUpload->link=$objLanguage->languageText('mod_gradebook_uploadMarks','gradebook');
+
 $this->TableInstructions->startRow();
-$this->TableInstructions->addCell($objLinkUpload->show(),NULL,NULL,NULL,NULL," colspan=\"7\"");
+$this->TableInstructions->addCell($objLinkUpload->show()." | ".$objLinkViewByAssessment->show(),NULL,NULL,NULL,NULL," colspan=\"7\"");
 $this->TableInstructions->endRow();
 
 if($dropdownAssessments && $dropdownAssessments!="View All") {

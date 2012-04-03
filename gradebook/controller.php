@@ -90,7 +90,7 @@ class gradebook extends controller {
         switch($action) {
             //default action
             case NULL:
-                if($this->objUser->isAdmin() || $this->objPerm->isContextMember('Lecturers')) {
+                if($this->objUser->isAdmin() || $this->objPerm->isContextMember('Lecturers')) {                    
                     return "main_admin_tpl.php";
                 } else {
                     return "main_user_tpl.php";
@@ -132,7 +132,7 @@ class gradebook extends controller {
 
                 switch($assessmentType) {
                     case 'Essays':
-                    //insert into tbl_essay_topics
+                        //insert into tbl_essay_topics
                         $fields = array();
                         $fields['name'] = $assessmentName;
                         $fields['percentage'] = $percentFinalMark;
@@ -140,35 +140,21 @@ class gradebook extends controller {
                         $fields['context'] = $contextCode;
                         $fields['closing_date'] = $closingDate;
                         $fields['description'] = $description;
-                        $objEssaytopics->addTopic($fields);
-                        //get the last created assignmentId
-                        $idArray=array();
-                        $idArray=$objEssaytopics->getTopic(NULL,NULL,"context='$contextCode' and name='$assessmentName'");
-                        $count=0;
-                        $count=count($idArray);
-                        $id=0;
-                        $id=$idArray[$count-1]["id"];
+                        $id = $objEssaytopics->addTopic($fields);
                         break;
                     case 'MCQ Tests':
-                    //insert into tbl_worksheet
+                        //insert into tbl_tests
                         $fields = array();
                         $fields['name'] = $assessmentName;
                         $fields['percentage'] = $percentFinalMark;
                         $fields['userid'] = $this->objUser->userId();
                         $fields['context'] = $contextCode;
-                        $fields['closing_date'] = $closingDate;
+                        $fields['closingdate'] = $closingDate;
                         $fields['description'] = $description;
-                        $objTestadmin->addTest($fields);
-                        //get the last created assignmentId
-                        $idArray=array();
-                        $idArray=$objTestadmin->getNewestTest("*","context='$contextCode' AND name='$assessmentName'");
-                        $count=0;
-                        $count=count($idArray);
-                        $id=0;
-                        $id=$idArray[$count-1]["id"];
+                        $id = $objTestadmin->addTest($fields);
                         break;
                     case 'Online Worksheets':
-                    //insert into tbl_worksheet
+                        //insert into tbl_worksheet
                         $fields = array();
                         $fields['name'] = $assessmentName;
                         $fields['percentage'] = $percentFinalMark;
@@ -176,18 +162,11 @@ class gradebook extends controller {
                         $fields['context'] = $contextCode;
                         $fields['closing_date'] = $closingDate;
                         $fields['description'] = $description;
-                        $objWorksheet->insert($fields);
-                        //get the last created assignmentId
-                        $idArray=array();
-                        $idArray=$objWorksheet->getWorksheets("context='$contextCode' AND name='$assessmentName'");
-                        $count=0;
-                        $count=count($idArray);
-                        $id=0;
-                        $id=$idArray[$count-1]["id"];
+                        $id = $objWorksheet->addWorksheet($fields);
                         break;
                     case 'Assignments':
-                    default:
-                    //insert into tbl_assignment
+                    default:                        
+                        //insert into tbl_assignment
                         $fields = array();
                         $fields['name'] = $assessmentName;
                         $fields['percentage'] = $percentFinalMark;
@@ -195,27 +174,21 @@ class gradebook extends controller {
                         $fields['context'] = $contextCode;
                         $fields['closing_date'] = $closingDate;
                         $fields['description'] = $description;
-                        $objAssignment->addAssignment($fields);
-                        //get the last created assignmentId
-                        $idArray=array();
-                        $idArray=$objAssignment->getAssignment($contextCode,"name='$assessmentName'");
-                        $count=0;
-                        $count=count($idArray);
-                        $id=0;
-                        $id=$idArray[$count-1]["id"];
+                        $id = $objAssignment->addAssignment($fields);
                         break;
                 }
-
                 for($i=1;$i<=$numberStudents;$i++) {
                     //get the userId
                     $userId = 0;
-                    $userId = $this->getParam("userId".$i, NULL);
+                    $userId = $this->getParam("userid".$i, NULL);
+
                     //get the student mark
                     $studentMark = 0;
                     $studentMark = $this->getParam("studentMark".$i, NULL);
+
                     switch($assessmentType) {
                         case 'Essays':
-                        //insert into tbl_essay_book
+                            //insert into tbl_essay_book
                             $fields = array();
                             $fields['topicid'] = $id;
                             $fields['studentid'] = $userId;
@@ -224,7 +197,7 @@ class gradebook extends controller {
                             $objEssaybook->bookEssay($fields);
                             break;
                         case 'MCQ Tests':
-                        //insert into tbl_test_results
+                            //insert into tbl_test_results
                             $fields = array();
                             $fields['testid'] = $id;
                             $fields['studentid'] = $userId;
@@ -232,7 +205,7 @@ class gradebook extends controller {
                             $objTestresults->addResult($fields);
                             break;
                         case 'Online Worksheets':
-                        //insert into tbl_worksheet_results
+                            //insert into tbl_worksheet_results
                             $fields = array();
                             $fields['worksheet_id'] = $id;
                             $fields['userid'] = $userId;
@@ -241,7 +214,7 @@ class gradebook extends controller {
                             break;
                         case 'Assignments':
                         default:
-                        //insert into tbl_assignment_submit
+                            //insert into tbl_assignment_submit
                             $fields = array();
                             $fields['assignmentid'] = $id;
                             $fields['userid'] = $userId;

@@ -92,7 +92,7 @@ if($dropdownAssessments) {
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_assignments','gradebook'),$objLanguage->languageText('mod_gradebook_assignments','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_essays','gradebook'),$objLanguage->languageText('mod_gradebook_essays','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_test','gradebook'),$objLanguage->languageText('mod_gradebook_test','gradebook'));
-$objAssessments->addOption($objLanguage->languageText('mod_gradebook_worksheet','gradebook'),$objLanguage->languageText('mod_gradebook_worksheet','gradebook'));
+$objAssessments->addOption($objLanguage->languageText('mod_gradebook_worksheet','gradebook'),$objLanguage->languageText('mod_gradebook_wordworksheet','gradebook'));
 $objAssessments->addOption($objLanguage->languageText('mod_gradebook_viewAll','gradebook'),$objLanguage->languageText('mod_gradebook_viewAll','gradebook'));
 $this->TableOptions->addCell($objAssessments->show(),"20%");
 $this->TableOptions->addCell("&nbsp;","20%");

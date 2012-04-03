@@ -113,7 +113,7 @@ class gradebookfunctions extends controller {
 
         $ar=array();
         //$ar=$this->objMembers->getSubGroupUsers($this->studGroupId, array('*'));
-        $contextStudents = $this->userContext->getContextStudents($contextCode);
+        $contextStudents = $this->userContext->getContextStudents($this->contextCode);
         $num=0;
         //$num=count($ar);
         $num=count($contextStudents);
