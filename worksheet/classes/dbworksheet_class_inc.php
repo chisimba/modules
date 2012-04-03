@@ -132,7 +132,22 @@ class dbworksheet extends dbTable
         }
         return FALSE;
     }
-
+    /**
+     * Method to add or update a worksheet.
+     *
+     * @access public
+     * @param array $fields The data to be inserted into the table
+     * @param string $id The id of the worksheet to be updated. Default=NULL.
+     * @return
+     */
+    public function addWorksheet($fields, $id = NULL) {
+        if ($id) {
+            $this->update('id', $id, $fields);
+        } else {
+            $id = $this->insert($fields);
+        }
+        return $id;
+    }
     /**
     * Method to add a new worksheet
     * @param string $context The current context.
