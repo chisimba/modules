@@ -112,7 +112,28 @@ class dbassignment_old extends dbtable
         }
         return FALSE;
     }
+    /**
+    * Method to get an assignment from the database.
+    * @param string $id The Unique Identifier.
+    * @param string $filter
+    * @return array $data List of assignments
+    */
+    public function getAssignmentById($id, $filter=NULL)
+    {
+        $sql = 'SELECT * FROM '.$this->table;
+        $sql .= " WHERE id='".$id."'";
 
+        if($filter){
+            $sql .= ' AND '.$filter;
+        }
+        $sql .= ' ORDER BY closing_date';
+        $data = $this->getArray($sql);
+
+        if($data){
+            return $data;
+        }
+        return FALSE;
+    }
     /**
     * Method to delete an assignment.
     * @param string $id The id of the assignment to be deleted
