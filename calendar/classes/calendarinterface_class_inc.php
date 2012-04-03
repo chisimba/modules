@@ -559,9 +559,9 @@ class calendarinterface extends object
                     $jqDialogue->setCssId('jqdialogue_'.$day.'_'.$key);
                     $jqDialogue->setTitle($title);
                     $jqDialogue->setContent($content);
-                    $jqDialogue->addOption('autoOpen: false');
-                    $jqDialogue->addOption('draggable: true');
-                    $jqDialogue->addOption('resizable: true');
+                    $jqDialogue->addOption('autoOpen', 'false');
+                    $jqDialogue->addOption('draggable', 'true');
+                    $jqDialogue->addOption('resizable', 'true');
                     $str .= $jqDialogue->show();
                 }
                 $this->eventsList[$day] = $string;
