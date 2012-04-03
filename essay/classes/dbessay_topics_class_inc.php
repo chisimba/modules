@@ -42,8 +42,10 @@ class dbessay_topics extends dbTable
         $fields['last_modified'] = date('Y-m-d H:i:s', time());
         if(!empty($id)){
             $this->update('id',$id,$fields);
+            return $id;
         }else{
-            $this->insert($fields);
+            $id = $this->insert($fields);
+            return $id;
         }
     }
 
