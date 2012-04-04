@@ -293,22 +293,28 @@ if(!$numberStudents) {
 					//retrieve grades from MCQ Tests
 					$as=array();
 					$testsArray=array();
-					$testsArray=$objTestadmin->getTests($contextCode);
+					$testsArray=$objTestadmin->getTests($contextCode);                                        
 					if(!empty($testsArray)) {
 						foreach($testsArray as $as) {
 							$count+=1;
 							$annualResult2=array();
 							$iTestresults=array();
 							$iTestresults=$objTestresults->getAnnualResults(
-								"tbl_test_results.studentId='".$userId[$i-1]."' and tbl_test_results.testId=tbl_tests.id and tbl_tests.id='$as[id]' and tbl_tests.context='$contextCode'",
+								"tbl_test_results.studentid='".$userId[$i-1]."' and 
+                                                                tbl_test_results.testId=tbl_tests.id and tbl_tests.id='$as[id]'
+                                                                and tbl_tests.context='$contextCode'",
 								"(tbl_test_results.mark/tbl_tests.totalMark)*tbl_tests.percentage result",
 								"tbl_test_results,tbl_tests");
 							if(!empty($iTestresults)) {
 								foreach($iTestresults as $annualResult2) {
-									$totalTests=round($annualResult2["result"],2);
-									$total+=round($annualResult2["result"],2);
+                                                                    $result = $annualResult2["result"];
+                                                                    if(isset ($result)){
+									$totalTests=round($result,2);
+									$total+=round($result,2);
+                                                                        
 									//tests
 									$this->TableInstructions->addCell(($totalTests?$totalTests:""));
+                                                                    }
 								}
 							} else {
 								$this->TableInstructions->addCell("&nbsp;");
@@ -658,7 +664,7 @@ switch($dropdownAssessments) {
 				$max=array();
 				$maxTestsArray=array();
 				$maxTestsArray=$objTestresults->getAnnualResults(
-						"tbl_test_results.testId=tbl_tests.id and tbl_tests.id='$as[id]' and tbl_tests.context='$contextCode'",
+						"tbl_test_results.testid=tbl_tests.id and tbl_tests.id='$as[id]' and tbl_tests.context='$contextCode'",
 						"max((tbl_test_results.mark/tbl_tests.totalMark)*tbl_tests.percentage) maxmark",
 						"tbl_test_results,tbl_tests");
 				if(!empty($maxTestsArray)) {

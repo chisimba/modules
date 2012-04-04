@@ -150,7 +150,9 @@ class gradebook extends controller {
                         $fields['userid'] = $this->objUser->userId();
                         $fields['context'] = $contextCode;
                         $fields['closingdate'] = $closingDate;
-                        $fields['description'] = $description;
+                        $fields['description'] = $assessmentName;
+                        $fields['status'] = "closed";
+                        $fields['testtype'] = "offline";
                         $id = $objTestadmin->addTest($fields);
                         break;
                     case 'Online Worksheets':
@@ -177,6 +179,7 @@ class gradebook extends controller {
                         $id = $objAssignment->addAssignment($fields);
                         break;
                 }
+                $totalMarkMCQ = 0;
                 for($i=1;$i<=$numberStudents;$i++) {
                     //get the userId
                     $userId = 0;
@@ -202,6 +205,7 @@ class gradebook extends controller {
                             $fields['testid'] = $id;
                             $fields['studentid'] = $userId;
                             $fields['mark'] = $studentMark;
+                            $totalMarkMCQ += $studentMark;
                             $objTestresults->addResult($fields);
                             break;
                         case 'Online Worksheets':
@@ -223,6 +227,8 @@ class gradebook extends controller {
                             break;
                     }
                 }
+                //Store MCQ total mark
+                $objTestadmin->setTotal($id, $totalMarkMCQ);
                 return $this->nextAction('viewByAssessment',array('dropdownAssessments'=>$assessmentType));
                 break;
         }
