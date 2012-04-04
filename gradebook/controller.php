@@ -65,6 +65,9 @@ class gradebook extends controller {
     public function dispatch($action) {
         //get the parameter from the querystring
         $action = $this->getParam("action", NULL);
+        if ($this->contextCode == '') {
+            return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
+        }
 
         //assignment object
         $objAssignment = 0;
