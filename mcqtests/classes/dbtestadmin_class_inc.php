@@ -68,6 +68,7 @@ class dbtestadmin extends dbtable {
             $sql.= " WHERE context='$context'";
         }
         $sql.= " and testtype not like 'Advanc%' ORDER BY closingdate DESC, name";
+        
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;

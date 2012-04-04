@@ -128,7 +128,7 @@ class dbresults extends dbtable {
      */
     public function getAnnualResults($filter, $fields = '*', $tables = 'tbl_test_results') {
         $sql = "SELECT $fields FROM ".$tables;
-        $sql.= " WHERE $filter";
+        $sql.= " WHERE $filter";        
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
