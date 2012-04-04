@@ -37,7 +37,7 @@ class essay extends controller
         //$this->objModules = $this->newObject('modules','modulecatalogue');
         $this->objModules = $this->newObject('modules','modulecatalogue');
         if(!$this->objModules->checkIfRegistered('essayadmin')){
-            return $this->nextAction('notregistered',array(),'redirect');
+            return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
         $this->assignment = FALSE;
         if($this->objModules->checkIfRegistered('Assignment Management', 'assignment')){
