@@ -39,6 +39,12 @@ class gradebook extends controller {
     //management of layer attributes <div tags etc
     public $objDiv;
 
+    //context object
+    public $objContext;
+
+    //context code object
+    public $contextCode;
+
     /**
      * initilization function - declaration of required objects
      */
@@ -55,6 +61,10 @@ class gradebook extends controller {
         $this->objLog=$this->newObject('logactivity', 'logger');
         $this->objLog->log();
         $this->objButtons = & $this->getObject('navbuttons', 'navigation');
+        // Get an instance of the context object
+        $this->objContext = $this->getObject('dbcontext','context');
+        //Get context code
+        $this->contextCode = $this->objContext->getContextCode();
     }
 
     /**
