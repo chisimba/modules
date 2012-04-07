@@ -13,12 +13,12 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region1">
         {
             "display" : "block",
-            "module" : "contentblocks",
+            "module" : "textblock",
             "block" : "contentblockshowto"
         }
         {
             "display" : "block",
-            "module" : "contentblocks",
+            "module" : "textblock",
             "block" : "contentleftnav"
         }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
