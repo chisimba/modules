@@ -30,12 +30,13 @@ jQuery(function() {
 
     });
     
-    jQuery('#link_add_bookmark').click(function() {
+    jQuery('#add_bookmark').click(function() {
         jQuery('#jqdialogue_add_bookmark').dialog('open');
     });
     
     jQuery('#jqdialogue_add_bookmark').live('dialogopen', function(event, ui) {
         jQuery('.ui-dialog-titlebar-close').hide();
+        jQuery('#input_bookmark_name').val('');
         jQuery('#input_location').val(bookmark);
         jQuery('#input_visible_location').val(bookmark);
     });
@@ -56,8 +57,21 @@ jQuery(function() {
         }
         else
         {
-            jQuery('#form_modal_bookmarks').submit();
             jQuery('#jqdialogue_add_bookmark').dialog('close');
+            var folder = jQuery('#input_folder_id').val();
+            var name = jQuery('#input_bookmark_name').val();
+            var location = jQuery('#input_location').val();
+            var params = 'folder_id=' + folder + '&bookmark_name=' + name + '&location=' + location;
+            jQuery.ajax({
+                type: "POST",
+                url: "index.php?module=bookmarks&action=ajaxSaveBookmark",
+                data: params,
+                success: function(ret) {
+                    jQuery("#jqdialogue_bookmark_success").dialog('open');
+                    jQuery('#checking').html(ret);
+                    return false;
+                }
+            });
         }
     });
 });

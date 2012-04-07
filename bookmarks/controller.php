@@ -264,7 +264,7 @@ class bookmarks extends controller
      * @access public
      * @return VOID 
      */
-    public function __save()
+    public function __ajaxSaveBookmark()
     {
         $data = array();
         $data['user_id'] = $this->objUser->PKId();
@@ -273,9 +273,10 @@ class bookmarks extends controller
         $data['location'] = $this->getParam('location');
         $data['created_by'] = $this->objUser->PKId();
         $data['date_created'] = date('Y-m-d H:i:s');
-        $this->objDBbookmarks->saveBookmark($data);
+        $id = $this->objDBbookmarks->saveBookmark($data);
 
-        return $this->nextAction('view');
+        echo $id;
+        die();
     }
     
     /**
@@ -337,6 +338,7 @@ class bookmarks extends controller
     */
     function __getMethod(& $action)
     {
+//        die($action);
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {

@@ -53,6 +53,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class bookmarksops extends object
 {
     public $parents;
+    public $script;
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -140,6 +141,7 @@ class bookmarksops extends object
         $string = $folderLayer . $bookmarkLayer;
         
         return $string;
+        return $string . $this->showLink();
     }
     
     /**
@@ -209,7 +211,7 @@ class bookmarksops extends object
                 }
                 else
                 {
-                    $this->objIcon->setIcon('folder_none', 'png');
+                    $this->objIcon->setIcon('folder', 'png');
                     $this->objIcon->title = $noLabel;
                     $this->objIcon->alt = $noLabel;
                     $icon = "<a href='#$id' id='icon_$id'>" . $this->objIcon->show(). '</a>';
@@ -300,7 +302,7 @@ class bookmarksops extends object
         }
         else
         {
-            $this->objIcon->setIcon('folder_none', 'png');
+            $this->objIcon->setIcon('folder', 'png');
             $this->objIcon->title = $noLabel;
             $this->objIcon->alt = $noLabel;
             $icon = "<a href='#$id' id='icon_$id'>" . $this->objIcon->show(). '</a>';
@@ -615,7 +617,7 @@ class bookmarksops extends object
     public function showLink()
     {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('bookmark_link.js', 'bookmarks'));
-        $jqDialog = $this->getObject('jqdialogue','jquery');
+        $jqDialog = $this->getObject('jqdialogue', 'jquery');
 
         $addBookmarkLabel = $this->objLanguage->languageText('mod_bookmarks_addbookmark', 'bookmarks', 'ERROR: mod_bookmarks_addbookmark');
         $bookmarkPageLabel = $this->objLanguage->languageText('mod_bookmarks_bookmarkpage', 'bookmarks', 'ERROR: mod_bookmarks_bookmarkpage');
@@ -626,6 +628,8 @@ class bookmarksops extends object
         $folderLabel = $this->objLanguage->languageText('mod_bookmarks_folder', 'bookmarks', 'ERROR: mod_bookmarks_folder');
         $rootFolderLabel = $this->objLanguage->languageText('mod_bookmarks_rootfolder', 'bookmarks', 'ERROR: mod_bookmarks_rootfolder');
         $noNameLabel = $this->objLanguage->languageText('mod_bookmarks_noname', 'bookmarks', 'ERROR: mod_bookmarks_noname');
+        $successTitleLabel = $this->objLanguage->languageText('word_success', 'system', 'ERROR: word_success');
+        $successLabel = $this->objLanguage->languageText('mod_bookmarks_success', 'bookmarks', 'ERROR: mod_bookmarks_success');
         
         $arrayVars = array();
         $arrayVars['no_name'] = $noNameLabel;
@@ -692,6 +696,7 @@ class bookmarksops extends object
         $objLayer->str =  $form;
         $formLayer = $objLayer->show();
 
+        $jqDialog->init();
         $jqDialog->setCssId('jqdialogue_add_bookmark');
         $jqDialog->setTitle($addBookmarkLabel);
         $jqDialog->setContent($formLayer);
@@ -701,13 +706,31 @@ class bookmarksops extends object
         $jqDialog->addOption('resizable', 'true');
         $jqDialog->removeOption('buttons');
         $dialog = $jqDialog->show();
-        
+        $this->script = $jqDialog->script;
+    
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell('<span class="success">' . $successLabel . '</span><div id="checking"></div>', '200px', '', '', 'odd', '', '');
+        $objTable->endRow();
+        $successTable = $objTable->show();
+
+        $jqDialog->init();
+        $jqDialog->setCssId('jqdialogue_bookmark_success');
+        $jqDialog->setTitle($successTitleLabel);
+        $jqDialog->setContent($successTable);
+        $jqDialog->addOption('autoOpen', 'false');
+        $jqDialog->addOption('draggable', 'true');
+        $jqDialog->addOption('resizable', 'true');
+        $dialog .= $jqDialog->show();
+        $this->script .= $jqDialog->script;
+
         $this->objIcon->title = $bookmarkPageLabel;
         $this->objIcon->alt = $bookmarkPageLabel;
         $this->objIcon->setIcon('bookmark', 'png');
         $bookmarkIcon = $this->objIcon->show();
 
-        $link = '<a href="#" id="link_add_bookmark">' . '&nbsp;' . $bookmarkIcon . '</a>';
+        $link = '<a href="#" id="add_bookmark">' . '&nbsp;' . $bookmarkIcon . '</a>';
 
         $objLayer = new layer();
         $objLayer->id = 'bookmark_layer';
@@ -911,6 +934,23 @@ class bookmarksops extends object
             $tree[] = $folder;
         } 
         return $tree;
+    }
+    
+    /**
+     *
+     * Method to return the bookmark link params
+     * 
+     * @access public
+     * @return array The array of params 
+     */
+    public function bookmarkParams()
+    {
+        $headerParams = $this->getJavascriptFile('bookmark_link.js', 'bookmarks');
+        $headerParams .= "\n" . $this->getJavascriptFile('jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js', 'jquery');
+        $headerParams .= "\n" . '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('jquery-ui-1.8.18/css/cupertino/jquery-ui-1.8.18.custom.css', 'jquery').'">';
+        $headerParams .= "\n" . $this->script;
+        $array = array('headerParams' => $headerParams);
+        return $array;
     }
 }
 ?>
