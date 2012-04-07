@@ -57,7 +57,7 @@ class contentblocks extends controller
         $this->objLanguage = $this->getObject("language", "language");
         // Load the module helper Javascript
         $this->appendArrayVar('headerParams',
-        $this->getJavaScriptFile('textblock.js',
+        $this->getJavaScriptFile('contentblock.js',
           'contentblocks'));
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');

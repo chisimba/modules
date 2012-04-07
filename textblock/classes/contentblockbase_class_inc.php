@@ -84,7 +84,7 @@ class contentblockbase extends object
      */
     public function setDataArr($id) {
         $arrData = array();
-        $arrData = $this->objDb->getBlockById($id);
+        $arrData = $this->objDb->getBlockById($id);        
         
         if (count($arrData) > 0) {
             $ar = $arrData[0];

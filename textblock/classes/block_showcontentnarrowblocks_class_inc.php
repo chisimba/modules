@@ -91,8 +91,7 @@ class block_showcontentnarrowblocks extends object
      */
     public function show()
     {
-        $objUi = $this->getObject("contentblockui", "contentblocks");
-        var_dump($objUi->showNarrowTextListed());exit;
+        $objUi = $this->getObject("contentblockui", "contentblocks");        
         return $objUi->showNarrowTextListed();
     }
 }
