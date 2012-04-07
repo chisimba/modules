@@ -482,12 +482,23 @@ class contentblockui extends object {
                 . "<br /><br />");
 
         // Create an element for the input of block text.
-        $objElement = new textarea("blocktext");
-        $objElement->rows = 10;
+        /* $objElement = new textarea("blocktext");
+          $objElement->rows = 10;
+          //Set the value of the element to $title
+          if (isset($this->blocktext)) {
+          $objElement->setContent(htmlspecialchars($this->blocktext));
+          } */
+        $objElement = $this->newObject('htmlarea', 'htmlelements');
+        $objElement->name = 'blocktext';
+        $objElement->width = '450px';
+        $objElement->height = '250px';
+        $objElement->toolbarSet = 'simple';
+        
         //Set the value of the element to $title
         if (isset($this->blocktext)) {
-            $objElement->setContent(htmlspecialchars($this->blocktext));
+            $objElement->value = $this->blocktext;
         }
+
         //Create label for the input of quote
         $quoteLabel = new label(
                         $this->objLanguage->languageText(
