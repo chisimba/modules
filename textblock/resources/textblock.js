@@ -45,7 +45,7 @@ jQuery(function() {
                 }
            },
            type: "POST",
-           url: "index.php?module=textblock&action=deleteajax&id=" + dId,
+           url: "index.php?module=contentblocks&action=deleteajax&id=" + dId,
            cache: false,
            success: function(ret){
                if(ret == "RECORD_DELETED") {

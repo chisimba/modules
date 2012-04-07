@@ -2,8 +2,8 @@
 /**
 *
 *  A layout template for Textblock
-*  Author: Derek Keats derek@dkeats.com
-*  Date: January 4, 2012, 3:53 pm
+*  @author    Paul Mungai paulwando@gmail.com
+*  @copyright 2012 AVOIR
 *
 *  A layout template for use with dynamic canvas content. This layout
 *  template is required in any module that will be parsing JSON templates.

@@ -1,8 +1,8 @@
 <?php
 /**
 *  A main content template for link editor
-*  Author: Derek Keats derek@dkeats.com
-*  Date: December 18, 2011, 8:48 am
+*  @author    Paul Mungai paulwando@gmail.com
+*  @copyright 2012 AVOIR
 *
 */
 ob_start();
@@ -14,12 +14,12 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "textblock",
-            "block" : "howto"
+            "block" : "contentblockshowto"
         }
         {
             "display" : "block",
             "module" : "textblock",
-            "block" : "leftnav"
+            "block" : "contentleftnav"
         }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
     </div>
@@ -27,7 +27,7 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "textblock",
-            "block" : "shownarrowblocks"
+            "block" : "showcontentnarrowblocks"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
     </div>
