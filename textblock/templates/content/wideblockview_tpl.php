@@ -18,7 +18,7 @@ $objFix->fixThree();
         }
         {
             "display" : "block",
-            "module" : "textblock",
+            "module" : "contentblocks",
             "block" : "contentleftnav"
         }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>

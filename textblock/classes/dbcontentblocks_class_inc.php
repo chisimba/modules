@@ -59,9 +59,9 @@ class dbcontentblocks extends dbTable {
      * @access public
      *
      */
-    public function getBlocksArr($blockType) {
-        $sql = "SELECT * from tbl_contentblocks WHERE blockid LIKE '"
-                . $blockType . "%' and deleted !=1";
+    public function getBlocksArr($blockType) {        
+        $sql = "SELECT * from tbl_contentblocks WHERE blockid = '"
+                . $blockType . "' and (deleted !=1 or deleted is null or deleted = 0)";
         $ar = $this->getArray($sql);
         if (!empty($ar)) {         
             return $ar;
