@@ -474,6 +474,7 @@ class coreloader extends object
      */
     public function show()
     {        
+        $plugins = '';
         if (!empty($this->plugins))
         {
             $this->addDependencies();
@@ -483,7 +484,7 @@ class coreloader extends object
         $string .= '<script type="text/javascript">jQuery.noConflict();</script>' . "\n";
         $string .= $this->loadUi();
         $string .= $this->loadTheme();
-        $string = $plugins;
+        $string .= $plugins;
         $this->appendArrayVar('headerParams', $string);
     }
 }
