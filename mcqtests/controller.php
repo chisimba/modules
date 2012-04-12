@@ -2271,8 +2271,10 @@ class mcqtests extends controller {
                 $totalMark = $this->dbQuestions->sumTotalmark($line['id']);
                 if (!empty($result)) {
                     $data[$key]['mark'] = $result[0]['mark'];
+                    $data[$key]['endtime'] = $result[0]['endtime'];
                 } else {
                     $data[$key]['mark'] = 'none';
+                    $data[$key]['endtime'] = '';
                 }
                 if (!empty($totalMark)) {
                     $data[$key]['totalmark'] = $totalMark;
