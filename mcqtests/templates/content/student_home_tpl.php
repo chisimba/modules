@@ -81,12 +81,20 @@ if (!empty($data)) {
             // Calculate mark as a percentage for display
             if ($line['mark'] != 'none') {
                 if ($line['testtype'] != 'Summative') {
-                    if ($line['mark'] == 0) {
+                    if (
+                        intval($line['mark']) == 0
+                        && is_null($line['endtime'])
+                    ) {
+                        $mark = '<span style="color: red;">legacy unmarked</span>';
+                    } else if (
+                        intval($line['mark']) == -1
+                    ) {
+                        $mark = '<span style="color: red;">unmarked</span>';
+                    } else if ($line['mark'] == 0) {
                         $mark = 0;
                     } else {
                         $mark = round($line['mark']/$line['totalmark']*100,2);
                     }
-                    
                 } else {
                     $mark = $completedLabel;
                 }
@@ -150,10 +158,12 @@ if (!empty($data)) {
         }
     }
 }
+/*
 $advanced = new link($this->uri(array('action'=>'studenthome2')));
 $advanced->link = $this->objLanguage->languageText('mod_mcqtest_advanced', 'mcqtests');
 $advanced->extra  =  "style='color:#000099;'";
 echo "<h3>".$advanced->show()."</h3>";
+*/
 echo $objTable->show();
 // Link to Assignment Management if registered
 if ($this->assignment) {

@@ -45,9 +45,27 @@ if (!empty($data)) {
     foreach($data as $line) {
         $class = (($i++%2) == 0) ? 'even' : 'odd';
         if ($totalmark != 0) {
-            $mark = round($line['mark']/$totalmark*100, 2) .'%';
+            //trigger_error('$line::'.var_export($line, true));
+            //trigger_error('isset($line[\'endtime\'])::'.var_export(isset($line['endtime']), true));
+            //trigger_error('endtime::'.var_export($line['endtime'], true));
+            if (
+                intval($line['mark']) == 0
+                && is_null($line['endtime'])
+            ) {
+                $mark = '<span style="color: red;">legacy unmarked</span>';
+            } else if (
+                intval($line['mark']) == -1
+            ) {
+                $mark = '<span style="color: red;">unmarked</span>';
+            } else {
+                $mark = round($line['mark']/$totalmark*100, 2) .'%';
+            }
         } else {
-            $mark = $line['mark'];
+            if (intval($line['mark']) == -1) {
+                $mark = 'unmarked';
+            } else {
+                $mark = $line['mark'];
+            }
         }
         if (isset($line['starttime']) && !empty($line['starttime'])) {
             $start = $this->formatDate($line['starttime']);

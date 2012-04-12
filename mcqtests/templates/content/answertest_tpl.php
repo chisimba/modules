@@ -405,7 +405,7 @@ $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     </script>";
 echo $javascript;
 $nav = '<p align="center"><b>'.$gotoLabel.'</b></p><p align="center">';
-$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>';
+$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>'; //10
 $str.= $nav;
 $objLayer = new layer();
 $objLayer->padding = '10px';

@@ -111,7 +111,7 @@ class dbquestions extends dbtable {
             $qnid = $id;
 
         //Add record to blocks
-        if ($inserting == 1) { // JC TRUE
+        if ($inserting == 1) {
             $arrData = array();
             $arrData['categoryid'] = $fields['testid'];
             $arrData['title'] = $fields['questiontype']; //qtype

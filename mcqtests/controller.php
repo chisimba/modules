@@ -103,10 +103,11 @@ class mcqtests extends controller {
         // Check if the assignment module is registered and can be linked to.
         $this->objModules = $this->newObject('modules', 'modulecatalogue');
         $this->assignment = FALSE;
+        /*
         if ($this->objModules->checkIfRegistered('Assignment Management', 'assignment')) {
             $this->assignment = TRUE;
         }
-
+        */
         // get the DB & Other objects
         $this->dbBlocks = $this->newObject('dbblocks');
         $this->formManager = $this->newObject('formmanager');
@@ -1079,12 +1080,25 @@ class mcqtests extends controller {
             case 'answertest':
                 $testId = $this->getParam('id');
                 $check = $this->getSession('taketest', NULL);
-
-
                 if ($check != 'open') {
                     $this->unsetSession('qData');
                     $resultId = $this->closeTest($testId);
+                    if (is_null($resultId)) {
+                        return $this->nextAction('');
+                    }
                     $this->setSession('taketest', 'open');
+                } else {
+                    $result = $this->dbResults->getResult($this->userId, $testId);
+                    if ($result !== FALSE) {
+                        $resultId = $result[0]['id'];
+                    } else {
+                        //$resultId = NULL;
+                        $fields = array();
+                        $fields['testid'] = $testId;
+                        $fields['studentid'] = $this->userId;
+                        $fields['mark'] = -1;
+                        $resultId = $this->dbResults->addResult($fields);
+                    }
                 }
                 $this->setVarByRef('check', $check);
                 $this->setVarByRef('resultId', $resultId);
@@ -1095,6 +1109,9 @@ class mcqtests extends controller {
                 if ($check != 'open') {
                     $this->unsetSession('qData');
                     $resultId = $this->closeTest($testId);
+//                    if (is_null($resultId)) {
+//                        return $this->nextAction('');
+//                    }
                     $this->setSession('taketest', 'open');
                 }
                 $this->setVarByRef('check', $check);
@@ -2340,11 +2357,11 @@ class mcqtests extends controller {
             $fields = array();
             $fields['testid'] = $testId;
             $fields['studentid'] = $this->userId;
-            $fields['mark'] = 0;
-            $id = $this->dbResults->addResult($fields);
-            return $id;
+            $fields['mark'] = -1;
+            return $this->dbResults->addResult($fields);
+        } else {
+            return NULL;
         }
-        return $this->nextAction('');
     }
 
     /**
@@ -2400,9 +2417,9 @@ class mcqtests extends controller {
                     $data[0]['qnum'] = $num;
                 }
             }
-        } else {
+        } else { // [[ JOC
             // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10');
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10'); //10
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);
