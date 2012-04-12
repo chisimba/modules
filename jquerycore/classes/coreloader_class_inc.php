@@ -285,6 +285,10 @@ class coreloader extends object
      */
     public function setTheme($theme)
     {
+        // Live path
+        // $path = 'core_modules/jquerycore/resources/core/';
+        $path = $this->objConfig->getModuleURI() . 'jquerycore/resources/ui/themes/';
+
         if (!empty($theme) && is_string($theme))
         {
             $themes = array();
@@ -472,7 +476,7 @@ class coreloader extends object
      * @access public
      * @return VOID
      */
-    public function show()
+    public function load()
     {        
         $plugins = '';
         if (!empty($this->plugins))
