@@ -3,7 +3,7 @@
  *
  * Tooltip class for jquery
  *
- * This module loads the jquery and also performs checks on versions and duplications
+ * This class is a wrapper for the jquery tooltip plugin
  *
  * PHP version 5
  *
@@ -90,19 +90,10 @@ class tooltip extends object
      * 
      * Variable to hold the show url option
      * 
-     * @access boolean
-     * @var inetger
+     * @access protected
+     * @var boolean
      */
     protected $showUrl = TRUE;
-
-    /**
-     * 
-     * Variable to hold a content string
-     * 
-     * @access proteced
-     * @var string
-     */
-    protected $contentString;
 
     /**
      * 
@@ -111,7 +102,7 @@ class tooltip extends object
      * @access proteced
      * @var string
      */
-    protected $contentFunction;
+    protected $content;
 
     /**
      * 
@@ -136,7 +127,7 @@ class tooltip extends object
      * Variable to hold the opacity
      * 
      * @access proteced
-     * @var float
+     * @var numeric
      */
     protected $opacity;
 
@@ -145,7 +136,7 @@ class tooltip extends object
      * Variable to hold the top position
      * 
      * @access proteced
-     * @var string
+     * @var numeric
      */
     protected $top;
 
@@ -154,7 +145,7 @@ class tooltip extends object
      * Variable to hold the left position
      * 
      * @access proteced
-     * @var string
+     * @var numeric
      */
     protected $left;
 
@@ -170,9 +161,9 @@ class tooltip extends object
     /**
      *
      * Intialiser for the tooltip class
+     * 
      * @access public
      * @return VOID
-     *
      */
     public function init()
     {
@@ -182,7 +173,9 @@ class tooltip extends object
      *
      * Method to set the tooltip element id.
      * 
+     * @access public
      * @param string $cssId The id of the element to have a tooltip
+     * @return VOID
      */
     public function setCssId($cssId)
     {
@@ -196,7 +189,9 @@ class tooltip extends object
      *
      * Method to set the tooltip display delay.
      * 
-     * @param inetger $delay The delay in 
+     * @access public
+     * @param inetger $delay The delay in showing the tooltip 
+     * @return VOID
      */
     public function setDelay($delay)
     {
@@ -210,7 +205,9 @@ class tooltip extends object
      *
      * Method to set the tooltip tracking.
      * 
+     * @access public
      * @param boolean $track TRUE to track | FALSE if not
+     * @return VOID
      */
     public function setTrack($track)
     {
@@ -224,7 +221,9 @@ class tooltip extends object
      *
      * Method to set the tooltip show url.
      * 
+     * @access public
      * @param boolean $showUrl TRUE to show the href/src | FALSE if not
+     * @return VOID
      */
     public function setShowUrl($showUrl)
     {
@@ -238,11 +237,13 @@ class tooltip extends object
      *
      * Method to set the tooltip content if not element title.
      * 
+     * @access public
      * @param string $contentString The tooltip content string
+     * @return VOID
      */
     public function setContentString($contentString)
     {
-        if (!empty($contentString) && (is_string($contentString) || is_integer($contentString)))
+        if (!empty($contentString) && is_string($contentString))
         {
             $this->contentString = $contentString;
         }
@@ -252,11 +253,13 @@ class tooltip extends object
      *
      * Method to set the tooltip content to a jquery function.
      * 
-     * @param boolean $contentFunction The tooltip content
+     * @access public
+     * @param string $contentFunction The tooltip content
+     * @return VOID
      */
     public function setContentFunction($contentFunction)
     {
-        if (!empty($contentFunction) && (is_string($contentFunction) || is_integer($contentFunction)))
+        if (!empty($contentFunction) && is_string($contentFunction))
         {
             $this->contentFunction = $contentFunction;
         }
@@ -266,7 +269,9 @@ class tooltip extends object
      *
      * Method to set the tooltip title string break.
      * 
-     * @param boolean $showBody The tooltip title / content break
+     * @access public
+     * @param string $showBody The tooltip title / content break
+     * @return VOID
      */
     public function setShowBody($showBody)
     {
@@ -280,7 +285,9 @@ class tooltip extends object
      *
      * Method to set the tooltip pngFix.
      * 
+     * @access public
      * @param boolean $pngFix TRUE if the pngFix must be applied | FALSE if not
+     * @return VOID
      */
     public function setPngFix($pngFix)
     {
@@ -294,11 +301,13 @@ class tooltip extends object
      *
      * Method to set the tooltip image opacity.
      * 
+     * @access public
      * @param float $opacity The opacity of the image
+     * @return VOID
      */
     public function setOpacity($opacity)
     {
-        if (!empty($opacity) && is_float($opacity))
+        if (!empty($opacity) && is_numeric($opacity))
         {
             $this->opacity = $opacity;
         }
@@ -308,11 +317,13 @@ class tooltip extends object
      *
      * Method to set the tooltip top position.
      * 
-     * @param string $top The top position
+     * @access public
+     * @param float $top The top position
+     * @return VOID
      */
     public function setTop($top)
     {
-        if (!empty($top) && is_string($top))
+        if (!empty($top) && is_numeric($top))
         {
             $this->top = $top;
         }
@@ -322,11 +333,13 @@ class tooltip extends object
      *
      * Method to set the tooltip left position.
      * 
-     * @param string $left The left position
+     * @access public
+     * @param float $left The left position
+     * @return VOID
      */
     public function setLeft($left)
     {
-        if (!empty($left) && is_string($left))
+        if (!empty($left) && is_numeric($left))
         {
             $this->left = $left;
         }
@@ -336,7 +349,9 @@ class tooltip extends object
      *
      * Method to set the tooltip extra css.
      * 
+     * @access public
      * @param string $extraClass The extra css class
+     * @return VOID
      */
     public function setExtraClass($extraClass)
     {
@@ -379,14 +394,10 @@ class tooltip extends object
         {
             $script .= ",opacity: $this->opacity";
         }
-        if (isset($this->contentString))
+        if (isset($this->content))
         {
-            $script .= ",bodyHandler: function() { return \"$this->contentString\";}";
-        }
-        if (isset($this->contentFunction))
-        {
-            $contentFunction = addslashes($ths->contentFunction);
-            $script .= ",bodyHandler: function() { return $contentFunction;}";
+            $content = addslashes($ths->content);
+            $script .= ",bodyHandler: function() { return $content;}";
         }
         $script .= "});});</script>";
         

@@ -3,7 +3,7 @@
  *
  * Main class for the jquerycore module
  *
- * This module loads the jquery and also performs checks on versions and duplications
+ * This class loads the jquery and also performs checks on versions and duplications
  *
  * PHP version 5
  *
@@ -57,7 +57,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Kevin Cyster kcyster@gmail.com
 *
 */
-class jquerycore extends object
+class coreloader extends object
 {
     /**
      * 
@@ -479,10 +479,10 @@ class jquerycore extends object
             $this->addDependencies();
             $plugins = $this->loadPlugins();
         }
-        //$string = $this->loadCore();
-        //$string .= '<script type="text/javascript">jQuery.noConflict();</script>' . "\n";
-        //$string .= $this->loadUi();
-        //$string .= $this->loadTheme();
+        $string = $this->loadCore();
+        $string .= '<script type="text/javascript">jQuery.noConflict();</script>' . "\n";
+        $string .= $this->loadUi();
+        $string .= $this->loadTheme();
         $string = $plugins;
         $this->appendArrayVar('headerParams', $string);
     }
