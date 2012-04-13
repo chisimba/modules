@@ -109,7 +109,7 @@ if ($action == 'edit' && $forum['defaultforum'] == 'Y') {
     $table->addCell($this->objLanguage->languageText('mod_forum_defaultforum', 'forum').$hiddenIdInput->show());
 } else {
     $radioGroup = new radio('visible');
-    $radioGroup->setBreakSpace(' / ');
+    $radioGroup->setBreakSpace('&nbsp;&nbsp;');
     $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes'));
     $radioGroup->addOption('N', $this->objLanguage->languageText('word_no'));
 
@@ -127,7 +127,7 @@ $title = '<nobr><strong>'.$this->objLanguage->languageText('mod_forum_usersratep
 $table->addCell($title, 100);
 
 $radioGroup = new radio('ratings');
-$radioGroup->setBreakSpace(' / ');
+$radioGroup->setBreakSpace('&nbsp;&nbsp;');
 $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
 if ($action == 'edit') {
@@ -146,7 +146,7 @@ $title = '<nobr><strong>'.ucwords($this->objLanguage->code2Txt('mod_forum_studen
 $table->addCell($title, 100);
 
 $radioGroup = new radio('student');
-$radioGroup->setBreakSpace(' / ');
+$radioGroup->setBreakSpace('&nbsp;&nbsp;');
 $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
 if ($action == 'edit') {
@@ -160,7 +160,7 @@ $title = '<nobr><strong>'.$this->objLanguage->languageText('mod_forum_usersuploa
 $table->addCell($title, 100);
 
 $radioGroup = new radio('attachments');
-$radioGroup->setBreakSpace(' / ');
+$radioGroup->setBreakSpace('&nbsp;&nbsp;');
 $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
 if ($action == 'edit') {
@@ -179,7 +179,7 @@ $title = '<nobr><strong>'.$this->objLanguage->languageText('mod_forum_enableemai
 $table->addCell($title, 100);
 
 $radioGroup = new radio('subscriptions');
-$radioGroup->setBreakSpace(' / ');
+$radioGroup->setBreakSpace('&nbsp;&nbsp;');
 $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
 if ($action == 'edit') {
@@ -231,7 +231,7 @@ if ($action == 'edit') {
 }
 
 // --------- End Row ---------- //
-$submitButton = new button('submitbtn', $this->objLanguage->languageText('word_submit'));
+$submitButton = new button('submitbtn', $this->objLanguage->languageText('word_save'));
 $submitButton->cssClass = 'save';
 $submitButton->setToSubmit();
 
@@ -239,7 +239,7 @@ $cancelButton = new button('cancel', $this->objLanguage->languageText('word_canc
 $returnUrl = $this->uri(array('action'=>'administration'));
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
-$table->addCell($submitButton->show().' / '.$cancelButton->show(),  null,  null, null, null, ' colspan="4"');
+$table->addCell($submitButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;'.$cancelButton->show(),  null,  null, null, null, ' colspan="4"');
 
 if ($action == 'edit') {
     $hiddenIdInput =& new textinput('id');
@@ -253,7 +253,7 @@ $form->addToForm($table->show());
 $form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'forum'), 'required');
 $form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'forum'), 'required');
 
-echo $form->show();
+echo '<div class="createforum">' . $form->show() . '</div>';
 
 $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
 ?>
