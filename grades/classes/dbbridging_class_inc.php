@@ -212,5 +212,48 @@ class dbbridging extends dbtable
     {
         return $this->delete($field, $id);
     }
+    
+    /**
+     *
+     * Method to get all links to an item.
+     * 
+     * @access public
+     * @param string $field The field to get links from
+     * @param string $id The id of the item to get links to 
+     * @return array
+     */
+    public function getLinked($field, $id)
+    {
+        return $this->fetchAll("WHERE `$field` = '$id'");
+    }
+    
+    /**
+     *
+     * Method to return unlinked items.
+     * 
+     * @access public
+     * @param string $from Field to check for links
+     * @param string $idString A CSV list of ids
+     * @param string $to Field to check if links exist
+     * @param string $linked The id to check links against
+     * @return array 
+     */
+    public function getUnlinked($from, $idString, $to, $linked)
+    {
+        $data = $this->fetchAll("WHERE $from IN ($idString) AND $to = '$linked'");
+
+        $idString = str_replace("'", "", $idString);
+        $idArray = explode(',', $idString);
+
+        foreach ($data as $line)
+        {
+            $key = array_search($line[$from], $idArray);
+            if ($key !== FALSE)
+            {
+                unset($idArray[$key]);
+            }
+        }
+        return $idArray;
+    }
 }
 ?>
