@@ -78,32 +78,6 @@ class dbusers extends dbtable
 
     /**
      *
-     * Get the text of the init_overview that we have in the sample database.
-     *
-     * @return string The text of the init_overview
-     * @access public
-     *
-     */
-    public function getAllUsers()
-    {
-        return $this->fetchAll("WHERE isactive = '1'");
-    }
-    
-    /**
-     *
-     * Get the text of the init_overview that we have in the sample database.
-     *
-     * @return string The text of the init_overview
-     * @access public
-     *
-     */
-    public function getUsers($start, $records)
-    {
-        return $this->fetchAll("WHERE isactive = '1' LIMIT $start, $records");
-    }
-    
-    /**
-     *
      * Method to get a user and the associated extra school data
      * 
      * @access public
@@ -136,14 +110,53 @@ class dbusers extends dbtable
     
     /**
      *
-     * Method to get the number of records
+     * Method to get the users for the flexigrid.
      * 
      * @access public
-     * @return integer The number of records in the table 
+     * @param integer $page The courrent page
+     * @param string $sortname The name of the column to be sorted on
+     * @param string $sortorder The direction of the sort
+     * @param string $qtype The column to search
+     * @param string $query The search query
+     * @param integer $rp The results per page
+     * @return object $json The json encoded object
      */
-    public function getCount()
+    public function getFlexigridUsers($page, $sortname, $sortorder, $qtype, $query, $rp)
     {
-        return $this->getRecordCount();
+        $data = array();
+        $sort = "ORDER BY $sortname $sortorder ";
+        if (!empty($qtype) && !empty($query))
+        {
+            $search = ("WHERE (`$qtype` LIKE '%$query%' AND `isactive` = 1) ");
+        }
+        else
+        {
+            $search = ("WHERE `isactive` = 1 ");
+        }
+        $total = $this->getRecordCount($search);
+        
+        $pageStart = ($page - 1) * $rp;
+        $limit = "LIMIT $pageStart, $rp";
+        
+        $sql = "SELECT id, username, title, firstname, surname, emailaddress FROM $this->table ";
+        $sql .= $search;
+        $sql .= $sort;
+        $sql .= $limit;
+                
+        $results = $this->getArray($sql);
+        
+        $data['page'] = $page;
+        $data['total'] = $total;
+        
+        foreach($results as $result)
+        {
+            $data['rows'][] = array(
+                'id' => $result['id'],
+                'cell' => $result,
+            );
+        }
+        
+        return $data;
     }
 }
 ?>

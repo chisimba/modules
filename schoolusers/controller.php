@@ -342,13 +342,14 @@ class schoolusers extends controller
          
     /**
      *
-     * Method corresponding to the ajaxUsers action
+     * Method corresponding to the ajaxFlexigridUsers action
+     * 
      * @access private
-     * @return 
+     * @return VOID 
      */
-    private function __ajaxUsers()
+    private function __ajaxFlexigridUsers()
     {
-        echo $this->objOps->showMain();
+        echo $this->objOps->ajaxFlexigridUsers();
         die();
     }
          

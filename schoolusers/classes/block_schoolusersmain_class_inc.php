@@ -82,7 +82,7 @@ class block_schoolusersmain extends object
      */
     public function show() 
     {
-        return $this->objOps->showPagination();
+        return $this->objOps->showFlexigrid();
     }
 }
 ?>

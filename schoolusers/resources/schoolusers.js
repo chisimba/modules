@@ -136,3 +136,8 @@ jQuery(function() {
     });
 
 });
+
+function doAdd(com, grid)
+{
+    window.location.href = jQuery(location).attr('href') + '&action=form';
+}

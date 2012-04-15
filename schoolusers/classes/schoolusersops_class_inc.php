@@ -118,109 +118,6 @@ class schoolusersops extends object
     
     /**
      *
-     * Method to generate the html for the user display template
-     * 
-     * @access public
-     * @return string $string The html string to be sent to the template 
-     */
-    public function showMain()
-    {
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
-        $firstNameLabel = $this->objLanguage->languageText('phrase_firstname', 'system', 'ERROR: phrase_firstname');
-        $lastNameLabel = $this->objLanguage->languageText('phrase_lastname', 'system', 'ERROR: phrase_lastname');
-        $usernameLabel = $this->objLanguage->languageText('word_username', 'system', 'ERROR: word_username');
-        $editLabel = $this->objLanguage->languageText('word_edit', 'system', 'ERROR: word_edit');
-        $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
-        $displayLabel = $this->objLanguage->languageText('word_display', 'system', 'ERROR: word_display');
-        $editUserLabel = $this->objLanguage->languageText('phrase_edituser', 'system', 'ERROR: phrase_edituser');
-        $deleteUserLabel = $this->objLanguage->languageText('phrase_deleteuser', 'system', 'ERROR: phrase_deleteuser');
-        $displayUserLabel = $this->objLanguage->languageText('phrase_displayuser', 'system', 'ERROR: phrase_displayuser');
-        $deleteConfirmLabel = $this->objLanguage->languageText('mod_schoolusers_deleteconfirm', 'schoolusers', 'ERROR: mod_schoolusers_deleteconfirm');
-        
-        $pageSize = 10;
-        $page = $this->getParam('page', 1);
-           
-        $count = $this->objDBusers->getCount();
-        $pages = ceil($count / $pageSize);
-        // Set up the sql elements.
-        $start = ($page * $pageSize);
-        if($start < 0){
-            $start = 0;
-        }
-        $userArray = $this->objDBusers->getUsers($start, $pageSize);
-        
-        $objTable = new htmltable();
-        $objTable->cellpadding = '4';
-        $objTable->startHeaderRow();
-        $objTable->addHeaderCell('<b>' . $usernameLabel . '</b>', '', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $titleLabel . '</b>', '', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $firstNameLabel . '</b>', '', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $lastNameLabel . '</b>', '', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $displayLabel . '</b>', '10%', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $editLabel . '</b>', '10%', '', 'left', 'heading', '');
-        $objTable->addHeaderCell('<b>' . $deleteLabel . '</b>', '10%', '', 'left', 'heading', '');
-        $objTable->endHeaderRow();
-
-        if (!empty($userArray))
-        {
-            $i = 0;
-            foreach ($userArray as $user)
-            {
-                $class = (($i++ % 2) == 0) ? 'even' : 'odd';
-                
-                $this->objIcon->title = $displayUserLabel;
-                $this->objIcon->alt = $displayUserLabel;
-                $this->objIcon->setIcon('user_go', 'png');
-                $displayIcon = $this->objIcon->show();
-
-                $objLink = new link($this->uri(array('action' => 'show', 'id' => $user['id'])));
-                $objLink->link = $displayIcon;
-                $displayLink = $objLink->show();
-
-                $this->objIcon->title = $editUserLabel;
-                $this->objIcon->alt = $editUserLabel;
-                $this->objIcon->setIcon('user_pencil', 'png');
-                $editIcon = $this->objIcon->show();
-
-                $objLink = new link($this->uri(array('action' => 'form', 'id' => $user['id'])));
-                $objLink->link = $editIcon;
-                $editLink = $objLink->show();
-            
-                $this->objIcon->setIcon('user_minus', 'png');
-                $this->objIcon->title = $deleteUserLabel;
-                $this->objIcon->alt = $deleteUserLabel;
-                $icon = $this->objIcon->show();
-
-                $location = $this->uri(array('action' => 'delete', 'id' => $user['id']));
-
-                $this->objConfirm->setConfirm($icon, $location, $deleteConfirmLabel);
-                $deleteLink = $this->objConfirm->show();
-                
-                $objTable->startRow();
-                $objTable->addCell($user['username'], '', '', '', $class, '', '');
-                $objTable->addCell($user['title'], '', '', '', $class, '', '');
-                $objTable->addCell($user['firstname'], '', '', '', $class, '', '');
-                $objTable->addCell($user['surname'], '', '', '', $class, '', '');
-                $objTable->addCell($displayLink, '', '', '', $class, '', '');
-                $objTable->addCell($editLink, '', '', '', $class, '', '');
-                $objTable->addCell($deleteLink, '', '', '', $class, '', '');
-                $objTable->endRow();
-            }            
-        }
-        $userTable = $objTable->show();
-        
-        $objLayer = new layer();
-        $objLayer->id = 'users';
-        $objLayer->str = $userTable;
-        $userLayer = $objLayer->show();
-        
-        $string = $userLayer;
-        
-        return $string. '<br />';
-    }
-
-    /**
-     *
      * Method to generate the html for the left block template
      * 
      * @access public
@@ -228,14 +125,6 @@ class schoolusersops extends object
      */
     public function showLeft()
     {
-        $this->appendArrayVar('headerParams',
-            $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
-            'jquery'));
-        $cssUri = $this->getResourceUri('plugins/ui/css/ui-lightness/jquery-ui-1.8.7.custom.css',
-            'jquery');
-        $this->appendArrayVar('headerParams', 
-            "<link href='$cssUri' rel='stylesheet' type='text/css'/>");
-
         $firstNameLabel = $this->objLanguage->languageText('phrase_firstname', 'system', 'ERROR: phrase_firstname');
         $lastNameLabel = $this->objLanguage->languageText('phrase_lastname', 'system', 'ERROR: phrase_lastname');
         $addLabel = $this->objLanguage->languageText('word_add', 'system', 'ERROR: word_add');
@@ -500,14 +389,6 @@ class schoolusersops extends object
      */
     public function showForm()
     {
-        $this->appendArrayVar('headerParams',
-            $this->getJavaScriptFile('plugins/ui/js/jquery-ui-1.8.7.custom.min.js',
-            'jquery'));
-        $cssUri = $this->getResourceUri('plugins/ui/css/ui-lightness/jquery-ui-1.8.7.custom.css',
-            'jquery');
-        $this->appendArrayVar('headerParams', 
-            "<link href='$cssUri' rel='stylesheet' type='text/css'/>");
-
         $idValue = $this->getParam('id', NULL);
         
         if (empty($idValue))
@@ -1206,24 +1087,110 @@ class schoolusersops extends object
         }
     }
     
+    public function showFlexigrid()
+    {
+        $objFlex = $this->newObject ('flexigrid', 'jquerycore');
+
+        $userListLabel = $this->objLanguage->languageText('phrase_listusers', 'system', 'ERROR: phrase_listusers');
+        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
+        $firstNameLabel = $this->objLanguage->languageText('phrase_firstname', 'system', 'ERROR: phrase_firstname');
+        $lastNameLabel = $this->objLanguage->languageText('phrase_lastname', 'system', 'ERROR: phrase_lastname');
+        $usernameLabel = $this->objLanguage->languageText('word_username', 'system', 'ERROR: word_username');
+        $emailAddressLabel = $this->objLanguage->languageText('phrase_emailaddress', 'system', 'ERROR: phrase_emailaddress');
+        $addLabel = $this->objLanguage->languageText('word_add', 'system', 'ERROR: word_add');
+        $editLabel = $this->objLanguage->languageText('word_edit', 'system', 'ERROR: word_edit');
+        $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
+        $displayLabel = $this->objLanguage->languageText('word_display', 'system', 'ERROR: word_display');
+
+        $objFlex->setCssId('grid_users');
+        $objFlex->setUrl('index.php?module=schoolusers&action=ajaxFlexigridUsers');
+        $objFlex->setTitle($userListLabel);
+        $objFlex->addColumn($usernameLabel, 'username', 125);
+        $objFlex->addColumn($titleLabel, 'title', 50);
+        $objFlex->addColumn($firstNameLabel, 'firstname', 150);
+        $objFlex->addColumn($lastNameLabel, 'surname', 150);
+        $objFlex->addColumn($emailAddressLabel, 'emailaddress', 150);
+        $objFlex->addColumn($displayLabel, 'display', 50, FALSE, 'center');
+        $objFlex->addColumn($editLabel, 'edit', 50, FALSE, 'center');
+        $objFlex->addColumn($deleteLabel, 'delete', 50, FALSE, 'center');
+        $objFlex->addButton($addLabel, 'doAdd', 'add');
+        $objFlex->addSearchitem($usernameLabel, 'username');
+        $objFlex->addSearchitem($firstNameLabel, 'firstname');
+        $objFlex->addSearchitem($lastNameLabel, 'surname', TRUE);
+        $objFlex->setSortname('surname');
+        $objFlex->setSortorder('ASC');
+        $objFlex->setUsepager(TRUE);
+        $objFlex->setUseRp(TRUE);
+        $objFlex->setRp(10);
+        $objFlex->setResizable(TRUE);
+        $objFlex->setShowTableToggleBtn(TRUE);
+        $objFlex->setHeight(325);
+        $objFlex->setWidth(880);
+        $objFlex->setSingleSelect(TRUE);
+        $flexigrid = $objFlex->show();
+        
+         return $flexigrid;
+    }
+    
     /**
      *
-     * Method to return the pagination object for display
+     * Method to add the links to the user data before display in the grid
      * 
      * @access public
-     * @return string $string The html string for display 
+     * @return object $data The json encoded data 
      */
-    public function showPagination($pageSize = 10)
+    public function ajaxFlexigridUsers()
     {
-        $this->objPagination->module = 'schoolusers';
-        $this->objPagination->action = 'ajaxUsers';
-        $this->objPagination->id = 'users_div';
-        $this->objPagination->currentPage = 0;
-        $count = $this->objDBusers->getCount();
-        $pages = ceil($count / $pageSize);
-        $this->objPagination->numPageLinks = $pages;
+        $editUserLabel = $this->objLanguage->languageText('phrase_edituser', 'system', 'ERROR: phrase_edituser');
+        $deleteUserLabel = $this->objLanguage->languageText('phrase_deleteuser', 'system', 'ERROR: phrase_deleteuser');
+        $displayUserLabel = $this->objLanguage->languageText('phrase_displayuser', 'system', 'ERROR: phrase_displayuser');
+        $deleteConfirmLabel = $this->objLanguage->languageText('mod_schoolusers_deleteconfirm', 'schoolusers', 'ERROR: mod_schoolusers_deleteconfirm');
+
+        $page = $this->getParam('page', 1);
+        $sortname = $this->getParam('sortname', 'surname');
+        $sortorder = $this->getParam('sortorder', 'ASC');
+        $qtype = $this->getParam('qtype', NULL);
+        $query = $this->getParam('query', NULL);
+        $rp = $this->getParam('rp', 10);
         
-        return $this->objPagination->show();
+        $data = $this->objDBusers->getFlexigridUsers($page, $sortname, $sortorder, $qtype, $query, $rp);
+        
+        foreach ($data['rows'] as $key => $line)
+        {
+            $this->objIcon->title = $displayUserLabel;
+            $this->objIcon->alt = $displayUserLabel;
+            $this->objIcon->setIcon('user_go', 'png');
+            $displayIcon = $this->objIcon->show();
+
+            $objLink = new link($this->uri(array('action' => 'show', 'id' => $line['id'])));
+            $objLink->link = $displayIcon;
+            $displayLink = $objLink->show();
+
+            $this->objIcon->title = $editUserLabel;
+            $this->objIcon->alt = $editUserLabel;
+            $this->objIcon->setIcon('user_pencil', 'png');
+            $editIcon = $this->objIcon->show();
+
+            $objLink = new link($this->uri(array('action' => 'form', 'id' => $line['id'])));
+            $objLink->link = $editIcon;
+            $editLink = $objLink->show();
+
+            $this->objIcon->setIcon('user_minus', 'png');
+            $this->objIcon->title = $deleteUserLabel;
+            $this->objIcon->alt = $deleteUserLabel;
+            $icon = $this->objIcon->show();
+
+            $location = $this->uri(array('action' => 'delete', 'id' => $line['id']));
+
+            $this->objConfirm->setConfirm($icon, $location, $deleteConfirmLabel);
+            $deleteLink = $this->objConfirm->show();
+
+            $data['rows'][$key]['cell']['display'] = $displayLink;
+            $data['rows'][$key]['cell']['edit'] = $editLink;
+            $data['rows'][$key]['cell']['delete'] = $deleteLink;
+        }
+        
+        return json_encode($data);
     }
 }
 ?>
