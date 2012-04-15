@@ -52,8 +52,23 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class bookmarksops extends object
 {
-    public $parents;
-    public $script;
+    /**
+     *
+     * Varuable to hold the parent folders
+     * 
+     * @access public
+     * @var type 
+     */
+    private $parents;
+    
+    /**
+     * 
+     * Variable to hold the script for the dialog object
+     * 
+     * @access public
+     * @var string
+     */
+    private $script;
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -72,6 +87,7 @@ class bookmarksops extends object
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
             $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objDialog = $this->getObject('dialog', 'jquerycore');
             
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -617,7 +633,6 @@ class bookmarksops extends object
     public function showLink()
     {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('bookmark_link.js', 'bookmarks'));
-        $jqDialog = $this->getObject('jqdialogue', 'jquery');
 
         $addBookmarkLabel = $this->objLanguage->languageText('mod_bookmarks_addbookmark', 'bookmarks', 'ERROR: mod_bookmarks_addbookmark');
         $bookmarkPageLabel = $this->objLanguage->languageText('mod_bookmarks_bookmarkpage', 'bookmarks', 'ERROR: mod_bookmarks_bookmarkpage');
@@ -634,8 +649,8 @@ class bookmarksops extends object
         $arrayVars = array();
         $arrayVars['no_name'] = $noNameLabel;
        
-        // pass password error to javascript.
-        $this->objSvars->varsToJs($arrayVars);
+        // pass error to javascript.
+        $this->script = $this->objSvars->varsToJs($arrayVars);
 
         $folderArray = $this->objDBfolders->getFolders($this->userId);
 
@@ -685,8 +700,8 @@ class bookmarksops extends object
         $formTable = $objTable->show();
 
         $objForm = new form('modal_bookmarks', $this->uri(array(
-            'action' => 'save',
-        )));
+            'action' => 'save'
+        ), 'bookmarks'));
         $objForm->extra = ' enctype="multipart/form-data"';
         $objForm->addToForm($formTable);
         $form = $objForm->show();
@@ -695,35 +710,29 @@ class bookmarksops extends object
         $objLayer->id = 'form_layer';
         $objLayer->str =  $form;
         $formLayer = $objLayer->show();
+        
+        $this->objDialog->setCssId('dialog_add_bookmark');
+        $this->objDialog->setTitle($addBookmarkLabel);
+        $this->objDialog->setContent($formLayer);
+        $this->objDialog->unsetButtons();
+        $dialog = $this->objDialog->show();
+        $this->script .= $this->objDialog->script;
 
-        $jqDialog->init();
-        $jqDialog->setCssId('jqdialogue_add_bookmark');
-        $jqDialog->setTitle($addBookmarkLabel);
-        $jqDialog->setContent($formLayer);
-        $jqDialog->addOption('closeOnEscape', 'false');
-        $jqDialog->addOption('autoOpen', 'false');
-        $jqDialog->addOption('draggable', 'true');
-        $jqDialog->addOption('resizable', 'true');
-        $jqDialog->removeOption('buttons');
-        $dialog = $jqDialog->show();
-        $this->script = $jqDialog->script;
-    
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
         $objTable->startRow();
-        $objTable->addCell('<span class="success">' . $successLabel . '</span><div id="checking"></div>', '200px', '', '', 'odd', '', '');
+        $objTable->addCell('<span class="success">' . $successLabel . '</span>', '200px', '', '', 'odd', '', '');
         $objTable->endRow();
         $successTable = $objTable->show();
 
-        $jqDialog->init();
-        $jqDialog->setCssId('jqdialogue_bookmark_success');
-        $jqDialog->setTitle($successTitleLabel);
-        $jqDialog->setContent($successTable);
-        $jqDialog->addOption('autoOpen', 'false');
-        $jqDialog->addOption('draggable', 'true');
-        $jqDialog->addOption('resizable', 'true');
-        $dialog .= $jqDialog->show();
-        $this->script .= $jqDialog->script;
+        $this->objDialog->setCssId('dialog_bookmark_success');
+        $this->objDialog->setTitle($successTitleLabel);
+        $this->objDialog->setContent($successTable);
+        $this->objDialog->setButtons(array(
+            "Ok" => 'jQuery(this).dialog("close");',
+        ));
+        $dialog .= $this->objDialog->show();
+        $this->script .= $this->objDialog->script;        
 
         $this->objIcon->title = $bookmarkPageLabel;
         $this->objIcon->alt = $bookmarkPageLabel;
@@ -946,8 +955,6 @@ class bookmarksops extends object
     public function bookmarkParams()
     {
         $headerParams = $this->getJavascriptFile('bookmark_link.js', 'bookmarks');
-        $headerParams .= "\n" . $this->getJavascriptFile('jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js', 'jquery');
-        $headerParams .= "\n" . '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('jquery-ui-1.8.18/css/cupertino/jquery-ui-1.8.18.custom.css', 'jquery').'">';
         $headerParams .= "\n" . $this->script;
         $array = array('headerParams' => $headerParams);
         return $array;

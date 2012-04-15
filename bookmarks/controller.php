@@ -270,7 +270,7 @@ class bookmarks extends controller
         $data['user_id'] = $this->objUser->PKId();
         $data['folder_id'] = $this->getParam('folder_id');
         $data['bookmark_name'] = $this->getParam('bookmark_name');
-        $data['location'] = $this->getParam('location');
+        $data['location'] = str_replace('|', '&', str_replace('/', '=', $this->getParam('location')));
         $data['created_by'] = $this->objUser->PKId();
         $data['date_created'] = date('Y-m-d H:i:s');
         $id = $this->objDBbookmarks->saveBookmark($data);

@@ -31,10 +31,10 @@ jQuery(function() {
     });
     
     jQuery('#add_bookmark').click(function() {
-        jQuery('#jqdialogue_add_bookmark').dialog('open');
+        jQuery('#dialog_add_bookmark').dialog('open');
     });
     
-    jQuery('#jqdialogue_add_bookmark').live('dialogopen', function(event, ui) {
+    jQuery('#dialog_add_bookmark').live('dialogopen', function(event, ui) {
         jQuery('.ui-dialog-titlebar-close').hide();
         jQuery('#input_bookmark_name').val('');
         jQuery('#input_location').val(bookmark);
@@ -42,7 +42,7 @@ jQuery(function() {
     });
     
     jQuery('#modal_cancel').live('click', function() {
-        jQuery('#jqdialogue_add_bookmark').dialog('close');
+        jQuery('#dialog_add_bookmark').dialog('close');
         return false;
     });
     
@@ -57,18 +57,20 @@ jQuery(function() {
         }
         else
         {
-            jQuery('#jqdialogue_add_bookmark').dialog('close');
+            jQuery('#dialog_add_bookmark').dialog('close');
             var folder = jQuery('#input_folder_id').val();
             var name = jQuery('#input_bookmark_name').val();
             var location = jQuery('#input_location').val();
+            location = location.replace(/=/gi, "/");
+            location = location.replace(/&/gi, "|");
+            
             var params = 'folder_id=' + folder + '&bookmark_name=' + name + '&location=' + location;
             jQuery.ajax({
                 type: "POST",
                 url: "index.php?module=bookmarks&action=ajaxSaveBookmark",
                 data: params,
                 success: function(ret) {
-                    jQuery("#jqdialogue_bookmark_success").dialog('open');
-                    jQuery('#checking').html(ret);
+                    jQuery("#dialog_bookmark_success").dialog('open');
                     return false;
                 }
             });
