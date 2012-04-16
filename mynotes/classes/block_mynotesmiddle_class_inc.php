@@ -59,7 +59,15 @@ class block_mynotesmiddle extends object
      * @access public
      */
     public $title;
-
+    
+    /**
+     *
+     * @var string Object $objUser String for the user object
+     * @access public
+     *
+     */
+    public $objUser;
+    
     /**
      * Standard init function
      *
@@ -70,6 +78,8 @@ class block_mynotesmiddle extends object
     public function init() 
     {
         $this->title = "My notes wideblock";
+        // Instantiate the user object.
+        $this->objUser = $this->getObject('user', 'security');
     }
     /**
      * Standard block show method.
@@ -78,6 +88,8 @@ class block_mynotesmiddle extends object
      */
     public function show() 
     {
+        $userid = $this->objUser->userId();
+        $this->notesOps->noteEditor($userid);
         return "With the new Chisimba dynamic canvas, it is better to render output as either wide or narrow blocks. Then use JSON templates to generate the rendered output. In this way, your module can use any block from any other module in addition to your own. In addition, your module will be able to render blocks to other sites, or as web widgets for use in other systems. Change this file to create your block but please don't be naughty and forget to edit the comment blocks. ALL OF THEM.";
     }
 }
