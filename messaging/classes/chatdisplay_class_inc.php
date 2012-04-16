@@ -717,21 +717,18 @@ class chatdisplay extends object
         // main chat display
         $objLayer = new layer();
         $objLayer->id = 'chatDiv';
-        $objLayer->height = '300px';
-        $objLayer->border = '1px solid black';
-        $objLayer->padding = '10px';
-        $objLayer->overflow = 'auto';
         $chatLayer = $objLayer->show();
         $str .= $chatLayer;
                
         // chat input area
         $objText = new textarea('message');
+        $objText->cssClass = 'chat_input';
         $objText->extra = ' onkeyup="javascript:jsTrapKeys(event, this.value);"';
         $chatText = $objText->show();
         
         // chat loading icon
         $this->objIcon->setIcon('loading_bar');
-        $this->objIcon->extra = 'style="width: 100%; height: 20px"';
+        $this->objIcon->cssClass = 'chat_loading_bar';
         $this->objIcon->title = $sendingLabel;
         $sendingIcon = $this->objIcon->show();
         
@@ -760,8 +757,8 @@ class chatdisplay extends object
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '2';
         $objTable->startRow();
-        $objTable->addCell($iconLayer.$chatText, '40%', '', '', '' ,'');
-        $objTable->addCell($sendButton.'<br />'.$clearButton, '', 'center', 'left', '' ,'');
+        $objTable->addCell($iconLayer.$chatText, '', '', '', '' ,'');
+        $objTable->addCell($sendButton.'<br />'.$clearButton, '', 'center', 'left', 'chat_buttons' ,'');
         $objTable->endRow();
         $chatTable = $objTable->show();
         $string = $chatTable;
@@ -1099,39 +1096,32 @@ class chatdisplay extends object
         //$counter = $this->getSession('message_counter');
         $messages = $this->dbMessaging->getChatMessages($roomId, $counter);
         
-        // ordered list of chat messages
+        // list of chat messages
         $str = '';
         if($messages != FALSE){
-//            $str = '<ul id="chat">';
+            $i = 0;
             foreach($messages as $message){
-//                $str .= '<li>';
                 $userId = $message['sender_id'];
+                $bla=NULL;
                 if($userId == 'system'){
                     $name = $systemLabel;   
-                }else{
-                    if($mode == 'context'){              
-                        $name = $this->objUser->username($userId);
-                    }else{
-                        $name = $this->objUser->fullname($userId);
-                    }   
+                } else {
+                    $name = $this->objUser->fullname($userId);
+                    $name .= $this->objUser->getSmallUserImage($userId, $name);
                 }
                 $date = $this->objDatetime->formatDate($message['date_created']);
-                $str = '<strong>['.$name;
-                if($mode == 'context'){
-                    $str .= ']:</strong><br />';
-                }else{
-                    $str .= '&#160;-&#160;'.$date.']:</strong><br />';
-                }
+                $str = '<span class="chat_user">'. $name . '</span> says<br />';
                 if($roomData['text_only'] == 1){
                     $str .= nl2br($message['message']);
                 }else{
                     $str .= nl2br($this->objWash->parseText($message['message']));
                 }
-                //$str .= nl2br($message['message']);
-//                $str .= '</li>';
                 $str .= '<br />';
+                $str .= '<span class="chat_date">' . $date . '</span>';
+                
+                $str = '<div class="chatbubble">' . $str . '</div>';
+                $i++;
             }
-//            $str .= '</ul>';
             $count = count($messages);
         }else{
             $count = 0;

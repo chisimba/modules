@@ -107,7 +107,6 @@ class block_onlineusers extends object
         $objLayer->id = 'usersListDiv';
         $userLayer = $objLayer->show();
         $str = $userLayer;
-        
         return $str;
     }
 }
