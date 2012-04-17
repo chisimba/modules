@@ -95,6 +95,7 @@ class schools extends controller
         $this->objGroupOps = $this->getObject('groupops', 'groupadmin');
         $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser = $this->getObject('user', 'security');
+        $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
@@ -578,6 +579,12 @@ class schools extends controller
         $data['modified_by'] = $this->objUser->PKId();
         $data['date_modified'] = date('Y-m-d H:i:s');
         $this->objDBschools->updateSchool($sid, $data);
+        
+        $user = $this->objUserAdmin->getUserDetails($id);
+        $puid = $user['puid'];
+
+        $groupId = $this->objGroups->getId('Principals');
+        $this->objGroups->addGroupUser($groupId, $puid);
         
         return $this->nextAction('show', array('sid' => $sid, 'tab' => 1));
     }

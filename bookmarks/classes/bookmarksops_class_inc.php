@@ -87,7 +87,6 @@ class bookmarksops extends object
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
             $this->objConfig = $this->getObject('altconfig', 'config');
-            $this->objDialog = $this->getObject('dialog', 'jquerycore');
             
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -711,6 +710,7 @@ class bookmarksops extends object
         $objLayer->str =  $form;
         $formLayer = $objLayer->show();
         
+        $this->objDialog = $this->newObject('dialog', 'jquerycore');
         $this->objDialog->setCssId('dialog_add_bookmark');
         $this->objDialog->setTitle($addBookmarkLabel);
         $this->objDialog->setContent($formLayer);
@@ -725,12 +725,10 @@ class bookmarksops extends object
         $objTable->endRow();
         $successTable = $objTable->show();
 
+        $this->objDialog = $this->newObject('dialog', 'jquerycore');
         $this->objDialog->setCssId('dialog_bookmark_success');
         $this->objDialog->setTitle($successTitleLabel);
         $this->objDialog->setContent($successTable);
-        $this->objDialog->setButtons(array(
-            "Ok" => 'jQuery(this).dialog("close");',
-        ));
         $dialog .= $this->objDialog->show();
         $this->script .= $this->objDialog->script;        
 

@@ -140,5 +140,43 @@ class dbgrades extends dbtable
     {
         return $this->update('id', $id, $data);
     }
+    
+    /**
+     *
+     * Method to get grade names for use in groups.
+     * 
+     * @access public
+     * @return string $nameString
+     */
+    public function getGrades()
+    {
+        $data = $this->fetchAll();
+        
+        if (!empty($data))
+        {
+            $nameArray = array();
+            foreach ($data as $line)
+            {
+                $nameArray[] = "'" . $line['name'] . "'";
+            }
+            $nameString = implode(',', $nameArray);
+            return $nameString;
+        }
+        return FALSE;
+    }
+
+    /**
+     *
+     * Method to return a grade by name
+     * 
+     * @access public
+     * @param string $name The name of the grade to retrieve
+     * @return array The grade data array 
+     */
+    public function getGradeByName($name)
+    {
+        return $this->getRow('name', $name);
+    }
+
 }
 ?>
