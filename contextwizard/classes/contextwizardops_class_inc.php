@@ -86,7 +86,6 @@ class contextwizardops extends object
             
             $this->objDBgrades = $this->getObject('dbgrades', 'grades');
             $this->objDBbridging = $this->getObject('dbbridging', 'grades');
-//            $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
         }
         catch(customException $e) {
             echo customException::cleanUp();
