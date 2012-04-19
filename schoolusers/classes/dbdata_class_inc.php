@@ -93,12 +93,25 @@ class dbdata extends dbtable
      * Method to update  user data
      * 
      * @access public
-     * @param string $sid The id of the user data to delete
+     * @param string $sid The id of the user data to update
      * return boolean 
      */
     public function updateData($id, $data)
     {
         return $this->update('user_id', $id, $data);
+    }
+
+    /**
+     *
+     * Method to get user data
+     * 
+     * @access public
+     * @param string $id The id of the user data to get
+     * return boolean 
+     */
+    public function getData($id)
+    {
+        return $this->getRow('user_id', $id);
     }
 }
 ?>

@@ -69,7 +69,6 @@ class schoolusersops extends object
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
             $this->objCaptcha = $this->getObject('captcha', 'utilities');
-            $this->objPagination = $this->newObject ('pagination', 'navigation');
 
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -509,6 +508,8 @@ class schoolusersops extends object
         $rev = $this->objLanguage->languageText('title_rev', 'system', 'TITLE: title_rev');
         $prof = $this->objLanguage->languageText('title_prof', 'system', 'TITLE: title_prof');
         $assocprof = $this->objLanguage->languageText('title_assocprof', 'system', 'TITLE: title_assocprof');
+        $sir = $this->objLanguage->languageText('title_sir', 'system', 'TITLE: title_sir');
+        $dame = $this->objLanguage->languageText('title_dame', 'system', 'TITLE: title_dame');
         $firstNameLabel = $this->objLanguage->languageText('phrase_firstname', 'system', 'ERROR: phrase_firstname');
         $middleNameLabel = $this->objLanguage->languageText('mod_schoolusers_middlename', 'schoolusers', 'ERROR: mod_schoolusers_middlename');
         $lastNameLabel = $this->objLanguage->languageText('phrase_lastname', 'system', 'ERROR: phrase_lastname');
@@ -557,6 +558,8 @@ class schoolusersops extends object
         $objDrop->addOption($rev, $rev);
         $objDrop->addOption($prof, $prof);
         $objDrop->addOption($assocprof, $assocprof);
+        $objDrop->addOption($sir, $sir);
+        $objDrop->addOption($dame, $dame);
         $objDrop->setSelected($titleValue);
         $titleDrop = $objDrop->show();
 

@@ -258,8 +258,8 @@ class schoolusers extends controller
     private function __validate()
     {
         $id = $this->getParam('id');
-        $cancel = $this->getParam('cancel');
-        if ($cancel == 'Cancel')
+        $cancel = $this->getParam('cancel', NULL);
+        if (!empty($cancel))
         {
             $this->setSession('errors', array());
             return $this->objUser->isLoggedIn() ? $this->nextAction('view') : $this->nextAction('view', '', 'prelogin');            
