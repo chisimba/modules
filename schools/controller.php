@@ -215,8 +215,8 @@ class schools extends controller
         // All the action is in the blocks
         $mode = $this->getParam('mode');
         $sid = $this->getParam('sid');
-        $cancel = $this->getParam('cancel');
-        if ($cancel == 'Cancel')
+        $cancel = $this->getParam('cancel', NULL);
+        if (!empty($cancel))
         {
             $this->setSession('errors', array());
             if ($mode == 'add')
@@ -324,8 +324,8 @@ class schools extends controller
         $mode = $this->getParam('mode');
         $sid = $this->getParam('sid');
         $cid = $this->getParam('cid');
-        $cancel = $this->getParam('cancel');
-        if ($cancel == 'Cancel')
+        $cancel = $this->getParam('cancel', NULL);
+        if (!empty($cancel))
         {
             $this->setSession('errors', array());
             return $this->nextAction('show', array('sid' => $sid, 'tab' => 2));
