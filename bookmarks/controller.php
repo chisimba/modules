@@ -175,8 +175,8 @@ class bookmarks extends controller
     */
     private function __validate()
     {
-        $cancel = $this->getParam('cancel');
-        if ($cancel == 'Cancel')
+        $cancel = $this->getParam('cancel', NULL);
+        if (!empty($cancel))
         {
             $this->setSession('errors', array());
             return $this->nextAction('view');
