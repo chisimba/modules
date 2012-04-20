@@ -190,7 +190,6 @@
                 type: "GET", 
                 url: "index.php", 
                 data: "module="+theModule+"&action=renderblock&blockid="+blockid+"&side="+side,
-                dataType: 'script',
                 success: function(msg){
                 
                     jQuery("#"+side+"previewcontent").show();
