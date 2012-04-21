@@ -16,9 +16,6 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
-	'datecreated' => array(
-		'type' => 'timestamp'
-		),
 	'title' => array(
 		'type' => 'text',
 		'length' => 250,
@@ -26,12 +23,20 @@ $fields = array(
 	'content' => array(
 		'type' => 'clob',
 		),
+        'tags' => array(
+                'type' => 'text',
+                ),
+        'datecreated' => array(
+		'type' => 'timestamp'
+		),
+        'datemodified' => array(
+		'type' => 'timestamp'
+		)
 	);
 
 //create other indexes here...
 
 $name = 'tbl_mynotes_text_idx';
-
 $indexes = array(
     'fields' => array(
          'title' => array(),

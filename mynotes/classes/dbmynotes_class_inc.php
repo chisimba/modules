@@ -86,7 +86,22 @@ class dbmynotes extends dbtable
     public function getOverview()
     {
         return $this->getAll(' WHERE id=\'init_overview\' ');
-
+    }
+    
+    /*
+     * Method to save a note to the database
+     * 
+     */
+    public function insertNote($data) {
+        $this->insert($data);        
+    }
+    
+    /*
+     * Method to edit a note in the database
+     * 
+     */
+    public function updateNote($id, $data) {
+        $this->update('id', $id, $data);        
     }
 
 }
