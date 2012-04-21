@@ -13,12 +13,12 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region1">
         {
             "display" : "block",
-            "module" : "textblock",
+            "module" : "contentblocks",
             "block" : "contentblocks_howtoedit"
         }
         {
             "display" : "block",
-            "module" : "textblock",
+            "module" : "contentblocks",
             "block" : "contentleftnav"
         }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
@@ -26,7 +26,7 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region2">
         {
             "display" : "block",
-            "module" : "textblock",
+            "module" : "contentblocks",
             "block" : "contentblocks_showajaxedit"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
