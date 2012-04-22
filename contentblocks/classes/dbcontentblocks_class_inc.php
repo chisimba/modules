@@ -24,6 +24,17 @@ class dbcontentblocks extends dbTable {
     public function init() {
         parent::init('tbl_contentblocks');
 
+        $this->objModule = $this->getObject('modules', 'modulecatalogue');
+
+        //Check if contentblocks is installed
+        $this->pbExists = $this->objModule->checkIfRegistered("contentblocks");
+        $this->pbVersion = $this->objModule->getVersion("prelogin");
+        if ($this->pbExists && ($this->pbVersion > 1.05)) {            
+            $this->objPreloginBlocks = $this->getObject("preloginblocks", "prelogin");
+        } else {
+            $this->pbExists = false;
+        }        
+
         $this->objBlock = $this->getObject('dbblocksdata', 'blocks');
         $this->objUser = $this->getObject("user", "security");
         $this->userId = $this->objUser->userId();
@@ -59,16 +70,17 @@ class dbcontentblocks extends dbTable {
      * @access public
      *
      */
-    public function getBlocksArr($blockType) {        
+    public function getBlocksArr($blockType) {
         $sql = "SELECT * from tbl_contentblocks WHERE blockid = '"
                 . $blockType . "' and (deleted !=1 or deleted is null or deleted = 0)";
         $ar = $this->getArray($sql);
-        if (!empty($ar)) {         
+        if (!empty($ar)) {
             return $ar;
         } else {
             return NULL;
         }
     }
+
     /**
      *
      * Get an array blocks of a particular type including deleted ones
@@ -137,7 +149,22 @@ class dbcontentblocks extends dbTable {
                     'css_id' => $cssId,
                     'css_class' => $cssClass,
                     'show_title' => $showTitle));
-            }//if
+                // Update prelogin blocks if a copy of this block exists
+                if($this->pbExists){
+                    //Check if an instance of this block exists in prelogin blocks to update
+                    $pbLeft = $this->objPreloginBlocks->getBlock($id."_lc");
+                    $pbMiddle = $this->objPreloginBlocks->getBlock($id."_mc");
+                    $pbRight = $this->objPreloginBlocks->getBlock($id."_rc");
+                    $data = array('title' => $csBlock["title"],
+                                    'content' => $csBlock["blocktext"]);
+                    if ($pbLeft)
+                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_lc", $data);
+                    if ($pbMiddle)
+                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_mc", $data);
+                    if ($pbMiddle)
+                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_rc", $data);
+                }
+            }
             // if add use insert
             if ($mode == "add") {
                 $this->insert(array(
