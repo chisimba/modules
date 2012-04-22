@@ -80,12 +80,21 @@ if ($this->objUser->isAdmin()) {
     foreach ($smallBlockOptions as $block => $title) {
         $rightBlocksDropDown->addOption($block, $title);
     }
-
+    
     //then left too
     foreach ($smallBlockOptions as $block => $title) {
         $leftBlocksDropDown->addOption($block, $title);
     }
 
+    //Add content sideblocks to options
+    if (!empty($contentSmallBlocks)) {
+        foreach ($contentSmallBlocks as $contentSmallBlock) {
+            //$block = $this->objBlocks->showBlock($contentSmallBlock["id"], "contentblocks");
+            $rightBlocksDropDown->addOption('block|' . $contentSmallBlock["id"] . '|' . "contentblocks", htmlentities($contentSmallBlock["title"]) . '(contentblocks)');
+            $leftBlocksDropDown->addOption('block|' . $contentSmallBlock["id"] . '|' . "contentblocks", htmlentities($contentSmallBlock["title"]) . '(contentblocks)');
+        }
+    }    
+    
     $button = new button('addrightblock', $objLanguage->languageText('mod_prelogin_addblock', 'prelogin', 'Add Block'));
     $button->cssId = 'rightbutton';
 

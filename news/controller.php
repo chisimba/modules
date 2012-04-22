@@ -49,6 +49,13 @@ class news extends controller {
         $this->objUser = $this->getObject('user', 'security');
 
         $this->objWashOut = $this->getObject('washout', 'utilities');
+        
+        $this->objModule = $this->getObject('modules', 'modulecatalogue');
+        //Check if contentblocks is installed
+        $this->cbExists = $this->objModule->checkIfRegistered("contentblocks");
+        if ($this->cbExists) {
+            $this->objBlocksContent = $this->getObject('dbcontentblocks', 'contentblocks');
+        }
     }
 
     /**
@@ -165,6 +172,16 @@ class news extends controller {
         // Load Blocks
         $rightBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage', 'right');
         $leftBlocks = $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage', 'left');
+        //Add content blocks if exists
+        $contentSmallBlocks = "";
+        $contentWideBlocks = "";
+        if ($this->cbExists) {
+            $contentSmallBlocks = $this->objBlocksContent->getBlocksArr('content_text');
+            $this->setVarByRef('contentSmallBlocks', $contentSmallBlocks);
+
+            $contentWideBlocks = $this->objBlocksContent->getBlocksArr('content_widetext');
+            $this->setVarByRef('contentWideBlocks', $contentWideBlocks);
+        }
         $this->setVar('pageType', 'frontpage');
         $this->setVar('pageTypeId', 'frontpage');
         $this->setVar('rightBlocks', $rightBlocks);
