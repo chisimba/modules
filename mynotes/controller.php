@@ -241,9 +241,10 @@ class mynotes extends controller {
      * 
      */
     
-    private function _ajaxGetNotes() {
+    private function __ajaxGetNotes() {
         $this->objLog->log("calling get notes");
-        return $this->objNotesOps->getNotes();
+        
+        return $this->objNoteOps->getNotes();
     }
 
     /**

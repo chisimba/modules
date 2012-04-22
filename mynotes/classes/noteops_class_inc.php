@@ -291,14 +291,10 @@ class noteops extends object {
         $notesArray = $this->objDbmynotes->getNotes($uid);
 
         $ret = '';
-
         if (!empty($notesArray)) {
             $list = "<div><ul>";
-
-            foreach ($notesArray as $fieldname => $value) {
-                if ($fieldname == 'content') {
-                    $list .= "<li>" . $value . "</li>";
-                }
+            foreach ($notesArray as $value) {
+                $list .= "<li>" . $value['content'] . "</li>";
             }
             $list .= "</ul></div>";
         } else {
@@ -306,12 +302,12 @@ class noteops extends object {
 
             $list = "<div><ul>" . $error . "</ul></div>";
         }
-
         $ret .= $list;
 
         echo $ret;
         die();
     }
+
 }
 
 ?>
