@@ -20,6 +20,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+        'count' => array(
+                'type' => 'text',
+                'length' => 16
+                ),
         'userid' => array(
                 'type' => 'text',
                 'length' => 32

@@ -100,6 +100,7 @@ class mynotes extends controller {
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the database class
         $this->objDbmynotes = & $this->getObject('dbmynotes', 'mynotes');
+        $this->objDbtags = & $this->getObject('dbtags', 'mynotes');
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js', 'mynotes'));
         //Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
@@ -207,9 +208,11 @@ class mynotes extends controller {
         if (empty($id) && $mode == 'add') {
             $data['datecreated'] = date('Y-m-d H:i:s');
             $this->objDbmynotes->insertNote($data);
+            $this->objDbtags->addTag($data);
         } else {
             $data['datemodified'] = date('Y-m-d H:i:s');
             $this->objDbmynotes->updateNote($id, $data);
+            $this->objDbtags->addTag($data, $id);
         }
 
         return $this->nextAction(NULL);

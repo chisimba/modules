@@ -17,7 +17,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @package mynotes
  * @version 0.1
  */
-class dbtag extends dbtable {
+class dbtags extends dbtable {
 
     /**
      * Method to construct the class and initialise the table.
@@ -45,33 +45,52 @@ class dbtag extends dbtable {
      * @return array $id The id of the inserted or updated tag.
      * @return array $qnId The qnId of the inserted or updated question.
      */
-    public function addTag($data, $id = Null, $qnId = Null) {
+    public function addTag($data, $id = Null) {
         $othertags = explode(",", $data["tags"]);
+        $fields = Array();
+        $count = 1;
 
-        if(!empty($othertags)) {
-            $idArr = array();
-            
-            if (!empty($id)) {
-                $idArr[$count] = $id;
-            }
-
+        if (!empty($othertags)) {
             foreach ($othertags as $othertag) {
-                if(!empty($othertag)) {
+                if (!empty($othertag)) {
                     $fields['name'] = $othertag;
                     $fields['userid'] = $this->userId;
                     $fields['datecreated'] = date('Y-m-d H:i:s');
-                    
-                    if($id) {
+
+
+                    if ($id) {
+                        // get current tag count
+                        $tmpTag = $this->getTag($id);
+                        $count = $tmpTag['count'];
+
+                        // increase tag count
+                        ++$count;
+
                         $fields['datemodified'] = date('Y-m-d H:i:s');
                         $fields['modifiedby'] = $this->userId;
+                        $fields['count'] = $count;
+
                         $this->update('id', $id, $fields);
                     } else {
-                        $this->insert($fields);
+                        $tagExists = $this->getTags("name='" . $othertag . "'");
+                        if (!empty($tagExists)) {
+                            $tagid = $tagExists[0]["id"];
+                            $count = $tagExists[0]['count'];
+
+                            // increase tag count
+                            ++$count;
+                            $fields['count'] = $count;
+                            
+                            $this->update('id', $tagid, $fields);
+                        } else {
+                            $fields['count'] = $count;
+                            $this->insert($fields);
+                        }
                     }
                 }
             }
         }
-        
+
         return $id;
     }
 
@@ -84,15 +103,19 @@ class dbtag extends dbtable {
      */
     public function getTags($filter = NULL) {
         $sql = 'SELECT * FROM ' . $this->table;
+
         if ($filter != NULL) {
             $sql.= " WHERE " . $filter;
         } else {
             $sql .= "";
         }
+
         $data = $this->getArray($sql);
+
         if (!empty($data)) {
             return $data;
         }
+
         return FALSE;
     }
 
@@ -106,10 +129,13 @@ class dbtag extends dbtable {
     public function getTag($id) {
         $sql = 'SELECT * FROM ' . $this->table;
         $sql.= " WHERE id='$id'";
+
         $data = $this->getArray($sql);
+
         if (!empty($data)) {
             return $data;
         }
+
         return FALSE;
     }
 

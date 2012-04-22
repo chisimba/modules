@@ -241,20 +241,20 @@ class noteops extends object {
 
         /* Add Title Row */
         $objTable->startRow();
-        $objTable->addCell($noteTitleLabel . ': ', '100px', '', '', '', '');
+        $objTable->addCell("<strong>".$noteTitleLabel . '</strong>: ', '100px', '', '', '', '');
         $objTable->addCell($titleInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
         $objTable->startRow();
-        $objTable->addCell($noteTagLabel . ': ', '100px', '', '', '', '');
+        $objTable->addCell("<strong>".$noteTagLabel . '</strong>: ', '100px', '', '', '', '');
         $objTable->addCell($tagInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Editor Rows */
         $objTable->startRow();
-        $objTable->addCell($noteEditorLabel . ":&nbsp;", NULL, '', '', NULL, '');
-        $objTable->addCell($editorInputValue, NULL, '', '', NULL, '');
+        $objTable->addCell("<strong>".$noteEditorLabel . "</strong>:&nbsp;", NULL, 'top', '', NULL, '');
+        $objTable->addCell($editorInputValue, NULL, 'top', '', NULL, '');
         $objTable->endRow();
 
         $objButton = new button('save', $confirmLabel);
@@ -294,7 +294,7 @@ class noteops extends object {
         if (!empty($notesArray)) {
             $list = "<div><ul>";
             foreach ($notesArray as $value) {
-                $list .= "<li>" . $value['content'] . "</li>";
+                $list .= "<li>" . strip_tags($value['content']) . "</li>";
             }
             $list .= "</ul></div>";
         } else {
