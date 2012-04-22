@@ -16,6 +16,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+        'userid' => array(
+                'type' => 'text',
+                'length' => 32
+                ),
 	'title' => array(
 		'type' => 'text',
 		'length' => 250,

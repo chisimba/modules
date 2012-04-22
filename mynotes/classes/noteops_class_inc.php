@@ -73,11 +73,16 @@ class noteops extends object {
             $this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js'));
             // Instantiate the language object.
             $this->objLanguage = $this->getObject('language', 'language');
+            $this->objUser = $this->getObject('user', 'security');
+
             $this->objTable = $this->loadClass('htmltable', 'htmlelements');
             $this->objLink = $this->loadClass('link', 'htmlelements');
             $this->objIcon = $this->getObject('geticon', 'htmlelements');
             $this->objInput = $this->loadClass('textinput', 'htmlelements');
             $this->objForm = $this->loadClass('form', 'htmlelements');
+
+
+            $this->objDbmynotes = $this->getObject('dbmynotes', 'mynotes');
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
@@ -203,7 +208,7 @@ class noteops extends object {
         return $objForm->show();
     }
 
-    public function validateNote($mode=NULL) {
+    public function validateNote($mode = NULL) {
         if ($mode == add) {
             $idInput = NULL;
         } else {
@@ -215,7 +220,7 @@ class noteops extends object {
         $titleInputValue = $this->getParam('title');
         $tagInputValue = $this->getParam('tags');
         $editorInputValue = $this->getParam('NoteContent');
-        
+
         $confirmLabel = $this->objLanguage->languageText('word_confirm', 'system', 'WORD: word_save, not found');
         $backLabel = $this->objLanguage->languageText('word_back', 'system', 'WORD: word_cancel, not found');
         $noteTitleLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetitle', 'mynotes', NULL, 'TEXT: mod_mynotes_notetitle, not found'));
@@ -267,14 +272,46 @@ class noteops extends object {
                             'action' => 'save',
                             'mode' => $mode
                         )));
-        
+
         $validateForm->addToForm($objTable);
         $validateForm->addToForm($idInput);
         $validateForm->addToForm($titleInput);
         $validateForm->addToForm($tagInput);
         $validateForm->addToForm($editorInput);
-        
+
         return $validateForm->show();
     }
+
+    public function getNotes() {
+        // Set up text elements.
+        $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', 'mynotes', 'TEXT: mod_mynotes_nonotes, not found');
+
+        $uid = $this->objUser->userId();
+
+        $notesArray = $this->objDbmynotes->getNotes($uid);
+
+        $ret = '';
+
+        if (!empty($notesArray)) {
+            $list = "<div><ul>";
+
+            foreach ($notesArray as $fieldname => $value) {
+                if ($fieldname == 'content') {
+                    $list .= "<li>" . $value . "</li>";
+                }
+            }
+            $list .= "</ul></div>";
+        } else {
+            $error = $this->error($noNotesLabel);
+
+            $list = "<div><ul>" . $error . "</ul></div>";
+        }
+
+        $ret .= $list;
+
+        echo $ret;
+        die();
+    }
 }
+
 ?>

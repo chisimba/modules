@@ -105,6 +105,7 @@ class mynotes extends controller {
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+        $this->objNoteOps = $this->getObject('noteops', 'mynotes');
     }
 
     /**
@@ -198,6 +199,7 @@ class mynotes extends controller {
         $id = $this->getParam('id');
 
         $data = array();
+        $data['userid'] = $this->objUser->userId();
         $data['title'] = $this->getParam('title');
         $data['tags'] = $this->getParam('tags');
         $data['content'] = $this->getParam('content');
@@ -230,6 +232,18 @@ class mynotes extends controller {
             $this->deleteItem();
             return $this->nextAction(NULL);
         }
+    }
+    
+    /*
+     * Method to retrieve all the notes for the current user
+     * 
+     * @access private
+     * 
+     */
+    
+    private function _ajaxGetNotes() {
+        $this->objLog->log("calling get notes");
+        return $this->objNotesOps->getNotes();
     }
 
     /**

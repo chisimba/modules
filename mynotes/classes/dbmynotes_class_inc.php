@@ -103,6 +103,18 @@ class dbmynotes extends dbtable
     public function updateNote($id, $data) {
         $this->update('id', $id, $data);        
     }
+    
+    /**
+     * Method to return a district
+     * 
+     * @access public
+     * @param string $id The id of the disctrict to get
+     * @return array The array of provinces for a district 
+     */
+    public function getNotes($uid)
+    {
+        return $this->fetchAll(" WHERE `userid` = '$uid'" );
+    }
 
 }
 ?>

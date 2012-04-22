@@ -18,12 +18,17 @@
  *
  */
 jQuery(function() {
-
-    
+     
     // Things to do on loading the page.
     jQuery(document).ready(function() {
-      // Load some demo content into the middle dynamic area.
-      jQuery("#middledynamic_area").load('packages/mynotes/resources/sample.txt');
+        // Load notes into the middle dynamic area.
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=mynotes&action=ajaxGetNotes",
+            success: function(ret) {
+                jQuery("#middledynamic_area").html(ret); 
+            }
+        });
     });
 
 });
