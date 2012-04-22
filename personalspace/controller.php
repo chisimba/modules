@@ -28,6 +28,12 @@ class personalspace extends controller
         // Create an instance of the module object
         $this->objModule = $this->getObject('modules', 'modulecatalogue');
         
+        //Check if contentblocks is installed
+        $this->cbExists = $this->objModule->checkIfRegistered("contentblocks");
+        if ($this->cbExists) {
+            $this->objBlocksContent = $this->getObject('dbcontentblocks', 'contentblocks');
+        }
+        
         $this->objContextBlocks = $this->getObject('dbcontextblocks', 'context');
         $this->objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
         $this->objUser = $this->getObject('user', 'security');
@@ -130,6 +136,17 @@ class personalspace extends controller
         
         $wideBlocks = $objBlocks->getBlocks('wide', 'site|user');
         $this->setVarByRef('wideBlocks', $wideBlocks);
+        
+        //Add content blocks if any
+        $contentSmallBlocks = "";
+        $contentWideBlocks = "";
+        if ($this->cbExists) {
+            $contentSmallBlocks = $this->objBlocksContent->getBlocksArr('content_text');
+            $this->setVarByRef('contentSmallBlocks', $contentSmallBlocks);
+
+            $contentWideBlocks = $this->objBlocksContent->getBlocksArr('content_widetext');
+            $this->setVarByRef('contentWideBlocks', $contentWideBlocks);
+        }
         
         return 'main_tpl.php';
     }
