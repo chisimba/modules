@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
@@ -65,7 +66,7 @@ $objHeading->type = 2;
 $fullOwnername = $this->objUserAdmin->getUserDetails($ownerId);
 //store Id
 $userId = $fullOwnername['userid'];
-$objHeading->str = $objLanguage->languageText("mod_eportfolio_youreviewing", 'eportfolio') .'&nbsp;'. $objUser->fullName($userId) . '&nbsp;' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
+$objHeading->str = $objLanguage->languageText("mod_eportfolio_youreviewing", 'eportfolio') . '&nbsp;' . $objUser->fullName($userId) . '&nbsp;' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio');
 echo $objHeading->show();
 echo "</br>";
 //Link to epms home
@@ -73,17 +74,17 @@ $iconSelect = $this->getObject('geticon', 'htmlelements');
 $iconSelect->setIcon('home');
 $iconSelect->alt = $objLanguage->languageText("mod_eportfolio_eportfoliohome", 'eportfolio');
 $mnglink = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'main'
-)));
+                    'module' => 'eportfolio',
+                    'action' => 'main'
+                )));
 $mnglink->link = $iconSelect->show();
 $linkManage = $mnglink->show();
 echo '<div align="center">' . $linkManage . '</div>';
 echo "</br>";
 $form = new form("add", $this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'addparts'
-)));
+                    'module' => 'eportfolio',
+                    'action' => 'addparts'
+                )));
 //Save button
 //$button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 //$button->setToSubmit();
@@ -97,9 +98,9 @@ $hasAccess = $this->_objUser->isContextLecturer();
 $hasAccess = $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
-    'module' => 'eportfolio',
-    'action' => 'view_contact'
-)));
+                    'module' => 'eportfolio',
+                    'action' => 'view_contact'
+                )));
 $link->link = 'View Identification Details';
 //Start Address View
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -122,11 +123,11 @@ $addressTable->endRow();
 // Step through the list of addresses.
 if (!empty($addressList)) {
     $addrcount = 0;
-    foreach($addressList as $addressItem) {
+    foreach ($addressList as $addressItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $addCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($addressItem['id'] == $subgrp['group_define_name']) {
                     $addCheck = 1;
                 }
@@ -176,14 +177,14 @@ $contactTable->endRow();
 // Step through the list of addresses.
 if (!empty($contactList)) {
     $contcount = 0;
-    foreach($contactList as $contactItem) {
+    foreach ($contactList as $contactItem) {
         // Display each field
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $contCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($contactItem['id'] == $subgrp['group_define_name']) {
                     $contCheck = 1;
                 }
@@ -227,11 +228,11 @@ $emailTable->endRow();
 $class = 'even';
 if (!empty($emailList)) {
     $emcount = 0;
-    foreach($emailList as $emailItem) {
+    foreach ($emailList as $emailItem) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $emailCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($emailItem['id'] == $subgrp['group_define_name']) {
                     $emailCheck = 1;
                 }
@@ -274,13 +275,13 @@ $demographicsTable->endRow();
 // Step through the list of addresses.
 if (!empty($demographicsList)) {
     $democount = 0;
-    foreach($demographicsList as $demographicsItem) {
+    foreach ($demographicsList as $demographicsItem) {
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $demoCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($demographicsItem['id'] == $subgrp['group_define_name']) {
                     $demoCheck = 1;
                 }
@@ -365,7 +366,7 @@ if (!empty($activitylist)) {
     $i = 0;
     $actcount = 0;
     $affcount = 0;
-    foreach($activitylist as $item) {
+    foreach ($activitylist as $item) {
         //Get context title
         $objDbContext = &$this->getObject('dbcontext', 'context');
         $mycontextRecord = $objDbContext->getContextDetails($item['contextid']);
@@ -377,7 +378,7 @@ if (!empty($activitylist)) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $actvCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $actvCheck = 1;
                 }
@@ -391,9 +392,9 @@ if (!empty($activitylist)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singleactivity',
-                  'atyId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singleactivity',
+                            'atyId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -402,14 +403,13 @@ if (!empty($activitylist)) {
                 $objPopup->set('scrollbars', 'yes');
                 $objPopup->set('resizable', 'yes');
                 $objPopup->putJs(); // you only need to do this once per page
-
                 // Display each field for activities
                 $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
                 $activityTable->startRow();
                 $activityTable->addCell($mycontextTitle, "", NULL, NULL, $class, '');
                 $activityTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $activityTable->addCell($this->objDate->formatDateOnly($item['start']) , "", NULL, NULL, $class, '');
-                $activityTable->addCell($this->objDate->formatDateOnly($item['finish']) , "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDateOnly($item['start']), "", NULL, NULL, $class, '');
+                $activityTable->addCell($this->objDate->formatDateOnly($item['finish']), "", NULL, NULL, $class, '');
                 $activityTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $activityTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $activityTable->endRow();
@@ -449,13 +449,13 @@ $class = NULL;
 if (!empty($affiliationList)) {
     $i = 0;
     $affcount = 0;
-    foreach($affiliationList as $affiliationItem) {
+    foreach ($affiliationList as $affiliationItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $affiliationCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($affiliationItem['id'] == $subgrp['group_define_name']) {
                     $affiliationCheck = 1;
                 }
@@ -470,9 +470,9 @@ if (!empty($affiliationList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singleaffiliation',
-                  'affiId' => $affiliationItem['id']
-                ) , 'eportfolio'));
+                            'action' => 'singleaffiliation',
+                            'affiId' => $affiliationItem['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -487,9 +487,9 @@ if (!empty($affiliationList)) {
                 $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, $class, '');
                 $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, $class, '');
-                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['start']) , "", NULL, NULL, $class, '');
-                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['finish']) , "", NULL, NULL, $class, '');
-                $affiliationTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['start']), "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($this->objDate->formatDateOnly($affiliationItem['finish']), "", NULL, NULL, $class, '');
+                $affiliationTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $affiliationTable->endRow();
             }
         }
@@ -522,11 +522,11 @@ $class = NULL;
 $transcount = 0;
 if (!empty($transcriptlist)) {
     $transcount = 0;
-    foreach($transcriptlist as $item) {
+    foreach ($transcriptlist as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $transCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $transCheck = 1;
                 }
@@ -540,9 +540,9 @@ if (!empty($transcriptlist)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singletranscript',
-                  'transId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singletranscript',
+                            'transId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -551,7 +551,6 @@ if (!empty($transcriptlist)) {
                 $objPopup->set('scrollbars', 'yes');
                 $objPopup->set('resizable', 'yes');
                 $objPopup->putJs(); // you only need to do this once per page
-
                 // Display each field for activities
                 $transcriptTable->startRow();
                 $transcriptTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -591,13 +590,13 @@ $class = NULL;
 $qclcount = 0;
 if (!empty($qclList)) {
     $qclcount = 0;
-    foreach($qclList as $qclItem) {
+    foreach ($qclList as $qclItem) {
         // Display each field for addresses
         $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $qclCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($qclItem['id'] == $subgrp['group_define_name']) {
                     $qclCheck = 1;
                 }
@@ -610,9 +609,9 @@ if (!empty($qclList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singlequali',
-                  'qualiId' => $qclItem['id']
-                ) , 'eportfolio'));
+                            'action' => 'singlequali',
+                            'qualiId' => $qclItem['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -628,8 +627,8 @@ if (!empty($qclList)) {
                 $qclTable->addCell($qclItem['qcl_title'], "", NULL, NULL, $class, '');
                 $qclTable->addCell($qclItem['organisation'], "", NULL, NULL, $class, '');
                 $qclTable->addCell($qclItem['qcl_level'], "", NULL, NULL, $class, '');
-                $qclTable->addCell($this->objDate->formatDateOnly($qclItem['award_date']) , "", NULL, NULL, $class, '');
-                $qclTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
+                $qclTable->addCell($this->objDate->formatDateOnly($qclItem['award_date']), "", NULL, NULL, $class, '');
+                $qclTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $qclTable->endRow();
             }
         }
@@ -662,11 +661,11 @@ $goacount = 0;
 if (!empty($goalsList)) {
     $i = 0;
     $goacount = 0;
-    foreach($goalsList as $item) {
+    foreach ($goalsList as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $goalsCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $goalsCheck = 1;
                 }
@@ -682,9 +681,9 @@ if (!empty($goalsList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singlegoal',
-                  'goalId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singlegoal',
+                            'goalId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -693,7 +692,6 @@ if (!empty($goalsList)) {
                 $objPopup->set('scrollbars', 'yes');
                 $objPopup->set('resizable', 'yes');
                 $objPopup->putJs(); // you only need to do this once per page
-
                 // Display each field for activities
                 $goalsTable->startRow();
                 $goalsTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -730,13 +728,13 @@ $competencyTable->endRow();
 $class = NULL;
 if (!empty($competencyList)) {
     $compcount = 0;
-    foreach($competencyList as $item) {
+    foreach ($competencyList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $ctyCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $ctyCheck = 1;
                 }
@@ -752,9 +750,9 @@ if (!empty($competencyList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singlecompetency',
-                  'competencyId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singlecompetency',
+                            'competencyId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -766,7 +764,7 @@ if (!empty($competencyList)) {
 
                 $competencyTable->startRow();
                 $competencyTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $competencyTable->addCell($this->objDate->formatDateOnly($item['award_date']) , "", NULL, NULL, $class, '');
+                $competencyTable->addCell($this->objDate->formatDateOnly($item['award_date']), "", NULL, NULL, $class, '');
                 $competencyTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $competencyTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $competencyTable->endRow();
@@ -803,13 +801,13 @@ $class = NULL;
 $intcount = 0;
 if (!empty($interestList)) {
     $intcount = 0;
-    foreach($interestList as $item) {
+    foreach ($interestList as $item) {
         // Display each field for activities
         $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $intrstCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $intrstCheck = 1;
                 }
@@ -823,9 +821,9 @@ if (!empty($interestList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                  'action' => 'singleinterest',
-                  'interestId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singleinterest',
+                            'interestId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -838,7 +836,7 @@ if (!empty($interestList)) {
                 $intcount = 1;
                 $interestTable->startRow();
                 $interestTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
-                $interestTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
+                $interestTable->addCell($this->objDate->formatDateOnly($item['creation_date']), "", NULL, NULL, $class, '');
                 $interestTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                 $interestTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $interestTable->endRow();
@@ -874,11 +872,11 @@ $reflectionTable->endRow();
 $class = NULL;
 if (!empty($reflectionList)) {
     $refcount = 0;
-    foreach($reflectionList as $item) {
+    foreach ($reflectionList as $item) {
         //Check if this item has been checked already
         if (!empty($isSubGroup)) {
             $rfctnCheck = 0;
-            foreach($isSubGroup[0] as $subgrp) {
+            foreach ($isSubGroup[0] as $subgrp) {
                 if ($item['id'] == $subgrp['group_define_name']) {
                     $rfctnCheck = 1;
                 }
@@ -893,9 +891,9 @@ if (!empty($reflectionList)) {
                 $commentIcon = $this->objIcon->show();
                 $objPopup = new windowpop();
                 $objPopup->set('location', $this->uri(array(
-                    'action' => 'singlereflection',
-                    'reflectId' => $item['id']
-                ) , 'eportfolio'));
+                            'action' => 'singlereflection',
+                            'reflectId' => $item['id']
+                                ), 'eportfolio'));
                 $objPopup->set('linktext', $commentIcon);
                 $objPopup->set('width', '600');
                 $objPopup->set('height', '350');
@@ -907,9 +905,9 @@ if (!empty($reflectionList)) {
                 // Display each field for activities
                 $reflectionTable->startRow();
                 $reflectionTable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-                $reflectionTable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($this->objDate->formatDateOnly($item['creation_date']), "", NULL, NULL, $class, '');
                 $reflectionTable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-                $reflectionTable->addCell($objPopup->show() , "", NULL, NULL, $class, '');
+                $reflectionTable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                 $reflectionTable->endRow();
             }
         }
@@ -947,18 +945,20 @@ if (!$hasAccess) {
     // Step through the list of addresses.
     $class = NULL;
     if (!empty($Id)) {
-        foreach($Id as $groupId) {
+        foreach ($Id as $groupId) {
             //Get the group parent_id
-            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            foreach($parentId as $myparentId) {
+            $parentId = $this->_objGroupAdmin->getParent($groupId);            
+            if (!empty($parentId)) {
+                //foreach($parentId as $myparentId) {
                 //Get the name from group table
-                $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                //$assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                $assertionId = $this->_objGroupAdmin->getName($parentId);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                 if (!empty($assertionslist)) {
                     //Check if this item has been checked already
                     if (!empty($isSubGroup)) {
                         $asserCheck = 0;
-                        foreach($isSubGroup[0] as $subgrp) {
+                        foreach ($isSubGroup[0] as $subgrp) {
                             if ($assertionslist[0]['id'] == $subgrp['group_define_name']) {
                                 $asserCheck = 1;
                             }
@@ -972,9 +972,9 @@ if (!$hasAccess) {
                             $commentIcon = $this->objIcon->show();
                             $objPopup = new windowpop();
                             $objPopup->set('location', $this->uri(array(
-                                'action' => 'singleassertion',
-                                'assertionId' => $assertionId
-                            ) , 'eportfolio'));
+                                        'action' => 'singleassertion',
+                                        'assertionId' => $assertionId
+                                            ), 'eportfolio'));
                             $objPopup->set('linktext', $commentIcon);
                             $objPopup->set('width', '600');
                             $objPopup->set('height', '350');
@@ -985,9 +985,9 @@ if (!$hasAccess) {
                             $objPopup->putJs(); // you only need to do this once per page
                             // Display each field for activities
                             $assertionstable->startRow();
-                            $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']) , "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($objUser->fullName($assertionslist[0]['userid']), "", NULL, NULL, $class, '');
                             $assertionstable->addCell($assertionslist[0]['rationale'], "", NULL, NULL, $class, '');
-                            $assertionstable->addCell($this->objDate->formatDateOnly($assertionslist[0]['creation_date']) , "", NULL, NULL, $class, '');
+                            $assertionstable->addCell($this->objDate->formatDateOnly($assertionslist[0]['creation_date']), "", NULL, NULL, $class, '');
                             $assertionstable->addCell($assertionslist[0]['shortdescription'], "", NULL, NULL, $class, '');
                             $assertionstable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                             $assertionstable->endRow();
@@ -995,6 +995,7 @@ if (!$hasAccess) {
                     }
                 }
                 unset($myparentId);
+                //}
             }
             unset($groupId);
         }
@@ -1004,7 +1005,6 @@ if (!$hasAccess) {
         $assertionstable->endRow();
     }
     //echo $assertionstable->show();
-    
 } else {
     //Language Items
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -1026,11 +1026,11 @@ if (!$hasAccess) {
     $class = NULL;
     //    $arrayLists = array();
     if (!empty($assertionslist)) {
-        foreach($assertionslist as $item) {
+        foreach ($assertionslist as $item) {
             //Check if this item has been checked already
             if (!empty($isSubGroup)) {
                 $assertCheck = 0;
-                foreach($isSubGroup[0] as $subgrp) {
+                foreach ($isSubGroup[0] as $subgrp) {
                     if ($item['id'] == $subgrp['group_define_name']) {
                         $assertCheck = 1;
                     }
@@ -1044,9 +1044,9 @@ if (!$hasAccess) {
                     $commentIcon = $this->objIcon->show();
                     $objPopup = new windowpop();
                     $objPopup->set('location', $this->uri(array(
-                     'action' => 'singleassertion',
-                     'assertionId' => $item['id']
-                    ) , 'eportfolio'));
+                                'action' => 'singleassertion',
+                                'assertionId' => $item['id']
+                                    ), 'eportfolio'));
                     $objPopup->set('linktext', $commentIcon);
                     $objPopup->set('width', '600');
                     $objPopup->set('height', '350');
@@ -1058,7 +1058,7 @@ if (!$hasAccess) {
                     // Display each field for activities
                     $assertionstable->startRow();
                     $assertionstable->addCell($item['rationale'], "", NULL, NULL, $class, '');
-                    $assertionstable->addCell($this->objDate->formatDateOnly($item['creation_date']) , "", NULL, NULL, $class, '');
+                    $assertionstable->addCell($this->objDate->formatDateOnly($item['creation_date']), "", NULL, NULL, $class, '');
                     $assertionstable->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
                     $assertionstable->addCell($objPopup->show(), "", NULL, NULL, $class, '');
                     $assertionstable->endRow();
@@ -1088,48 +1088,47 @@ $this->objTab->init();
 $this->objmainTab->init();
 
 //For each tab, check if made visible and order as per the eportfolio blocks
-
 //Get Visible MAIN blocks
-$mainBlocks = $this->objEPBlocks->getVisibleBlocks('main',$userId);
+$mainBlocks = $this->objEPBlocks->getVisibleBlocks('main', $userId);
 //Step through each Block
 foreach ($mainBlocks as $mainBlock) {
-    if ($mainBlock["title"]=='Identification') {
+    if ($mainBlock["title"] == 'Identification') {
         //Names tab (Visible By Default)
         $this->objTab->tabId = "minitab001";
         $this->objTab->addTab(array(
-            'name' => $this->objLanguage->languageText("word_name") ,
+            'name' => $this->objLanguage->languageText("word_name"),
             'content' => $userTable->show()
         ));
         //Get Visible IDENTIFICATION blocks
-        $identityBlocks = $this->objEPBlocks->getVisibleBlocks('identity',$userId);
+        $identityBlocks = $this->objEPBlocks->getVisibleBlocks('identity', $userId);
         //Step through each Block
         foreach ($identityBlocks as $identityBlock) {
-            if  ($identityBlock["title"]=='Address') {
+            if ($identityBlock["title"] == 'Address') {
                 //Address Tab
                 $this->objTab->tabId = "identitytab001";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio'),
                     'content' => $addressTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Contact') {
+            } elseif ($identityBlock["title"] == 'Contact') {
                 //Contact Tab
                 $this->objTab->tabId = "identitytab002";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordContact", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordContact", 'eportfolio'),
                     'content' => $contactTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Email') {
+            } elseif ($identityBlock["title"] == 'Email') {
                 //Email Tab
                 $this->objTab->tabId = "identitytab003";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordEmail", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordEmail", 'eportfolio'),
                     'content' => $emailTable->show()
                 ));
-            } elseif  ($identityBlock["title"]=='Demographics') {
+            } elseif ($identityBlock["title"] == 'Demographics') {
                 //Demographics Tab
                 $this->objTab->tabId = "identitytab004";
                 $this->objTab->addTab(array(
-                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordDemographics", 'eportfolio') ,
+                    'name' => $this->objLanguage->languageText("mod_eportfolio_wordDemographics", 'eportfolio'),
                     'content' => $demographicsTable->show()
                 ));
             }
@@ -1138,70 +1137,70 @@ foreach ($mainBlocks as $mainBlock) {
         //Identification Tab
         $this->objmainTab->tabId = "maintab001";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInformation", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInformation", 'eportfolio'),
             'content' => $infotabs
         ));
-    } elseif  ($mainBlock["title"]=='Activities') {
+    } elseif ($mainBlock["title"] == 'Activities') {
         //Activity Title
         $this->objmainTab->tabId = "maintab002";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio'),
             'content' => $activityTable->show()
-        ));        
-    } elseif  ($mainBlock["title"]=='Affiliation') {
+        ));
+    } elseif ($mainBlock["title"] == 'Affiliation') {
         //Affiliation Title
         $this->objmainTab->tabId = "maintab003";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAffiliation", 'eportfolio'),
             'content' => $affiliationTable->show()
-        ));        
-    } elseif  ($mainBlock["title"]=='Transcripts') {
+        ));
+    } elseif ($mainBlock["title"] == 'Transcripts') {
         //Transcripts Title
         $this->objmainTab->tabId = "maintab004";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio'),
             'content' => $transcriptTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Qualifications') {
+    } elseif ($mainBlock["title"] == 'Qualifications') {
         //Qualifications Title
         $this->objmainTab->tabId = "maintab005";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio'),
             'content' => $qclTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Goals') {
+    } elseif ($mainBlock["title"] == 'Goals') {
         //Goals Title
         $this->objmainTab->tabId = "maintab006";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_goals", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_goals", 'eportfolio'),
             'content' => $goalsTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Competencies') {
+    } elseif ($mainBlock["title"] == 'Competencies') {
         //Competencies Title
         $this->objmainTab->tabId = "maintab007";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio'),
             'content' => $competencyTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Interests') {
+    } elseif ($mainBlock["title"] == 'Interests') {
         //Interests Title
         $this->objmainTab->tabId = "maintab008";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio'),
             'content' => $interestTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Reflections') {
+    } elseif ($mainBlock["title"] == 'Reflections') {
         //Reflections Title
         $this->objmainTab->tabId = "maintab009";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio'),
             'content' => $reflectionTable->show()
         ));
-    } elseif  ($mainBlock["title"]=='Assertions') {
+    } elseif ($mainBlock["title"] == 'Assertions') {
         //Assertions Title
         $this->objmainTab->tabId = "maintab010";
         $this->objmainTab->addTab(array(
-            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio') ,
+            'name' => $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio'),
             'content' => $assertionstable->show()
         ));
     }
@@ -1209,9 +1208,9 @@ foreach ($mainBlocks as $mainBlock) {
 
 $myeportfolioTab = $this->objmainTab->show();
 $tabBox->addTab(array(
-    'name' => $this->objLanguage->languageText("phrase_myePortfolio", 'eportfolio') ,
+    'name' => $this->objLanguage->languageText("phrase_myePortfolio", 'eportfolio'),
     'content' => $myeportfolioTab
-) , 'winclassic-tab-style-sheet');
+        ), 'winclassic-tab-style-sheet');
 //echo $tabBox->show();
 $form->addToForm($myeportfolioTab);
 echo $form->show();

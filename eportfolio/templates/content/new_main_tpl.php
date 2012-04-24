@@ -449,12 +449,17 @@ $demographicsTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_n
 $demographicsTable->endRow();
 // Step through the list of addresses.
 if (!empty($demographicsList)) {
-    foreach($demographicsList as $demographicsItem) {
+    foreach($demographicsList as $demographicsItem) {        
         // Display each field for Demographics
         $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
+        if(!empty($cattype)) {
+            $cat_type = $cattype[0]['type'];
+        } else {
+            $cat_type = "";
+        }
         $datetime = explode("-", $this->objDate->formatDateOnly($demographicsItem['birth']));
         $demographicsTable->startRow();
-        $demographicsTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($cat_type, "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($datetime[0], "", NULL, NULL, NULL, '');
         $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         // Show the edit link

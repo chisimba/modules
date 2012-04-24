@@ -1589,10 +1589,11 @@ class getall_Eportfolio extends object
                 foreach($Id as $groupId) {
                     //Get the group parent_id
                     $parentId = $this->_objGroupAdmin->getParent($groupId);
-                    $newParentId = array_unique($parentId);
-                    foreach($newParentId as $myparentId) {
+                    //$newParentId = array_unique($parentId);
+                    //foreach($newParentId as $myparentId) {
                         //Get the name from group table
-                        $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                        $assertionId = $this->_objGroupAdmin->getName($parentId);
+                        //$assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                         $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                         if (!empty($assertionslist)) {
                             $emptyChecker = 1;
@@ -1647,7 +1648,7 @@ class getall_Eportfolio extends object
                             $assertionstable->endRow();
                         }
                         unset($myparentId);
-                    }
+                    //}
                     //$assertNo = $assertNo + 1;
                     unset($groupId);
                 }
@@ -1695,11 +1696,13 @@ class getall_Eportfolio extends object
                 //$assertNo = 1;
                 foreach($Id as $groupId) {
                     //Get the group parent_id
-                    $parentId = $this->_objGroupAdmin->getParent($groupId);
-                    $newParentId = array_unique($parentId);
-                    foreach($newParentId as $myparentId) {
+                    $parentId = $this->_objGroupAdmin->getParent($groupId); 
+                    
+                    //$newParentId = array_unique($parentId);
+                    //foreach($newParentId as $myparentId) {
                         //Get the name from group table
-                        $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                        //$assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                     $assertionId = $this->_objGroupAdmin->getName($parentId);
                         $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
                         if (!empty($assertionslist)) {
                             // Display each field for assertions
@@ -1708,7 +1711,7 @@ class getall_Eportfolio extends object
                             $assertionstable->endRow();
                         }
                         unset($myparentId);
-                    }
+                    //}
                     //$assertNo = $assertNo + 1;
                     unset($groupId);
                 }
