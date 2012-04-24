@@ -26,14 +26,16 @@ class dbcontentblocks extends dbTable {
 
         $this->objModule = $this->getObject('modules', 'modulecatalogue');
 
-        //Check if contentblocks is installed
+        //Check if postlogin blocks is installed
         $this->pbExists = $this->objModule->checkIfRegistered("contentblocks");
         $this->pbVersion = $this->objModule->getVersion("prelogin");
-        if ($this->pbExists && ($this->pbVersion > 1.05)) {            
+        if ($this->pbExists && ($this->pbVersion > 1.05)) {
             $this->objPreloginBlocks = $this->getObject("preloginblocks", "prelogin");
         } else {
             $this->pbExists = false;
-        }        
+        }
+
+        $this->objDbModuleBlocks = $this->getObject("dbmoduleblocks", "modulecatalogue");
 
         $this->objBlock = $this->getObject('dbblocksdata', 'blocks');
         $this->objUser = $this->getObject("user", "security");
@@ -139,6 +141,23 @@ class dbcontentblocks extends dbTable {
             $cssClass = $this->getParam('css_class', NULL);
             // if edit use update
             if ($mode == "edit") {
+                // Update prelogin blocks if a copy of this block exists
+                if ($this->pbExists) {
+                    //Check if an instance of this block exists in prelogin blocks to update
+                    $pbLeft = $this->objPreloginBlocks->getBlock($id . "_lc");
+                    $pbMiddle = $this->objPreloginBlocks->getBlock($id . "_mc");
+                    $pbRight = $this->objPreloginBlocks->getBlock($id . "_rc");
+                    $data = array('title' => $csBlock["title"],
+                        'content' => $csBlock["blocktext"]);
+                    if ($pbLeft)
+                        $pbResult = $this->objPreloginBlocks->updateContentBlock($id . "_lc", $data);
+                    if ($pbMiddle)
+                        $pbResult = $this->objPreloginBlocks->updateContentBlock($id . "_mc", $data);
+                    if ($pbMiddle)
+                        $pbResult = $this->ojPreloginBlocks->updateContentBlock($id . "_rc", $data);
+                }
+
+                //Update should be last action
                 $this->update("id", $id, array(
                     'blockid' => $blockid,
                     'title' => $title,
@@ -149,25 +168,11 @@ class dbcontentblocks extends dbTable {
                     'css_id' => $cssId,
                     'css_class' => $cssClass,
                     'show_title' => $showTitle));
-                // Update prelogin blocks if a copy of this block exists
-                if($this->pbExists){
-                    //Check if an instance of this block exists in prelogin blocks to update
-                    $pbLeft = $this->objPreloginBlocks->getBlock($id."_lc");
-                    $pbMiddle = $this->objPreloginBlocks->getBlock($id."_mc");
-                    $pbRight = $this->objPreloginBlocks->getBlock($id."_rc");
-                    $data = array('title' => $csBlock["title"],
-                                    'content' => $csBlock["blocktext"]);
-                    if ($pbLeft)
-                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_lc", $data);
-                    if ($pbMiddle)
-                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_mc", $data);
-                    if ($pbMiddle)
-                    $pbResult = $this->objPreloginBlocks->updateContentBlock($id."_rc", $data);
-                }
+               
             }
             // if add use insert
             if ($mode == "add") {
-                $this->insert(array(
+                $id = $this->insert(array(
                     'blockid' => $blockid,
                     'title' => $title,
                     'blocktext' => $blocktext,
@@ -177,6 +182,24 @@ class dbcontentblocks extends dbTable {
                     'css_id' => $cssId,
                     'css_class' => $cssClass,
                     'show_title' => $showTitle));
+
+                //Add block to modulecatalogue wide & narrow blocks
+                $blockwidth = "";
+                if ($blockid == "content_widetext")
+                    $blockwidth = "wide";
+                if ($blockid == "content_text")
+                    $blockwidth = "normal";
+
+                $moduleid = "contentblocks";
+                $type = "site";                
+
+                //Use same id as contentblock
+                $arrData = array('id' => $id, 'moduleid' => $moduleid, 'blockname' => $title, 'blockwidth' => $blockwidth, 'blocktype' => $type);
+                $exists = $this->objDbModuleBlocks->getAll(" WHERE id = '$id'");
+                
+                if (count($exists) < 1) {
+                    $this->objDbModuleBlocks->insert($arrData); 
+                }
             }//if
         } catch (customException $e) {
             echo customException::cleanUp($e);
