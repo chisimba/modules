@@ -105,15 +105,34 @@ class dbmynotes extends dbtable
     }
     
     /**
-     * Method to return a district
+     * Method to return notes for a user
      * 
      * @access public
-     * @param string $id The id of the disctrict to get
-     * @return array The array of provinces for a district 
+     * @param string $id The id of the user's notes
+     * @return array The note array 
      */
     public function getNotes($uid)
     {
         return $this->fetchAll(" WHERE `userid` = '$uid'" );
+    }
+    
+    /*
+     * Method to return a note
+     * 
+     * @access public
+     * @param string $id The id of the note
+     * @return array The note array
+     */
+    public function getNote($id) {
+        return $this->getRow('id', $id);
+    }
+    
+    /*
+     * Method to search the notes based on a tag
+     * 
+     */
+    public function getNotesWitTags($searchKey) {
+        return $this->fetchAll(" WHERE `tags` LIKE '%".$searchKey."%'");
     }
 
 }

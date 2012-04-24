@@ -1,8 +1,8 @@
 <?php
 /**
-*  A page for validating the note that the user has either added or edited
+*  A template for search results of My notes
 *  Author: Nguni Phakela nguni52@gmail.com
-*  Date: April 21, 2012, 7:24 pm
+*  Date: March 16, 2012, 5:00 am
 *
 */
 ob_start();
@@ -24,8 +24,10 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "mynotes",
-            "block" : "mynotesvalidate"
+            "block" : "searchresults"
         }
+        <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
+        <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>
 </div>
 <?php

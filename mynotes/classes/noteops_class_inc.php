@@ -59,6 +59,8 @@ class noteops extends object {
      *
      */
     public $objLanguage;
+    public $tagCloud;
+    protected $objTagCloud;
 
     /**
      * Standard init function
@@ -69,20 +71,19 @@ class noteops extends object {
      */
     public function init() {
         try {
-            // Load the functions specific to this module.
-            $this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js'));
-            // Instantiate the language object.
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
+            $this->objTagCloud = $this->getObject('tagcloud', 'utilities');
 
             $this->objTable = $this->loadClass('htmltable', 'htmlelements');
             $this->objLink = $this->loadClass('link', 'htmlelements');
             $this->objIcon = $this->getObject('geticon', 'htmlelements');
             $this->objInput = $this->loadClass('textinput', 'htmlelements');
             $this->objForm = $this->loadClass('form', 'htmlelements');
-
+            $this->htmlHeading = $this->loadClass('htmlheading', 'htmlelements');
 
             $this->objDbmynotes = $this->getObject('dbmynotes', 'mynotes');
+            $this->objDbTags = $this->getObject('dbtags', 'mynotes');
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
@@ -90,28 +91,34 @@ class noteops extends object {
     }
 
     /**
-     * Render the input box for creating a note.
+     * Method to show note(s)
      *
      * @return string The input box and button
      *
      */
     public function showNotes() {
-        $addLabel = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
-        $addNoteLabel = $this->objLanguage->code2Txt('mod_mynotes_addnote', 'mynotes', NULL, 'TEXT: mod_mynotes_addnote, not found');
-        $ret = '';
+        $id = $this->getParam('id');
+        if (!empty($id)) {
+            return $this->showNote($this->getParam('id'));
+        } else {
+            $addLabel = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
+            $addNoteLabel = $this->objLanguage->code2Txt('mod_mynotes_addnote', 'mynotes', NULL, 'TEXT: mod_mynotes_addnote, not found');
+            $ret = '';
 
-        $this->objIcon->title = $addLabel;
-        $this->objIcon->alt = $addLabel;
-        $this->objIcon->setIcon('add', 'png');
-        $addIcon = $this->objIcon->show();
+            $this->objIcon->title = $addLabel;
+            $this->objIcon->alt = $addLabel;
+            $this->objIcon->setIcon('add', 'png');
+            $addIcon = $this->objIcon->show();
 
-        $objLink = new link($this->uri(array('action' => 'add', 'mode' => 'add')));
-        $objLink->link = $addIcon . '&nbsp;' . $addNoteLabel;
-        $addLink = $objLink->show();
+            $objLink = new link($this->uri(array('action' => 'add', 'mode' => 'add')));
+            $objLink->link = $addIcon . '&nbsp;' . $addNoteLabel;
+            $addLink = $objLink->show();
 
-        $ret .= $error . '<br />' . $addLink;
+            $ret .= $addLink;
 
-        return $ret;
+
+            return $ret;
+        }
     }
 
     /**
@@ -241,19 +248,19 @@ class noteops extends object {
 
         /* Add Title Row */
         $objTable->startRow();
-        $objTable->addCell("<strong>".$noteTitleLabel . '</strong>: ', '100px', '', '', '', '');
+        $objTable->addCell("<strong>" . $noteTitleLabel . '</strong>: ', '100px', '', '', '', '');
         $objTable->addCell($titleInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
         $objTable->startRow();
-        $objTable->addCell("<strong>".$noteTagLabel . '</strong>: ', '100px', '', '', '', '');
+        $objTable->addCell("<strong>" . $noteTagLabel . '</strong>: ', '100px', '', '', '', '');
         $objTable->addCell($tagInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Editor Rows */
         $objTable->startRow();
-        $objTable->addCell("<strong>".$noteEditorLabel . "</strong>:&nbsp;", NULL, 'top', '', NULL, '');
+        $objTable->addCell("<strong>" . $noteEditorLabel . "</strong>:&nbsp;", NULL, 'top', '', NULL, '');
         $objTable->addCell($editorInputValue, NULL, 'top', '', NULL, '');
         $objTable->endRow();
 
@@ -282,6 +289,11 @@ class noteops extends object {
         return $validateForm->show();
     }
 
+    /*
+     * Method to retrieve the notes from the database and display them
+     * 
+     */
+
     public function getNotes() {
         // Set up text elements.
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', 'mynotes', 'TEXT: mod_mynotes_nonotes, not found');
@@ -306,6 +318,140 @@ class noteops extends object {
 
         echo $ret;
         die();
+    }
+
+    public function getTagCloud() {
+        $this->tagCloud = $this->objDbTags->getTags();
+        if (!empty($this->tagCloud)) {
+            $tagscl = $this->processTags();
+            //var_dump($tagscl); die();
+            if ($tagscl != NULL) {
+                $this->objTagCloud = $this->objTagCloud->buildCloud($tagscl);
+            } else {
+                $this->objTagCloud = NULL;
+            }
+        }
+
+        return $this->objTagCloud;
+    }
+
+    public function processTags() {
+        $tags = NULL;
+        foreach ($this->tagCloud as $arrs) {
+            if (!empty($arrs['name'])) {
+                $tags .= $arrs['name'] . ",";
+            }
+        }
+        $tagsArr [] = explode(',', $tags);
+
+        if (empty($tagsArr)) {
+            return NULL;
+        }
+
+        foreach ($tagsArr as $tagger) {
+            foreach ($tagger as $tagged) {
+                $tags .= $tagged . ",";
+            }
+        }
+        $tags = str_replace(',,', ',', $tags);
+        $tagarray = explode(',', $tags);
+        $basetags = array_unique($tagarray);
+
+        foreach ($basetags as $q) {
+            $numbers = array_count_values($tagarray);
+            $weight = $numbers [$q];
+            $entry [] = array('name' => $q, 'url' => $this->uri(array('action' => 'search', 'srchstr' => $q, 'srchtype' => 'tags'), 'mynotes'), 'weight' => $weight * 1000, 'time' => time());
+        }
+
+        return $entry;
+    }
+
+    /*
+     * Method to search notes based on tags
+     * 
+     */
+
+    public function searchNotes($searchKey) {
+        $mySearchResults = $this->objDbmynotes->getNotesWitTags($searchKey);
+
+        // Set up text elements.
+        $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', 'mynotes', 'TEXT: mod_mynotes_nonotes, not found');
+
+        $uid = $this->objUser->userId();
+
+        $ret = '';
+        if (!empty($mySearchResults)) {
+            $list = "<div><ul>";
+            $tmpLink = NULL;
+            foreach ($mySearchResults as $value) {
+                $tmpLink = new Link($this->uri(array('action' => 'showNote', 'id' => $value['id'], 'mynotes')));
+                $tmpLink->link = $value['title'];
+                $list .= "<li>" . $tmpLink->show() . "</li>";
+            }
+            $list .= "</ul></div>";
+        } else {
+            $error = $this->error($noNotesLabel);
+
+            $list = "<div><ul>" . $error . "</ul></div>";
+        }
+        $ret .= $list;
+
+
+        return $ret;
+    }
+
+    public function showNote($id) {
+        $editLabel = $this->objLanguage->languageText('word_edit', 'system', 'WORD: word_edit, not found');
+        ;
+        $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'WORD: word_delete, not found');
+
+        $noteArr = $this->objDbmynotes->getNote($id);
+
+        $titleValue = $noteArr['title'];
+        $tagValues = $noteArr['tags'];
+        $contentValue = $noteArr['content'];
+
+        $title = new htmlheading($titleValue, 2);
+        
+        $editLink = new link($this->uri(array("action"=> 'edit', 'id'=>$noteArr['id']), 'mynotes'));
+        $this->objIcon->title = $editLabel;
+        $this->objIcon->alt = $editLabel;
+        $this->objIcon->setIcon('edit', 'png');
+        $editIcon = $this->objIcon->show();
+        $editLink->link = $editIcon;
+
+        $deleteLink = new link($this->uri(array("action"=> 'delete', 'id'=>$noteArr['id']), 'mynotes'));
+        $this->objIcon->title = $deleteLabel;
+        $this->objIcon->alt = $deleteLabel;
+        $this->objIcon->setIcon('delete', 'png');
+        $deleteIcon = $this->objIcon->show();
+        $deleteLink->link = $deleteIcon;
+
+        $title->str .= "&nbsp;".$editLink->show()."&nbsp;".$deleteLink->show();
+        $str = "<div>";
+        $str .= $title->show();
+        $str .= $contentValue;
+
+        $tmpLink = NULL;
+        $tagList = "";
+        $tagArr = explode(",", $tagValues);
+        $arraySize = count($tagArr);
+        $count = 0;
+        foreach ($tagArr as $value) {
+            $count++;
+            $tmpLink = new Link($this->uri(array('action' => 'search', 'srchstr' => $value, 'srchtype' => 'tags'), 'mynotes'));
+            $tmpLink->link = $value;
+            $tagList .= $tmpLink->show();
+            if ($count < $arraySize) {
+                $tagList .= ",";
+            }
+        }
+
+
+        $str .= "<div class=\"center taglist \">" . $tagList . "</div>";
+        $str .= "</div>";
+
+        return $str;
     }
 
 }

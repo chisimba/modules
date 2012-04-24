@@ -106,8 +106,6 @@ class dbtags extends dbtable {
 
         if ($filter != NULL) {
             $sql.= " WHERE " . $filter;
-        } else {
-            $sql .= "";
         }
 
         $data = $this->getArray($sql);

@@ -1,9 +1,7 @@
 <?php
 /**
  *
- * A left block for My notes.
- *
- * A left block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A middle block for showing search results of my notes.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +16,9 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @version    0.001
+ * @version    0.008
  * @package    mynotes
- * @author     Derek Keats derek@localhost.local
+ * @author     Nguni Phakela nguni52@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -39,18 +37,14 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * 
- * A left block for My notes.
- *
- * A left block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
  *
  * @category  Chisimba
- * @author    Derek Keats derek@localhost.local 
- * @version   0.001
+ * @author    Nguni Phakela nguni52@gmail.com
+ * @version   0.008
  * @copyright 2011 AVOIR
  *
  */
-class block_mynotesleft extends object
+class block_searchresults extends object
 {
     /**
      * The title of the block
@@ -61,10 +55,13 @@ class block_mynotesleft extends object
     public $title;
     
     /*
-     * The object used for module operations
+     * Keywords to search for
      * 
+     * @var     object
+     * @access  private
      */
-    public $objNoteOps;
+    private $searchKey;
+    
     /**
      * Standard init function
      *
@@ -74,12 +71,16 @@ class block_mynotesleft extends object
      */
     public function init() 
     {
+        // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->code2Txt('mod_mynotes_tags', 'mynotes', NULL, 'TEXT: mod_mynotes_tags, not found');
-        
+        $this->title = $this->objLanguage->code2Txt('mod_mynotes_searchresults', 'mynotes', NULL, 'TEXT: mod_mynotes_searchresults, not found');
+    
         // Load operations class for notes.
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
+        
+        $this->searchKey = $this->getParam('srchstr');
     }
+    
     /**
      * Standard block show method.
      *
@@ -87,7 +88,7 @@ class block_mynotesleft extends object
      */
     public function show() 
     {
-        return $this->objNoteOps->getTagCloud();
+        return $this->objNoteOps->searchNotes($this->searchKey);
     }
 }
 ?>

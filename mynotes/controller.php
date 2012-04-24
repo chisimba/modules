@@ -101,7 +101,8 @@ class mynotes extends controller {
         // Create an instance of the database class
         $this->objDbmynotes = & $this->getObject('dbmynotes', 'mynotes');
         $this->objDbtags = & $this->getObject('dbtags', 'mynotes');
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js', 'mynotes'));
+        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js', 'mynotes'));
+        $this->appendArrayVar('headerParams', "<link href=\"".$this->getResourceUri('css/mynotes.css','mynotes')."\" rel='stylesheet' type='text/css'/>");
         //Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
@@ -236,18 +237,37 @@ class mynotes extends controller {
             return $this->nextAction(NULL);
         }
     }
-    
+
     /*
      * Method to retrieve all the notes for the current user
      * 
      * @access private
      * 
      */
-    
+
     private function __ajaxGetNotes() {
         $this->objLog->log("calling get notes");
-        
+
         return $this->objNoteOps->getNotes();
+    }
+
+    /*
+     * Method to search for the keywords that are found in my notes using the
+     * tag links
+     * 
+     * @access private
+     */
+
+    private function __search() {
+        return 'searchresults_tpl.php';
+    }
+    
+    /*
+     * Method to show individual note with all it's details
+     * 
+     */
+    private function __showNote() {
+        return 'shownote_tpl.php';
     }
 
     /**

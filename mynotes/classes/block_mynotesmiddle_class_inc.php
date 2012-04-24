@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * A middle block for My notes.
@@ -28,12 +29,12 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -51,8 +52,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_mynotesmiddle extends object
-{
+class block_mynotesmiddle extends object {
+
     /**
      * The title of the block
      *
@@ -60,7 +61,13 @@ class block_mynotesmiddle extends object
      * @access public
      */
     public $title;
-    
+
+    /*
+     * The object used for module operations
+     * 
+     */
+    public $objNotesOps;
+
     /**
      * Standard init function
      *
@@ -68,23 +75,32 @@ class block_mynotesmiddle extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
-        // Load language class
-        $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->code2Txt('mod_mynotes_allnotes', 'mynotes', NULL, 'TEXT: mod_mynotes_allnotes, not found');
-    
-        // Load operations class for notes.
-        $this->objNoteOps = $this->getObject('noteops', 'mynotes');
+    public function init() {
+        try {
+            // Load the functions specific to this module.
+            $this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js'));
+
+            // Load language class
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->title = $this->objLanguage->code2Txt('mod_mynotes_allnotes', 'mynotes', NULL, 'TEXT: mod_mynotes_allnotes, not found');
+
+            // Load operations class for notes.
+            $this->objNoteOps = $this->getObject('noteops', 'mynotes');
+        } catch (customException $e) {
+            echo customException::cleanUp();
+            die();
+        }
     }
+
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return $this->objNoteOps->showNotes();
     }
+
 }
+
 ?>

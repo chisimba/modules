@@ -1,0 +1,15 @@
+/* 
+    Document   : MyNotes
+    Created on : 24 Apr 2012, 6:40:48 AM
+    Author     : Nguni Phakela
+    Description:
+        Custom css specific to MyNotes module
+*/
+
+div.center {
+    text-align: center;
+}
+
+div.taglist {
+   padding: 10px; 
+}
