@@ -18,7 +18,7 @@ class dbEportfolio_Reflection extends dbTable
     {
         parent::init('tbl_eportfolio_reflection');
         $this->objUser = &$this->getObject('user', 'security');
-        $this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
+        //$this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
     }
     /**
      * Return all records

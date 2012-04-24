@@ -18,7 +18,7 @@ class dbEportfolio_Qcl extends dbTable
     {
         parent::init('tbl_eportfolio_qcl');
         $this->objUser = &$this->getObject('user', 'security');
-        $this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
+        //$this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
     }
     /**
      * Return all records

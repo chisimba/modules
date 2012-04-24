@@ -18,7 +18,7 @@ class dbEportfolio_Assertion extends dbTable
     {
         parent::init('tbl_eportfolio_assertion');
         $this->objUser = &$this->getObject('user', 'security');
-        $this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
+        //$this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
     }
     /**
      * Return all records

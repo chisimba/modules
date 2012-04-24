@@ -19,7 +19,7 @@ class dbEportfolio_Categorytypes extends dbTable
         parent::init('tbl_eportfolio_categorytypes');
         $this->objUser = &$this->getObject('user', 'security');
         $this->objDbCategoryList = &$this->getObject('dbeportfolio_category', 'eportfolio');
-        $this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
+        //$this->objUserContext = &$this->newObject('utils', 'contextpostlogin');
     }
     /**
      * Return record
