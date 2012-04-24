@@ -796,6 +796,8 @@ class eportfolio extends controller {
                 break;
 
             case "add_address":
+                $address_type = $this->getParam('address_type', null);
+                $this->setVarByRef('address_type', $address_type);
                 $this->setLayoutTemplate('eportfolio_layout_tpl.php');
                 return "add_address_tpl.php";
                 break;
