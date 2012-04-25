@@ -96,13 +96,15 @@ class noteops extends object {
      * @return string The input box and button
      *
      */
-    public function showNotes() {
+    public function showNotes($isViewAll = NULL) {
         $id = $this->getParam('id');
         if (!empty($id)) {
             return $this->showNote($this->getParam('id'));
         } else {
             $addLabel = $this->objLanguage->languageText('word_add', 'system', 'WORD: word_add, not found');
             $addNoteLabel = $this->objLanguage->code2Txt('mod_mynotes_addnote', 'mynotes', NULL, 'TEXT: mod_mynotes_addnote, not found');
+            $viewLabel = $this->objLanguage->languageText('word_view', 'system', 'WORD: word_view, not found');
+            $viewNoteLabel = $this->objLanguage->code2Txt('mod_mynotes_viewnote', 'mynotes', NULL, 'TEXT: mod_mynotes_viewnote, not found');
             $ret = '';
 
             $this->objIcon->title = $addLabel;
@@ -110,12 +112,28 @@ class noteops extends object {
             $this->objIcon->setIcon('add', 'png');
             $addIcon = $this->objIcon->show();
 
+            $this->objIcon->title = $viewLabel;
+            $this->objIcon->alt = $viewLabel;
+            $this->objIcon->setIcon('view', 'gif');
+            $viewAllIcon = $this->objIcon->show();
+
             $objLink = new link($this->uri(array('action' => 'add', 'mode' => 'add')));
             $objLink->link = $addIcon . '&nbsp;' . $addNoteLabel;
             $addLink = $objLink->show();
 
-            $ret .= $addLink;
+            $objLink = new link($this->uri(array('action' => 'viewall', 'mode'=>'viewall')));
+            $objLink->link = $viewAllIcon . '&nbsp;' . $viewNoteLabel;
+            $viewAllLink = $objLink->show();
 
+            $ret .= $viewAllLink . "&nbsp;&nbsp;&nbsp;&nbsp;" . $addLink;
+
+            if (!empty($isViewAll)) {
+                $objInput = new textinput('viewall', $idInputValue, 'hidden', '40');
+                $objInput->setId("viewall");
+                $viewAllInput = $objInput->show();
+            }
+            
+            $ret .= $viewAllInput;
 
             return $ret;
         }
@@ -137,10 +155,23 @@ class noteops extends object {
         if ($mode == 'add') {
             $titleInputValue = NULL;
             $tagInputValue = NULL;
-            $editorInputValue = NULL;
             $mainText = NULL;
 
             $idInput = NULL;
+        } else {
+            $idInputValue = $this->getParam('id');
+
+            $data = $this->objDbmynotes->getNote($idInputValue);
+
+            if (!empty($data)) {
+                $titleInputValue = $data['title'];
+                $tagInputValue = $data['tags'];
+                $mainText = $data['content'];
+            } else {
+                $titleInputValue = NULL;
+                $tagInputValue = NULL;
+                $mainText = NULL;
+            }
         }
 
         $errorArray = $this->getSession('errors');
@@ -150,13 +181,16 @@ class noteops extends object {
 
         $titleInputValue = !empty($errorArray) ? $errorArray['data']['title'] : $titleInputValue;
         $tagInputValue = !empty($errorArray) ? $errorArray['data']['tag'] : $tagInputValue;
-        $editorInputValue = !empty($errorArray) ? $errorArray['data']['content'] : $editorInputValue;
+        $mainText = !empty($errorArray) ? $errorArray['data']['content'] : $mainText;
 
         $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
         $noteTitleLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetitle', 'mynotes', NULL, 'TEXT: mod_mynotes_notetitle, not found'));
         $noteTagLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetag', 'mynotes', NULL, 'TEXT: mod_mynotes_notetag, not found'));
         $noteEditorLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_noteeditor', 'mynotes', NULL, 'TEXT: mod_mynotes_noteeditor, not found'));
+
+        $objInput = new textinput('id', $idInputValue, 'hidden', '40');
+        $idInput = $objInput->show();
 
         $objInput = new textinput('title', $titleInputValue, '', '40');
         $titleInput = $objInput->show();
@@ -170,7 +204,7 @@ class noteops extends object {
         /* Add Title Row */
         $objTable->startRow();
         $objTable->addCell($noteTitleLabel . ': ', '100px', '', '', '', '');
-        $objTable->addCell($titleInputError . $titleInput, '', '', '', '', '');
+        $objTable->addCell($titleIdnputError . $titleInput, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
@@ -216,11 +250,11 @@ class noteops extends object {
     }
 
     public function validateNote($mode = NULL) {
-        if ($mode == add) {
+        if ($mode == "add") {
             $idInput = NULL;
         } else {
-            $idInputValue = $this->getParam('sid');
-            $objInput = new textinput('sid', $idInputValue, 'hidden', '50');
+            $idInputValue = $this->getParam('id');
+            $objInput = new textinput('id', $idInputValue, 'hidden', '50');
             $idInput = $objInput->show();
         }
 
@@ -295,20 +329,37 @@ class noteops extends object {
      */
 
     public function getNotes() {
+        $isViewAll = $this->getParam('viewall');
+
         // Set up text elements.
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', 'mynotes', 'TEXT: mod_mynotes_nonotes, not found');
-
+        $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', 'mynotes', 'TEXT: mod_mynotes_readmore, not found');
         $uid = $this->objUser->userId();
 
-        $notesArray = $this->objDbmynotes->getNotes($uid);
+        if (empty($isViewAll)) {
+            $limit = "LIMIT 2";
+        }
+        $notesArray = $this->objDbmynotes->getNotes($uid, $limit);
 
         $ret = '';
         if (!empty($notesArray)) {
-            $list = "<div><ul>";
-            foreach ($notesArray as $value) {
-                $list .= "<li>" . strip_tags($value['content']) . "</li>";
+            if ($isViewAll) {
+                $list = "<div><ul>";
+                foreach ($notesArray as $value) {
+                    $noteLink = new Link($this->uri(array('action' => 'shownote', 'id' => $value['id']), 'mynotes'));
+                    $noteLink->link = $value['title'];
+                    $list .= "<li>" . $noteLink->show() . "</li>";
+                }
+                $list .= "</ul></div>";
+            } else {
+                $list = "<div><ul>";
+                foreach ($notesArray as $value) {
+                    $noteLink = new Link($this->uri(array('action' => 'shownote', 'id' => $value['id']), 'mynotes'));
+                    $noteLink->link = "&nbsp;&nbsp;" . $readMoreLabel . " ...";
+                    $list .= "<li>" . $this->wordlimit(strip_tags($value['content']), 200, $noteLink->show()) . "</li>";
+                }
+                $list .= "</ul></div>";
             }
-            $list .= "</ul></div>";
         } else {
             $error = $this->error($noNotesLabel);
 
@@ -318,6 +369,15 @@ class noteops extends object {
 
         echo $ret;
         die();
+    }
+
+    public function wordlimit($string, $length = 50, $ellipsis = " ...") {
+        $words = explode(' ', $string);
+        if (count($words) > $length) {
+            return implode(' ', array_slice($words, 0, $length)) . $ellipsis;
+        } else {
+            return $string . $ellipsis;
+        }
     }
 
     public function getTagCloud() {
@@ -412,22 +472,24 @@ class noteops extends object {
         $contentValue = $noteArr['content'];
 
         $title = new htmlheading($titleValue, 2);
-        
-        $editLink = new link($this->uri(array("action"=> 'edit', 'id'=>$noteArr['id']), 'mynotes'));
+
+        $editLink = new link($this->uri(array("action" => 'edit', 'id' => $noteArr['id']), 'mynotes'));
         $this->objIcon->title = $editLabel;
         $this->objIcon->alt = $editLabel;
         $this->objIcon->setIcon('edit', 'png');
         $editIcon = $this->objIcon->show();
         $editLink->link = $editIcon;
 
-        $deleteLink = new link($this->uri(array("action"=> 'delete', 'id'=>$noteArr['id']), 'mynotes'));
+        $deleteLink = new link($this->uri(array("action" => 'delete', 'id' => $noteArr['id']), 'mynotes'));
         $this->objIcon->title = $deleteLabel;
         $this->objIcon->alt = $deleteLabel;
         $this->objIcon->setIcon('delete', 'png');
         $deleteIcon = $this->objIcon->show();
         $deleteLink->link = $deleteIcon;
-
-        $title->str .= "&nbsp;".$editLink->show()."&nbsp;".$deleteLink->show();
+        $deleteLink->cssId = "delete";
+        $deleteLink->extra = 'onclick="return confirmDelete()"';
+        
+        $title->str .= "&nbsp;" . $editLink->show() . "&nbsp;" . $deleteLink->show();
         $str = "<div>";
         $str .= $title->show();
         $str .= $contentValue;

@@ -100,8 +100,19 @@ class dbmynotes extends dbtable
      * Method to edit a note in the database
      * 
      */
-    public function updateNote($id, $data) {
+    public function updateNote($data, $id) {
         $this->update('id', $id, $data);        
+    }
+    
+    /**
+     * Method to delete a note.
+     *
+     * @access public
+     * @param string $id The id of the note.
+     * @return
+     */
+    public function deleteNote($id) {
+        $this->delete('id', $id);
     }
     
     /**
@@ -111,9 +122,9 @@ class dbmynotes extends dbtable
      * @param string $id The id of the user's notes
      * @return array The note array 
      */
-    public function getNotes($uid)
+    public function getNotes($uid, $limit = NULL)
     {
-        return $this->fetchAll(" WHERE `userid` = '$uid'" );
+        return $this->fetchAll(" WHERE `userid` = '$uid' ORDER BY datemodified DESC ".$limit );
     }
     
     /*

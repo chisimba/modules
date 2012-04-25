@@ -65,8 +65,17 @@ class block_mynotesmiddle extends object {
     /*
      * The object used for module operations
      * 
+     * @access public
      */
     public $objNotesOps;
+    
+    /*
+     * Mode: View All notes or only 2
+     * 
+     * @access public
+     * 
+     */
+    public $mode;
 
     /**
      * Standard init function
@@ -86,6 +95,8 @@ class block_mynotesmiddle extends object {
 
             // Load operations class for notes.
             $this->objNoteOps = $this->getObject('noteops', 'mynotes');
+            
+            $this->mode = $this->getParam('mode');
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
@@ -98,7 +109,7 @@ class block_mynotesmiddle extends object {
      * @return string $this->display block rendered
      */
     public function show() {
-        return $this->objNoteOps->showNotes();
+        return $this->objNoteOps->showNotes($this->mode);
     }
 
 }

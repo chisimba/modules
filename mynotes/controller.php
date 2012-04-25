@@ -141,13 +141,22 @@ class mynotes extends controller {
     /**
      * 
      * Method corresponding to the view action. It shows the default
-     * dynamic canvas template, showing you how to create block based
-     * view templates
+     * dynamic canvas template
      * @access private
      * 
      */
     private function __view() {
-        // All the action is in the blocks
+        return "main_tpl.php";
+    }
+    
+    /**
+     * 
+     * Method corresponding to the view action. It shows the default
+     * dynamic canvas template
+     * @access private
+     * 
+     */
+    private function __viewall() {
         return "main_tpl.php";
     }
 
@@ -159,6 +168,7 @@ class mynotes extends controller {
      * 
      */
     private function __edit() {
+        $this->setVar('mode', 'edit');
         return 'editform_tpl.php';
     }
 
@@ -170,7 +180,7 @@ class mynotes extends controller {
      * 
      */
     private function __add() {
-        $this->setvar('mode', 'add');
+        $this->setVar('mode', 'add');
         return 'editform_tpl.php';
     }
 
@@ -212,8 +222,8 @@ class mynotes extends controller {
             $this->objDbtags->addTag($data);
         } else {
             $data['datemodified'] = date('Y-m-d H:i:s');
-            $this->objDbmynotes->updateNote($id, $data);
-            $this->objDbtags->addTag($data, $id);
+            $this->objDbmynotes->updateNote($data, $id);
+            $this->objDbtags->addTag($data);
         }
 
         return $this->nextAction(NULL);
@@ -232,9 +242,12 @@ class mynotes extends controller {
     private function __delete() {
         // retrieve the confirmation code from the querystring
         $confirm = $this->getParam("confirm", "no");
+        $id = $this->getParam('id');
         if ($confirm == "yes") {
-            $this->deleteItem();
+            $this->objDbmynotes->deleteNote($id);
             return $this->nextAction(NULL);
+        } else {
+            $this->nextAction("showNote", array("id"=>$id, "error"=>"nodelete"));
         }
     }
 
@@ -246,8 +259,6 @@ class mynotes extends controller {
      */
 
     private function __ajaxGetNotes() {
-        $this->objLog->log("calling get notes");
-
         return $this->objNoteOps->getNotes();
     }
 

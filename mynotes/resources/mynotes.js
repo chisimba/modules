@@ -21,14 +21,38 @@ jQuery(function() {
      
     // Things to do on loading the page.
     jQuery(document).ready(function() {
-        // Load notes into the middle dynamic area.
-        jQuery.ajax({
-            type: "POST",
-            url: "index.php?module=mynotes&action=ajaxGetNotes",
-            success: function(ret) {
-                jQuery("#middledynamic_area").html(ret); 
-            }
-        });
+        var viewAll = jQuery("#viewall").val();
+        
+        if(viewAll === undefined) {
+            // Load notes into the dynamic area. These are the latest two notes
+            // with the first 200 words showing
+            jQuery.ajax({
+                type: "POST",
+                url: "index.php?module=mynotes&action=ajaxGetNotes",
+                success: function(ret) {
+                    jQuery("#middledynamic_area").html(ret); 
+                }
+            });
+        } else {
+           // this is a list of all the notes that I have.
+           jQuery.ajax({
+                type: "POST",
+                url: "index.php?module=mynotes&action=ajaxGetNotes&viewall=true",
+                success: function(ret) {
+                    jQuery("#middledynamic_area").html(ret); 
+                }
+            });
+        }
     });
-
 });
+
+function confirmDelete() {
+    message = "Are you sure you want to delete this note?";
+    var answer = confirm(message);
+    if (answer){
+        window.location.href = jQuery("#delete").attr("href") + "&confirm=yes";
+        return false; // This line added
+    }
+    
+    return false;  
+}  

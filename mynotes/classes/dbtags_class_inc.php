@@ -41,11 +41,10 @@ class dbtags extends dbtable {
      *
      * @access public
      * @param array $fields The table fields to be added/updated.
-     * @param string $id The id of the tag to be edited. Default=NULL.
      * @return array $id The id of the inserted or updated tag.
      * @return array $qnId The qnId of the inserted or updated question.
      */
-    public function addTag($data, $id = Null) {
+    public function addTag($data) {
         $othertags = explode(",", $data["tags"]);
         $fields = Array();
         $count = 1;
@@ -57,36 +56,38 @@ class dbtags extends dbtable {
                     $fields['userid'] = $this->userId;
                     $fields['datecreated'] = date('Y-m-d H:i:s');
 
+                    /* if (!empty($id)) {
+                      // get current tag count
+                      $tmpTag = $this->getTag($id);
+                      $count = $tmpTag['count'];
 
-                    if ($id) {
-                        // get current tag count
-                        $tmpTag = $this->getTag($id);
-                        $count = $tmpTag['count'];
+                      // increase tag count
+                      ++$count;
+
+                      // update current tag info
+                      $fields['count'] = $count;
+                      $fields['datemodified'] = date('Y-m-d H:i:s');
+                      $fields['modifiedby'] = $this->userId;
+
+                      $this->update('id', $id, $fields);
+                      } else { */
+                    $tagExists = $this->getTags("name='" . $othertag . "'");
+                    if (!empty($tagExists)) {
+                        $tagid = $tagExists[0]["id"];
+                        $count = $tagExists[0]['count'];
 
                         // increase tag count
                         ++$count;
-
+                        $fields['count'] = $count;
                         $fields['datemodified'] = date('Y-m-d H:i:s');
                         $fields['modifiedby'] = $this->userId;
-                        $fields['count'] = $count;
 
-                        $this->update('id', $id, $fields);
+                        $this->update('id', $tagid, $fields);
                     } else {
-                        $tagExists = $this->getTags("name='" . $othertag . "'");
-                        if (!empty($tagExists)) {
-                            $tagid = $tagExists[0]["id"];
-                            $count = $tagExists[0]['count'];
-
-                            // increase tag count
-                            ++$count;
-                            $fields['count'] = $count;
-                            
-                            $this->update('id', $tagid, $fields);
-                        } else {
-                            $fields['count'] = $count;
-                            $this->insert($fields);
-                        }
+                        $fields['count'] = $count;
+                        $this->insert($fields);
                     }
+                    //}
                 }
             }
         }
