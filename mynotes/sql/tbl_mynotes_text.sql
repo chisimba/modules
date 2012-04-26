@@ -35,7 +35,13 @@ $fields = array(
 		),
         'datemodified' => array(
 		'type' => 'timestamp'
-		)
+		),
+        'public_note' => array(
+                'type' => 'text',
+                'length' => 6,
+                'notnull' => TRUE,
+                'default' => 'false'
+                )
 	);
 
 //create other indexes here...
