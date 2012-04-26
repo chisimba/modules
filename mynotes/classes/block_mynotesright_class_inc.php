@@ -20,7 +20,7 @@
  *
  * @version    0.001
  * @package    mynotes
- * @author     Derek Keats derek@localhost.local
+ * @author     Nguni Phakela nguni52@gmail.com
  * @copyright  2010 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -46,7 +46,7 @@ $GLOBALS['kewl_entry_point_run']) {
  *
  * @category  Chisimba
  * @package    mynotes
- * @author     Derek Keats derek@localhost.local
+ * @author     Nguni Phakela nguni52@gmail.com
  * @version   0.001
  * @copyright 2010 AVOIR
  *

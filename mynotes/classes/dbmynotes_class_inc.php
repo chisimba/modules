@@ -23,7 +23,7 @@
  *
  * @category  Chisimba
  * @package   mynotes
- * @author    Derek Keats derek@localhost.local
+ * @author    Nguni Phakela nguni52@gmail.com
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   0.001
@@ -56,7 +56,7 @@ $GLOBALS['kewl_entry_point_run'])
 * that you will need to edit in order for it to work.
 *
 * @package   mynotes
-* @author    Derek Keats derek@localhost.local
+* @author    Nguni Phakela nguni52@gmail.com
 *
 */
 class dbmynotes extends dbtable

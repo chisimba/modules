@@ -1,7 +1,7 @@
 <?php
 /**
 *  A main content template for My notes
-*  Author: Derek Keats derek@localhost.local
+*  Author: Nguni Phakela nguni52@gmail.com
 *  Date: March 16, 2012, 7:33 am
 *
 */

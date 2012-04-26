@@ -21,7 +21,7 @@
  *
  * @version    0.001
  * @package    mynotes
- * @author     Derek Keats derek@localhost.local
+ * @author     Nguni Phakela nguni52@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -46,7 +46,7 @@ if (!
  * A middle block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
  *
  * @category  Chisimba
- * @author    Derek Keats derek@localhost.local
+ * @author    Nguni Phakela nguni52@gmail.com
  * @author    Nguni Phakela nguni52@gmail.com
  * @version   0.001
  * @copyright 2011 AVOIR

@@ -1,7 +1,7 @@
 /* 
  * Javascript to support mynotes
  *
- * Written by Derek Keats derek@localhost.local
+ * Written by Nguni Phakela nguni52@gmail.com
  * STarted on: March 16, 2012, 7:33 am
  *
  * The following parameters need to be set in the
