@@ -1,6 +1,5 @@
 <?php
 $showNav = TRUE;
-
 if (isset($hideNavSwitch) && $hideNavSwitch) {
     $showNav = FALSE;
 }
@@ -58,22 +57,22 @@ if (isset($currentChapter)) {
     /*
     $form = new form ('searchform', $this->uri(array('action'=>'search')));
     $form->method = 'GET';
-    
+
     $hiddenInput = new hiddeninput('module', 'contextcontent');
     $form->addToForm($hiddenInput->show());
-    
+
     $hiddenInput = new hiddeninput('action', 'search');
     $form->addToForm($hiddenInput->show());
-    
+
     $textinput = new textinput ('contentsearch');
     $button = new button ('searchgo', 'Go');
     $button->setToSubmit();
-    
+
     $form->addToForm($textinput->show().' '.$button->show());
-    
+
     $objFieldset = $this->newObject('fieldset', 'htmlelements');
     $label = new label ($this->objLanguage->languageText('mod_forum_searchfor', 'forum', 'Search for').':', 'input_contentsearch');
-    
+
     $objFieldset->setLegend($label->show());
     $objFieldset->contents = $form->show();
     */
@@ -138,6 +137,7 @@ if (isset($currentChapter)) {
     $returnLink->link = $this->objLanguage->languageText('mod_contextcontent_returntochapterlist', 'contextcontent', 'Return to Chapter List');
 
     $left .= '<hr /><p>'.$returnLink->show().'</p>';
+    $left = '<div id="context_left_nav">' . $left . '</div>';
 
     //Add toolbar
     $toolbar = $this->getObject('contextsidebar', 'context');

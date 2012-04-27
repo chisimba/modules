@@ -1,5 +1,4 @@
 <?php
-
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -55,24 +54,17 @@ $todays_date = date('Y-m-d H:i');
 $today = strtotime($todays_date);
 
 if (count($chapters) > 0) {
-
     $content .= '<ol>';
-
     foreach ($chapters as $chapter) {
         $showChapter = TRUE;
-
         if ($chapter['visibility'] == 'N') {
             $showChapter = FALSE;
         }
-
         if ($this->isValid('viewhiddencontent')) {
             $showChapter = TRUE;
         }
-
         $releasedate = strtotime($chapter['releasedate']);
         $enddate = strtotime($chapter['enddate']);
-
-
         //compate dates here, then decide on visibility
         if (!empty($releasedate) && !empty($enddate)) {
             if (($today <= $releasedate)) {
@@ -90,18 +82,12 @@ if (count($chapters) > 0) {
                 }
             }
         }
-
-
         if ($showChapter) {
-
             $bookmarkLink = new link("#{$chapter['chapterid']}");
             $bookmarkLink->link = '';
             $bookmarkLink->title = $this->objLanguage->languageText('mod_contextcontent_scrolltohapter', 'contextcontent');
-
             $showImg = "";
-
             if ($this->eventsEnabled) {
-
                 // Get List of Pages in the Chapter
                 //$chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
                 $ischapterlogged = $this->objContextActivityStreamer->getRecord($this->objUser->userId(), $chapter['chapterid']);
@@ -150,7 +136,9 @@ if ($enableViewActivityLog == 'true' && $this->isValid('addchapter')) {
     $link->link = $trackerimg . '&nbsp;' . $this->objLanguage->languageText('mod_contextcontent_useractivitylogs', 'contextcontent');
 
     $content .= '<br />' . $link->show() . '';
+
 }
+$content = '<div id="context_left_nav">' . $content . "</div>";
 $objFieldset->contents = $toolbar->show();
 $cssLayout->setLeftColumnContent($content);
 $cssLayout->setMiddleColumnContent($this->getContent());

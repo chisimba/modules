@@ -1,5 +1,5 @@
 <?php
-
+$res ="";
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 
@@ -204,9 +204,9 @@ if ($this->isValid('addpage')) {
     // $objTabs->addTab("Lecturer View",$topTable->show().$content.'<hr />'.$table->show().$form);
     // $objTabs->addTab("Student View",$topTable->show().$content.'<hr />'.$table2->show());
     // echo $objTabs->show();
-    echo '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
+    $res .= '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
 } else {
-    echo '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
+    $res .= '<div id="tablenav">'.$topTable->show() . $content . '<hr />' . $table->show() . $form.'</div>';
 }
 
 //Check if comments are allowed for this course
@@ -216,12 +216,12 @@ if ($showcomment == 1) {
     $head = $this->objLanguage->languageText('mod_contextcontent_word_comment', 'contextcontent');
     $objHead->type = 1;
     $objHead->str = $head;
-    echo '<br/>' . $objHead->show() . '<br/>';
+    $res .=  '<br/>' . $objHead->show() . '<br/>';
 
     $commentpost = $this->objContextComments->getPageComments($currentPage);
     if (count($commentpost) < 1) {
 
-        echo $this->objLanguage->languageText('mod_contextcontent_nocomment', 'contextcontent') . '<br/>';
+        $res .=  $this->objLanguage->languageText('mod_contextcontent_nocomment', 'contextcontent') . '<br/>';
     } else {
         $cnt = 0;
         $oddcolor = $this->objSysConfig->getValue('CONTEXTCONTENT_ODD', 'contextcontent');
@@ -233,9 +233,9 @@ if ($showcomment == 1) {
             $objOutput .= $comment['comment'];
 
             if ($cnt % 2 == 0) {
-                echo '<div class="colorbox ' . $evencolor . 'box">' . $objOutput . '</div>';
+                $res .=  '<div class="colorbox ' . $evencolor . 'box">' . $objOutput . '</div>';
             } else {
-                echo '<div class="colorbox ' . $oddcolor . 'box">' . $objOutput . '</div>';
+                $res .=  '<div class="colorbox ' . $oddcolor . 'box">' . $objOutput . '</div>';
             }
             $cnt++;
         }
@@ -266,8 +266,10 @@ if ($showcomment == 1) {
     $cfieldset->addContent($ct->show());
     $cform->addToForm($cfieldset->show());
     $cform->addToForm($this->objconvButton->show());
-    echo '<br/>' . $cform->show();
+    $res .=  '<br/>' . $cform->show();
 }
+
+echo '<div id="context_content">' . $res . "</div>";
 
 /*
   <script type="text/javascript">

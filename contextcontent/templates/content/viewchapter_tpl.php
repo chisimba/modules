@@ -1,5 +1,4 @@
 <?php
-
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -67,8 +66,9 @@ $introheader->str = $chapter['chaptertitle'];
 $content.= $introheader->show() . $objWashout->parseText($chapter['introduction']);
 
 if ($this->isValid('addpage')) {
-    echo '<div id="tablenav">' . $topTable->show() . $content . '<hr />' . $table->show() . '</div>';
+    $ret = '<div id="tablenav">' . $topTable->show() . $content . '<hr />' . $table->show() . '</div>';
 } else {
-    echo '<div id="tablenav">' . $topTable->show() . $content . '<hr />' . $table->show() . '</div>';
+    $ret = '<div id="tablenav">' . $topTable->show() . $content . '<hr />' . $table->show() . '</div>';
 }
+echo "<div id='context_content'>-----------------------------------------" . $ret . "</div>"
 ?>

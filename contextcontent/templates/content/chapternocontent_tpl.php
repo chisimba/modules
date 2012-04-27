@@ -1,49 +1,35 @@
 <?php
-
+$ret ="";
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->align = 'absmiddle';
-
 $objIcon->setIcon('edit');
 $editIcon = $objIcon->show();
-
 $objIcon->setIcon('delete');
 $deleteIcon = $objIcon->show();
-
 $objIcon->setIcon('create_page');
 $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 $objIcon->title = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
 $addPageIcon = $objIcon->show();
-
 $objIcon->setIcon('add_multiple');
 $objIcon->alt = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
 $objIcon->title =$this->objLanguage->languageText('mod_contextcontent_createpagefromfile','contextcontent','Create page from file');
 $addPageFromFileIcon = $objIcon->show();
-
 $editLink = new link($this->uri(array('action'=>'editchapter', 'id'=>$chapter['chapterid'])));
 $editLink->link = $editIcon;
-
 $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
 $deleteLink->link = $deleteIcon;
-
 $addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 $addPageLink->link = $addPageIcon;
-
-
 $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$chapter['chapterid'])));
 $addPageFromFileLink->link = $addPageFromFileIcon;
-
-
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
 $this->setVarByRef('chapters', $chapters);
-
 $this->setLayoutTemplate('layout_firstpage_tpl.php');
-
 $chapterlink=new htmlheading();
 $chapterlink->type=1;
 $con=$chapter['chaptertitle'];
-
 if ($this->isValid('editchapter')) {
     $con.= ' '.$editLink->show();
 }
@@ -56,12 +42,12 @@ if ($this->isValid('addpage')) {
     $con.= ' '.$addPageLink->show();//.' / '.$addPageFromFileLink->show();
 }
 $chapterlink->str=$con;
-echo  $chapterlink->show();
+$ret .= $chapterlink->show();
 
 if ($this->getParam('message') == 'chaptercreated') {
-    echo '<p class="warning">'.$errorTitle.'</p>';
+    $ret .= '<p class="warning">'.$errorTitle.'</p>';
 } else {
-    echo '<p class="error">'.$errorTitle.'. '.$errorMessage.'</p>';
+    $ret .= '<p class="error">'.$errorTitle.'. '.$errorMessage.'</p>';
 }
 
 /** removed at request of Eteaching customer
@@ -73,7 +59,7 @@ echo $introheader->show();
 
 $objWashout = $this->getObject('washout', 'utilities');
 
-echo $objWashout->parseText($chapter['introduction']);
+$ret .= $objWashout->parseText($chapter['introduction']);
 
 $addPageLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
 $addPageLink->link = $this->objLanguage->languageText('mod_contextcontent_addapagetothischapter','contextcontent');
@@ -83,12 +69,15 @@ $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextconten
 
 
 if ($this->isValid('addpage')) {
-     echo $addPageLink->show().' / ';//.' / '.$addPageFromFileLink->show().' / ';
+     $ret .= $addPageLink->show().' / ';//.' / '.$addPageFromFileLink->show().' / ';
 }
 
 $returnLink = new link ($this->uri(NULL));
 $returnLink->link = $this->objLanguage->languageText('mod_contextcontent_returntochapterlist', 'contextcontent', 'Return to Chapter List');
 
-echo $returnLink->show();
+$ret .= $returnLink->show();
+
+$ret = '<div id="context_content">' . $ret . '</div>';
+echo $ret;
 
 ?>
