@@ -10,6 +10,6 @@ div.center {
     text-align: center;
 }
 
-div.taglist {
+div.taglist, div.notelist {
    padding: 10px; 
 }

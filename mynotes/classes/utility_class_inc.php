@@ -49,7 +49,11 @@ if (!
  */
 class utility extends object {
 
-    public function init(){}
+    private $module;
+    
+    public function init(){
+        $this->module = "mynotes";
+    }
 
     /*
      * Function 

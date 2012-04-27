@@ -132,6 +132,7 @@ class noteops extends object {
 
             $ret .= $viewAllLink . "&nbsp;&nbsp;&nbsp;&nbsp;" . $addLink;
 
+            $viewAllInput = "";
             if (!empty($isViewAll)) {
                 $objInput = new textinput('viewall', $idInputValue, 'hidden', '40');
                 $objInput->setId("viewall");
@@ -145,16 +146,9 @@ class noteops extends object {
     }
 
     /**
-     * Method to display the posts editor in its entirety
+     * Method to show note form when either adding a new note or editing a note
      * 
-     * title
-     * tags
-     * editor
-     *
-     * @param  integer $userid
-     * @param  integer $editid
-     * @param  string $defaultText Default Text to be populated in the Editor
-     * @return boolean
+     * @param  $mode add or editing note parameter
      */
     public function addEditNote($mode) {
         if ($mode == 'add') {
@@ -373,8 +367,13 @@ class noteops extends object {
             $list = "<div><ul>" . $error . "</ul></div>";
         }
 
-        $prevPage = 0;
-        $nextPage = 0;
+        $prevPage = $this->getParam("prevpage");
+        
+        if(empty($prevPage)) {
+            $prevPage = 2;
+            $nextPage = 7;
+        }
+        
         // get previous and next link
         if($prevPage == 0) {
             // display prev but not as a link
@@ -384,6 +383,7 @@ class noteops extends object {
             $link->link = $prevLabel;
             $prevLink = '&#171; '.$link->show();
         }
+        
         if($nextPage == -1) {
             $nextLink = $nextLabel.' &#187;';
         } else {
@@ -394,6 +394,7 @@ class noteops extends object {
         
         $ret .= $list;
 
+        $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
         $ret .= "<div class='center'>".$prevLink.'&nbsp;&nbsp;&nbsp;'.$nextLink."</div>";
         echo $ret;
         die();
@@ -430,8 +431,6 @@ class noteops extends object {
 
         // Set up text elements.
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
-
-        $uid = $this->objUser->userId();
 
         $ret = '';
         if (!empty($mySearchResults)) {
@@ -509,7 +508,32 @@ class noteops extends object {
 
         return $str;
     }
+    
+    public function getNotesList($begin, $end) {
+        $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
+        
+        $ret = "";
+        $uid = $this->objUser->userId();
+        $data = $this->objDbmynotes->getNotesForList($uid, $begin, $end);
+        
+        if (!empty($data)) {
+            $list = "<div><ul>";
+            $tmpLink = NULL;
+            foreach ($data as $value) {
+                $tmpLink = new Link($this->uri(array('action' => 'showNote', 'id' => $value['id'], $this->module)));
+                $tmpLink->link = $value['title'];
+                $list .= "<li>" . $tmpLink->show() . "</li>";
+            }
+            $list .= "</ul></div>";
+        } else {
+            $error = $this->error($noNotesLabel);
 
+            $list = "<div><ul>" . $error . "</ul></div>";
+        }
+        
+        $ret .= $list;
+
+        return $ret;
+    }
 }
-
 ?>

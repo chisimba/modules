@@ -62,6 +62,7 @@ $GLOBALS['kewl_entry_point_run'])
 class dbmynotes extends dbtable
 {
 
+    private $table;
     /**
     *
     * Intialiser for the mynotes database connector
@@ -71,8 +72,9 @@ class dbmynotes extends dbtable
     */
     public function init()
     {
+        $this->table = 'tbl_mynotes_text';
         //Set the parent table to our demo table
-        parent::init('tbl_mynotes_text');
+        parent::init($this->table);
     }
 
     /**
@@ -144,6 +146,17 @@ class dbmynotes extends dbtable
      */
     public function getNotesWitTags($searchKey) {
         return $this->fetchAll(" WHERE `tags` LIKE '%".$searchKey."%'");
+    }
+    
+    /*
+     * 
+     * 
+     */
+    public function getNotesForList($uid, $start, $end) {
+        
+        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC " . $limit;
+        
+        return $this->getArray($sql);
     }
 
 }
