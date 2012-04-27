@@ -115,7 +115,7 @@ if ($mode == 'add') {
         $objRecipientTarget->setBreakSpace('<br />');
         $objRecipientTarget->addOption('site', $this->objLanguage->languageText('mod_announcements_allusers', 'announcements', 'Site - All Users'));
         $objRecipientTarget->addOption('context', $this->objLanguage->code2Txt('mod_announcements_onlytofollowing', 'announcements', NULL, 'Only to the following [-contexts-]'));
-        $objRecipientTarget->setSelected('site');
+        $objRecipientTarget->setSelected('context');
         $table->addCell($objRecipientTarget->show().$contextsList);
         $table->endRow();
     } else if ($isAdmin) {
@@ -164,7 +164,7 @@ $table->startRow();
 $email2Users = new radio ('email');
 $email2Users->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
 $email2Users->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
-$email2Users->setSelected('Y');
+$email2Users->setSelected('N');
 $email2Users->setBreakSpace(' &nbsp; ');
 $table->addCell($this->objLanguage->languageText('mod_announcements_emailtousers', 'announcements', 'Email to Users'));
 $table->addCell($email2Users->show());

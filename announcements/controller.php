@@ -27,10 +27,10 @@ class announcements extends controller
 {
 
     /**
-     * @var array $userContext List of Contexts a user belongs to
+     * @var array $userContext List of Contexts a user belongs to except the current one
      * @access private
      */
-    private $userContext;
+    private $userContexts;
 
     /**
      * @var array $lecturerContext List of Contexts a user is a lecturer in
@@ -50,27 +50,26 @@ class announcements extends controller
         $this->objConfig = $this->getObject('altconfig', 'config');
         //feed creator subsystem
         $this->objFeedCreator = $this->getObject('feeder', 'feed');
-
         $this->objAnnouncements = $this->getObject('dbannouncements');
-
         $this->userId = $this->objUser->userId();
-
         $objUserContext = $this->getObject('usercontext', 'context');
         if(!empty($this->userId)){
-         $this->userContext = $objUserContext->getUserContext($this->userId);
-         $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
+            $userContext = $objUserContext->getUserContext($this->userId);
+            $cc = $this->objContext->getContextCode();
+            foreach ($userContext as $context) {
+                if ($context !== $cc) {
+                    $this->userContexts[] = $context;
+                }
+            }
+            $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
         }
         $this->isAdmin = $this->objUser->isAdmin();
-
         $this->itemsPerPage = 10;
-
         $this->setVar('lecturerContext', $this->lecturerContext);
         $this->setVar('isAdmin', $this->isAdmin);
-								//Load Module Catalogue Class
+		//Load Module Catalogue Class
 		$this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
-
 		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
-
 		if($this->objModuleCatalogue->checkIfRegistered('activitystreamer'))
 		{
 			$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
@@ -80,8 +79,6 @@ class announcements extends controller
 			$this->eventsEnabled = FALSE;
 		}
     }
-
-
 
     /**
     * Standard Dispatch Function for Controller
@@ -97,17 +94,10 @@ class announcements extends controller
         * using case selections)
         */
         $method = $this->getMethod($action);
-
         $this->setLayoutTemplate('announcements_layout_tpl.php');
-
-        /*
-        * Return the template determined by the method resulting
-        * from action
-        */
+        // Return the template determined by the method resulting from action.
         return $this->$method();
     }
-
-
 
     /**
     *
@@ -171,7 +161,6 @@ class announcements extends controller
      */
     public function __feed()
     {
-
         //get ther username
         $username = $this->getParam("username");
         //$username = "admin";
@@ -186,7 +175,6 @@ class announcements extends controller
         //create the feed with the post
         //title of the feed - Site Name Announcements
         $feedtitle = htmlentities("Announcements");
-
         //description
         $feedDescription = "Some description";
 
@@ -205,7 +193,6 @@ class announcements extends controller
         $this->objFeedCreator->setrssImage($feedtitle, $iconURL, $feedLink, $feedDescription);
         //set up the feed
         $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
-
         //
         foreach($posts as $feeditems) {
             //use the post title as the feed item title
@@ -232,7 +219,6 @@ class announcements extends controller
         }
         $feed = $this->objFeedCreator->output();
        // echo htmlentities($feed);
-
     }
 
     public function cData($data)
@@ -249,29 +235,20 @@ class announcements extends controller
         if (!is_array($item)) {
             $item = $this->objAnnouncements->getMessage($item);
         }
-
         if ($item === FALSE) {
-
             return FALSE;
         }
-
         if ($item['contextid'] == 'site' && $this->isAdmin) {
-
             return TRUE;
         }
-
-
         if ($item['contextid'] == 'context' && count($this->lecturerContext) > 0) {
             // See if some items match
             $diff = array_intersect($this->lecturerContext, $this->objAnnouncements->getMessageContexts($item['id']));
-
             // If yes, user can edit or delete
             if (count($diff) > 0) {
                 return TRUE;
             }
         }
-
-        // Else
         return FALSE;
     }
 
@@ -285,12 +262,10 @@ class announcements extends controller
     */
     private function __home()
     {
-
         //use own template here
-         $this->setLayoutTemplate(NULL);
-        $numAnnouncements = $this->objAnnouncements->getNumAnnouncements($this->userContext);
-
-        $this->setVarByRef('numAnnouncements', $numAnnouncements);
+        $this->setLayoutTemplate(NULL);
+        //$numAnnouncements = $this->objAnnouncements->getNumAnnouncements($this->userContext);
+        //$this->setVarByRef('numAnnouncements', $numAnnouncements);
         return 'home_tpl.php';
     }
 
@@ -300,7 +275,6 @@ class announcements extends controller
     private function __add()
     {
         $this->setVar('mode', 'add');
-
         return 'addedit_tpl.php';
     }
 
@@ -315,22 +289,14 @@ class announcements extends controller
         $contexts = $this->getParam('contexts', array());
         $email = $this->getParam('email');
         $message = $this->getParam('message');
-        /*
-        // If context checked, target set to context by default
-        if (!empty($contexts)) {
-            $recipienttarget = 'context';
-        }
-        */
         $email = ($email == 'Y');
         if (
             ($mode == 'add'
             || $mode == 'fixup')
-        && ($title == ''
+            && ($title == ''
             || strip_tags($message) == '')) {
             $this->setVar('mode', 'fixup');
             $this->setVar("errorMessage", $this->objLanguage->languageText('mod_announcements_errortitlemessagerequired', 'announcements'));
-            //$this->setVar('lecturerContext', $this->lecturerContext);
-            //$this->setVar('isAdmin', $this->isAdmin);
             $this->setVar("title", $title);
             $this->setVar('recipienttarget', $recipienttarget);
             $this->setVar('contexts', $contexts);
@@ -361,14 +327,11 @@ class announcements extends controller
     private function __view()
     {
         $id = $this->getParam('id');
-
         $announcement = $this->objAnnouncements->getMessage($id);
-
         if ($announcement == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unknownannouncement'));
         } else {
             $this->setVarByRef('announcement', $announcement);
-
             return 'view_tpl.php';
         }
     }
@@ -379,9 +342,7 @@ class announcements extends controller
     private function __getajax()
     {
         $page = $this->getParam('page', 0);
-
-        $announcements = $this->objAnnouncements->getAllAnnouncements($this->userContext, $this->itemsPerPage, $page);
-
+        $announcements = $this->objAnnouncements->getAllAnnouncements($this->userContexts, $this->itemsPerPage, $page);
         if (count($announcements) == 0) {
             echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_announcements_noannouncements', 'announcements', 'There are no announcements').'</div>';
         } else {
@@ -395,11 +356,15 @@ class announcements extends controller
     private function __getcontextajax()
     {
         $page = $this->getParam('page', 0);
-
-        $announcements = $this->objAnnouncements->getContextAnnouncements($this->objContext->getContextCode(), $this->itemsPerPage, $page);
-
+        $announcements = $this->objAnnouncements->getContextAnnouncements(
+          $this->objContext->getContextCode(), $this->itemsPerPage, $page
+        );
         if (count($announcements) == 0) {
-            echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_announcements_noannouncements', 'announcements', 'There are no announcements').'</div>';
+            echo '<div class="noRecordsMessage">'
+              .$this->objLanguage->languageText(
+                'mod_announcements_noannouncements', 'announcements',
+                'There are no announcements'
+              ) .'</div>';
         } else {
             return $this->generateAjaxResponse($announcements);
         }
@@ -414,54 +379,51 @@ class announcements extends controller
             $this->loadClass('htmlheading', 'htmlelements');
             $objDateTime = $this->getObject('dateandtime', 'utilities');
             $objTrimString = $this->getObject('trimstr', 'strings');
-
             $table = $this->newObject('htmltable', 'htmlelements');
-			$table->width= '80%';
+			//$table->width= '80%';
             $table->startHeaderRow();
-            $table->addHeaderCell($this->objLanguage->languageText('word_date', 'system', 'Date'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_date', 'system', 'Date'), "180");
             $table->addHeaderCell($this->objLanguage->languageText('word_title', 'system', 'Title'));
-            $table->addHeaderCell($this->objLanguage->languageText('word_by', 'system', 'By'));
-            $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'));
-			$table->addHeaderCell('&nbsp;');
+            $table->addHeaderCell($this->objLanguage->languageText('word_by', 'system', 'By'), "200");
+            $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'), "70");
+			$table->addHeaderCell('&nbsp;', "70");
 			$table->endHeaderRow();
-
-
+            // Initialise class for odd even.
+            $rowClass = 'even';
             foreach ($announcements as $announcement)
             {
+                $rowClass = ($rowClass == 'even')? 'odd' : 'even';
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
                 $link->link = $announcement['title'];
                 //Get and set the edit icon
                 $objEdIcon = $this->getObject('geticon', 'htmlelements');
-	 		            $objEdIcon->setIcon('edit');
+                $objEdIcon->setIcon('edit');
                 //Link to edit using the edit icon
-            				$editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
+                $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
                 $editLink->link = $objEdIcon->show();
                 //Get and set the delete icon
                 $objIcon = $this->getObject('geticon', 'htmlelements');
-	 		            $objIcon->setIcon('delete');
+                $objIcon->setIcon('delete');
                 //Link to delete using the delete icon
                 $deleteArray = array('action'=>'delete', 'id'=>$announcement['id']);
                 $deleteLink = $objIcon->getDeleteIconWithConfirm($announcement['id'], $deleteArray, 'announcements');
-
-                $table->startRow();
-                $table->addCell($objDateTime->formatDate($announcement['createdon']), '15%');
-                $table->addCell($link->show(),'50%');
-                $table->addCell($this->objUser->fullName($announcement['createdby']), '20%');
-
+                $table->startRow($rowClass);
+                $table->addCell($objDateTime->formatDate($announcement['createdon']), "180");
+                $table->addCell($link->show());
+                $table->addCell($this->objUser->fullName($announcement['createdby']), "200");
                 if ($announcement['contextid'] == 'site') {
                     $type = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements', 'Site');
                 } else {
                     $type = ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]'));
                 }
-
-                $table->addCell($type, 200);
+                $table->addCell($type, "70");
 				if ($this->checkPermission($announcement['id'])) {
-					$table->addCell($editLink->show()."&nbsp;&nbsp;".$deleteLink, '15%');
-				}
+					$table->addCell($editLink->show()."&nbsp;&nbsp;".$deleteLink, "70");
+				} else {
+                    $table->addCell("&nbsp;", "70");
+                }
                 $table->endRow();
-
             }
-
             echo $table->show();
     }
 
@@ -471,21 +433,16 @@ class announcements extends controller
     private function __edit()
     {
         $id = $this->getParam('id');
-
         $announcement = $this->objAnnouncements->getMessage($id);
-
         if ($announcement == FALSE) {
             return $this->nextAction(NULL, array('error'=>'unknownannouncement'));
         } else if (!$this->checkPermission($announcement['id'])) {
             return $this->nextAction(NULL, array('error'=>'nopermission'));
         } else {
             $this->setVarByRef('announcement', $announcement);
-
             $contextAnnouncementList = $this->objAnnouncements->getMessageContexts($id);
             $this->setVarByRef('contextAnnouncementList', $contextAnnouncementList);
-
             $this->setVar('mode', 'edit');
-
             return 'addedit_tpl.php';
         }
     }
@@ -496,7 +453,6 @@ class announcements extends controller
      */
     private function __update()
     {
-
         $id = $this->getParam('id');
         $title = $this->getParam('title');
         $message = $this->getParam('message');
@@ -504,14 +460,11 @@ class announcements extends controller
         $mode = $this->getParam('mode');
         $recipienttarget = $this->getParam('recipienttarget');
         $contexts = $this->getParam('contexts');
-
         $email = ($email == 'Y') ? TRUE : FALSE;
-
         if (!$this->checkPermission($id)) {
             return $this->nextAction(NULL, array('error'=>'nopermission'));
         } else {
             $this->objAnnouncements->updateAnnouncement($id, $title, $message, $recipienttarget, $contexts, $email);
-
             return $this->nextAction('view', array('id'=>$id));
         }
     }
@@ -522,7 +475,6 @@ class announcements extends controller
     private function __delete()
     {
         $id = $this->getParam('id');
-
         if (!$this->checkPermission($id)) {
             return $this->nextAction(NULL, array('error'=>'nopermission'));
         } else {

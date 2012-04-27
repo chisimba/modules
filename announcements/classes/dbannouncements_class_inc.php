@@ -47,7 +47,7 @@ class dbAnnouncements extends dbTable {
         $this->loadClass("link", "htmlelements");
         $this->objIndexData = $this->getObject('indexdata', 'search');
         $this->objLanguage = $this->getObject("language", "language");
-	$this->dbSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->dbSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->emailTitle = $this->objLanguage->languageText('mod_announcements_emailtitle', 'announcements', 'Important announcement');
         $this->emailBody1 = $this->objLanguage->languageText('mod_announcements_emailbody1', 'announcements', 'has posted an important new announcement titled');
         $this->emailBody2 = $this->objLanguage->languageText('mod_announcements_emailbody2', 'announcements', 'has updated  announcement titled');
@@ -64,7 +64,7 @@ class dbAnnouncements extends dbTable {
      * @return string Insert Id
      */
     public function addAnnouncement($title, $message, $type='site', $contexts=array(), $email=TRUE) {
-// Do insert
+        // Do insert
         $messageId = $this->insert(array(
                     'title' => $title,
                     'message' => $message,
@@ -75,29 +75,28 @@ class dbAnnouncements extends dbTable {
                 ));
 
 
-// If site announcement
+        // If site announcement
         if ($type == 'site') {
-
             if ($messageId != FALSE) {
 
-// Add to Search
+                // Add to Search
                 $this->addAnnouncementToSearchIndex($messageId, $title, $message, 'root');
-// Optimize Search
+                // Optimize Search
                 $this->objIndexData->optimize();
 
                 if ($email) {
                     $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
                     $atitle = $this->emailTitle . ": '$title'";
                     $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-		    	if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-			    $message1 .= /*$this->emailBody4.*/$message ." ";
-			}
-		    $message1 .= $this->emailBody3 . ": " . $link->href;
+                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+                        $message1 .= /*$this->emailBody4.*/$message ." ";
+                    }
+                    $message1 .= $this->emailBody3 . ": " . $link->href;
                     $emailList = $this->getSiteRecipients();
-
                     $this->sendEmail($atitle, $message, $emailList);
                 }
             }
+
         } else {
 
             if ($messageId != FALSE) {
@@ -107,7 +106,6 @@ class dbAnnouncements extends dbTable {
                     $this->addMessageToContext($messageId, $context);
                     $emailList = array_merge($emailList, $this->getContextRecipients($context));
                     $contextcodeList.=$context . " ";
-
                     $this->addAnnouncementToSearchIndex($messageId, $title, $message, $context);
                 }
 
@@ -118,15 +116,14 @@ class dbAnnouncements extends dbTable {
                     $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
                     $atitle = $this->emailTitle . ": '$title'";
                     $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-		    	if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-			    $message1 .= ": ".$message ." ";
-			}
-		    $message1 .= $this->emailBody3 . ": " . $link->href;
-		    $this->sendEmail($atitle, $message1, $emailList); //JO'C $this->getSiteRecipients()
+                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+                        $message1 .= ": ".$message ." ";
+                    }
+                    $message1 .= $this->emailBody3 . ": " . $link->href;
+                    $this->sendEmail($atitle, $message1, $emailList); //JO'C $this->getSiteRecipients()
                 }
             }
         }
-
         return $messageId;
     }
 
@@ -134,7 +131,6 @@ class dbAnnouncements extends dbTable {
         if ($type == 'context') {
             $this->removeContextAnnouncement($id);
         }
-
         $result = $this->update('id', $id, array(
                     'title' => $title,
                     'message' => $message,
@@ -143,10 +139,8 @@ class dbAnnouncements extends dbTable {
                     'createdby' => $this->objUser->userId(),
                     'contextid' => $type,
                 ));
-
         // If site announcement
         if ($type == 'site') {
-
             if ($result != FALSE) {
                 // Add to Search
                 $this->addAnnouncementToSearchIndex($id, $title, $message, 'root');
@@ -157,40 +151,33 @@ class dbAnnouncements extends dbTable {
                     $link = new link($this->uri(array("action" => "view", "id" => $id)));
                     $atitle = $this->emailTitle . ": '$title'";
                     $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-		    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-			    $message1 .= ": ".$message ." ";
-			}
-		    $message1 .= $this->emailBody3 . ": " . $link->href;
-
+                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+                        $message1 .= ": ".$message ." ";
+                    }
+                    $message1 .= $this->emailBody3 . ": " . $link->href;
                     $this->sendEmail($atitle, $message1, $this->getSiteRecipients());
                 }
-            }
-        } else {
+            }        } else {
 
             if ($result != FALSE) {
-
                 $emailList = array();
-
                 foreach ($contexts as $context) {
                     $this->addMessageToContext($id, $context);
                     $emailList = array_merge($emailList, $this->getContextRecipients($context));
-
                     $this->addAnnouncementToSearchIndex($id, $title, $message, $context);
                 }
 
                 // Optimize Search
                 $this->objIndexData->optimize();
-
                 if ($email) {
                     $link = new link($this->uri(array("action" => "view", "id" => $id)));
                     $atitle = $this->emailTitle . " : $title";
                     $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-		        if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-			    $message1 .= ": ".$message ." ";
-			}
-		    $message1 .= $this->emailBody3 . ": " . $link->href;
-
-		    $this->sendEmail($atitle, $message1, $emailList);
+                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+                        $message1 .= ": ".$message ." ";
+                    }
+                    $message1 .= $this->emailBody3 . ": " . $link->href;
+        		    $this->sendEmail($atitle, $message1, $emailList);
                 }
             }
         }
@@ -198,19 +185,14 @@ class dbAnnouncements extends dbTable {
 
     public function deleteAnnouncement($id) {
         $announcement = $this->getMessage($id);
-
         if ($announcement == FALSE) {
             return FALSE;
         } else {
-
             if ($announcement['contextid'] == 'context') {
                 $this->removeContextAnnouncement($id);
             }
-
             $this->delete('id', $id);
-
             $this->objIndexData->removeIndex('announcement_entry_' . $id);
-
             return TRUE;
         }
     }
@@ -220,34 +202,29 @@ class dbAnnouncements extends dbTable {
      * This function removes the search entry as well as link to db record
      *
      * @param string $id Record Id of Announcement
+     *
      */
-    private function removeContextAnnouncement($id) {
+    private function removeContextAnnouncement($id)
+    {
         parent::init('tbl_announcements_context');
-
         $result = $this->getAll(" WHERE announcementid = '{$id}' ");
-
         if (count($result) > 0) {
             foreach ($result as $context) {
                 $this->objIndexData->removeIndex('announcement_entry_' . $context['contextid'] . '_' . $id);
                 $this->delete('id', $context['id']);
             }
         }
-
-
         parent::init('tbl_announcements');
     }
 
-    private function addAnnouncementToSearchIndex($id, $title, $message, $context) {
-
-
-// Prep Data
-
+    private function addAnnouncementToSearchIndex($id, $title, $message, $context)
+    {
+        // Prep Data
         if ($context == 'root') {
             $docId = 'announcement_entry_' . $id;
         } else {
             $docId = 'announcement_entry_' . $context . '_' . $id;
         }
-
         $docDate = $this->now();
         $url = $this->uri(array('action' => 'view', 'id' => $id), 'announcements');
         $title = $title;
@@ -255,8 +232,7 @@ class dbAnnouncements extends dbTable {
         $teaser = $message;
         $module = 'announcements';
         $userId = $this->objUser->userId();
-
-// Add to Index
+        // Add to Index
         $this->objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context, 'noworkgroup', NULL, NULL, NULL, NULL, FALSE); // Turn off optimizing
     }
 
@@ -270,11 +246,8 @@ class dbAnnouncements extends dbTable {
      */
     private function addMessageToContext($messageId, $context) {
         parent::init('tbl_announcements_context');
-
         $result = $this->insert(array('announcementid' => $messageId, 'contextid' => $context));
-
         parent::init('tbl_announcements');
-
         return $result;
     }
 
@@ -302,33 +275,8 @@ class dbAnnouncements extends dbTable {
         $objMailer->setValue('fromName', $this->objUser->fullname());
         $objMailer->setValue('subject', $title);
         $objMailer->setValue('body', $message);
-
         $objMailer->setValue('AltBody', $message);
-
-
         $objMailer->send();
-
-
-
-        /* $list = "";
-          $separator = '';
-          foreach($recipients as $recipient) {
-          $list .= $separator . $recipient['emailaddress'];
-          $separator = ', ';
-          }
-          $to = $list;
-
-          $body = $message;
-          $subject = $title;
-          $from  = $this->objUser->email();
-
-          $headers  = 'MIME-Version: 1.0' . "\r\n";
-          $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-          $headers .= 'From: '.$from . "\r\n" .
-          'Reply-To: '.$from . "\r\n" .
-          'X-Mailer: PHP/' . phpversion();
-
-          return mail($to, $subject, $body, $headers); */
     }
 
     /**
@@ -337,12 +285,6 @@ class dbAnnouncements extends dbTable {
      */
     private function getSiteRecipients() {
         $users = $this->objUser->getAll();
-        /* $emailList = array();
-
-          foreach ($users as $user) {
-          $emailList[] = $user['emailaddress'];
-          } */
-
         return $users;
     }
 
@@ -353,11 +295,9 @@ class dbAnnouncements extends dbTable {
      */
     private function getContextRecipients($contextCode) {
         $objGroups = $this->getObject('managegroups', 'contextgroups');
-
         $lecturers = $objGroups->contextUsers('Lecturers', $contextCode, array('emailAddress'));
         $students = $objGroups->contextUsers('Students', $contextCode, array('emailAddress'));
         $guests = $objGroups->contextUsers('Guests', $contextCode, array('emailAddress'));
-
         return array_merge($lecturers, $students, $guests);
     }
 
@@ -389,7 +329,6 @@ class dbAnnouncements extends dbTable {
                     $or = " OR ";
                 }
             }
-
             if ($this->isAdmin) {
                 $where .= "{$or} tbl_announcements.contextid = 'site'";
             }
@@ -399,21 +338,17 @@ class dbAnnouncements extends dbTable {
         if ($where != '') {
             $where = 'WHERE ' . $where;
         }
-
         $sql = "SELECT DISTINCT tbl_announcements.id, title, createdon, tbl_announcements.contextid, message, createdby FROM tbl_announcements
         LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
                 {$where}
         ORDER BY createdon DESC ";
-// AND createdby = '{$this->userId}'
+        // AND createdby = '{$this->userId}'
         if ($limit != NULL && $page != NULL) {
 
             $page = $page * $limit;
 
             $sql .= " LIMIT {$page}, {$limit}";
         }
-
-//echo $sql;
-
         return $this->getArray($sql);
     }
 
