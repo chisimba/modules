@@ -262,10 +262,6 @@ class mynotes extends controller {
         return $this->objNoteOps->getNotes();
     }
     
-    private function __ajaxGetList() {
-        return $this->objNoteOps->getNotesList();
-    }
-
     /*
      * Method to search for the keywords that are found in my notes using the
      * tag links
