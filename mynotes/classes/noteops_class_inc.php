@@ -426,6 +426,8 @@ class noteops extends object {
             } else {
                 $this->objTagCloud = NULL;
             }
+        } else {
+            $this->objTagCloud = NULL;
         }
 
         return $this->objTagCloud;
