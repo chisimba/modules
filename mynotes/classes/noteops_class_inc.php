@@ -331,7 +331,7 @@ class noteops extends object {
         $isViewAll = $this->getParam('viewall');
         $tmpPrevPage = explode("_", $this->getParam("prevnotepage"));
         $prevPage = $tmpPrevPage[1];
-        $tmpNextPage = explode($this->getParam("nextnotepage"));
+        $tmpNextPage = explode("_", $this->getParam("nextnotepage"));
                 var_dump($tmpNextPage);
         $nextPage = $tmpNextPage[1];
         echo "PREV PAGE: ".$prevPage."<br/>NEXT PAGE: ".$nextPage;
@@ -367,9 +367,9 @@ class noteops extends object {
                 $list .= "</ul></div>";
             }
         } else {
-            $error = $this->error($noNotesLabel);
+            //$error = $this->error($noNotesLabel);
 
-            $list = "<div><ul>" . $error . "</ul></div>";
+            $list = "<div><ul>" . $noNotesLabel . "</ul></div>";
         }
 
         if(empty($prevPage) && empty($nextPage)) {
@@ -528,6 +528,7 @@ class noteops extends object {
         $uid = $this->objUser->userId();
         $data = $this->objDbmynotes->getNotesForList($uid, $begin, $end);
         
+        $list = "";
         if (!empty($data)) {
             $list = "<div><ul>";
             $tmpLink = NULL;
@@ -537,10 +538,6 @@ class noteops extends object {
                 $list .= "<li>" . $tmpLink->show() . "</li>";
             }
             $list .= "</ul></div>";
-        } else {
-            $error = $this->error($noNotesLabel);
-
-            $list = "<div><ul>" . $error . "</ul></div>";
         }
         
         $ret .= $list;
