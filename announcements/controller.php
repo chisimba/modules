@@ -151,7 +151,17 @@ class announcements extends controller
 
     public function requiresLogin()
     {
-        return False;
+        switch ($this->getParam('action', NULL)) {
+            case 'edit':
+            case 'add':
+            case 'save':
+            case 'delete':
+                return TRUE;
+                break;
+            default:
+                return False;
+                break;
+        }
     }
     /**
      *Method to generate a rss feed
