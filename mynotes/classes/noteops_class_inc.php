@@ -329,7 +329,12 @@ class noteops extends object {
 
     public function getNotes() {
         $isViewAll = $this->getParam('viewall');
-
+        $tmpPrevPage = explode("_", $this->getParam("prevnotepage"));
+        $prevPage = $tmpPrevPage[1];
+        $tmpNextPage = explode($this->getParam("nextnotepage"));
+                var_dump($tmpNextPage);
+        $nextPage = $tmpNextPage[1];
+        echo "PREV PAGE: ".$prevPage."<br/>NEXT PAGE: ".$nextPage;
         // Set up text elements.
         $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
         $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
@@ -367,27 +372,32 @@ class noteops extends object {
             $list = "<div><ul>" . $error . "</ul></div>";
         }
 
-        $prevPage = $this->getParam("prevpage");
-        
-        if(empty($prevPage)) {
+        if(empty($prevPage) && empty($nextPage)) {
             $prevPage = 2;
             $nextPage = 7;
+        } else if(!empty($prevPage)){
+            $prevPage = $prevPage - 5;
+            $nextPage += $prevPage;
+        } else if(!empty($nextPage)) {
+            $prevPage = $nextPage;
+            $nextPage += 5;
         }
-        
+
         // get previous and next link
-        if($prevPage == 0) {
+        if($prevPage == 2) {
             // display prev but not as a link
             $prevLink = '&#171; '.$prevLabel;
         } else {
-            $link = new link($this->uri(array("action" => "shownotes", 'prevpage' => $prevPage), $this->module));
+            $link = new link($this->uri(array("action" => "view", 'prevnotepage' => "prev_".$prevPage), $this->module));
             $link->link = $prevLabel;
             $prevLink = '&#171; '.$link->show();
         }
         
-        if($nextPage == -1) {
+        $noteListCount = $this->objDbmynotes->getListCount($uid, $prevPage, $nextPage+1);
+        if($noteListCount <= 5) {
             $nextLink = $nextLabel.' &#187;';
         } else {
-            $link = new link($this->uri(array("action" => "shownotes", 'nextpage' => $nextPage), $this->module));
+            $link = new link($this->uri(array("action" => "view", 'nextnotepage' => "next_".$nextPage), $this->module));
             $link->link = $nextLabel.' &#187;';
             $nextLink = $link->show();
         }

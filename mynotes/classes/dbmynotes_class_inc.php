@@ -154,9 +154,17 @@ class dbmynotes extends dbtable
      */
     public function getNotesForList($uid, $start, $end) {
         
-        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC " . $limit;
+        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
         
         return $this->getArray($sql);
+    }
+    
+    public function getListCount($uid, $start, $end) {
+        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
+        $data = $this->getArray($sql);
+        $dataCount = count($data);
+        
+        return $dataCount;
     }
 
 }
