@@ -329,15 +329,11 @@ class noteops extends object {
 
     public function getNotes() {
         $isViewAll = $this->getParam('viewall');
-        $tmpPrevPage = explode("_", $this->getParam("prevnotepage"));
-        $prevPage = $tmpPrevPage[1];
-        $tmpNextPage = explode("_", $this->getParam("nextnotepage"));
-                var_dump($tmpNextPage);
-        $nextPage = $tmpNextPage[1];
-        echo "PREV PAGE: ".$prevPage."<br/>NEXT PAGE: ".$nextPage;
+        $prevPage = $this->getParam("prevnotepage");
+        $nextPage = $this->getParam("nextnotepage");
+        echo "NEXT PAGE: ".$nextPage;
+        echo "TEST: ".$this->getParam("test");
         // Set up text elements.
-        $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
-        $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
         $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', $this->module, 'TEXT: mod_mynotes_readmore, not found');
         $uid = $this->objUser->userId();
@@ -372,40 +368,14 @@ class noteops extends object {
             $list = "<div><ul>" . $noNotesLabel . "</ul></div>";
         }
 
-        if(empty($prevPage) && empty($nextPage)) {
-            $prevPage = 2;
-            $nextPage = 7;
-        } else if(!empty($prevPage)){
-            $prevPage = $prevPage - 5;
-            $nextPage += $prevPage;
-        } else if(!empty($nextPage)) {
-            $prevPage = $nextPage;
-            $nextPage += 5;
+        if(!empty($nextPage)) {
+            $data = getNote($nextPage);var_dump($data);
+            $prevPage = $data['puid'] + 1;
+            $nextPage = $prevPage + 6;
         }
-
-        // get previous and next link
-        if($prevPage == 2) {
-            // display prev but not as a link
-            $prevLink = '&#171; '.$prevLabel;
-        } else {
-            $link = new link($this->uri(array("action" => "view", 'prevnotepage' => "prev_".$prevPage), $this->module));
-            $link->link = $prevLabel;
-            $prevLink = '&#171; '.$link->show();
-        }
-        
-        $noteListCount = $this->objDbmynotes->getListCount($uid, $prevPage, $nextPage+1);
-        if($noteListCount <= 5) {
-            $nextLink = $nextLabel.' &#187;';
-        } else {
-            $link = new link($this->uri(array("action" => "view", 'nextnotepage' => "next_".$nextPage), $this->module));
-            $link->link = $nextLabel.' &#187;';
-            $nextLink = $link->show();
-        }
-        
         $ret .= $list;
-
         $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
-        $ret .= "<div class='center'>".$prevLink.'&nbsp;&nbsp;&nbsp;'.$nextLink."</div>";
+        $ret .= "<div class='center'>".$this->getPrevNextLinks($prevPage, $nextPage)."</div>";
         echo $ret;
         die();
     }
@@ -523,9 +493,17 @@ class noteops extends object {
     
     public function getNotesList($begin, $end) {
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
+        echo "BEGIN: " . $begin;
+        if(empty($begin)) {
+            $begin = 2;
+            $end = 7;
+        } else {
+            echo "BEGIN: " . $begin;
+        }
         
         $ret = "";
         $uid = $this->objUser->userId();
+        
         $data = $this->objDbmynotes->getNotesForList($uid, $begin, $end);
         
         $list = "";
@@ -538,10 +516,60 @@ class noteops extends object {
                 $list .= "<li>" . $tmpLink->show() . "</li>";
             }
             $list .= "</ul></div>";
+        } else {
+            $list = "<div class='error'>".$noNotesLabel."</div>";
         }
         
         $ret .= $list;
 
+        return $ret;
+    }
+    
+    public function getPrevNextLinks($prevPageNum, $nextPageNum) {
+        $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
+        $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
+        
+        if(empty($prevPageNum) && empty($nextPageNum)) {
+            $prevPageNum = 2;
+            $nextPageNum = 7;
+        }
+        $noteData = $this->objDbmynotes->getNotesUsingPuid($prevPageNum, $nextPageNum);
+        $count = count($noteData);
+        
+        if(!empty($noteData)) {
+            $nextPageId = $noteData[$count-1]['id'];
+        } else {
+            $puid = $nextPageNum + 1;
+            $data = $this->getRowData($puid);
+            $nextPageId = $data['id'];
+        }
+        if($nextPageNum > 7) {
+            $prevPageNum = $nextPageNum - 5;
+        } else {
+            $prevPageNum = 2;
+        }
+        
+        // get previous and next link
+        if($prevPageNum == 2) {
+            // display prev but not as a link
+            $prevLink = '&#171; '.$prevLabel;
+        } else {
+            $link = new link($this->uri(array("action" => "view", 'prevnotepage' => $prevPageId), $this->module));
+            $link->link = $prevLabel;
+            $prevLink = '&#171; '.$link->show();
+        }
+        
+        $noteListCount = $this->objDbmynotes->getListCount($uid, $prevPageNum, $nextPageNum+1);
+        if($noteListCount <= 5) {
+            $nextLink = $nextLabel.' &#187;';
+        } else {    
+            $link = new link($this->uri(array("action" => "view", 'nextnotepage' => $nextPageId), $this->module));
+            $link->link = $nextLabel.' &#187;';
+            $nextLink = $link->show();
+        }
+        
+        $ret = $prevLink.'&nbsp;&nbsp;&nbsp;'.$nextLink;
+        
         return $ret;
     }
 }

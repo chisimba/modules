@@ -95,7 +95,8 @@ class dbmynotes extends dbtable
      * 
      */
     public function insertNote($data) {
-        $this->insert($data);        
+        $id = $this->insert($data);
+        return $id;
     }
     
     /*
@@ -147,7 +148,7 @@ class dbmynotes extends dbtable
     public function getNotesWitTags($searchKey) {
         return $this->fetchAll(" WHERE `tags` LIKE '%".$searchKey."%'");
     }
-    
+   
     /*
      * 
      * 
@@ -160,12 +161,18 @@ class dbmynotes extends dbtable
     }
     
     public function getListCount($uid, $start, $end) {
-        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
-        $data = $this->getArray($sql);
-        $dataCount = count($data);
+        $filter = " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
+        $recordCount = $this->getRecordCount($sql);
         
-        return $dataCount;
+        return $recordCount;
     }
-
+    
+    public function getNotesUsingPuid($prevPageNum, $nextPageNum) {
+        return $this->fetchAll(" WHERE `puid` BETWEEN $prevPageNum AND $nextPageNum");
+    }
+    
+    public function getRowData($puid) {
+        return $this->getRow('puid', $puid);
+    }
 }
 ?>

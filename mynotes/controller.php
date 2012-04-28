@@ -218,7 +218,7 @@ class mynotes extends controller {
 
         if (empty($id) && $mode == 'add') {
             $data['datecreated'] = date('Y-m-d H:i:s');
-            $this->objDbmynotes->insertNote($data);
+            $id = $this->objDbmynotes->insertNote($data);
             $this->objDbtags->addTag($data);
         } else {
             $data['datemodified'] = date('Y-m-d H:i:s');
@@ -226,7 +226,7 @@ class mynotes extends controller {
             $this->objDbtags->addTag($data);
         }
 
-        return $this->nextAction(NULL);
+        return $this->nextAction("showNote", array("id"=>$id));
     }
 
     /**
