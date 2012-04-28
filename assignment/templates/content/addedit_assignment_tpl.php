@@ -1,5 +1,5 @@
 <?php
-
+$ret ="";
 // Can change field
 if ($mode == 'edit') {
     $canChangeField = $this->objAssignmentSubmit->getCountStudentSubmissions($assignment['id']) == 0;
@@ -60,51 +60,7 @@ function toggleType(el)
 </script>';
     echo $jsToggleType;
 }
-/*
-  // Load CSS & JS
-  $extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0-rc2/resources/css/ext-all.css','htmlelements').'"/>';
-  $extbasejs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-  $extalljs = '<script language="JavaScript" src="'.$this->getResourceUri('ext-3.0-rc2/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-  $this->appendArrayVar('headerParams', $extallcss);
-  $this->appendArrayVar('headerParams', $extbasejs);
-  $this->appendArrayVar('headerParams', $extalljs);
- */
-/*
-  $js = '<script language="JavaScript" src="'.$this->getResourceUri('addedit_assignment.js').'" type="text/javascript"></script>';
-  $this->appendArrayVar('headerParams', $js);
- */
-/*
-  // Ext onReady
-  if ($mode == 'edit') {
-  $onReady = "
-  Ext.onReady(function(){
-  initRadioButtons(
-  '".$assignment['format']."',
-  '".$assignment['assesment_type']."',
-  '".$assignment['resubmit']."',
-  '".$assignment['email_alert']."',
-  '".$assignment['filename_conversion']."',
-  ".($canChangeField?'true':'false')."
-  );
-  });
-  ";
-  }
-  else {
-  $onReady = "
-  Ext.onReady(function(){
-  initRadioButtons(
-  '0',
-  '0',
-  '0',
-  '1',
-  '1',
-  true
-  );
-  });
-  ";
-  }
-  $this->appendArrayVar('headerParams', "<script type='text/javascript'>".$onReady."</script>");
- */
+
 // Load classes
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -133,7 +89,7 @@ if ($mode == 'edit') {
 $heading = new htmlHeading();
 $heading->type = 1;
 $heading->str = $headingStr;
-echo $heading->show();
+$ret .= $heading->show();
 // Table
 $generaltable = $this->newObject('htmltable', 'htmlelements');
 
@@ -171,15 +127,6 @@ $typetable = $this->newObject('htmltable', 'htmlelements');
 
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'));
-/*
-    if ($assignment['format'] == '0') {
-        $_type = $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online');
-    } else {
-        $_type = $this->objLanguage->languageText('mod_assignment_upload', 'assignment', 'Upload');
-    }
-    $typetable->addCell($textinput->show() . $_type . '<sup>1</sup>');
-} else {
-*/
 $radio = new radio($canChangeField?'type':'typeDisabled');
 $radio->extra = 'onclick="toggleType(this);"';
 $radio->addOption(0, $this->objLanguage->languageText('mod_assignment_online', 'assignment', 'Online'));
@@ -199,12 +146,7 @@ if ($mode == 'edit' && !$canChangeField) {
     $textinput->fldType = "hidden";
 }
 $typetable->addCell($radio->show().($canChangeField?'':($textinput->show().'<sup>1</sup>')));
-/*
-$table->addCell('<div id="_type"></div>');
-*/
-/*
-}
-*/
+
 $typetable->endRow();
 
 // Uploadable options
@@ -289,19 +231,7 @@ $typetable->endRow();
 // Reflection
 $typetable->startRow();
 $typetable->addCell($this->objLanguage->languageText('mod_assignment_isreflection', 'assignment', 'Is it a Reflection?'));
-/*
-if (!$canChangeField) {
-    $textinput = new textinput('assesment_type');
-    $textinput->value = $assignment['assesment_type'];
-    $textinput->fldType = "hidden";
-    if ($assignment['assesment_type'] == '0') {
-        $isReflection = $this->objLanguage->languageText('word_no', 'system', 'No');
-    } else {
-        $isReflection = $this->objLanguage->languageText('word_yes', 'system', 'Yes');
-    }
-    $typetable->addCell($textinput->show() . $isReflection . '<sup>1</sup>');
-} else {
-*/
+
 $radio = new radio($canChangeField?'assesment_type':'assesment_typeDisabled');
 $radio->addOption(1, $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
 $radio->addOption(0, $this->objLanguage->languageText('word_no', 'system', 'No'));
@@ -318,16 +248,8 @@ if ($mode == 'edit' && !$canChangeField) {
     $textinput->fldType = "hidden";
     $textinput->value = $assignment['assesment_type'];
 }
-/*
-$typetable->addCell($radio->show());
-*/
+
 $typetable->addCell($radio->show().($canChangeField?'':($textinput->show().'<sup>1</sup>')));
-/*
-$table->addCell('<div id="isReflection"></div>');
-*/
-/*
-}
-*/
 $typetable->endRow();
 
 // Multiple submissions
@@ -341,12 +263,7 @@ if ($mode == 'edit') {
 }
 $radio->setBreakSpace('&nbsp;');
 $typetable->addCell($radio->show());
-/*
-  $table->addCell('<div id="allowMultiple"></div>');
- */
 $typetable->endRow();
-
-
 
 //email alerts
 $commtable = $this->newObject('htmltable', 'htmlelements');
@@ -364,12 +281,7 @@ if ($mode == 'edit') {
 $radio->setBreakSpace('&nbsp;');
 $commtable->addCell($radio->show());
 
-/*
-  $table->addCell('<div id="emailAlert"></div>');
- */
 $commtable->endRow();
-
-
 
 $commtable->startRow();
 $commtable->addCell($this->objLanguage->languageText('mod_assignment_emailalertfromstudents', 'assignment', 'Send email alert to students when assignment is created'));
@@ -682,20 +594,11 @@ $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_mark
 $form->addRule('mark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
 $form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_yearmark', 'assignment', 'Please enter year mark'), 'required');
 $form->addRule('yearmark', $this->objLanguage->languageText('mod_assignment_val_numreq', 'assignment', 'Has to be a number'), 'numeric');
-/*
-$js_pre_submittrigger = '
-<script language="JavaScript" type="text/javascript">
-function val_pre_submittrigger(dummy)
-{
-    toggleTypeOptions(true);
-    return true;
-}
-</script>
-';
-echo $js_pre_submittrigger;
-$form->addRule('uploadableOptions', '', 'custom', 'val_pre_submittrigger');
-*/
-echo $form->show();
+
+$ret .= $form->show();
+echo "<div class='assignment_main'>$ret</div>";
+
+
 // Footer note
 if (!$canChangeField) {
     echo '<sup>1</sup>' . $this->objLanguage->languageText('mod_assignment_cannotchangefield', 'assignment');

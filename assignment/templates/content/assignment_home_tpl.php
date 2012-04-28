@@ -1,5 +1,5 @@
 <?php
-
+$ret = "";
 $openLabel = $this->objLanguage->languageText('mod_assignment_open', 'assignment');
 $closedLabel = $this->objLanguage->languageText('mod_assignment_closed', 'assignment');
 $viewLabel = $this->objLanguage->languageText('mod_assignment_view', 'assignment');
@@ -30,7 +30,7 @@ if ($this->isValid('add')) {
     $objHead->str .= ' ' . $link->show();
 }
 
-echo $objHead->show();
+$ret .= $objHead->show();
 
 $objTable = $this->newObject('htmltable', 'htmlelements');
 
@@ -114,7 +114,7 @@ if (count($assignments) == 0) {
                     }
                 }
             }
-           
+
         }
         if ($this->isValid('edit')) {
             $okToShow = TRUE;
@@ -139,7 +139,7 @@ if (count($assignments) == 0) {
                 $deleteLink = new link($this->uri(array('action' => 'delete', 'id' => $assignment['id'])));
                 $deleteLink->link = $deleteIcon;
 
-                $objTable->addCell($editLink->show() . '&nbsp;' . $deleteLink->show(), '60');
+                $objTable->addCell($editLink->show() . '&nbsp;' . $deleteLink->show(), '60', NULL, NULL, $class);
             }
             $objTable->endRow();
         }
@@ -152,21 +152,22 @@ if (count($assignments) == 0) {
     }
 }
 
-echo $objTable->show();
+$ret .= $objTable->show();
 
 
 if ($this->isValid('add')) {
     $link = new link($this->uri(array('action' => 'add')));
     $link->link = $this->objLanguage->languageText('mod_assignment_addassignment', 'assignment', 'Add Assignment');
 
-    echo '<p>' . $link->show() . '</p>';
+    $ret .= '<p class="assignment_link_add">' . $link->show() . '</p>';
 }
 
 
 if ($this->objUser->isContextStudent($this->contextCode)) {
     $this->objLink->link($this->uri(array('action' => 'displaylist')));
     $this->objLink->link = $this->objLanguage->languageText('mod_assignment_submittedassignmentslist', 'assignment');
-
-    echo $this->objLink->show();
+    $ret .= '<p class="assignment_link_submittedlist">' . $this->objLink->show() . '</p>';
 }
+
+echo "<div class='assignment_main'>$ret</div>";
 ?>
