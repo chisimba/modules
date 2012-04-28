@@ -76,7 +76,20 @@ class block_mynotesmiddle extends object {
      * 
      */
     public $mode;
+    
+    /*
+     * Next page of notes for paging
+     * 
+     * @access pubilc
+     */
+    public $nextPage;
 
+    /*
+     * Previous page of notes for paging
+     * 
+     * @access pubilc
+     */
+    public $prevPage;
     /**
      * Standard init function
      *
@@ -97,6 +110,8 @@ class block_mynotesmiddle extends object {
             $this->objNoteOps = $this->getObject('noteops', 'mynotes');
             
             $this->mode = $this->getParam('mode');
+            $this->nextPage = $this->getParam('nextnotepage');
+            $this->prevPage = $this->getParam('prevnotepage');
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
@@ -109,7 +124,7 @@ class block_mynotesmiddle extends object {
      * @return string $this->display block rendered
      */
     public function show() {
-        return $this->objNoteOps->showNotes($this->mode);
+        return $this->objNoteOps->showNotes($this->mode, $this->nextPage, $this->prevPage);
     }
 
 }

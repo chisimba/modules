@@ -11,13 +11,32 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         var viewAll = jQuery("#viewall").val();
+        var nextPage = jQuery("#nextpage").val();
+        var prevPage = jQuery("#prevpage").val();
         
         if(viewAll === undefined) {
             // Load notes into the dynamic area. These are the latest two notes
             // with the first 200 words showing
+            if(isNaN(nextPage)) {
+                nextPage="7";
+            } else {
+                nextPage =parseInt(nextPage) + 6;
+            }
+            if(isNaN(prevPage)) {
+                if(!isNaN(nextPage)) {
+                    prevPage = parseInt(nextPage)-5;
+                } else {
+                    prevPage="2";
+                }
+            } else {
+                prevPage = parseInt(parseInt) - 5;
+                nextPage = prevPage;
+            }
+            
             jQuery.ajax({
                 type: "POST",
                 url: "index.php?module=mynotes&action=ajaxGetNotes",
+                data: "nextnotepage="+nextPage+"&prevnotepage="+ prevPage,
                 success: function(ret) {
                     jQuery("#middledynamic_area").html(ret); 
                 }
