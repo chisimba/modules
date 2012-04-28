@@ -1,5 +1,5 @@
 <?php
-
+$ret = "";
 // Load classes.
 $this->loadHTMLElement('form');
 $this->loadHTMLElement('textarea');
@@ -12,7 +12,7 @@ $header = new htmlheading();
 $header->type = 1;
 $header->str =$objLanguage->languageText("faq_sayitadd");
 
-echo $header->show();
+$ret .= $header->show();
 
 // Display form.
 $form = new form("add",
@@ -67,5 +67,7 @@ $cancelButton->setOnClick("window.location='".$this->uri(array('action'=>'view',
 
 $form->addToForm($button->show().' / '.$cancelButton->show());
 
-echo $form->show();
+$ret .= $form->show();
+
+echo "<div class='faq_main'>$ret</div>"
 ?>

@@ -8,13 +8,9 @@ if($this->_objDBContext->isInContext())
 } else {
     $cm ='';
 }
-//
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-
 $toolbar = $this->getObject('contextsidebar', 'context');
-
 $cssLayout->setLeftColumnContent($toolbar->show());
-//$cssLayout->setLeftColumnContent($cm);
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>

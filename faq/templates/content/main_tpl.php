@@ -1,5 +1,5 @@
 <?php
-
+$ret = "";
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
@@ -58,12 +58,12 @@ if (count($categories) > 0 && $this->userHasModifyAccess()) {
     $objHeading->str .= ' '.$addLink.'<br>'.$tagCloudContent;
 }
 
-echo $objHeading->show();
+$ret .= $objHeading->show();
 
 if (count($categories) == 0) {
-    echo '<div class="noRecordsMessage">No FAQ Categories available</div>';
+    $ret .= '<div class="noRecordsMessage">No FAQ Categories available</div>';
 } else {
-    echo '<ol>';
+    $ret .= '<ol>';
 
     $objIcon = $this->newObject('geticon','htmlelements');
 
@@ -89,7 +89,7 @@ if (count($categories) == 0) {
         $categoryLink->link = $item['categoryname'];
         $categoryLink->title = $this->objLanguage->languageText('mod_faq_viewcategory', 'faq');
 
-        echo '<li>'.$categoryLink->show().' ('.$numItems.')';
+        $ret .= '<li>'.$categoryLink->show().' ('.$numItems.')';
 
         if ($this->userHasModifyAccess()) {
             // Create the edit link.
@@ -109,13 +109,13 @@ if (count($categories) == 0) {
             );
 			if ($this->isValid('add'))
 			{
-            	echo ' &nbsp; '.$editLink->show().' '.$objConfirm->show();
+            	$ret .= ' &nbsp; '.$editLink->show().' '.$objConfirm->show();
 			}
         }
 
-        echo '</li>';
+        $ret .= '</li>';
     }
-    echo '</ol>';
+    $ret .= '</ol>';
 }
 
 
@@ -138,15 +138,15 @@ function showHideAddCategory()
 
 if ($this->isValid('add'))
 {
-	echo '<p>'.$addLink->show()./*' / '.$returnToFaqLink->show().*/'</p>';
+	$ret .= '<p>'.$addLink->show()./*' / '.$returnToFaqLink->show().*/'</p>';
 }
-	echo '<div id="addfaqcategory" style="display:none;">';
+	$ret .= '<div id="addfaqcategory" style="display:none;">';
 
 
 $objHeading = new htmlheading();
 $objHeading->type=3;
 $objHeading->str =$objLanguage->languageText("mod_faq_addcategory","faq");
-echo $objHeading->show();
+$ret .= $objHeading->show();
 
 // Load the classes.
 $this->loadClass("form","htmlelements");
@@ -191,8 +191,10 @@ $cancelButton->setOnClick("showHideAddCategory();");
 $form->addToForm($button->show().' / '.$cancelButton->show());
 $form->addRule('category', 'Please enter the name of the category', 'required');
 // Show the form.
-echo $form->show();
+$ret .= $form->show();
 
-echo '</div>';
+$ret .= '</div>';
+
+echo "<div class='faq_main'>$ret</div>"
 
 ?>

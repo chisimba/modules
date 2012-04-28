@@ -54,15 +54,12 @@ class faq extends controller {
         if ($this->isRestricted($action) && !$this->userHasModifyAccess()) {
             return 'access_denied_tpl.php';
         }
-
         // Set the error string
         $error = "";
         $this->setVarByRef("error", $error);
-
         // Get the context
         $this->objDbContext = &$this->getObject('dbcontext', 'context');
         $this->contextCode = $this->objDbContext->getContextCode();
-
         // If we are not in a context...
         if ($this->contextCode == null) {
             $this->contextId = "root";
@@ -198,7 +195,6 @@ class faq extends controller {
     public function viewByTag($tag) {
         $list = $this->objFaqEntries->listAllByTag($tag);
         $this->setVarByRef('list', $list);
-
         // Get all the categories
         $categories = $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
