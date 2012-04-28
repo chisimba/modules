@@ -553,8 +553,7 @@ class noteops extends object {
             $link->link = $prevLabel;
             $prevLink = '&#171; '.$link->show();
         }
-        echo "PREV PAGE NUM: ". $prevPageNum;
-        echo "<br />NEXT PAGE NUM: ".$nextPageNum;
+        
         $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum+1);
         if($noteListCount <= 5) {
             $nextLink = $nextLabel.' &#187;';
