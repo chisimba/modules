@@ -4,20 +4,14 @@
 * @package essayadmin
 */
 
-/*
-echo '<pre>';
-var_dump($topicdata);
-var_dump($data);
-echo '</pre>';
-die;
-*/
+// Avoid undefined variable crap
+if (!isset($topic)) {
+    $topic=NULL;
+}
+
 
 $this->objDateformat =  $this->newObject('dateandtime', 'utilities');
 $this->objFile= $this->newObject('upload','filemanager');
-
-//$topic=;
-//$duedate=0;
-//$duedate=$topicdata[0]['closing_date'];
 
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('link','htmlelements');
@@ -39,7 +33,10 @@ $essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin')
 $submithead=$this->objLanguage->languageText('mod_essayadmin_datesubmitted','essayadmin');
 $markhead=$this->objLanguage->languageText('mod_essayadmin_mark','essayadmin').' (%)';
 $btnexit=$this->objLanguage->languageText('word_exit');
-$head=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_essays', 'essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin').' '.$topic;
+$head=$this->objLanguage->languageText('mod_essayadmin_submitted','essayadmin')
+          .' '.$this->objLanguage->languageText('mod_essayadmin_essays', 'essayadmin')
+          .' '.$this->objLanguage->languageText('mod_essayadmin_in', 'essayadmin')
+          .' '.$topic;
 $titledownload=$this->objLanguage->languageText('mod_essayadmin_downloadessay','essayadmin'); //.' '.$this->objLanguage->languageText('mod_essayadmin_essay', 'essayadmin');
 $titleupload=$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_marks', 'essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_and','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_marked','essayadmin').' '.$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
 $topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
@@ -75,19 +72,6 @@ $objTable->cellspacing=2;
 $objTable->cellpadding=2;
 
 $objTable->addHeader($tableHd,'heading');
-
-//$objTable->row_attributes=' height="5"';
-
-/*
-$objTable->startRow();
-$objTable->addCell('','10%','bottom');
-$objTable->addCell('','20%','bottom');
-$objTable->addCell('','30%','bottom');
-$objTable->addCell('','15%','bottom');
-$objTable->addCell('','15%','bottom');
-$objTable->addCell('','10%');
-$objTable->endRow();
-*/
 
 /******************** set up table data ***********************/
 

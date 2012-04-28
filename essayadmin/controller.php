@@ -174,29 +174,7 @@ class essayadmin extends controller
         //break;
         // save topic
         case 'savetopic':
-            //echo "<pre>";
-            //print_r($_POST);
-            //echo "</pre>";
-            //if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
             $id = $this->getParam('id', NULL);
-            //isset($_POST['id'])?$_POST['id']:NULL;
-            //$id=$this->getParam('id',NULL);
-            //echo gettype($id)."[$id]";
-            // get time in correct format
-            /*
-            $date = array_fill(0,3,0);
-            $delims='- ';
-            $postTimeStamp = $this->getParam('timestamp', 0);
-            $word=strtok($postTimeStamp, $delims);
-            $i=0;
-            while(is_string($word)){
-                $date[$i]=$word;
-                $i++;
-                $word=strtok($delims);
-            }
-
-            $time=mktime(0,0,0,$date[1],$date[2],$date[0]);
-            */
             $fields = array();
             $fields['context']=$this->contextcode;
             $fields['name']=$this->getParam('topicarea', '');
@@ -314,10 +292,6 @@ class essayadmin extends controller
             $fields['topicid']=$topicAreaId;
             $fields['topic']=$this->getParam('essaytopic', '');
             $fields['notes']=$this->getParam('notes', '');
-            $this->dbessays->addEssay($fields,$id);
-            //if(empty($id)){
-            //$id=$this->dbessays->getLastInsertId();
-            //}
             // set confirmation message
             $message = $this->objLanguage->languageText('mod_essayadmin_confirmessay', 'essayadmin');
             $this->setSession('confirm', $message);
@@ -346,12 +320,6 @@ class essayadmin extends controller
             $topicdata=$this->dbtopic->getTopic($topicAreaId,'id, name, closing_date');
             // get booked essays in topic
             $data=$this->dbbook->getBooking("WHERE topicid='{$topicAreaId}'");
-            /*
-            $this->setVarByRef('topicdata',$topicdata);
-            $this->setVarByRef('data',$data);
-            $this->setLayoutTemplate('essayadmin_layout_tpl.php');
-            return 'mark_essays_tpl.php';
-            */
             // get essay titles and student names for each booked essay
             foreach($data as $key=>$item){
                 $essay=$this->dbessays->getEssay($item['essayid'],'topic');
@@ -366,37 +334,6 @@ class essayadmin extends controller
             $this->setVarByRef('data',$data);
             $this->setLayoutTemplate('essayadmin_layout_tpl.php');
             return 'mark_essays_tpl.php';
-        //break;
-        /*
-        case 'marktopic':
-            // get topic id
-            $id=$this->getParam('id');
-            $topicdata=$this->dbtopic->getTopic($id,'id, name, closing_date');
-            // get booked essays in topic
-            $data=$this->dbbook->getBooking("where topicid='$id'");
-            // get essay titles and student names for each booked essay
-            //echo "<pre>"; print_r($data);  print_r($topicdata); echo "</pre>";
-		    foreach($data as $key=>$item){
-                $essay=$this->dbessays->getEssay($item['essayid'],'topic');
-                $data[$key]['essay']=$essay[0]['topic'];
-                //$student=
-		        //$studentNo=$this->objUser->fullname($item['studentid']);
-                $data[$key]['studentNo']=$this->objUser->getStaffNumber($item['studentid']); //[0]['fullname'];
-                $data[$key]['student']=$this->objUser->fullname($item['studentid']); //$student;//[0]['fullname'];
-            }
-            $this->setVarByRef('topicdata',$topicdata);
-            $this->setVarByRef('data',$data);
-            $template='mark_essays_tpl.php';
-        break;
-        */
-        /*
-        case 'viewessays':
-            // display students essays details
-            $data=$this->getStudentEssays();
-            $this->setVarByRef('data',$data);
-            $template='view_essays_tpl.php';
-        break;
-        */
         case 'download':
             $this->setVar('fileId', $this->getParam('fileid'));
             $this->setPageTemplate(NULL);
@@ -435,77 +372,48 @@ class essayadmin extends controller
             $topic = $this->getParam('id');
             // Get book ID
         	$book = $this->getParam('book');
-            /*
-            $submit = $this->getParam('save');
-            */
-            /*
-            if ($submit == $this->objLanguage->languageText('word_save')){
-                $this->dbbook->bookEssay(array(
-                    'mark'=>$this->getParam('mark', ''),
-                    'comment'=>$this->getParam('comment', '')
-                ),
-                $book
-                );
-                return $this->nextAction('marktopic',array('id'=>$topic));
-            }
-            */
-            //if ($submit == $this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')) {
-                $mark=$this->getParam('mark', '');
-                $comment=$this->getParam('comment', '');
-                // get fileid
-                //$booking=$this->dbbook->getBooking("where id='$book'",'studentfileid');
-                // upload file to database, overwrite original file
-                $fileDetails = $this->objFile->uploadFile('file');
+            $mark=$this->getParam('mark', '');
+            $comment=$this->getParam('comment', '');
+            // upload file to database, overwrite original file
+            $fileDetails = $this->objFile->uploadFile('file');
 
-				if ($fileDetails === FALSE){
-	            	$message = $this->objLanguage->languageText('mod_essayadmin_uploadfailureunknown', 'essayadmin');
-				}
-				else if (!$fileDetails['success']) {
-					switch ($fileDetails['reason']) {
-					case 'bannedfile':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_bannedfile', 'essayadmin');
-						break;
-					case 'partialuploaded':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_partialuploaded', 'essayadmin');
-						break;
-					case 'nouploadedfileprovided':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_nouploadedfileprovided', 'essayadmin');
-						break;
-					case 'doesnotmeetextension':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_doesnotmeetextension', 'essayadmin');
-						break;
-					case 'needsoverwrite':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_needsoverwrite', 'essayadmin');
-						break;
-					case 'filecouldnotbesaved':
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_filecouldnotbesaved', 'essayadmin');
-						break;
-					default:
-						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_unknownreason', 'essayadmin');
-					}
-	            	$message = $this->objLanguage->languageText('mod_essayadmin_uploadfailure', 'essayadmin').":&nbsp;"
-					.$reason;
-					/*
-						." REASON: ".$arrayfiledetails['reason']."<br />"
-						." FILENAME: ".$arrayfiledetails['name']."<br />"
-						." SIZE: ".$arrayfiledetails['size']."<br />"
-						." MIMETYPE: ".$arrayfiledetails['mimetype']."<br />"
-						." ERRORCODE: ".$arrayfiledetails['errorcode']
-					;
-					*/
-				}
-				else {
-					$fields = array(
-    					'mark'=>$mark,
-    					'comment'=>$comment,
-    					'lecturerfileid'=>$fileDetails['fileid']
-    				);
-                    $this->dbbook->bookEssay($fields, $book);
-                	// display success message
-                	//$message = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
-				    $message = NULL;
+            if ($fileDetails === FALSE){
+                $message = $this->objLanguage->languageText('mod_essayadmin_uploadfailureunknown', 'essayadmin');
+            } else if (!$fileDetails['success']) {
+                switch ($fileDetails['reason']) {
+                    case 'bannedfile':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_bannedfile', 'essayadmin');
+                        break;
+                    case 'partialuploaded':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_partialuploaded', 'essayadmin');
+                        break;
+                    case 'nouploadedfileprovided':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_nouploadedfileprovided', 'essayadmin');
+                        break;
+                    case 'doesnotmeetextension':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_doesnotmeetextension', 'essayadmin');
+                        break;
+                    case 'needsoverwrite':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_needsoverwrite', 'essayadmin');
+                        break;
+                    case 'filecouldnotbesaved':
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_filecouldnotbesaved', 'essayadmin');
+                        break;
+                    default:
+                        $reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_unknownreason', 'essayadmin');
+                }
+                $message = $this->objLanguage->languageText('mod_essayadmin_uploadfailure', 'essayadmin')
+                   .":&nbsp;" . $reason;
+            } else {
+                $fields = array(
+                    'mark'=>$mark,
+                    'comment'=>$comment,
+                    'lecturerfileid'=>$fileDetails['fileid']
+                );
+                $this->dbbook->bookEssay($fields, $book);
+                // display success message
+                $message = NULL;
             	}
-			//}
             if (!is_null($message)) {
     			$this->setSession('message',$message);
     			$this->setSession('mark',$mark);
@@ -515,8 +423,6 @@ class essayadmin extends controller
             else {
                 return $this->nextAction('marktopic', array('id'=>$topic));
             }
-            //return $this->nextAction('upload', array('book'=>$book,/*'msg'=>$msg,*/'id'=>$topic));
-        //break;
         default:
             $this->setVar('content', $this->renderTopics());
             $this->setLayoutTemplate('essayadmin_layout_tpl.php');
@@ -524,18 +430,6 @@ class essayadmin extends controller
         }
         return $template;
     }
-
-    /**
-    * Method to delete an essay or all essays in a topic.
-    * @param string $topic The id of the current topic.
-    * @param string $id The id of the essay to delete. Default=NULL if deleting all essays in the topic.
-    * @return
-    */
-    /*
-    function deleteEssay($topicAreaId, $id=NULL)
-    {
-    }
-    */
 
     /**
     * Renders the topics.
@@ -558,27 +452,6 @@ class essayadmin extends controller
                 $topics[$key]['submitted'] = $bookings[0]['submitted'];
             }
         }
-        // set up language items
-        //$subhead=$this->objLanguage->languageText('mod_essayadmin_selecttopic','essayadmin');
-        //$topicslabel=;
-        //;
-        //;
-        //$viewLabel=$this->objLanguage->languageText('word_view');
-        //$essaysLabel=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
-        //$title=$viewLabel.' '.$essaysLabel;
-        //$title1=;
-        //$title2=;
-        //$title3=;
-        //$title4=;
-        //
-        //$viewSubmitted=$viewLabel.' '.$submittedLabel.' '.$essaysLabel;
-        //;
-        //;
-        //$noTopics = ;
-
-        // set up html elements
-        //$objHead=$this->newObject('htmlheading','htmlelements');
-
         $heading = $this->objLanguage->languageText('mod_essayadmin_name','essayadmin');
         $this->setVarByRef('heading', $heading);
 
@@ -697,13 +570,6 @@ class essayadmin extends controller
         $topic=$this->dbtopic->getTopic($topicAreaId);
         // get essays in topic
         $essays=$this->dbessays->getEssays($topicAreaId);
-        //$objTable=$this->objTable;
-        //$objTable2=$this->objTable;
-        //$objLink = $this->objLink;
-
-        // set up language elements
-        //$head='';
-        //$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin').' ';
         $head = $this->objLanguage->languageText('mod_essayadmin_topicarea','essayadmin').': '.$topic[0]['name'];
         $subhead=$this->objLanguage->languageText('mod_essayadmin_essays','essayadmin');
         $descriptionLabel=$this->objLanguage->languageText('mod_essayadmin_description','essayadmin');
@@ -866,22 +732,9 @@ class essayadmin extends controller
             $objTable->addCell($noEssays,'','','','noRecordsMessage','colspan="4"');
             $objTable->endRow();
         }
-        //$objTable->row_attributes=' height="10"';
-        /*
-        $objTable->startRow();
-        $objTable->addCell('','','','','','colspan="4"');
-        $objTable->endRow();
-        */
 
         $str .=
             $objTable->show();
-
-        /*
-        echo '<pre>';
-        var_dump($topic);
-        echo '</pre>';
-        die;
-        */
 
         $links = '';
 
@@ -900,27 +753,8 @@ class essayadmin extends controller
         $objLink->link = $strHome;
         $objLink->title = $strHome;
         $links .= '<br />'.$objLink->show();
-
-        //$objLayer = new layer;
-        //$objLayer->align='center';
-        //$objLayer->border=0;
-        //$objLayer->str=$back;
-
-        $str .= $links; //$objLayer->show();
-
+        $str .= $links;
         return $str;
     }
-
-    /**
-    * Method to take a datetime string and reformat it as text.
-    * @param string $date The date in datetime format.
-    * @return string $ret The formatted date.
-    */
-/*    public function formatDate($date)
-    {
-        $ret = $this->objDate->formatDate($date);
-        return $ret;
-    }
-*/
 }
 ?>
