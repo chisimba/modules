@@ -55,18 +55,38 @@ class noteops extends object {
     /**
      *
      * @var string Object $objLanguage String for the language object
-     * @access public
+     * @access private
      *
      */
-    public $objLanguage;
-    public $tagCloud;
+    private $objLanguage;
+    /*
+     * @var $tagCloud The html string that is returned as the tag cloud
+     * @access private
+     */
+    private $tagCloud;
+    
+    /*
+     * @var $objTagCloud The tag cloud object used. This is the object that is in the
+     * utilities module.
+     * @access protected
+     * 
+     */
     protected $objTagCloud;
 
-    public $module;
-    
-    public $objUtility;
     /*
-     * @var current user id
+     * @var $module This is the name of the current module
+     * @access private
+     */
+    private $module;
+    
+    /*
+     * @var $objUtility This is the current module's utility class
+     * @access private
+     */
+    private $objUtility;
+    
+    /*
+     * @var $uid current user id
      * @access public
      */
     public $uid;
@@ -388,7 +408,7 @@ class noteops extends object {
         }
         $ret .= $list;
         $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
-        $ret .= "<div class='center'>".$this->getPrevNextLinks($prevPage, $nextPage)."</div>";
+        $ret .= "<div class='center'>".$this->objUtility->getPrevNextLinks($prevPage, $nextPage)."</div>";
         echo $ret;
         die();
     }
@@ -535,37 +555,6 @@ class noteops extends object {
         return $ret;
     }
     
-    public function getPrevNextLinks($prevPageNum, $nextPageNum) {
-        $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
-        $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
-        
-        if(empty($prevPageNum) && empty($nextPageNum)) {
-            $prevPageNum = 2;
-            $nextPageNum = 7;
-        }
-        
-        // get previous and next link
-        if($prevPageNum == 2) {
-            // display prev but not as a link
-            $prevLink = '&#171; '.$prevLabel;
-        } else {
-            $link = new link($this->uri(array("action" => "view", 'prevnotepage' => $prevPageNum), $this->module));
-            $link->link = $prevLabel;
-            $prevLink = '&#171; '.$link->show();
-        }
-        
-        $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum+1);
-        if($noteListCount <= 5) {
-            $nextLink = $nextLabel.' &#187;';
-        } else {    
-            $link = new link($this->uri(array("action" => "view", 'nextnotepage' => $nextPageNum), $this->module));
-            $link->link = $nextLabel.' &#187;';
-            $nextLink = $link->show();
-        }
-        
-        $ret = $prevLink.'&nbsp;&nbsp;&nbsp;'.$nextLink;
-        
-        return $ret;
-    }
+    
 }
 ?>
