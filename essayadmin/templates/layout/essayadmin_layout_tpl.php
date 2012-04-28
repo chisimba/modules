@@ -26,10 +26,8 @@ if(isset($body)){
 $objLayer->str = $this->getContent();
 
 $main.=$objLayer->show();
-/*
-if(isset($foot)){
-    $main.=$foot;
-}*/
+
+$main = "<div class='essay_main'>$main</div>";
 
 $cssLayout->setLeftColumnContent($leftMenu->show());
 $cssLayout->setMiddleColumnContent($main);

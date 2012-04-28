@@ -121,23 +121,10 @@ class essayadmin extends controller
 		* should give us http://nextgen.mak.ac.ug/ which can then be appended to
 		* $essayadmindir and the required download file for an accurate download link
 		*/
-		//$essayadminpath=0;
-    	//$essayadminpath=KEWL_SITEROOT_PATH."usrfiles/essayadmin/";
-		//array may be comprised of the following: array('action' => '')
-        //--
-		//$parametersArray = array('action' => $this->getParam("action", NULL), 'id' => $this->getParam("id", NULL));
-		//the download link, e.g. http://nextgen.mak.ac.ug/
-		//$essayadminDownloadLink=0;
-        //$essayadminDownloadLink=$this->uri($parametersArray);
-        ////$essayadminReplacement=0;
-        //$essayadminReplacement="index.php\?".$_SERVER['QUERY_STRING'];
-        //$essayadminReplacement=ereg_replace("&","&amp;",$essayadminReplacement);
-        //$essayadminDownloadLink=ereg_replace($essayadminReplacement,"",$essayadminDownloadLink);
 		$essayadminDownloadLink =
 		    $this->objConfig->getsiteRoot()
 		    .$this->objConfig->getcontentPath()
 		    .'essayadmin/';
-		//$this->setVar('essayadminpath',$essayadminpath);
 		$this->setVar('essayadminDownloadLink',$essayadminDownloadLink);
 		//remove all zip files older than 24hrs, or 86,400 seconds
 		//$this->objDbZip->deleteOldFiles();

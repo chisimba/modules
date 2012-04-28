@@ -23,9 +23,10 @@ $content .= $objHeading->show();
 $objLayer = $this->objLayer;
 $objLayer->str = $this->getContent();
 $content .= $objLayer->show();
-
+$content = "<div class='essay_main'>$content</div>";
 $objLayout = $this->newObject('csslayout', 'htmlelements');
 $objLayout->setLeftColumnContent($leftMenu->show());
 $objLayout->setMiddleColumnContent($content);
+
 echo $objLayout->show();
 ?>

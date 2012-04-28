@@ -3,33 +3,13 @@
 * Template to view list of essays for a student.
 * @package essay
 */
-
+$ret = "";
 $this->loadclass('htmltable','htmlelements');
 $this->loadClass('windowpop','htmlelements');
 $this->objDateformat = $this->newObject('dateandtime','utilities');
 
 $objLink = new link();
 $objIcon = $this->getObject('geticon','htmlelements');
-
-// set up language items
-//$list=$this->objLanguage->languageText('word_list');
-//$head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay').' '.$this->objLanguage->languageText('word_for').' '.$this->user;
-//$topichead=$this->objLanguage->languageText('mod_essay_topic','essay');
-//$essayhead=$this->objLanguage->languageText('mod_essay_essay','essay');
-//$datehead=$this->objLanguage->languageText('mod_essay_closedate','essay');
-//$bypasshead=$this->objLanguage->languageText('mod_essay_bypass', 'essay');
-//$submithead=$this->objLanguage->languageText('mod_essay_datesubmitted','essay');
-//$lblSubmitted=
-//$markhead=$this->objLanguage->languageText('mod_essay_mark','essay');
-//$submittitle=$this->objLanguage->languageText('mod_essay_upload','essay');
-//$downloadhead=$this->objLanguage->languageText('mod_essay_download','essay');
-//$loadhead=$submittitle.' / '.$downloadhead;
-//$submittitle.=' '.$this->objLanguage->languageText('mod_essay_essay','essay');
-//$downloadhead.=' '.$this->objLanguage->languageText('mod_essay_marked','essay').' '.$this->objLanguage->languageText('mod_essay_essay','essay');
-//$commenthead=$this->objLanguage->languageText('word_view').' '.$this->objLanguage->languageText('mod_essay_comment','essay');
-//$topiclist=$this->objLanguage->languageText('word_back').' '.strtolower($this->objLanguage->languageText('word_to')).' '.$topichead;
-//$topichome=$this->objLanguage->languageText('mod_essay_name','essay').' '.$this->objLanguage->languageText('word_home');
-//$lbClosed = ;
 
 $this->setVar('heading', $this->objLanguage->code2Txt('mod_essay_listofessaysfor', 'essay', array('STUDENT'=>$this->user)));
 
@@ -119,9 +99,10 @@ if (!empty($data)) {
         $objTable->endRow();
     }
 }
-echo $objTable->show();
+$ret .= $objTable->show();
 
 $objLink->link($this->uri(''));
 $objLink->link=$this->objLanguage->languageText('mod_essay_essayhome','essay');
-echo $objLink->show();
+$ret .= $objLink->show();
+echo "<div class='essay_main'>$ret</div>";
 ?>
