@@ -162,7 +162,7 @@ class dbmynotes extends dbtable
     
     public function getListCount($uid, $start, $end) {
         $filter = " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
-        $recordCount = $this->getRecordCount($sql);
+        $recordCount = $this->getRecordCount($filter);
         
         return $recordCount;
     }

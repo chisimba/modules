@@ -29,8 +29,8 @@ jQuery(function() {
                     prevPage="2";
                 }
             } else {
-                prevPage = parseInt(parseInt) - 5;
-                nextPage = prevPage;
+                nextPage = prevPage-1;
+                prevPage = parseInt(prevPage) - 6;
             }
             
             jQuery.ajax({

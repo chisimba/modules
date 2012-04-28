@@ -65,6 +65,11 @@ class noteops extends object {
     public $module;
     
     public $objUtility;
+    /*
+     * @var current user id
+     * @access public
+     */
+    public $uid;
     /**
      * Standard init function
      *
@@ -89,6 +94,8 @@ class noteops extends object {
 
             $this->objDbmynotes = $this->getObject('dbmynotes', $this->module);
             $this->objDbTags = $this->getObject('dbtags', $this->module);
+            
+            $this->uid = $this->objUser->userId();
         } catch (customException $e) {
             echo customException::cleanUp();
             die();
@@ -349,12 +356,11 @@ class noteops extends object {
         // Set up text elements.
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
         $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', $this->module, 'TEXT: mod_mynotes_readmore, not found');
-        $uid = $this->objUser->userId();
-
+        
         if (empty($isViewAll)) {
             $limit = "LIMIT 2";
         }
-        $notesArray = $this->objDbmynotes->getNotes($uid, $limit);
+        $notesArray = $this->objDbmynotes->getNotes($this->uid, $limit);
 
         $ret = '';
         if (!empty($notesArray)) {
@@ -507,9 +513,8 @@ class noteops extends object {
         }
         
         $ret = "";
-        $uid = $this->objUser->userId();
         
-        $data = $this->objDbmynotes->getNotesForList($uid, $begin, $end);
+        $data = $this->objDbmynotes->getNotesForList($this->uid, $begin, $end);
         
         $list = "";
         if (!empty($data)) {
@@ -548,8 +553,9 @@ class noteops extends object {
             $link->link = $prevLabel;
             $prevLink = '&#171; '.$link->show();
         }
-        
-        $noteListCount = $this->objDbmynotes->getListCount($uid, $prevPageNum, $nextPageNum+1);
+        echo "PREV PAGE NUM: ". $prevPageNum;
+        echo "<br />NEXT PAGE NUM: ".$nextPageNum;
+        $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum+1);
         if($noteListCount <= 5) {
             $nextLink = $nextLabel.' &#187;';
         } else {    
