@@ -1,8 +1,4 @@
 <?php
-
-//var_dump($_COOKIE);
-//var_dump($_SESSION);
-
 /**
  * @package mcqtests
  * Layout template for the mcqtests module
@@ -16,7 +12,10 @@ if (!isset($heading)) {
 $objHead->str = $heading;
 $objHead->type = 1;
 $head = $objHead->show();
-$cssLayout->setLeftColumnContent($leftMenu->show());
-$cssLayout->setMiddleColumnContent($head.$this->getContent());
+$left = $leftMenu->show();
+$middle = $head.$this->getContent();
+$middle = "<div class='mcq_main'>$middle</div>";
+$cssLayout->setLeftColumnContent($left);
+$cssLayout->setMiddleColumnContent($middle);
 echo $cssLayout->show();
 ?>

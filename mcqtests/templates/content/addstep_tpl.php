@@ -1,15 +1,10 @@
 <?php
-
-//var_dump($_SESSION);
-
 /**
  * Template for adding a new test or editing an existing one.
  * @package mcqtests
  * @param array $data The details of the test to be edited.
  * @param string $mode Add or edit
  */
-// set up layout template
-//$this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 // set up html elements
 $objTable = $this->loadClass('htmltable', 'htmlelements');
@@ -28,13 +23,12 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 $objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
 $this->objStepMenu = $this->newObject('stepmenu', 'navigation');
 
-// header
-
+// header <-- no kidding! Absolutely brilliant and meaningful comment. Congrats!
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objLanguage->languageText('mod_mcqtests_addtest', 'mcqtests', 'Add a New Test');
 
-echo $header->show();
+$ret = $header->show();
 
 // set up language items
 $stepmenudescription = $this->objLanguage->languageText('mod_mcqtests_stepmenudescription', 'mcqtests');
@@ -81,17 +75,10 @@ $errDates = $this->objLanguage->languageText('mod_mcqtests_errordates', 'mcqtest
 $permissionsLabel = $this->objLanguage->languageText('mod_mcqtests_coursepermissionslabel','mcqtests',"Data Bank Type");
 $coursePermissionPrivate = $this->objLanguage->languageText('mod_mcqtests_privatecourse','mcqtests', "Private Course");
 $coursePermissionPublic = $this->objLanguage->languageText('mod_mcqtests_publiccourse','mcqtests', "Public Course");
-	/*
-	if ($mode == 'edit') {
-		$this->setVarByRef('heading', $editHeading);
-	} else {
-		$this->setVarByRef('heading', $addHeading);
-	}
-	*/
+
 if (!empty($data)) {
     $id = $data[0]['id'];
     $name = $data[0]['name'];
-    //$chapter = $data[0]['chapter'];
     $status = $data[0]['status'];
     $px = explode('.', $data[0]['percentage']);
     $percent = $px[0];
@@ -144,9 +131,6 @@ $objTable->border = "0";
 $objTable->attributes = "align = 'center'";
 $objTable->cellpadding = 5;
 
-
-
-
 //current will tell us which step we processing
 $currentstep = $this->getParam('currentstep');
 if($currentstep==null || $currentstep>3) {
@@ -180,18 +164,6 @@ switch($currentstep) {
         $objTable->addCell($objLabel->show() , '20%', $valign="top");
         $objTable->addCell($objText->show() , '80%', $valign="top");
         $objTable->endRow();
-        // hidden fields
-	/*
-	$hidden = '';
-	if ($mode == 'edit') {
-		$objInput = new textinput('id', $id);
-		$objInput->fldType = 'hidden';
-		$hidden = $objInput->show();
-	}
-	$objTable->addRow(array(
-		$hidden
-	));
-	*/
         // Set activity status - not active if in add mode
         $objLabel = new label('<b>'.$statusLabel.':</b>', 'input_status');
 
@@ -451,7 +423,8 @@ switch($currentstep) {
 }//end of switch#
 
 
-echo $this->objStepMenu->show().'<br />';
-echo $objForm->show();
+$ret .= $this->objStepMenu->show().'<br />';
+$ret .= $objForm->show();
 
+echo "<div class='mcq_main'>$ret</div>";
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template to display the test to the student for answering.
  * @package mcqtests
@@ -25,7 +26,7 @@ $objImage = &$this->loadClass('image', 'htmlelements');
 $objLabel = &$this->loadClass('label', 'htmlelements');
 $objLayer = &$this->loadClass('layer', 'htmlelements');
 $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
-echo $objHighlightLabels->show();
+$ret = $objHighlightLabels->show();
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_mcqtests_answertest', 'mcqtests');
@@ -234,6 +235,6 @@ $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->str = $str.'<br/><a href="javascript:window.close();">'.$closeLabel.'</a>';
 $pageLayer = $objLayer->show();
-echo $pageLayer;
+echo "<div class='mcq_main'>" . $ret . $pageLayer . "</div>";
 
 ?>
