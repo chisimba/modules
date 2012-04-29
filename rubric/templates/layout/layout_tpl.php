@@ -21,11 +21,8 @@ else {
 $userMenuBar=& $this->getObject('sidemenu','toolbar');
 $toolbar = $this->getObject('contextsidebar', 'context');
 $cssLayout->setLeftColumnContent($toolbar->show());
-//$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
-////$sideMenuBar=& $this->getObject('sidemenu','toolbar');
-
-//$cssLayout->setLeftColumnContent($this->sideMenuBar->menuContext()); //change to what needs to be done
-$cssLayout->setMiddleColumnContent($this->getContent());
-
+$ret = $this->getContent();
+$ret = "<div class='rubric_main'>$ret</div>";
+$cssLayout->setMiddleColumnContent($ret);
 echo $cssLayout->show();
 ?>
