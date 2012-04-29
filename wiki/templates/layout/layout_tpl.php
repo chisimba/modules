@@ -12,8 +12,11 @@ $cssLayout->setNumColumns(2);
 
 $leftColumn=$this->newObject('wikidisplay','wiki');
 
-$cssLayout->setLeftColumnContent($leftColumn->showWikiToolbar());
-$cssLayout->setMiddleColumnContent($this->getContent());
-
+$left = $leftColumn->showWikiToolbar();
+$left = "<div class='wiki_left'>$left</div>";
+$cssLayout->setLeftColumnContent($left);
+$middle = $this->getContent();
+$middle = "<div class='wiki_main'>$middle</div>";
+$cssLayout->setMiddleColumnContent($middle);
 echo $cssLayout->show();
 ?>
