@@ -1,6 +1,7 @@
 <?php
 
 $middleColumn = $this->getVar('middleColumn');
+$middleColumn = "<div class='forum_main'>$middleColumn</div>";
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(1);
 $cssLayout->setMiddleColumnContent($middleColumn);
