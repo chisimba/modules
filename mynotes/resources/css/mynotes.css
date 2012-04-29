@@ -16,9 +16,6 @@ div.taglist, div.notelist {
 div#middledynamic_area li {
     padding-bottom: 10px;
 }
-div#middledynamic_area li a {
+span#readmore {
     font-weight: bold;
-}
-div.notelist li a {
-    font-weight:normal !important;
 }

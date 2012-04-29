@@ -396,7 +396,7 @@ class noteops extends object {
                 $list = "<div><ul>";
                 foreach ($notesArray as $value) {
                     $noteLink = new Link($this->uri(array('action' => 'shownote', 'id' => $value['id']), $this->module));
-                    $noteLink->link = "&nbsp;&nbsp;" . $readMoreLabel . " ...";
+                    $noteLink->link = "&nbsp;&nbsp;<span id='readmore'>" . $readMoreLabel . " ...</span>";
                     $list .= "<li>" . $this->objUtility->wordlimit(strip_tags($value['content']), 200, $noteLink->show()) . "</li>";
                 }
                 $list .= "</ul></div>";
