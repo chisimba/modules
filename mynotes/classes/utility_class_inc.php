@@ -48,13 +48,13 @@ if (!
  *
  */
 class utility extends object {
-
     /*
      * @var $module The name of the current module, mynotes
      * @access private
      */
+
     private $module;
-    
+
     /**
      *
      * @var string Object $objLanguage String for the language object
@@ -62,15 +62,15 @@ class utility extends object {
      *
      */
     private $objLanguage;
-    
-    public function init(){
+
+    public function init() {
         $this->module = "mynotes";
-        
+
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLink = $this->loadClass('link', 'htmlelements');
         $this->objUser = $this->getObject('user', 'security');
         $this->objDbmynotes = $this->getObject('dbmynotes', $this->module);
-        
+
         $this->uid = $this->objUser->userId();
     }
 
@@ -78,6 +78,7 @@ class utility extends object {
      * Function 
      * 
      */
+
     public function wordlimit($string, $length = 50, $ellipsis = " ...") {
         $words = explode(' ', $string);
         if (count($words) > $length) {
@@ -86,46 +87,26 @@ class utility extends object {
             return $string . $ellipsis;
         }
     }
-    
+
     /*
      * Method use to process the tags that are used by the tag cloud utility.
      * 
      * @return array that is used by tag cloud containing tags and weights, with 
      * tag url.
      */
+
     public function processTags($tagCloud) {
-        $tags = NULL;
+
         foreach ($tagCloud as $arrs) {
             if (!empty($arrs['name'])) {
-                $tags .= $arrs['name'] . ",";
+                $entry [] = array('name' => $arrs['name'],
+                    'url' => $this->uri(array(
+                        'action' => 'search',
+                        'srchstr' => $q,
+                        'srchtype' => 'tags'), $this->module),
+                    'weight' => $arrs['count'] * 5,
+                    'time' => time());
             }
-        }
-        $tagsArr [] = explode(',', $tags);
-
-        if (empty($tagsArr)) {
-            return NULL;
-        }
-
-        foreach ($tagsArr as $tagger) {
-            foreach ($tagger as $tagged) {
-                $tags .= $tagged . ",";
-            }
-        }
-        $tags = str_replace(',,', ',', $tags);
-        $tagarray = explode(',', $tags);
-        $basetags = array_unique($tagarray);
-
-        foreach ($basetags as $q) {
-            $numbers = array_count_values($tagarray);
-            $weight = $numbers[$q];
-            $entry [] = array('name' => $q,
-                              'url' => $this->uri(array(
-                                                        'action' => 'search', 
-                                                        'srchstr' => $q, 
-                                                        'srchtype' => 'tags'),
-                                                  $this->module),
-                              'weight' => $weight * 1000, 
-                              'time' => time());
         }
 
         return $entry;
@@ -134,33 +115,34 @@ class utility extends object {
     public function getPrevNextLinks($prevPageNum, $nextPageNum) {
         $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
         $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
-        
-        if(empty($prevPageNum) && empty($nextPageNum)) {
+
+        if (empty($prevPageNum) && empty($nextPageNum)) {
             $prevPageNum = 2;
             $nextPageNum = 7;
         }
-        
+
         // get previous and next link
-        if($prevPageNum == 2) {
+        if ($prevPageNum == 2) {
             // display prev but not as a link
-            $prevLink = '&#171; '.$prevLabel;
+            $prevLink = '&#171; ' . $prevLabel;
         } else {
             $link = new link($this->uri(array("action" => "view", 'prevnotepage' => $prevPageNum), $this->module));
             $link->link = $prevLabel;
-            $prevLink = '&#171; '.$link->show();
+            $prevLink = '&#171; ' . $link->show();
         }
-        
-        $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum+1);
-        if($noteListCount <= 5) {
-            $nextLink = $nextLabel.' &#187;';
-        } else {    
+
+        $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum + 1);
+        if ($noteListCount <= 5) {
+            $nextLink = $nextLabel . ' &#187;';
+        } else {
             $link = new link($this->uri(array("action" => "view", 'nextnotepage' => $nextPageNum), $this->module));
-            $link->link = $nextLabel.' &#187;';
+            $link->link = $nextLabel . ' &#187;';
             $nextLink = $link->show();
         }
-        
-        $ret = $prevLink.'&nbsp;&nbsp;&nbsp;'.$nextLink;
-        
+
+        $ret = $prevLink . '&nbsp;&nbsp;&nbsp;' . $nextLink;
+
         return $ret;
     }
+
 }
