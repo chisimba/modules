@@ -96,13 +96,13 @@ class utility extends object {
      */
 
     public function processTags($tagCloud) {
-
+        $entry = array();
         foreach ($tagCloud as $arrs) {
             if (!empty($arrs['name'])) {
                 $entry [] = array('name' => $arrs['name'],
                     'url' => $this->uri(array(
                         'action' => 'search',
-                        'srchstr' => $q,
+                        'srchstr' => $arrs['name'],
                         'srchtype' => 'tags'), $this->module),
                     'weight' => $arrs['count'] * 5,
                     'time' => time());
