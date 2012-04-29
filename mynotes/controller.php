@@ -6,10 +6,6 @@
  * 
  * Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world.
  * 
- * main page shows paginated list of my notes
- * tag cloud
- * html stripped first 200 words of my last 2 notes
- * 
  * PHP version 5
  * 
  * This program is free software; you can redistribute it and/or modify 

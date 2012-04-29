@@ -407,8 +407,12 @@ class noteops extends object {
             $list = "<div><ul>" . $noNotesLabel . "</ul></div>";
         }
         $ret .= $list;
-        $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
-        $ret .= "<div class='center'>".$this->objUtility->getPrevNextLinks($prevPage, $nextPage)."</div>";
+        
+        if(empty($isViewAll)) {
+            $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
+            $ret .= "<div class='center'>".$this->objUtility->getPrevNextLinks($prevPage, $nextPage)."</div>";
+        }
+        
         echo $ret;
         die();
     }

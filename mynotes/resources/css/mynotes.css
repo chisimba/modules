@@ -13,3 +13,12 @@ div.center {
 div.taglist, div.notelist {
    padding: 10px; 
 }
+div#middledynamic_area li {
+    padding-bottom: 10px;
+}
+div#middledynamic_area li a {
+    font-weight: bold;
+}
+div.notelist li a {
+    font-weight:normal !important;
+}

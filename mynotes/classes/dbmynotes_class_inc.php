@@ -119,7 +119,7 @@ class dbmynotes extends dbtable
     }
     
     /**
-     * Method to return notes for a user
+     * Method to return latest 2 notes for a user
      * 
      * @access public
      * @param string $id The id of the user's notes
@@ -127,7 +127,11 @@ class dbmynotes extends dbtable
      */
     public function getNotes($uid, $limit = NULL)
     {
-        return $this->fetchAll(" WHERE `userid` = '$uid' ORDER BY datemodified DESC ".$limit );
+        $filter = " WHERE `userid` = '$uid' ORDER BY datemodified DESC, datemodified DESC ";
+        $sql1 = "SELECT * FROM ". $this->table . $filter;
+        $sql2 = "SELECT allDataTable.* FROM (".$sql1.") as allDataTable ".$limit; 
+        
+        return $this->getArray($sql2);
     }
     
     /*
