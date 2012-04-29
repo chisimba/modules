@@ -161,7 +161,7 @@ class noteops extends object {
 
             $viewAllInput = "";
             if (!empty($isViewAll)) {
-                $objInput = new textinput('viewall', $idInputValue, 'hidden', '40');
+                $objInput = new textinput('viewall', 'true', 'hidden', '40');
                 $objInput->setId("viewall");
                 $viewAllInput = $objInput->show();
             }
@@ -197,7 +197,7 @@ class noteops extends object {
             $tagInputValue = NULL;
             $mainText = NULL;
 
-            $idInput = NULL;
+            $idInputValue = NULL;
         } else {
             $idInputValue = $this->getParam('id');
 
@@ -215,6 +215,7 @@ class noteops extends object {
         }
 
         $errorArray = $this->getSession('errors');
+        $titleIdInputError = (!empty($errorArray) && array_key_exists('id', $errorArray['errors'])) ? $errorArray['errors']['id'] : NULL;
         $titleInputError = (!empty($errorArray) && array_key_exists('title', $errorArray['errors'])) ? $errorArray['errors']['title'] : NULL;
         $tagInputError = (!empty($errorArray) && array_key_exists('tags', $errorArray['errors'])) ? $errorArray['errors']['tags'] : NULL;
         $editorInputError = (!empty($errorArray) && array_key_exists('content', $errorArray['errors'])) ? $errorArray['errors']['content'] : NULL;
@@ -244,7 +245,7 @@ class noteops extends object {
         /* Add Title Row */
         $objTable->startRow();
         $objTable->addCell($noteTitleLabel . ': ', '100px', '', '', '', '');
-        $objTable->addCell($titleIdnputError . $titleInput, '', '', '', '', '');
+        $objTable->addCell($titleIdInputError . $titleInput, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
@@ -376,14 +377,14 @@ class noteops extends object {
         // Set up text elements.
         //$noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
         $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', $this->module, 'TEXT: mod_mynotes_readmore, not found');
-        
+        $ret = '';
+        $list = '';
+        $limit = NULL;
         if (empty($isViewAll)) {
             $limit = "LIMIT 2";
         }
         $notesArray = $this->objDbmynotes->getNotes($this->uid, $limit);
 
-        $ret = '';
-        $list = '';
         if (!empty($notesArray)) {
             if ($isViewAll) {
                 $list = "<div><ul>";

@@ -48,6 +48,7 @@ class dbtags extends dbtable {
         $othertags = explode(",", $data["tags"]);
         $fields = Array();
         $count = 1;
+        $id = NULL;
 
         if (!empty($othertags)) {
             foreach ($othertags as $othertag) {
