@@ -374,7 +374,7 @@ class noteops extends object {
         $nextPage = $this->getParam("nextnotepage");
         
         // Set up text elements.
-        $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
+        //$noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
         $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', $this->module, 'TEXT: mod_mynotes_readmore, not found');
         
         if (empty($isViewAll)) {
@@ -383,6 +383,7 @@ class noteops extends object {
         $notesArray = $this->objDbmynotes->getNotes($this->uid, $limit);
 
         $ret = '';
+        $list = '';
         if (!empty($notesArray)) {
             if ($isViewAll) {
                 $list = "<div><ul>";
@@ -401,11 +402,11 @@ class noteops extends object {
                 }
                 $list .= "</ul></div>";
             }
-        } else {
+        }/* else {
             //$error = $this->error($noNotesLabel);
 
-            $list = "<div><ul>" . $noNotesLabel . "</ul></div>";
-        }
+            //$list = "<div><ul>" . $noNotesLabel . "</ul></div>";
+        }*/
         $ret .= $list;
         
         if(empty($isViewAll)) {
