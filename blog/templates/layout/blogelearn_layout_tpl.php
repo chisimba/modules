@@ -1,5 +1,5 @@
 <?php
-
+die();
 // Create Side Bar Navigation
 $objSideBar = $this->newObject('sidebar', 'navigation');
 
@@ -44,38 +44,38 @@ if (count($bloggers) > 0) {
     $this->loadClass('dropdown', 'htmlelements');
     $this->loadClass('hiddeninput', 'htmlelements');
     $this->loadClass('label', 'htmlelements');
-    
+
     $form = new form ('viewbyuser', $this->uri(array('action' => 'byuser')));
     $form->method = 'get';
     $module = new hiddeninput('module', 'blog');
     $form->addToForm($module->show());
-    
+
     $action = new hiddeninput('action', 'randblog');
     $form->addToForm($action->show());
-    
+
     $dropdown = new dropdown('userid');
-    
+
     foreach ($bloggers as $blogger)
     {
         $dropdown->addOption($blogger['userid'], $objUser->fullName($blogger['userid']));
     }
-    
+
     if ($this->getParam('action') != 'allblogs') {
         $dropdown->setSelected($this->getParam('userid', $objUser->userId()));
     }
-    
+
     $label = new label ($this->objLanguage->languageText('mod_blog_viewbyblogger', 'blog', 'View by Blogger'), 'input_id');
-    
+
     $button = new button(NULL, $this->objLanguage->languageText('help_blog_title_viewblog', 'blog', 'View Blog'));
     $button->setToSubmit();
-    
+
     $objFeatureBox = $this->newObject('featurebox', 'navigation');
-    
+
     $form->addToForm($dropdown->show().'<br /><br />'.$button->show());
-    
-    
+
+
     $sidebar .= '<br />'.$objFeatureBox->show($label->show(), $form->show());
-    
+
 }
 
 if ($objUser->isLoggedIn()) {

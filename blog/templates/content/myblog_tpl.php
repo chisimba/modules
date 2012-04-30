@@ -87,8 +87,8 @@ if (isset($catid) && empty($posts) && empty($latestpost) && empty($drafts)) {
         	else {
         		$middleColumn.= $this->objblogPosts->showPosts($drafts);
         	}
-        	
-            
+
+
         }
     }
 }
