@@ -21,6 +21,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_radio extends form_entity_handler {
     
+    private $formNumber;
     /*!
      * \brief Private data member that stores a radio button object for the WYSIWYG
      * form editor.
@@ -75,6 +76,7 @@ class form_entity_radio extends form_entity_handler {
         $this->loadClass('radio', 'htmlelements');
         $this->breakSpaceType = NULL;
         $this->radioName = NULL;
+        $this->formNumber = NULL;
         $this->labelnOptionArray = array();
         $this->objDBRadioEntity = $this->getObject('dbformbuilder_radio_entity', 'formbuilder');
         $this->tempWYSIWYGBoolDefaultSelected = FALSE;
@@ -85,7 +87,8 @@ class form_entity_radio extends form_entity_handler {
      * radio object.
      * \parm elementName A string for the form element identifier.
      */
-    public function createFormElement($elementName="") {
+    public function createFormElement($formNumber,$elementName="") {
+        $this->formNumber = $formNumber;
         $this->radioName = $elementName;
         $this->objRadio = new radio($elementName);
     }
@@ -117,11 +120,11 @@ class form_entity_radio extends form_entity_handler {
         $WYSIWYGRadioInsertForm.="</div>";
         $WYSIWYGRadioInsertForm.= "<b>Radio Label Menu</b>";
         $WYSIWYGRadioInsertForm.="<div id='radioLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGRadioInsertForm.= $this->insertFormLabelOptions("radio", "labelOrientation");
+        $WYSIWYGRadioInsertForm.= $this->insertFormLabelOptions("radio", "labelOrientation",NULL,NULL);
         $WYSIWYGRadioInsertForm.= "</div>";
         $WYSIWYGRadioInsertForm.="<b>Radio Option Layout Menu</b>";
         $WYSIWYGRadioInsertForm.="<div id='radioLayoutContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGRadioInsertForm.=$this->buildLayoutForm('radio option', $formName, "radio") . "";
+        $WYSIWYGRadioInsertForm.=$this->buildLayoutForm('radio option', $formName, "radio",NULL) . "";
         $WYSIWYGRadioInsertForm.="</div>";
         $WYSIWYGRadioInsertForm.="<b>Insert Radio Options Menu</b>";
         $WYSIWYGRadioInsertForm.="<div id='radioOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
@@ -130,6 +133,203 @@ class form_entity_radio extends form_entity_handler {
 
         return $WYSIWYGRadioInsertForm;
     }
+    
+    public function getWYSIWYGRadioEditForm($formNumber, $formElementName) {
+        $radioParameters = $this->objDBRadioEntity->listRadioParameters($formNumber, $formElementName);
+        if (empty($radioParameters)) {
+            return 0;
+        } else {
+            $formElementLabel = "";
+            $labelOrientation = "";
+            foreach ($radioParameters as $thisradioParameter) {
+
+                //$radioName = $thisradioParameter["radioname"];
+                //$radioOptionLabel = $thisradioParameter["radiooptionlabel"];
+                //$radioOptionValue = $thisradioParameter["radiooptionvalue"];
+                //$defaultValue = $thisradioParameter["defaultvalue"];
+                //$breakspace = $thisradioParameter["breakspace"];
+                $formElementLabel = $thisradioParameter["label"];
+                $labelOrientation = $thisradioParameter["labelorientation"];
+
+            }
+            $WYSIWYGRadioEditForm="<div id='editFormElementTabs'>	
+         <ul>
+		<li><a href='#editFormElementPropertiesContainer'>Edit Radio Button Properties</a></li>
+		<li><a href='#editFormElementOptionsContainer'>Edit Radio Button Options</a></li>
+	</ul>";
+        $WYSIWYGRadioEditForm.= "<div id='editFormElementPropertiesContainer'>";
+        $WYSIWYGRadioEditForm.= "<b>Edit Radio Label Properties</b>";
+        $WYSIWYGRadioEditForm.="<div id='radioLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGRadioEditForm.= $this->insertFormLabelOptions("radio", "labelOrientation",$formElementLabel,$labelOrientation);
+        $WYSIWYGRadioEditForm.= "</div>";
+        $WYSIWYGRadioEditForm.= "</div>";
+        
+        $WYSIWYGRadioEditForm.= "<div id='editFormElementOptionsContainer'>";
+        $WYSIWYGRadioEditForm.= "<b>Edit Radio Button Options</b>";
+        $WYSIWYGRadioEditForm.="<div id='radioOptionsContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $optionNumber = 1;
+        
+        $WYSIWYGRadioEditForm.="<style>
+            .singleOptionContainer{
+            color: #222222;
+            font-size: 72.5%;
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background: none repeat scroll 0 0 #EEEEEE;
+            border-top: 1px solid #CCCCCC;
+            padding: 10px 20px;
+            width: 700px;
+            display:block;
+            overflow: hidden;
+            }
+            
+.singleOptionContainer:hover {
+
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+       background: none repeat scroll 0 0 #CFCFCF;
+
+	}
+        
+.optionValueContainer{
+width: 150px;
+float:left;
+}
+
+.optionLabelContainer{
+width: 150px;
+float:left;
+}
+
+.optionBreakSpaceContainer{
+width: 120px;
+float:left;
+}
+
+.defaultOptionContainer{
+width: 100px;
+float:left;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+.deleteOptionLink, .editOptionLink {
+    display: block;
+    float: right;
+    width: 60px;
+}
+
+        </style>";
+//        #CFCFCF, #F6F6F6
+                $WYSIWYGRadioEditForm.= "<div class='singleOptionContainer' id='optionTitle'>";
+                $WYSIWYGRadioEditForm.= "<div class='optionValueContainer'><b>Option Value</b></div>";
+                $WYSIWYGRadioEditForm.= "<div class='optionLabelContainer'><b>Option Label</b></div>";
+                $WYSIWYGRadioEditForm.= "<div class='optionBreakSpaceContainer'><b>Break Space</b></div>";
+                $WYSIWYGRadioEditForm.= "<div class='defaultOptionContainer'><b>Default Selected</b></div>"; 
+                $WYSIWYGRadioEditForm.= "</div>";
+        foreach ($radioParameters as $thisradioParameter) {
+
+                //$radioName = $thisradioParameter["radioname"];
+                $radioOptionLabel = $thisradioParameter["radiooptionlabel"];
+                $radioOptionValue = $thisradioParameter["radiooptionvalue"];
+                $defaultValue = $thisradioParameter["defaultvalue"];
+                $breakspace = $thisradioParameter["breakspace"];
+                $formElementLabel = $thisradioParameter["label"];
+                $labelOrientation = $thisradioParameter["labelorientation"];
+                $WYSIWYGRadioEditForm.= "<div class='singleOptionContainer' id='option".$optionNumber."' formNumber='".$formNumber."' formElementName='".$formElementName."' optionLabel='".$radioOptionLabel."' optionValue='".$radioOptionValue."' defaultValue='".$defaultValue."' breakspace='".$breakspace."' formElementLabel='".$formElementLabel."' labelOrientation='".$labelOrientation."'>";
+                $WYSIWYGRadioEditForm.= "<div class='optionValueContainer'>".$radioOptionValue."</div>";
+                $WYSIWYGRadioEditForm.= "<div class='optionLabelContainer'>".$radioOptionLabel."</div>";
+                $WYSIWYGRadioEditForm.= "<div class='optionBreakSpaceContainer'>".$breakspace."</div>";
+                if ($defaultValue == TRUE){
+                  $WYSIWYGRadioEditForm.= "<div class='defaultOptionContainer'>yes</div>";  
+                }else{
+                  $WYSIWYGRadioEditForm.= "<div class='defaultOptionContainer'>no</div>";  
+                }
+                
+                $WYSIWYGRadioEditForm.= "<a class='deleteOptionLink' href='#delete'>Delete</a>";
+                $WYSIWYGRadioEditForm.= "<a class='editOptionLink' href='#edit'>Edit</a>";
+                $WYSIWYGRadioEditForm.= "</div>";
+                $optionNumber++;
+
+            }
+        $WYSIWYGRadioEditForm.= "</div>";
+        $WYSIWYGRadioEditForm.= "</div>";
+        
+        $WYSIWYGRadioEditForm.= "</div>";
+        $WYSIWYGRadioEditForm.= "<style>
+            
+.editFormElementOptionsHeadingSpacer{
+height:150px;
+border-bottom: 2px solid #666666;
+overflow: hidden;
+}
+
+.formElementOptionUpdateHeading{
+float:right;
+margin-top:110px;
+margin-right:50px;
+position:relative;
+color: #222222;
+font-family: 'Droid Serif',Cambria,Georgia,Palatino,'Palatino Linotype','Myriad Pro',Serif;
+font-size: 3.0em;
+}
+
+.editFormElementOptionsSideSeperator{
+float:right;
+clear:none;
+width:2px;
+height:600px;
+margin-right:100px;
+background:#666666;
+}
+
+.editFormElementFormContainer{
+width:780px;
+margin-left:10px;
+}
+
+.formElementOptionsFormButtonsContainer{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-style: double;
+    border-bottom-style: double;
+    border-top-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    padding:5px;
+    margin-bottom:5px;
+    margin-top:5px;
+    height:30px;
+}
+
+.formElementOptionsFormSuperContainer{
+min-height:600px;
+}
+</style>";
+        $WYSIWYGRadioEditForm.="<div class='formElementOptionsFormSuperContainer'>";
+        $WYSIWYGRadioEditForm.= "<div class='editFormElementOptionsSideSeperator'></div>";
+        $WYSIWYGRadioEditForm.="<div class='editFormElementOptionsHeadingSpacer'><div class='formElementOptionUpdateHeading'>Update Radio Button Option</div></div>";
+        $WYSIWYGRadioEditForm.= "<div class='editFormElementFormContainer'>";
+        $WYSIWYGRadioEditForm.="<b>Radio Option Layout Menu</b>";
+        $WYSIWYGRadioEditForm.="<div id='radioLayoutContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGRadioEditForm.=$this->buildLayoutForm('radio option', $formName, "radio",NULL) . "";
+        $WYSIWYGRadioEditForm.="</div>";
+        $WYSIWYGRadioEditForm.="<b>Radio Options Menu</b>";
+        $WYSIWYGRadioEditForm.="<div id='radioOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGRadioEditForm.=$this->insertOptionAndValueForm('radio', 0) . "";
+        $WYSIWYGRadioEditForm.="</div>";
+        $WYSIWYGRadioEditForm.= "<div class='formElementOptionsFormButtonsContainer'></div>";
+        $WYSIWYGRadioEditForm.= "</div>";
+        $WYSIWYGRadioEditForm.= "</div>";
+        return $WYSIWYGRadioEditForm;
+            
+        
+
+	
+
+        }
+    }
 
     /*!
      * \brief This member function gets the radio button name if it has already
@@ -137,8 +337,8 @@ class form_entity_radio extends form_entity_handler {
      * \param radioFormName A string containing the form element indentifier.
      * \return A string.
      */
-    protected function getRadioName($radioFormName) {
-        $radioParameters = $this->objDBRadioEntity->listRadioParameters($radioFormName);
+    protected function getRadioName($formNumber,$radioFormName) {
+        $radioParameters = $this->objDBRadioEntity->listRadioParameters($formNumber,$radioFormName);
         return $radioName = $radioParameters["0"]['radioname'];
     }
 
@@ -173,10 +373,11 @@ class form_entity_radio extends form_entity_handler {
      * put on top, bottom, left or right of the radio button form element.
      * \return A boolean value on successful storage of the radio button form element.
      */
-    public function insertOptionandValue($formElementName, $option, $value, $defaultSelected, $layoutOption, $formElementLabel, $labelOrientation) {
+    public function insertOptionandValue($formNumber,$formElementName, $option, $value, $defaultSelected, $layoutOption, $formElementLabel, $labelOrientation) {
 
-        if ($this->objDBRadioEntity->checkDuplicateRadioEntry($formElementName, $value) == TRUE) {
-            $this->objDBRadioEntity->insertSingle($this->radioName, $option, $value, $defaultSelected, $layoutOption, $formElementLabel, $labelOrientation);
+        if ($this->objDBRadioEntity->checkDuplicateRadioEntry($formNumber,$formElementName, $value) == TRUE) {
+            $this->objDBRadioEntity->insertSingle($formNumber,$this->radioName, $option, $value, $defaultSelected, $layoutOption, $formElementLabel, $labelOrientation);
+            $this->formNumber = $formNumber;
             $this->labelnOptionArray[$value] = $option;
             $this->tempWYSIWYGBoolDefaultSelected = $defaultSelected;
             $this->tempWYSIWYGLayoutOption = $layoutOption;
@@ -199,8 +400,8 @@ class form_entity_radio extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteRadioEntity($formElementName) {
-        $deleteSuccess = $this->objDBRadioEntity->deleteFormElement($formElementName);
+    protected function deleteRadioEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBRadioEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -213,8 +414,8 @@ class form_entity_radio extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed radio object.
      */
-    protected function constructRadioEntity($radioName) {
-        $radioParameters = $this->objDBRadioEntity->listRadioParameters($radioName);
+    protected function constructRadioEntity($radioName,$formNumber) {
+        $radioParameters = $this->objDBRadioEntity->listRadioParameters($formNumber,$radioName);
 //$radioName = $radioParameters["radioname"]["0"];
 
 $constructedRadio = "";
@@ -273,7 +474,7 @@ $constructedRadio = "";
      */
     private function buildWYSIWYGRadioEntity() {
 
-        $radioParameters = $this->objDBRadioEntity->listRadioParameters($this->radioName);
+        $radioParameters = $this->objDBRadioEntity->listRadioParameters($this->formNumber,$this->radioName);
         $constructedRadio = "";
         foreach ($radioParameters as $thisradioParameter) {
             $radioName = $thisradioParameter["radioname"];

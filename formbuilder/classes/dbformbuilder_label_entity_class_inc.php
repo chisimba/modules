@@ -58,8 +58,8 @@ class dbformbuilder_label_entity extends dbTable {
      * \param labelFormName A string.
      * \return An array with all the label parameters that have a name supplied by the argument
      */
-    function listLabelParameters($labelFormName) {
-        return $this->getAll("WHERE labelname='" . $labelFormName . "'");
+    function listLabelParameters($formNumber, $labelFormName) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND labelname='" . $labelFormName . "'");
     }
 
     /*!
@@ -68,11 +68,11 @@ class dbformbuilder_label_entity extends dbTable {
      * \param label A string. This is the actual text of the label.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateLabelEntry($labelName, $label) {
+    function checkDuplicateLabelEntry($formNumber, $labelName) {
 
 ///Get entries where the label form name and the label text are like the search
 /// parameters.
-        $sql = "where labelname like '" . $labelName . "' and label like '" . $label . "'";
+        $sql = "where formnumber like '".$formNumber."' and labelname like '" . $labelName . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -92,13 +92,20 @@ class dbformbuilder_label_entity extends dbTable {
      * label. There are three possibilities, "new line","double space" and "no spaces".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($labelName, $label, $breakSpace) {
+    function insertSingle($formNumber, $labelName, $label, $breakSpace) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'labelname' => $labelName,
                     'label' => $label,
                     'breakspace' => $breakSpace
                 ));
         return $id;
+    }
+    
+    function updateSingle($formNumber,$labelName,$labelText,$breakSpace){
+        $UpdateSQL = "UPDATE tbl_formbuilder_label_entity
+        SET label='".$labelText."', breakspace='".$breakSpace."' WHERE labelname='".$labelName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
     }
 
     /*!
@@ -107,11 +114,13 @@ class dbformbuilder_label_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where labelname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber,$formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and labelname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
-            $this->delete("labelname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_label_entity WHERE formnumber like '".$formNumber."' AND labelname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("labelname", $formElementName);
             return true;
         } else {
             return false;

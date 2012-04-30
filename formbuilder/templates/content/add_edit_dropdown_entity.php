@@ -10,7 +10,7 @@
  * this new form element in the div WYSIWYGDropDown so its content
  * can be passed back into WYSIWYG editor through jQuery.
  */
-
+$formNumber = $this->getParam("formNumber");
 $optionValue = $this->getParam('optionValue');
 $optionLabel = $this->getParam('optionLabel');
 $formElementName = $this->getParam('formElementName');
@@ -26,9 +26,9 @@ if ($defaultSelected == "on") {
     $defaultSelected = false;
 }
 $objDDEntity = $this->getObject('form_entity_dropdown', 'formbuilder');
-$objDDEntity->createFormElement($formElementName);
+$objDDEntity->createFormElement($formNumber,$formElementName);
 
-if ($objDDEntity->insertOptionandValue($formElementName, $optionLabel, $optionValue, $defaultSelected, $formElementLabel, $formElementLabelLayout) == TRUE) {
+if ($objDDEntity->insertOptionandValue($formNumber,$formElementName, $optionLabel, $optionValue, $defaultSelected, $formElementLabel, $formElementLabelLayout) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;

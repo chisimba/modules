@@ -120,7 +120,11 @@ function produceLabel(formElementID,formElementLayout,formElementText)
         jQuery('#tempdivcontainer').empty();
         if (postSuccessBoolean == 1)
         {
+            var formnumber = jQuery("#getFormNumber").html();
+            formnumber = jQuery.trim(formnumber);
+            
             var labelDataToPost = {
+                "formNumber":formnumber,
                 "labelValue":formElementText,
                 "formElementName":formElementID,
                 "layoutOption":formElementLayout

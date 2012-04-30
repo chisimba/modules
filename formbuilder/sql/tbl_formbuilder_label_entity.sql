@@ -26,6 +26,11 @@ $fields = array(
  'type' => 'text',
  'length' => 32,
  'notnull' => 1
+), 
+'formnumber' => array(
+'type' => 'text',
+ 'length' => 10,
+ 'notnull' => 1
 ),
  'labelname' => array(
  'type' => 'text',

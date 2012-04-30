@@ -25,7 +25,8 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_datepicker extends form_entity_handler
 {
-    
+ 
+    private $formNumber;
         /*!
      * \brief Private data member that stores a datepicker object for the WYSIWYG
      * form editor.
@@ -75,6 +76,7 @@ class form_entity_datepicker extends form_entity_handler
         $this->dpValue=NULL;
         $this->dpDateFormat=NULL;
         $this->defaultDate=NULL;
+        $this->formNumber=NULL;
         $this->objDBdpEntity = $this->getObject('dbformbuilder_datepicker_entity','formbuilder');
                 }
 
@@ -84,8 +86,9 @@ class form_entity_datepicker extends form_entity_handler
      * \parm elementName A string for the form element identifier.
      * \pram elementValue A string for the html name for the datepicker object.
      */
-    public function createFormElement($elementName="",$elementValue="")
+    public function createFormElement($formNumber,$elementName="",$elementValue="")
     {
+        $this->formNumber = $formNumber;
         $this->dpName = $elementName;
         $this->dpValue = $elementValue;
         $this->objDP = $this->newObject('datepicker', 'htmlelements'); 
@@ -108,9 +111,9 @@ public function getWYSIWYGDatePickerName()
      * \param dpFormName A string containing the form element indentifier.
      * \return A string.
      */
-protected function getDatePickerName($dpFormName)
+protected function getDatePickerName($formNumber,$dpFormName)
 {
-$dpParameters = $this->objDBdpEntity->listDatePickerParameters($dpFormName);
+$dpParameters = $this->objDBdpEntity->listDatePickerParameters($formNumber,$dpFormName);
  $dpNameArray= array();
   foreach($dpParameters as $thisDPParameter){
  $dpName = $thisDPParameter["datepickervalue"];
@@ -149,12 +152,37 @@ public function getWYSIWYGDatePickerInsertForm($formName)
     $WYSIWYGDatePickerInsertForm.= "</div>";
     $WYSIWYGDatePickerInsertForm.="<b>Date Picker Date Settings</b>";
       $WYSIWYGDatePickerInsertForm.="<div id='dpPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
-  $WYSIWYGDatePickerInsertForm.= $this->insertDatePickerFormParameters();
+  $WYSIWYGDatePickerInsertForm.= $this->insertDatePickerFormParameters(NULL,NULL);
   $WYSIWYGDatePickerInsertForm.= "</div>";
            return   $WYSIWYGDatePickerInsertForm;
     }
+    
+    public function getWYSIWYGDatePickerEditForm($formNumber, $formElementName) {
+        $dpParameters = $this->objDBdpEntity->listDatePickerParameters($formNumber, $formElementName);
+        if (empty($dpParameters)) {
+            return 0;
+        } else {
+            $dpValue = "";
+            $defaultDate = "";
+            $dateFormat = "";
+            foreach ($dpParameters as $thisDPParameter) {
+                //$dpName = $thisDPParameter["datepickername"];
+                $dpValue = $thisDPParameter["datepickervalue"];
+                $defaultDate = $thisDPParameter["defaultdate"];
+                $dateFormat = $thisDPParameter["dateformat"];
+            }
 
-                        /*!
+
+            $WYSIWYGDatePickerEditForm = "<b>Edit Date Picker Settings</b>";
+            $WYSIWYGDatePickerEditForm.="<div id='dpPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGDatePickerEditForm .="<input type='hidden' name='uniqueFormElementName' id='uniqueFormElementName' value=" . $dpValue . " />";
+            $WYSIWYGDatePickerEditForm.= $this->insertDatePickerFormParameters($dateFormat, $defaultDate);
+            $WYSIWYGDatePickerEditForm.= "</div>";
+            return $WYSIWYGDatePickerEditForm;
+        }
+    }
+
+    /*!
      * \brief This member function allows you to insert a new datepicker in a form with
      * a form element identifier.
      * \brief Before a new datepicker gets inserted into the database,
@@ -167,13 +195,13 @@ public function getWYSIWYGDatePickerInsertForm($formName)
      * \param dateFormat A string to choose the format the date is saved.
      * \return A boolean value on successful storage of the datepicker form element.
      */
-public function insertDatePickerParameters($formElementName,$formElementValue,$defaultDate,$dateFormat)
+public function insertDatePickerParameters($formNumber,$formElementName,$formElementValue,$defaultDate,$dateFormat)
 {
 
-    if ($this->objDBdpEntity->checkDuplicateDatepickerEntry($formElementName,$formElementValue) == TRUE)
+    if ($this->objDBdpEntity->checkDuplicateDatepickerEntry($formNumber,$formElementName,$formElementValue) == TRUE)
     {
-        $this->objDBdpEntity->insertSingle($formElementName,$formElementValue,$defaultDate,$dateFormat);
-
+        $this->objDBdpEntity->insertSingle($formNumber,$formElementName,$formElementValue,$defaultDate,$dateFormat);
+        $this->formNumber = $formNumber;
         $this->dpName = $formElementName;
         $this->dpValue = $formElementValue;
         $this->defaultDate=$defaultDate;
@@ -184,6 +212,23 @@ public function insertDatePickerParameters($formElementName,$formElementValue,$d
  else {
         return FALSE;
     }
+}
+
+public function updateDatePickerParameters($formNumber, $formElementName, $datePickerValue, $defaultCustomDate, $dateFormat){
+      if ($this->objDBdpEntity->checkDuplicateDatepickerEntry($formNumber,$formElementName,$datePickerValue) == FALSE)
+    {
+        $this->objDBdpEntity->updateSingle($formNumber,$formElementName,$datePickerValue,$defaultCustomDate,$dateFormat);
+        $this->formNumber = $formNumber;
+        $this->dpName = $formElementName;
+        $this->dpValue = $datePickerValue;
+        $this->defaultDate=$defaultCustomDate;
+        $this->dpDateFormat=$dateFormat;
+
+    return TRUE;
+    }
+ else {
+        return FALSE;
+    }  
 }
 
     /*!
@@ -198,9 +243,9 @@ public function insertDatePickerParameters($formElementName,$formElementValue,$d
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-protected function deleteDatePickerEntity($formElementName)
+protected function deleteDatePickerEntity($formNumber,$formElementName)
 {
-    $deleteSuccess = $this->objDBdpEntity->deleteFormElement($formElementName);
+    $deleteSuccess = $this->objDBdpEntity->deleteFormElement($formNumber,$formElementName);
     return $deleteSuccess;
 }
 
@@ -213,10 +258,10 @@ protected function deleteDatePickerEntity($formElementName)
      * parent class member function buildForm to build a form.
      * \return A constructed datepicker object.
      */
-protected function constructDatePickerEntity($dpName)
+protected function constructDatePickerEntity($dpName,$formNumber)
 {
 
-$dpParameters = $this->objDBdpEntity->listDatePickerParameters($dpName);
+$dpParameters = $this->objDBdpEntity->listDatePickerParameters($formNumber,$dpName);
 $constructedDatePicker = "";
   foreach($dpParameters as $thisDPParameter){
  $dpName = $thisDPParameter["datepickername"];

@@ -58,9 +58,9 @@ class dbformbuilder_dropdown_entity extends dbTable {
      * \param ddName A string.
      * \return An array with all the drop down lists that have a name supplied by the argument
      */
-    function listDropdownParameters($ddName) {
+    function listDropdownParameters($formNumber,$ddName) {
 ///Store a mysql query string into a temporary variable
-        $sql = "select * from tbl_formbuilder_dropdown_entity where dropdownname like '" . $ddName . "'";
+        $sql = "select * from tbl_formbuilder_dropdown_entity where formnumber like '".$formNumber."' and dropdownname like '" . $ddName . "'";
 ///Return the array of entries. Note that is function in part of the parent class dbTable.
         return $this->getArray($sql);
     }
@@ -71,11 +71,11 @@ class dbformbuilder_dropdown_entity extends dbTable {
      * \param ddValue A string. This can be thought of as a name.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateDropdownEntry($ddName, $ddValue) {
+    function checkDuplicateDropdownEntry($formNumber,$ddName, $ddValue) {
 
 ///Get entries where the drop down form name and the drop down name are like the search
 /// parameters.
-        $sql = "where dropdownname like '" . $ddName . "' and ddoptionvalue like '" . $ddValue . "'";
+        $sql = "where formnumber like '".$formNumber."' and dropdownname like '" . $ddName . "' and ddoptionvalue like '" . $ddValue . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -100,8 +100,9 @@ class dbformbuilder_dropdown_entity extends dbTable {
      * \param labelOrientation A string either "top", "bottom","left", "right".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($ddName, $ddLabel, $ddValue, $defaultValue, $label, $labelOrientation) {
+    function insertSingle($formNumber,$ddName, $ddLabel, $ddValue, $defaultValue, $label, $labelOrientation) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'dropdownname' => $ddName,
                     'ddoptionlabel' => $ddLabel,
                     'ddoptionvalue' => $ddValue,
@@ -118,17 +119,19 @@ class dbformbuilder_dropdown_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
+    function deleteFormElement($formNumber,$formElementName) {
 ///Get all the entries the have a drop down form name according to the
 ///search value.
-        $sql = "where dropdownname like '" . $formElementName . "'";
+        $sql = "where formnumber like '".$formNumber."' and dropdownname like '" . $formElementName . "'";
 ///Get the number of records for the entries. Note the getRecordCount
 ///is a dbtable member function.
         $valueExists = $this->getRecordCount($sql);
 ///If there are values that exist then delete the records and return true
 ///otherwise return false.
         if ($valueExists >= 1) {
-            $this->delete("dropdownname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_dropdown_entity WHERE formnumber like '".$formNumber."' AND dropdownname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("dropdownname", $formElementName);
             return true;
         } else {
             return false;

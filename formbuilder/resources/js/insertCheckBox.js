@@ -23,7 +23,10 @@ jQuery('.errorMessageDiv').empty();
         insertFormElement();
     });
     var myurlToCreateCheckBox = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToInsertFormElement]").val();
+    var formnumber = jQuery("#getFormNumber").html();
+    formnumber = jQuery.trim(formnumber);
     var dataToPost ={
+        "formNumber":formnumber,
         "formName":formName,
         "formNumber":formNumber,
         "formElementType":formElementType
@@ -149,7 +152,11 @@ produceCheckBoxIdentifier(formElementIDs,optionValues,optionLabels,formElementLa
  */
 function produceCheckbox(formElementID,optionValue,optionLabel,formElementLabel,formElementLabelLayout,formElementLayout,defaultOption)
 {
+    var formnumber = jQuery("#getFormNumber").html();
+    formnumber = jQuery.trim(formnumber);
+    
             var checkBoxDataToPost = {
+                "formNumber":formnumber,
                 "optionValue":optionValue,
                 "optionLabel":optionLabel,
                 "formElementName":formElementID,

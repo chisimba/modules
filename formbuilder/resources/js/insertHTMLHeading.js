@@ -126,7 +126,11 @@ function produceHTMLHeading(formElementID,fontSize,textAlignment,formElementText
         jQuery('#tempdivcontainer').empty();
         if (postSuccessBoolean == 1)
         {
+            var formnumber = jQuery("#getFormNumber").html();
+            formnumber = jQuery.trim(formnumber);
+    
             var HTMLHeadingdataToPost = {
+                "formNumber":formnumber,
                 "formElementName": formElementID,
                 "HTMLHeadingValue": formElementText,
                 "fontSize": fontSize,
@@ -152,7 +156,7 @@ Please choose a unique HTML Heading ID and text combination.");
 
                     if (jQuery("#WYSIWYGForm").children("#"+formElementID).length <= 0)
                     {
-                        jQuery("#WYSIWYGForm").append('<div id ='+formElementID+' class="witsCCMSFormElementLabel"></div>');
+                        jQuery("#WYSIWYGForm").append('<div id ='+formElementID+' class="witsCCMSFormElementHTMLHeading"></div>');
                         jQuery("#WYSIWYGForm").children("#"+formElementID).html(HTMLheading);
                        var elementToHighlight = jQuery("#WYSIWYGForm").children("#"+formElementID);
   highlightNewConstructedFormElement(elementToHighlight);

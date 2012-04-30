@@ -82,7 +82,7 @@ does not exist. Please contact your software administrator.</p>');
             filterNumberInput(formElementLengthSimple);
             filterNumberInput(formElementHeightSimple);
             filterNumberInput(formElementHeightAdvanced);
-//formElementLabelLayoutSimple.button();
+formElementLabelLayoutSimple.button();
 //formElementLabelLayoutAdvanced.button();
             jQuery( "#dialog-box-formElementsAdvanced" ).dialog( "option", "buttons", {
                                     "Help": function() {
@@ -220,8 +220,12 @@ function produceTextArea(formElementID,formElementName,formElementValue,rowSize,
         jQuery('#tempdivcontainer').empty();
         if (postSuccessBoolean == 1)
         {
-
+            
+          var formnumber = jQuery("#getFormNumber").html();
+            formnumber = jQuery.trim(formnumber);
+    
             var textAreaDataToPost = {
+                "formNumber":formnumber,
                 "formElementName": formElementID,
                 "textAreaName": formElementName,
                 "textAreaValue" : formElementValue,

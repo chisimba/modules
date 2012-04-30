@@ -12,21 +12,31 @@
  */
 
 //$this->appendArrayVar('headerParams', $this->getJavascriptFile('1.4.2/jquery-1.4.2.min.js', 'jquery'));
+$formNumber = $this->getParam("formNumber");
 $labelValue = $this->getParam('labelValue');
 
 $formElementName = $this->getParam('formElementName');
 
 $layoutOption = $this->getParam('layoutOption');
-
+$update = $this->getParam("update");
 $layoutOption = trim("$layoutOption");
 
 $objLabelEntity = $this->getObject('form_entity_label', 'formbuilder');
-
-if ($objLabelEntity->createFormElement($formElementName, $labelValue, $layoutOption) == TRUE) {
-    $postSuccessBoolean = 1;
+$postSuccessBoolean = 0;
+if (isset($update) && $update == "1") {
+        if ($objLabelEntity->updateFormElement($formNumber, $formElementName, $labelValue, $layoutOption) == TRUE) {
+        $postSuccessBoolean = 1;
+    } else {
+        $postSuccessBoolean = 0;
+    }
 } else {
-    $postSuccessBoolean = 0;
+    if ($objLabelEntity->createFormElement($formNumber, $formElementName, $labelValue, $layoutOption) == TRUE) {
+        $postSuccessBoolean = 1;
+    } else {
+        $postSuccessBoolean = 0;
+    }
 }
+
 ?>
 
 <div id="WYSIWYGLabel">

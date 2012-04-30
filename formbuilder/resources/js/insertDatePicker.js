@@ -48,7 +48,14 @@ does not exist. Please contact your software administrator.</p>');
             jQuery("#dialog-box-formElements").children("#content").html(insertDatePickerFormContent);
             jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").hide();
             jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").datepicker();
-
+            jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").addClass("myDatePicker");
+//            $("#ui-datepicker-div").css("z-index", "9999"); 
+//            jQuery(".myDatePicker").datepicker({
+//                dateFormat: 'yy-mm-dd'
+//                showOn: 'button',
+//                buttonImage: 'packages/formbuilder/resources/images/userManual/calendar.gif',
+//                buttonImageOnly: true
+//            });
             //jQuery("#dialog-box-formElements").children("#content").children("#selectDefaultDate").children("#datepicker").datepicker( "option", "altFormat", 'yyyy-mm-dd' );
             //jQuery("#dialog-box-formElements").children("#content").children("#selectDefaultDate").children("#datepicker").datepicker({ appendText: 'yyyy-mm-dd' });
            
@@ -58,6 +65,10 @@ does not exist. Please contact your software administrator.</p>');
            jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").datepicker('option', {
                 dateFormat: 'yy-mm-dd'
             });
+//            
+//            	jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").live('click', function() {
+//		jQuery(this).datepicker({showOn:'focus'}).focus();
+//	});
             jQuery("#dialog-box-formElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").val("Real Time Date");
             var formElementID = jQuery(':input[name=uniqueFormElementID]');
             var formElementName = jQuery(':input[name=uniqueFormElementName]');
@@ -163,8 +174,10 @@ function produceDatePicker(formElementID,formElementName,dateFormat,defaultDate)
         if (postSuccessBoolean == 1)
         {
 
-
+            var formnumber = jQuery("#getFormNumber").html();
+            formnumber = jQuery.trim(formnumber);
             var datePickerDataToPost = {
+                "formNumber":formnumber,
                 "datePickerName": formElementID,
                 "datePickerValue": formElementName,
                 "dateFormat": dateFormat,

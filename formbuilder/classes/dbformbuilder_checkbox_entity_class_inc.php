@@ -58,8 +58,8 @@ class dbformbuilder_checkbox_entity extends dbTable {
      * \param buttonFormName A string.
      * \return An array with all the check boxes that have a name supplied by the argument
      */
-    function listCheckboxParameters($checkboxName) {
-        return $this->getAll("WHERE checkboxname='" . $checkboxName . "'");
+    function listCheckboxParameters($formNumber,$checkboxName) {
+        return $this->getAll("WHERE formnumber ='".$formNumber."' AND checkboxname='" . $checkboxName . "'");
     }
 
     /*!
@@ -68,11 +68,11 @@ class dbformbuilder_checkbox_entity extends dbTable {
      * \param checkboxValue A string.
      * \return An boolean value.
      */
-    function checkDuplicateCheckboxEntry($checkboxName, $checkboxValue) {
+    function checkDuplicateCheckboxEntry($formNumber,$checkboxName, $checkboxValue) {
 
 ///Get entries where the checkbox form name and the check box name are like the search
 /// parameters.
-        $sql = "where checkboxname like '" . $checkboxName . "' and checkboxvalue like '" . $checkboxValue . "'";
+        $sql = "where formnumber like '".$formNumber."' and checkboxname like '" . $checkboxName . "' and checkboxvalue like '" . $checkboxValue . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -99,8 +99,9 @@ class dbformbuilder_checkbox_entity extends dbTable {
      * indicating where the label with be in relation to the check box.
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout) {
+    function insertSingle($formnumber,$checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout) {
         $id = $this->insert(array(
+                    'formnumber' => $formnumber,
                     'checkboxname' => $checkboxName,
                     'checkboxvalue' => $checkboxValue,
                     'checkboxlabel' => $checkboxLabel,
@@ -118,17 +119,19 @@ class dbformbuilder_checkbox_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
+    function deleteFormElement($formNumber, $formElementName) {
 ///Get all the entries the have a check box form name according to the
 ///search value.
-        $sql = "where checkboxname like '" . $formElementName . "'";
+        $sql = "where formnumber like '".$formNumber."' AND  checkboxname like '" . $formElementName . "'";
 ///Get the number of records for the entries. Note the getRecordCount
 ///is a dbtable member function.
         $valueExists = $this->getRecordCount($sql);
 ///If there are values that exist then delete the records and return true
 ///otherwise return false.
         if ($valueExists >= 1) {
-            $this->delete("checkboxname", $formElementName);
+              $deleteSQLStatement = "DELETE FROM tbl_formbuilder_checkbox_entity WHERE formnumber like '".$formNumber."' AND checkboxname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("checkboxname", $formElementName);
             return true;
         } else {
             return false;

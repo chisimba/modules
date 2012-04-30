@@ -167,8 +167,10 @@ class form_element_editor extends object {
         $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;'><b style='font-size:12px;'>WYSIWYG Form Editor Toolbar</b></span>";
         $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px; font-size:10px;'>Insert A:&nbsp;&nbsp;   ";
         $toolBarUnderConstrunction .=$this->formElementDropDown->showFormElementInserterDropDown() . "</span>";
-        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle Rearrangement of Form Elements</label></span>";
-        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle Deletion of Form Elements</label></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle Reorder</label></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input type='checkbox' id='editFormElementsButton' /><label for='editFormElementsButton'>Toggle Edit</label></span>";
+        $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;position:relative;top:10px;'><input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle Delete</label></span>";
+        
         $toolBarUnderConstrunction .= "<span style='margin:25px 10px 25px 10px;'><button class='finishDesigningForm' id='toolBarDoneButton'>Done</button></span>";
 //        $toolBarUnderConstrunction .= "Rearrange Form Elements : <span style='margin:35px' id='sortFormElementsToggleContainer'><input style='margin:25px' type='checkbox' id='sortFormElementsButton' /><label for='sortFormElementsButton'>Toggle</label></span>
 //&nbsp;&nbsp;&nbsp;Delete Form Elements : <input type='checkbox' id='deleteFormElementsButton' /><label for='deleteFormElementsButton'>Toggle</label>
@@ -210,6 +212,10 @@ class form_element_editor extends object {
     public function showInsertLabelForm($formName) {
         return $this->labelConstructor->getWYSIWYGLabelInsertForm($formName);
     }
+    
+    public function showEditLabelForm($formNumber,$formElementName){
+        return $this->labelConstructor->getWYSIWYGLabelEditForm($formNumber,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -221,6 +227,10 @@ class form_element_editor extends object {
      */
     public function showInsertHTMLHeadingForm($formName) {
         return $this->HTMLHeadingConstructor->getWYSIWYGHTMLHeadingInsertForm($formName);
+    }
+    
+    public function showEditHTMLHeadingForm($formNumber,$formElementName){
+        return $this->HTMLHeadingConstructor->getWYSIWYGHTMLHeadingEditForm($formNumber,$formElementName);
     }
 
     /*!
@@ -234,6 +244,10 @@ class form_element_editor extends object {
     public function showInsertTextInputForm($formName) {
         return $this->textinputConstructor->getWYSIWYGTextInputInsertForm($formName);
     }
+    
+    public function showEditTextInputForm($formNumber,$formElementName){
+        return $this->textinputConstructor->getWYSIWYGTextInputEditForm($formNumber,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -246,6 +260,10 @@ class form_element_editor extends object {
     public function showInsertTextAreaForm($formName) {
         return $this->textareaConstructor->getWYSIWYGTextAreaInsertForm($formName);
     }
+    
+    public function showEditTextAreaForm($formNumber,$formElementName){
+        return $this->textareaConstructor->getWYSIWYGTextAreaEditForm($formNumber,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -257,6 +275,10 @@ class form_element_editor extends object {
      */
     public function showInsertDatePickerForm($formName) {
         return $this->datePickerConstructor->getWYSIWYGDatePickerInsertForm($formName);
+    }
+    
+    public function showEditDatePickerForm($formNumber,$formElementName){
+        return $this->datePickerConstructor->getWYSIWYGDatePickerEditForm($formNumber,$formElementName);
     }
 
     /*!
@@ -281,6 +303,10 @@ class form_element_editor extends object {
      */
     public function showInsertRadioForm($formName) {
         return $this->radioConstructor->getWYSIWYGRadioInsertForm($formName);
+    }
+    
+    public function showEditRadioForm($formNumber,$formElementName){
+        return $this->radioConstructor->getWYSIWYGRadioEditForm($formNumber,$formElementName);
     }
 
     /*!

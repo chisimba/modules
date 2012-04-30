@@ -7,7 +7,7 @@
  */
 $jqueryUILoader = $this->getObject('jqueryui_loader','formbuilder');
 $this->appendArrayVar('headerParams', $jqueryUILoader->includeJqueyUI());
-
+$editFormElementManager = '<script language="JavaScript" src="' . $this->getResourceUri('js/editFormElementManager.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementLabel = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertLabel.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementHTMLHeading = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertHTMLHeading.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementTextInput = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertTextInput.js', 'formbuilder') . '" type="text/javascript"></script>';
@@ -18,6 +18,17 @@ $formElementDropDown = '<script language="JavaScript" src="' . $this->getResourc
 $formElementMSDropDown = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertMSDropDown.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementButton = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertButton.js', 'formbuilder') . '" type="text/javascript"></script>';
 $formElementRadio = '<script language="JavaScript" src="' . $this->getResourceUri('js/insertRadio.js', 'formbuilder') . '" type="text/javascript"></script>';
+
+
+$editFormElementOptionManager = '<script language="JavaScript" src="' . $this->getResourceUri('js/editFormElementOptionManager.js', 'formbuilder') . '" type="text/javascript"></script>';
+
+$editFormElementLabel = '<script language="JavaScript" src="' . $this->getResourceUri('js/editLabel.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementTextInput = '<script language="JavaScript" src="' . $this->getResourceUri('js/editTextInput.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementTextArea = '<script language="JavaScript" src="' . $this->getResourceUri('js/editTextArea.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementHTMLHeading = '<script language="JavaScript" src="' . $this->getResourceUri('js/editHTMLHeading.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementDatePicker = '<script language="JavaScript" src="' . $this->getResourceUri('js/editDatePicker.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementRadio = '<script language="JavaScript" src="' . $this->getResourceUri('js/editRadio.js', 'formbuilder') . '" type="text/javascript"></script>';
+
 //$jqplotLibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqplot/jquery.jqplot.js', 'formbuilder').'" type="text/javascript"></script>';
 //$jqplotCSS = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/jqplot/jquery.jqplot.css', 'formbuilder').'"';
 //$jqplotBarGraphLibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqplot/jqplot.barRenderer.js', 'formbuilder').'" type="text/javascript"></script>';
@@ -25,6 +36,18 @@ $formElementRadio = '<script language="JavaScript" src="' . $this->getResourceUr
 //$jqplotPieGraphLibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqplot/jqplot.pieRenderer.js', 'formbuilder').'" type="text/javascript"></script>';
 //$jqplotPntLabelsLibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqplot/jqplot.pointLabels.js', 'formbuilder').'" type="text/javascript"></script>';
 //[If browser is IE]; this library needs to be included to jqplot to work
+
+$this->appendArrayVar('headerParams', $editFormElementLabel);
+$this->appendArrayVar('headerParams', $editFormElementTextInput);
+$this->appendArrayVar('headerParams', $editFormElementTextArea);
+$this->appendArrayVar('headerParams', $editFormElementHTMLHeading);
+$this->appendArrayVar('headerParams', $editFormElementDatePicker);
+$this->appendArrayVar('headerParams', $editFormElementRadio);
+
+
+
+$this->appendArrayVar('headerParams', $editFormElementOptionManager);
+$this->appendArrayVar('headerParams', $editFormElementManager);
 $this->appendArrayVar('headerParams', $formElementLabel);
 $this->appendArrayVar('headerParams', $formElementHTMLHeading);
 $this->appendArrayVar('headerParams', $formElementTextArea);
@@ -114,6 +137,7 @@ echo $formNumber = $this->getParam('formNumber', NULL);
     $ajaxUrlToProduceTextArea = html_entity_decode($this->uri(array('action' => 'addEditTextArea'), 'formbuilder'));
     $ajaxUrlToProduceTextInput = html_entity_decode($this->uri(array('action' => 'addEditTextInput'), 'formbuilder'));
     $ajaxUrlToInsertFormElement = html_entity_decode($this->uri(array('action' => 'insertFormElement'), 'formbuilder'));
+    $ajaxUrlToEditFormElement = html_entity_decode($this->uri(array('action' => 'editFormElement'), 'formbuilder'));
     $ajaxUrlToCreateANewFormElement = html_entity_decode($this->uri(array('action' => 'createNewFormElement'), 'formbuilder'));
     $ajaxUrlToCreateMSDropdown = html_entity_decode($this->uri(array('action' => 'addEditMultiSelectableDropdownEntity'), 'formbuilder'));
     $ajaxUrlToCreateHelpContent = html_entity_decode($this->uri(array('action' => 'getHelpContent'), 'formbuilder'));
@@ -146,7 +170,10 @@ echo $formNumber = $this->getParam('formNumber', NULL);
 
     $hiddenInputToInsertFormElement = new hiddeninput("urlToInsertFormElement", $ajaxUrlToInsertFormElement);
     echo $hiddenInputToInsertFormElement->show();
-
+    
+    $hiddenInputToEditFormElement = new hiddeninput("urlToEditFormElement", $ajaxUrlToEditFormElement);
+    echo $hiddenInputToEditFormElement->show();
+    
     $hiddenInputToCreateANewFormElement = new hiddeninput("urlToCreateANewFormElement", $ajaxUrlToCreateANewFormElement);
     echo $hiddenInputToCreateANewFormElement->show();
     $hiddenInputToProduceMSDropDown = new hiddeninput("urlToProduceMSDropDown", $ajaxUrlToCreateMSDropdown);
@@ -163,6 +190,11 @@ echo $formNumber = $this->getParam('formNumber', NULL);
 </div>
 
 <div id="dialog-box-formElements" title="Dialogue Box Title">
+    <div style =" border: 1px solid transparent; padding: 7px" class="errorMessageDiv"> </div>
+    <div id="content"></div>
+</div>
+
+<div id="dialog-box-editFormElements" title="Dialogue Box Title">
     <div style =" border: 1px solid transparent; padding: 7px" class="errorMessageDiv"> </div>
     <div id="content"></div>
 </div>
@@ -309,6 +341,26 @@ echo $formNumber = $this->getParam('formNumber', NULL);
             }
         });
 
+        jQuery("#dialog-box-editFormElements").dialog({
+            autoOpen: false,
+            show: 'clip',
+            hide: 'clip',
+            width:950,
+            resizable: true,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                'OK': function() {
+                    jQuery(this).dialog('close');
+                },
+                Cancel: function() {
+                    jQuery(this).dialog('close');
+                }
+            },
+close: function(event, ui) {
+}
+        });
+        
         jQuery("#dialog-box-formElements").dialog({
             autoOpen: false,
             show: 'clip',
@@ -383,11 +435,17 @@ close: function(event, ui) {
             jQuery('#dialog-box-formElementsHelp').dialog('open');
             var  btnOK = jQuery('.ui-dialog-buttonpane').find('button:contains("OK")');
             btnOK.css('float', 'right');
+                        jQuery('#dialog-box-formElementsHelp').children('#FormElementInserterTabs').children('#formElementExplaination').children('#dpContainer').children("#datepicker").addClass("myDatePicker");
+//             $("#ui-datepicker-div").css("z-index", "9999"); 
             jQuery('#dialog-box-formElementsHelp').children('#FormElementInserterTabs').children('#formElementExplaination').children('#dpContainer').children("#datepicker").datepicker({
-                showOn: 'button',
-                buttonImage: 'packages/formbuilder/resources/images/userManual/calendar.gif',
-                buttonImageOnly: true
+               dateFormat: 'yy-mm-dd'
+//               showOn: 'button',
+//                buttonImage: 'packages/formbuilder/resources/images/userManual/calendar.gif',
+//                buttonImageOnly: true
             });
+//            	jQuery('#dialog-box-formElementsHelp').children('#FormElementInserterTabs').children('#formElementExplaination').children('#dpContainer').children("#datepicker").live('click', function() {
+//		jQuery(this).datepicker({showOn:'focus'}).focus();
+//	});
 
         });
     }
@@ -718,7 +776,7 @@ edit your form.</p>');
     function sortFormElements(){
 
         jQuery("#WYSIWYGForm").children().css("border", "1px dashed red");
-        jQuery("#WYSIWYGForm").children().prepend('<span id="sortSpan" ><span style="clear:left; float:right;" class="ui-icon ui-icon-arrowthick-2-n-s"></span><br></span>');
+        jQuery("#WYSIWYGForm").children().prepend('<span id="sortSpan" ><span style="clear:none; float:right;" class="ui-icon ui-icon-arrowthick-2-n-s"></span><br></span>');
         jQuery("#WYSIWYGForm").children().hover(
         function(){ jQuery("#WYSIWYGForm").children().children('#sortSpan').children().css('background-color','green') },
         function(){ jQuery("#WYSIWYGForm").children().children('#sortSpan').children().css('background-color','white') }
@@ -737,7 +795,7 @@ edit your form.</p>');
 
     function resetSort(){
 
-        if (jQuery("#deleteFormElementsButton:checked").val() != "on" )
+        if (jQuery("#deleteFormElementsButton:checked").val() != "on" && jQuery("#editFormElementsButton:checked").val() != "on" )
         {
             jQuery("#WYSIWYGForm").children().css("border", "0");
         }
@@ -773,10 +831,10 @@ edit your form.</p>');
         jQuery("#WYSIWYGForm").children().each(function (index, domEle)
         {
             var domFormElementIDs = jQuery(domEle).attr("id");
-            jQuery(domEle).prepend('<span id="'+domFormElementIDs+'" class="deleteSpan"><span style="clear:both; float:right;" class="ui-icon ui-icon-scissors"></span><br></span>');
+            jQuery(domEle).prepend('<span id="'+domFormElementIDs+'" class="deleteSpan"><span style="clear:none; float:right;" class="ui-icon ui-icon-scissors"></span><br></span>');
         });
 
-        jQuery("#WYSIWYGForm").children().children('span').hover(
+        jQuery("#WYSIWYGForm").children().children('.deleteSpan').hover(
         function()
         {
             jQuery(this).children().css('background-color','red');
@@ -856,13 +914,14 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
 
     function resetDelete()
     {
-        if (jQuery("#sortFormElementsButton:checked").val() != "on" )
+        if (jQuery("#sortFormElementsButton:checked").val() != "on" && jQuery("#editFormElementsButton:checked").val() != "on" )
         {
             jQuery("#WYSIWYGForm").children().css("border", "0");
         }
         jQuery("#WYSIWYGForm").children().children().remove('.deleteSpan');
         jQuery("#WYSIWYGForm").children().children('.deleteSpan').unbind("click");
     }
+    
     function setUpRearrangeAndDeleteElementButtons(formNumber)
     {
 
@@ -871,15 +930,12 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
         jQuery("#sortFormElementsButton").button({icons: {
                 primary: "ui-icon-arrowthick-2-n-s"
             }});
-//        $( ".demo button:first" ).button({
-//            icons: {
-//                primary: "ui-icon-locked"
-//            },
-//            text: false
-//        })
+
         jQuery("#deleteFormElementsButton").button({icons: {
                 primary: "ui-icon-scissors"
             }});
+        
+
 
         jQuery( "#sortFormElementsButton" ).button({ disabled: false });
         jQuery( "#sortFormElementsButton" ).attr('checked',false);
@@ -917,6 +973,7 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
     {
         resetSort();
         resetDelete();
+        resetEditFormElements();
         if (jQuery("#sortFormElementsButton:checked").val() == "on" )
         {
             resetSort();
@@ -932,6 +989,12 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
         jQuery( "#deleteFormElementsButton").button( "refresh" );
         jQuery( "#deleteFormElementsButton").button({ disabled: true });
         jQuery( "#deleteFormElementsButton" ).unbind();
+        resetSort();
+        jQuery("#editFormElementsButton").attr('checked', false);
+        jQuery( "#editFormElementsButton").button( "refresh" );
+        jQuery( "#editFormElementsButton").button({ disabled: true });
+        jQuery( "#editFormElementsButton" ).unbind();
+        jQuery("#WYSIWYGForm").children().css("border", "0");
     }
 
     function insertFormElement()
@@ -943,6 +1006,7 @@ outside the WYSIWYG interface.<BR><span class='ui-icon ui-icon-alert' style='flo
         setUpRearrangeAndDeleteElementButtons(formNumber);
         setUpDoneButton();
         setUpMainMenuIcons();
+        setUpEditFormElementButton();
         jQuery('#input_add_form_elements_drop_down').change(function() {
 
             if (jQuery('#input_add_form_elements_drop_down').val() == "form_heading")

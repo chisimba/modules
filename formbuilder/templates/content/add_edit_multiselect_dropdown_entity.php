@@ -11,15 +11,15 @@ Ajax function and store them into temporary variables.
  * this new form element in the div WYSIWYGMSDropdown so its content
  * can be passed back into WYSIWYG editor through jQuery.
 */
+$formNumber = $this->getParam("formNumber");
+$optionValue = $this->getParam('optionValue');
+$optionLabel = $this->getParam('optionLabel');
+$formElementName = $this->getParam('formElementName');
 
-echo $optionValue = $this->getParam('optionValue');
-echo $optionLabel = $this->getParam('optionLabel');
-echo $formElementName = $this->getParam('formElementName');
-
-echo $defaultSelected = $this->getParam('defaultSelected');
-echo $menuSize = $this->getParam('menuSize');
-echo $formElementLabel = $this->getParam('formElementLabel');
-echo $formElementLabelLayout = $this->getParam('formElementLabelLayout');
+$defaultSelected = $this->getParam('defaultSelected');
+$menuSize = $this->getParam('menuSize');
+$formElementLabel = $this->getParam('formElementLabel');
+$formElementLabelLayout = $this->getParam('formElementLabelLayout');
 if ($defaultSelected == "on") {
     $defaultSelected = true;
 } else {
@@ -27,9 +27,9 @@ if ($defaultSelected == "on") {
 }
 
 $objMSDDEntity = $this->getObject('form_entity_multiselect_dropdown', 'formbuilder');
-$objMSDDEntity->createFormElement($formElementName);
+$objMSDDEntity->createFormElement($formNumber,$formElementName);
 
-if ($objMSDDEntity->insertOptionandValue($formElementName, $optionLabel, $optionValue, $defaultSelected, $menuSize,$formElementLabel,$formElementLabelLayout) == TRUE) {
+if ($objMSDDEntity->insertOptionandValue($formNumber,$formElementName, $optionLabel, $optionValue, $defaultSelected, $menuSize,$formElementLabel,$formElementLabelLayout) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;

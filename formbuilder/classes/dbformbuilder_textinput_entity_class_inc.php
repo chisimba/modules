@@ -58,9 +58,9 @@ class dbformbuilder_textinput_entity extends dbTable {
      * \param formElementName A string for the html name for the text input
      * \return An boolean, true if it exists.
      */
-    function checkIfEntryExists($formElementName)
+    function checkIfEntryExists($formNumber,$formElementName)
     {
- $sql = "where textinputname like '" . $formElementName . "'";
+ $sql = "where formnumber like '".$formNumber."' and textinputname like '" . $formElementName . "'";
    $Exists = $this->getRecordCount($sql);
         if ($Exists > 0) {
             return true;
@@ -76,8 +76,8 @@ class dbformbuilder_textinput_entity extends dbTable {
      * \return An array with all the text area parameters that have a name
      * supplied by the argument
      */
-    function listTextInputParameters($textInputFormname) {
-        return $this->getAll("WHERE textinputformname='" . $textInputFormname . "'");
+    function listTextInputParameters($formNumber,$textInputFormname) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND textinputformname='" . $textInputFormname . "'");
     }
 
     /*!
@@ -86,11 +86,11 @@ class dbformbuilder_textinput_entity extends dbTable {
      * \param textinputname A string which is basically the name of the form element.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateTextInputEntry($textinputformname, $textinputname) {
+    function checkDuplicateTextInputEntry($formNumber,$textinputformname, $textinputname) {
 
 ///Get entries where the text input form name and the text input name are like the search
 /// parameters.
-        $sql = "where textinputformname like '" . $textinputformname . "' and textinputname like '" . $textinputname . "'";
+        $sql = "where formnumber like '".$formNumber."' and textinputformname like '" . $textinputformname . "' and textinputname like '" . $textinputname . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -116,8 +116,9 @@ class dbformbuilder_textinput_entity extends dbTable {
      * \param labelorientation A string either "top", "bottom","left", "right".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($textinputformname, $textinputname, $textvalue, $texttype, $textsize, $maskedinputchoice, $textinputlabel, $labelorientation) {
+    function insertSingle($formNumber,$textinputformname, $textinputname, $textvalue, $texttype, $textsize, $maskedinputchoice, $textinputlabel, $labelorientation) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'textinputformname' => $textinputformname,
                     'textinputname' => $textinputname,
                     'textvalue' => $textvalue,
@@ -129,6 +130,12 @@ class dbformbuilder_textinput_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function updateSingle($formNumber,$textinputformname,$textinputname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout){
+        $UpdateSQL = "UPDATE tbl_formbuilder_textinput_entity
+        SET textvalue='".$textvalue."', texttype='".$texttype."', textsize='".$textsize."', maskedinputchoice='".$maskedinputchoice."', label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."' WHERE textinputformname='".$textinputformname."' and textinputname='".$textinputname."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
 
     /*!
      * \brief This member function deletes a text input according to its form element
@@ -136,10 +143,12 @@ class dbformbuilder_textinput_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where textinputformname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber,$formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and textinputformname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_textinput_entity WHERE formnumber like '".$formNumber."' AND textinputformname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
             $this->delete("textinputformname", $formElementName);
             return true;
         } else {

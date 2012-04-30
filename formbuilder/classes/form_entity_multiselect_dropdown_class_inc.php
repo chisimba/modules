@@ -22,6 +22,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_multiselect_dropdown extends form_entity_handler {
 
+    private $formNumber;
     /*!
      * \brief Private data member that stores a ms drop down object for the WYSIWYG
      * form editor.
@@ -71,6 +72,7 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
         $this->msddLabelnOptionArray = array();
         $this->defaultMSValuesArray = array();
         $this->msddLabel = NULL;
+        $this->formNumber = NULL;
         $this->objDBmsddEntity = $this->getObject('dbformbuilder_multiselect_dropdown_entity', 'formbuilder');
     }
 
@@ -79,7 +81,8 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      * ms dropdown object.
      * \parm elementName A string for the form element identifier.
      */
-    public function createFormElement($elementName="") {
+    public function createFormElement($formNumber,$elementName="") {
+        $this->formNumber = $formNumber;
         $this->msddName = $elementName;
         $this->objMSDD = new dropdown($elementName);
     }
@@ -100,8 +103,8 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      * \param msdropdownName A string containing the form element indentifier.
      * \return A string.
      */
-    protected function getMultiSelectDropdownName($msDropDownName) {
-        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($msDropDownName);
+    protected function getMultiSelectDropdownName($formNumber,$msDropDownName) {
+        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($formNumber,$msDropDownName);
 
         return $msddName = $msddParameters["0"]['multiselectdropdownname'];
     }
@@ -154,11 +157,11 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      * put on top, bottom, left or right of the dropdown list.
      * \return A boolean value on successful storage of the ms dropdown form element.
      */
-    public function insertOptionandValue($formElementName, $option, $value, $defaultSelected, $msddsize, $formElementLabel, $labelLayout) {
+    public function insertOptionandValue($formNumber,$formElementName, $option, $value, $defaultSelected, $msddsize, $formElementLabel, $labelLayout) {
 
-        if ($this->objDBmsddEntity->checkDuplicateMultiSelectDropdownEntry($formElementName, $value) == TRUE) {
-            $this->objDBmsddEntity->updateMenuSize($formElementName, $msddsize);
-            $this->objDBmsddEntity->insertSingle($formElementName, $option, $value, $defaultSelected, $msddsize, $formElementLabel, $labelLayout);
+        if ($this->objDBmsddEntity->checkDuplicateMultiSelectDropdownEntry($formNumber,$formElementName, $value) == TRUE) {
+            $this->objDBmsddEntity->updateMenuSize($formNumber,$formElementName, $msddsize);
+            $this->objDBmsddEntity->insertSingle($formNumber,$formElementName, $option, $value, $defaultSelected, $msddsize, $formElementLabel, $labelLayout);
 
             $this->msddName = $formElementName;
 
@@ -181,8 +184,8 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteMultiSelectDropDownEntity($formElementName) {
-        $deleteSuccess = $this->objDBmsddEntity->deleteFormElement($formElementName);
+    protected function deleteMultiSelectDropDownEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBmsddEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -195,9 +198,9 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed ms dropdown object.
      */
-    protected function constructMultiSelectDropDownEntity($msDropDownName) {
+    protected function constructMultiSelectDropDownEntity($msDropDownName,$formNumber) {
 
-        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($msDropDownName);
+        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($formNumber,$msDropDownName);
 
         $msddName = $msddParameters["0"]['multiselectdropdownname'];
         $msddUnderConstruction = new dropdown($msddName);
@@ -258,7 +261,7 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
      */
     private function buildWYSIWYGMultiSelectDropdownEntity() {
 
-        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($this->msddName);
+        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($this->formNumber,$this->msddName);
 
         foreach ($msddParameters as $thisDDParameter) {
 

@@ -551,6 +551,21 @@ class formbuilder extends controller {
         $this->setPageTemplate('ajax_template.php');
         return "insert_form_element.php";
     }
+    
+    /*!
+     * \brief This action inserts a edit form element indentifier into a form through the
+     * the WYSIWYG form editor.
+     * \note This action is via AJAX
+     * \note Setting the jquery version greater than 1.4 is
+     * vital since the jquery UI does not work.
+     * \note A custom template file is being set that suppresses
+     * chisimba head and only spit out the actual content.
+     *  \return A template file edit_form_element.php
+     */
+    private function __editFormElement(){
+        $this->setPageTemplate('ajax_template.php');
+        return "edit_form_element.php";
+    }
 
     /*!
      * \brief This action inserts a new radio into a form through the

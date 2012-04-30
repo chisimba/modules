@@ -10,6 +10,7 @@
  * this new form element in the div WYSIWYGCheckbox so its content
  * can be passed back into WYSIWYG editor through jQuery.
  */
+$formNumber = $this->getParam("formNumber");
 $optionValue = $this->getParam('optionValue');
 $optionLabel = $this->getParam('optionLabel');
 $formElementName = $this->getParam('formElementName');
@@ -27,7 +28,7 @@ if ($defaultSelected == "on") {
 $objCheckboxEntity = $this->getObject('form_entity_checkbox', 'formbuilder');
 
 
-if ($objCheckboxEntity->createFormElement($formElementName, $optionValue, $optionLabel, $defaultSelected, $layoutOption, $formElementLabel, $formElementLabelLayout) == TRUE) {
+if ($objCheckboxEntity->createFormElement($formNumber,$formElementName, $optionValue, $optionLabel, $defaultSelected, $layoutOption, $formElementLabel, $formElementLabelLayout) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;

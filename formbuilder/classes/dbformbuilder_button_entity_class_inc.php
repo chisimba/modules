@@ -57,8 +57,8 @@ class dbformbuilder_button_entity extends dbTable {
      * \param buttonFormName A string.
      * \return An array with all the buttons that have a name supplied by the argument
      */
-    function listButtonParameters($buttonFormName) {
-        return $this->getAll("WHERE buttonformname='" . $buttonFormName . "'");
+    function listButtonParameters($formNumber,$buttonFormName) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND buttonformname='" . $buttonFormName . "'");
     }
 
     /*!
@@ -67,11 +67,11 @@ class dbformbuilder_button_entity extends dbTable {
      * \param buttonName A string.
      * \return An boolean value.
      */
-    function checkDuplicateButtonEntry($buttonFormName, $buttonName) {
+    function checkDuplicateButtonEntry($formNumber,$buttonFormName, $buttonName) {
 
 ///Get entries where the button form name and the button name are like the search
 /// parameters.
-        $sql = "where buttonformname like '" . $buttonFormName . "' and buttonname like '" . $buttonName . "'";
+        $sql = "where formnumber like '".$formNumber."' and buttonformname like '" . $buttonFormName . "' and buttonname like '" . $buttonName . "'";
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
 ///Check whether there are multiple entries.
@@ -90,8 +90,9 @@ class dbformbuilder_button_entity extends dbTable {
      * \param isSetToResetOrSubmitstring A string either "submit" or "reset".
      * \return A random generated id for this new entry.
      */
-    function insertSingle($buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
+    function insertSingle($formnumber,$buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
         $id = $this->insert(array(
+                    'formnumber' => $formnumber,
                     'buttonformname' => $buttonFormName,
                     'buttonname' => $buttonName,
                     'buttonlabel' => $buttonLabel,
@@ -106,17 +107,21 @@ class dbformbuilder_button_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value.
      */
-    function deleteFormElement($formElementName) {
+    function deleteFormElement($formNumber,$formElementName) {
 ///Get all the entries the have a button form name according to the
 ///search value.
-        $sql = "where buttonformname like '" . $formElementName . "'";
+        $sql = "where formnumber like '".$formNumber."' AND buttonformname like '" . $formElementName . "'";
 ///Get the number of records for the entries. Note the getRecordCount
 ///is a dbtable member function.
         $valueExists = $this->getRecordCount($sql);
 ///If there are values that exist then delete the records and return true
 ///otherwise return false.
+        
+
         if ($valueExists >= 1) {
-            $this->delete("buttonformname", $formElementName);
+                   $deleteSQLStatement = "DELETE FROM tbl_formbuilder_button_entity WHERE formnumber like '".$formNumber."' AND buttonformname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+//            $this->delete("buttonformname", $formElementName);
             return true;
         } else {
             return false;

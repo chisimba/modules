@@ -21,6 +21,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_dropdown extends form_entity_handler {
     
+    private $formNumber;
     /*!
      * \brief Private data member that stores a drop down object for the WYSIWYG
      * form editor.
@@ -63,6 +64,7 @@ class form_entity_dropdown extends form_entity_handler {
         $this->ddName = NULL;
         $this->ddLabelnOptionArray = array();
         $this->ddLabel = NULL;
+        $this->formNumber = NULL;
         $this->objDBddEntity = $this->getObject('dbformbuilder_dropdown_entity', 'formbuilder');
     }
 
@@ -71,7 +73,8 @@ class form_entity_dropdown extends form_entity_handler {
      * dropdown object.
      * \parm elementName A string for the form element identifier.
      */
-    public function createFormElement($elementName="") {
+    public function createFormElement($formNumber,$elementName="") {
+        $this->formNumber = $formNumber;
         $this->ddName = $elementName;
         $this->objDD = new dropdown($elementName);
     }
@@ -92,8 +95,8 @@ class form_entity_dropdown extends form_entity_handler {
      * \param dropdownName A string containing the form element indentifier.
      * \return A string.
      */
-    protected function getDropdownName($dropdownName) {
-        $ddParameters = $this->objDBddEntity->listDropdownParameters($dropdownName);
+    protected function getDropdownName($formNumber,$dropdownName) {
+        $ddParameters = $this->objDBddEntity->listDropdownParameters($formNumber,$dropdownName);
 
         return $ddName = $ddParameters["0"]['dropdownname'];
     }
@@ -142,9 +145,9 @@ class form_entity_dropdown extends form_entity_handler {
      * put on top, bottom, left or right of the dropdown list.
      * \return A boolean value on successful storage of the dropdown form element.
      */
-    public function insertOptionandValue($formElementName, $option, $value, $defaultSelected, $label, $labelOrientation) {
-        if ($this->objDBddEntity->checkDuplicateDropdownEntry($formElementName, $value) == TRUE) {
-            $this->objDBddEntity->insertSingle($formElementName, $option, $value, $defaultSelected, $label, $labelOrientation);
+    public function insertOptionandValue($formNumber,$formElementName, $option, $value, $defaultSelected, $label, $labelOrientation) {
+        if ($this->objDBddEntity->checkDuplicateDropdownEntry($formNumber,$formElementName, $value) == TRUE) {
+            $this->objDBddEntity->insertSingle($formNumber,$formElementName, $option, $value, $defaultSelected, $label, $labelOrientation);
 
             $this->ddName = $formElementName;
 
@@ -167,8 +170,8 @@ class form_entity_dropdown extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteDropDownEntity($formElementName) {
-        $deleteSuccess = $this->objDBddEntity->deleteFormElement($formElementName);
+    protected function deleteDropDownEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBddEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -181,8 +184,8 @@ class form_entity_dropdown extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed dropdown object.
      */
-    protected function constructDropDownEntity($dropdownName) {
-        $ddParameters = $this->objDBddEntity->listDropdownParameters($dropdownName);
+    protected function constructDropDownEntity($dropdownName,$formNumber) {
+        $ddParameters = $this->objDBddEntity->listDropdownParameters($formNumber,$dropdownName);
 
         $ddName = $ddParameters["0"]['dropdownname'];
         $ddUnderConstruction = new dropdown($ddName);
@@ -236,7 +239,7 @@ class form_entity_dropdown extends form_entity_handler {
      */
     private function buildWYSIWYGDropdownEntity() {
 
-        $ddParameters = $this->objDBddEntity->listDropdownParameters($this->ddName);
+        $ddParameters = $this->objDBddEntity->listDropdownParameters($this->formNumber,$this->ddName);
         $this->objDD = new dropdown($this->ddName);
         foreach ($ddParameters as $thisDDParameter) {
 

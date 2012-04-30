@@ -31,7 +31,8 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_textarea extends form_entity_handler
 {
-        /*!
+    private $formNumber; 
+    /*!
      * \brief Private data member that stores a text area object for the WYSIWYG
      * form editor.
      */
@@ -119,6 +120,7 @@ class form_entity_textarea extends form_entity_handler
         $this->toolbarChoice =NULL;
         $this->taLabel=NULL;
         $this->labelOrientation;
+        $this->formNumber = NULL;
 
         $this->objDBtaEntity = $this->getObject('dbformbuilder_textarea_entity','formbuilder');
 
@@ -131,8 +133,9 @@ class form_entity_textarea extends form_entity_handler
                      * \param textAreaName A string for the actual html name for
                      * the text area.
      */
-    public function createFormElement($textAreaFormName='',$textAreaName='')
+    public function createFormElement($formNumber,$textAreaFormName='',$textAreaName='')
     {
+    $this->formNumber = $formNumber;
     $this->taFormName = $textAreaFormName;
     $this->taName= $textAreaName; 
     }
@@ -154,9 +157,9 @@ public function getWYSIWYGTextAreaName()
      * \param textAreaFormName A string containing the form element indentifier.
      * \return A string.
      */
-protected function getTextAreaName($textAreaFormName)
+protected function getTextAreaName($formNumber,$textAreaFormName)
 {
-       $taParameters = $this->objDBtaEntity->listTextAreaParameters($textAreaFormName);
+       $taParameters = $this->objDBtaEntity->listTextAreaParameters($formNumber,$textAreaFormName);
     $textAreaNameArray = array();
 
 foreach($taParameters as $thistaParameter){
@@ -168,6 +171,47 @@ foreach($taParameters as $thistaParameter){
 return $textAreaNameArray;
 }
 
+public function getWYSIWYGTextAreaEditForm($formNumber, $formElementName) {
+        $taParameters = $this->objDBtaEntity->listTextAreaParameters($formNumber, $formElementName);
+        if (empty($taParameters)) {
+            return 0;
+        } else {
+            $textareaValue = "";
+            $columnSize = "";
+            $rowSize = "";
+            $textareaLabel = "";
+            $labelLayout = "";
+            $textareaName= "";
+            foreach ($taParameters as $thistaParameter) {
+
+                //$textareaFormName = $thistaParameter["textareaformname"];
+                $textareaName = $thistaParameter["textareaname"];
+                $textareaValue = $thistaParameter["textareavalue"];
+                $columnSize = $thistaParameter["columnsize"];
+                $rowSize = $thistaParameter["rowsize"];
+                //      $simpleOrAdvancedChoice = $thistaParameter["simpleoradvancedchoice"];
+                //              $toolbarChoice = $thistaParameter["toolbarchoice"];
+                $textareaLabel = $thistaParameter["label"];
+                $labelLayout = $thistaParameter["labelorientation"];
+            }
+            $WYSIWYGTextInputEditForm = "<b>Edit Text Area Label Parameters</b>";
+            $WYSIWYGTextInputEditForm .="<input type='hidden' name='textAreaName' id='textAreaName' value=".$textareaName." />";
+            $WYSIWYGTextInputEditForm.="<div id='textAreaLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGTextInputEditForm.= $this->insertFormLabelOptions("text_input", "labelOrientationSimple", $textareaLabel, $labelLayout);
+            $WYSIWYGTextInputEditForm.= "</div>";
+
+            $WYSIWYGTextInputEditForm.="<b>Edit Text Area Size Parameters</b>";
+            $WYSIWYGTextInputEditForm.="<div id='textAreaSizeMenuContainer' class='ui-widget-content ui-corner-all' style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGTextInputEditForm .= $this->insertTextAreaSizeParameters($columnSize, $rowSize);
+            $WYSIWYGTextInputEditForm.= "</div>";
+
+            $WYSIWYGTextInputEditForm.="<b>Edit Text Area Properties</b>";
+            $WYSIWYGTextInputEditForm.="<div id='textAreaPropertiesContainer' class='ui-widget-content ui-corner-all' style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGTextInputEditForm.= $this->insertTextForm('text area', 2, 68,$textareaValue);
+            $WYSIWYGTextInputEditForm.= "</div>";
+            return $WYSIWYGTextInputEditForm;
+        }
+    }
     /*!
      * \brief This member function contructs the html content for the form that
      * allows you to insert the text area parameters to insert
@@ -194,17 +238,17 @@ return $textAreaNameArray;
 
       $WYSIWYGTextInputInsertForm.="<b>Text Area Label Menu</b>";
             $WYSIWYGTextInputInsertForm.="<div id='textAreaLabelContainer' class='ui-widget-content ui-corner-all' style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
- $WYSIWYGTextInputInsertForm.= $this->insertFormLabelOptions("text_input","labelOrientationSimple");
+ $WYSIWYGTextInputInsertForm.= $this->insertFormLabelOptions("text_input","labelOrientationSimple",NULL,NULL);
           $WYSIWYGTextInputInsertForm.= "</div>";
 
                 $WYSIWYGTextInputInsertForm.="<b>Text Area Size Menu</b>";
             $WYSIWYGTextInputInsertForm.="<div id='textAreaSizeMenuContainer' class='ui-widget-content ui-corner-all' style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
-              $WYSIWYGTextInputInsertForm .= $this->insertTextAreaSizeParameters();
+              $WYSIWYGTextInputInsertForm .= $this->insertTextAreaSizeParameters(NULL,NULL);
                               $WYSIWYGTextInputInsertForm.= "</div>";
 
                               $WYSIWYGTextInputInsertForm.="<b>Text Area Properties Menu</b>";
            $WYSIWYGTextInputInsertForm.="<div id='textAreaPropertiesContainer' class='ui-widget-content ui-corner-all' style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
-            $WYSIWYGTextInputInsertForm.= $this->insertTextForm('text area',2,68);
+            $WYSIWYGTextInputInsertForm.= $this->insertTextForm('text area',2,68,NULL);
                                           $WYSIWYGTextInputInsertForm.= "</div>";
                                             $WYSIWYGTextInputInsertForm.= "</div>";
              // $WYSIWYGTextInputInsertForm.="</div>";
@@ -258,12 +302,12 @@ return $textAreaNameArray;
      * put on top, bottom, left or right of the text area form element.
      * \return A boolean value on successful storage of the text area form element.
      */
-public function insertTextAreaParameters($textareaformname,$textareaname,$textareavalue,$columnsize,$rowsize,$simpleoradvancedchoice,$toolbarchoice,$formElementLabel,$labelLayout)
+public function insertTextAreaParameters($formNumber,$textareaformname,$textareaname,$textareavalue,$columnsize,$rowsize,$simpleoradvancedchoice,$toolbarchoice,$formElementLabel,$labelLayout)
 {
 
-    if ($this->objDBtaEntity->checkDuplicateTextAreaEntry($textareaformname,$textareaname) == TRUE)
+    if ($this->objDBtaEntity->checkDuplicateTextAreaEntry($formNumber,$textareaformname,$textareaname) == TRUE)
     {
-        $this->objDBtaEntity->insertSingle($textareaformname,$textareaname,$textareavalue,$columnsize,$rowsize,$simpleoradvancedchoice,$toolbarchoice,$formElementLabel,$labelLayout);
+        $this->objDBtaEntity->insertSingle($formNumber,$textareaformname,$textareaname,$textareavalue,$columnsize,$rowsize,$simpleoradvancedchoice,$toolbarchoice,$formElementLabel,$labelLayout);
 
         $this->taName = $textareaname;
         $this->taRowSize=$rowsize;
@@ -271,6 +315,26 @@ public function insertTextAreaParameters($textareaformname,$textareaname,$textar
         $this->taTextValue=$textareavalue;
         $this->taSimpleorAdvancedChoice=$simpleoradvancedchoice;
         $this->toolbarChoice=$toolbarchoice;
+        $this->taLabel=$formElementLabel;
+        $this->labelOrientation=$labelLayout;
+    return TRUE;
+    }
+ else {
+        return FALSE;
+    }
+}
+
+public function updateTextAreaParameters($formNumber,$textareaformname,$textareaname,$textAreaValue,$ColumnSize,$RowSize,$simpleOrAdvancedHAChoice,$toolbarChoice,$formElementLabel,$labelLayout){
+        if ($this->objDBtaEntity->checkDuplicateTextAreaEntry($formNumber,$textareaformname,$textareaname) == FALSE)
+    {
+        $this->objDBtaEntity->updateSingle($formNumber,$textareaformname,$textareaname,$textAreaValue,$ColumnSize,$RowSize,$simpleOrAdvancedHAChoice,$toolbarChoice,$formElementLabel,$labelLayout);
+
+        $this->taName = $textareaname;
+        $this->taRowSize=$RowSize;
+        $this->taColumnSize=$ColumnSize;
+        $this->taTextValue=$textAreaValue;
+        $this->taSimpleorAdvancedChoice=$simpleOrAdvancedHAChoice;
+        $this->toolbarChoice=$toolbarChoice;
         $this->taLabel=$formElementLabel;
         $this->labelOrientation=$labelLayout;
     return TRUE;
@@ -317,9 +381,9 @@ private function convertTextAreaColumnSizeToHTMLColumnSize($columnSize)
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-protected function deleteTextAreaEntity($formElementName)
+protected function deleteTextAreaEntity($formNumber,$formElementName)
 {
-    $deleteSuccess = $this->objDBtaEntity->deleteFormElement($formElementName);
+    $deleteSuccess = $this->objDBtaEntity->deleteFormElement($formNumber,$formElementName);
     return $deleteSuccess;
 }
 
@@ -390,9 +454,9 @@ break;
      * parent class member function buildForm to build a form.
      * \return A constructed textarea object.
      */
-protected function constructTextAreaEntity($textareaName)
+protected function constructTextAreaEntity($textareaName,$formNumber)
 {
-    $taParameters = $this->objDBtaEntity->listTextAreaParameters($textareaName);
+    $taParameters = $this->objDBtaEntity->listTextAreaParameters($formNumber,$textareaName);
 $constructedta = "";
 foreach($taParameters as $thistaParameter){
 

@@ -10,20 +10,30 @@
  * this new form element in the div WYSIWYGHTMLHeading so its content
  * can be passed back into WYSIWYG editor through jQuery.
  */
-
+$formNumber = $this->getParam("formNumber");
 $HTMLHeadingValue = $this->getParam('HTMLHeadingValue');
 $formElementName = $this->getParam('formElementName');
 $fontSize = $this->getParam('fontSize');
 $textAlignment = $this->getParam('textAlignment');
-
+$update = $this->getParam('update');
 
 $objHTMLHeadingEntity = $this->getObject('form_entity_htmlheading', 'formbuilder');
+$postSuccessBoolean = 0;
 
-if ($objHTMLHeadingEntity->createFormElement($formElementName, $HTMLHeadingValue, $fontSize, $textAlignment) == TRUE) {
+if (isset($update) && $update == "1"){
+   if ($objHTMLHeadingEntity->updateFormElement($formNumber,$formElementName, $HTMLHeadingValue, $fontSize, $textAlignment) == TRUE) {
+    $postSuccessBoolean = 1;
+} else {
+    $postSuccessBoolean = 0;
+} 
+}else{
+    if ($objHTMLHeadingEntity->createFormElement($formNumber,$formElementName, $HTMLHeadingValue, $fontSize, $textAlignment) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;
 }
+}
+
 ?>
 
 <div id="WYSIWYGHTMLHeading">

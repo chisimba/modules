@@ -18,6 +18,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_htmlheading extends form_entity_handler {
     
+    private $formNumber;
     /*!
      * \brief Private data member that stores a html heading object for the WYSIWYG
      * form editor.
@@ -78,20 +79,35 @@ class form_entity_htmlheading extends form_entity_handler {
      * left, right or center.
      * \return A boolean value on successful storage of the html heading form element.
      */
-    public function createFormElement($headingName, $heading, $fontSize, $textAlignment) {
+    public function createFormElement($formNumber,$headingName, $heading, $fontSize, $textAlignment) {
 
-        if ($this->objDBHTMLHeadingEntity->checkDuplicateHTMLheadingEntry($headingName, $heading) == TRUE) {
-
+        if ($this->objDBHTMLHeadingEntity->checkDuplicateHTMLheadingEntry($formNumber,$headingName) == TRUE) {
+            $this->formNumber = $formNumber;
             $this->headingName = $headingName;
             $this->headingValue = $heading;
             $this->fontSize = $fontSize;
             $this->textAlignment = $textAlignment;
-            $this->objDBHTMLHeadingEntity->insertSingle($headingName, $heading, $fontSize, $textAlignment);
+            $this->objDBHTMLHeadingEntity->insertSingle($formNumber,$headingName, $heading, $fontSize, $textAlignment);
 
             return TRUE;
         } else {
             return FALSE;
         }
+    }
+    
+    public function updateFormElement($formNumber,$headingName, $heading, $fontSize, $textAlignment){
+               if ($this->objDBHTMLHeadingEntity->checkDuplicateHTMLheadingEntry($formNumber,$headingName) == FALSE) {
+            $this->formNumber = $formNumber;
+            $this->headingName = $headingName;
+            $this->headingValue = $heading;
+            $this->fontSize = $fontSize;
+            $this->textAlignment = $textAlignment;
+            $this->objDBHTMLHeadingEntity->updateSingle($formNumber,$headingName, $heading, $fontSize, $textAlignment);
+
+            return TRUE;
+        } else {
+            return FALSE;
+        } 
     }
 
     /*!
@@ -110,8 +126,8 @@ class form_entity_htmlheading extends form_entity_handler {
      * \param HTMLHeadingFormName A string containing the form element indentifier.
      * \return A string.
      */
-    protected function getHeadingName($HTMLHeadingFormName) {
-        $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($HTMLHeadingFormName);
+    protected function getHeadingName($formNumber,$HTMLHeadingFormName) {
+        $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($formNumber,$HTMLHeadingFormName);
         $HTMLHeadingNameArray = array();
         foreach ($HTMLHeadingParameters as $thisHTMLHeadingParameter) {
 
@@ -139,11 +155,38 @@ class form_entity_htmlheading extends form_entity_handler {
         $WYSIWYGLabelInsertForm.= "</div>";
         $WYSIWYGLabelInsertForm.="<b>Text Heading Properties Menu</b>";
         $WYSIWYGLabelInsertForm.="<div id='HeadingPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGLabelInsertForm.= $this->insertFontSizeForm() . "<br><br>";
-        $WYSIWYGLabelInsertForm.= $this->insertTextAlignmentType() . "<br><br>";
-        $WYSIWYGLabelInsertForm.= $this->insertTextForm('HTML Heading', 2, 68);
+        $WYSIWYGLabelInsertForm.= $this->insertFontSizeForm(NULL) . "<br><br>";
+        $WYSIWYGLabelInsertForm.= $this->insertTextAlignmentType(NULL) . "<br><br>";
+        $WYSIWYGLabelInsertForm.= $this->insertTextForm('HTML Heading', 2, 68,NULL);
         $WYSIWYGLabelInsertForm.= "</div>";
         return $WYSIWYGLabelInsertForm;
+    }
+    
+    public function getWYSIWYGHTMLHeadingEditForm($formNumber,$HTMLHeadingFormName){
+         $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($formNumber,$HTMLHeadingFormName);
+        if (empty($HTMLHeadingParameters)) {
+            return 0;
+        } else {
+            $headingText = "";
+            $headingSize = "";
+            $textAlignment = "";
+            foreach ($HTMLHeadingParameters as $thisHTMLHeadingParameter) {
+
+            //$headingName = $thisHTMLHeadingParameter["headingname"];
+            $headingText = $thisHTMLHeadingParameter["heading"];
+            $headingSize = $thisHTMLHeadingParameter["size"];
+            $textAlignment = $thisHTMLHeadingParameter["alignment"];
+
+        }
+        $WYSIWYGLabelEditForm="<b>Edit Text Heading Properties</b>";
+        $WYSIWYGLabelEditForm.="<div id='HeadingPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGLabelEditForm.= $this->insertFontSizeForm($headingSize) . "<br><br>";
+        $WYSIWYGLabelEditForm.= $this->insertTextAlignmentType($textAlignment) . "<br><br>";
+        $WYSIWYGLabelEditForm.= $this->insertTextForm('HTML Heading', 2, 68,$headingText);
+        $WYSIWYGLabelEditForm.= "</div>";
+        return $WYSIWYGLabelEditForm;
+
+        }
     }
 
     /*!
@@ -158,8 +201,8 @@ class form_entity_htmlheading extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteHTMLHeadingEntity($formElementName) {
-        $deleteSuccess = $this->objDBHTMLHeadingEntity->deleteFormElement($formElementName);
+    protected function deleteHTMLHeadingEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBHTMLHeadingEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -172,9 +215,9 @@ class form_entity_htmlheading extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed html heading.
      */
-    protected function constructHTMLHeadingEntity($HTMLHeadingName) {
+    protected function constructHTMLHeadingEntity($HTMLHeadingName,$formNumber) {
 
-        $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($HTMLHeadingName);
+        $HTMLHeadingParameters = $this->objDBHTMLHeadingEntity->listHTMLHeadingParameters($formNumber,$HTMLHeadingName);
         $constructedHTMLHeading= "";
         foreach ($HTMLHeadingParameters as $thisHTMLHeadingParameter) {
 

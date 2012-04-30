@@ -11,7 +11,7 @@ Ajax function and store them into temporary variables.
  * this new form element in the div WYSIWYGRadio so its content
  * can be passed back into WYSIWYG editor through jQuery.
 */
-
+$formNumber = $this->getParam("formNumber");
 $optionValue = $this->getParam('optionValue');
 $optionLabel = $this->getParam('optionLabel');
 $formElementName = $this->getParam('formElementName');
@@ -27,9 +27,9 @@ if ($defaultSelected == "on") {
     $defaultSelected = false;
 }
 $objRadioEntity = $this->getObject('form_entity_radio', 'formbuilder');
-$objRadioEntity->createFormElement($formElementName);
+$objRadioEntity->createFormElement($formNumber,$formElementName);
 
-if ($objRadioEntity->insertOptionandValue($formElementName, $optionLabel, $optionValue, $defaultSelected, $layoutOption,$formElementLabel,$formElementLabelLayout) == TRUE) {
+if ($objRadioEntity->insertOptionandValue($formNumber,$formElementName, $optionLabel, $optionValue, $defaultSelected, $layoutOption,$formElementLabel,$formElementLabelLayout) == TRUE) {
     $postSuccessBoolean = 1;
 } else {
     $postSuccessBoolean = 0;

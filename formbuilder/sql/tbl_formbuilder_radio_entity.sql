@@ -27,6 +27,11 @@ $fields = array(
  'length' => 32,
  'notnull' => 1
 ),
+ 'formnumber' => array(
+'type' => 'text',
+ 'length' => 10,
+ 'notnull' => 1
+),
  'radioname' => array(
  'type' => 'text',
  'length' => 150,

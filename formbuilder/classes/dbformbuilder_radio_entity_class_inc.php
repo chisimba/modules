@@ -59,8 +59,8 @@ class dbformbuilder_radio_entity extends dbTable {
      * \return An array with all the radio button parameters that have a name
      * supplied by the argument
      */
-    function listRadioParameters($radioFormName) {
-        return $this->getAll("WHERE radioname='" . $radioFormName . "'");
+    function listRadioParameters($formNumber,$radioFormName) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND radioname='" . $radioFormName . "'");
     }
 
     /*!
@@ -69,11 +69,11 @@ class dbformbuilder_radio_entity extends dbTable {
      * \param radiooptionvalue A string. This is the value of radio button option.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateRadioEntry($radioName, $radiooptionvalue) {
+    function checkDuplicateRadioEntry($formNumber,$radioName, $radiooptionvalue) {
 
 ///Get entries where the radio form name and the radio option value are like the search
 /// parameters.
-        $sql = "where radioname like '" . $radioName . "' and radiooptionvalue like '" . $radiooptionvalue . "'";
+        $sql = "where formnumber like '".$formNumber."' and radioname like '" . $radioName . "' and radiooptionvalue like '" . $radiooptionvalue . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -99,8 +99,9 @@ class dbformbuilder_radio_entity extends dbTable {
      * \param labelLayout A string either "top", "bottom","left", "right".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($radioName, $radioLabel, $radiooptionvalue, $defaultvalue, $breakspace, $formElementLabel, $formElementLabelLayout) {
+    function insertSingle($formNumber,$radioName, $radioLabel, $radiooptionvalue, $defaultvalue, $breakspace, $formElementLabel, $formElementLabelLayout) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'radioname' => $radioName,
                     'radiooptionlabel' => $radioLabel,
                     'radiooptionvalue' => $radiooptionvalue,
@@ -118,11 +119,13 @@ class dbformbuilder_radio_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where radioname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber,$formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and radioname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
-            $this->delete("radioname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_radio_entity WHERE formnumber like '".$formNumber."' AND radioname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("radioname", $formElementName);
             return true;
         } else {
             return false;

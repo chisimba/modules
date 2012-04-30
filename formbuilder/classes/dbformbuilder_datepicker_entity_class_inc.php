@@ -58,9 +58,9 @@ class dbformbuilder_datepicker_entity extends dbTable {
      * \param dpName A string.
      * \return An array with all the date picker objects that have a name supplied by the argument
      */
-    function listDatePickerParameters($dpName) {
+    function listDatePickerParameters($formNumber,$dpName) {
 ///Store a mysql query string.
-        $sql = "select * from tbl_formbuilder_datepicker_entity where datepickername like '" . $dpName . "'";
+        $sql = "select * from tbl_formbuilder_datepicker_entity where formnumber like '".  $formNumber  ."' AND datepickername like '" . $dpName . "'";
 ///Return the array of entries. Note that is function in part of the parent class dbTable.
         return $this->getArray($sql);
     }
@@ -71,11 +71,11 @@ class dbformbuilder_datepicker_entity extends dbTable {
      * \param dpValue A string. This can be thought of as a name.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateDatepickerEntry($dpName, $dpValue) {
+    function checkDuplicateDatepickerEntry($formNumber,$dpName, $dpValue) {
 
 ///Get entries where the date picker form name and the date picker name are like the search
 /// parameters.
-        $sql = "where datepickername like '" . $dpName . "' and datepickervalue like '" . $dpValue . "'";
+        $sql = "where datepickername LIKE '" . $dpName . "' AND formnumber LIKE '".$formNumber."' AND datepickervalue like '" . $dpValue . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -96,14 +96,21 @@ class dbformbuilder_datepicker_entity extends dbTable {
      * \param isDateFormat A string.
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($dpName, $dpValue, $dpDefaultDate, $dpDateFormat) {
+    function insertSingle($formNumber,$dpName, $dpValue, $dpDefaultDate, $dpDateFormat) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'datepickername' => $dpName,
                     'datepickervalue' => $dpValue,
                     'defaultdate' => $dpDefaultDate,
                     'dateFormat' => $dpDateFormat
                 ));
         return $id;
+    }
+    
+    function updateSingle($formNumber,$formElementName,$datePickerValue,$defaultCustomDate,$dateFormat){
+        $UpdateSQL = "UPDATE tbl_formbuilder_datepicker_entity
+        SET defaultdate='".$defaultCustomDate."', dateFormat='".$dateFormat."' WHERE datepickername='".$formElementName."' and datepickervalue='".$datePickerValue."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
     }
 
     /*!
@@ -112,17 +119,19 @@ class dbformbuilder_datepicker_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
+    function deleteFormElement($formNumber,$formElementName) {
 ///Get all the entries the have a date picker form name according to the
 ///search value.
-        $sql = "where datepickername like '" . $formElementName . "'";
+        $sql = "where formnumber like '".$formNumber."' and datepickername like '" . $formElementName . "'";
 ///Get the number of records for the entries. Note the getRecordCount
 ///is a dbtable member function.
         $valueExists = $this->getRecordCount($sql);
 ///If there are values that exist then delete the records and return true
 ///otherwise return false.
         if ($valueExists >= 1) {
-            $this->delete("datepickername", $formElementName);
+              $deleteSQLStatement = "DELETE FROM tbl_formbuilder_datepicker_entity WHERE formnumber like '".$formNumber."' AND datepickername like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("datepickername", $formElementName);
             return true;
         } else {
             return false;

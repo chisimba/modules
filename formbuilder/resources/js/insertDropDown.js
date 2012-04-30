@@ -157,7 +157,11 @@ var formElementLabels=formElementLabel.val();
  */
 function produceDropDown(formElementID,optionValue,optionLabel,formElementLabel,formElementLabelLayout,defaultOption,defaultAlreadySelected)
 {
+    var formnumber = jQuery("#getFormNumber").html();
+    formnumber = jQuery.trim(formnumber);
+            
     var dropDownDataToPost = {
+        "formNumber":formnumber,
         "optionValue":optionValue,
         "optionLabel":optionLabel,
         "formElementName":formElementID,

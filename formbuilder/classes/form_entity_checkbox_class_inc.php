@@ -21,6 +21,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_checkbox extends form_entity_handler {
     
+    private $formNumber;
     /*!
      * \brief This data member stores the form element identifier or ID that can
      * be used anywhere in this class.
@@ -94,17 +95,17 @@ class form_entity_checkbox extends form_entity_handler {
      * put on top, bottom, left or right of the checkbox.
      * \return A boolean value on successful storage of the checkbox form element.
      */
-    public function createFormElement($checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout) {
+    public function createFormElement($formNumber,$checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout) {
 
-        if ($this->objDBcheckboxEntity->checkDuplicateCheckboxEntry($checkboxName, $checkboxValue) == TRUE) {
-
+        if ($this->objDBcheckboxEntity->checkDuplicateCheckboxEntry($formNumber,$checkboxName, $checkboxValue) == TRUE) {
+            $this->formNumber = $formNumber;
             $this->checkboxValue = $checkboxValue;
             $this->checkboxName = $checkboxName;
             $this->checkboxLabel = $checkboxLabel;
             $this->isCheckedBoolean = $isChecked;
             $this->checkboxLayoutOption = $breakSpace;
 
-            $this->objDBcheckboxEntity->insertSingle($checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout);
+            $this->objDBcheckboxEntity->insertSingle($formNumber,$checkboxName, $checkboxValue, $checkboxLabel, $isChecked, $breakSpace, $formElementLabel, $labelLayout);
             return TRUE;
         } else {
             return FALSE;
@@ -127,8 +128,8 @@ class form_entity_checkbox extends form_entity_handler {
      * \param checkboxFormName A string containing the form element indentifier.
      * \return A string.
      */
-    protected function getCheckboxName($checkboxFormName) {
-        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($checkboxFormName);
+    protected function getCheckboxName($formNumber,$checkboxFormName) {
+        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($formNumber,$checkboxFormName);
         $checkboxNameArray = array();
         foreach ($checkboxParameters as $thisCheckboxParameter) {
             $checkboxValue = $thisCheckboxParameter["checkboxvalue"];
@@ -180,8 +181,8 @@ class form_entity_checkbox extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteCheckBoxEntity($formElementName) {
-        $deleteSuccess = $this->objDBcheckboxEntity->deleteFormElement($formElementName);
+    protected function deleteCheckBoxEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBcheckboxEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -194,8 +195,8 @@ class form_entity_checkbox extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed checkbox.
      */
-    protected function constructCheckBoxEntity($checkboxName) {
-        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($checkboxName);
+    protected function constructCheckBoxEntity($checkboxName,$formNumber) {
+        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($formNumber,$checkboxName);
         $constructedCheckbox = "";
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 
@@ -247,7 +248,7 @@ class form_entity_checkbox extends form_entity_handler {
      */
     private function buildWYSIWYGCheckboxEntity() {
 
-        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($this->checkboxName);
+        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($this->formNumber,$this->checkboxName);
         $constructedCheckbox = "";
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 //Store the values of the array in variables

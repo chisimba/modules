@@ -59,8 +59,8 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
      * \param msddName A string.
      * \return An array with all the msdd parameters that have a name supplied by the argument
      */
-    function listMultiSelectDropdownParameters($msddName) {
-        $sql = "select * from tbl_formbuilder_multiselect_dropdown_entity where multiselectdropdownname like '" . $msddName . "'";
+    function listMultiSelectDropdownParameters($formNumber,$msddName) {
+        $sql = "select * from tbl_formbuilder_multiselect_dropdown_entity where formnumber like '".$formNumber."' and multiselectdropdownname like '" . $msddName . "'";
         return $this->getArray($sql);
     }
 
@@ -70,11 +70,11 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
      * \param label A string. This is the actual name of the msdd.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateMultiSelectDropdownEntry($msddName, $msddValue) {
+    function checkDuplicateMultiSelectDropdownEntry($formNumber,$msddName, $msddValue) {
 
 ///Get entries where the msdd form name and the msdd name are like the search
 /// parameters.
-        $sql = "where multiselectdropdownname like '" . $msddName . "' and msddoptionvalue like '" . $msddValue . "'";
+        $sql = "where formnumber like '".$formNumber."' and multiselectdropdownname like '" . $msddName . "' and msddoptionvalue like '" . $msddValue . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -101,8 +101,9 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
      * \param labelLayout A string either "top", "bottom","left", "right".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($msddName, $msddLabel, $msddValue, $defaultValue, $msddsize, $formElementLabel, $labelLayout) {
+    function insertSingle($formNumber,$msddName, $msddLabel, $msddValue, $defaultValue, $msddsize, $formElementLabel, $labelLayout) {
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'multiselectdropdownname' => $msddName,
                     'msddoptionlabel' => $msddLabel,
                     'msddoptionvalue' => $msddValue,
@@ -120,10 +121,13 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
      * name.
      * \param msddsize An integer with the desired menu size to update.
      */
-    function updateMenuSize($msddName, $msddsize) {
-        $this->update('multiselectdropdownname', $msddName, array(
-            'msddsize' => $msddsize
-        ));
+    function updateMenuSize($formNumber,$msddName, $msddsize) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_multiselect_dropdown_entity
+SET msddsize='".$msddsize."' WHERE multiselectdropdownname='".$msddName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+//        $this->update('multiselectdropdownname', $msddName, array(
+//            'msddsize' => $msddsize
+//        ));
     }
 
     /*!
@@ -132,11 +136,13 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where multiselectdropdownname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber,$formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and multiselectdropdownname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
-            $this->delete("multiselectdropdownname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_multiselect_dropdown_entity WHERE formnumber like '".$formNumber."' AND multiselectdropdownname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("multiselectdropdownname", $formElementName);
             return true;
         } else {
             return false;

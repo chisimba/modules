@@ -10,29 +10,37 @@
  * this new form element in the div WYSIWYGCheckbox so its content
  * can be passed back into WYSIWYG editor through jQuery.
  */
-
+$formNumber = $this->getParam("formNumber");
 $datePickerName = $this->getParam('datePickerName');
 $datePickerValue = $this->getParam('datePickerValue');
 $dateFormat = $this->getParam('dateFormat');
 $defaultCustomDate = $this->getParam('defaultCustomDate');
-
+$update = $this->getParam("update");
 
 $objDPEntity = $this->getObject('form_entity_datepicker', 'formbuilder');
+$postSuccessBoolean = 0;
+$objDPEntity->createFormElement($formNumber, $datePickerName, $datePickerValue);
 
-$objDPEntity->createFormElement($datePickerName, $datePickerValue);
-
-if ($objDPEntity->insertDatePickerParameters($datePickerName, $datePickerValue, $defaultCustomDate, $dateFormat) == TRUE) {
-    $postSuccessBoolean = 1;
+if (isset($update) && $update) {
+    if ($objDPEntity->updateDatePickerParameters($formNumber, $datePickerName, $datePickerValue, $defaultCustomDate, $dateFormat) == TRUE) {
+        $postSuccessBoolean = 1;
+    } else {
+        $postSuccessBoolean = 0;
+    }
 } else {
-    $postSuccessBoolean = 0;
+    if ($objDPEntity->insertDatePickerParameters($formNumber, $datePickerName, $datePickerValue, $defaultCustomDate, $dateFormat) == TRUE) {
+        $postSuccessBoolean = 1;
+    } else {
+        $postSuccessBoolean = 0;
+    }
 }
 ?>
 
 <div id="WYSIWYGDatepicker">
-<?php
-if ($postSuccessBoolean == 1) {
+    <?php
+    if ($postSuccessBoolean == 1) {
 //!!!Problem Code!!!
-    echo $objDPEntity->showWYSIWYGDatepickerEntity();
+        echo $objDPEntity->showWYSIWYGDatepickerEntity();
 // $datePicker = $this->newObject('datepicker', 'htmlelements');
 // $datePicker->name = 'storydate';
 // //$datePicker->setName("storydate");
@@ -42,8 +50,8 @@ if ($postSuccessBoolean == 1) {
 //       echo $postSuccessBoolean;
 //
 //       echo "fweljfklwejfklejflejfl;wejf";
-} else {
-    echo $postSuccessBoolean;
-}
-?>
+    } else {
+        echo $postSuccessBoolean;
+    }
+    ?>
 </div>

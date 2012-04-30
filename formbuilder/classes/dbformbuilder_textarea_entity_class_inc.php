@@ -58,8 +58,8 @@ class dbformbuilder_textarea_entity extends dbTable {
      * \return An array with all the text area parameters that have a name
      * supplied by the argument
      */
-    function listTextAreaParameters($textAreaFormname) {
-        return $this->getAll("WHERE textareaformname='" . $textAreaFormname . "'");
+    function listTextAreaParameters($formNumber,$textAreaFormname) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND textareaformname='" . $textAreaFormname . "'");
     }
 
     /*!
@@ -68,11 +68,11 @@ class dbformbuilder_textarea_entity extends dbTable {
      * \param textareaname A string which is basically the name of the form element.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateTextAreaEntry($textareaformname, $textareaname) {
+    function checkDuplicateTextAreaEntry($formNumber,$textareaformname, $textareaname) {
 
 ///Get entries where the text area form name and the text area name are like the search
 /// parameters.
-        $sql = "where textareaformname like '" . $textareaformname . "' and textareaname like '" . $textareaname . "'";
+        $sql = "where formnumber like '".$formNumber."' and textareaformname like '" . $textareaformname . "' and textareaname like '" . $textareaname . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -82,6 +82,8 @@ class dbformbuilder_textarea_entity extends dbTable {
             return FALSE;
         }
     }
+    
+
 
     /*!
      * \brief Insert a new record
@@ -98,8 +100,9 @@ class dbformbuilder_textarea_entity extends dbTable {
      * \param labelorientation A string either "top", "bottom","left", "right".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($textareaformname, $textareaname, $textareavalue, $columnsize, $rowsize, $simpleoradvancedchoice, $toolbarchoice, $textarealabel, $labelorientation) {
+    function insertSingle($formnumber,$textareaformname, $textareaname, $textareavalue, $columnsize, $rowsize, $simpleoradvancedchoice, $toolbarchoice, $textarealabel, $labelorientation) {
         $id = $this->insert(array(
+                    'formnumber' => $formnumber,
                     'textareaformname' => $textareaformname,
                     'textareaname' => $textareaname,
                     'textareavalue' => $textareavalue,
@@ -112,6 +115,12 @@ class dbformbuilder_textarea_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function updateSingle($formNumber,$textareaformname,$textareaname,$textAreaValue,$ColumnSize,$RowSize,$simpleOrAdvancedHAChoice,$toolbarChoice,$formElementLabel,$labelLayout){
+        $UpdateSQL = "UPDATE tbl_formbuilder_textarea_entity
+        SET textareavalue='".$textAreaValue."', columnsize='".$ColumnSize."', rowsize='".$RowSize."', simpleoradvancedchoice='".$simpleOrAdvancedHAChoice."', toolbarchoice='".$toolbarChoice."', label='".$formElementLabel."', labelorientation='".$labelLayout."' WHERE textareaformname='".$textareaformname."' and textareaname='".$textareaname."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
 
     /*!
      * \brief This member function deletes a text area according to its form element
@@ -119,11 +128,13 @@ class dbformbuilder_textarea_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where textareaformname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber,$formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and textareaformname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
-            $this->delete("textareaformname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_textarea_entity WHERE formnumber like '".$formNumber."' AND textareaformname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("textareaformname", $formElementName);
             return true;
         } else {
             return false;

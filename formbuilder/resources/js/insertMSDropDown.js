@@ -176,7 +176,9 @@ does not exist. Please contact your software administrator.</p>');
  */
 function   produceMSDropDown(formElementID,optionValue,optionLabel,menuSize,formElementLabel,formElementLabelLayout,defaultOption)
 {
-  var MSDropdowndataToPost = {"optionValue":optionValue, "optionLabel":optionLabel, "formElementName":formElementID, "defaultSelected":defaultOption, "menuSize":menuSize,"formElementLabel":formElementLabel,"formElementLabelLayout":formElementLabelLayout};
+              var formnumber = jQuery("#getFormNumber").html();
+            formnumber = jQuery.trim(formnumber);
+  var MSDropdowndataToPost = {"formNumber":formnumber,"optionValue":optionValue, "optionLabel":optionLabel, "formElementName":formElementID, "defaultSelected":defaultOption, "menuSize":menuSize,"formElementLabel":formElementLabel,"formElementLabelLayout":formElementLabelLayout};
                         var myurlToCreateMSDropDown = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceMSDropDown]").val();
 
                 jQuery('#tempdivcontainer').load(myurlToCreateMSDropDown ,MSDropdowndataToPost ,function postSuccessFunction(html) {

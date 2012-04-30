@@ -238,37 +238,37 @@ class form_entity_handler extends object {
             switch ($formElementType) {
 
                 case 'radio':
-                    $deleteSuccess = $this->radioConstructor->deleteRadioEntity($formElementName);
+                    $deleteSuccess = $this->radioConstructor->deleteRadioEntity($formNumber,$formElementName);
                     break;
 
                 case 'checkbox':
-                    $deleteSuccess = $this->checkboxConstructor->deleteCheckBoxEntity($formElementName);
+                    $deleteSuccess = $this->checkboxConstructor->deleteCheckBoxEntity($formNumber,$formElementName);
                     break;
 
                 case 'dropdown':
-                    $deleteSuccess = $this->dropdownConstructor->deleteDropDownEntity($formElementName);
+                    $deleteSuccess = $this->dropdownConstructor->deleteDropDownEntity($formNumber,$formElementName);
                     break;
                 case 'label':
-                    $deleteSuccess = $this->labelConstructor->deleteLabelEntity($formElementName);
+                    $deleteSuccess = $this->labelConstructor->deleteLabelEntity($formNumber,$formElementName);
                     break;
 
                 case 'HTML_heading':
-                    $deleteSuccess = $this->HTMLHeadingConstructor->deleteHTMLHeadingEntity($formElementName);
+                    $deleteSuccess = $this->HTMLHeadingConstructor->deleteHTMLHeadingEntity($formNumber,$formElementName);
                     break;
                 case 'datepicker':
-                    $deleteSuccess = $this->datePickerConstructor->deleteDatePickerEntity($formElementName);
+                    $deleteSuccess = $this->datePickerConstructor->deleteDatePickerEntity($formNumber,$formElementName);
                     break;
                 case 'text_input':
-                    $deleteSuccess = $this->textinputConstructor->deleteTextInputEntity($formElementName);
+                    $deleteSuccess = $this->textinputConstructor->deleteTextInputEntity($formNumber,$formElementName);
                     break;
                 case 'text_area':
-                    $deleteSuccess = $this->textareaConstructor->deleteTextAreaEntity($formElementName);
+                    $deleteSuccess = $this->textareaConstructor->deleteTextAreaEntity($formNumber,$formElementName);
                     break;
                 case 'button':
-                    $deleteSuccess = $this->buttonConstructor->deleteButtonEntity($formElementName);
+                    $deleteSuccess = $this->buttonConstructor->deleteButtonEntity($formNumber,$formElementName);
                     break;
                 case 'multiselectable_dropdown':
-                    $deleteSuccess = $this->multiselectDropDownConstructor->deleteMultiSelectDropDownEntity($formElementName);
+                    $deleteSuccess = $this->multiselectDropDownConstructor->deleteMultiSelectDropDownEntity($formNumber,$formElementName);
                     break;
                 default:
                     $deleteSuccess = 2;
@@ -306,45 +306,45 @@ class form_entity_handler extends object {
             switch ($formElementType) {
 
                 case 'radio':
-                    $constructedRadio = $this->radioConstructor->constructRadioEntity($formElementName);
+                    $constructedRadio = $this->radioConstructor->constructRadioEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementRadio'>$constructedRadio</div>";
                     break;
                 case 'checkbox':
-                    $constructedCheckBox = $this->checkboxConstructor->constructCheckBoxEntity($formElementName);
+                    $constructedCheckBox = $this->checkboxConstructor->constructCheckBoxEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementCheckBox'>$constructedCheckBox</div>";
                     break;
 
                 case 'dropdown':
-                    $constructedDropdown = $this->dropdownConstructor->constructDropDownEntity($formElementName);
+                    $constructedDropdown = $this->dropdownConstructor->constructDropDownEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementDropDown'>$constructedDropdown</div>";
                     break;
                 case 'label':
-                    $constructedLabel = $this->labelConstructor->constructLabelEntity($formElementName);
+                    $constructedLabel = $this->labelConstructor->constructLabelEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementLabel'>$constructedLabel</div>";
                     break;
                 case 'HTML_heading':
-                    $constructedHTMLHeading = $this->HTMLHeadingConstructor->constructHTMLHeadingEntity($formElementName);
+                    $constructedHTMLHeading = $this->HTMLHeadingConstructor->constructHTMLHeadingEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .= "<div id =$formElementName class='witsCCMSFormElementHTMLHeading'>$constructedHTMLHeading</div>";
                     break;
                 case 'datepicker':
-                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName);
+                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementDatePicker'><br>[JavaScript Conflict: Date Picker Object can not be displayed.
 It \"will\" be displayed in the built form.]<br></div>";
                     break;
                 case 'text_input':
-                    $constructedTextInput = $this->textinputConstructor->constructTextInputEntity($formElementName);
+                    $constructedTextInput = $this->textinputConstructor->constructTextInputEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementTextInput'>$constructedTextInput</div>";
                     break;
                 case 'text_area':
-                    $constructedTextArea = $this->textareaConstructor->constructTextAreaEntity($formElementName);
+                    $constructedTextArea = $this->textareaConstructor->constructTextAreaEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementTextArea'>$constructedTextArea</div>";
                     break;
                 case 'button':
-                    $constructedButton = $this->buttonConstructor->constructButtonEntity($formElementName);
+                    $constructedButton = $this->buttonConstructor->constructButtonEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementButton'>$constructedButton</div>";
                     break;
                 case 'multiselectable_dropdown':
-                    $constructedMultiSelectDropDown = $this->multiselectDropDownConstructor->constructMultiSelectDropDownEntity($formElementName);
+                    $constructedMultiSelectDropDown = $this->multiselectDropDownConstructor->constructMultiSelectDropDownEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementMultiSelectDropDown'>$constructedMultiSelectDropDown</div>";
                     break;
 
@@ -446,16 +446,16 @@ It \"will\" be displayed in the built form.]<br></div>";
             switch ($formElementType) {
 
                 case 'radio':
-                    $constructedRadio = $this->radioConstructor->constructRadioEntity($formElementName);
+                    $constructedRadio = $this->radioConstructor->constructRadioEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementRadio'>$constructedRadio</div>");
-                    $radioName = $this->radioConstructor->getRadioName($formElementName);
+                    $radioName = $this->radioConstructor->getRadioName($formNumber,$formElementName);
                     $formElementNameArray[] = $radioName;
                     $formElementTypeArray[] = $formElementType;
                     break;
                 case 'checkbox':
-                    $constructedCheckBox = $this->checkboxConstructor->constructCheckBoxEntity($formElementName);
+                    $constructedCheckBox = $this->checkboxConstructor->constructCheckBoxEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementCheckBox'>$constructedCheckBox</div>");
-                    $checkBoxNameArray = $this->checkboxConstructor->getCheckboxName($formElementName);
+                    $checkBoxNameArray = $this->checkboxConstructor->getCheckboxName($formNumber,$formElementName);
 
                     $numberOfCheckBoxTypes = count($checkBoxNameArray);
                     $formElementNameArray = array_merge($formElementNameArray, $checkBoxNameArray);
@@ -468,30 +468,30 @@ It \"will\" be displayed in the built form.]<br></div>";
                     break;
 
                 case 'dropdown':
-                    $constructedDropdown = $this->dropdownConstructor->constructDropDownEntity($formElementName);
+                    $constructedDropdown = $this->dropdownConstructor->constructDropDownEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementDropDown'>$constructedDropdown</div>");
-                    $dropdownName = $this->dropdownConstructor->getDropdownName($formElementName);
+                    $dropdownName = $this->dropdownConstructor->getDropdownName($formNumber,$formElementName);
 
                     $formElementNameArray[] = $dropdownName;
                     $formElementTypeArray[] = $formElementType;
                     break;
                 case 'label':
-                    $constructedLabel = $this->labelConstructor->constructLabelEntity($formElementName);
+                    $constructedLabel = $this->labelConstructor->constructLabelEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementLabel'>$constructedLabel</div>");
 //   $formElementNameArray[]=$formElementName;
 //              $formElementTypeArray[]=$formElementType;
                     break;
                 case 'HTML_heading':
-                    $constructedHTMLHeading = $this->HTMLHeadingConstructor->constructHTMLHeadingEntity($formElementName);
+                    $constructedHTMLHeading = $this->HTMLHeadingConstructor->constructHTMLHeadingEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementHTMLHeading'>$constructedHTMLHeading</div>");
 // $formElementNameArray[]=$formElementName;
 //   $formElementTypeArray[]=$formElementType;
                     break;
                 case 'datepicker':
-                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName);
+                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementDatePicker'>$constructedDatePicker</div>");
 
-                    $datePickerNameArray = $this->datePickerConstructor->getDatePickerName($formElementName);
+                    $datePickerNameArray = $this->datePickerConstructor->getDatePickerName($formNumber,$formElementName);
                     $numberOfDatePickerTypes = count($datePickerNameArray);
                     $formElementNameArray = array_merge($formElementNameArray, $datePickerNameArray);
                     for ($i = 0; $i < $numberOfDatePickerTypes; $i++) {
@@ -501,9 +501,9 @@ It \"will\" be displayed in the built form.]<br></div>";
 //                            $formElementTypeArray[]=$formElementType;
                     break;
                 case 'text_input':
-                    $constructedTextInput = $this->textinputConstructor->constructTextInputEntity($formElementName);
+                    $constructedTextInput = $this->textinputConstructor->constructTextInputEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementTextInput'>$constructedTextInput</div>");
-                    $textInputNameArray = $this->textinputConstructor->getTextInputName($formElementName);
+                    $textInputNameArray = $this->textinputConstructor->getTextInputName($formNumber,$formElementName);
                     $numberOfTextInputTypes = count($textInputNameArray);
                     $formElementNameArray = array_merge($formElementNameArray, $textInputNameArray);
 // $formElementNameArray[]=$formElementName;
@@ -512,9 +512,9 @@ It \"will\" be displayed in the built form.]<br></div>";
                     }
                     break;
                 case 'text_area':
-                    $constructedTextArea = $this->textareaConstructor->constructTextAreaEntity($formElementName);
+                    $constructedTextArea = $this->textareaConstructor->constructTextAreaEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementTextArea'>$constructedTextArea</div>");
-                    $textAreaNameArray = $this->textareaConstructor->getTextAreaName($formElementName);
+                    $textAreaNameArray = $this->textareaConstructor->getTextAreaName($formNumber,$formElementName);
                     $numberOfTextAreaTypes = count($textAreaNameArray);
                     $formElementNameArray = array_merge($formElementNameArray, $textAreaNameArray);
 // $formElementNameArray[]=$formElementName;
@@ -524,15 +524,15 @@ It \"will\" be displayed in the built form.]<br></div>";
                     }
                     break;
                 case 'button':
-                    $constructedButton = $this->buttonConstructor->constructButtonEntity($formElementName);
+                    $constructedButton = $this->buttonConstructor->constructButtonEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementButton'>$constructedButton</div>");
 //   $formElementNameArray[]=$formElementName;
 //                  $formElementTypeArray[]=$formElementType;
                     break;
                 case 'multiselectable_dropdown':
-                    $constructedMultiSelectDropDown = $this->multiselectDropDownConstructor->constructMultiSelectDropDownEntity($formElementName);
+                    $constructedMultiSelectDropDown = $this->multiselectDropDownConstructor->constructMultiSelectDropDownEntity($formElementName,$formNumber);
                     $objForm->addToForm("<div id =$formElementName class='witsCCMSFormElementMultiSelectDropDown'>$constructedMultiSelectDropDown</div>");
-                    $multiSelectDropDownName = $this->multiselectDropDownConstructor->getMultiSelectDropdownName($formElementName);
+                    $multiSelectDropDownName = $this->multiselectDropDownConstructor->getMultiSelectDropdownName($formNumber,$formElementName);
 
 
                     $formElementNameArray[] = $multiSelectDropDownName;
@@ -678,7 +678,7 @@ It \"will\" be displayed in the built form.]<br></div>";
      * is taken into account in this member function.
      * \return A constructed mini form to insert the layout for a form element option.
      */
-    protected function buildLayoutForm($formElementType, $value, $formElement) {
+    protected function buildLayoutForm($formElementType, $value, $formElement,$editValue) {
         $this->loadClass('radio', 'htmlelements');
         $objElement = new radio('formElementLayout');
         if ($formElementType == NULL || $this->detectIEBrowser() == TRUE) {
@@ -696,7 +696,12 @@ It \"will\" be displayed in the built form.]<br></div>";
             $objElement->addOption('normal', 'Use normal layout (No Spaces)<br>' .
                     "<img src='packages/formbuilder/resources/images/" . $formElement . "_no_space.png' alt='single space'>");
         }
-        $objElement->setSelected('tab');
+        if (isset($editValue)){
+            $objElement->setSelected($editValue);
+        } else {
+            $objElement->setSelected('tab');
+        }
+        
 //$objElement->setBreakSpace("<br>");
         $layoutUnderConstruction .= $objElement->show();
         return $layoutUnderConstruction;
@@ -709,7 +714,7 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text area.
      * \return A constructed mini form to insert default text.
      */
-    protected function insertTextForm($formElementType, $textAreaRowSize, $textAreaColumnSize) {
+    protected function insertTextForm($formElementType, $textAreaRowSize, $textAreaColumnSize,$editValue) {
         $this->loadClass('textarea', 'htmlelements');
         if ($formElementType == NULL) {
             $layouUnderConstruction = "Enter the desired text:<br>";
@@ -718,7 +723,12 @@ It \"will\" be displayed in the built form.]<br></div>";
         } else {
             $layouUnderConstruction = "Enter the desired text for " . $formElementType . ":<br>";
         }
-        $desiredTextInput = new textarea("formElementDesiredText", null, $textAreaRowSize, $textAreaColumnSize);
+        if (isset($editValue)){
+            $desiredTextInput = new textarea("formElementDesiredText", $editValue, $textAreaRowSize, $textAreaColumnSize);
+        }else{
+          $desiredTextInput = new textarea("formElementDesiredText", null, $textAreaRowSize, $textAreaColumnSize);  
+        }
+        
         $layouUnderConstruction .= $desiredTextInput->show();
         return $layouUnderConstruction;
     }
@@ -730,7 +740,7 @@ It \"will\" be displayed in the built form.]<br></div>";
      * radio element.
      * \return A constructed mini form to insert font sizes.
      */
-    protected function insertFontSizeForm() {
+    protected function insertFontSizeForm($editSize) {
         $this->loadClass('radio', 'htmlelements');
         $fontSizeUnderConstruction = "Select Font Size:<br>";
         $objElement = new radio('fontSize');
@@ -740,7 +750,12 @@ It \"will\" be displayed in the built form.]<br></div>";
         $objElement->addOption('4', '<font size="2"><b>Size 4</b></font>');
         $objElement->addOption('5', '<font size="1"><b>Size 5</b></font>');
         $objElement->addOption('6', '<font size="-2"><SUB>Size 6</SUB></font>');
-        $objElement->setSelected('3');
+        if (isset($editSize)){
+            $objElement->setSelected($editSize);
+        }else{
+           $objElement->setSelected('3'); 
+        }
+        
         $objElement->setBreakSpace("<br>");
         $fontSizeUnderConstruction .= $objElement->show();
         return $fontSizeUnderConstruction;
@@ -753,14 +768,19 @@ It \"will\" be displayed in the built form.]<br></div>";
      * radio element.
      * \return A constructed mini form to insert text alignment
      */
-    protected function insertTextAlignmentType() {
+    protected function insertTextAlignmentType($editAlignment) {
         $this->loadClass('radio', 'htmlelements');
         $textAlignmentUnderConstruction = "Select Alignment Type:<br>";
         $objElement = new radio('textAlignment');
         $objElement->addOption('left', 'Left Align');
         $objElement->addOption('center', 'Center Align');
         $objElement->addOption('right', 'Right Align');
-        $objElement->setSelected('left');
+        if (isset($editAlignment)){
+            $objElement->setSelected($editAlignment);
+        }else{
+         $objElement->setSelected('left');   
+        }
+        
         $objElement->setBreakSpace("<br>");
         $textAlignmentUnderConstruction .= $objElement->show();
         return $textAlignmentUnderConstruction;
@@ -773,10 +793,15 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text input.
      * \return A constructed mini form to insert widths of form elements.
      */
-    protected function insertCharacterSizeForm() {
+    protected function insertCharacterSizeForm($editTextInputSize) {
         $characterSizeUnderConstruction = "Set character or field size for text input (between 1-150):&nbsp&nbsp&nbsp";
         $this->loadClass('textinput', 'htmlelements');
-        $characterLengthTextInput = new textinput("textInputLength", "25", 'text', "4");
+        if (isset($editTextInputSize)){
+          $characterLengthTextInput = new textinput("textInputLength", $editTextInputSize, 'text', "4");
+        }else{
+          $characterLengthTextInput = new textinput("textInputLength", "25", 'text', "4");  
+        }
+        
         $characterSizeUnderConstruction .=$characterLengthTextInput->show();
         return $characterSizeUnderConstruction;
     }
@@ -788,13 +813,18 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text input and two radio elements.
      * \return A constructed mini form to insert parameters for text inputs.
      */
-    protected function insertTextInputOptionsForm($textAreaRowSize, $textAreaColumnSize) {
+    protected function insertTextInputOptionsForm($textAreaRowSize, $textAreaColumnSize,$editTIType,$editValidationType,$editDefaultText) {
         $TIOptionsUnderConstruction = "Select Text Input Type:<br>";
         $this->loadClass('radio', 'htmlelements');
         $objElement = new radio('textOrPasswordRadio');
         $objElement->addOption('text', 'Insert Text');
         $objElement->addOption('password', 'Insert Password');
-        $objElement->setSelected('text');
+        if (isset($editTIType)){
+            $objElement->setSelected($editTIType);
+        } else {
+            $objElement->setSelected('text');
+        }
+        
 //  $objElement->setBreakSpace("<br>");
         $TIOptionsUnderConstruction .= $objElement->show() . "<br>";
         $TIOptionsUnderConstruction .="<div id=additionalTextProperties>";
@@ -815,14 +845,23 @@ It \"will\" be displayed in the built form.]<br></div>";
         $objElement->addOption('html_hex', 'HTML Color Codes : #00ccff');
         $objElement->addOption('email', 'Email Address : salman.noor@wits.ac.za');
         $objElement->addOption('url', 'Internet Address : http://www.google.co.za');
-        $objElement->setSelected('default');
+        if (isset($editValidationType)){
+          $objElement->setSelected($editValidationType);  
+        }else{
+          $objElement->setSelected('default');  
+        }
+        
 //$objElement->setBreakSpace("<br>");
         $TIOptionsUnderConstruction .= $objElement->show();
 
         $TIOptionsUnderConstruction .= "<div id='defaultTextInput'>";
         $TIOptionsUnderConstruction .= "<br>Set the default text for text input:<br>";
-
-        $desiredTextInput = new textarea("formElementDesiredText", '', $textAreaRowSize, $textAreaColumnSize);
+        if(isset($editDefaultText)){
+           $desiredTextInput = new textarea("formElementDesiredText", $editDefaultText, $textAreaRowSize, $textAreaColumnSize); 
+        }else{
+           $desiredTextInput = new textarea("formElementDesiredText", '', $textAreaRowSize, $textAreaColumnSize); 
+        }
+        
         $TIOptionsUnderConstruction .= $desiredTextInput->show();
         $TIOptionsUnderConstruction .= "</div></div>";
         return $TIOptionsUnderConstruction;
@@ -847,9 +886,14 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text input and a radio element.
      * \return A constructed mini form to insert labels for form elements
      */
-    protected function insertFormLabelOptions($formElementType, $radioName) {
+    protected function insertFormLabelOptions($formElementType, $radioName,$editLabelParam,$editLabelOrientationParam) {
         $LabelMenuConstruction = "Insert a label or leave this field blank to add no label: <br>";
-        $desiredTextInput = new textarea("formElementLabel", '', 1, 68);
+        if (isset($editLabelParam)){
+            $desiredTextInput = new textarea("formElementLabel", $editLabelParam, 1, 68);
+        } else {
+          $desiredTextInput = new textarea("formElementLabel", '', 1, 68);  
+        }
+        
         $LabelMenuConstruction .= $desiredTextInput->show() . "<br>";
         $LabelMenuConstruction .= "Label Orientation:<br>";
         $objElement = new radio($radioName);
@@ -857,7 +901,12 @@ It \"will\" be displayed in the built form.]<br></div>";
         $objElement->addOption("right", "Place label on the right.<br><img src='packages/formbuilder/resources/images/" . $formElementType . "_label_right.png' alt='right'>");
         $objElement->addOption('top', "Place label on the top.<br><img src='packages/formbuilder/resources/images/" . $formElementType . "_label_top.png' alt='right'>");
         $objElement->addOption('bottom', "Insert label at the bottom.<br><img src='packages/formbuilder/resources/images/" . $formElementType . "_label_bottom.png' alt='right'><br>");
-        $objElement->setSelected('left');
+        if (isset($editLabelOrientationParam)){
+            $objElement->setSelected($editLabelOrientationParam);
+        } else {
+          $objElement->setSelected('left');  
+        }
+        
 // $objElement->setBreakSpace("<br>");
 
         if ($this->detectIEBrowser()) {
@@ -882,13 +931,23 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text inputs
      * \return A constructed mini form to insert a size for text areas.
      */
-    protected function insertTextAreaSizeParameters() {
+    protected function insertTextAreaSizeParameters($editColumnSize,$editRowSize) {
         $TASizeParametersUnderConstruction = "Set horizontal or column size for text area (between 1-140):  ";
         $this->loadClass('textinput', 'htmlelements');
-        $columnLengthTextArea = new textinput("textAreaLength", "70", 'text', "4");
+        if (isset($editColumnSize)){
+           $columnLengthTextArea = new textinput("textAreaLength", $editColumnSize, 'text', "4");   
+        } else{
+          $columnLengthTextArea = new textinput("textAreaLength", "70", 'text', "4");  
+        }
+        
         $TASizeParametersUnderConstruction .=$columnLengthTextArea->show() . "<br>";
         $TASizeParametersUnderConstruction .="Set vertical or row size for text area (between 1-240):  ";
-        $rowLengthTextArea = new textinput("textAreaHeight", "10", 'text', "4");
+        if (isset($editRowSize)){
+            $rowLengthTextArea = new textinput("textAreaHeight", $editRowSize, 'text', "4");
+        }else{
+           $rowLengthTextArea = new textinput("textAreaHeight", "10", 'text', "4"); 
+        }
+        
         $TASizeParametersUnderConstruction .=$rowLengthTextArea->show() . "<br>";
         return $TASizeParametersUnderConstruction;
     }
@@ -926,7 +985,7 @@ It \"will\" be displayed in the built form.]<br></div>";
      * element, a dropdown list and text input.
      * \return A constructed mini form to insert the datepicker parameters.
      */
-    protected function insertDatePickerFormParameters() {
+    protected function insertDatePickerFormParameters($ditDateFormat,$editDefaultDate) {
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         $DPParametersUnderConstruction = "Please Select Date Format: <br>";
@@ -940,19 +999,34 @@ It \"will\" be displayed in the built form.]<br></div>";
         foreach ($possibleDateFomats as $thisDateFormat) {
             $defaultDateFormatRadio->addOption($thisDateFormat, $thisDateFormat);
         }
-        $defaultDateFormatRadio->setSelected('YYYY-MM-DD');
+        if (isset($ditDateFormat)) {
+            $defaultDateFormatRadio->setSelected($ditDateFormat);
+        } else {
+            $defaultDateFormatRadio->setSelected('YYYY-MM-DD');
+        }
+
         $DPParametersUnderConstruction.= $defaultDateFormatRadio->show() . "<br><br>";
         $DPParametersUnderConstruction .="Please Select Choice of a Default Set Date:<br>";
         $defaultDateRadio = new radio("defaultDateChoice");
         $defaultDateRadio->addOption("Real Date", "Set the default selected date to real time");
         $defaultDateRadio->addOption("Custom Date", "Customize the default selected date");
         $defaultDateRadio->setBreakSpace("<br>");
-        $defaultDateRadio->setSelected('Real Date');
+        if (isset($editDefaultDate) && $editDefaultDate != "Real Time Date") {
+            $defaultDateRadio->setSelected('Custom Date');
+        } else {
+            $defaultDateRadio->setSelected('Real Date');
+        }
+
         $DPParametersUnderConstruction .= $defaultDateRadio->show() . "<br>";
 
         $DPParametersUnderConstruction .= "<div id='selectDefaultDate'>";
         $DPParametersUnderConstruction .="Select a Default Date: ";
-        $DPParametersUnderConstruction .="<input type='text' name='datepickerInput' id='datepicker'>";
+        if (isset($editDefaultDate)) {
+            $DPParametersUnderConstruction .="<input type='text' name='datepickerInput' id='datepicker' value='$editDefaultDate'>";
+        } else {
+            $DPParametersUnderConstruction .="<input type='text' name='datepickerInput' id='datepicker'>";
+        }
+
         $DPParametersUnderConstruction .="</div>";
         return $DPParametersUnderConstruction;
     }

@@ -135,10 +135,12 @@ setUpFormElementModalHelp('submitbuttons');
  *  \param submitOrResetOption A string to set whether is button is a 'reset' or
  *  a 'submit'button'.
  */
-function      produceButton(formElementID,formElementName,buttonLabel,sumbitOrResetOption)
+function produceButton(formElementID,formElementName,buttonLabel,sumbitOrResetOption)
 {
-
+    var formnumber = jQuery("#getFormNumber").html();
+    formnumber = jQuery.trim(formnumber);
     var buttonDataToPost = {
+        "formNumber":formnumber,
         "formElementName": formElementID,
         "buttonName": formElementName,
         "buttonLabel" : buttonLabel,

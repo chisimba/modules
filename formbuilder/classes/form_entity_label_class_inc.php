@@ -18,6 +18,7 @@ include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_label extends form_entity_handler {
 
+    private $formNumber;
     /*!
      * \brief Private data member that stores a label object for the WYSIWYG
      * form editor.
@@ -73,18 +74,34 @@ class form_entity_label extends form_entity_handler {
      * the label.
      * \return A boolean value on successful storage of the label form element.
      */
-    public function createFormElement($labelName, $label, $breakSpace) {
+    public function createFormElement($formNumber,$labelName, $label, $breakSpace) {
 
-        if ($this->objDBLabelEntity->checkDuplicateLabelEntry($labelName, $label) == TRUE) {
+        if ($this->objDBLabelEntity->checkDuplicateLabelEntry($formNumber,$labelName) == TRUE) {
+            $this->formNumber = $formNumber;
             $this->LabelName = $labelName;
             $this->labelValue = $label;
             $this->breakspace = $breakSpace;
-            $this->objDBLabelEntity->insertSingle($labelName, $label, $breakSpace);
+            $this->objDBLabelEntity->insertSingle($formNumber,$labelName, $label, $breakSpace);
 
             return TRUE;
         } else {
             return FALSE;
         }
+    }
+    
+    public function updateFormElement($formNumber,$labelName, $label, $breakSpace){
+       if ($this->objDBLabelEntity->checkDuplicateLabelEntry($formNumber,$labelName) == FALSE) {
+            $this->formNumber = $formNumber;
+            $this->LabelName = $labelName;
+            $this->labelValue = $label;
+            $this->breakspace = $breakSpace;
+            
+            $this->objDBLabelEntity->updateSingle($formNumber,$labelName, $label, $breakSpace);
+
+            return TRUE;    
+        } else {
+            return FALSE;
+        } 
     }
 
     /*!
@@ -105,10 +122,39 @@ class form_entity_label extends form_entity_handler {
         $WYSIWYGLabelInsertForm.="</div>";
         $WYSIWYGLabelInsertForm.="<b>Label Properties Menu</b>";
         $WYSIWYGLabelInsertForm.="<div id='labelSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGLabelInsertForm.= $this->buildLayoutForm('label', $formName, "label") . "<br><br>";
-        $WYSIWYGLabelInsertForm.= $this->insertTextForm('label', 2, 68);
+        $WYSIWYGLabelInsertForm.= $this->buildLayoutForm('label', $formName, "label",NULL) . "<br><br>";
+        $WYSIWYGLabelInsertForm.= $this->insertTextForm('label', 2, 68,NULL);
         $WYSIWYGLabelInsertForm.="</div>";
         return $WYSIWYGLabelInsertForm;
+    }
+    
+    public function getWYSIWYGLabelEditForm($formNumber,$formElementName){
+        $labelParameters = $this->objDBLabelEntity->listLabelParameters($formNumber,$formElementName);
+        if (empty($labelParameters)) {
+            return 0;
+        } else {
+            $labelFormName = "";
+            $labelText = "";
+            $labelBreakspace = "";
+            
+            foreach ($labelParameters as $thislabelParameter) {
+
+            $labelFormName = $thislabelParameter["labelname"];
+            $labelText = $thislabelParameter["label"];
+            $labelBreakspace = $thislabelParameter["breakspace"];
+        } 
+        
+        $WYSIWYGLabelEditForm = "";
+        $WYSIWYGLabelEditForm.="<b>Edit Label Properties</b>";
+        $WYSIWYGLabelEditForm.="<div id='labelSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGLabelEditForm.= $this->buildLayoutForm('label', $labelFormName, "label",$labelBreakspace) . "<br><br>";
+        $WYSIWYGLabelEditForm.= $this->insertTextForm('label', 2, 68,$labelText);
+        $WYSIWYGLabelEditForm.="</div>";
+        
+        }
+        return $WYSIWYGLabelEditForm;
+
+     
     }
 
     /*!
@@ -130,9 +176,9 @@ class form_entity_label extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed label.
      */
-    protected function constructLabelEntity($labelName) {
+    protected function constructLabelEntity($labelName,$formNumber) {
 
-        $labelParameters = $this->objDBLabelEntity->listLabelParameters($labelName);
+        $labelParameters = $this->objDBLabelEntity->listLabelParameters($formNumber,$labelName);
         $constructedLabel = "";
         foreach ($labelParameters as $thislabelParameter) {
 
@@ -160,8 +206,8 @@ class form_entity_label extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteLabelEntity($formElementName) {
-        $deleteSuccess = $this->objDBLabelEntity->deleteFormElement($formElementName);
+    protected function deleteLabelEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBLabelEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 

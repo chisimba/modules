@@ -20,7 +20,8 @@
 include_once 'form_entity_handler_class_inc.php';
 
 class form_entity_button extends form_entity_handler {
-
+    
+    private $formnumber;
     /*!
      * \brief Private data member that stores a button object for the WYSIWYG
      * form editor.
@@ -69,6 +70,7 @@ class form_entity_button extends form_entity_handler {
         $this->buttonName = NULL;
         $this->buttonLabel = NULL;
         $this->isSetOrResetChoice = NULL;
+        $this->formnumber = NULL;
     }
 
     /*!
@@ -84,15 +86,15 @@ class form_entity_button extends form_entity_handler {
      * submit or reset.
      * \return A boolean value on succesful storage of the button form element.
      */
-    public function createFormElement($buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
+    public function createFormElement($formNumber, $buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
 
-        if ($this->objDBbuttonEntity->checkDuplicateButtonEntry($buttonFormName, $buttonName) == TRUE) {
-
+        if ($this->objDBbuttonEntity->checkDuplicateButtonEntry($formNumber,$buttonFormName, $buttonName) == TRUE) {
+            $this->formnumber = $formNumber;
             $this->buttonFormName = $buttonFormName;
             $this->buttonName = $buttonName;
             $this->buttonLabel = $buttonLabel;
             $this->isSetOrResetChoice = $isSetToResetOrSubmit;
-            $this->objDBbuttonEntity->insertSingle($buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit);
+            $this->objDBbuttonEntity->insertSingle($formNumber,$buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit);
             return TRUE;
         } else {
             return FALSE;
@@ -144,8 +146,8 @@ class form_entity_button extends form_entity_handler {
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-    protected function deleteButtonEntity($formElementName) {
-        $deleteSuccess = $this->objDBbuttonEntity->deleteFormElement($formElementName);
+    protected function deleteButtonEntity($formNumber,$formElementName) {
+        $deleteSuccess = $this->objDBbuttonEntity->deleteFormElement($formNumber,$formElementName);
         return $deleteSuccess;
     }
 
@@ -158,9 +160,9 @@ class form_entity_button extends form_entity_handler {
      * parent class member function buildForm to build a form.
      * \return A constructed button.
      */
-    protected function constructButtonEntity($buttonFormName) {
+    protected function constructButtonEntity($buttonFormName,$formNumber) {
 
-        $buttonParameters = $this->objDBbuttonEntity->listButtonParameters($buttonFormName);
+        $buttonParameters = $this->objDBbuttonEntity->listButtonParameters($formNumber,$buttonFormName);
 
 $constructedButton="";
         foreach ($buttonParameters as $thisbuttonParameter) {

@@ -30,7 +30,8 @@ include_once 'form_entity_handler_class_inc.php';
 //$this->appendArrayVar('headerParams', '<script type="text/javascript">jQuery.noConflict();</script>');
 class form_entity_textinput extends form_entity_handler
 {
-            /*!
+    private $formNumber; 
+    /*!
      * \brief Private data member that stores a text input object for the WYSIWYG
      * form editor.
      */
@@ -108,6 +109,7 @@ private $tiLabelLayout;
         $this->tiTextMask=NULL;
         $this->tiLabel =NULL;
         $this->tiLabelLayout=NULL;
+        $this->formNumber =NULL;
         $this->objDBtiEntity = $this->getObject('dbformbuilder_textinput_entity','formbuilder');
                 }
 
@@ -118,8 +120,9 @@ private $tiLabelLayout;
                      * \param textInputName A string for the actual html name for
                      * the text area.
      */
-    public function createFormElement($textInputFormName='',$textInputName='')
+    public function createFormElement($formNumber,$textInputFormName='',$textInputName='')
     {
+    $this->formNumber = $formNumber;
     $this->tiFormName = $textInputFormName;
     $this->tiName=$textInputName; 
     }
@@ -135,9 +138,9 @@ public function getWYSIWYGTextInputName()
     return $this->tiName;
 }
 
-protected function checkIfTextInputExists($formElementName)
+protected function checkIfTextInputExists($formNumber,$formElementName)
 {
-return $this->objDBtiEntity->checkIfEntryExists($formElementName);
+return $this->objDBtiEntity->checkIfEntryExists($formNumber,$formElementName);
 }
     /*!
      * \brief This member function gets the text input name if it has already
@@ -145,9 +148,9 @@ return $this->objDBtiEntity->checkIfEntryExists($formElementName);
      * \param textInputFormName A string containing the form element indentifier.
      * \return A string.
      */
-protected function getTextInputName($textInputFormName)
+protected function getTextInputName($formNumber,$textInputFormName)
 {
-    $tiParameters = $this->objDBtiEntity->listTextInputParameters($textInputFormName);
+    $tiParameters = $this->objDBtiEntity->listTextInputParameters($formNumber,$textInputFormName);
     $textInputArray = array();
 foreach($tiParameters as $thistiParameter){
 
@@ -180,18 +183,59 @@ return $textInputArray;
 
                 $WYSIWYGTextInputInsertForm.="<b>Text Input Label Menu</b>";
             $WYSIWYGTextInputInsertForm.="<div id='textInputLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
- $WYSIWYGTextInputInsertForm.= $this->insertFormLabelOptions("text_input","labelOrientation");
+         $WYSIWYGTextInputInsertForm.= $this->insertFormLabelOptions("text_input","labelOrientation",NULL,NULL);
           $WYSIWYGTextInputInsertForm.= "</div>";
           $WYSIWYGTextInputInsertForm.="<b>Text Input Size Menu</b>";
            $WYSIWYGTextInputInsertForm.="<div id='textInputSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
            
-           $WYSIWYGTextInputInsertForm .= $this->insertCharacterSizeForm()."";
+           $WYSIWYGTextInputInsertForm .= $this->insertCharacterSizeForm(NULL)."";
                        $WYSIWYGTextInputInsertForm.= "</div>";
            $WYSIWYGTextInputInsertForm.="<b>Text Input Properties Menu</b>";
            $WYSIWYGTextInputInsertForm.="<div id='textInputPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
-       $WYSIWYGTextInputInsertForm.= $this->insertTextInputOptionsForm(2,68)."";
+       $WYSIWYGTextInputInsertForm.= $this->insertTextInputOptionsForm(2,68,NULL,NULL,NULL)."";
          $WYSIWYGTextInputInsertForm.= "</div>";
            return $WYSIWYGTextInputInsertForm;
+    }
+    
+    public function getWYSIWYGTextInputEditForm($formNumber, $formElementName) {
+        $tiParameters = $this->objDBtiEntity->listTextInputParameters($formNumber, $formElementName);
+        if (empty($tiParameters)) {
+            return 0;
+        } else {
+            $textValue = "";
+            $textType = "";
+            $textSize = "";
+            $maskedInputChoice = "";
+            $textInputLabel = "";
+            $labelOrientation = "";
+            foreach ($tiParameters as $thistiParameter) {
+
+                $textValue = $thistiParameter["textvalue"];
+                $textType = $thistiParameter["texttype"];
+
+                $textSize = $thistiParameter["textsize"];
+                $maskedInputChoice = $thistiParameter["maskedinputchoice"];
+
+                $textInputLabel = $thistiParameter["label"];
+                $labelOrientation = $thistiParameter["labelorientation"];
+            }
+             $WYSIWYGTextInputEditForm ="<b>Edit Text Input Label Parameters</b>";
+             $WYSIWYGTextInputEditForm.="<div id='textInputLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
+             $WYSIWYGTextInputEditForm.= $this->insertFormLabelOptions("text_input","labelOrientation",$textInputLabel,$labelOrientation);
+             $WYSIWYGTextInputEditForm.= "</div>";
+             
+             $WYSIWYGTextInputEditForm.="<b>Edit Text Input Size Parameters</b>";
+             $WYSIWYGTextInputEditForm.="<div id='textInputSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
+             $WYSIWYGTextInputEditForm .= $this->insertCharacterSizeForm($textSize)."";
+             $WYSIWYGTextInputEditForm.= "</div>";
+             
+             $WYSIWYGTextInputEditForm.="<b>Edit Text Input Properties</b>";
+             $WYSIWYGTextInputEditForm.="<div id='textInputPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
+             $WYSIWYGTextInputEditForm.= $this->insertTextInputOptionsForm(2,68,$textType,$maskedInputChoice,$textValue)."";
+             $WYSIWYGTextInputEditForm.= "</div>";
+             
+             return $WYSIWYGTextInputEditForm;
+        }
     }
 
             /*!
@@ -214,40 +258,21 @@ return $textInputArray;
      * put on top, bottom, left or right of the text input form element.
      * \return A boolean value on successful storage of the text input form element.
      */
-public function insertTextInputParameters($textinputformname,$textinputname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout)
+public function insertTextInputParameters($formNumber,$textinputformname,$textinputname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout)
 {
      // return   $textInputArrayForThisForm = $this->getFormElementIdentifierArray('text_input', $textinputformname)."gtgtgtgtg<br>";
-    if ($this->objDBtiEntity->checkDuplicateTextInputEntry($textinputformname,$textinputname) == TRUE)
+    if ($this->objDBtiEntity->checkDuplicateTextInputEntry($formNumber,$textinputformname,$textinputname) == TRUE)
     {
   
-//      foreach ($textInputArrayForThisForm as $thisTextInput) {
-//////Store the values of the array in variables
-////// $formElementType = $formElement["formelementtpye"];
-//            $formElementIdentifier = $thisTextInput["formelementname"];
-//            $a.="||||".$formElementIdentifier;
-//
-////            $formElementName= $this->objDBtiEntity->listTextInputParameters($formElementIdentifier);
-////            if ($formElementName[0]['textinputname'] == $textinputname)
-////            {
-////             return FALSE;
-////            }
-////
-////
-////            if ($this->textinputConstructor->checkIfTextInputExists($formElementName))
-////            {
-////                         $postSuccess = 0;
-////            return $postSuccess;
-////            }
-//      }
-//      return $a;
-        $this->objDBtiEntity->insertSingle($textinputformname,$textinputformname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout);
+
+        $this->objDBtiEntity->insertSingle($formNumber,$textinputformname,$textinputformname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout);
 
         $this->tiName = $textinputname;
         $this->tiTextValue=$textvalue;
         $this->tiType=$texttype;
         $this->tiSize=$textsize;
         $this->tiTextMask=$maskedinputchoice;
-
+        $this->formNumber=$formNumber;
         $this->tiLabel =$formElementLabel;
         $this->tiLabelLayout=$formElementLabelLayout;
     return TRUE;
@@ -255,6 +280,27 @@ public function insertTextInputParameters($textinputformname,$textinputname,$tex
  else {
         return FALSE;
     }
+}
+
+public function updateTextInputParameters($formNumber,$textinputformname,$textinputname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout){
+       if ($this->objDBtiEntity->checkDuplicateTextInputEntry($formNumber,$textinputformname,$textinputname) == FALSE)
+    {
+  
+        $this->objDBtiEntity->updateSingle($formNumber,$textinputformname,$textinputformname,$textvalue,$texttype,$textsize,$maskedinputchoice,$formElementLabel,$formElementLabelLayout);
+
+        $this->tiName = $textinputname;
+        $this->tiTextValue=$textvalue;
+        $this->tiType=$texttype;
+        $this->tiSize=$textsize;
+        $this->tiTextMask=$maskedinputchoice;
+        $this->formNumber=$formNumber;
+        $this->tiLabel =$formElementLabel;
+        $this->tiLabelLayout=$formElementLabelLayout;
+    return TRUE;
+    }
+ else {
+        return FALSE;
+    } 
 }
 
     /*!
@@ -269,9 +315,9 @@ public function insertTextInputParameters($textinputformname,$textinputname,$tex
      * automatically call this member function.
      * \return A boolean value for a successful delete.
      */
-protected function deleteTextInputEntity($formElementName)
+protected function deleteTextInputEntity($formNumber,$formElementName)
 {
-    $deleteSuccess = $this->objDBtiEntity->deleteFormElement($formElementName);
+    $deleteSuccess = $this->objDBtiEntity->deleteFormElement($formNumber,$formElementName);
     return $deleteSuccess;
 }
 
@@ -335,10 +381,10 @@ break;
      * parent class member function buildForm to build a form.
      * \return A constructed text input object.
      */
-protected function constructTextInputEntity($textInputName)
+protected function constructTextInputEntity($textInputName,$formNumber)
 {
 
-    $tiParameters = $this->objDBtiEntity->listTextInputParameters($textInputName);
+    $tiParameters = $this->objDBtiEntity->listTextInputParameters($formNumber,$textInputName);
 $constructedti= "";
 foreach($tiParameters as $thistiParameter){
 

@@ -57,8 +57,8 @@ class dbformbuilder_htmlheading_entity extends dbTable {
      * \param headingFormName A string.
      * \return An array with all the html headings that have a name supplied by the argument
      */
-    function listHTMLHeadingParameters($headingFormName) {
-        return $this->getAll("WHERE headingname='" . $headingFormName . "'");
+    function listHTMLHeadingParameters($formNumber,$headingFormName) {
+        return $this->getAll("WHERE formnumber='".$formNumber."' AND headingname='" . $headingFormName . "'");
     }
 
     /*!
@@ -67,10 +67,10 @@ class dbformbuilder_htmlheading_entity extends dbTable {
      * \param heading A string. This is the actual text of the heading.
      * \return An boolean value depending on the success or failiure.
      */
-    function checkDuplicateHTMLheadingEntry($headingname, $heading) {
+    function checkDuplicateHTMLheadingEntry($formNumber, $headingname) {
 ///Get entries where the html heading form name and the html heading text are like the search
 /// parameters.
-        $sql = "where headingname like '" . $headingname . "' and heading like '" . $heading . "'";
+        $sql = "where formnumber like '".$formNumber."' and headingname like '" . $headingname . "'";
 
 ///Return the number of entries. Note that is function in part of the parent class dbTable.
         $numberofDuplicates = $this->getRecordCount($sql);
@@ -92,15 +92,22 @@ class dbformbuilder_htmlheading_entity extends dbTable {
      * possibilities, "left","right" and "center".
      * \return A newly creating random id that gets saved with the new entry.
      */
-    function insertSingle($headingname, $heading, $fontSize, $textAlignment) {
+    function insertSingle($formNumber,$headingname, $heading, $fontSize, $textAlignment) {
 
         $id = $this->insert(array(
+                    'formnumber' => $formNumber,
                     'headingname' => $headingname,
                     'heading' => $heading,
                     'size' => $fontSize,
                     'alignment' => $textAlignment
                 ));
         return $id;
+    }
+    
+    function updateSingle($formNumber,$headingName, $heading, $fontSize, $textAlignment){
+        $UpdateSQL = "UPDATE tbl_formbuilder_htmlheading_entity
+        SET heading='".$heading."', size='".$fontSize."', alignment='".$textAlignment."' WHERE headingname='".$headingName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
     }
 
     /*!
@@ -109,11 +116,13 @@ class dbformbuilder_htmlheading_entity extends dbTable {
      * \param  formElementName A string. This is form element identifier.
      * \return A boolean value whether its was successful or not.
      */
-    function deleteFormElement($formElementName) {
-        $sql = "where headingname like '" . $formElementName . "'";
+    function deleteFormElement($formNumber, $formElementName) {
+        $sql = "where formnumber like '".$formNumber."' and headingname like '" . $formElementName . "'";
         $valueExists = $this->getRecordCount($sql);
         if ($valueExists >= 1) {
-            $this->delete("headingname", $formElementName);
+            $deleteSQLStatement = "DELETE FROM tbl_formbuilder_htmlheading_entity WHERE formnumber like '".$formNumber."' AND headingname like '" . $formElementName . "'";
+            $this->_execute($deleteSQLStatement);
+            //$this->delete("headingname", $formElementName);
             return true;
         } else {
             return false;
