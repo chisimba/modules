@@ -36,7 +36,6 @@ jQuery(function() {
         id=jQuery(this).attr("id");
         fixedid = id.replace("more_posts_", "");
         jQuery("#"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
-        alert(fixedid);
         jQuery.ajax({
             url: "index.php?module=wall&action=getmoreposts&wallid="+fixedid,
             type: "GET",
