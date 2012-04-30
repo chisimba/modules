@@ -104,7 +104,7 @@ class wallops extends object {
      *
      * @var integer $wallType The wall type (1,2,3)
      * @access public
-     * 
+     *
      */
     public $wallType = FALSE;
 
@@ -154,7 +154,7 @@ class wallops extends object {
      * @param integer $page The page number
      * @param integer $num The number of items per page
      * @return string The rendered wall
-     * 
+     *
      */
     public function showObjectWall($keyName, $keyValue, $page=0, $num=10) {
         $wallType = 4;
@@ -180,7 +180,7 @@ class wallops extends object {
      * @param string $wallType The wall type (0=site wall, 1=personal or user wall, 2=context wall)
      * @param integer $num The number of results to return, defaulting to 10
      * @return string The formatted wall posts
-     * 
+     *
      */
     public function showWall($wallType, $num=10) {
         $this->wallType = $wallType;
@@ -313,7 +313,7 @@ class wallops extends object {
             // Stick with pagesize of 10 for now.
             $pageSize = 10;
             // Count the number of records that correspond to our needs.
-            $numPosts = $this->objDbwall->countPosts($wallType);
+            $numPosts = $this->objDbwall->countPosts($wallType, FALSE, $keyName, $keyValue);
             // Calculate the number of pages.
             $totalPages = intval($numPosts / $pageSize) + 1;
             // set the next page to display.
@@ -332,6 +332,7 @@ class wallops extends object {
             //die($keyname . ' = ' . $keyValue);
             $posts = $this->objDbwall->getMorePosts($wallType, $page, $keyName, $keyValue);
             $ret .= $this->showPosts($posts, $numPosts, $wallType, $wallid, 10, $hideMoreLink);
+            $ret ="<div class='wall_more_posts'>$ret</div>";
         } else {
             $ret = $this->objLanguage->languageText("mod_wall_nowalltype", "wall", "No wall type given");
         }

@@ -2,7 +2,7 @@
  * Javascript to support the wall module in Chisimba
  *
  * Written by Derek Keats based on ideas, some functions and
- * studying the code of 
+ * studying the code of
  *
  */
 
@@ -16,7 +16,7 @@ function stripHTML(source){
 // Turn links into active links
 function replaceURLWithHTMLLinks(source) {
   var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-   replaced = source.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
+   replaced = source.replace(exp,"<a href='$1' target='_blank'>$1</a>");
    return replaced;
 }
 
@@ -29,13 +29,14 @@ jQuery(function() {
     var fixedid;
     var target;
     var wallid;
-   
+
     // Function for getting additional wall posts.
     var dataStrBase = "walltype="+wallType+"&page=";
     jQuery(".wall_posts_more").live("click", function(){
         id=jQuery(this).attr("id");
         fixedid = id.replace("more_posts_", "");
         jQuery("#"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
+        alert(fixedid);
         jQuery.ajax({
             url: "index.php?module=wall&action=getmoreposts&wallid="+fixedid,
             type: "GET",
@@ -70,7 +71,7 @@ jQuery(function() {
                     data: "wallpost="+status_text,
                     success: function(msg) {
                         jQuery("#wallpost_"+id).val("");
-                        jQuery(".shareBtn").attr("disabled", "");
+                        jQuery(".shareBtn").removeAttr("disabled");
                         jQuery("#wall_onlytext_"+id).html(tmpOnlytxt);
                         if(msg == "true") {
                             jQuery("#wall_"+id).prepend("<div class='wallpostrow'><span class='wallposter'>"+me+"</span><div class='msg'>"+status_text+"</div></div>");
@@ -188,7 +189,7 @@ jQuery(function() {
                     }
                     jQuery("#c__"+fixedid).html(tmpHolder);
                     jQuery("#ct_"+id).val("");
-                    jQuery("#ct_"+id).attr("disabled", "");
+                    jQuery("#ct_"+id).removeAttr("disabled");
                 }
             });
             return false;
@@ -196,5 +197,5 @@ jQuery(function() {
     });
 
     // Next one here.....
-    
+
 });
