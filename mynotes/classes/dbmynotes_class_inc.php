@@ -164,8 +164,12 @@ class dbmynotes extends dbtable
         return $this->getArray($sql);
     }
     
-    public function getListCount($uid, $start, $end) {
-        $filter = " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
+    public function getListCount($uid, $start = NULL, $end=NULL) {
+        if(empty($start) && empty($end)) {
+            $filter = " where `userid` = '$uid'";
+        } else {
+            $filter = " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
+        }
         $recordCount = $this->getRecordCount($filter);
         
         return $recordCount;

@@ -64,7 +64,7 @@ class noteops extends object {
      * @access private
      */
     private $tagCloud;
-    
+
     /*
      * @var $objTagCloud The tag cloud object used. This is the object that is in the
      * utilities module.
@@ -78,18 +78,19 @@ class noteops extends object {
      * @access private
      */
     private $module;
-    
+
     /*
      * @var $objUtility This is the current module's utility class
      * @access private
      */
     private $objUtility;
-    
+
     /*
      * @var $uid current user id
      * @access public
      */
     public $uid;
+
     /**
      * Standard init function
      *
@@ -114,7 +115,7 @@ class noteops extends object {
 
             $this->objDbmynotes = $this->getObject('dbmynotes', $this->module);
             $this->objDbTags = $this->getObject('dbtags', $this->module);
-            
+
             $this->uid = $this->objUser->userId();
         } catch (customException $e) {
             echo customException::cleanUp();
@@ -166,21 +167,21 @@ class noteops extends object {
                 $viewAllInput = $objInput->show();
             }
             $nextPageInput = "";
-            if(!empty($nextPage)) {
+            if (!empty($nextPage)) {
                 $objInput = new textinput('nextpage', $nextPage, 'hidden', '40');
                 $objInput->setId("nextpage");
                 $nextPageInput = $objInput->show();
             }
             $prevPageInput = "";
-            if(!empty($prevPage)) {
+            if (!empty($prevPage)) {
                 $objInput = new textinput('prevpage', $prevPage, 'hidden', '40');
                 $objInput->setId("prevpage");
                 $prevPageInput = $objInput->show();
             }
 
 
-            
-            $ret .= $viewAllInput.$nextPageInput.$prevPageInput;
+
+            $ret .= $viewAllInput . $nextPageInput . $prevPageInput;
 
             return $ret;
         }
@@ -373,7 +374,7 @@ class noteops extends object {
         $isViewAll = $this->getParam('viewall');
         $prevPage = $this->getParam("prevnotepage");
         $nextPage = $this->getParam("nextnotepage");
-        
+
         // Set up text elements.
         //$noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
         $readMoreLabel = $this->objLanguage->languageText('mod_mynotes_readmore', $this->module, 'TEXT: mod_mynotes_readmore, not found');
@@ -404,32 +405,32 @@ class noteops extends object {
                 $list .= "</ul></div>";
             }
         }/* else {
-            //$error = $this->error($noNotesLabel);
+          //$error = $this->error($noNotesLabel);
 
-            //$list = "<div><ul>" . $noNotesLabel . "</ul></div>";
-        }*/
+          //$list = "<div><ul>" . $noNotesLabel . "</ul></div>";
+          } */
         $ret .= $list;
-        
-        if(empty($isViewAll)) {
-            $ret .= "<div class='notelist'>".$this->getNotesList($prevPage, $nextPage)."</div>";
-            $ret .= "<div class='center'>".$this->objUtility->getPrevNextLinks($prevPage, $nextPage)."</div>";
+
+        if (empty($isViewAll)) {
+            $ret .= "<div class='notelist'>" . $this->getNotesList($prevPage, $nextPage) . "</div>";
+            $ret .= "<div class='center'>" . $this->objUtility->getPrevNextLinks($prevPage, $nextPage) . "</div>";
         }
-        
+
         echo $ret;
         die();
     }
 
-    
     /*
      * Method used to return the tag cloud that is shown on the right sidebar
      * 
      * @return the tag cloud
      */
+
     public function getTagCloud() {
         $this->tagCloud = $this->objDbTags->getTags();
         if (!empty($this->tagCloud)) {
             $tagscl = $this->objUtility->processTags($this->tagCloud);
-            
+
             if ($tagscl != NULL) {
                 $this->objTagCloud = $this->objTagCloud->buildCloud($tagscl);
             } else {
@@ -529,38 +530,44 @@ class noteops extends object {
 
         return $str;
     }
-    
+
     public function getNotesList($begin, $end) {
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
-        
-        if(empty($begin)) {
+
+        if (empty($begin)) {
             $begin = 2;
             $end = 7;
         }
-        
+
         $ret = "";
-        
-        $data = $this->objDbmynotes->getNotesForList($this->uid, $begin, $end);
-        
         $list = "";
-        if (!empty($data)) {
-            $list = "<div><ul>";
-            $tmpLink = NULL;
-            foreach ($data as $value) {
-                $tmpLink = new Link($this->uri(array('action' => 'showNote', 'id' => $value['id'], $this->module)));
-                $tmpLink->link = $value['title'];
-                $list .= "<li>" . $tmpLink->show() . "</li>";
+
+        // check if there are less than 2 notes.
+        $allNotesData = $this->objDbmynotes->getListCount($this->uid);
+        if ($allNotesData > 2) {
+            $data = $this->objDbmynotes->getNotesForList($this->uid, $begin, $end);
+
+            if (!empty($data)) {
+                $list = "<div><ul>";
+                $tmpLink = NULL;
+                foreach ($data as $value) {
+                    $tmpLink = new Link($this->uri(array('action' => 'showNote', 'id' => $value['id'], $this->module)));
+                    $tmpLink->link = $value['title'];
+                    $list .= "<li>" . $tmpLink->show() . "</li>";
+                }
+                $list .= "</ul></div>";
+            } else {
+                $list = "<div class='error'>" . $noNotesLabel . "</div>";
             }
-            $list .= "</ul></div>";
         } else {
-            $list = "<div class='error'>".$noNotesLabel."</div>";
+            $list = "";
         }
         
         $ret .= $list;
 
         return $ret;
     }
-    
-    
+
 }
+
 ?>
