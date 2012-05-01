@@ -2,7 +2,7 @@
  * Javascript to support mynotes
  *
  * Written by Nguni Phakela nguni52@gmail.com
- * STarted on: March 16, 2012, 7:33 am
+ * Started on: March 16, 2012, 7:33 am
  *
  */
 
@@ -55,11 +55,11 @@ jQuery(function() {
 });
 
 function confirmDelete() {
-    message = "Are you sure you want to delete this note?";
+    var message = "Are you sure you want to delete this note?";
     var answer = confirm(message);
     if (answer){
         window.location.href = jQuery("#delete").attr("href") + "&confirm=yes";
-        return false; // This line added
+        return false;
     }
     
     return false;  

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Database access for My notes
@@ -30,155 +31,197 @@
  * @link      http://www.chisimba.com
  *
  */
-
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- *
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *
- */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         *
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-*
-* Database access for My notes
-*
-* Database access for My notes. This is a sample database model class
-* that you will need to edit in order for it to work.
-*
-* @package   mynotes
-* @author    Nguni Phakela nguni52@gmail.com
-*
-*/
-class dbmynotes extends dbtable
-{
+ *
+ * Database access for My notes
+ *
+ * Database access for My notes. This is a sample database model class
+ * that you will need to edit in order for it to work.
+ *
+ * @package   mynotes
+ * @author    Nguni Phakela nguni52@gmail.com
+ *
+ */
+class dbmynotes extends dbtable {
 
     private $table;
+
     /**
-    *
-    * Intialiser for the mynotes database connector
-    * @access public
-    * @return VOID
-    *
-    */
-    public function init()
-    {
+     *
+     * Intialiser for the mynotes database connector
+     * @access public
+     * @return VOID
+     *
+     */
+    public function init() {
         $this->table = 'tbl_mynotes_text';
         //Set the parent table to our demo table
         parent::init($this->table);
     }
 
-    /**
-     *
-     * Get the text of the init_overview that we have in the sample database.
-     *
-     * @return string The text of the init_overview
-     * @access public
-     *
-     */
-    public function getOverview()
-    {
-        return $this->getAll(' WHERE id=\'init_overview\' ');
-    }
-    
     /*
      * Method to save a note to the database
      * 
+     * @access public
+     * @param $data The array containing the key value pair of the data to be 
+     *              inserted into the table.
+     * @return $id The id of the data that was just inserted into the database table
+     * 
      */
+
     public function insertNote($data) {
         $id = $this->insert($data);
         return $id;
     }
-    
+
     /*
      * Method to edit a note in the database
      * 
+     * @access public
+     * @param $data The array containing the key value pair of the data to be 
+     *              inserted into the table.
+     * @param $id The id of the row of data to be updated
+     * @return VOID
+     * 
      */
+
     public function updateNote($data, $id) {
-        $this->update('id', $id, $data);        
+        $this->update('id', $id, $data);
     }
-    
+
     /**
      * Method to delete a note.
      *
      * @access public
      * @param string $id The id of the note.
-     * @return
+     * @return VOID
+     * 
      */
     public function deleteNote($id) {
         $this->delete('id', $id);
     }
-    
+
     /**
      * Method to return latest 2 notes for a user
      * 
      * @access public
      * @param string $id The id of the user's notes
+     * @param $limit The number of records that should be retrieved from the table.
      * @return array The note array 
+     * 
      */
-    public function getNotes($uid, $limit = NULL)
-    {
+    public function getNotes($uid, $limit = NULL) {
         $filter = " WHERE `userid` = '$uid' ORDER BY datemodified DESC, datemodified DESC ";
-        $sql1 = "SELECT * FROM ". $this->table . $filter;
-        $sql2 = "SELECT allDataTable.* FROM (".$sql1.") as allDataTable ".$limit; 
-        
+        $sql1 = "SELECT * FROM " . $this->table . $filter;
+        $sql2 = "SELECT allDataTable.* FROM (" . $sql1 . ") as allDataTable " . $limit;
+
         return $this->getArray($sql2);
     }
-    
+
     /*
-     * Method to return a note
+     * Method to return note data.
      * 
      * @access public
      * @param string $id The id of the note
      * @return array The note array
+     * 
      */
+
     public function getNote($id) {
         return $this->getRow('id', $id);
     }
-    
+
     /*
      * Method to search the notes based on a tag
      * 
+     * @access public
+     * @param $searchKey The tag name that we are using to do the search
+     * @return array All the notes that have the tag that is being searched for
+     * 
      */
+
     public function getNotesWitTags($searchKey) {
-        return $this->fetchAll(" WHERE `tags` LIKE '%".$searchKey."%'");
+        return $this->fetchAll(" WHERE `tags` LIKE '%" . $searchKey . "%'");
     }
-   
+
     /*
+     * Method to retrieve a certain number of notes
      * 
-     * 
+     * @access public
+     * @param $uid This is the user ID.
+     * @param $start This is the the starting row to search from
+     * @param $end This is the end row to search to
+     * @return array List of items to between the rows specified above
      */
     public function getNotesForList($uid, $start, $end) {
-        
-        $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
-        
-        return $this->getArray($sql);
+        if ($start < $end) {
+            $sql = "Select * from " . $this->table . " where `userid` = '$uid' AND
+                puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
+
+            return $this->getArray($sql);
+        } else {
+            return NULL;
+        }
     }
-    
-    public function getListCount($uid, $start = NULL, $end=NULL) {
-        if(empty($start) && empty($end)) {
+
+    /*
+     * Method to retrieve the number of records for a certain number of notes
+     * 
+     * @access public
+     * @param $uid This is the user ID.
+     * @param $start This is the the starting row to search from
+     * @param $end This is the end row to search to
+     * @return array The number of records that match the search criteria.
+     */
+
+    public function getListCount($uid, $start = NULL, $end = NULL) {
+        if (empty($start) && empty($end)) {
             $filter = " where `userid` = '$uid'";
         } else {
             $filter = " where `userid` = '$uid' AND puid BETWEEN $start AND $end ORDER BY datemodified DESC ";
         }
         $recordCount = $this->getRecordCount($filter);
-        
+
         return $recordCount;
     }
-    
+
+    /*
+     * Method to retrieve notes when using the previous and next buttons. It will
+     * return all the notes for our current page number
+     * 
+     * @acces public
+     * @param $prevPageNum The previous page number
+     * @param $nextPageNum The next page number
+     * @return array All the notes that are expected for current page
+     * 
+     */
     public function getNotesUsingPuid($prevPageNum, $nextPageNum) {
         return $this->fetchAll(" WHERE `puid` BETWEEN $prevPageNum AND $nextPageNum");
     }
-    
+
+    /*
+     * Method to get a note based on it's puid
+     * 
+     * @access public
+     * @param $puid The current note's record number
+     * @return array The data for the current row
+     */
     public function getRowData($puid) {
         return $this->getRow('puid', $puid);
     }

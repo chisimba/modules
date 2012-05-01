@@ -1,9 +1,9 @@
 <?php
+
 /**
  *
- * A right block for My notes.
- *
- * A right block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A right block for My notes. Take notes, organize them by tags, keep them private 
+ * or share them with your friends, all user, or the world..
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,21 +28,20 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
  * 
- * A right block for My notes.
- *
- * A right block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A right block for My notes. Take notes, organize them by tags, keep them private
+ * or share them with your friends, all user, or the world..
  *
  * @category  Chisimba
  * @package    mynotes
@@ -51,8 +50,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_mynotesright extends object
-{
+class block_mynotesright extends object {
+
     /**
      * The title of the block
      *
@@ -60,6 +59,7 @@ class block_mynotesright extends object
      * @access public
      */
     public $title;
+
     /**
      * Standard init function
      *
@@ -67,18 +67,19 @@ class block_mynotesright extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
-        $this->title = "Left block sample";
+    public function init() {
+        $this->title = "Right block sample";
     }
+
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return "This is a demonstration right block.";
     }
+
 }
+
 ?>

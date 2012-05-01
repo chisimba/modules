@@ -48,11 +48,11 @@ if (!
  *
  */
 class utility extends object {
+    
     /*
      * @var $module The name of the current module, mynotes
      * @access private
      */
-
     private $module;
 
     /**
@@ -63,6 +63,12 @@ class utility extends object {
      */
     private $objLanguage;
 
+    /**
+     * Method to construct the class and initialise objects to be used.
+     *
+     * @access public
+     * @return VOID
+     */
     public function init() {
         $this->module = "mynotes";
 
@@ -75,10 +81,15 @@ class utility extends object {
     }
 
     /*
-     * Function 
+     * Method to truncate the given content so that it is limited to 200 words
+     * 
+     * @access public
+     * @param $string The content to be truncated
+     * @param $length The expected length of the content to be truncated
+     * @param $ellipsis The ellipsis for the content
+     * @return String with truncated content that has appended to it the ellipsis 
      * 
      */
-
     public function wordlimit($string, $length = 50, $ellipsis = " ...") {
         $words = explode(' ', $string);
         if (count($words) > $length) {
@@ -89,12 +100,14 @@ class utility extends object {
     }
 
     /*
-     * Method use to process the tags that are used by the tag cloud utility.
+     * Method used to process the tags that are used by the tag cloud utility.
      * 
+     * @param $tagCloud The array that has all the information for each tag that is
+     *                  being processed.
      * @return array that is used by tag cloud containing tags and weights, with 
      * tag url.
+     * 
      */
-
     public function processTags($tagCloud) {
         $entry = array();
         foreach ($tagCloud as $arrs) {
@@ -112,6 +125,15 @@ class utility extends object {
         return $entry;
     }
 
+    /*
+     * Method use to create previous and next links for the list of notes
+     * 
+     * @access public
+     * @param $prevPageNum The previous page number
+     * @param $nextPageNum The next page number
+     * @return String with the previous and next links if either of them exists
+     * 
+     */
     public function getPrevNextLinks($prevPageNum, $nextPageNum) {
         $prevLabel = $this->objLanguage->languageText('mod_mynotes_prev', $this->module, 'TEXT: mod_mynotes_prev, not found');
         $nextLabel = $this->objLanguage->languageText('mod_mynotes_next', $this->module, 'TEXT: mod_mynotes_next, not found');
@@ -144,5 +166,5 @@ class utility extends object {
 
         return $ret;
     }
-
 }
+?>

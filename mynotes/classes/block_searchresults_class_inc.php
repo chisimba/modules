@@ -44,8 +44,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_searchresults extends object
-{
+class block_searchresults extends object {
     /**
      * The title of the block
      *
@@ -69,8 +68,7 @@ class block_searchresults extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->code2Txt('mod_mynotes_searchresults', 'mynotes', NULL, 'TEXT: mod_mynotes_searchresults, not found');
@@ -86,8 +84,7 @@ class block_searchresults extends object
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return $this->objNoteOps->searchNotes($this->searchKey);
     }
 }

@@ -3,8 +3,6 @@
  *
  * A middle block for adding or editing notes.
  *
- * A middle block for adding or editing my notes.
- * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -71,8 +69,10 @@ class block_mynotesaddedit extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
+        // Load the functions specific to this page.
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/addedit.js'));
+
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
@@ -85,13 +85,13 @@ class block_mynotesaddedit extends object
             $this->title = $this->title = $this->objLanguage->code2Txt('mod_mynotes_editnote', 'mynotes', NULL, 'TEXT: mod_mynotes_editnote, not found');
         }
     }
+    
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return $this->objNoteOps->addEditNote($this->mode);
     }
 }

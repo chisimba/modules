@@ -44,8 +44,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_mynotesvalidate extends object
-{
+class block_mynotesvalidate extends object {
+    
     /**
      * The title of the block
      *
@@ -69,8 +69,7 @@ class block_mynotesvalidate extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
@@ -83,13 +82,13 @@ class block_mynotesvalidate extends object
             $this->title = $this->title = $this->objLanguage->code2Txt('mod_mynotes_validateeditednote', 'mynotes', NULL, 'TEXT: mod_mynotes_validateeditednote, not found');
         }
     }
+    
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return $this->objNoteOps->validateNote($this->mode);
     }
 }

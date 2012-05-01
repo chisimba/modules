@@ -2,9 +2,8 @@
 
 /**
  *
- * A middle block for My notes.
- *
- * A middle block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A middle block for My notes. Take notes, organize them by tags, keep them private
+ * or share them with your friends, all user, or the world..
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,9 +40,8 @@ if (!
 
 /**
  * 
- * A middle block for My notes.
- *
- * A middle block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A middle block for My notes. Take notes, organize them by tags, keep them private 
+ * or share them with your friends, all user, or the world..
  *
  * @category  Chisimba
  * @author    Nguni Phakela nguni52@gmail.com
@@ -82,6 +80,7 @@ class block_mynotesmiddle extends object {
      * 
      * @access pubilc
      */
+    
     public $nextPage;
 
     /*
@@ -90,6 +89,7 @@ class block_mynotesmiddle extends object {
      * @access pubilc
      */
     public $prevPage;
+    
     /**
      * Standard init function
      *
@@ -126,7 +126,5 @@ class block_mynotesmiddle extends object {
     public function show() {
         return $this->objNoteOps->showNotes($this->mode, $this->nextPage, $this->prevPage);
     }
-
 }
-
 ?>

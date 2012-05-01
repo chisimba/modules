@@ -253,7 +253,6 @@ class mynotes extends controller {
      * @access private
      * 
      */
-
     private function __ajaxGetNotes() {
         return $this->objNoteOps->getNotes();
     }
@@ -264,7 +263,6 @@ class mynotes extends controller {
      * 
      * @access private
      */
-
     private function __search() {
         return 'searchresults_tpl.php';
     }
@@ -355,7 +353,5 @@ class mynotes extends controller {
                 break;
         }
     }
-
 }
-
 ?>

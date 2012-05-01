@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* An SQL file for mynotes tags.
+* An SQL file for mynotes content.
 *
 */
 // Table Name

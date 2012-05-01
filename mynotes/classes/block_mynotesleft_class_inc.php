@@ -1,9 +1,8 @@
 <?php
 /**
  *
- * A left block for My notes.
- *
- * A left block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A left block for My notes. Take notes, organize them by tags, keep them private
+ * or share them with your friends, all user, or the world.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +39,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A left block for My notes.
  *
- * A left block for My notes. Take notes, organize them by tags, keep them private or share them with your friends, all user, or the world..
+ * A left block for My notes. Take notes, organize them by tags, keep them private 
+ * or share them with your friends, all user, or the world..
  *
  * @category  Chisimba
  * @author    Nguni Phakela nguni52@gmail.com 
@@ -65,6 +64,7 @@ class block_mynotesleft extends object
      * 
      */
     public $objNoteOps;
+    
     /**
      * Standard init function
      *
@@ -72,21 +72,20 @@ class block_mynotesleft extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->code2Txt('mod_mynotes_tags', 'mynotes', NULL, 'TEXT: mod_mynotes_tags, not found');
         
         // Load operations class for notes.
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
     }
+    
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         return $this->objNoteOps->getTagCloud();
     }
 }

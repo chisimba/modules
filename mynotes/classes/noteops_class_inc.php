@@ -112,6 +112,7 @@ class noteops extends object {
             $this->objInput = $this->loadClass('textinput', 'htmlelements');
             $this->objForm = $this->loadClass('form', 'htmlelements');
             $this->htmlHeading = $this->loadClass('htmlheading', 'htmlelements');
+            $this->loadClass('label', 'htmlelements');
 
             $this->objDbmynotes = $this->getObject('dbmynotes', $this->module);
             $this->objDbTags = $this->getObject('dbtags', $this->module);
@@ -126,6 +127,10 @@ class noteops extends object {
     /**
      * Method to show note(s)
      *
+     * @access public
+     * @param $isViewAll Are we viewing all the notes?
+     * @param $nextPage The next page
+     * @param $prevPage The previous page
      * @return string The input box and button
      *
      */
@@ -179,8 +184,6 @@ class noteops extends object {
                 $prevPageInput = $objInput->show();
             }
 
-
-
             $ret .= $viewAllInput . $nextPageInput . $prevPageInput;
 
             return $ret;
@@ -190,7 +193,10 @@ class noteops extends object {
     /**
      * Method to show note form when either adding a new note or editing a note
      * 
+     * @access public
      * @param  $mode add or editing note parameter
+     * @return The form used when adding or editing a note
+     * 
      */
     public function addEditNote($mode) {
         if ($mode == 'add') {
@@ -217,27 +223,33 @@ class noteops extends object {
 
         $errorArray = $this->getSession('errors');
         $titleIdInputError = (!empty($errorArray) && array_key_exists('id', $errorArray['errors'])) ? $errorArray['errors']['id'] : NULL;
-        $titleInputError = (!empty($errorArray) && array_key_exists('title', $errorArray['errors'])) ? $errorArray['errors']['title'] : NULL;
+        //$titleInputError = (!empty($errorArray) && array_key_exists('title', $errorArray['errors'])) ? $errorArray['errors']['title'] : NULL;
         $tagInputError = (!empty($errorArray) && array_key_exists('tags', $errorArray['errors'])) ? $errorArray['errors']['tags'] : NULL;
-        $editorInputError = (!empty($errorArray) && array_key_exists('content', $errorArray['errors'])) ? $errorArray['errors']['content'] : NULL;
+        //$editorInputError = (!empty($errorArray) && array_key_exists('content', $errorArray['errors'])) ? $errorArray['errors']['content'] : NULL;
 
         $titleInputValue = !empty($errorArray) ? $errorArray['data']['title'] : $titleInputValue;
         $tagInputValue = !empty($errorArray) ? $errorArray['data']['tag'] : $tagInputValue;
         $mainText = !empty($errorArray) ? $errorArray['data']['content'] : $mainText;
 
+        // get text for labels
         $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'WORD: word_save, not found');
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
         $noteTitleLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetitle', $this->module, NULL, 'TEXT: mod_mynotes_notetitle, not found'));
         $noteTagLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetag', $this->module, NULL, 'TEXT: mod_mynotes_notetag, not found'));
         $noteEditorLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_noteeditor', $this->module, NULL, 'TEXT: mod_mynotes_noteeditor, not found'));
 
+        // create labels
+        $titleLabel = new label($noteTitleLabel . ':', 'input_title');
+        $tagLabel = new label($noteTagLabel . ':', 'input_tag');
+        $editorLabel = new label($noteEditorLabel . ':&nbsp;', 'input_content');
+        
         $objInput = new textinput('id', $idInputValue, 'hidden', '40');
         $idInput = $objInput->show();
 
-        $objInput = new textinput('title', $titleInputValue, '', '40');
+        $objInput = new textinput('title', $titleInputValue, '', '60');
         $titleInput = $objInput->show();
 
-        $objInput = new textinput('tags', $tagInputValue, '', '40');
+        $objInput = new textinput('tags', $tagInputValue, '', '60');
         $tagInput = $objInput->show();
 
         $objTable = new htmltable();
@@ -245,20 +257,20 @@ class noteops extends object {
 
         /* Add Title Row */
         $objTable->startRow();
-        $objTable->addCell($noteTitleLabel . ': ', '100px', '', '', '', '');
+        $objTable->addCell($titleLabel->show(), '200px', '', '', '', '');
         $objTable->addCell($titleIdInputError . $titleInput, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
         $objTable->startRow();
-        $objTable->addCell($noteTagLabel . ': ', '100px', '', '', '', '');
+        $objTable->addCell($tagLabel->show(), '200px', '', '', '', '');
         $objTable->addCell($tagInputError . $tagInput, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Editor Rows */
         //Add the WYSIWYG editor label
         $objTable->startRow();
-        $objTable->addCell($noteEditorLabel . ":&nbsp;", NULL, 'top', '', NULL, '');
+        $objTable->addCell($editorLabel->show(), '200px', 'top', '', NULL, '');
 
         //Add the WYSIWYG editor
         $editor = $this->newObject('htmlarea', 'htmlelements');
@@ -291,6 +303,14 @@ class noteops extends object {
         return $objForm->show();
     }
 
+    /*
+     * Method used to validate that the contents of the note are as expected
+     * 
+     * @access public
+     * @param  $mode add or editing note parameter
+     * @return A form that shows the data that has been input for confirmation
+     * 
+     */
     public function validateNote($mode = NULL) {
         if ($mode == "add") {
             $idInput = NULL;
@@ -309,7 +329,11 @@ class noteops extends object {
         $noteTitleLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetitle', $this->module, NULL, 'TEXT: mod_mynotes_notetitle, not found'));
         $noteTagLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetag', $this->module, NULL, 'TEXT: mod_mynotes_notetag, not found'));
         $noteEditorLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_noteeditor', $this->module, NULL, 'TEXT: mod_mynotes_noteeditor, not found'));
-
+        
+        // create labels
+        $titleLabel = new label($noteTitleLabel . ':', 'input_title');
+        $tagLabel = new label($noteTagLabel . ':', 'input_tag');
+        $editorLabel = new label($noteEditorLabel . ':&nbsp;', 'input_content');
         $objInput = new textinput('title', $titleInputValue, 'hidden', '40');
         $titleInput = $objInput->show();
 
@@ -324,19 +348,19 @@ class noteops extends object {
 
         /* Add Title Row */
         $objTable->startRow();
-        $objTable->addCell("<strong>" . $noteTitleLabel . '</strong>: ', '100px', '', '', '', '');
+        $objTable->addCell($titleLabel->show(), '200px', '', '', '', '');
         $objTable->addCell($titleInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Tags Row */
         $objTable->startRow();
-        $objTable->addCell("<strong>" . $noteTagLabel . '</strong>: ', '100px', '', '', '', '');
+        $objTable->addCell($tagLabel->show(), '200px', '', '', '', '');
         $objTable->addCell($tagInputValue, '', '', '', '', '');
         $objTable->endRow();
 
         /* Add Editor Rows */
         $objTable->startRow();
-        $objTable->addCell("<strong>" . $noteEditorLabel . "</strong>:&nbsp;", NULL, 'top', '', NULL, '');
+        $objTable->addCell($editorLabel->show(), NULL, 'top', '', NULL, '');
         $objTable->addCell($editorInputValue, NULL, 'top', '', NULL, '');
         $objTable->endRow();
 
@@ -344,7 +368,7 @@ class noteops extends object {
         $objButton->setToSubmit();
         $confirmButton = $objButton->show();
 
-        $objButton = new button('cancel', $backLabel);
+        $objButton = new button('cancel', $backLabel, "javascript:history.go(-1)");
         $backButton = $objButton->show();
 
         $objTable->startRow();
@@ -368,8 +392,10 @@ class noteops extends object {
     /*
      * Method to retrieve the notes from the database and display them
      * 
+     * @access public
+     * @return a list of notes
+     * 
      */
-
     public function getNotes() {
         $isViewAll = $this->getParam('viewall');
         $prevPage = $this->getParam("prevnotepage");
@@ -423,9 +449,10 @@ class noteops extends object {
     /*
      * Method used to return the tag cloud that is shown on the right sidebar
      * 
+     * @access public
      * @return the tag cloud
+     * 
      */
-
     public function getTagCloud() {
         $this->tagCloud = $this->objDbTags->getTags();
         if (!empty($this->tagCloud)) {
@@ -446,8 +473,9 @@ class noteops extends object {
     /*
      * Method to search notes based on tags
      * @param searchKey keywords to search the notes
+     * @return A list of notes that match the search key
+     * 
      */
-
     public function searchNotes($searchKey) {
         $mySearchResults = $this->objDbmynotes->getNotesWitTags($searchKey);
 
@@ -471,13 +499,19 @@ class noteops extends object {
         }
         $ret .= $list;
 
-
         return $ret;
     }
 
+    /*
+     * Method to show one note
+     * 
+     * @access public
+     * @param $id The id of the note to be viewed
+     * @return String Note data
+     * 
+     */
     public function showNote($id) {
         $editLabel = $this->objLanguage->languageText('word_edit', 'system', 'WORD: word_edit, not found');
-        ;
         $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'WORD: word_delete, not found');
 
         $noteArr = $this->objDbmynotes->getNote($id);
@@ -514,6 +548,7 @@ class noteops extends object {
         $tagArr = explode(",", $tagValues);
         $arraySize = count($tagArr);
         $count = 0;
+        
         foreach ($tagArr as $value) {
             $count++;
             $tmpLink = new Link($this->uri(array('action' => 'search', 'srchstr' => $value, 'srchtype' => 'tags'), $this->module));
@@ -524,13 +559,21 @@ class noteops extends object {
             }
         }
 
-
         $str .= "<div class=\"center taglist \">" . $tagList . "</div>";
         $str .= "</div>";
 
         return $str;
     }
 
+    /*
+     * Method used to get the notes list
+     * 
+     * @access public
+     * @param $begin The record number for the beginning of the list
+     * @param $end The record number for the end of the list
+     * @return A list of notes, 5 of them, for the current page.
+     * 
+     */
     public function getNotesList($begin, $end) {
         $noNotesLabel = $this->objLanguage->languageText('mod_mynotes_nonotes', $this->module, 'TEXT: mod_mynotes_nonotes, not found');
 
@@ -567,7 +610,5 @@ class noteops extends object {
 
         return $ret;
     }
-
 }
-
 ?>
