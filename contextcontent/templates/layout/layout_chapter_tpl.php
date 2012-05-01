@@ -143,11 +143,25 @@ if (isset($currentChapter)) {
     $toolbar = $this->getObject('contextsidebar', 'context');
     $objFieldset = $this->newObject('fieldset', 'htmlelements');
     $objFieldset->contents = $toolbar->show();
+//$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $cols = $this->objSysConfig->getValue('CONTEXTCONTENT_COLUMNS', 'contextcontent');
+    $cols = (integer)$cols;
     $cssLayout = $this->newObject('csslayout', 'htmlelements');
-    $cssLayout->setNumColumns(3);
-    $cssLayout->setLeftColumnContent($left);
+    $cssLayout->setNumColumns($cols);
+    switch ($cols) {
+        case 1:
+
+            break;
+        case 2:
+            $cssLayout->setLeftColumnContent($left . $objFieldset->show());
+            break;
+        case 3:
+        default:
+            $cssLayout->setLeftColumnContent($left);
+            $cssLayout->setRightColumnContent($objFieldset->show());
+            break;
+    }
     $cssLayout->setMiddleColumnContent($this->getContent());
-    $cssLayout->setRightColumnContent($objFieldset->show());
     echo $cssLayout->show();
 
 } else {
