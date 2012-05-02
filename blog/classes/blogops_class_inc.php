@@ -410,16 +410,14 @@ class blogops extends object
     public function buildBloggertable($rec)
     {
         $lastentry = $this->objDbBlog->getLatestPost($rec['id']);
+        $imglink = new href($this->uri(array('action' => 'randblog', 'userid' => $rec['id'])) , $rec['img']);
         if(!empty($lastentry))
         {
         	$link = new href($this->uri(array(
             	'action' => 'randblog',
             	'userid' => $rec['id']
         	)) , stripslashes($lastentry['post_title']));
-        	$imglink = new href($this->uri(array(
-            	'action' => 'randblog',
-            	'userid' => $rec['id']
-        	)) , $rec['img']);
+        	//$imglink = new href($this->uri(array( 'action' => 'randblog', 'userid' => $rec['id'])) , $rec['img']);
         }
         else {
         	$link = $this->objLanguage->languageText("mod_blog_onlydrafts", "blog");
