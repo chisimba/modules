@@ -106,8 +106,28 @@ class digitallibrary extends controller {
      */
     private function __upload() {
         $digitalLibrary = $this->getObject("digitallibraryutil", "digitallibrary");
-        $folderid= $digitalLibrary->upload();
+        $folderid = $digitalLibrary->upload();
         return $this->nextAction('home', array("folder" => $folderid));
+    }
+
+    /**
+     * this builds a form with files that match the selected tag
+     * @return string 
+     */
+    private function __viewbytag() {
+        $tag = $this->getParam('tag');
+        $this->setVarByRef("tag", $tag);
+        return 'showfileswithtags_tpl.php';
+    }
+
+    /**
+     * displays info on a selected file
+     * @return string 
+     */
+    private function __fileinfo() {
+        $fileId = $this->getParam("id");
+        $this->setVarByRef("fileid", $fileId);
+        return "fileinfo_tpl.php";
     }
 
 }

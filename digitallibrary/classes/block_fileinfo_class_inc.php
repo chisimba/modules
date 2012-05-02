@@ -19,21 +19,20 @@
  */
 
 /**
- * This creates the tag cloud functionality of files marked for digitallibrary
+ * This displays detailed info about a file
  *
  * @author davidwaf
  */
-class digitallibraytagcloud extends object {
+class block_fileinfo extends object {
 
-    public function init() {
-        $this->objFileTags = $this->getObject('dbfiletags', 'filemanager');
-        $this->objUser = $this->getObject("user", "security");
+    function init() {
+        $this->title = "File Info";
     }
 
-    function createTagCloud() {
-
-        $frontPage = $this->getObject("frontpage");
-        return $frontPage->getTagCloud();
+    function show() {
+        $fileId = $this->configData;
+        $digitallibraryutil = $this->getObject("digitallibraryutil");
+        return $digitallibraryutil->showFileInfo($fileId);
     }
 
 }

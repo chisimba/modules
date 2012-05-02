@@ -19,21 +19,23 @@
  */
 
 /**
- * This creates the tag cloud functionality of files marked for digitallibrary
+ * This class builds a table showing files that match the selected tag
  *
  * @author davidwaf
  */
-class digitallibraytagcloud extends object {
+class block_fileswithtag extends object {
 
-    public function init() {
-        $this->objFileTags = $this->getObject('dbfiletags', 'filemanager');
-        $this->objUser = $this->getObject("user", "security");
+    function init() {
+        $this->title="Files with tag";
     }
 
-    function createTagCloud() {
-
-        $frontPage = $this->getObject("frontpage");
-        return $frontPage->getTagCloud();
+    /**
+     * build the files with tags that match 
+     */
+    function show() {
+        $tag = $this->configData;
+        $digitallibraryutil = $this->getObject("digitallibraryutil");
+        return $digitallibraryutil->showFilesWithTag($tag);
     }
 
 }

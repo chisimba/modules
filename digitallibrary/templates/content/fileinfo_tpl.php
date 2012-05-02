@@ -20,13 +20,14 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "digitallibrary",
-        "block" : "tagcloud"
+        "block" : "fileinfo",
+        <?php
+        echo '"configData":';
+        echo '"' . $fileid . '"';
+        ?>
+
         }
-        {
-        "display" : "block",
-        "module" : "digitallibrary",
-        "block" : "frontpage"
-        }
+
 
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>

@@ -109,10 +109,14 @@ class frontpage extends object {
         return $formData->show() . $uploadTitle . $uploadForm->show();
     }
 
+    /**
+     *builds the tag cloud for files uploaded to digital library
+     * @return type 
+     */
     function getTagCloud() {
         $dbFileTags = $this->getObject("dbfiletags", "filemanager");
         $objTagCloud = $this->getObject("tagcloud", "utilities");
-        $tags = $dbFileTags->getAllTagCloudResults(""); //" AND tbl_files.path like '/digitallibrary/%'");
+        $tags = $dbFileTags->getAllTagCloudResults(" AND tbl_files.path like '/digitallibrary/%'");
         // $this->tags->addElement($tags['name'], $tags['url'], $tags['weight'], $tags['time']);
         $tagCloud = '<p><strong>' . $this->objLanguage->languageText('word_tags', 'system', 'Tags') . ':</strong> ';
 
@@ -122,7 +126,7 @@ class frontpage extends object {
             $tagsArray = array();
             foreach ($tags as $tag) {
                 $tagArray = array();
-                $tagLink = new link($this->uri(array('action' => 'viewbytag', 'tag' => $tag['tag']), "filemanager"));
+                $tagLink = new link($this->uri(array('action' => 'viewbytag', 'tag' => $tag['tag']), "digitallibrary"));
                 $tagLink->link = $tag['tag'];
                 $tagArray['name'] = $tag['tag'];
                 $tagArray['url'] = $tagLink->href;
