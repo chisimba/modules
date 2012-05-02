@@ -1,5 +1,4 @@
 <?php
-die();
 // Create Side Bar Navigation
 $objSideBar = $this->newObject('sidebar', 'navigation');
 
