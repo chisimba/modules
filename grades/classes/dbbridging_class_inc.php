@@ -78,6 +78,7 @@ class dbbridging extends dbtable
         $this->objDBschools = $this->getObject('dbschools_schools', 'schools');
         $this->objDBgrades = $this->getObject('dbgrades', 'grades');
         $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
+        $this->objDBstrands = $this->getObject('dbstrands', 'grades');
         $this->objDBclasses = $this->getObject('dbclasses', 'grades');
         $this->objDBcontext = $this->getObject('dbcontext', 'context');
     }
@@ -104,6 +105,9 @@ class dbbridging extends dbtable
                 break;
             case 'subject_id':
                 $table = $this->objDBsubjects->table;
+                break;
+            case 'strand_id':
+                $table = $this->objDBstrands->table;
                 break;
             case 'class_id':
                 $table = $this->objDBclasses->table;
@@ -142,6 +146,10 @@ class dbbridging extends dbtable
             case 'subject_id':
                 $dbClass = $this->objDBsubjects;
                 $table = $this->objDBsubjects->table;
+                break;
+            case 'strand_id':
+                $dbClass = $this->objDBstrands;
+                $table = $this->objDBstrands->table;
                 break;
             case 'class_id':
                 $dbClass = $this->objDBclasses;
@@ -254,6 +262,17 @@ class dbbridging extends dbtable
             }
         }
         return $idArray;
+    }
+    
+    /**
+     *
+     * Method to get all links
+     * 
+     * @return array The array of links 
+     */
+    public function getAll()
+    {
+        return $this->fetchAll();
     }
 }
 ?>

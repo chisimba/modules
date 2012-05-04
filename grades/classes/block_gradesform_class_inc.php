@@ -73,9 +73,11 @@ class block_gradesform extends object
         
         $addGradeLabel = $this->objLanguage->code2Txt('mod_grades_addgrade', 'grades', NULL, 'ERROR: mod_grades_addgrade');
         $addSubjectLabel = $this->objLanguage->code2Txt('mod_grades_addsubject', 'grades', NULL, 'ERROR: mod_grades_addsubject');
+        $addStrandLabel = $this->objLanguage->code2Txt('mod_grades_addstrand', 'grades', NULL, 'ERROR: mod_grades_addstrand');
         $addClassLabel = $this->objLanguage->code2Txt('mod_grades_addclass', 'grades', NULL, 'ERROR: mod_grades_addclass');
         $editGradeLabel = $this->objLanguage->code2Txt('mod_grades_editgrade', 'grades', NULL, 'ERROR: mod_grades_editgrade');
         $editSubjectLabel = $this->objLanguage->code2Txt('mod_grades_editsubject', 'grades', NULL, 'ERROR: mod_grades_editsubject');
+        $editStrandLabel = $this->objLanguage->code2Txt('mod_grades_editstrand', 'grades', NULL, 'ERROR: mod_grades_editstrand');
         $editClassLabel = $this->objLanguage->code2Txt('mod_grades_editclass', 'grades', NULL, 'ERROR: mod_grades_editclass');
 
         $type = $this->getParam('type');
@@ -88,6 +90,9 @@ class block_gradesform extends object
                 break;
             case 's':
                 $this->title = (empty($id)) ? $addSubjectLabel : $editSubjectLabel;
+                break;
+            case 'k':
+                $this->title = (empty($id)) ? $addStrandLabel : $editStrandLabel;
                 break;
             case 'c':
                 $this->title = (empty($id)) ? $addClassLabel : $editClassLabel;

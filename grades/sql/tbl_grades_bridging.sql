@@ -28,6 +28,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+        'strand_id' => array(
+                'type' => 'text',
+                'length' => 32
+                ),
 	'class_id' => array(
 		'type' => 'text',
 		'length' => 32
@@ -62,6 +66,7 @@ $indexes = array(
          'school_id' => array(),
          'grade_id' => array(),
          'subject_id' => array(),
+         'strand_id' => array(),
          'class_id' => array(),
          'context_id' => array(),
     )

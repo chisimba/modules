@@ -56,6 +56,37 @@ jQuery(function() {
        }
     });
 
+    jQuery('#addstrandlink').click(function() {
+       jQuery('#strandsformdiv').toggle();
+       jQuery('#addstrandsdiv').toggle();
+       if (jQuery('#strandstablediv').length > 0)
+       {
+           jQuery('#strandstablediv').toggle();
+       }
+    });
+    
+    jQuery('#cancel_strand').live('click', function() {
+       
+       jQuery('#strandsformdiv').toggle();
+       jQuery('#addstrandsdiv').toggle();
+       if (jQuery('#strandstablediv').length > 0)
+       {
+           jQuery('#strandstablediv').toggle();
+       }
+    });
+    
+    jQuery('#save_strand').live('click', function() {
+       if (jQuery('#input_strand_id').val() == '')
+       {
+           alert (no_strand);
+           return false;
+       }
+       else
+       {
+           jQuery('#form_strand').submit();
+       }
+    });
+
     jQuery('#addclasslink').click(function() {
        jQuery('#classesformdiv').toggle();
        jQuery('#addclassesdiv').toggle();

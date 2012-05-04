@@ -70,20 +70,25 @@ class block_gradeslink extends object
         
         $gradesLabel = $this->objLanguage->code2Txt('mod_grades_linkgrade', 'grades', NULL, 'ERROR: mod_grades_linkgrade');
         $subjectsLabel = $this->objLanguage->code2Txt('mod_grades_linksubject', 'grades', NULL, 'ERROR: mod_grades_linksubject');
+        $strandsLabel = $this->objLanguage->code2Txt('mod_grades_linkstrand', 'grades', NULL, 'ERROR: mod_grades_linkstrand');
         $classesLabel = $this->objLanguage->code2Txt('mod_grades_linkclass', 'grades', NULL, 'ERROR: mod_grades_linkclass');
         
         $type = $this->getParam('type');
         switch ($type)
         {
-            case 'g':
+            case 'grade':
                 $this->title = ucfirst(strtolower($gradesLabel));
                 $this->string = $this->objOps->showGradeLink();
                 break;
-            case 's':
+            case 'subject':
                 $this->title = ucfirst(strtolower($subjectsLabel));
                 $this->string = $this->objOps->showSubjectLink();
                 break;
-            case 'c':
+            case 'strand':
+                $this->title = ucfirst(strtolower($strandsLabel));
+                $this->string = $this->objOps->showStrandLink();
+                break;
+            case 'class':
                 $this->title = ucfirst(strtolower($classesLabel));
                 $this->string = $this->objOps->showClassLink();
                 break;

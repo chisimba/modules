@@ -26,7 +26,7 @@
  * @copyright 2011 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   0.001
- * @link      http://www.chisimba.com
+ * @to      http://www.chisimba.com
  *
  */
  
@@ -102,6 +102,7 @@ class grades extends controller
         // Create an instance of the database class
         $this->objDBgrades = $this->getObject('dbgrades', 'grades');
         $this->objDBsubjects = $this->getObject('dbsubjects', 'grades');
+        $this->objDBstrands = $this->getObject('dbstrands', 'grades');
         $this->objDBclasses = $this->getObject('dbclasses', 'grades');
         $this->objDBbridging = $this->getObject('dbbridging', 'grades');
         $this->objOps = $this->getObject('gradesops', 'grades');
@@ -193,9 +194,9 @@ class grades extends controller
     private function __validate()
     {
         $type = $this->getParam('type');
-        $cancel = $this->getParam('cancel');
+        $cancel = $this->getParam('cancel', NULL);
         $id = $this->getParam('id');
-        if ($cancel == 'Cancel')
+        if (!empty($cancel))
         {
             $this->setSession('errors', array());
             return $this->nextAction('list', array('type' => $type));
@@ -210,13 +211,16 @@ class grades extends controller
         {
             switch ($type)
             {
-                case 'g':
+                case 'grade':
                     $dbClass = $this->objDBgrades;
                     break;
-                case 's':
+                case 'subject':
                     $dbClass = $this->objDBsubjects;
                     break;
-                case 'c':
+                case 'strand':
+                    $dbClass = $this->objDBstrands;
+                    break;
+                case 'class':
                     $dbClass = $this->objDBclasses;
                     break;
             }
@@ -233,9 +237,9 @@ class grades extends controller
                 $data['date_created'] = date('Y-m-d H:i:s');
                 $newId = $dbClass->insertData($data);
                 
-                if ($newId)
+                if ($newId && $type == 'grade')
                 {
-                    $groupId = $this->objGroups->addGroup($data['name'], $data['description']);
+                    $this->objGroups->addGroup($data['name'], $data['description']);
                 }
             }
             $this->setSession('errors', array());
@@ -260,26 +264,27 @@ class grades extends controller
         
         switch ($type)
         {
-            case 'g':
+            case 'grade_id':
                 $this->objDBgrades->deleteData($id);
-                $this->objDBbridging->deleteLinks('grade_id', $id);
                 break;
-            case 's':
+            case 'subject_id':
                 $this->objDBsubjects->deleteData($id);
-                $this->objDBbridging->deleteLinks('subject_id', $id);
                 break;
-            case 'c':
+            case 'strand_id':
+                $this->objDBstrands->deleteData($id);
+                break;
+            case 'class_id':
                 $this->objDBclasses->deleteData($id);
-                $this->objDBbridging->deleteLinks('class_id', $id);
                 break;
         }       
-        return $this->nextAction('list', array('type' => $type));
+        $this->objDBbridging->deleteLinks($type, $id);
+        return $this->nextAction('list', array('type' => substr($type, 0, -3)));
     }
     
     /**
      *
-     * Method that corresponds to the link action. It returns the 
-     * page to link vaarious lerning components
+     * Method that corresponds to the to action. It returns the 
+     * page to to vaarious lerning components
      * 
      * @access private 
      */
@@ -290,564 +295,111 @@ class grades extends controller
     
     /**
      *
-     * Method that corresponds to the savelink action. It returns the 
-     * page to link various learning components after saving a link
+     * Method that corresponds to the saveto action. It returns the 
+     * page to to various learning components after saving a to
      * 
      * @access private 
      */
     private function __savelink()
     {
-        $type = $this->getParam('type');
-        $link = $this->getParam('link');
+        $from = $this->getParam('from');
+        $to = $this->getParam('to');
         
-        // save actual link made.
+        $id = $this->getParam($from, NULL);
+        $link = $this->getParam($to, NULL);
+var_dump($from, $id);        
+var_dump($to, $link);        
         $data = array();
-        switch ($type)
-        {
-            case 's':
-                $id = $this->getParam('subject_id');
-                $data['subject_id'] = $id;
-                $data['created_by'] = $this->objUser->PKId();
-                $data['date_created'] = date('Y-m-d H:i:s');
-                switch ($link)
-                {
-                    case 'h':
-                        $data['school_id'] = $this->getParam('school_id');
-                        $tab = 0;
-                        break;
-                    case 'g':
-                        $data['grade_id'] = $this->getParam('grade_id');
-                        $tab = 1;
-                        break;
-                    case 'c':
-                        $data['class_id'] = $this->getParam('class_id');
-                        $tab = 2;
-                        break;
-                    case 'x':
-                        $data['context_id'] = $this->getParam('context_id');
-                        $tab = 3;
-                        break;
-                }
-                break;
-            case 'g':
-                $id = $this->getParam('grade_id');
-                $data['grade_id'] = $id;
-                $data['created_by'] = $this->objUser->PKId();
-                $data['date_created'] = date('Y-m-d H:i:s');
-                switch ($link)
-                {
-                    case 'h':
-                        $data['school_id'] = $this->getParam('school_id');
-                        $tab = 0;
-                        break;
-                    case 's':
-                        $data['subject_id'] = $this->getParam('subject_id');
-                        $tab = 1;
-                        break;
-                    case 'c':
-                        $data['class_id'] = $this->getParam('class_id');
-                        $tab = 2;
-                        break;
-                }
-                break;
-            case 'c':
-                $id = $this->getParam('class_id');
-                $data['class_id'] = $id;
-                $data['created_by'] = $this->objUser->PKId();
-                $data['date_created'] = date('Y-m-d H:i:s');
-                switch ($link)
-                {
-                    case 'h':
-                        $data['school_id'] = $this->getParam('school_id');
-                        $tab = 0;
-                        break;
-                    case 's':
-                        $data['subject_id'] = $this->getParam('subject_id');
-                        $tab = 1;
-                        break;
-                    case 'g':
-                        $data['grade_id'] = $this->getParam('grade_id');
-                        $tab = 2;
-                        break;
-                }
-                break;
-        }
-        $this->objDBbridging->insertData($data);
+        $data[$from] = $id;
+        $data[$to] = $link;        
+        $data['created_by'] = $this->objUser->PKId();
+        $data['date_created'] = date('Y-m-d H:i:s');
+        
+        $tab = substr($to, 0, -3);
+
+        $savedId = $this->objDBbridging->insertData($data);
         
         // save associated links.
-        switch ($type)
-        {
-            case 'g':
-                $linked = $this->objDBbridging->getLinked('grade_id', $id);
-                if (!empty($linked))
-                {      
-                    $schoolIds = array();
-                    $subjectIds = array();
-                    $classIds = array();
-                    switch ($link)
-                    {
-                        case 'h':
-                            $linkedId = $this->getParam('school_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['subject_id']))
-                                {
-                                    $subjectIds[] = "'" . $item['subject_id'] . "'";
-                                }
-                                if (!empty($item['class_id']))
-                                {
-                                    $classIds[] = "'" . $item['class_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($subjectIds))
-                            {
-                                $idString = implode(',', $subjectIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('subject_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['school_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['subject_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($classIds))
-                            {
-                                $idString = implode(',', $classIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('class_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['school_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['class_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 's':
-                            $linkedId = $this->getParam('subject_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['class_id']))
-                                {
-                                    $classIds[] = "'" . $item['class_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'subject_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['subject_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($classIds))
-                            {
-                                $idString = implode(',', $classIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('class_id', $idString, 'subject_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['subject_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['class_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 'c':
-                            $linkedId = $this->getParam('class_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['subject_id']))
-                                {
-                                    $subjectIds[] = "'" . $item['subject_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'class_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['class_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($subjectIds))
-                            {
-                                $idString = implode(',', $subjectIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('subject_id', $idString, 'class_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['class_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['subject_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                    }
-                }
-                break;
-            case 's':
-                $linked = $this->objDBbridging->getLinked('subject_id', $id);
-                if (!empty($linked))
-                {      
-                    $schoolIds = array();
-                    $gradeIds = array();
-                    $classIds = array();
-                    switch ($link)
-                    {
-                        case 'g':
-                            $linkedId = $this->getParam('grade_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['class_id']))
-                                {
-                                    $classIds[] = "'" . $item['class_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'grade_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($classIds))
-                            {
-                                $idString = implode(',', $classIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('class_id', $idString, 'grade_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['class_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 'c':
-                            $linkedId = $this->getParam('class_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['grade_id']))
-                                {
-                                    $gradeIds[] = "'" . $item['grade_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'class_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['class_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($gradeIds))
-                            {
-                                $idString = implode(',', $gradeIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('grade_id', $idString, 'class_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['class_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['grade_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 'h':
-                            $linkedId = $this->getParam('school_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['class_id']))
-                                {
-                                    $classIds[] = "'" . $item['class_id'] . "'";
-                                }
-                                if (!empty($item['grade_id']))
-                                {
-                                    $gradeIds[] = "'" . $item['grade_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($classIds))
-                            {
-                                $idString = implode(',', $classIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('class_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['school_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['class_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($gradeIds))
-                            {
-                                $idString = implode(',', $gradeIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('grade_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                    }
-                }
-                break;
-            case 'c':
-                $linked = $this->objDBbridging->getLinked('class_id', $id);
-                if (!empty($linked))
-                {      
-                    $schoolIds = array();
-                    $gradeIds = array();
-                    $subjectIds = array();
-                    switch ($link)
-                    {
-                        case 'g':
-                            $linkedId = $this->getParam('grade_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['subject_id']))
-                                {
-                                    $subjectIds[] = "'" . $item['subject_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'grade_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($subjectIds))
-                            {
-                                $idString = implode(',', $subjectIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('subject_id', $idString, 'grade_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['grade_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 'h':
-                            $linkedId = $this->getParam('school_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['subject_id']))
-                                {
-                                    $subjectIds[] = "'" . $item['subject_id'] . "'";
-                                }
-                                if (!empty($item['grade_id']))
-                                {
-                                    $gradeIds[] = "'" . $item['grade_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($subjectIds))
-                            {
-                                $idString = implode(',', $subjectIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('subject_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['school_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['subject_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($gradeIds))
-                            {
-                                $idString = implode(',', $gradeIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('grade_id', $idString, 'school_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['school_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['grade_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                        case 's':
-                            $linkedId = $this->getParam('subject_id');
-                            foreach ($linked as $item)
-                            {
-                                if (!empty($item['school_id']))
-                                {
-                                    $schoolIds[] = "'" . $item['school_id'] . "'";
-                                }
-                                if (!empty($item['grade_id']))
-                                {
-                                    $gradeIds[] = "'" . $item['grade_id'] . "'";
-                                }
-                            }
-                            $data = array();
-                            if (!empty($schoolIds))
-                            {
-                                $idString = implode(',', $schoolIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('school_id', $idString, 'subject_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['subject_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['school_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            $data = array();
-                            if (!empty($gradeIds))
-                            {
-                                $idString = implode(',', $gradeIds);
-                                $unlinked = $this->objDBbridging->getUnlinked('grade_id', $idString, 'subject_id', $linkedId);
-                                if (!empty($unlinked))
-                                {
-                                    $data['grade_id'] = $linkedId;
-                                    $data['created_by'] = $this->objUser->PKId();
-                                    $data['date_created'] = date('Y-m-d H:i:s');
-                                    foreach ($unlinked as $item)
-                                    {
-                                        $data['subject_id'] = $item;
-                                        $this->objDBbridging->insertData($data);
-                                    }                                    
-                                }                                
-                            }
-                            break;
-                    }
-                }
-                break;
-        }        
+        $links = $this->objDBbridging->getAll();
+        $linkArray = $links;
         
-        return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));        
+        foreach ($links as $item)
+        {
+            $data = array();
+            $data['created_by'] = $this->objUser->PKId();
+            $data['date_created'] = date('Y-m-d H:i:s');
+            $data[$to] = $link;
+            
+            if (array_key_exists($from, $item) && !empty($item[$from]))
+            {
+                foreach ($item as $field => $value)
+                {
+                    if ($field != $from && $field != 'id' && $field != 'created_by' && $field != 'date_created'
+                        && $field != 'modified_by' && $field != 'date_modified' && $field != 'puid')
+                    {
+                        if (!empty($value) && $value != $link)
+                        {
+                            $data[$field] = $value;
+                            
+                            $exists = FALSE;
+                            foreach ($linkArray as $row)
+                            {
+                                if ($row[$to] == $link && $row[$field] == $value)
+                                {
+                                    $exists = TRUE;
+                                }
+                            }
+                            if (!$exists)
+                            {
+                                $this->objDBbridging->insertData($data);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // save associated links.
+        $links = $this->objDBbridging->getAll();
+        $linkArray = $links;
+        
+        foreach ($links as $item)
+        {
+            $data = array();
+            $data['created_by'] = $this->objUser->PKId();
+            $data['date_created'] = date('Y-m-d H:i:s');
+            $data[$to] = $link;
+            
+            if (array_key_exists($to, $item) && !empty($item[$to]))
+            {
+                foreach ($item as $field => $value)
+                {
+                    if ($field != $to && $field != 'id' && $field != 'created_by' && $field != 'date_created'
+                        && $field != 'modified_by' && $field != 'date_modified' && $field != 'puid')
+                    {
+                        if (!empty($value) && $value != $id)
+                        {
+                            $data[$field] = $value;
+                            
+                            $exists = FALSE;
+                            foreach ($linkArray as $row)
+                            {
+                                if ($row[$from] == $id && $row[$field] == $value)
+                                {
+                                    $exists = TRUE;
+                                }
+                            }
+                            if (!$exists)
+                            {
+                                $this->objDBbridging->insertData($data);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->nextAction('link', array('type' => substr($from, 0, -3), 'id' => $id, 'tab' => $tab));        
     }
     
     /**
@@ -864,6 +416,18 @@ class grades extends controller
     
     /**
      *
+     * Method that corresponds to the ajaxShowStrand action.
+     * It returns the html for the ajax request
+     * 
+     * @access private 
+     */
+    private function __ajaxShowStrand()
+    {
+        return $this->objOps->ajaxShowStrand();
+    }
+    
+    /**
+     *
      * Method that corresponds to the ajaxShowContext action.
      * It returns the html for the ajax request
      * 
@@ -876,8 +440,8 @@ class grades extends controller
     
     /**
      *
-     * Method that corresponds to the savelink action. It returns the 
-     * page to link various learning components after saving a link
+     * Method that corresponds to the deletelink action. It returns the 
+     * page to to various learning components after saving a link
      * 
      * @access private 
      */
@@ -888,57 +452,9 @@ class grades extends controller
         $id = $this->getParam('id');
         $del = $this->getParam('del');
 
-        switch ($type)
-        {
-            case 's':
-                switch ($link)
-                {
-                    case 'h':
-                        $tab = 0;
-                        break;
-                    case 'g':
-                        $tab = 1;
-                        break;
-                    case 'c':
-                        $tab = 2;
-                        break;
-                    case 'x':
-                        $tab = 3;
-                        break;
-                }
-                break;
-            case 'g':
-                switch ($link)
-                {
-                    case 'h':
-                        $tab = 0;
-                        break;
-                    case 's':
-                        $tab = 1;
-                        break;
-                    case 'c':
-                        $tab = 2;
-                        break;
-                }
-                break;
-            case 'c':
-                switch ($link)
-                {
-                    case 'h':
-                        $tab = 0;
-                        break;
-                    case 's':
-                        $tab = 1;
-                        break;
-                    case 'g':
-                        $tab = 2;
-                        break;
-                }
-                break;
-        }
-        $this->objDBbridging->deleteLink($del);
+       $this->objDBbridging->deleteLink($del);
 
-        return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $tab));
+        return $this->nextAction('link', array('type' => $type, 'id' => $id, 'tab' => $link));
     }
     
     /**
@@ -998,7 +514,7 @@ class grades extends controller
     * 
     * @access private
     * @param string $action The action parameter passed byref
-    * @return stromg the name of the method
+    * @return string the name of the method
     * 
     */
     function __getMethod(& $action)

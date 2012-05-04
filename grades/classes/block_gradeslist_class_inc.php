@@ -70,6 +70,7 @@ class block_gradeslist extends object
         
         $gradesLabel = $this->objLanguage->code2Txt('mod_grades_gradeslist', 'grades', NULL, 'ERROR: mod_grades_gradeslist');
         $subjectsLabel = $this->objLanguage->code2Txt('mod_grades_subjectslist', 'grades', NULL, 'ERROR: mod_grades_subjectslist');
+        $strandsLabel = $this->objLanguage->code2Txt('mod_grades_strandslist', 'grades', NULL, 'ERROR: mod_grades_strandslist');
         $classesLabel = $this->objLanguage->code2Txt('mod_grades_classeslist', 'grades', NULL, 'ERROR: mod_grades_classeslist');
         
         $type = $this->getParam('type');
@@ -80,6 +81,9 @@ class block_gradeslist extends object
                 break;
             case 's':
                 $this->title = ucfirst(strtolower($subjectsLabel));
+                break;
+            case 'k':
+                $this->title = ucfirst(strtolower($strandsLabel));
                 break;
             case 'c':
                 $this->title = ucfirst(strtolower($classesLabel));

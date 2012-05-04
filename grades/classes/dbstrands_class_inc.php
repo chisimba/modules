@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Kevin Cyster kcyster@gmail.com
 *
 */
-class dbsubjects extends dbtable
+class dbstrands extends dbtable
 {
 
     /**
@@ -72,16 +72,16 @@ class dbsubjects extends dbtable
     public function init()
     {
         //Set the parent table to our demo table
-        parent::init('tbl_grades_subjects');
-        $this->table = 'tbl_grades_subjects';
+        parent::init('tbl_grades_strands');
+        $this->table = 'tbl_grades_strands';
     }
 
     /**
      *
-     * Method to return all subjects
+     * Method to return all strands
      *
      * @access public
-     * @return array $result An array of all the subjects
+     * @return array $result An array of all the strands
      *
      */
     public function getAll()
@@ -93,23 +93,23 @@ class dbsubjects extends dbtable
 
     /**
      *
-     * Method to return a subject
+     * Method to return a strand
      * 
      * @access public
-     * @param string $id The id of the subject to retrieve
-     * @return array The subject data array 
+     * @param string $id The id of the strand to retrieve
+     * @return array The strand data array 
      */
-    public function getSubject($id)
+    public function getStrand($id)
     {
         return $this->getRow('id', $id);
     }
 
     /**
-     * Method to add a subject to the database
+     * Method to add a strand to the database
      * 
      * @access public
-     * @param array @data The array of subject data
-     * @return string The id of the subject added
+     * @param array @data The array of strand data
+     * @return string The id of the strand added
      */
     public function insertData($data)
     {
@@ -118,10 +118,10 @@ class dbsubjects extends dbtable
     
     /**
      *
-     * Method to delete a subject
+     * Method to delete a strand
      * 
      * @access public
-     * @param string $sid The id of the subject to delete
+     * @param string $sid The id of the strand to delete
      * return boolean 
      */
     public function deleteData($id)
@@ -130,11 +130,11 @@ class dbsubjects extends dbtable
     }
 
     /**
-     * Method to edit a subject on the database
+     * Method to edit a strand on the database
      * 
      * @access public
-     * @param array @data The array of subject data
-     * @return string The id of the class edited
+     * @param array @data The array of strand data
+     * @return string The id of the strand edited
      */
     public function updateData($id, $data)
     {
