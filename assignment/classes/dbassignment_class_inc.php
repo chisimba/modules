@@ -153,12 +153,12 @@ class dbassignment extends dbtable {
                     'updated' => date('Y-m-d H:i:s', time())
                 ));
         if ($emailAlert == '1') {
-            $title = "'" . $name . "' " . $this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment  has been created in '") . $this->objContext->getTitle($context) . "'";
+            $subject = "'".$name."' " . $this->objLanguage->languageText('mod_assignment_emailsubject', 'assignment', " assignment has been created in") . ' \'' . $this->objContext->getTitle($context) . '\'';
             $contextredirecturi = html_entity_decode($this->uri(array('action'=>'view', 'id'=>$id), 'assignment'));
             $link = new link($this->uri(array('action'=>'joincontext', 'contextcode'=>$this->objContext->getContextCode(), 'contextredirecturi'=> $contextredirecturi), 'context'));
             $message = $this->objLanguage->languageText('mod_assignment_emailbody', 'assignment', "To view the assignment, click on this link") . ' ' .
                     $link->href;
-            $this->sendEmail($title, $message, $this->getContextRecipients($context));
+            $this->sendEmail($subject, $message, $this->getContextRecipients($context));
         }
         $this->addReminderToCalendar(
                 $name,
@@ -220,11 +220,11 @@ class dbassignment extends dbtable {
     /**
      * Method to email an assignment to users
      *
-     * @param string $title Title of the assignment
+     * @param string $subject Subject of the assignment
      * @param string $message The assignment
      * @param array $recipients List of Recipients (array of email addresses);
      */
-    private function sendEmail($title, $message, $recipients) {
+    private function sendEmail($subject, $message, $recipients) {
 
         $objMailer = $this->getObject('email', 'mail');
         $message = html_entity_decode($message);
@@ -238,7 +238,7 @@ class dbassignment extends dbtable {
         $objMailer->setValue('to', $list);
         $objMailer->setValue('from', $this->objUser->email());
         $objMailer->setValue('fromName', $this->objUser->fullname());
-        $objMailer->setValue('subject', $title);
+        $objMailer->setValue('subject', $subject);
         $objMailer->setValue('body', $message);
         $objMailer->setValue('AltBody', $message);
         $objMailer->send();
