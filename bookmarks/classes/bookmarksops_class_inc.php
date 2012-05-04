@@ -737,7 +737,7 @@ class bookmarksops extends object
         $this->objIcon->setIcon('bookmark', 'png');
         $bookmarkIcon = $this->objIcon->show();
 
-        $link = '<a href="#" id="add_bookmark">' . '&nbsp;' . $bookmarkIcon . '</a>';
+        $link = '<a href="#" id="add_bookmark"><strong>' . '&nbsp;' . $bookmarkIcon . '</strong></a>';
 
         $objLayer = new layer();
         $objLayer->id = 'bookmark_layer';
