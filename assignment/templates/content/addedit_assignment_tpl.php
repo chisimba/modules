@@ -192,7 +192,7 @@ $this->loadClass('checkbox', 'htmlelements');
 $stringFiletypes = '';
 $separator = '';
 foreach ($arrAllowedFileTypes as $filetype) {
-    $objCheckbox = new checkbox('filetypes[]', 'dummy', in_array($filetype, $arrAllowedFileTypesSelected));
+    $objCheckbox = new checkbox('filetypes[]', '', in_array($filetype, $arrAllowedFileTypesSelected));
     $objCheckbox->setValue($filetype);
     if (!$uploadableOptionsEnabled) {
         $objCheckbox->extra = 'disabled="disabled"';
