@@ -133,13 +133,17 @@ class contextwizardops extends object
         $firstLabel = $this->objLanguage->code2Txt('mod_contextwizard_first', 'contextwizard', NULL, 'ERROR: mod_contextwizard_first');
         $selectLevelLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectlevel', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectlevel');
         $selectSubjectLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectsubject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectsubject');
+        $selectStrandLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectstrand', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectstrand');
         $selectContextLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectcontext', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectcontext');
         $levelLabel = $this->objLanguage->code2Txt('mod_contextwizard_level', 'contextwizard', NULL, 'ERROR: mod_contextwizard_level');
         $subjectLabel = $this->objLanguage->code2Txt('mod_contextwizard_subject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_subject');
+        $strandLabel = $this->objLanguage->code2Txt('mod_contextwizard_strand', 'contextwizard', NULL, 'ERROR: mod_contextwizard_strand');
         $contextLabel = $this->objLanguage->code2Txt('mod_contextwizard_context', 'contextwizard', NULL, 'ERROR: mod_contextwizard_context');
         $subjectTitleLabel = $this->objLanguage->code2Txt('mod_contextwizard_titlesubject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_titlesubject');
+        $strandTitleLabel = $this->objLanguage->code2Txt('mod_contextwizard_titlestrand', 'contextwizard', NULL, 'ERROR: mod_contextwizard_titlestrand');
         $contextTitleLabel = $this->objLanguage->code2Txt('mod_contextwizard_titlecontext', 'contextwizard', NULL, 'ERROR: mod_contextwizard_titlecontext');
         $subjectErrorLabel = $this->objLanguage->code2Txt('mod_contextwizard_subejcterror', 'contextwizard', NULL, 'ERROR: mod_contextwizard_subejcterror');
+        $strandErrorLabel = $this->objLanguage->code2Txt('mod_contextwizard_stranderror', 'contextwizard', NULL, 'ERROR: mod_contextwizard_stranderror');
         $levelErrorLabel = $this->objLanguage->code2Txt('mod_contextwizard_levelerror', 'contextwizard', NULL, 'ERROR: mod_contextwizard_levelerror');
         $contextErrorLabel = $this->objLanguage->code2Txt('mod_contextwizard_contexterror', 'contextwizard', NULL, 'ERROR: mod_contextwizard_contexterror');
         
@@ -150,6 +154,11 @@ class contextwizardops extends object
         // pass error to javascript.
         $arrayVars = array();
         $arrayVars['no_subject'] = $subjectErrorLabel;
+        $this->objSvars->varsToJs($arrayVars);
+
+        // pass error to javascript.
+        $arrayVars = array();
+        $arrayVars['no_strand'] = $strandErrorLabel;
         $this->objSvars->varsToJs($arrayVars);
 
         // pass error to javascript.
@@ -322,6 +331,62 @@ class contextwizardops extends object
         $this->objDialog->unsetButtons();
         $dialog .= $this->objDialog->show();
         
+        // strand dialog
+        $array = array('step' => $strandLabel);
+        $strandDialogLabel = $this->objLanguage->code2Txt('mod_contextwizard_title', 'contextwizard', $array, 'ERROR: mod_contextwizard_title');
+
+        $objLayer = new layer();
+        $objLayer->id = 'strand_layer';
+        $strandLayer = $objLayer->show();
+
+        $objButton = new button('next', $nextLabel);
+        $objButton->setId('strand_next');
+        $nextButton = $objButton->show();
+        
+        $objButton = new button('back', $backLabel);
+        $objButton->setId('strand_back');
+        $backButton = $objButton->show();
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell($strandTitleLabel, '', '', '', '', 'colspan="2"', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($selectStrandLabel, '', '', '', '', '', '');
+        $objTable->addCell($strandLayer, '', '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell($backButton . '&nbsp;' . $nextButton, '', '', '', '', 'colspan="2"', '');
+        $objTable->endRow();
+        $strandTable = $objTable->show();
+        
+        $objForm = new form('wizard_strand', $this->uri(array(
+            'action' => 'next'
+        ), 'contextwizard'));
+        $objForm->extra = ' enctype="multipart/form-data"';
+        $objForm->addToForm($strandTable);
+        $form = $objForm->show();
+               
+        $objLayer = new layer();
+        $objLayer->id = 'form_layer';
+        $objLayer->str =  $form;
+        $formLayer = $objLayer->show();
+
+        $this->objDialog = $this->newObject('dialog', 'jquerycore');
+        $this->objDialog->setCssId('dialog_wizard_strand');
+        $this->objDialog->setTitle(ucwords($strandDialogLabel));
+        $this->objDialog->setCloseOnEscape(FALSE);
+        $this->objDialog->setContent($formLayer);
+        $this->objDialog->setAutoOpen(FALSE);
+        $this->objDialog->setOpen("jQuery('.ui-dialog-titlebar-close').hide();");
+        $this->objDialog->setHeight(250);
+        $this->objDialog->setWidth(650);
+        $this->objDialog->setResizable(FALSE);
+        $this->objDialog->setAutoOpen(FALSE);
+        $this->objDialog->unsetButtons();
+        $dialog .= $this->objDialog->show();
+
         // course dialog
         $array = array('step' => $contextLabel);
         $contextDialogLabel = $this->objLanguage->code2Txt('mod_contextwizard_title', 'contextwizard', $array, 'ERROR: mod_contextwizard_title');
@@ -378,7 +443,7 @@ class contextwizardops extends object
         $this->objDialog->unsetButtons();
         $dialog .= $this->objDialog->show();
 
-        return $dialog;
+        return $splashLabel . $dialog;
         
     }
     
@@ -408,7 +473,7 @@ class contextwizardops extends object
     {
         $selectSubjectLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectsubject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectsubject');
 
-        $groupId =$this->getParam('group_id');
+        $groupId = $this->getParam('group_id');
         $groupName = $this->objGroups->getName($groupId);
         $grade = $this->objDBgrades->getGradeByName($groupName);
         $subjects = $this->objDBbridging->getLinkedItems('grade_id', 'subject_id', $grade['id']);
@@ -424,7 +489,30 @@ class contextwizardops extends object
     
     /**
      *
-     * Method to process an ajax request to get the contexts for a subject
+     * Method to process an ajax request to get the strands for a grade
+     * 
+     * @access public
+     * @return VOID 
+     */
+    public function ajaxGetStrands()
+    {
+        $selectStrandLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectsubject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectsubject');
+
+        $subjectId =$this->getParam('subject_id');
+        $strands = $this->objDBbridging->getLinkedItems('subject_id', 'strand_id', $subjectId);
+        
+        $objDrop = new dropdown('strand_id');
+        $objDrop->addOption('', $selectStrandLabel . '...');
+        $objDrop->addFromDB($strands, 'name', 'strand_id');
+        $strandDrop = $objDrop->show();
+                       
+        echo $strandDrop;
+        die();
+    }
+    
+    /**
+     *
+     * Method to process an ajax request to get the contexts for a strand
      * 
      * @access public
      * @return VOID 
@@ -433,8 +521,8 @@ class contextwizardops extends object
     {
         $selectContextLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectcontext', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectcontext');
 
-        $subjectId =$this->getParam('subject_id');
-        $contexts = $this->objDBbridging->getLinkedItems('subject_id', 'context_id', $subjectId);
+        $strandId =$this->getParam('strand_id');
+        $contexts = $this->objDBbridging->getLinkedItems('strand_id', 'context_id', $strandId);
 
         $objDrop = new dropdown('contextcode');
         $objDrop->addOption('', $selectContextLabel . '...');
@@ -443,7 +531,6 @@ class contextwizardops extends object
                        
         echo $contextDrop;
         die();
-    }
-    
+    }    
 }
 ?>

@@ -179,6 +179,18 @@ class contextwizard extends controller
     
     /**
      *
+     * Method corresponding to the ajaxGetStrands method
+     * 
+     * @access public
+     * @return VOID 
+     */
+    public function __ajaxGetStrands()
+    {
+        return $this->objOps->ajaxGetStrands();
+    }
+    
+    /**
+     *
      * Method corresponding to the ajaxGetSubjects method
      * 
      * @access public

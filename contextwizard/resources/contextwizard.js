@@ -88,10 +88,39 @@ jQuery(function() {
         {
             jQuery.ajax({
                 type: 'POST',
-                url: 'index.php?module=contextwizard&action=ajaxGetContexts',
+                url: 'index.php?module=contextwizard&action=ajaxGetStrands',
                 data: 'subject_id=' + jQuery('#input_subject_id').val(),
                 success: function(ret) {
                     jQuery('#dialog_wizard_subject').dialog('close');
+                    jQuery('#strand_layer').html(ret);                    
+                    jQuery('#dialog_wizard_strand').dialog('open'); 
+                    return false;
+                }
+            });
+        }
+    });
+
+    jQuery('#strand_back').live('click', function() {
+       jQuery('#dialog_wizard_strand').dialog('close');
+       jQuery('#dialog_wizard_subject').dialog('open');
+       return false;
+    });
+    
+    jQuery('#strand_next').live('click', function() {
+        var strand_id = jQuery('#input_strand_id').val(); 
+        if (strand_id == '')
+        {
+            alert(no_strand);
+            return false;
+        }
+        else
+        {
+            jQuery.ajax({
+                type: 'POST',
+                url: 'index.php?module=contextwizard&action=ajaxGetContexts',
+                data: 'strand_id=' + jQuery('#input_strand_id').val(),
+                success: function(ret) {
+                    jQuery('#dialog_wizard_strand').dialog('close');
                     jQuery('#context_layer').html(ret);                    
                     jQuery('#dialog_wizard_context').dialog('open'); 
                     return false;
@@ -102,7 +131,7 @@ jQuery(function() {
 
     jQuery('#context_back').live('click', function() {
        jQuery('#dialog_wizard_context').dialog('close');
-       jQuery('#dialog_wizard_subject').dialog('open');
+       jQuery('#dialog_wizard_strand').dialog('open');
        return false;
     });
     
