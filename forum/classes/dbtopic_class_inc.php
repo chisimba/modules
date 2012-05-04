@@ -442,7 +442,7 @@ GROUP BY tbl_forum_topic.id                ';
      */
     function getTopicForumDetails($topic_id) {
         $sql = 'SELECT tbl_forum.* FROM tbl_forum_topic
-        INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id) 
+        INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id)
         WHERE tbl_forum_topic.id = \''.$topic_id.'\' GROUP BY tbl_forum_topic.id LIMIT 1';
 
         $forum = $this->getArray($sql);
