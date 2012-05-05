@@ -118,11 +118,11 @@ $tblTopic->startHeaderRow();
 
         // --------------
 
-		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'replies', $this->objLanguage->languageText('word_replies', 'forum', 'Replies')), Null, 'center', 'center');
+		$tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'replies', $this->objLanguage->languageText('word_replies', 'system', 'Replies')), Null, 'center', 'center');
 
         // --------------
 
-        $tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'views', $this->objLanguage->languageText('word_views', 'forum', 'Views')), Null, 'center', 'center');
+        $tblTopic->addHeaderCell($this->objForum->forumSortLink ($forumid, 'views', $this->objLanguage->languageText('word_views', 'system', 'Views')), Null, 'center', 'center');
 
         // --------------
 

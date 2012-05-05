@@ -294,8 +294,8 @@ GROUP BY tbl_forum_topic.id                ';
             $table->startHeaderRow();
             $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
             $table->addHeaderCell($this->objLanguage->languageText('word_author'), NULL, NULL, 'center');
-            $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum'), NULL, NULL, 'center');
-            $table->addHeaderCell($this->objLanguage->languageText('word_views', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'system'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('word_views', 'system'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
             $table->endHeaderRow();
 

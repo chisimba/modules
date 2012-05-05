@@ -133,8 +133,8 @@ class dynamicblocks_forumview extends object
 				//$tblTopic->addHeaderCell($this->objLanguage->languageText('word_type', 'forum', 'Type'), '30', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'), '30%', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_author'), Null, 'center', 'center');
-				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum', 'Replies'), Null, 'center', 'center');
-		        $tblTopic->addHeaderCell($this->objLanguage->languageText('word_views', 'forum', 'Views'), Null, 'center', 'center');
+				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_replies', 'system', 'Replies'), Null, 'center', 'center');
+		        $tblTopic->addHeaderCell($this->objLanguage->languageText('word_views', 'system', 'Views'), Null, 'center', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), Null, 'center', 'center');
 		$tblTopic->endHeaderRow();
 
