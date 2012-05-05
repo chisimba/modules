@@ -100,20 +100,21 @@ class activityutilities extends object {
     	$activityCount = $all[0]['cnt'];
     	$cnt = 0;
     	$str = '{"totalCount":"'.count($all).'","activities":[';
-    	if($activityCount > 0)
-    	{
-    	$activitiesArray = array();
-    		foreach($activities as $activity)
-    		{
-    			$arr = array();
-    			$arr['id'] = $activity['id'];
-    			$arr['title'] = $activity['title'];
-    			$arr['description'] = $activity['description'];
-    			$arr['contextcode'] = $activity['contextcode'];
-    			$arr['createdby'] = htmlentities($this->objUser->fullname($activity['createdby']));
-    			$arr['createdon'] = $activity['createdon'];
-    			$activitiesArray[] = $arr;
-    		}
+
+        $activitiesArray = array();
+        if($activityCount > 0)
+    	{    	
+            foreach($activities as $activity)
+            {
+                $arr = array();
+                $arr['id'] = $activity['id'];
+                $arr['title'] = $activity['title'];
+                $arr['description'] = $activity['description'];
+                $arr['contextcode'] = $activity['contextcode'];
+                $arr['createdby'] = htmlentities($this->objUser->fullname($activity['createdby']));
+                $arr['createdon'] = $activity['createdon'];
+                $activitiesArray[] = $arr;
+            }
     	}    	
     	return json_encode(array('totalCount' => $activityCount, 'activities' =>  $activitiesArray));    	
     }

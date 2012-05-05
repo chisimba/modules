@@ -86,6 +86,11 @@ class activitystreamer extends controller
      */
     protected function __jsonlistactivities()
     {
+        if ($this->getParam('passthroughlogin'))
+        {
+            return $this->nextAction(NULL, NULL, 'postlogin');
+        }
+
         $objUtils = $this->getObject('activityutilities','activitystreamer');
         echo $objUtils->jsonListActivity($this->getParam('start'), $this->getParam('limit'));
         exit(0);
@@ -97,6 +102,11 @@ class activitystreamer extends controller
      */
     protected function __jsoncourseactivities()
     {
+        if ($this->getParam('passthroughlogin'))
+        {
+            return $this->nextAction(NULL, NULL, 'postlogin');
+        }
+        
         $objUtils = $this->getObject('activityutilities','activitystreamer');
         echo $objUtils->jsonCourseActivies($this->getParam('start'), $this->getParam('limit'));
         exit(0);
