@@ -34,9 +34,28 @@ jQuery(function() {
         });
     });
     
-    jQuery('[id^="block_"]').live('click', function() {
-        var id = this.id.replace("block_", "");
-        var bookmark = jQuery("#block_" + id);
+    jQuery('[class^="block_contextcode_"]').live('click', function() {
+        var domain = jQuery(location).attr('hostname');
+        var path = jQuery(location).attr('pathname');
+
+        var contextcode = jQuery(this).attr('class').replace('block_contextcode_', '');
+        var uri = jQuery(this).html();
+
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=bookmarks&action=ajaxSetContext",
+            data: 'contextcode=' + contextcode,
+            success: function(ret) {
+                if (ret == 'true')
+                {
+                    window.location = 'http://' + domain + path + '?' + uri;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        });
     });
 
 });

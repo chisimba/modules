@@ -89,11 +89,6 @@ jQuery(function() {
         });
     });
 
-    jQuery('[id^="location_"]').live('click', function() {
-        var id = this.id.replace("location_", "");
-        var bookmark = jQuery("#location_" + id);
-    });
-
     jQuery('#form_bookmarks').ready(function() {
         var fullUrl = jQuery(location).attr('href');
         var domain = jQuery(location).attr('hostname');
@@ -108,6 +103,25 @@ jQuery(function() {
     jQuery('[class^="child_"]').each(function() {
         jQuery(this).hide();
     });
-    
+
+    jQuery('[class^="contextcode_"]').live('click', function() {
+        var contextcode = jQuery(this).attr('class').replace('contextcode_', '');
+        var location = jQuery(this).html();
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=bookmarks&action=ajaxSetContext",
+            data: 'contextcode=' + contextcode,
+            success: function(ret) {
+                if (ret == 'true')
+                {
+                    window.location = location;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        });
+    });
     
 });

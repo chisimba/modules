@@ -167,5 +167,26 @@ class dbbookmarks extends dbtable
     {
         return $this->delete('folder_id', $id);
     }
+    
+    /**
+     *
+     * Method to return whether or not a user has bookmarks
+     * 
+     * @access public
+     * @param string $userId The id of the user
+     * @return boolean TRUE if the user has bookmarks | FALSE if not
+     */
+    public function hasBookmarks($userId)
+    {
+        $data = $this->fetchAll("WHERE `user_id` = '$userId'");
+        if (empty($data))
+        {
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
 }
 ?>

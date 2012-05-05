@@ -24,6 +24,10 @@ $fields = array(
 		'type' => 'text',
                 'length' => 32,
 		),
+	'contextcode' => array(
+		'type' => 'text',
+                'length' => 255,
+                ),
 	'bookmark_name' => array(
 		'type' => 'text',
 		'length' => 250,
@@ -59,6 +63,7 @@ $indexes = array(
          'user_id' => array(),
          'folder_id' => array(),
          'bookmark_name' => array(),
+         'contextcode' => array(),
     )
 );
 ?>

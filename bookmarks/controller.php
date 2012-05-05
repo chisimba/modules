@@ -101,6 +101,7 @@ class bookmarks extends controller
         $this->objDBbookmarks = $this->getObject('dbbookmarks', 'bookmarks');
         $this->objDBfolders = $this->getObject('dbfolders', 'bookmarks');
         $this->objOps = $this->getObject('bookmarksops', 'bookmarks');
+        $this->objContext = $this->getObject('dbcontext', 'context');
         
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('bookmarks.js',
@@ -236,23 +237,27 @@ class bookmarks extends controller
                     $this->objDBbookmarks->deleteFolderBookmarks($subFolderId);
                 }
             }            
+            $array = array();
         }
         else
         {
             $id = $this->getParam('id');
+            $folderId = $this->getParam('folder_id');
+            
             $this->objDBbookmarks->deleteBookmark($id);
+            $array = array('folder_id' => $folderId);
         }
-        return $this->nextAction('view');
+        return $this->nextAction('view', $array);
     }   
     
     /**
      *
      * Method to display subfolders
      * 
-     * @access public
+     * @access private
      * @return VIOD 
      */
-    public function __ajaxGetBookmarks()
+    private function __ajaxGetBookmarks()
     {
         return $this->objOps->ajaxGetBookmarks();
     }
@@ -261,14 +266,17 @@ class bookmarks extends controller
      *
      * Method to save the modal added bookmarks
      * 
-     * @access public
+     * @access private
      * @return VOID 
      */
-    public function __ajaxSaveBookmark()
+    private function __ajaxSaveBookmark()
     {
+        $contextCode = $this->objContext->getContextCode();
+        
         $data = array();
         $data['user_id'] = $this->objUser->PKId();
         $data['folder_id'] = $this->getParam('folder_id');
+        $data['contextcode'] = $contextCode;
         $data['bookmark_name'] = $this->getParam('bookmark_name');
         $data['location'] = str_replace('|', '&', str_replace('/', '=', $this->getParam('location')));
         $data['created_by'] = $this->objUser->PKId();
@@ -283,12 +291,34 @@ class bookmarks extends controller
      *
      * Method to display subfolders
      * 
-     * @access public
+     * @access private
      * @return VIOD 
      */
-    public function __ajaxGetBlockBookmarks()
+    private function __ajaxGetBlockBookmarks()
     {
         return $this->objOps->ajaxGetBlockBookmarks();
+    }
+    
+    /**
+     *
+     * Method to set the context
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __ajaxSetContext()
+    {
+        $contextcode = $this->getParam('contextcode');
+        
+        $context = $this->objContext->getContextCode();
+
+        if ($contextcode != $context)
+        {
+            $this->objContext->leaveContext();
+            $this->objContext->joinContext($contextcode);
+        }
+        echo 'true';
+        die();
     }
     
     /**
@@ -317,7 +347,7 @@ class bookmarks extends controller
     * @return boolean TRUE|FALSE
     * 
     */
-    function __validAction(& $action)
+    private function __validAction(& $action)
     {
         if (method_exists($this, "__".$action)) {
             return TRUE;
@@ -336,7 +366,7 @@ class bookmarks extends controller
     * @return stromg the name of the method
     * 
     */
-    function __getMethod(& $action)
+    private function __getMethod(& $action)
     {
 //        die($action);
         if ($this->__validAction($action)) {

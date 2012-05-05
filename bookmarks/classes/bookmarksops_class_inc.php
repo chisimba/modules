@@ -139,6 +139,7 @@ class bookmarksops extends object
      */
     public function showMain()
     {
+        
         $objLayer = new layer();
         $objLayer->id = 'main_folders_layer';
         $objLayer->floating = 'left';
@@ -146,17 +147,18 @@ class bookmarksops extends object
         $objLayer->str = $this->showFolders();
         $folderLayer = $objLayer->show();
         
+        $folderId = $this->getParam('folder_id');
+        
         $objLayer = new layer();
         $objLayer->id = 'main_bookmarks_layer';
         $objLayer->floating = 'left';
         $objLayer->width = '65%';
-        $objLayer->str = $this->showBookmarks();
+        $objLayer->str = $this->showBookmarks($folderId);
         $bookmarkLayer = $objLayer->show();
 
         $string = $folderLayer . $bookmarkLayer;
         
         return $string;
-        return $string . $this->showLink();
     }
     
     /**
@@ -512,7 +514,7 @@ class bookmarksops extends object
      * @access public
      * @return string $string The html string for display 
      */
-    public function showBookmarks()
+    public function showBookmarks($folderId = NULL)
     {
         $bookmarksLabel = $this->objLanguage->languageText('mod_bookmarks_bookmarks', 'bookmarks', 'ERROR: mod_bookmarks_bookmarks');
         $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
@@ -534,11 +536,16 @@ class bookmarksops extends object
         
         $bookmarksTable = $objTable->show();
         
+        if (!empty($folderId))
+        {
+            $bookmarksTable = $this->ajaxGetBookmarks(FALSE, $folderId);
+        }
+
         $objLayer = new layer();
         $objLayer->id = 'folder_bookmarks';
         $objLayer->str = $bookmarksTable;
         $bookmarkLayer = $objLayer->show();
-
+        
         $objFieldset = new fieldset();
         $objFieldset->legend = '<b>' . $bookmarksLabel. '</b>';
         $objFieldset->contents = $bookmarkLayer;
@@ -554,9 +561,10 @@ class bookmarksops extends object
      * Method to return the html string for an ajax request
      * 
      * @access public
+     * @param boolean $isAjax TRUE if this is an ajax request | FALSE if not
      * @return VOID 
      */
-    public function ajaxGetBookmarks()
+    public function ajaxGetBookmarks($isAjax = TRUE, $folderId = NULL)
     {
         $folderLabel = $this->objLanguage->languageText('mod_bookmarks_folder', 'bookmarks', 'ERROR: mod_bookmarks_folder');
         $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'ERROR: word_delete');
@@ -567,13 +575,19 @@ class bookmarksops extends object
         $rootLabel = $this->objLanguage->languageText('mod_bookmarks_rootfolder', 'bookmarks', 'ERROR: mod_bookmarks_rootfolder');
         $confirmBookmarkLabel = $this->objLanguage->languageText('mod_bookmarks_confirmdeletebookmark', 'bookmarks', 'ERROR: mod_bookmarks_confirmdeletebookmark');
 
-        $folderId = $this->getParam('id');
+        $folderId = $this->getParam('id', $folderId);
+        $folderId = ($folderId == 'root') ? NULL : $folderId;
+        
         $folderArray = $this->objDBfolders->getFolder($folderId);
         if (empty($folderArray))
         {
             $folderArray['folder_name'] = $rootLabel;
         }
         $bookmarksArray = $this->objDBbookmarks->getBookmarks($this->userId, $folderId);
+        if (empty($folderId))
+        {
+            $folderId = 'root';
+        }
 
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
@@ -600,14 +614,22 @@ class bookmarksops extends object
                 $this->objIcon->alt = $deleteBookmarkLabel;
                 $deleteIcon = $this->objIcon->show();
 
-                $location = $this->uri(array('action' => 'delete', 'type' => 'bookmark', 'id' => $bookmark['id']));
+                $location = $this->uri(array('action' => 'delete', 'type' => 'bookmark', 'id' => $bookmark['id'], 'folder_id' => $folderId));
 
                 $this->objConfirm->setConfirm($deleteIcon , $location, $confirmBookmarkLabel);
                 $deleteLink = $this->objConfirm->show();
 
                 $siteRoot = $this->objConfig->getsiteRoot();
                 $location = $siteRoot . 'index.php?' . $bookmark['location'];
-                $link = "<a href='" . $location . "' id='location_" . $bookmark['id'] . "'>" . $location . '</a>';
+                if (!empty($bookmark['contextcode']))
+                {
+                    $linkClass = " class='contextcode_" . $bookmark['contextcode'] . "'";
+                    $link = "<a href='#' id='location_" . $bookmark['id'] . "'" . $linkClass . ">" . $location . '</a>';
+                }
+                else
+                {
+                    $link = "<a href='" . $location . "' id='location_" . $bookmark['id'] . "'>" . $location . '</a>';
+                }                
                 
                 $objTable->startRow();
                 $objTable->addCell($bookmark['bookmark_name'], '', '', '', $class, '', '');
@@ -618,8 +640,15 @@ class bookmarksops extends object
         }
         $bookmarkTable = $objTable->show();
         
-        echo '<b>' . $folderLabel . ' - ' . $folderArray['folder_name'] . '</b><br />' . $bookmarkTable;
-        die();
+        if ($isAjax)
+        {
+            echo '<b>' . $folderLabel . ' - ' . $folderArray['folder_name'] . '</b><br />' . $bookmarkTable;
+            die();
+        }
+        else
+        {
+            return '<b>' . $folderLabel . ' - ' . $folderArray['folder_name'] . '</b><br />' . $bookmarkTable;
+        }
     }
     
     /**
@@ -737,16 +766,40 @@ class bookmarksops extends object
         $this->objIcon->setIcon('bookmark', 'png');
         $bookmarkIcon = $this->objIcon->show();
 
-        $link = '<a href="#" id="add_bookmark"><strong>' . '&nbsp;' . $bookmarkIcon . '</strong></a>';
-
-        $objLayer = new layer();
-        $objLayer->id = 'bookmark_layer';
-        $objLayer->floating = 'right';
-        $objLayer->str =  $link . $dialog;
-        $bookmarkLayer = $objLayer->show();
-
-        return $bookmarkLayer;
+        $link = '<a href="#" id="add_bookmark"><strong>' . $bookmarkIcon . '</strong></a>';
         
+        return $link . $dialog;
+    }
+    
+    /**
+     *
+     * Method to show the goto bookmarks link.
+     * 
+     * @access public
+     * @return string $string The goto bookmark icon
+     */
+    public function showGotoLink()
+    {
+        $gotoLabel = $this->objLanguage->languageText('mod_bookmarks_gotobookmarks', 'bookmarks', 'ERROR: mod_bookmarks_gotobookmarks');
+
+        $hasBookmarks = $this->objDBbookmarks->hasBookmarks($this->userId);
+
+        if ($hasBookmarks)
+        {
+            $this->objIcon->title = $gotoLabel;
+            $this->objIcon->alt = $gotoLabel;
+            $this->objIcon->setIcon('bookmark_go', 'png');
+            $gotoIcon = $this->objIcon->show();            
+            
+            $uri = $this->uri(array(), 'bookmarks');
+            $gotoLink = '<a href="' . $uri . '"><strong>' . $gotoIcon . '</strong></a>';
+        }
+        else
+        {
+            $gotoLink = NULL;
+        }
+        
+        return $gotoLink;
     }
     
     /**
@@ -807,7 +860,15 @@ class bookmarksops extends object
             {
                 $siteRoot = $this->objConfig->getsiteRoot();
                 $location = $siteRoot . 'index.php?' . $bookmark['location'];
-                $link = "<a href='" . $location . "' id='block_" . $bookmark['id'] . "'>" . $bookmark['location'] . '</a>';
+                if (!empty($bookmark['contextcode']))
+                {
+                    $linkClass = " class='block_contextcode_" . $bookmark['contextcode'] . "'";
+                    $link = "<a href='#' id='block_" . $bookmark['id'] . "'" . $linkClass . ">" . $bookmark['location'] . '</a>';
+                }
+                else
+                {
+                    $link = "<a href='" . $location . "' id='block_" . $bookmark['id'] . "'>" . $bookmark['location'] . '</a>';
+                }                
 
                 $objTable->startRow();
                 $objTable->addCell('<b>' . $bookmark['bookmark_name'] . '</b>', '', '', '', '', '', '');
@@ -865,7 +926,15 @@ class bookmarksops extends object
             {
                 $siteRoot = $this->objConfig->getsiteRoot();
                 $location = $siteRoot . 'index.php?' . $bookmark['location'];
-                $link = "<a href='" . $location . "' id='block_" . $bookmark['id'] . "'>" . $bookmark['location'] . '</a>';
+                if (!empty($bookmark['contextcode']))
+                {
+                    $linkClass = " class='block_contextcode_" . $bookmark['contextcode'] . "'";
+                    $link = "<a href='#' id='block_" . $bookmark['id'] . "'" . $linkClass . ">" . $bookmark['location'] . '</a>';
+                }
+                else
+                {
+                    $link = "<a href='" . $location . "' id='block_" . $bookmark['id'] . "'>" . $bookmark['location'] . '</a>';
+                }                
 
                 $objTable->startRow();
                 $objTable->addCell('<b>' . $bookmark['bookmark_name'] . '</b>', '', '', '', '', '', '');
