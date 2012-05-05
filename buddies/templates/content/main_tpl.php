@@ -110,7 +110,7 @@ foreach ($buddies as $buddy) {
     $imPopup = $this->getObject('chatdisplay', 'messaging');
     $objIcon = $this->newObject('geticon', 'htmlelements');
     $objIcon->setIcon('instantmessaging', 'gif', 'icons/modules');
-    $this->objIcon->title = $imTitleLabel;
+    $objIcon->title = $objLanguage->languageText('phrase_sendinstantmessage', 'workgroup');
     $imIcon = $objIcon->show();
     // popup link to ban users
     $objPopup = new windowpop();
