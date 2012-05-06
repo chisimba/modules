@@ -27,6 +27,7 @@ class personalspace extends controller
         
         // Create an instance of the module object
         $this->objModule = $this->getObject('modules', 'modulecatalogue');
+        $this->objBlocks = $this->getObject('blocks', 'blocks');
         
         //Check if contentblocks is installed
         $this->cbExists = $this->objModule->checkIfRegistered("contentblocks");
