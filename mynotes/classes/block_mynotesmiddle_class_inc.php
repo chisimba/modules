@@ -99,9 +99,8 @@ class block_mynotesmiddle extends object {
      */
     public function init() {
         try {
-            // Load the functions specific to this module.
             $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/mynotes.js'));
-
+            
             // Load language class
             $this->objLanguage = $this->getObject('language', 'language');
             $this->title = $this->objLanguage->code2Txt('mod_mynotes_allnotes', 'mynotes', NULL, 'TEXT: mod_mynotes_allnotes, not found');

@@ -71,8 +71,9 @@ class block_mynotesaddedit extends object
      */
     public function init() {
         // Load the functions specific to this page.
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/jquery.form.js'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/addedit.js'));
-
+        
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');

@@ -104,6 +104,9 @@ class mynotes extends controller {
         //Log this module call
         $this->objLog->log();
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
+        $this->setVar('SUPPRESS_JQUERY', TRUE);
+        //$this->setVar('JQUERY_VERSION', '1.7.1');
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
     }
 
     /**
@@ -210,9 +213,9 @@ class mynotes extends controller {
         $data['userid'] = $this->objUser->userId();
         $data['title'] = $this->getParam('title');
         $data['tags'] = $this->getParam('tags');
-        $data['content'] = $this->getParam('content');
+        $data['content'] = $this->getParam('NoteContent');
 
-        if (empty($id) && $mode == 'add') {
+        /*if (empty($id) && $mode == 'add') {
             $data['datecreated'] = date('Y-m-d H:i:s');
             $id = $this->objDbmynotes->insertNote($data);
             $this->objDbtags->addTag($data);
@@ -220,9 +223,15 @@ class mynotes extends controller {
             $data['datemodified'] = date('Y-m-d H:i:s');
             $this->objDbmynotes->updateNote($data, $id);
             $this->objDbtags->addTag($data);
-        }
+        }*/
 
-        return $this->nextAction("showNote", array("id"=>$id));
+        echo "userid: ".$data['userid']."\n";
+        echo "title: ".$data['title']."\n";
+        echo "tags: ".$data['tags']."\n";
+        echo "content: ".$data['content']."\n";
+        
+        die();
+        //return $this->nextAction("showNote", array("id"=>$id));
     }
 
     /**
