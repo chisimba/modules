@@ -255,7 +255,7 @@ class noteops extends object {
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
 
-        $responseArea = "<div id=\"responsearea\"></div>";
+        $responseArea = "<div id=\"responsearea\" class=\"error\"></div>";
         
         /* Add Title Row */
         $objTable->startRow();
@@ -299,7 +299,7 @@ class noteops extends object {
                             'action' => 'save'/*'validatenote'*/,
                             'mode' => $mode
                         )));
-        //$objForm->setOnSubmit("checkFormSubmit();");
+        $objForm->setOnSubmit("checkFormSubmit();return false;");
 
         $objForm->addToForm($responseArea);
         $objForm->addToForm($objTable->show());

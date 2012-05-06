@@ -98,15 +98,15 @@ class mynotes extends controller {
         $this->objDbmynotes = & $this->getObject('dbmynotes', 'mynotes');
         $this->objDbtags = & $this->getObject('dbtags', 'mynotes');
         //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('mynotes.js', 'mynotes'));
-        $this->appendArrayVar('headerParams', "<link href=\"".$this->getResourceUri('css/mynotes.css','mynotes')."\" rel='stylesheet' type='text/css'/>");
+        $this->appendArrayVar('headerParams', "<link href=\"" . $this->getResourceUri('css/mynotes.css', 'mynotes') . "\" rel='stylesheet' type='text/css'/>");
         //Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
-        $this->setVar('SUPPRESS_JQUERY', TRUE);
+        //$this->setVar('SUPPRESS_JQUERY', TRUE);
         //$this->setVar('JQUERY_VERSION', '1.7.1');
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
+        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('1.7.1/jquery-1.7.1.min.js', 'jquery'));
     }
 
     /**
@@ -147,7 +147,7 @@ class mynotes extends controller {
     private function __view() {
         return "main_tpl.php";
     }
-    
+
     /**
      * 
      * Method corresponding to the view action. It shows the default
@@ -213,23 +213,19 @@ class mynotes extends controller {
         $data['userid'] = $this->objUser->userId();
         $data['title'] = $this->getParam('title');
         $data['tags'] = $this->getParam('tags');
-        $data['content'] = $this->getParam('NoteContent');
+        $data['content'] = $this->getParam('content');
 
-        /*if (empty($id) && $mode == 'add') {
+        if (empty($id) && $mode == 'add') {
             $data['datecreated'] = date('Y-m-d H:i:s');
             $id = $this->objDbmynotes->insertNote($data);
             $this->objDbtags->addTag($data);
+            echo $id;
         } else {
             $data['datemodified'] = date('Y-m-d H:i:s');
-            $this->objDbmynotes->updateNote($data, $id);
+            $status = $this->objDbmynotes->updateNote($data, $id);
             $this->objDbtags->addTag($data);
-        }*/
-
-        echo "userid: ".$data['userid']."\n";
-        echo "title: ".$data['title']."\n";
-        echo "tags: ".$data['tags']."\n";
-        echo "content: ".$data['content']."\n";
-        
+            echo $status; // TRUE|FALSE
+        }
         die();
         //return $this->nextAction("showNote", array("id"=>$id));
     }
@@ -252,7 +248,7 @@ class mynotes extends controller {
             $this->objDbmynotes->deleteNote($id);
             return $this->nextAction(NULL);
         } else {
-            $this->nextAction("showNote", array("id"=>$id, "error"=>"nodelete"));
+            $this->nextAction("showNote", array("id" => $id, "error" => "nodelete"));
         }
     }
 
@@ -262,24 +258,27 @@ class mynotes extends controller {
      * @access private
      * 
      */
+
     private function __ajaxGetNotes() {
         return $this->objNoteOps->getNotes();
     }
-    
+
     /*
      * Method to search for the keywords that are found in my notes using the
      * tag links
      * 
      * @access private
      */
+
     private function __search() {
         return 'searchresults_tpl.php';
     }
-    
+
     /*
      * Method to show individual note with all it's details
      * 
      */
+
     private function __showNote() {
         return 'shownote_tpl.php';
     }
@@ -362,5 +361,7 @@ class mynotes extends controller {
                 break;
         }
     }
+
 }
+
 ?>

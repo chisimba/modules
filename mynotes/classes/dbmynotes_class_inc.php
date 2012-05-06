@@ -97,12 +97,12 @@ class dbmynotes extends dbtable {
      * @param $data The array containing the key value pair of the data to be 
      *              inserted into the table.
      * @param $id The id of the row of data to be updated
-     * @return VOID
+     * @return TRUE|FALSE
      * 
      */
 
     public function updateNote($data, $id) {
-        $this->update('id', $id, $data);
+        return $this->update('id', $id, $data);
     }
 
     /**
