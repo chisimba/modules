@@ -108,7 +108,7 @@ class slateui extends object
      * @access private
      *
      */
-    private function insertAddIcon($mode)
+    private function insertAddIcon($mode, $labelText=NULL)
     {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $link =  $this->uri(
@@ -123,7 +123,7 @@ class slateui extends object
             $showCss = " style='visibility:show' ";
         }
         return "&nbsp; <span class='conditional_add' "
-          . $showCss . ">" . $addlink->show()
+          . $showCss . ">" . $labelText . $addlink->show()
           . "</span>";
     }
 
@@ -214,9 +214,22 @@ class slateui extends object
             }
             $table->endRow();
         }
-        return $table->show();
+        if ($this->objUser->isAdmin()) {
+            $ret = $this->insertAddIcon('showadd', "Add a page ");
+        } else {
+            $ret = NULL;
+        }
+        return $table->show() . $ret;
     }
 
+    /**
+     *
+     * Show the page navigation for display in a narrow block
+     *
+     * @return string  The rendered page navigation
+     * @access public
+     *
+     */
     public function showPageNav()
     {
         $objData = $this->getObject("dbslatepages", "slate");
@@ -233,6 +246,9 @@ class slateui extends object
             $activeLink->cssClass = "slate_page_link";
             $activeLink->link = $pageTitle;
             $ret .= $activeLink->show() . "<br />";
+        }
+        if ($this->objUser->isAdmin()) {
+            $ret .= $this->insertAddIcon('showadd', "Add a page ");
         }
         return $ret;
     }
@@ -285,7 +301,7 @@ class slateui extends object
         $table->addCell($textinput->show());
         $table->endRow();
 
-        // Input for the title.
+        // Input for the page.
         $label = $this->objLanguage->languageText(
           'mod_slate_page', 'slate', "Page number for link");
         $table->startRow();

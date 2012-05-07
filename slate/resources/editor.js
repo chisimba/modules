@@ -33,7 +33,7 @@ jQuery(function() {
                 data: data_string,
                 success: function(msg) {
                     jQuery("#savePage").attr("disabled", "");
-                    alert(msg);
+                    //alert(msg);
                     if(msg !== "ERROR_DATA_INSERT_FAIL") {
                         // Update the information area
                         // (msg is the id of the record on success)
