@@ -153,7 +153,7 @@ class slate extends controller
         $this->setLayoutTemplate('layout_tpl.php');
         return "manage_tpl.php";
     }
-    
+
     /**
     *
     * Method corresponding to the edit action. It shows the edit
@@ -162,7 +162,7 @@ class slate extends controller
     * @return string The populated template
     * @access private
     *
-    * @return string 
+    * @return string
     */
     private function __edit()
     {
@@ -179,22 +179,26 @@ class slate extends controller
     * @access private
     *
     * @return void
-    * @access private 
-    * 
+    * @access private
+    *
     */
     private function __pagesave()
     {
         $objDb = $this->getObject('dbslatepages', 'slate');
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'edit') {
-            $ret = $objDb->addPage();
-            die($ret);
+            $ret = $objDb->savePage();
+            if ($ret) {
+                die($this->getParam('id', NULL));
+            } else {
+                die ('ERROR_DATA_INSERT_FAIL');
+            }
         } else {
             $ret = $objDb->addPage();
             die($ret);
         }
     }
-    
+
     /**
     *
     * Method corresponding to the delete action. It deletes the item
@@ -203,7 +207,7 @@ class slate extends controller
     * @return string The populated template
     * @access private
     *
-    * @return string 
+    * @return string
     */
     private function __delete()
     {
@@ -220,7 +224,7 @@ class slate extends controller
             die("ILLEGAL_DELETE_NOTADMIN");
         }
     }
-    
+
     /**
     *
     * Method to render a block for use by the ajax methods when

@@ -61,13 +61,13 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class slateui extends object
 {
-    
+
     /**
-    * 
-    * @var string $objLanguage String object property for holding the 
+    *
+    * @var string $objLanguage String object property for holding the
     * language object
     * @access public
-    * 
+    *
     */
     public $objLanguage;
     public $objUser;
@@ -75,7 +75,7 @@ class slateui extends object
     /**
     *
     * Constructor for the slate UI object
-    * 
+    *
     * @access public
     * @return VOID
     *
@@ -95,18 +95,18 @@ class slateui extends object
             $this->description = NULL;
         }
     }
-    
-  
+
+
     /**
      *
      * Insert an add icon for use by javacript. It will be visitble
-     * when you are in edit mode, but invisible when you are in add 
+     * when you are in edit mode, but invisible when you are in add
      * mode. After a save, it will be toggled to visible.
-     * 
+     *
      * @param string $mode The edit|add mode
      * @return string The rendered icon
      * @access private
-     *  
+     *
      */
     private function insertAddIcon($mode)
     {
@@ -117,13 +117,13 @@ class slateui extends object
         $addlink = new link($link);
         $objIcon->setIcon('add');
         $addlink->link = $objIcon->show();
-        if ($mode == 'add') { 
+        if ($mode == 'add') {
             $showCss = "style='visibility:hidden'";
         } else {
             $showCss = " style='visibility:show' ";
         }
-        return "&nbsp; <span class='conditional_add' " 
-          . $showCss . ">" . $addlink->show() 
+        return "&nbsp; <span class='conditional_add' "
+          . $showCss . ">" . $addlink->show()
           . "</span>";
     }
 
@@ -153,14 +153,14 @@ class slateui extends object
         $header->type = 2;
         return $header->show();
     }
-    
+
     /**
      *
      * Show the pages that are available within existing slates.
-     * 
+     *
      * @return string The rendered links
      * @access public
-     *  
+     *
      */
     public function showPages()
     {
@@ -217,14 +217,34 @@ class slateui extends object
         return $table->show();
     }
 
-    
+    public function showPageNav()
+    {
+        $objData = $this->getObject("dbslatepages", "slate");
+        $arData = $objData->getPages();
+        $this->loadClass('link','htmlelements');
+        $ret = "";
+        foreach ($arData as $linkItem) {
+            $id = $linkItem['id'];
+            $linkPage = $linkItem['page'];
+            $linkUrl = $this->uri(array('page' => $linkPage), 'slate');
+            $pageTitle = $linkItem['title'];
+            $pageDesc = $linkItem['description'];
+            $activeLink = new link($linkUrl);
+            $activeLink->cssClass = "slate_page_link";
+            $activeLink->link = $pageTitle;
+            $ret .= $activeLink->show() . "<br />";
+        }
+        return $ret;
+    }
+
+
     /**
-     * 
+     *
      * Show the form for adding / editing a slate page
      *
      * @return string The formatted form
      * @access public
-     * 
+     *
      */
     public function showPageEditForm()
     {
@@ -252,7 +272,7 @@ class slateui extends object
         $description = $this->description;
         // Table for the form.
         $table = $this->newObject('htmltable', 'htmlelements');
-        
+
         // Input for the title.
         $label = $this->objLanguage->languageText(
           'mod_slate_pagetitle', 'slate', "Page title");
@@ -264,7 +284,7 @@ class slateui extends object
          $textinput->cssClass = 'required';
         $table->addCell($textinput->show());
         $table->endRow();
-        
+
         // Input for the title.
         $label = $this->objLanguage->languageText(
           'mod_slate_page', 'slate', "Page number for link");
@@ -276,7 +296,7 @@ class slateui extends object
          $textinput->cssClass = 'required';
         $table->addCell($textinput->show());
         $table->endRow();
-               
+
         // Input for the description
         $label = $this->objLanguage->languageText(
           'mod_slate_description', 'slate', "Page description");
@@ -288,7 +308,7 @@ class slateui extends object
          $textinput->cssClass = 'required';
         $table->addCell($textinput->show());
         $table->endRow();
-        
+
         // Save button
         $table->startRow();
         $table->addCell("&nbsp;");
@@ -297,10 +317,10 @@ class slateui extends object
         $button->setToSubmit();
         $table->addCell($button->show());
         $table->endRow();
-        
+
         // Insert a message area for Ajax result to display.
         $msgArea = "<br /><div id='save_results' class='ajax_results'></div>";
-        
+
         // Add hidden fields for use by JS
         $hiddenFields = "\n\n";
         $hidMode = new hiddeninput('mode');
@@ -311,7 +331,7 @@ class slateui extends object
         $hidId->cssId = "id";
         $hidId->value = $id;
         $hiddenFields .= $hidId->show() . "\n\n";
-        
+
          // Createform, add fields to it and display.
         $formData = new form('slatepageEditor', NULL);
         $formData->addToForm(
@@ -321,7 +341,7 @@ class slateui extends object
           . $msgArea);
         return $formData->show();
     }
-    
+
     /**
      *
      * For editing, load the data according to the ID provided. It
@@ -345,6 +365,6 @@ class slateui extends object
             return FALSE;
         }
     }
-    
+
 }
 ?>

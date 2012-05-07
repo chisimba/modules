@@ -11,7 +11,16 @@ $objFix->fixThree();
 ?>
 <div id="twocolumns">
     <div id="Canvas_Content_Body_Region1">
-        Left col stuff
+        {
+            "display" : "block",
+            "module" : "slate",
+            "block" : "slateinstructions"
+        }
+        {
+            "display" : "block",
+            "module" : "slate",
+            "block" : "slatelinklist"
+        }
     </div>
     <div id="Canvas_Content_Body_Region2">
         {
