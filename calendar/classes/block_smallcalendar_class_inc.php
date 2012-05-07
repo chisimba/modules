@@ -9,7 +9,7 @@ class block_smallcalendar extends object
         $this->objLanguage = $this->getObject('language', 'language');
         
         $this->title = $this->objLanguage->languageText('mod_calendar_sidecal', 'system', 'Side calendar');
-        $this->objCalendarInterface = $this->getObject('calendarinterface');
+        $this->objCalendarInterface = $this->newObject('calendarinterface');
     }
     
     public function show()

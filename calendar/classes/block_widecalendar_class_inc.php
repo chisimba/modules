@@ -8,7 +8,7 @@ class block_widecalendar extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText('word_calendar', 'system', 'Calendar');
-        $this->objCalendarInterface = $this->getObject('calendarinterface');
+        $this->objCalendarInterface = $this->newObject('calendarinterface');
     }
     
     public function show()

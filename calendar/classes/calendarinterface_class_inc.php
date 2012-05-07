@@ -110,7 +110,6 @@ class calendarinterface extends object
         $this->objCalendar = $this->getObject('dbcalendar', 'calendarbase');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDateFunctions = $this->getObject('dateandtime','utilities');
-        $this->objJqDialog = $this->getObject('jqdialogue','jquery');
         
         $this->loadClass('link', 'htmlelements');
         
@@ -537,7 +536,7 @@ class calendarinterface extends object
                     else
                     {
                         $eventTitle = strip_tags(wordwrap(stripslashes($this->rawEventsList[$day][$key]['eventtitle']), 25, '&#8203;', true));
-                        $string .= '<a href="#'.$day.'" id="event_'.$day.'_'.$key.'" onclick="jQuery(\'#jqdialogue_'.$day.'_'.$key.'\').dialog(\'open\')">'.$eventTitle.'</a><br />';                
+                        $string .= '<a href="#" id="event_'.$day.'_'.$key.'" onclick="jQuery(\'#jqdialogue_'.$day.'_'.$key.'\').dialog(\'open\')">'.$eventTitle.'</a><br />';                
                     }
 
                     $table = $this->newObject('htmltable', 'htmlelements');
@@ -555,14 +554,11 @@ class calendarinterface extends object
                     $table->endRow();                   
                     $content = $table->show().'<br /><br />';
 
-                    $jqDialogue = $this->newObject('jqdialogue', 'jquery');
-                    $jqDialogue->setCssId('jqdialogue_'.$day.'_'.$key);
-                    $jqDialogue->setTitle($title);
-                    $jqDialogue->setContent($content);
-                    $jqDialogue->addOption('autoOpen', 'false');
-                    $jqDialogue->addOption('draggable', 'true');
-                    $jqDialogue->addOption('resizable', 'true');
-                    $str .= $jqDialogue->show();
+                    $this->objDialog = $this->newObject('dialog', 'jquerycore');
+                    $this->objDialog->setCssId('jqdialogue_'.$day.'_'.$key);
+                    $this->objDialog->setTitle($title);
+                    $this->objDialog->setContent($content);
+                    $str .= $this->objDialog->show();
                 }
                 $this->eventsList[$day] = $string;
             }
