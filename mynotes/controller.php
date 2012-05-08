@@ -214,6 +214,7 @@ class mynotes extends controller {
         $data['title'] = $this->getParam('title');
         $data['tags'] = $this->getParam('tags');
         $data['content'] = $this->getParam('content');
+        $data['public'] = $this->getParam('isPublic');
 
         if (empty($id) && $mode == 'add') {
             $data['datecreated'] = date('Y-m-d H:i:s');

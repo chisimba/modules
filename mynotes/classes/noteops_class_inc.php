@@ -113,6 +113,7 @@ class noteops extends object {
             $this->objForm = $this->loadClass('form', 'htmlelements');
             $this->htmlHeading = $this->loadClass('htmlheading', 'htmlelements');
             $this->loadClass('label', 'htmlelements');
+            $this->objCheckbox = $this->loadClass('checkbox', 'htmlelements');
 
             $this->objDbmynotes = $this->getObject('dbmynotes', $this->module);
             $this->objDbTags = $this->getObject('dbtags', $this->module);
@@ -236,13 +237,16 @@ class noteops extends object {
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'WORD: word_cancel, not found');
         $noteTitleLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetitle', $this->module, NULL, 'TEXT: mod_mynotes_notetitle, not found'));
         $noteTagLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notetag', $this->module, NULL, 'TEXT: mod_mynotes_notetag, not found'));
+        $notePublicLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_notepublic', $this->module, NULL, 'TEXT: mod_mynotes_notepublic, not found'));
         $noteEditorLabel = ucfirst($this->objLanguage->code2Txt('mod_mynotes_noteeditor', $this->module, NULL, 'TEXT: mod_mynotes_noteeditor, not found'));
-
+        
         // create labels
         $titleLabel = new label($noteTitleLabel . ':', 'input_title');
         $tagLabel = new label($noteTagLabel . ':', 'input_tag');
+        $publicLabel = new label($notePublicLabel . ":", 'input_public');
         $editorLabel = new label($noteEditorLabel . ':&nbsp;', 'input_content');
         
+        // input elements for the form
         $objInput = new textinput('id', $idInputValue, 'hidden', '40');
         $idInput = $objInput->show();
 
@@ -251,6 +255,8 @@ class noteops extends object {
 
         $objInput = new textinput('tags', $tagInputValue, '', '60');
         $tagInput = $objInput->show();
+        
+        $publicCheckbox = new checkbox('public');
 
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
@@ -268,7 +274,13 @@ class noteops extends object {
         $objTable->addCell($tagLabel->show(), '200px', '', '', '', '');
         $objTable->addCell($tagInputError . $tagInput, '', '', '', '', '');
         $objTable->endRow();
-
+        
+        /* Add Public Row */
+        $objTable->startRow();
+        $objTable->addCell($publicLabel->show(), '200px', '', '', '', '');
+        $objTable->addCell($publicCheckbox->show(), '', '', '', '', '');
+        $objTable->endRow();
+        
         /* Add Editor Rows */
         //Add the WYSIWYG editor label
         $objTable->startRow();

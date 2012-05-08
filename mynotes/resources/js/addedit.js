@@ -22,6 +22,10 @@ function checkFormSubmit() {
     validateForm();
 }
 
+/*
+ * This function validates the form elements. 
+ *
+ */
 function validateForm() {
     var message = "Are you sure you want to save this note without any tags?";
     var myTitle = jQuery("#input_title").val().trim();
@@ -40,6 +44,11 @@ function validateForm() {
             return false;
         }
     }
+    var checked = jQuery("#input_public").is(':checked');
+    var myPublic = "false";
+    if(checked) {
+        myPublic = "true";
+    }
     
     var myContent = CKEDITOR.instances.NoteContent.getData().trim();
     
@@ -48,17 +57,29 @@ function validateForm() {
         return false;
     }
     
-    var myUrl = jQuery("#input_uri").val();
+    // ajax submit form
+    ajaxSubmitForm(myTitle, myTags, myPublic, myContent);
     
+    return true;
+}
+
+/*
+ * This function is used to submit the form using ajax when adding or editing a
+ * note. It appends a message about the success/failure of the submit, which 
+ * then fades out slowly.
+ * 
+ */
+function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
+    var myUrl = jQuery("#input_uri").val();
     var myId = jQuery("#input_id").val();
     
-    // ajax submit form
     jQuery.ajax({
         type: "POST",
         url: myUrl,
         data: {
             title: myTitle, 
-            tags: myTags, 
+            tags: myTags,
+            isPublic: myPublic,
             content: myContent, 
             id: myId
         },
@@ -87,8 +108,6 @@ function validateForm() {
             jQuery("#responsearea").fadeIn("Error submitting data");
         }
     });
-    
-    return true;
 }
 
 /* 
