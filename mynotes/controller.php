@@ -224,7 +224,11 @@ class mynotes extends controller {
             $data['datemodified'] = date('Y-m-d H:i:s');
             $status = $this->objDbmynotes->updateNote($data, $id);
             $this->objDbtags->addTag($data);
-            echo $status; // TRUE|FALSE
+            if($status){// TRUE|FALSE
+                echo "TRUE";
+            } else {
+                echo "FALSE";
+            }
         }
         die();
         //return $this->nextAction("showNote", array("id"=>$id));

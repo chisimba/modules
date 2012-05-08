@@ -42,13 +42,14 @@ function validateForm() {
     }
     
     var myContent = CKEDITOR.instances.NoteContent.getData().trim();
-    alert(myContent);
+    
     if(myContent.length == 0) {
         alert("Please enter content");
         return false;
     }
     
-    var myUrl = jQuery("#form_mynotes").attr("action");alert(myUrl);
+    var myUrl = jQuery("#input_uri").val();
+    alert(myUrl);
     
     var myId = jQuery("#input_id").val();
     
@@ -72,43 +73,55 @@ function validateForm() {
                 jQuery('#responsearea').fadeOut('slow');
                 
                 jQuery("#input_id").val(data);
-                var mode = jQuery.getQueryString('mode');
+                tmpUrl = jQuery("#input_uri").val();
+                var mode = jQuery.getUrlVar('mode', tmpUrl);
+                alert(mode);
 
                 if(mode == "add") {
                     // change mode so that we now editing data, not adding new 
                     // data
-                    tmpUrl = jQuery("#form_mynotes").attr("action");
+                    //jQuery("#form_mynotes").attr("action");
                     tmpUrl = tmpUrl.replace("add", "edit");
                     tmpUrl += "&id=" + data;
-                    jQuery("#form_mynotes").attr("action",tmpUrl);
+                    alert(tmpUrl);
+                    jQuery("#input_uri").val(tmpUrl);
+                //jQuery("#form_mynotes").attr("action",tmpUrl);
                 }
             }
         }
     });
+    
+    return;
 }
 
-/* create jQuery plugin to retrieve the param values from query string */
+/* 
+ * create jQuery plugin to retrieve the param values from query string
+ * Usage: getUrlVars(url)
+ * 
+ * then to get a specific variable from url
+ * var allVars = $.getUrlVars();
+ * myVar = allVars["name"];
+ *  
+ * Usage: $.getUrlVar("name");
+ * 
+ * var byName = $.getUrlVar("name");
+ *    
+*/
 ;(function ($) {
-    $.extend({      
-        getQueryString: function (name) {           
-            function parseParams() {
-                var params = {},
-                    e,
-                    a = /\+/g,  // Regex for replacing addition symbol with a space
-                    r = /([^&=]+)=?([^&]*)/g,
-                    d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-                    q = window.location.search.substring(1);
-
-                while (e = r.exec(q))
-                    params[d(e[1])] = d(e[2]);
-
-                return params;
+    $.extend({
+        getUrlVars: function(myUrl){
+            var vars = [], hash;
+            var hashes = myUrl.slice(myUrl.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
             }
-
-            if (!this.queryStringParams)
-                this.queryStringParams = parseParams(); 
-
-            return this.queryStringParams[name];
+            return vars;
+        },
+        getUrlVar: function(name, myUrl){
+            return $.getUrlVars(myUrl)[name];
         }
-    });
+    })
 })(jQuery);

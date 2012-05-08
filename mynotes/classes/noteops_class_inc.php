@@ -295,14 +295,19 @@ class noteops extends object {
         $objTable->addCell($idInput . $saveButton . '&nbsp;' . $cancelButton, '', '', '', '', 'colspan="2"');
         $objTable->endRow();
 
-        $objForm = new form($this->module, $this->uri(array(
+        $myUri = $this->uri(array(
                             'action' => 'save'/*'validatenote'*/,
                             'mode' => $mode
-                        )));
-        $objForm->setOnSubmit("checkFormSubmit();return false;");
+                        ));
+        $myUri = str_replace("&amp;", "&", $myUri);
+        $hiddenAction = new textinput('uri', $myUri, 'hidden', NULL);
+        
+        $objForm = new form($this->module, "javascript:checkFormSubmit();void(0);");
+        //$objForm->setOnSubmit("checkFormSubmit($myUri);return false;");
 
         $objForm->addToForm($responseArea);
         $objForm->addToForm($objTable->show());
+        $objForm->addToForm($hiddenAction);
 
         return $objForm->show();
     }
