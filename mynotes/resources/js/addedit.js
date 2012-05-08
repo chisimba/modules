@@ -48,7 +48,7 @@ function validateForm() {
         return false;
     }
     
-    var myUrl = jQuery("#form_mynotes").attr("action");
+    var myUrl = jQuery("#form_mynotes").attr("action");alert(myUrl);
     
     var myId = jQuery("#input_id").val();
     
@@ -72,12 +72,43 @@ function validateForm() {
                 jQuery('#responsearea').fadeOut('slow');
                 
                 jQuery("#input_id").val(data);
-                if(myUrl.has("add")) {
+                var mode = jQuery.getQueryString('mode');
+
+                if(mode == "add") {
                     // change mode so that we now editing data, not adding new 
                     // data
-                    jQuery("#form_mynotes").attr("action").replace("add", "edit");
+                    tmpUrl = jQuery("#form_mynotes").attr("action");
+                    tmpUrl = tmpUrl.replace("add", "edit");
+                    tmpUrl += "&id=" + data;
+                    jQuery("#form_mynotes").attr("action",tmpUrl);
                 }
             }
         }
     });
 }
+
+/* create jQuery plugin to retrieve the param values from query string */
+;(function ($) {
+    $.extend({      
+        getQueryString: function (name) {           
+            function parseParams() {
+                var params = {},
+                    e,
+                    a = /\+/g,  // Regex for replacing addition symbol with a space
+                    r = /([^&=]+)=?([^&]*)/g,
+                    d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+                    q = window.location.search.substring(1);
+
+                while (e = r.exec(q))
+                    params[d(e[1])] = d(e[2]);
+
+                return params;
+            }
+
+            if (!this.queryStringParams)
+                this.queryStringParams = parseParams(); 
+
+            return this.queryStringParams[name];
+        }
+    });
+})(jQuery);
