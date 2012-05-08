@@ -49,7 +49,6 @@ function validateForm() {
     }
     
     var myUrl = jQuery("#input_uri").val();
-    alert(myUrl);
     
     var myId = jQuery("#input_id").val();
     
@@ -66,7 +65,6 @@ function validateForm() {
         success: function(data) {
             if(data == "FALSE") {
                 jQuery("#responsearea").fadeIn("Error submitting data");
-                alert("Error submitting data");
             } else {
                 jQuery("#responsearea").text("Data saved Successfully");
                 jQuery("#responsearea").show();
@@ -75,19 +73,18 @@ function validateForm() {
                 jQuery("#input_id").val(data);
                 tmpUrl = jQuery("#input_uri").val();
                 var mode = jQuery.getUrlVar('mode', tmpUrl);
-                alert(mode);
-
+                
                 if(mode == "add") {
                     // change mode so that we now editing data, not adding new 
                     // data
-                    //jQuery("#form_mynotes").attr("action");
                     tmpUrl = tmpUrl.replace("add", "edit");
                     tmpUrl += "&id=" + data;
-                    alert(tmpUrl);
                     jQuery("#input_uri").val(tmpUrl);
-                //jQuery("#form_mynotes").attr("action",tmpUrl);
                 }
             }
+        },
+        error: function() {
+            jQuery("#responsearea").fadeIn("Error submitting data");
         }
     });
     
