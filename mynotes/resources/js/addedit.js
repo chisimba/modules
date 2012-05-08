@@ -91,7 +91,7 @@ function validateForm() {
         }
     });
     
-    return;
+    return true;
 }
 
 /* 
