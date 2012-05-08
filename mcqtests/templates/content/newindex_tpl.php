@@ -66,46 +66,51 @@ $tableHd[] = '&nbsp;';
 $objTable->addHeader($tableHd, 'heading');
 if (!empty($data)) {
     $i = 0;
+    $valid=$this->isValid('whatever');
     foreach($data as $line) {
         $class = (($i++%2) == 0) ? 'odd' : 'even';
-        // link to view test and add questions
-        $objLink = new link($this->uri(array(
-            'action' => 'view2',
-            'test' => $line['id']
-        )));
-        $objLink->title = $viewLabel;
-        $objLink->link = $line['name'];
-        $viewLink = $objLink->show();
-        // edit, mark and delete icons
-        $objIcon->title = $editLabel;
-        $icons = $objIcon->getEditIcon($this->uri(array(
-            'action' => 'edit',
-            'id' => $line['id']
-        )));
-        $objIcon->setIcon('delete');
-        $objIcon->title = $deleteLabel;
+        $icons='';
+        $viewLink='';
+        if ($valid){
+            // link to view test and add questions
+            $objLink = new link($this->uri(array(
+                'action' => 'view2',
+                'test' => $line['id']
+            )));
+            $objLink->title = $viewLabel;
+            $objLink->link = $line['name'];
+            $viewLink = $objLink->show();
+            // edit, mark and delete icons
+            $objIcon->title = $editLabel;
+            $icons = $objIcon->getEditIcon($this->uri(array(
+                'action' => 'edit',
+                'id' => $line['id']
+            )));
+            $objIcon->setIcon('delete');
+            $objIcon->title = $deleteLabel;
 
-        $objConfirm = new confirm();
-        $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
-            'action' => 'delete',
-            'id' => $line['id']
-        )) , $confirmLabel.' '.$line['name'].'?');
-        $icons.= $objConfirm->show();
-        $objIcon->setIcon('comment');
-        $objIcon->title = $listLabel;
-        $objLink = new link($this->uri(array(
+            $objConfirm = new confirm();
+            $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+                'action' => 'delete',
+                'id' => $line['id']
+            )) , $confirmLabel.' '.$line['name'].'?');
+            $icons.= $objConfirm->show();
+            $objIcon->setIcon('comment');
+            $objIcon->title = $listLabel;
+            $objLink = new link($this->uri(array(
             'action' => 'liststudents',
             'id' => $line['id']
-        )));
-        $objLink->link = $objIcon->show();
-        $icons.= $objLink->show();
-        // set up export results icon
-        $objIcon->title = $exportLabel;
-        $exportIcon = $objIcon->getLinkedIcon($this->uri(array(
-            'action' => 'export',
-            'testId' => $line['id']
-        )) , 'exportcvs');
-        $icons.= $exportIcon;
+            )));
+            $objLink->link = $objIcon->show();
+            $icons.= $objLink->show();
+            // set up export results icon
+            $objIcon->title = $exportLabel;
+            $exportIcon = $objIcon->getLinkedIcon($this->uri(array(
+               'action' => 'export',
+               'testId' => $line['id']
+               )) , 'exportcvs');
+            $icons.= $exportIcon;
+        }
         // set up table rows
         $tableRow = array();
         $tableRow[] = $viewLink;

@@ -40,7 +40,10 @@ $addUrl = $this->uri(array(
 $addIcon = $objIcon->getAddIcon($addUrl);
 if ($this->isValid('add'))
 {
+        $addOkay=TRUE;
 	$heading.= '&nbsp;&nbsp;&nbsp;'.$addIcon;
+} else {
+       $addOkay=FALSE;
 }
 $this->setVarByRef('heading', $heading);
 if (!empty($testId)) {
@@ -69,6 +72,7 @@ if (!empty($data)) {
     foreach($data as $line) {
         $class = (($i++%2) == 0) ? 'odd' : 'even';
         // link to view test and add questions
+if ($addOkay==TRUE){
         $objLink = new link($this->uri(array(
             'action' => 'view',
             'id' => $line['id']
@@ -76,6 +80,11 @@ if (!empty($data)) {
         $objLink->title = $viewLabel;
         $objLink->link = $line['name'];
         $viewLink = $objLink->show();
+} else {
+        $viewLink=$line['name'];
+}
+$icons='';
+if ($addOkay==TRUE){
         // edit, mark and delete icons
         $objIcon->title = $editLabel;
         $icons = $objIcon->getEditIcon($this->uri(array(
@@ -106,6 +115,7 @@ if (!empty($data)) {
             'testId' => $line['id']
         )) , 'exportcvs');
         $icons.= $exportIcon;
+}
         // set up table rows
         $tableRow = array();
         $tableRow[] = $viewLink;
