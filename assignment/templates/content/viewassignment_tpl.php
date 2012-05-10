@@ -258,8 +258,12 @@ if ($this->isValid('markassignments')) {
         $ret .= '<hr />' . $header->show();
 
         // Display by Assignment Type
+        $this->objCond = $this->newObject('contextCondition', 'contextpermissions');
         if ($assignment['closing_date'] < date('Y-m-d H:i')) {
             $ret .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_assignment_assignmentclosed', 'assignment', 'Assignment Closed') . '</div>';
+        } else if (!($this->objCond->isContextMember('Students'))) { 
+            $ret .= '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_assignment_notstudent', 'assignment', 'Not a Student') . '</div>';
+
         } else if ($assignment['format'] == '0') { // Online Assignment
             $form = new form('addassignment', $this->uri(array('action' => 'submitonlineassignment')));
 
