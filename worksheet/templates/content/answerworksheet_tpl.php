@@ -45,6 +45,8 @@ $form->addToForm($hiddenInput->show());
 $userInput = new hiddeninput('user', $this->objUser->userId());
 $form->addToForm($userInput->show());
 
+$this->objCond = $this->newObject('contextCondition', 'contextpermissions');
+$isStudent=$this->objCond->isContextMember('Students');
 
     $counter = 1;
     foreach ($questions as $question)
@@ -55,6 +57,7 @@ $form->addToForm($userInput->show());
                 $str .= $this->objWashout->parseText($question['question']);
                 $str .= '<strong>'.$this->objLanguage->languageText('mod_worksheet_marks', 'worksheet', 'Marks').'</strong> ('.$question['question_worth'].')';
             $str .= '</div>';
+        if ($isStudent){
             $str .= '<div class="newForumContent">';
             
                 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
@@ -70,6 +73,7 @@ $form->addToForm($userInput->show());
                 
                 $str .= $htmlArea->show();
             $str .= '</div>';
+        }
         
         $str .= '</div>';
         
@@ -77,14 +81,14 @@ $form->addToForm($userInput->show());
         $counter++;
     }
 
-$button = new button ('saveanswers', $this->objLanguage->languageText('mod_worksheet_saveanswers', 'worksheet', 'Save Answers'));
-$button->setToSubmit();
+if ($isStudent){
+    $button = new button ('saveanswers', $this->objLanguage->languageText('mod_worksheet_saveanswers', 'worksheet', 'Save Answers'));
+    $button->setToSubmit();
 
-$button2 = new button ('saveandclose', $this->objLanguage->languageText('mod_worksheet_saveanswersandsubmit', 'worksheet', 'Save Answers and Submit for Marking'));
-$button2->setToSubmit();
-
-
-$form->addToForm('<br /><p align="center">'.$button->show().' &nbsp; '.$button2->show().'</p><br />&nbsp;');
+    $button2 = new button ('saveandclose', $this->objLanguage->languageText('mod_worksheet_saveanswersandsubmit', 'worksheet', 'Save Answers and Submit for Marking'));
+    $button2->setToSubmit();
+    $form->addToForm('<br /><p align="center">'.$button->show().' &nbsp; '.$button2->show().'</p><br />&nbsp;');
+    }
 
 echo $form->show();
 
