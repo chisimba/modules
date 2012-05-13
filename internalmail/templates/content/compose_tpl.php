@@ -5,7 +5,7 @@ $scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery-ui-pers
 $this->appendArrayVar('headerParams', $scripts);
 
 $this->appendArrayVar('bodyOnLoad', 'loadRecipientList();');
-	
+
 
 // security check-must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
@@ -36,7 +36,7 @@ $objFieldset = $this->loadClass('fieldset', 'htmlelements');
 $objLayer = $this->loadClass('layer', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
-$objIcon->setIcon('loader');
+$objIcon->setIcon('loader', 'gif');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_internalmail_compose', 'internalmail');
@@ -80,7 +80,7 @@ if ($text != $signature) {
 $objHeader = new htmlHeading();
 $objHeader->str = $heading;
 $objHeader->type = 1;
-$pageData = $objHeader->show();
+$pageData = '<div class="internalmail_send_heading">' . $objHeader->show() . '</div>';
 
 // set up html elements
 $objInput = new textinput('firstname', '', '', '50');
@@ -109,6 +109,7 @@ $objLayer->visibility = 'hidden';
 $objLayer->str = $objIcon->show();
 $loadLayer = $objLayer->show();
 
+// The users inside the to box.
 $objLayer = new layer();
 $objLayer->id = 'toList';
 $objLayer->str = $toList;
@@ -130,10 +131,10 @@ $messageText = $objText->show();
 
 // set up address book icon
 $action = $this->uri(array(
-    'action' => 'showbooks'    
+    'action' => 'showbooks'
 ));
 $objIcon->title = $addressLabel;
-$objIcon->setIcon('addressbook');
+$objIcon->setIcon('addressbook', 'png');
 $objIcon->extra=' onclick="javascript:
     $(\'#form_composeform\').attr(\'action\',\''.$action.'\');
     $(\'#form_composeform\').submit();"';
@@ -151,6 +152,7 @@ $objTable->endRow();
 $searchTable = $objTable->show();
 
 $objFieldset = new fieldset();
+
 $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 10px;"';
 $objFieldset->legend = '<b>'.$searchFirstnameLabel.'</b>';
 $objFieldset->contents = $searchTable;
@@ -177,7 +179,7 @@ $f = '<form id="searchform" name="searchform" autocomplete="off">
 				<p>
 					<label>Search Users</label><br/>
 					<input type="text" id="suggest4">
-					<input type="hidden" id="hiddensuggest4" name="username">							
+					<input type="hidden" id="hiddensuggest4" name="username">
 					<input id="searchbutton" type="button" onclick="submitSearchForm(this.form)" value="Add Recipient" />
 				</p>
 			</form>';
@@ -205,7 +207,7 @@ $emailTable = $objTable->show();
 
 $objTabbedbox = new tabbedbox();
 $objTabbedbox->extra = 'style="padding: 10px;"';
-$objTabbedbox->addTabLabel($emailLabel.'&#160;&#160;'.$addressIcon);
+$objTabbedbox->addTabLabel($addressIcon);
 $objTabbedbox->addBoxContent($emailTable);
 $emailTab = $objTabbedbox->show();
 
@@ -258,7 +260,7 @@ if ($attachments != NULL) {
             'file' => $attachment['filename'],
         ));
         $objIcon->title = $deleteLabel;
-        $objIcon->setIcon('delete');
+        $objIcon->setIcon('delete', 'png');
         $objIcon->extra = ' onclick="javascript:
             if(confirm(\''.$confirmLabel.'\')){
                	$(\'#form_composeform\').attr(\'action\',\''.$deleteArray.'\');
@@ -334,6 +336,7 @@ $objLink->link = $backLabel;
 $pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
+$objLayer->cssClass='internalmail';
 $objLayer->padding = '10px';
 $objLayer->str = $pageData;
 $pageLayer = $objLayer->show();
@@ -346,7 +349,7 @@ $this->appendArrayVar('headerParams', $script);
 $str = '<link rel="stylesheet" href="'.$this->getResourceUri('jquery.autocomplete.css', 'jquery').'" type="text/css" />';
 $this->appendArrayVar('headerParams', $str);
 
-	
+
 	$str = '<script type="text/javascript">
 
         function SubmitForm()
@@ -383,7 +386,7 @@ $(":text, textarea").result(findValueCallback).next().click(function() {
 		matchContains: true,
 		formatItem: formatItem,
 		formatResult: formatResult,
-		
+
 	}).result(function (evt, data, formatted) {
 
 					$("#hiddensuggest4").val(data[1]);
@@ -412,7 +415,7 @@ function changeOptions(){
 }
 
 function submitSearchForm(frm)
-{	
+{
 	username = frm.hiddensuggest4.value;
 	//groupId = frm.groupid.value;
 	if(username)
@@ -420,10 +423,10 @@ function submitSearchForm(frm)
 
 		addRecipient(username);
 	}
-	
+
 	frm.hiddensuggest4.value = "";
 	frm.suggest4.value = "";
-	
+
 }
 	</script>';
 	$this->appendArrayVar('headerParams', $str);

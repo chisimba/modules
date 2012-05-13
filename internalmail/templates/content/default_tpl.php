@@ -331,7 +331,7 @@ if (empty($arrEmailListData)) {
         if ($email['read_email'] != 1) {
             if ($email['sent_email'] != 1) {
                 $objIcon->title = $unreadEmailLabel;
-                $objIcon->setIcon('unreadletter');
+                $objIcon->setIcon('unreadletter', 'png');
                 $objIcon->extra = ' onclick="javascript:
                     $(\'form_hiddenform\').action=\''.$action.'\';
                     $(\'form_hiddenform\').submit();"';
@@ -339,7 +339,7 @@ if (empty($arrEmailListData)) {
                 $class = 'warning';
             } else {
                 $objIcon->title = $sentLabel;
-                $objIcon->setIcon('sent');
+                $objIcon->setIcon('sent', 'png');
                 $objIcon->extra = ' onclick="javascript:
                     $(\'form_hiddenform\').action=\''.$action.'\';
                     $(\'form_hiddenform\').submit();"';
@@ -349,9 +349,9 @@ if (empty($arrEmailListData)) {
         } else {
             $objIcon->title = $readLabel;
             if ($email['sent_email'] != 1) {
-                $objIcon->setIcon('readletter');
+                $objIcon->setIcon('readletter', 'png');
             } else {
-                $objIcon->setIcon('readsent');
+                $objIcon->setIcon('readsent', 'png');
             }
             $objIcon->extra = ' onclick="javascript:
                 $(\'form_hiddenform\').action=\''.$action.'\';
@@ -366,7 +366,7 @@ if (empty($arrEmailListData)) {
         // set up attachment icon
         if ($email['attachments'] >= 1) {
             $objIcon->title = $attachmentLabel;
-            $objIcon->setIcon('attachments');
+            $objIcon->setIcon('attachments', 'png');
             $attachIcon = $objIcon->show();
         } else {
             $attachIcon = '';
@@ -450,7 +450,7 @@ if (empty($messageData)) {
     }
     // set up next and previous icons
     $objIcon->title = $previousLabel;
-    $objIcon->setIcon('prev_new');
+    $objIcon->setIcon('prev_new', 'png');
     $objIcon->extra = ' onclick="javascript:
         $(\'input_mode\').value=\'prev\';
         $(\'form_hiddenform\').submit();"';
@@ -458,7 +458,7 @@ if (empty($messageData)) {
 
     // set up next icon
     $objIcon->title = $nextLabel;
-    $objIcon->setIcon('next_new');
+    $objIcon->setIcon('next_new', 'png');
     $objIcon->extra = ' onclick="javascript:
         $(\'input_mode\').value=\'next\';
         $(\'form_hiddenform\').submit();"';
@@ -480,7 +480,7 @@ if (empty($messageData)) {
         'subject' => 'RE: '.$emailData['subject'],
         'message' => $replyMessage,
         'emailId' => $emailData['id']
-    )) , 'reply');
+    )) , 'reply', 'png');
     $icons = $replyIcon;
 
     // set up reply all icon
@@ -496,7 +496,7 @@ if (empty($messageData)) {
         'subject' => 'RE: '.$emailData['subject'],
         'message' => $replyMessage,
         'emailId' => $emailData['id']
-    )) , 'replyall');
+    )) , 'replyall', 'png');
     $icons.= $replyallIcon;
 
     // set up forward icon
@@ -515,7 +515,7 @@ if (empty($messageData)) {
         'subject' => 'FWD: '.$emailData['subject'],
         'message' => $fwdMessage,
         'emailId' => $emailData['id']
-    )) , 'forward');
+    )) , 'forward', 'png');
     $icons.= $forwardIcon;
 
     // set up resend icon
@@ -527,7 +527,7 @@ if (empty($messageData)) {
             'mode' => 'resend',
             'emailId' => $emailData['id'],
             'filter' => $filter
-        )) , 'resend');
+        )) , 'resend', 'png');
         $icons.= $resendIcon;
     } else {
         $icons.= '';
@@ -619,7 +619,7 @@ if (!empty($messageData)) {
 $objIcon->title = $composeLabel;
 $composeIcon = $objIcon->getLinkedIcon($this->uri(array(
     'action' => 'compose'
-)) , 'notes');
+)) , 'notes', 'png');
 
 // set up manage folder icon
 $objIcon->title = $manageFolderLabel;
@@ -627,7 +627,7 @@ $objIcon->extra = '';
 $manageIcon = $objIcon->getLinkedIcon($this->uri(array(
     'action' => 'managefolders',
     'currentFolderId' => $folderId
-)) , 'managefolders');
+)) , 'managefolders', 'png');
 
 // set up manage address books icon
 $objIcon->title = $manageBooksLabel;
@@ -635,7 +635,7 @@ $objIcon->extra = '';
 $booksIcon = $objIcon->getLinkedIcon($this->uri(array(
     'action' => 'manageaddressbooks',
     'currentFolderId' => $folderId
-)) , 'addressbook');
+)) , 'addressbook', 'png');
 
 // set up manage configs icon
 $objIcon->title = $manageSettingsLabel;
@@ -643,7 +643,7 @@ $objIcon->extra = '';
 $configIcon = $objIcon->getLinkedIcon($this->uri(array(
     'action' => 'managesettings',
     'currentFolderId' => $folderId
-)) , 'mailconfig');
+)) , 'mailconfig', 'png');
 
 // set up main table
 $objTable = new htmltable();
@@ -684,6 +684,7 @@ $objLink->link = $exitLabel;
 $pageData.= '<br />'.$objLink->show();
 
 $objLayer = new layer();
+$objLayer->cssClass='internalmail';
 $objLayer->padding = '10px';
 $objLayer->addToStr($pageData);
 $pageLayer = $objLayer->show();
