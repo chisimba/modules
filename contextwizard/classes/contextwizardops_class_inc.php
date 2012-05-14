@@ -127,7 +127,7 @@ class contextwizardops extends object
 
         $myProfileLabel = $this->objLanguage->languageText('phrase_myprofile', 'system', 'ERROR: phrase_myprofile');
         $nextLabel = $this->objLanguage->languageText('word_next', 'system', 'ERROR: word_next');
-        $backLabel = $this->objLanguage->languageText('word_back', 'system', 'ERROR: word_back');
+        $backLabel = ucfirst(strtolower($this->objLanguage->languageText('word_back', 'system', 'ERROR: word_back')));
         $enterLabel = $this->objLanguage->languageText('word_enter', 'system', 'ERROR: word_enter');
         $splashLabel = $this->objLanguage->languageText('mod_contextwizard_welcome', 'contextwizard', 'ERROR: mod_contextwizard_welcome');
         $firstLabel = $this->objLanguage->code2Txt('mod_contextwizard_first', 'contextwizard', NULL, 'ERROR: mod_contextwizard_first');
@@ -179,8 +179,11 @@ class contextwizardops extends object
         }
 
         $gradeGroups = array();
-        $gradeString = $this->objDBgrades->getGrades();        
-        $gradeGroups = $this->objGroups->getGroups("WHERE group_define_name IN ($gradeString)");
+        $gradeString = $this->objDBgrades->getGrades();
+        if ($gradeString)
+        {
+            $gradeGroups = $this->objGroups->getGroups("WHERE group_define_name IN ($gradeString)");
+        }
         
         if (!empty($gradeGroups))
         {
