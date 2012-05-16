@@ -408,17 +408,8 @@ class blogposts extends object
                 $iconList = $this->objCC->show($cclic);
                 // $commentLink = $this->objComments->addCommentLink($type = NULL);
                 if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
-
-
-
                     $commentCount = $objCommentCounter->show($post['id']);
                     //$this->objComments->getCount($post['id']);
-
-
-
-
-
-
                 }
                 // edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
@@ -483,7 +474,8 @@ class blogposts extends object
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $fboxcontent = $post['post_content']
+                    $pcontent = "<div class='blog_content'>" . $post['post_content'] . "</div>";
+                    $fboxcontent = $pcontent
                       . $this->cleaner->cleanHtml("<br /><hr />"
                       . "<div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
@@ -552,9 +544,9 @@ class blogposts extends object
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    
+                    $pcontent = "<div class='blog_content'>" . $post['post_content'] . "</div>";
                     $ret.= '<div class="blogpost_before"></div>'
-                      . $objFeatureBox->showContent($head, $post['post_content']
+                      . $objFeatureBox->showContent($head, $pcontent
                       . $this->cleaner->cleanHtml("<br /><hr /><div class='blog-item-base'><center><em><b>"
                       . $this->objLanguage->languageText("mod_blog_word_tags4thispost", "blog")
                       . "</b><br />" . $linkstr . "</em><br />"

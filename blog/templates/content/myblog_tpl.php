@@ -1,4 +1,5 @@
 <?php
+// This is the default template for viewing blogs.
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
 $middleColumn = NULL;
@@ -61,7 +62,7 @@ if (isset($catid) && empty($posts) && empty($latestpost) && empty($drafts)) {
         $header = new htmlheading();
         $header->type = 3;
         $header->str = $this->objLanguage->languageText("mod_blog_latestpost", "blog") . ": " . $this->objDbBlog->getCatById($latestpost[0]['post_category']);
-        $middleColumn.= $header->show();
+        $middleColumn.= "<span class='blog_page_header'>" .$header->show() . "</span>";
         if ($posts[0]['id'] == $latestpost[0]['id']) {
             unset($posts[0]);
         }

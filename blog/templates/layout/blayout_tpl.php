@@ -8,3 +8,4 @@ $cssLayout->setLeftColumnContent($leftMenu); //$leftMenu->show());
 $cssLayout->setRightColumnContent($rightSideColumn);
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
+?>
