@@ -76,7 +76,7 @@ class block_browsecourseactivitiesbutton extends object
         try {
             $this->objLanguage =  $this->getObject('language', 'language');
             $this->objUser =  $this->getObject('user', 'security');
-            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_courseupdates', 'activitystreamer', NULL, 'Course Updates'));
+            $this->title = ucwords($this->objLanguage->code2Txt('mod_activitystreamer_courseupdatesbtn', 'activitystreamer', NULL, 'Course Updates button'));
             
             $this->loadClass('checkbox', 'htmlelements');
         } catch (customException $e) {
