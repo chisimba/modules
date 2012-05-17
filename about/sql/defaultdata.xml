@@ -11,6 +11,24 @@
         <datelastupdated>2012-02-17 15:12:58</datelastupdated>
     </tbl_about_moduleblocks>
     <tbl_about_moduleblocks>
+        <id>init_on_install_3</id>
+        <userid>1</userid>
+        <block>block|disclaimer|about</block>
+        <side>middle</side>
+        <position>2</position>
+        <module>about</module>
+        <datelastupdated>2012-04-26 15:12:58</datelastupdated>
+    </tbl_about_moduleblocks>
+    <tbl_about_moduleblocks>
+        <id>init_on_install_4</id>
+        <userid>1</userid>
+        <block>block|copyright|about</block>
+        <side>middle</side>
+        <position>3</position>
+        <module>about</module>
+        <datelastupdated>2012-04-26 15:12:58</datelastupdated>
+    </tbl_about_moduleblocks>
+    <tbl_about_moduleblocks>
         <id>init_on_install_2</id>
         <userid>1</userid>
         <block>block|contact|about</block>
