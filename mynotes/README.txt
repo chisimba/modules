@@ -11,3 +11,7 @@ There will be a tag cloud on the left and a couple of notes on the right with
 paging. The latest two notes will show at the top with html stripped and with 
 words count less than 200. These notes will then be followed by a list of notes
 that show only titles of the note.
+
+Copy the share icon from _common2/css/images/sexybuttons/icons/silk to 
+_common/icons/
+        

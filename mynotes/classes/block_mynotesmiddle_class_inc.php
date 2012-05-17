@@ -99,6 +99,7 @@ class block_mynotesmiddle extends object {
      */
     public function init() {
         try {
+            $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/modal.popup.js'));
             $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/mynotes.js'));
             
             // Load language class

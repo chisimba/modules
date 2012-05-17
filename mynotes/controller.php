@@ -288,6 +288,9 @@ class mynotes extends controller {
         return 'shownote_tpl.php';
     }
 
+    private function __ajaxGetShare() {
+        return $this->objNoteOps->getShareOptions();
+    }
     /**
      * 
      * Method to return an error when the action is not a valid 

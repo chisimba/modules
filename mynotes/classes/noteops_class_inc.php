@@ -534,6 +534,7 @@ class noteops extends object {
     public function showNote($id) {
         $editLabel = $this->objLanguage->languageText('word_edit', 'system', 'WORD: word_edit, not found');
         $deleteLabel = $this->objLanguage->languageText('word_delete', 'system', 'WORD: word_delete, not found');
+        $shareLabel = $this->objLanguage->languageText('word_share', 'mynotes', 'WORD: word_share, not found');
 
         $noteArr = $this->objDbmynotes->getNote($id);
 
@@ -558,8 +559,17 @@ class noteops extends object {
         $deleteLink->link = $deleteIcon;
         $deleteLink->cssId = "delete";
         $deleteLink->extra = 'onclick="return confirmDelete()"';
+        
+        // copy the share icon from _common2/css/images/sexybuttons/icons/silk to _common/icons/
+        //$shareLink = new link($this->uri(array('action'=>'share', 'id'=>$noteArr['id'], $this->module)));
+        $this->objIcon->title = $shareLabel;
+        $this->objIcon->alt = $shareLabel;
+        $this->objIcon->setIcon('share','png');
+        $this->objIcon->extra = "class='modal'";
+        $shareIcon = $this->objIcon->show();
+        //$shareLink->link = $shareIcon;
 
-        $title->str .= "&nbsp;" . $editLink->show() . "&nbsp;" . $deleteLink->show();
+        $title->str .= "&nbsp;" . $editLink->show() . "&nbsp;" . $deleteLink->show() . "&nbsp;" . $shareIcon;
         $str = "<div>";
         $str .= $title->show();
         $str .= $contentValue;
@@ -582,6 +592,8 @@ class noteops extends object {
 
         $str .= "<div class=\"center taglist \">" . $tagList . "</div>";
         $str .= "</div>";
+        
+        $popupSource = $this->getResourceUri('tmp/test.html');
 
         return $str;
     }
@@ -630,6 +642,11 @@ class noteops extends object {
         $ret .= $list;
 
         return $ret;
+    }
+    
+    public function getShareOptions() {
+        echo "This is the returned data from the ajax call. Holla!!";
+        die();
     }
 }
 ?>
