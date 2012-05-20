@@ -40,8 +40,10 @@ class block_frontpage extends object {
      * this function is called to return content to be rendered
      */
     function show() {
+        $errorMessage=  $this->configData;
+       
         $digitalLibrary = $this->getObject('frontpage', 'digitallibrary');
-        return $digitalLibrary->createDigitalFrontPage();
+        return $digitalLibrary->createDigitalFrontPage($errorMessage);
     }
 
 }

@@ -574,7 +574,7 @@ class digitallibraryupload extends filemanagerobject {
                         $savepath = $this->objCleanUrl->cleanUpUrl($savepath);
                         $path = $this->objCleanUrl->cleanUpUrl($path);
 
-                        $objOverwriteIncrement = $this->getObject('overwriteincrement', 'filemanger');
+                        $objOverwriteIncrement = $this->getObject('overwriteincrement', 'filemanager');
                         $filename = $objOverwriteIncrement->checkfile($filename, $path);
 
                         $savepath .= $filename;
@@ -663,7 +663,13 @@ class digitallibraryupload extends filemanagerobject {
                 $fileInfoArray['fullpath'] = $savepath;
                 $fileInfoArray['subfolder'] = $subfolder;
                 $fileInfoArray['originalfolder'] = $originalsubfolder;
-            }
+
+                $viewlink=new link($this->uri(array("action"=>"fileinfo","id"=>$fileId)));
+                $url=$viewlink->href;
+              
+                $objLucene = $this->getObject('indexdata', 'search');
+                $objLucene->luceneIndex($fileId, strftime('%Y-%m-%d', mktime()), $url, $filename, NULL, NULL, digitallibrary, $this->objUser->userId(), NULL, NULL, NULL);
+                 }
 
             // Update Standard File Details
             $fileInfoArray['name'] = $filename;
@@ -679,6 +685,9 @@ class digitallibraryupload extends filemanagerobject {
             // Add Result to Upload Results Array
             $fileUploadResultsArray[$file['name']] = $fileInfoArray;
         }
+
+
+
         return $fileInfoArray;
     }
 

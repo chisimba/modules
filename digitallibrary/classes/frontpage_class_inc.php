@@ -46,16 +46,16 @@ class frontpage extends object {
     /**
      * this creates the front page of the digital library. 
      */
-    public function createDigitalFrontPage() {
+    public function createDigitalFrontPage($errorMessage) {
         // Createform, add fields to it and display.
         $formData = new form('searchForm', $this->uri(array("action" => "search")));
         // Table for the buttons
         $table = $this->newObject('htmltable', 'htmlelements');
-        $table->cssClass = "search form";
+        $table->cssClass = "searchform";
 
 
         $table->startRow();
-        $textinput = new textinput('searchfield');
+        $textinput = new textinput('filequery');
         $textinput->size = 60;
 
         $buttonTitle = $this->objLanguage->languageText('mod_digitallibrary_search', 'digitallibrary');
@@ -80,7 +80,7 @@ class frontpage extends object {
 
         foreach ($files as $file) {
 
-            $link = new link($this->uri(array("action" => 'viewfile')));
+            $link = new link($this->uri(array("action" => 'fileinfo',"id"=>$file['id'])));
             $link->link = $file['filename'];
             $latestFilesTable->startRow();
             $latestFilesTable->addCell($this->objFileIcons->getFileIcon($file['filename']) . '&nbsp;' . $link->show());
@@ -106,7 +106,8 @@ class frontpage extends object {
 
 
         $uploadTitle = '<h3>' . $this->objLanguage->languageText('phrase_uploadfiles', 'system', 'Upload Files') . '</h3>';
-        return $formData->show() . $uploadTitle . $uploadForm->show();
+       
+        return '<div class="error">'.$errorMessage.'</div>'. $formData->show() . $uploadTitle .$uploadForm->show();
     }
 
     /**
@@ -134,9 +135,9 @@ class frontpage extends object {
                 $tagArray['time'] = time();
                 $tagsArray[] = $tagArray;
             }
+            
             $tagCloud = $objTagCloud->buildCloud($tagsArray);
         }
-
 
         return $tagCloud;
     }

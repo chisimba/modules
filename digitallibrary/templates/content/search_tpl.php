@@ -20,17 +20,15 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "digitallibrary",
-        "block" : "tagcloud"
-        }
-        {
-        "display" : "block",
-        "module" : "digitallibrary",
-        "block" : "frontpage",
-          <?php
+        "block" : "searchresults",
+        <?php
         echo '"configData":';
-        echo '"' . $errormessage . '"';
+        echo '"' . $searchParam . '"';
         ?>
-       }
+
+        }
+
+
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>

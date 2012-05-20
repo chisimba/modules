@@ -96,6 +96,9 @@ class digitallibrary extends controller {
      * Default action of the module 
      */
     function __home() {
+        $errorMessage = $this->getParam("errormessage");
+      
+        $this->setVarByRef("errormessage", $errorMessage);
         return "home_tpl.php";
     }
 
@@ -107,7 +110,14 @@ class digitallibrary extends controller {
     private function __upload() {
         $digitalLibrary = $this->getObject("digitallibraryutil", "digitallibrary");
         $folderid = $digitalLibrary->upload();
-        return $this->nextAction('home', array("folder" => $folderid));
+        $errorMessage="";
+        if ($this->startsWith($folderid, "ERROR")) {
+            $messages = explode(":", $folderid);
+            $errorMessage = $messages[1];
+           
+           
+        }
+        return $this->nextAction('home', array("folder" => $folderid,"errormessage"=>$errorMessage));
     }
 
     /**
@@ -128,6 +138,32 @@ class digitallibrary extends controller {
         $fileId = $this->getParam("id");
         $this->setVarByRef("fileid", $fileId);
         return "fileinfo_tpl.php";
+    }
+
+    /**
+     * process the search requewst
+     * @return string 
+     */
+    private function __search() {
+        $searchParam = $this->getParam('filequery');
+
+        $this->setVarByRef("searchParam", $searchParam);
+        return 'search_tpl.php';
+    }
+
+    private function startsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    private function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        $start = $length * -1; //negative
+        return (substr($haystack, $start) === $needle);
     }
 
 }

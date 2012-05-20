@@ -34,7 +34,7 @@ class digitallibraryutil extends object {
         $this->userObj = $this->getObject("user", "security");
         $this->objFileTags = $this->getObject('dbfiletags', 'filemanager');
         $this->objLanguage = $this->getObject('language', 'language');
-         $this->objCleanUrl=  $this->getObject("cleanurl", "filemanager");
+        $this->objCleanUrl = $this->getObject("cleanurl", "filemanager");
         $this->loadClass("htmlheading", "htmlelements");
     }
 
@@ -45,7 +45,10 @@ class digitallibraryutil extends object {
      */
     public function upload() {
         $folder = $this->objFolders->getFolder($this->getParam('folder'));
-
+        $keywords = $this->getParam("tagsfield");
+        if ($keywords == null) {
+            return "ERROR:No tags provided";
+        }
         if ($folder != FALSE) {
             $this->objUpload->setUploadFolder($folder['folderpath']);
         } else {
@@ -59,12 +62,12 @@ class digitallibraryutil extends object {
 
         // Check if User entered page by typing in URL
         if ($results == FALSE) {
-            return $this->nextAction(NULL);
+            return "Error: Invalid upload action";
         }
 
         // Check if no files were provided
         if (count($results) == 1 && array_key_exists('nofileprovided', $results)) {
-            return $this->nextAction('uploadresults', array('error' => 'nofilesprovided'));
+            return "ERROR: No file provided";
         }
         $overwrite = $this->objUploadMessages->processOverwriteMessages();
         $index = 0;
@@ -163,6 +166,60 @@ class digitallibraryutil extends object {
         return $content;
     }
 
+    /**
+     * get files that match the filter
+     * @return type 
+     */
+    public function showFilesMatchingFilter($searchQuery) {
+
+        if (trim($searchQuery) == '') {
+
+            return 'Empty search querry supplied';
+        }
+
+
+
+        $files = $this->objFiles->getMatchingFiles(" WHERE filename like '%$searchQuery%' or description like '%$searchQuery%'");
+
+        if (count($files) == 0) {
+            return "No files found";
+        }
+
+        $objPreviewFolder = $this->getObject('previewfolder', "filemanager");
+        $objPreviewFolder->targetModule = "digitallibrary";
+
+        $table = $objPreviewFolder->previewContent(array(), $files, "", "dl");
+
+
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('selectall.js', 'htmlelements'));
+
+        $content = "";
+        $content.= '<h1>' . $this->objLanguage->languageText('mod_filemanager_fileswithtag', 'filemanager', 'Files with tag') . ': ' . $searchQuery . '</h1>';
+
+        if (count($files) > 0) {
+            $form = new form('deletefiles', $this->uri(array('action' => 'multidelete')));
+            $form->addToForm($table);
+
+            $button = new button('submitform', $this->objLanguage->languageText('mod_filemanager_deleteselecteditems', 'filemanager', 'Delete Selected Items'));
+            $button->setToSubmit();
+
+            $selectallbutton = new button('selectall', $this->objLanguage->languageText('phrase_selectall', 'system', 'Select All'));
+            $selectallbutton->setOnClick("javascript:SetAllCheckBoxes('deletefiles', 'files[]', true);");
+
+            $deselectallbutton = new button('deselectall', $this->objLanguage->languageText('phrase_deselectall', 'system', 'Deselect all'));
+            $deselectallbutton->setOnClick("javascript:SetAllCheckBoxes('deletefiles', 'files[]', false);");
+
+            $form->addToForm($button->show() . ' &nbsp; &nbsp; ' . $selectallbutton->show() . ' ' . $deselectallbutton->show());
+
+            $content.= $form->show();
+        } else {
+            $content.= $table;
+        }
+
+
+        return $content;
+    }
+
     function showFileInfo($fileId) {
         $file = $this->objFiles->getFile($fileId);
         $content = "";
@@ -182,6 +239,10 @@ class digitallibraryutil extends object {
 
         $fileDownloadPath = $this->objConfig->getcontentPath() . $file['path'];
         $fileDownloadPath = $this->objCleanUrl->cleanUpUrl($fileDownloadPath);
+
+        $fileFolder = $file['filefolder'];
+
+        $folderId = $this->objFolders->getFolderId($fileFolder);
 
         $folder = $this->objFolders->getFolder($folderId);
         if ($folder['access'] == 'private_all' || $folder['access'] == 'private_selected') {
@@ -212,101 +273,10 @@ class digitallibraryutil extends object {
         $this->appendArrayVar('headerParams', $copyToClipBoardJS);
         $header->str .= ' ' . $link->show() . ' ';
 
-        if ($mode == 'selectfilewindow' || $mode == 'selectimagewindow' || $mode == 'fckimage' || $mode == 'fckflash' || $mode == 'fcklink') {
-            if (count($restrictions) == 0) {
-                $header->str .= ' (<a href="javascript:selectFile();">' . $this->objLanguage->languageText('mod_filemanager_selectfile', 'filemanager', 'Select File') . '</a>) ';
-            } else if (in_array(strtolower($file['datatype']), $restrictions)) {
-                $header->str .= ' (<a href="javascript:selectFile();">' . $this->objLanguage->languageText('mod_filemanager_selectfile', 'filemanager', 'Select File') . '</a>) ';
-            }
+        $folderParts = explode('/', $file['filefolder']);
 
-            if ($mode == 'fckimage' || $mode == 'fckflash') {
-                if (isset($file['width']) && isset($file['height'])) {
-                    $widthHeight = ', ' . $file['width'] . ', ' . $file['height'];
-                } else {
-                    $widthHeight = '';
-                }
-            } else {
-                $widthHeight = '';
-            }
 
-            if ($mode == 'fckimage' || $mode == 'fckflash' || $mode == 'fcklink') {
-
-                $checkOpenerScript = '
-        <script type="text/javascript">
-        //<![CDATA[
-        ' . $selectParam . '
-
-        function selectFile()
-        {
-            if (window.opener) {
-                try
-                 {
-                     window.opener.CKEDITOR.tools.callFunction(1, "' . htmlspecialchars_decode($this->uri(array('action' => 'file', 'id' => $file['id'], 'filename' => $file['filename'], 'type' => '.' . $file['datatype']), 'filemanager', '', TRUE, FALSE, TRUE)) . '"' . $widthHeight . ') ;
-            
-                 }
-                catch(err)
-                {
-                     window.opener.CKEDITOR.tools.callFunction(2, "' . htmlspecialchars_decode($this->uri(array('action' => 'file', 'id' => $file['id'], 'filename' => $file['filename'], 'type' => '.' . $file['datatype']), 'filemanager', '', TRUE, FALSE, TRUE)) . '"' . $widthHeight . ') ;
-             
-                }
-
-                 window.top.close() ;
-                 window.top.opener.focus() ;
-            }
-        }
-        //]]>
-        </script>
-                ';
-
-                $this->appendArrayVar('headerParams', $checkOpenerScript);
-            } else if ($mode == 'selectfilewindow') {
-                $checkOpenerScript = '
-        <script type="text/javascript">
-        function selectFile()
-        {
-            if (window.opener) {
-                
-                //alert(fileName[id]);
-                window.opener.document.getElementById("input_selectfile_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['filename']) . '";
-                window.opener.document.getElementById("hidden_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['id']) . '";
-            
-                window.close();
-                window.opener.focus();
-            } else {
-                window.parent.document.getElementById("input_selectfile_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['filename']) . '";
-                window.parent.document.getElementById("hidden_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['id']) . '";
-                window.parent.hidePopWin();
-            }
-        }
-        </script>
-                ';
-
-                $this->appendArrayVar('headerParams', $checkOpenerScript);
-            } else if ($mode == 'selectimagewindow') {
-
-                $objThumbnails = $this->getObject('thumbnails');
-
-                $checkOpenerScript = '
-        <script type="text/javascript">
-        function selectFile()
-        {
-            if (window.opener) {
-                window.opener.document.getElementById("imagepreview_' . $this->getParam('name') . '").src = "' . $objThumbnails->getThumbnail($file['id'], $file['filename'], $file['path']) . '";
-                window.opener.document.getElementById("hidden_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['id']) . '";
-                window.close();
-                window.opener.focus();
-            } else {
-                window.parent.document.getElementById("selectfile_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['filename']) . '";
-                window.parent.document.getElementById("hidden_' . $this->getParam('name') . '").value = "' . htmlspecialchars_decode($file['id']) . '";
-                window.parent.hidePopWin();
-            }
-        }
-        </script>
-                ';
-
-                $this->appendArrayVar('headerParams', $checkOpenerScript);
-            }
-        }
+        $folderPermission = $this->objFolders->checkPermissionUploadFolder($folderParts[0], $folderParts[1]);
 
         if ($folderPermission) {
             $header->str .= $editLink->show();
@@ -315,9 +285,10 @@ class digitallibraryutil extends object {
         $content.= $header->show();
 
 
-        $content.= '<br /><p><strong>' . $this->objLanguage->languageText('word_description', 'system', 'Description') . ':</strong> <em>' . $file['filedescription'] . '</em></p>';
+        $content.= '<br /><p><strong>' . $this->objLanguage->languageText('word_description', 'system', 'Description') . ':</strong> <em>' . $file['description'] . '</em></p>';
         $content.= '<p><strong>' . $this->objLanguage->languageText('word_tags', 'system', 'Tags') . ':</strong> ';
 
+        $tags = $this->objFileTags->getFileTags($file['id']);
         if (count($tags) == 0) {
             $content.= '<em>' . $this->objLanguage->languageText('phrase_notags', 'system', 'no tags') . '</em>';
         } else {
@@ -334,7 +305,9 @@ class digitallibraryutil extends object {
         $content.= '</p>';
         $tabContent = $this->newObject('tabber', 'htmlelements');
         $tabContent->width = '90%';
-
+        $objFilePreview = $this->getObject('filepreview', 'filemanager');
+        $preview = $objFilePreview->previewFile($file['id']);
+        $embedCode = "";
         if ($preview != '') {
 
             if ($file['category'] == 'images') {
@@ -343,18 +316,32 @@ class digitallibraryutil extends object {
             }
 
             $objWashout = $this->getObject('washout', 'utilities');
+            $embedCode = '<h2>' . $this->objLanguage->languageText('mod_filemanager_embedcode', 'filemanager', 'Embed Code') . '</h2>';
 
-            $preview = $objWashout->parseText($embedValue);
+            $embedCode .= '<p>' . $this->objLanguage->languageText('mod_filemanager_embedinstructions', 'filemanager', 'Copy this code and paste it into any text box to display this file.') . '</p>';
 
-            $previewContent = '<h2>' . $this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview') . '</h2>' . $preview;
+            $embedCode .= '<form name="formtocopy">
 
-
-            //$tabContent->addTab($this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview'), $previewContent);
-            $tabContent->addTab(array('name' => $this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview'), 'content' => $previewContent));
-
-            //$tabContent->addTab($this->objLanguage->languageText('mod_filemanager_embedcode', 'filemanager', 'Embed Code'), $embedCode);
-            $tabContent->addTab(array('name' => $this->objLanguage->languageText('mod_filemanager_embedcode', 'filemanager', 'Embed Code'), 'content' => $embedCode));
+    <input name="texttocopy" readonly="readonly" style="width:70%" type="text" value="' . $embedCode . '" />';
+            $embedCode .= '
+    <br /><input type="button" onclick="javascript:copyToClipboard(document.formtocopy.texttocopy);" value="Copy to Clipboard" />
+    </form>';
         }
+
+        $embedValue = htmlentities('[FILEPREVIEW id="' . $file['id'] . '" comment="' . $file['filename'] . '" /]');
+
+        $objWashout = $this->getObject("washout", "utilities");
+        $embedValue = $objWashout->parseText($embedValue);
+
+        $previewContent = '<h2>' . $this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview') . '</h2>' . $preview;
+
+
+        //$tabContent->addTab($this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview'), $previewContent);
+        $tabContent->addTab(array('name' => $this->objLanguage->languageText('mod_filemanager_filepreview', 'filemanager', 'File Preview'), 'content' => $previewContent));
+
+        //$tabContent->addTab($this->objLanguage->languageText('mod_filemanager_embedcode', 'filemanager', 'Embed Code'), $embedCode);
+        $tabContent->addTab(array('name' => $this->objLanguage->languageText('mod_filemanager_embedcode', 'filemanager', 'Embed Code'), 'content' => $embedCode));
+
 
         $fileInfo = $this->objLanguage->languageText('mod_filemanager_fileinfo', 'filemanager', 'File Information');
 
