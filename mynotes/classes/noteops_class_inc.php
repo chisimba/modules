@@ -468,14 +468,16 @@ class noteops extends object {
     }
 
     /*
-     * Method used to return the tag cloud that is shown on the right sidebar
+     * Method used to return the tag cloud that is shown on the left sidebar for
+     * current user only
      * 
      * @access public
      * @return the tag cloud
      * 
      */
     public function getTagCloud() {
-        $this->tagCloud = $this->objDbTags->getTags();
+        $filter = "userid = '".$this->objUser->userId()."'";
+        $this->tagCloud = $this->objDbTags->getTags($filter);
         if (!empty($this->tagCloud)) {
             $tagscl = $this->objUtility->processTags($this->tagCloud);
 
