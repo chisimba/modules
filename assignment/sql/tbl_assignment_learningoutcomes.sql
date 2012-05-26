@@ -26,4 +26,11 @@ $fields = array(
 		'default' => '',
 		)
 	);
+// Other indicies 
+$name = 'assignment_idx';
+$indexes = array(
+    'fields' => array(
+        'assignment_id' => array()
+    )
+);
 ?>

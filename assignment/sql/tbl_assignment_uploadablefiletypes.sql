@@ -35,4 +35,11 @@ $fields = array(
 		'notnull' => 1,
 		),
 	);
+// Other indicies 
+$name = 'assignment_idx';
+$indexes = array(
+    'fields' => array(
+        'assignment_id' => array()
+    )
+);
 ?>

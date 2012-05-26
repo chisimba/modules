@@ -26,4 +26,11 @@ $fields = array(
 		'default' => '',
 		)
 	);
+$name = 'workgroups_index';
+$indexes = array(
+    'fields' => array(
+        'assignment_id' => array(),
+        'workgroup_id' => array()
+    )
+);
 ?>

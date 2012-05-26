@@ -50,4 +50,11 @@ $fields = array(
 		'length' => 14
 		)
 	);
+// Other indicies 
+$name = 'assignment_idx';
+$indexes = array(
+    'fields' => array(
+        'assignment_id' => array()
+    )
+);
 ?>
