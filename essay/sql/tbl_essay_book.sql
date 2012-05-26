@@ -69,4 +69,12 @@ $fields = array(
       'type'    =>  'timestamp'
     )
 );
+// Other indicies 
+$name = 'book_index';
+$indexes = array(
+    'fields' => array(
+        'essayid' => array(),
+        'topicid' => array()
+    )
+);
 ?>

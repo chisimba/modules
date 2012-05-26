@@ -55,8 +55,14 @@ $fields = array(
       'type'        =>  'timestamp'
       )
    );
-//create other indexes here...
-
+// Other indicies
+$name = 'contextcodex';
+$indexes = array(
+    'fields' => array(
+        'context' => array()
+    )
+);
+?>
 
 
 
