@@ -27,5 +27,13 @@ $fields = array(
         'type' => 'clob'
         ),
     );
+//create other indexes here...
 
+$name = 'pageidx';
+
+$indexes = array(
+    'fields' => array(
+        'pageid' => array()
+    )
+);
 ?>
