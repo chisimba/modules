@@ -30,4 +30,11 @@ $fields = array(
    'type'       =>  'date',      /*timestamp does not work in five -- check the size limit can it be assigned a size i.e datetime*/
    ),
    );
+// Other indicies
+$name = 'tableIdx';
+$indexes = array(
+    'fields' => array(
+        'tableId' => array()
+    )
+);
 ?>

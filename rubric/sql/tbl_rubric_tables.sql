@@ -45,4 +45,11 @@ $fields = array(
    'notnull'    =>  0 
    )
    );
+// Other indicies
+$name = 'contextCodex';
+$indexes = array(
+    'fields' => array(
+        'contextCode' => array()
+    )
+);
 ?>
