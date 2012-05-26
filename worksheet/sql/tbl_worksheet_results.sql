@@ -42,4 +42,11 @@ $fields = array(
 		'notnull' => 1
 		)
 	);
+// Other indicies
+$name = 'worksheet_idx';
+$indexes = array(
+    'fields' => array(
+        'worksheet_id' => array()
+    )
+);
 ?>

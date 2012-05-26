@@ -44,4 +44,12 @@ $fields = array(
 		'notnull' => 1
 		)
 	);
+// Other indicies
+$name = 'filestore_index';
+$indexes = array(
+    'fields' => array(
+        'context_id' => array(),
+        'fileid' => array()
+    )
+);
 ?>

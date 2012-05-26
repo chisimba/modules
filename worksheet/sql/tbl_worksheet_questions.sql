@@ -54,4 +54,11 @@ $fields = array(
 		'type' => 'timestamp'
 		)
 	);
+// Other indicies
+$name = 'worksheet_idx';
+$indexes = array(
+    'fields' => array(
+        'worksheet_id' => array()
+    )
+);
 ?>

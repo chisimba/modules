@@ -68,4 +68,11 @@ $fields = array(
 		'notnull' => 1
 		)
 	);
+// Other indicies
+$name = 'contextx';
+$indexes = array(
+    'fields' => array(
+        'context' => array()
+    )
+);
 ?>
