@@ -43,5 +43,11 @@ $fields = array(
 	)
 	
 );
-
+// Other indicies
+$name = 'contextcodex';
+$indexes = array(
+    'fields' => array(
+        'contextcode' => array()
+    )
+);
 ?>
