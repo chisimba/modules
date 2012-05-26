@@ -177,7 +177,7 @@
              molestie at pharetra at, porttitor mollis dui. Duis eu tortor nec
              neque auctor consequat ac sodales orci. Sed tincidunt, leo id
              laoreet imperdiet, dolor ipsum dapibus urna, vitae auctor ipsum
-             velit vel massa. 
+             velit vel massa.
         </wallpost>
         <datecreated>2010-12-31 07:16:25</datecreated>
         <posterid>10</posterid>
@@ -350,4 +350,256 @@
         <userid>6</userid>
         <fuserid>5</fuserid>
     </tbl_foaf_friends>
+
+    <!-- Create some login history for our users -->
+    <tbl_userloginhistory>
+        <id>lih_init_1</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-03-28 12:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_2</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-03-29 11:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_3</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-03-29 15:01:50</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_4</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-03-30 09:06:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_5</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-01 09:26:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_6</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-03 19:16:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_7</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-04 08:19:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_8</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-06 11:19:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_9</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-06 14:21:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_10</id>
+        <userId>1</userId>
+        <lastLoginDateTime>2012-04-07 11:21:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_11</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-03-11 12:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_12</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-03-19 11:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_13</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-03-19 15:01:50</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_14</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-03-21 09:06:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_15</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-03-22 09:21:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_16</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-01 19:26:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_17</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-04 08:22:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_18</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-06 11:45:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_19</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-06 14:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_20</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-07 11:29:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_21</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-09 12:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_22</id>
+        <userId>2</userId>
+        <lastLoginDateTime>2012-04-10 11:22:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_23/id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-06 14:21:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_24</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-07 11:21:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_25</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-11 12:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_26</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-19 11:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_27</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-19 15:01:50</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_28</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-21 09:06:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_29</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-03-22 09:21:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_30</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-01 19:26:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_31</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-04 08:22:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_32</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-06 11:45:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_33</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-06 14:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_34</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-07 11:29:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_35</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-09 12:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_36</id>
+        <userId>3</userId>
+        <lastLoginDateTime>2012-04-10 11:22:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_37/id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-08 14:21:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_38</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-08 11:21:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_29</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-12 12:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_40</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-19 11:01:40</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_41</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-19 15:01:50</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_42</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-21 09:06:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_43</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-03-22 09:21:30</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_44</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-01 19:26:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_45</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-04 08:22:10</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_46</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-06 11:45:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_47</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-06 14:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_48</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-07 11:29:12</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_49</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-09 12:51:17</lastLoginDateTime>
+    </tbl_userloginhistory>
+    <tbl_userloginhistory>
+        <id>lih_init_50</id>
+        <userId>4</userId>
+        <lastLoginDateTime>2012-04-10 11:22:12</lastLoginDateTime>
+    </tbl_userloginhistory>
 </defaultdata>
