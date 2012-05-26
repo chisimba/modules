@@ -35,4 +35,12 @@ $fields = array(
         'length' => 32,
         )
     );
+// Other indicies
+$name = 'definitions_index';
+$indexes = array(
+    'fields' => array(
+        'categoryid' => array(),
+        'datasetid' => array()
+    )
+);
 ?>

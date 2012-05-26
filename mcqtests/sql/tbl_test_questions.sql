@@ -97,7 +97,8 @@ $name = 'test_questions_index';
 
 $indexes = array(
                 'fields' => array(
-                'testid' => array()
-            ),
+                'testid' => array(),
+                'categoryid' => array()
+            )
         );
 ?>

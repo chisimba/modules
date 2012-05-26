@@ -23,4 +23,11 @@ $fields = array(
         'length' => 255,
         )
     );
+// Other indicies
+$name = 'datasetidx';
+$indexes = array(
+    'fields' => array(
+        'datasetid' => array()
+    )
+);
 ?>

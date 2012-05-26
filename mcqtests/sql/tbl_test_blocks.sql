@@ -66,4 +66,11 @@ $fields = array(
         'length' => 25
         )
     );
+// Other indicies
+$name = 'categoryidx';
+$indexes = array(
+    'fields' => array(
+        'categoryid' => array()
+    )
+);
 ?>

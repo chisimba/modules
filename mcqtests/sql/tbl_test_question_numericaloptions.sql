@@ -34,4 +34,11 @@ $fields = array(
         'type'=>'float'
         )
 );
+// Other indicies
+$name = 'questionidx';
+$indexes = array(
+    'fields' => array(
+        'questionid' => array()
+    )
+);
 ?>

@@ -31,4 +31,11 @@ $fields = array(
         'length' => 10
         )
 );
+// Other indicies
+$name = 'questionidx';
+$indexes = array(
+    'fields' => array(
+        'questionid' => array()
+    )
+);
 ?>

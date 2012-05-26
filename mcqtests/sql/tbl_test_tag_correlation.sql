@@ -32,4 +32,11 @@ $fields = array(
         'length' => 32,
         )
     );
+// Other indicies
+$name = 'tagidx';
+$indexes = array(
+    'fields' => array(
+        'tagid' => array()
+    )
+);
 ?>

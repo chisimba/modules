@@ -36,4 +36,12 @@ $fields = array(
         'length' => 2,
         ),
     );
+// Other indicies
+$name = 'answers_indicies';
+$indexes = array(
+    'fields' => array(
+        'testid' => array(),
+        'questionid' => array()
+    )
+);
 ?>

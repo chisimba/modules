@@ -45,4 +45,12 @@ $fields = array(
         'length' => 32,
         )
     );
+// Other indicies
+$name = 'tag_instance_indicies';
+$indexes = array(
+    'fields' => array(
+        'tagid' => array(),
+        'itemid' => array()
+    )
+);
 ?>
