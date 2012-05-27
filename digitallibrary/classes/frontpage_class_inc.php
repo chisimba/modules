@@ -41,12 +41,13 @@ class frontpage extends object {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject("user", "security");
         $this->objFileIcons = $this->getObject('fileicons', 'files');
+        $this->objFolders = $this->getObject('dbfolder', 'filemanager');
     }
 
     /**
      * this creates the front page of the digital library. 
      */
-    public function createDigitalFrontPage($errorMessage) {
+    public function createDigitalFrontPage($folderId, $infoMessage, $errorMessage) {
         // Createform, add fields to it and display.
         $formData = new form('searchForm', $this->uri(array("action" => "search")));
         // Table for the buttons
@@ -68,24 +69,27 @@ class frontpage extends object {
 
 
         $digitalDB = $this->getObject("dbdigitallibrary", "digitallibrary");
-        $files = $digitalDB->getLatest(5);
+        $files = $digitalDB->getLatest(3);
         $latestFilesTable = $this->getObject("htmltable", "htmlelements");
 
-        $latestFilesTable->startHeaderRow();
-        $latestFilesTable->addHeaderCell($this->objLanguage->languageText('mod_digitallibrary_name', 'digitallibrary'));
-        $latestFilesTable->addHeaderCell($this->objLanguage->languageText('mod_digitallibrary_date', 'digitallibrary'));
-        $latestFilesTable->addHeaderCell($this->objLanguage->languageText('mod_digitallibrary_author', 'digitallibrary'));
+       foreach ($files as $file) {
 
-        $latestFilesTable->endHeaderRow();
-
-        foreach ($files as $file) {
-
-            $link = new link($this->uri(array("action" => 'fileinfo',"id"=>$file['id'])));
+            $link = new link($this->uri(array("action" => 'fileinfo', "id" => $file['id'])));
             $link->link = $file['filename'];
             $latestFilesTable->startRow();
-            $latestFilesTable->addCell($this->objFileIcons->getFileIcon($file['filename']) . '&nbsp;' . $link->show());
-            $latestFilesTable->addCell($file['datecreated']);
-            $latestFilesTable->addCell($this->objUser->fullname($file['creatorid']));
+            $title = '<h3 id="dl_latestfiles">' . $this->objFileIcons->getFileIcon($file['filename']) . '&nbsp;' . $link->show() . '</h3>';
+            $dateCreated = $file['datecreated'];
+            $createdBy = $this->objUser->fullname($file['creatorid']);
+
+            $content =
+                    '<div id="filedetails">';
+            $content.=$title;
+            $content.=$dateCreated;
+            $content.= '<br/>'. $this->objLanguage->languageText('mod_digitallibrary_by', 'digitallibrary').': '.$createdBy;
+           
+            $content.=' </div>';
+            $latestFilesTable->addCell($content);
+
             $latestFilesTable->endRow();
         }
 
@@ -99,19 +103,19 @@ class frontpage extends object {
         $formData->addToForm($table->show());
         $formData->addToForm($htmlheading->show() . $latestFilesTable->show());
 
+        if ($folderId == '') {
+            // Get Folder Details
+            $folderpath = 'digitallibrary/root';
 
-        $uploadForm = $this->getObject("digitallibraryupload");
+            $folderId = $this->objFolders->getFolderId($folderpath);
+        }
 
-        $uploadForm->formaction = $this->uri(array('action' => 'upload'), "digitallibrary");
-
-
-        $uploadTitle = '<h3>' . $this->objLanguage->languageText('phrase_uploadfiles', 'system', 'Upload Files') . '</h3>';
        
-        return '<div class="error">'.$errorMessage.'</div>'. $formData->show() . $uploadTitle .$uploadForm->show();
+        return   $formData->show() ;
     }
 
     /**
-     *builds the tag cloud for files uploaded to digital library
+     * builds the tag cloud for files uploaded to digital library
      * @return type 
      */
     function getTagCloud() {
@@ -135,7 +139,7 @@ class frontpage extends object {
                 $tagArray['time'] = time();
                 $tagsArray[] = $tagArray;
             }
-            
+
             $tagCloud = $objTagCloud->buildCloud($tagsArray);
         }
 

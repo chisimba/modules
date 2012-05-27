@@ -6,6 +6,7 @@ $objFix->fixThree();
 <div id="twocolumn">
     <div id="Canvas_Content_Body_Region1">
 
+
         {
         "display" : "block",
         "module" : "digitallibrary",
@@ -38,10 +39,10 @@ $objFix->fixThree();
         {
         "display" : "block",
         "module" : "digitallibrary",
-        "block" : "fileinfo",
+        "block" : "viewfolder",
         <?php
         echo '"configData":';
-        echo '"' . $fileid . '"';
+        echo '"' . $data . '"';
         ?>
 
         }

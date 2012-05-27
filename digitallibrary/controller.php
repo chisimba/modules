@@ -30,6 +30,13 @@ class digitallibrary extends controller {
         $this->objFiles = $this->getObject('dbfile', 'filemanager');
         $this->objFolders = $this->getObject('dbfolder', 'filemanager');
         $this->objUpload = $this->getObject('upload', 'filemanager');
+
+        $folderpath = 'digitallibrary/root';
+
+        $folderId = $this->objFolders->getFolderId($folderpath);
+        if ($folderId == FALSE) {
+            $folderId = $this->objFolders->indexFolder($folderpath);
+        }
     }
 
     /**
@@ -97,8 +104,16 @@ class digitallibrary extends controller {
      */
     function __home() {
         $errorMessage = $this->getParam("errormessage");
-      
-        $this->setVarByRef("errormessage", $errorMessage);
+        $folderId = $this->getParam("folder");
+
+        if ($folderId == '') {
+            $folderpath = 'digitallibrary/root';
+            $folderId = $this->objFolders->getFolderId($folderpath);
+        }
+        $infoMessage = $this->getParam("message");
+        $data = $folderId . '|' . $infoMessage . '|' . $errorMessage;
+        $this->setVarByRef("data", $data);
+        $this->setVarByRef("folderId", $folderId);
         return "home_tpl.php";
     }
 
@@ -109,15 +124,19 @@ class digitallibrary extends controller {
      */
     private function __upload() {
         $digitalLibrary = $this->getObject("digitallibraryutil", "digitallibrary");
-        $folderid = $digitalLibrary->upload();
-        $errorMessage="";
-        if ($this->startsWith($folderid, "ERROR")) {
-            $messages = explode(":", $folderid);
+        $folderId = $this->getParam("folderid");
+        $result = $digitalLibrary->upload($folderId);
+        $errorMessage = "";
+        if ($this->startsWith($result, "ERROR")) {
+            $messages = explode(":", $result);
             $errorMessage = $messages[1];
-           
-           
         }
-        return $this->nextAction('home', array("folder" => $folderid,"errormessage"=>$errorMessage));
+        return $this->nextAction('viewfolder', array("folder" => $folderId, "errormessage" => $errorMessage));
+    }
+
+    private function __createfolder() {
+        $digitalLibrary = $this->getObject("digitallibraryutil", "digitallibrary");
+        return $digitalLibrary->createFolder();
     }
 
     /**
@@ -136,6 +155,10 @@ class digitallibrary extends controller {
      */
     private function __fileinfo() {
         $fileId = $this->getParam("id");
+        $file = $this->objFiles->getFile($fileId);
+        $fileFolder = $file['filefolder'];
+        $folderId = $this->objFolders->getFolderId($fileFolder);
+        $this->setVarByRef("folderId", $folderId);
         $this->setVarByRef("fileid", $fileId);
         return "fileinfo_tpl.php";
     }
@@ -149,6 +172,16 @@ class digitallibrary extends controller {
 
         $this->setVarByRef("searchParam", $searchParam);
         return 'search_tpl.php';
+    }
+
+    private function __viewfolder() {
+        $id = $this->getParam('folder');
+        $errorMessage = $this->getParam("errormessage");
+        $infoMessage = $this->getParam("messag  e");
+        $data = $id . '|' . $infoMessage . '|' . $errorMessage;
+        $this->setVarByRef("data", $data);
+        $this->setVarByRef("folderId", $id);
+        return "showfolder_tpl.php";
     }
 
     private function startsWith($haystack, $needle) {

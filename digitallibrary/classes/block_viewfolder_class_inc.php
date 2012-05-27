@@ -23,30 +23,30 @@
  */
 
 /**
- * this displays 'access  denied error'. This is usually called when a user
- * tries to access a resource of which they dont have permissions to
+ * Contructs a folder tree structure
  *
  * @author davidwaf
  */
-class block_frontpage extends object {
+class block_viewfolder extends object {
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
-
-        $this->title ='';// $this->objLanguage->languageText('mod_digitallibrary_title', 'digitallibrary');
+        $this->title ='';// $this->objLanguage->languageText('mod_digitallibrary_createfolder', 'digitallibrary');
+        $this->objFolders = $this->getObject('dbfolder', 'filemanager');
     }
 
     /**
      * this function is called to return content to be rendered
      */
     function show() {
-        $data = $this->configData;
+         $data = $this->configData;
         $dataArray = explode("|", $data);
         $folderId = $dataArray[0];
         $infoMessage = $dataArray[1];
         $errorMessage = $dataArray[2];
-        $digitalLibrary = $this->getObject('frontpage', 'digitallibrary');
-        return $digitalLibrary->createDigitalFrontPage($folderId, $infoMessage, $errorMessage);
+        $digitalLibraryUtil = $this->getObject("digitallibraryutil", "digitallibrary");
+        $viewFolder = $digitalLibraryUtil->viewFolder($folderId,$infoMessage,$errorMessage);
+        return   $viewFolder;
     }
 
 }

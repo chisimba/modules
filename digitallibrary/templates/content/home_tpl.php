@@ -6,8 +6,25 @@ $objFix->fixThree();
 <div id="twocolumn">
     <div id="Canvas_Content_Body_Region1">
 
+        {
+        "display" : "block",
+        "module" : "digitallibrary",
+        "block" : "foldertree",
+        <?php
+        echo '"configData":';
+        echo '"' . $folderId . '"';
+        ?>
+        }
 
-
+        {
+        "display" : "block",
+        "module" : "digitallibrary",
+        "block" : "createfolder",
+        <?php
+        echo '"configData":';
+        echo '"' . $folderId . '"';
+        ?>
+        }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>
@@ -26,11 +43,11 @@ $objFix->fixThree();
         "display" : "block",
         "module" : "digitallibrary",
         "block" : "frontpage",
-          <?php
+        <?php
         echo '"configData":';
-        echo '"' . $errormessage . '"';
+        echo '"' . $data . '"';
         ?>
-       }
+        }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>
