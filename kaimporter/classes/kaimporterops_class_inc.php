@@ -80,11 +80,6 @@ class kaimporterops extends dbtable
     */
     public function init()
     {
-        $this->host = "http://localhost";
-
-
-
-
         $this->objLanguage = $this->getObject('language', 'language');
         // Load Context Object
         $this->objContext = $this->getObject('dbcontext', 'context');
@@ -157,8 +152,8 @@ class kaimporterops extends dbtable
         $khanPath = $this->getParam('path', FALSE);
         if ($khanPath) {
             // Test with KhanAcademy_maths
-            $basePath = $this->host . $rootPath . $khanPath . '/files/';
-            $fullPath = $this->host . $rootPath . $khanPath . '/files/data_master.txt';
+            $basePath = $rootPath . $khanPath . '/files/';
+            $fullPath = $rootPath . $khanPath . '/files/data_master.txt';
             $data = $this->readData($fullPath, $basePath);
             return $this->doLoad($data, $basePath);
             //return $this->testTheData($data, $basePath);
@@ -171,7 +166,7 @@ class kaimporterops extends dbtable
     public function buildArrayOfPages()
     {
         $rootPath = $this->getUrlRoot();
-        $fullPath= $this->host . $rootPath . 'KhanAcademy_maths/files/data_master.txt';
+        $fullPath= $rootPath . 'KhanAcademy_maths/files/data_master.txt';
         $data = $this->readData($fullPath);
         return $this->getChaptersDropdown();
         //return $this->testTheData($data);
