@@ -112,6 +112,31 @@ class dbformbuilder_radio_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function checkIfOptionExists($id){
+           $sql = "where id like '".$id."'";
+
+///Return the number of entries. Note that is function in part of the parent class dbTable.
+        $numberofDuplicates = $this->getRecordCount($sql);
+        if ($numberofDuplicates < 1) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    function updateSingle($optionID,$formNumber,$radioName, $radioLabel, $radiooptionvalue, $defaultvalue, $breakspace, $formElementLabel, $formElementLabelLayout) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_radio_entity
+        SET radiooptionlabel='".$radioLabel."', radiooptionvalue='".$radiooptionvalue."', defaultvalue='".$defaultvalue."', breakspace='".$breakspace."', label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."' WHERE radioname='".$radioName."' and formnumber='".$formNumber."' and id='".$optionID."'";
+        $this->_execute($UpdateSQL);
+    }
+    
+    
+    function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout){
+                $UpdateSQL = "UPDATE tbl_formbuilder_radio_entity
+        SET label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."' WHERE radioname='".$formElementName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
 
     /*!
      * \brief This member function deletes a radio button according to its form element

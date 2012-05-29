@@ -1276,6 +1276,29 @@ class formbuilder extends controller {
          $this->setPageTemplate('ajax_template.php');
          return "set_style.php";
     }
+    
+    /*!
+     * \brief This action can allow you to update parameters of each form element option of any
+     * form element type.
+     * \note This action is called via AJAX
+     * \return A template file that includes the relevant css in the header.
+     */
+    private function __updateFormElementOption(){
+         $this->setPageTemplate('ajax_template.php');
+         return "updateFormElementOption.php";
+    }
+    
+    
+    /*!
+     * \brief This action can allow you to delete a form element option of any
+     * form element type.
+     * \note This action is called via AJAX
+     * \return A template file that includes the relevant css in the header.
+     */
+    private function __deleteFormElementOption(){
+         $this->setPageTemplate('ajax_template.php');
+         return "deleteFormElementOption.php";
+    }
 
 }
 ?>

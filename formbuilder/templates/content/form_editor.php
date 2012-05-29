@@ -1,4 +1,4 @@
-<?php
+u<?php
 
 /*! \file form_editor.php
  * \brief The template file is called by the action designWYSIWYGForm in the controller.php.
@@ -127,6 +127,9 @@ echo $formNumber = $this->getParam('formNumber', NULL);
 //            $ajaxUrlToProduceTextArea = $_SERVER[PHP_SELF] . "?module=formbuilder&action=addEditTextArea";
 //            $ajaxUrlToProduceTextInput = $_SERVER[PHP_SELF] . "?module=formbuilder&action=addEditTextInput";
     $this->loadClass('hiddeninput', 'htmlelements');
+    $ajaxUrlToEditFormElementOption = html_entity_decode($this->uri(array('action' => 'updateFormElementOption'), 'formbuilder'));
+    $ajaxUrlToDeleteFormElementOption = html_entity_decode($this->uri(array('action' => 'deleteFormElementOption'), 'formbuilder'));
+        
     $ajaxUrlToProduceButton = html_entity_decode($this->uri(array('action' => 'addEditButton'), 'formbuilder'));
     $ajaxUrlToProduceCheckbox = html_entity_decode($this->uri(array('action' => 'addEditCheckboxEntity'), 'formbuilder'));
     $ajaxUrlToProduceDatePicker = html_entity_decode($this->uri(array('action' => 'addEditDatePickerEntity'), 'formbuilder'));
@@ -141,6 +144,13 @@ echo $formNumber = $this->getParam('formNumber', NULL);
     $ajaxUrlToCreateANewFormElement = html_entity_decode($this->uri(array('action' => 'createNewFormElement'), 'formbuilder'));
     $ajaxUrlToCreateMSDropdown = html_entity_decode($this->uri(array('action' => 'addEditMultiSelectableDropdownEntity'), 'formbuilder'));
     $ajaxUrlToCreateHelpContent = html_entity_decode($this->uri(array('action' => 'getHelpContent'), 'formbuilder'));
+
+    $hiddenInputToEditFormElementOption = new hiddeninput("urlToEditFormElementOption", $ajaxUrlToEditFormElementOption);
+    echo $hiddenInputToEditFormElementOption->show();
+    
+    $hiddenInputToDeleteFormElementOption = new hiddeninput("urlToDeleteFormElementOption", $ajaxUrlToDeleteFormElementOption);
+    echo $hiddenInputToDeleteFormElementOption->show();
+    
     $hiddenInputToProduceButton = new hiddeninput("urlToProduceButton", $ajaxUrlToProduceButton);
     echo $hiddenInputToProduceButton->show();
 
