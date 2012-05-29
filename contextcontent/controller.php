@@ -766,7 +766,7 @@ class contextcontent extends controller {
             $menutitle = "Untitled";
         }
         $headerscripts = stripslashes($this->getParam('headerscripts'));
-        $language = 'en';
+        $language = 'en'; //@GOOD HEAVENS @TODO FIX THIS - DWK 2012 05 29
         $pagecontent = stripslashes($this->getParam('pagecontent'));
         $parent = stripslashes($this->getParam('parentnode'));
         $chapter = stripslashes($this->getParam('chapter'));
