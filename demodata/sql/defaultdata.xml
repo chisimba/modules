@@ -463,7 +463,7 @@
         <lastLoginDateTime>2012-04-10 11:22:12</lastLoginDateTime>
     </tbl_userloginhistory>
     <tbl_userloginhistory>
-        <id>lih_init_23/id>
+        <id>lih_init_23</id>
         <userId>3</userId>
         <lastLoginDateTime>2012-03-06 14:21:17</lastLoginDateTime>
     </tbl_userloginhistory>
@@ -533,7 +533,7 @@
         <lastLoginDateTime>2012-04-10 11:22:12</lastLoginDateTime>
     </tbl_userloginhistory>
     <tbl_userloginhistory>
-        <id>lih_init_37/id>
+        <id>lih_init_37</id>
         <userId>4</userId>
         <lastLoginDateTime>2012-03-08 14:21:17</lastLoginDateTime>
     </tbl_userloginhistory>
