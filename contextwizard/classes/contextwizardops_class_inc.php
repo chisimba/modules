@@ -71,7 +71,6 @@ class contextwizardops extends object
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             //$this->objConfirm = $this->newObject('confirm', 'utilities');
             //$this->objConfig = $this->getObject('altconfig', 'config');
-            $this->objDialog = $this->getObject('dialog', 'jquerycore');
             
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -185,13 +184,14 @@ class contextwizardops extends object
             $gradeGroups = $this->objGroups->getGroups("WHERE group_define_name IN ($gradeString)");
         }
         
+        $gradeGroupArray = array();
         if (!empty($gradeGroups))
         {
             foreach ($gradeGroups as $group)
             {
                 $gradeGroupArray[$group['group_id']] = $group['group_define_name'];
             }
-        }
+        }        
         $grade = array_intersect($gradeGroupArray, $userGroupArray);
 
         if (!empty($grade))
