@@ -69,6 +69,15 @@ class dbstatusbar_settings extends dbtable
     public $table;    
 
     /**
+     * 
+     * Variable to hold the PKId
+     * 
+     * @access public
+     * @var string
+     */
+    public $PKId;
+
+    /**
     *
     * Intialiser for the statusbar database connector
     * @access public
@@ -86,17 +95,53 @@ class dbstatusbar_settings extends dbtable
      * Get the statusbar settings.
      *
      * @access public
-     * @param string $userId The id of the user to get settings for
+     * @param string $PKId The PKId of the user to get settings for
      * @return array The array of setting
      */
-    public function getSettings($userId)
+    public function getSettings()
     {
-        $sql = "SELECT * FROM $this->table AS s";
-        $sql .= " LEFT JOIN `tbl_statusbar_configs` AS c";
-        $sql .= " ON s.config_id = c.id";
-        $sql .= " WHERE s.user_id = '$userId'";
+        return $this->fetchAll("WHERE user_id = '$this->PKId'");
+    }
+    
+    /**
+     *
+     * Method to save the settings
+     * 
+     * @access public
+     * @param string $orientation The orientation setting for the user
+     * @param string $position The position setting for the user
+     * @return VOID
+     */
+    public function saveSettings($orientation, $position, $display)
+    {
+        $this->delete('user_id', $this->PKId);
         
-        return $this->getArray($sql);
+        $data = array();
+        $data['user_id'] = $this->PKId;
+        $data['param'] = 'orientation';
+        $data['value'] = $orientation;
+        $data['created_by'] = $this->PKId;
+        $data['date_created'] = date('Y-m-d H:i:s');
+        
+        $this->insert($data);
+
+        $data = array();
+        $data['user_id'] = $this->PKId;
+        $data['param'] = 'position';
+        $data['value'] = $position;
+        $data['created_by'] = $this->PKId;
+        $data['date_created'] = date('Y-m-d H:i:s');
+        
+        $this->insert($data);
+
+        $data = array();
+        $data['user_id'] = $this->PKId;
+        $data['param'] = 'display';
+        $data['value'] = $display;
+        $data['created_by'] = $this->PKId;
+        $data['date_created'] = date('Y-m-d H:i:s');
+
+        $this->insert($data);
     }
 }
 ?>

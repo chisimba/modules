@@ -20,9 +20,9 @@ $fields = array(
         'type' => 'text',
         'length' => 32
     ),
-    'config_id' => array(
+    'param' => array(
         'type' => 'text',
-        'length' => 32,
+        'length' => 50,
     ),
     'value' => array(
         'type' => 'text',
@@ -52,7 +52,6 @@ $indexes = array(
     'fields' => array(
          'id' => array(),
          'user_id' => array(),
-         'config_id' => array(),
     )
 );
 ?>

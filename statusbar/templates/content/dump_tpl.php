@@ -14,7 +14,7 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region2">
         {
             "display" : "block",
-            "module" : "schools",
+            "module" : "statusbar",
             "block" : "statusbarinvalid"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>

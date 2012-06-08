@@ -85,6 +85,24 @@ class statusbar extends controller
     public $objLog;
 
     /**
+     * 
+     * Variable to hold the userId
+     * 
+     * @access public
+     * @var string
+     */
+    public $userId;
+
+    /**
+     * 
+     * Variable to hold the PKId
+     * 
+     * @access public
+     * @var string
+     */
+    public $PKId;
+
+    /**
     * 
     * Intialiser for the statusbar controller
     * @access public
@@ -93,17 +111,28 @@ class statusbar extends controller
     public function init()
     {
         $this->objUser = $this->getObject('user', 'security');
+        $this->PKId = $this->objUser->PKId();
+        $this->userId = $this->objUser->userId();
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the database class
-        $this->objDBconfigs = $this->getObject('dbstatusbar_configs', 'statusbar');
         $this->objDBsettings = $this->getObject('dbstatusbar_settings', 'statusbar');
+        $this->objDBsettings->PKId = $this->PKId;
+        
         $this->appendArrayVar('headerParams',
           $this->getJavaScriptFile('statusbar.js',
           'statusbar'));
+        $this->appendArrayVar('headerParams',
+          $this->getJavaScriptFile('jquery.bgiframe.min.js',
+          'jquerycore'));
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
+        $this->objOps = $this->getObject('statusbarops', 'statusbar');
+        $this->objOps->PKId = $this->PKId;
+        $this->objOps->userId = $this->userId;
+        
+        $this->objMessage = $this->getObject('dbmessaging', 'messaging');
         //Log this module call
         $this->objLog->log();
     }
@@ -151,6 +180,115 @@ class statusbar extends controller
     {
         // All the action is in the blocks
         return "main_tpl.php";
+    }
+    
+    /**
+     *
+     * Method corresponding to the ajaxShowOrientation action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxShowOrientation()
+    {
+        return $this->objOps->ajaxShowOrientation();
+    }
+        
+    /**
+     *
+     * Method corresponding to the ajaxSaveSettings action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxSaveSettings()
+    {
+        $orientation = $this->getParam('orientation', $this->objOps->orientation);
+        $position = $this->getParam('position', $this->objOps->position);
+        $display = $this->getParam('display', $this->objOps->display);
+        
+        $this->objOps->orientation = $orientation;
+        $this->objOps->position = $position;
+        $this->objOps->display = $display;
+
+        $this->objDBsettings->saveSettings($orientation, $position, $display);
+        
+        echo 'true';
+        die();
+    }
+        
+    /**
+     *
+     * Method corresponding to the ajaxSaveMessage action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxSaveMessage()
+    {
+        $recipient = $this->getParam('recipient');
+        $message = $this->getParam('message');
+        
+        $this->objMessage->addImMessage($recipient, $message);
+        
+        echo 'true';
+        die();
+    }
+    
+    /**
+     *
+     * Method corresponding to the ajaxShowMessage action
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __ajaxShowMessage()
+    {
+        $messages = $this->objMessage->getInstantMessages();
+        
+        $message = array();
+        $message['from'] = $messages[0]['firstname'] . '&nbsp;' . $messages[0]['surname'];
+        $message['message'] = $messages[0]['message'];
+        
+        echo json_encode($message);
+        die();
+    }
+    
+        
+    /**
+     *
+     * Method corresponding to the ajaxShowPosition action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxShowPosition()
+    {
+        return $this->objOps->ajaxShowPosition();
+    }
+        
+    /**
+     *
+     * Method corresponding to the ajaxDisplayToggle action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxDisplayToggle()
+    {
+        //return $this->objOps->ajaxDisplayToggle();
+    }
+        
+    /**
+     *
+     * Method corresponding to the ajaxShowMain action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxShowMain()
+    {
+        return $this->objOps->showMain(TRUE);
     }
         
     /**
