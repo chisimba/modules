@@ -99,7 +99,7 @@ class bookmarks extends controller
         
         // Create an instance of the database class
         $this->objDBbookmarks = $this->getObject('dbbookmarks', 'bookmarks');
-        $this->objDBfolders = $this->getObject('dbfolders', 'bookmarks');
+        $this->objDBfolders = $this->getObject('dbbookmarkfolders', 'bookmarks');
         $this->objOps = $this->getObject('bookmarksops', 'bookmarks');
         $this->objContext = $this->getObject('dbcontext', 'context');
         

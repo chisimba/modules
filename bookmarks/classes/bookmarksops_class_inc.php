@@ -101,7 +101,7 @@ class bookmarksops extends object
             
             // Load db classes,
             $this->objDBbookmarks = $this->getObject('dbbookmarks', 'bookmarks');
-            $this->objDBfolders = $this->getObject('dbfolders', 'bookmarks');
+            $this->objDBfolders = $this->getObject('dbbookmarkfolders', 'bookmarks');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -743,6 +743,7 @@ class bookmarksops extends object
         $this->objDialog->setCssId('dialog_add_bookmark');
         $this->objDialog->setTitle($addBookmarkLabel);
         $this->objDialog->setContent($formLayer);
+        $this->objDialog->setWidth(750);
         $this->objDialog->unsetButtons();
         $dialog = $this->objDialog->show();
         $this->script .= $this->objDialog->script;
@@ -758,6 +759,7 @@ class bookmarksops extends object
         $this->objDialog->setCssId('dialog_bookmark_success');
         $this->objDialog->setTitle($successTitleLabel);
         $this->objDialog->setContent($successTable);
+        $this->objDialog->setWidth(370);
         $dialog .= $this->objDialog->show();
         $this->script .= $this->objDialog->script;        
 

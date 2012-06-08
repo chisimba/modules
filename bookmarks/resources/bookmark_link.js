@@ -47,7 +47,7 @@ jQuery(function() {
     });
     
     jQuery('#modal_save').live('click', function() {
-        var nameValue = jQuery('#input_bookmark_name').val().trim();
+        var nameValue = jQuery('#input_bookmark_name').val();
         if (nameValue == '')
         {
             alert(no_name);
