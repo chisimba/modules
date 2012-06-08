@@ -217,5 +217,36 @@ class dbBuddies extends dbTable
         }
         return;
 	}
+        
+    /**
+     *
+     * Method to return all online buddies
+     * 
+     * @access public
+     * @param string $userId The id of the user to get buddie for
+     * @return array $buddies All online buddies 
+     */
+    public function getOnlineBuddies($userId)
+    {
+        $sql = "SELECT *"
+          . " FROM tbl_buddies AS buddies," 
+          . " tbl_loggedinusers AS online, "
+          . " tbl_users as users"
+          . " WHERE buddies.buddyid = online.userid"
+          . " AND buddies.userid='". $userId."'"
+          . " AND users.userid = online.userid";
+          $data = $this->getArray($sql);
+          
+        $result = array();
+
+        if ($data)
+        {
+            foreach ($data as $line)
+            {
+                $result[$line['userid']] = $line['firstname'] . ' ' . $line['surname'];
+            }
+        }
+        return $result;
+    }
 }
 ?>
