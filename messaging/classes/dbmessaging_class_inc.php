@@ -945,5 +945,27 @@ class dbmessaging extends dbTable
         }
         return array();
     }
+    
+    /**
+     *
+     * Method to get the number of instant messages for the user
+     * 
+     * @access public
+     * @return array $messages The unread Instant messages the user has 
+     */
+    public function getInstantMessages()
+    {
+        $this->_setMessagesTable();
+        $sql = "SELECT * FROM tbl_messaging_messages as m";
+        $sql .= " LEFT JOIN tbl_users as u";
+        $sql .= " ON m.sender_id = u.userid";
+        $sql .= " WHERE recipient_id = '$this->userId'";
+        $sql .= " AND message_type = 1";
+        $sql .= " AND delivery_state < 1";
+        $sql .= " ORDER BY message_counter";
+        $messages = $this->getArray($sql);
+        
+        return $messages;
+    }
 }
 ?>
