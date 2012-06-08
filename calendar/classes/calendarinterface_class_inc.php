@@ -558,6 +558,7 @@ class calendarinterface extends object
                     $this->objDialog->setCssId('jqdialogue_'.$day.'_'.$key);
                     $this->objDialog->setTitle($title);
                     $this->objDialog->setContent($content);
+                    $this->objDialog->setWidth(350);
                     $str .= $this->objDialog->show();
                 }
                 $this->eventsList[$day] = $string;
