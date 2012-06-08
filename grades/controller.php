@@ -307,8 +307,7 @@ class grades extends controller
         
         $id = $this->getParam($from, NULL);
         $link = $this->getParam($to, NULL);
-var_dump($from, $id);        
-var_dump($to, $link);        
+
         $data = array();
         $data[$from] = $id;
         $data[$to] = $link;        
