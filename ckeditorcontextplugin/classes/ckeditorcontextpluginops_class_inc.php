@@ -139,9 +139,9 @@ class ckeditorcontextpluginops extends object
         $applyLabel = $this->objLanguage->languageText('mod_ckeditorcontextplugin_applyfilter', 'ckeditorcontextplugin', 'ERROR: mod_ckeditorcontextplugin_applyfilter');
         
         $contexts = $this->objUserContext->getUserContext($this->userId);
-        $contextTab = array();
         if (count($contexts) > 0)
         {
+            $contextTab = array();
             $contextArray = array();
             foreach ($contexts as $contextCode)
             {
@@ -253,7 +253,10 @@ class ckeditorcontextpluginops extends object
         );
 
         $objTabs = $this->newObject('tabs', 'jquerycore');
-        $objTabs->addTab($contextTab);
+        if (count($contexts) > 0)
+        {
+            $objTabs->addTab($contextTab);
+        }
         $objTabs->addTab($filterTab);
         $string = $objTabs->show();
         $this->script = $objTabs->script;
