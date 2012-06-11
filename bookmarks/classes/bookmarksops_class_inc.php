@@ -83,7 +83,6 @@ class bookmarksops extends object
             $this->objUser = $this->getObject('user', 'security');
             $this->userId = $this->objUser->PKId();
             $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
-            $this->objSvars = $this->getObject('serializevars', 'utilities');
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
             $this->objConfig = $this->getObject('altconfig', 'config');
@@ -660,8 +659,6 @@ class bookmarksops extends object
      */
     public function showLink()
     {
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('bookmark_link.js', 'bookmarks'));
-
         $addBookmarkLabel = $this->objLanguage->languageText('mod_bookmarks_addbookmark', 'bookmarks', 'ERROR: mod_bookmarks_addbookmark');
         $bookmarkPageLabel = $this->objLanguage->languageText('mod_bookmarks_bookmarkpage', 'bookmarks', 'ERROR: mod_bookmarks_bookmarkpage');
         $saveLabel = $this->objLanguage->languageText('word_save', 'system', 'ERROR: word_save');
@@ -678,7 +675,7 @@ class bookmarksops extends object
         $arrayVars['no_name'] = $noNameLabel;
        
         // pass error to javascript.
-        $this->script = $this->objSvars->varsToJs($arrayVars);
+        $this->script = "<script type=\"text/javascript\">var no_name = '$noNameLabel';</script>";
 
         $folderArray = $this->objDBfolders->getFolders($this->userId);
 
