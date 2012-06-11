@@ -126,17 +126,209 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "<b>Multi-Selectable Drop Down List Label Menu</b>";
         $WYSIWYGDropDownInsertForm.= "<div id='msdropdownLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGDropDownInsertForm.= $this->insertFormLabelOptions("msdropdown", "labelOrientation");
+        $WYSIWYGDropDownInsertForm.= $this->insertFormLabelOptions("msdropdown", "labelOrientation", NULL, NULL);
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.="<b>Multi-Selectable Drop Down List Size Menu</b>";
         $WYSIWYGDropDownInsertForm.="<div id='msdropdownSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGDropDownInsertForm .= $this->insertMSDropDownSizeForm();
+        $WYSIWYGDropDownInsertForm .= $this->insertMSDropDownSizeForm(NULL);
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.="<b>Insert Multi-Selectable Drop Down List Options Menu</b>";
         $WYSIWYGDropDownInsertForm.="<div id='msddOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGDropDownInsertForm.= $this->insertOptionAndValueForm('multi-selectable drop down list', 0) . "<br>";
         $WYSIWYGDropDownInsertForm.= "</div>";
         return $WYSIWYGDropDownInsertForm;
+    }
+
+    public function getWYSIWYGMSDropDownEditForm($formNumber, $formElementName) {
+        $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($formNumber, $formElementName);
+        if (empty($msddParameters)) {
+            return 0;
+        } else {
+            $msddsize = NULL;
+            $formElementLabel = NULL;
+            $labelOrientation = NULL;
+            foreach ($msddParameters as $thisMSDDParameter) {
+
+                //$msddName = $thisMSDDParameter["multiselectdropdownname"];
+                //$msddOptionLabel = $thisMSDDParameter["msddoptionlabel"];
+                //$msddOptionValue = $thisMSDDParameter["msddoptionvalue"];
+                //$defaultValue = $thisMSDDParameter["defaultvalue"];
+                $msddsize = $thisMSDDParameter["msddsize"];
+                $formElementLabel = $thisMSDDParameter["label"];
+                $labelOrientation = $thisMSDDParameter["labelorientation"];
+            }
+            $WYSIWYGMSDropDownEditForm = "<div id='editFormElementTabs'>	
+         <ul>
+		<li><a href='#editFormElementPropertiesContainer'>Edit Multi-Select Drop Down List Properties</a></li>
+		<li><a href='#editFormElementOptionsContainer'>Edit Multi-Select Drop Down List Options</a></li>
+	</ul>";
+            $WYSIWYGMSDropDownEditForm.= "<div id='editFormElementPropertiesContainer'>";
+
+            $WYSIWYGMSDropDownEditForm.= "<b>Multi-Selectable Drop Down List Label Properties</b>";
+            $WYSIWYGMSDropDownEditForm.= "<div id='msdropdownLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGMSDropDownEditForm.= $this->insertFormLabelOptions("msdropdown", "labelOrientation", $formElementLabel, $labelOrientation);
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.="<b>Multi-Selectable Drop Down List Size Properties</b>";
+            $WYSIWYGMSDropDownEditForm.="<div id='msdropdownSizeContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGMSDropDownEditForm .= $this->insertMSDropDownSizeForm($msddsize);
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+
+            $WYSIWYGMSDropDownEditForm.= "<div id='editFormElementOptionsContainer'>";
+            $WYSIWYGMSDropDownEditForm.= "<b>Edit Multi-Select Drop Down List Options</b>";
+            $WYSIWYGMSDropDownEditForm.="<div id='dropdownOptionsContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGMSDropDownEditForm.="<style>
+            .singleOptionContainer{
+            color: #222222;
+            font-size: 72.5%;
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background: none repeat scroll 0 0 #EEEEEE;
+            border-top: 1px solid #CCCCCC;
+            padding: 10px 20px;
+            width: 700px;
+            display:block;
+            overflow: hidden;
+            }
+            
+.singleOptionContainer:hover {
+
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+       background: none repeat scroll 0 0 #CFCFCF;
+
+	}
+        
+.optionValueContainer{
+width: 180px;
+float:left;
+}
+
+.optionLabelContainer{
+width: 180px;
+float:left;
+}
+
+.defaultOptionContainer{
+width: 130px;
+float:left;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+.deleteOptionLink, .editOptionLink {
+    display: block;
+    float: right;
+    width: 80px;
+}
+
+        </style>";
+
+            $optionNumber = 1;
+            $WYSIWYGMSDropDownEditForm.= "<div class='formOptionsListContainer'>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='singleOptionContainer' id='optionTitle'>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='optionValueContainer'><b>Option Value</b></div>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='optionLabelContainer'><b>Option Label</b></div>";
+//                $WYSIWYGDropDownEditForm.= "<div class='optionBreakSpaceContainer'><b>Break Space</b></div>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='defaultOptionContainer'><b>Default Selected</b></div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+
+            foreach ($msddParameters as $thisMSDDParameter) {
+
+                //$msddName = $thisMSDDParameter["multiselectdropdownname"];
+                $msddOptionLabel = $thisMSDDParameter["msddoptionlabel"];
+                $msddOptionValue = $thisMSDDParameter["msddoptionvalue"];
+                $defaultValue = $thisMSDDParameter["defaultvalue"];
+                $msddsize = $thisMSDDParameter["msddsize"];
+                $formElementLabel = $thisMSDDParameter["label"];
+                $labelOrientation = $thisMSDDParameter["labelorientation"];
+                $id = $thisMSDDParameter["id"];
+
+                $WYSIWYGMSDropDownEditForm.= "<div class='singleOptionContainer' id='option" . $optionNumber . "' optionID='" . $id . "' formNumber='" . $formNumber . "' formElementName='" . $formElementName . "' optionLabel='" . $msddOptionLabel . "' optionValue='" . $msddOptionValue . "' defaultValue='" . $defaultValue . "' formElementSize='".$msddsize."' formElementLabel='" . $formElementLabel . "' labelOrientation='" . $labelOrientation . "'>";
+                $WYSIWYGMSDropDownEditForm.= "<div class='optionValueContainer'>" . $msddOptionValue . "</div>";
+                $WYSIWYGMSDropDownEditForm.= "<div class='optionLabelContainer'>" . $msddOptionLabel . "</div>";
+                if ($defaultValue == TRUE) {
+                    $WYSIWYGMSDropDownEditForm.= "<div class='defaultOptionContainer'>yes</div>";
+                } else {
+                    $WYSIWYGMSDropDownEditForm.= "<div class='defaultOptionContainer'>no</div>";
+                }
+                $WYSIWYGMSDropDownEditForm.= "<a class='deleteOptionLink' href='#delete'>Delete</a>";
+                $WYSIWYGMSDropDownEditForm.= "<a class='editOptionLink' href='#edit'>Edit</a>";
+                $WYSIWYGMSDropDownEditForm.= "</div>";
+                $optionNumber++;
+            }
+
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+
+
+            $WYSIWYGMSDropDownEditForm.= "<style>
+            
+.editFormElementOptionsHeadingSpacer{
+height:150px;
+border-bottom: 2px solid #666666;
+overflow: hidden;
+}
+
+.formElementOptionUpdateHeading{
+float:right;
+margin-top:110px;
+margin-right:50px;
+position:relative;
+color: #222222;
+font-family: 'Droid Serif',Cambria,Georgia,Palatino,'Palatino Linotype','Myriad Pro',Serif;
+font-size: 3.0em;
+}
+
+.editFormElementOptionsSideSeperator{
+float:right;
+clear:none;
+width:2px;
+height:390px;
+margin-right:100px;
+background:#666666;
+}
+
+.editFormElementFormContainer{
+width:780px;
+margin-left:10px;
+}
+
+.formElementOptionsFormButtonsContainer{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-style: double;
+    border-bottom-style: double;
+    border-top-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    padding:5px;
+    margin-bottom:5px;
+    margin-top:5px;
+    height:30px;
+}
+
+.formElementOptionsFormSuperContainer{
+min-height:390px;
+}
+</style>";
+            $WYSIWYGMSDropDownEditForm.="<div class='formElementOptionsFormSuperContainer'>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='editFormElementOptionsSideSeperator'></div>";
+            $WYSIWYGMSDropDownEditForm.="<div class='editFormElementOptionsHeadingSpacer'><div class='formElementOptionUpdateHeading'>Update Multi-Select Drop Down List Option</div></div>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='editFormElementFormContainer'>";
+            $WYSIWYGMSDropDownEditForm.="<b>Multi-Selectable Drop Down Options Menu</b>";
+            $WYSIWYGMSDropDownEditForm.="<div id='ddOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $WYSIWYGMSDropDownEditForm.= $this->insertOptionAndValueForm('multi-selectable drop down list', 0) . "<br>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.= "<div class='formElementOptionsFormButtonsContainer'></div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            $WYSIWYGMSDropDownEditForm.= "</div>";
+            return $WYSIWYGMSDropDownEditForm;
+        }
     }
 
     /*!
@@ -171,6 +363,26 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
             return FALSE;
         }
     }
+    
+    public function updateOptionandValue($optionID,$formNumber,$formElementName, $option, $value, $defaultSelected,$msddsize, $formElementLabel, $labelOrientation) {
+              if ($this->objDBmsddEntity->checkIfOptionExists($optionID) == TRUE) {
+            $this->objDBmsddEntity->updateSingle($optionID,$formNumber,$formElementName, $option, $value, $defaultSelected,$msddsize, $formElementLabel, $labelOrientation);
+           $this->msddName = $formElementName;
+            $this->formNumber = $formNumber;
+            
+            return TRUE;
+        } else {
+            return FALSE;
+        }  
+    }
+    
+
+    public function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout,$formElementSize){
+        $this->objDBmsddEntity->updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout,$formElementSize);
+            
+        $this->formNumber = $formNumber;
+        $this->msddName = $formElementName;
+    }
 
     /*!
      * \brief This member function deletes an existing ms dropdown list form element with
@@ -204,7 +416,8 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
 
         $msddName = $msddParameters["0"]['multiselectdropdownname'];
         $msddUnderConstruction = new dropdown($msddName);
-
+        $msddLabel=NULL;
+        $labelOrientation=NULL;
         foreach ($msddParameters as $thisMSDDParameter) {
 
             $msddName = $thisMSDDParameter["multiselectdropdownname"];
@@ -262,10 +475,11 @@ class form_entity_multiselect_dropdown extends form_entity_handler {
     private function buildWYSIWYGMultiSelectDropdownEntity() {
 
         $msddParameters = $this->objDBmsddEntity->listMultiSelectDropdownParameters($this->formNumber,$this->msddName);
-
+        $msddLabel=NULL;
+        $labelOrientation=NULL;
         foreach ($msddParameters as $thisDDParameter) {
 
-            $msddName = $thisDDParameter["multiselectdropdownname"];
+    //        $msddName = $thisDDParameter["multiselectdropdownname"];
             $msddOptionLabel = $thisDDParameter["msddoptionlabel"];
             $msddOptionValue = $thisDDParameter["msddoptionvalue"];
             $defaultValue = $thisDDParameter["defaultvalue"];

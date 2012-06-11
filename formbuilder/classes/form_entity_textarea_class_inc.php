@@ -232,7 +232,7 @@ public function getWYSIWYGTextAreaEditForm($formNumber, $formElementName) {
          $WYSIWYGTextInputInsertForm.="<b>Text Area HTML ID and Name Menu</b>";
       $WYSIWYGTextInputInsertForm.="<div id='textAreaNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
         $WYSIWYGTextInputInsertForm.= $this->buildInsertIdForm('textarea',$formName,"70")."<br>";
-       $WYSIWYGTextInputInsertForm.= $this->buildInsertFormElementNameForm('text area', "70")."<br>";
+       $WYSIWYGTextInputInsertForm.= $this->buildInsertFormElementNameForm('text area', "70",NULL)."<br>";
                 $WYSIWYGTextInputInsertForm.= "</div>";
    //     $WYSIWYGTextInputInsertForm.= "</div>";
 
@@ -460,13 +460,13 @@ protected function constructTextAreaEntity($textareaName,$formNumber)
 $constructedta = "";
 foreach($taParameters as $thistaParameter){
 
-   $textareaFormName = $thistaParameter["textareaformname"];
+ //  $textareaFormName = $thistaParameter["textareaformname"];
   $textareaName = $thistaParameter["textareaname"];
       $textareaValue = $thistaParameter["textareavalue"];
       $columnSize = $thistaParameter["columnsize"];
       $rowSize = $thistaParameter["rowsize"];
             $simpleOrAdvancedChoice = $thistaParameter["simpleoradvancedchoice"];
-                  $toolbarChoice = $thistaParameter["toolbarchoice"];
+          //        $toolbarChoice = $thistaParameter["toolbarchoice"];
                   $textareaLabel= $thistaParameter["label"];
                   $labelLayout = $thistaParameter["labelorientation"];
                   

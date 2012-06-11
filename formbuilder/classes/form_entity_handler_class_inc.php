@@ -327,7 +327,7 @@ class form_entity_handler extends object {
                     $WYSIWYGFormUnderConstruction .= "<div id =$formElementName class='witsCCMSFormElementHTMLHeading'>$constructedHTMLHeading</div>";
                     break;
                 case 'datepicker':
-                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName,$formNumber);
+//                    $constructedDatePicker = $this->datePickerConstructor->constructDatePickerEntity($formElementName,$formNumber);
                     $WYSIWYGFormUnderConstruction .="<div id =$formElementName class='witsCCMSFormElementDatePicker'><br>[JavaScript Conflict: Date Picker Object can not be displayed.
 It \"will\" be displayed in the built form.]<br></div>";
                     break;
@@ -657,14 +657,19 @@ It \"will\" be displayed in the built form.]<br></div>";
      * text input.
      * \return A constructed mini form to insert the html name for the form elements.
      */
-    protected function buildInsertFormElementNameForm($formElementType, $textInputWidth) {
+    protected function buildInsertFormElementNameForm($formElementType, $textInputWidth,$existingFormElementName) {
         $this->loadClass('textinput', 'htmlelements');
         if ($formElementType == NULL) {
             $insertFormElementNameUnderConstruction = "Enter a form element name:<br>";
         } else {
             $insertFormElementNameUnderConstruction = "Enter a name for your " . $formElementType . ":<br>";
         }
-        $FormElementNameTextInput = new textinput("uniqueFormElementName", '', 'text', $textInputWidth);
+        if (isset($existingFormElementName)){
+           $FormElementNameTextInput = new textinput("uniqueFormElementName", $existingFormElementName, 'text', $textInputWidth); 
+        }else{
+           $FormElementNameTextInput = new textinput("uniqueFormElementName", '', 'text', $textInputWidth); 
+        }
+        
         $insertFormElementNameUnderConstruction .= $FormElementNameTextInput->show();
         return $insertFormElementNameUnderConstruction;
     }
@@ -1061,7 +1066,7 @@ It \"will\" be displayed in the built form.]<br></div>";
      * a radio element.
      * \return A constructed mini form to insert the size of a ms drop down.
      */
-    protected function insertMSDropDownSizeForm() {
+    protected function insertMSDropDownSizeForm($predefinedSize) {
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $MSDropDownSize = "Multi-Selectable Drop Down Menu Size :<br>";
@@ -1069,12 +1074,22 @@ It \"will\" be displayed in the built form.]<br></div>";
         $objElement = new radio('menuSize');
         $objElement->addOption('autofit', 'Set menu size to auto-fit all menu values');
         $objElement->addOption('custom', 'Specify Custom Size');
-        $objElement->setSelected('autofit');
+        if (isset($predefinedSize) && $predefinedSize>1){
+          $objElement->setSelected('custom');  
+        }else{
+           $objElement->setSelected('autofit'); 
+        }
+        
         $objElement->setBreakSpace("<br>");
         $MSDropDownSize .= $objElement->show() . "<br>";
         $MSDropDownSize .="<div id='setCustomMenuSize'>";
         $MSDropDownSize .="Set Custom Menu Size (Choose any number greater than 2):  ";
-        $menuSizeParameter = new textinput("menuSizeParameter", "1", 'text', "4");
+        if (isset($predefinedSize)){
+         $menuSizeParameter = new textinput("menuSizeParameter", $predefinedSize, 'text', "4");   
+        }else{
+         $menuSizeParameter = new textinput("menuSizeParameter", "1", 'text', "4");   
+        }
+        
         $MSDropDownSize .=$menuSizeParameter->show() . "";
         $MSDropDownSize .="</div>";
         return $MSDropDownSize;

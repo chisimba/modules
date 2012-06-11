@@ -14,7 +14,7 @@ $formNumber = $this->getParam("formNumber");
 $optionValue = $this->getParam('optionValue');
 $optionLabel = $this->getParam('optionLabel');
 $formElementName = $this->getParam('formElementName');
-
+$update = $this->getParam("update");
 $defaultSelected = $this->getParam('defaultSelected');
 
 $formElementLabel = $this->getParam('formElementLabel');
@@ -28,11 +28,25 @@ if ($defaultSelected == "on") {
 $objDDEntity = $this->getObject('form_entity_dropdown', 'formbuilder');
 $objDDEntity->createFormElement($formNumber,$formElementName);
 
-if ($objDDEntity->insertOptionandValue($formNumber,$formElementName, $optionLabel, $optionValue, $defaultSelected, $formElementLabel, $formElementLabelLayout) == TRUE) {
-    $postSuccessBoolean = 1;
+
+
+if ($update != "2") {
+
+
+    if (isset($update) && $update == "1") {
+        $objDDEntity->updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout);
+        $postSuccessBoolean = 1;
+    } else {
+        if ($objDDEntity->insertOptionandValue($formNumber,$formElementName, $optionLabel, $optionValue, $defaultSelected, $formElementLabel, $formElementLabelLayout) == TRUE) {
+            $postSuccessBoolean = 1;
+        } else {
+            $postSuccessBoolean = 0;
+        }
+    }
 } else {
-    $postSuccessBoolean = 0;
+    $postSuccessBoolean = 1;
 }
+
 ?>
 
 <div id="WYSIWYGDropdown">

@@ -48,16 +48,6 @@ function editFormElements(formNumber){
             var formNumber = jQuery.trim(formnumber);
             editPertinentFormElement(formNumber,idOfElementToBeEdited,classOfElementToBeEdited);
 
-//            jQuery( "#dialog-box").dialog({ title: 'Confirm Form Element Delete' });
-//            jQuery("#dialog-box").html('<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This form element will be permanently deleted and cannot be recovered. Are you sure?</p>');
-//            jQuery("#dialog-box").dialog("open");
-//            jQuery( "#dialog-box" ).dialog( "option", "buttons", {
-//                "Delete Form Element": function() {
-//                    removeSpan(idOfElementToBeDeleted,formNumber);
-//                },  "Cancel": function() {
-//                    jQuery(this).dialog("close");
-//                }
-//            });
         });
 }
 
@@ -132,6 +122,42 @@ case "witsCCMSFormElementTextInput":
     jQuery( "#dialog-box-editFormElements").dialog("open"); 
     LoadEditRadioForm(formNumber,formElementName,classOfFormElement);
   break;
+  
+    case "witsCCMSFormElementDropDown":
+     unsetRearrangeAndDeleteElementButtons(formNumber);
+    jQuery( "#dialog-box-editFormElements").dialog({ title: 'Edit Drop Down List' });
+    $( "#dialog-box-editFormElements" ).dialog({ position: "top" });
+    jQuery( "#dialog-box-editFormElements").dialog("open"); 
+    LoadEditDropDownForm(formNumber,formElementName,classOfFormElement);
+  break;
+  
+      case "witsCCMSFormElementCheckBox":
+     unsetRearrangeAndDeleteElementButtons(formNumber);
+    jQuery( "#dialog-box-editFormElements").dialog({ title: 'Edit Check Boxes' });
+    $( "#dialog-box-editFormElements" ).dialog({ position: "top" });
+    jQuery( "#dialog-box-editFormElements").dialog("open"); 
+    LoadEditCheckBoxForm(formNumber,formElementName,classOfFormElement);
+  break;
+  
+        case "witsCCMSFormElementMultiSelectDropDown":
+     unsetRearrangeAndDeleteElementButtons(formNumber);
+    jQuery( "#dialog-box-editFormElements").dialog({ title: 'Edit Multi Select Drop Down List' });
+    $( "#dialog-box-editFormElements" ).dialog({ position: "top" });
+    jQuery( "#dialog-box-editFormElements").dialog("open"); 
+    LoadEditMSDropDownForm(formNumber,formElementName,classOfFormElement);
+  break;
+  
+          case "witsCCMSFormElementButton":
+     unsetRearrangeAndDeleteElementButtons(formNumber);
+    jQuery( "#dialog-box-editFormElements").dialog({ title: 'Edit Button' });
+    $( "#dialog-box-editFormElements" ).dialog({ position: "top" });
+    jQuery( "#dialog-box-editFormElements").dialog("open"); 
+    LoadEditButtonForm(formNumber,formElementName,classOfFormElement);
+  break;
+  
+  
+  
+  
 default:
  
 }

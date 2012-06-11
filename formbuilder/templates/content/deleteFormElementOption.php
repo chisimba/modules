@@ -11,32 +11,22 @@ switch ($formElementType) {
         break;
 
     case 'checkbox':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
+       $objCheckBoxEntity = $this->getObject('dbformbuilder_checkbox_entity', 'formbuilder');
+       $objCheckBoxEntity->deleteSingle($optionID);
         break;
 
     case 'dropdown':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
+       $objDropdownEntity = $this->getObject('dbformbuilder_dropdown_entity', 'formbuilder');
+       $objDropdownEntity->deleteSingle($optionID);
         break;
-    case 'label':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
+        case 'button':
+       $objButtonEntity = $this->getObject('dbformbuilder_button_entity', 'formbuilder');
+       $objButtonEntity->deleteSingle($optionID);
         break;
-    case 'HTML_heading':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
-        break;
-    case 'datepicker':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
-        break;
-    case 'text_input':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
-        break;
-    case 'text_area':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
-        break;
-    case 'button':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
-        break;
+
     case 'multiselectable_dropdown':
-        $postSuccess = $objFormEntityHandler->insertNewFormElement($formNumber, $formName, $formElementType, $formElementName);
+       $objMSDropdownEntity = $this->getObject('dbformbuilder_multiselect_dropdown_entity', 'formbuilder');
+       $objMSDropdownEntity->deleteSingle($optionID);
         break;
     default:
         $postSuccess = 2;

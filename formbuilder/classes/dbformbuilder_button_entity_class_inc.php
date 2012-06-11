@@ -100,6 +100,24 @@ class dbformbuilder_button_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function checkIfButtonExists($id){
+           $sql = "where id like '".$id."'";
+
+///Return the number of entries. Note that is function in part of the parent class dbTable.
+        $numberofDuplicates = $this->getRecordCount($sql);
+        if ($numberofDuplicates < 1) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    function updateSingle($optionID,$formNumber,$buttonFormName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_button_entity
+        SET buttonname='".$buttonName."', buttonlabel='".$buttonLabel."', issettoresetorsubmit='".$isSetToResetOrSubmit."' WHERE buttonformname='".$buttonFormName."' and formnumber='".$formNumber."' and id='".$optionID."'";
+        $this->_execute($UpdateSQL);
+    }
 
     /*!
      * \brief This member function deletes a button according to its form element

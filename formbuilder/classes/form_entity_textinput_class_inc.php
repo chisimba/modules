@@ -388,7 +388,7 @@ protected function constructTextInputEntity($textInputName,$formNumber)
 $constructedti= "";
 foreach($tiParameters as $thistiParameter){
 
-   $textInputFormName = $thistiParameter["textinputformname"];
+//   $textInputFormName = $thistiParameter["textinputformname"];
   $textInputName = $thistiParameter["textinputname"];
   $textValue = $thistiParameter["textvalue"];
       $textType = $thistiParameter["texttype"];

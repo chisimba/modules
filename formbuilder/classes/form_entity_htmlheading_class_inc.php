@@ -221,7 +221,7 @@ class form_entity_htmlheading extends form_entity_handler {
         $constructedHTMLHeading= "";
         foreach ($HTMLHeadingParameters as $thisHTMLHeadingParameter) {
 
-            $headingName = $thisHTMLHeadingParameter["headingname"];
+            //$headingName = $thisHTMLHeadingParameter["headingname"];
             $headingText = $thisHTMLHeadingParameter["heading"];
             $headingSize = $thisHTMLHeadingParameter["size"];
             $textAlignment = $thisHTMLHeadingParameter["alignment"];

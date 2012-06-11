@@ -64,7 +64,6 @@ function setUpEditTextInputForm(formNumber,formElementName){
         {
             jQuery("#defaultTextInput").show("slow");
             formElementText.val('');
-        //jQuery("input:radio[name=maskedInputChoice]:eq(0)").attr('checked', "checked");
         }
         else
         {
@@ -87,10 +86,7 @@ function setUpEditTextInputForm(formNumber,formElementName){
             allFields.removeClass('ui-state-error');
             bValid = bValid && checkRegexp(formElementSize,/^\d+$/,"The text input character length only allows digits (0-9).");
             bValid = bValid && checkValue(formElementSize,'text input character length',1,150);
-            //                             if ( jQuery('input:radio[name=textOrPasswordRadio]:checked').val() == "text")
-            //                  {
-            //               bValid = bValid && checkLength(formElementText," default text for the text input",1,550);
-            //  }
+
             if (bValid) {
       
                 var textOrPasswords= jQuery('input:radio[name=textOrPasswordRadio]:checked').val();

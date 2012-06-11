@@ -1,7 +1,5 @@
 <?php
 
-
-
 $formNumber = $this->getParam('formNumber');
 $formElementName = $this->getParam('formElementName');
 $formElementType = $this->getParam('formElementType');
@@ -10,39 +8,43 @@ if (isset($formElementType)) {
     switch ($formElementType) {
 
         case 'witsCCMSFormElementRadio':
-            echo $objInsertElementFormEntity->showEditRadioForm($formNumber,$formElementName);
+            echo $objInsertElementFormEntity->showEditRadioForm($formNumber, $formElementName);
             break;
-        case 'checkbox':
-         
+        case 'witsCCMSFormElementCheckBox':
+            echo $objInsertElementFormEntity->showEditCheckBoxForm($formNumber, $formElementName);
             break;
-        case 'dropdown':
-      
+        case 'witsCCMSFormElementDropDown':
+            echo $objInsertElementFormEntity->showEditDropDownForm($formNumber, $formElementName);
             break;
+        case 'witsCCMSFormElementMultiSelectDropDown':
+            echo $objInsertElementFormEntity->showEditMSDropDownForm($formNumber, $formElementName);
+            break;
+        case 'witsCCMSFormElementButton':
+            echo $objInsertElementFormEntity->showEditButtonForm($formNumber, $formElementName);
+            break;
+        
+        
+        
+        
+        //form elements without options
         case 'witsCCMSFormElementLabel':
-            echo $objInsertElementFormEntity->showEditLabelForm($formNumber,$formElementName);
+            echo $objInsertElementFormEntity->showEditLabelForm($formNumber, $formElementName);
             break;
         case 'witsCCMSFormElementHTMLHeading':
-           echo $objInsertElementFormEntity->showEditHTMLHeadingForm($formNumber,$formElementName);
+            echo $objInsertElementFormEntity->showEditHTMLHeadingForm($formNumber, $formElementName);
             break;
         case 'witsCCMSFormElementDatePicker':
-          echo $objInsertElementFormEntity->showEditDatePickerForm($formNumber,$formElementName);
+            echo $objInsertElementFormEntity->showEditDatePickerForm($formNumber, $formElementName);
             break;
         case 'witsCCMSFormElementTextInput':
-            echo $objInsertElementFormEntity->showEditTextInputForm($formNumber,$formElementName);
+            echo $objInsertElementFormEntity->showEditTextInputForm($formNumber, $formElementName);
             break;
         case 'witsCCMSFormElementTextArea':
-            echo $objInsertElementFormEntity->showEditTextAreaForm($formNumber,$formElementName);
-            break;
-        case 'button':
-     
-            break;
-        case 'multiselectable_dropdown':
-     
+            echo $objInsertElementFormEntity->showEditTextAreaForm($formNumber, $formElementName);
             break;
         default:
             echo $postSuccess = 0;
             break;
     }
 }
-
 ?>

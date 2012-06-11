@@ -182,7 +182,7 @@ class form_entity_label extends form_entity_handler {
         $constructedLabel = "";
         foreach ($labelParameters as $thislabelParameter) {
 
-            $labelFormName = $thislabelParameter["labelname"];
+//            $labelFormName = $thislabelParameter["labelname"];
             $labelText = $thislabelParameter["label"];
             $labelBreakspace = $thislabelParameter["breakspace"];
 

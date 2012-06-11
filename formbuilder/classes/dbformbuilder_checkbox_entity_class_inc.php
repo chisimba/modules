@@ -83,6 +83,18 @@ class dbformbuilder_checkbox_entity extends dbTable {
             return FALSE;
         }
     }
+    
+        function checkIfOptionExists($id){
+           $sql = "where id like '".$id."'";
+
+///Return the number of entries. Note that is function in part of the parent class dbTable.
+        $numberofDuplicates = $this->getRecordCount($sql);
+        if ($numberofDuplicates < 1) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 
     /*!
      * \brief Insert a record
@@ -112,6 +124,19 @@ class dbformbuilder_checkbox_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function updateSingle($optionID,$formNumber,$checkboxName, $checkboxLabel, $checkboxValue, $isChecked, $breakSpace, $formElementLabel, $labelLayout) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_checkbox_entity
+        SET checkboxlabel='".$checkboxLabel."', checkboxvalue='".$checkboxValue."', ischecked='".$isChecked."', breakspace='".$breakSpace."', label='".$formElementLabel."', labelorientation='".$labelLayout."' WHERE checkboxname='".$checkboxName."' and formnumber='".$formNumber."' and id='".$optionID."'";
+        $this->_execute($UpdateSQL);
+    }
+
+    function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout){
+        $UpdateSQL = "UPDATE tbl_formbuilder_checkbox_entity
+        SET label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."' WHERE checkboxname='".$formElementName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
+    
 
     /*!
      * \brief This member function deletes a check box according to its form element

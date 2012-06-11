@@ -292,6 +292,11 @@ class form_element_editor extends object {
     public function showInsertCheckboxForm($formName) {
         return $this->checkboxConstructor->getWYSIWYGCheckBoxInsertForm($formName);
     }
+    
+    
+    public function showEditCheckboxForm($formName,$formElementName) {
+        return $this->checkboxConstructor->getWYSIWYGCheckBoxEditForm($formName,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -320,6 +325,10 @@ class form_element_editor extends object {
     public function showInsertDropDownForm($formName) {
         return $this->dropdownConstructor->getWYSIWYGDropDownInsertForm($formName);
     }
+    
+    public function showEditDropDownForm($formName,$formElementName){
+        return $this->dropdownConstructor->getWYSIWYGDropDownEditForm($formName,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -332,6 +341,10 @@ class form_element_editor extends object {
     public function showInsertMSDropDownForm($formName) {
         return $this->multiselectDropDownConstructor->getWYSIWYGMSDropDownInsertForm($formName);
     }
+    
+        public function showEditMSDropDownForm($formName,$formElementName) {
+        return $this->multiselectDropDownConstructor->getWYSIWYGMSDropDownEditForm($formName,$formElementName);
+    }
 
     /*!
      * \brief This member function is the interface for AJAX functions to call a
@@ -343,6 +356,10 @@ class form_element_editor extends object {
      */
     public function showInsertButtonForm($formName) {
         return $this->buttonConstructor->getWYSIWYGButtonInsertForm($formName);
+    }
+    
+    public function showEditButtonForm($formNumber,$formElementName){
+       return $this->buttonConstructor->getWYSIWYGButtonEditForm($formNumber,$formElementName); 
     }
 
 }

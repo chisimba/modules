@@ -171,7 +171,8 @@ Please choose a unique button ID and name combination. Insert a unique button na
             else
             {
 
-                jQuery("#WYSIWYGForm").children("#"+formElementID).append(button);
+                jQuery("#WYSIWYGForm").children("#"+formElementID).empty();
+                   jQuery("#WYSIWYGForm").children("#"+formElementID).html(button);
                 var elementToHighlights = jQuery("#WYSIWYGForm").children("#"+formElementID);
                 highlightNewConstructedFormElement(elementToHighlights);
 

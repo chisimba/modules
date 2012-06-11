@@ -204,11 +204,6 @@ Please choose a unique drop down ID and value combination. Insert a unique drop 
         }
 
 
-
-
-
-
-
     });
 }
 

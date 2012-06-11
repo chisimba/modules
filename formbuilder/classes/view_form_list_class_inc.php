@@ -605,9 +605,9 @@ echo $objYourForm->buildForm(' . $formNumber . ');', 3, 80);
         foreach ($formListMetaDataArray as $thisformListMetaData) {
 //Store the values of the array in variables
 
-            $id = $thisformListMetaData["id"];
+          //  $id = $thisformListMetaData["id"];
             $formNumber = $thisformListMetaData["formnumber"];
-            $formName = $thisformListMetaData["name"];
+          //  $formName = $thisformListMetaData["name"];
             $formLabel = $thisformListMetaData["label"];
             $formDetails = $thisformListMetaData["details"];
             $formAuthorID = $thisformListMetaData["author"];

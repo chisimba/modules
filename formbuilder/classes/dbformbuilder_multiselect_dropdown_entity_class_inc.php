@@ -114,6 +114,30 @@ class dbformbuilder_multiselect_dropdown_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function checkIfOptionExists($id){
+           $sql = "where id like '".$id."'";
+
+///Return the number of entries. Note that is function in part of the parent class dbTable.
+        $numberofDuplicates = $this->getRecordCount($sql);
+        if ($numberofDuplicates < 1) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    function updateSingle($optionID,$formNumber,$msddName, $msddLabel, $msddValue, $defaultValue,$msddsize, $label, $labelOrientation) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_multiselect_dropdown_entity
+        SET msddoptionlabel='".$msddLabel."', msddoptionvalue='".$msddValue."', defaultvalue='".$defaultValue."', msddsize='".$msddsize."', label='".$label."', labelorientation='".$labelOrientation."' WHERE multiselectdropdownname='".$msddName."' and formnumber='".$formNumber."' and id='".$optionID."'";
+        $this->_execute($UpdateSQL);
+    }
+
+    function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout,$formElementSize){
+        $UpdateSQL = "UPDATE tbl_formbuilder_multiselect_dropdown_entity
+        SET label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."', msddsize='".$formElementSize."' WHERE multiselectdropdownname='".$formElementName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
 
     /*!
      * \bried This function updates the menu size of the existing msdd.

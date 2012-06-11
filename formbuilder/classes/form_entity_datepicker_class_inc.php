@@ -148,7 +148,7 @@ public function getWYSIWYGDatePickerInsertForm($formName)
   $WYSIWYGDatePickerInsertForm="<b>Date Picker HTML ID and Name Menu</b>";
   $WYSIWYGDatePickerInsertForm.="<div id='dpIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
   $WYSIWYGDatePickerInsertForm.= $this->buildInsertIdForm('datepicker',$formName,"70")."<br>";
-  $WYSIWYGDatePickerInsertForm.= $this->buildInsertFormElementNameForm('datepicker', "70")."<br>";
+  $WYSIWYGDatePickerInsertForm.= $this->buildInsertFormElementNameForm('datepicker', "70",NULL)."<br>";
     $WYSIWYGDatePickerInsertForm.= "</div>";
     $WYSIWYGDatePickerInsertForm.="<b>Date Picker Date Settings</b>";
       $WYSIWYGDatePickerInsertForm.="<div id='dpPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> " ;
@@ -301,7 +301,7 @@ $constructedDatePicker .= $currentConstructedDatePicker;
 public function buildWYSIWYGDatepickerEntity()
 {
 
-$dpParameters = $this->objDBdpEntity->listDatePickerParameters($this->dpName);
+//$dpParameters = $this->objDBdpEntity->listDatePickerParameters($this->dpName);
 
 $this->objDP->name = $this->dpValue;
  if ($this->defaultDate != "Real Time Date")

@@ -19,7 +19,7 @@ does not exist or is empty. Please contact your software administrator.</p>');
 }
 
 function setUpEditDatePickerForm(formNumber,formElementName){
-    //               jQuery("#dialog-box-editFormElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").datepicker();
+  
     var mydefaultDate = jQuery("#dialog-box-editFormElements").children("#content").children("#dpPropertiesContainer").children("#selectDefaultDate").children("#datepicker").val();
 
     
@@ -108,31 +108,30 @@ function setUpEditDatePickerForm(formNumber,formElementName){
 
 function updateDatePicker(formNumber,formElementName,formElementValue,dateFormat,defaultDate){
 
-            var datePickerDataToPost = {
-                "update":1,
-                "formNumber":formNumber,
-                "datePickerName": formElementName,
-                "datePickerValue": formElementValue,
-                "dateFormat": dateFormat,
-                "defaultCustomDate":defaultDate
-            };
-            var myurlToUpdateDatePicker = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceDatePicker]").val();
+    var datePickerDataToPost = {
+        "update":1,
+        "formNumber":formNumber,
+        "datePickerName": formElementName,
+        "datePickerValue": formElementValue,
+        "dateFormat": dateFormat,
+        "defaultCustomDate":defaultDate
+    };
+    var myurlToUpdateDatePicker = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceDatePicker]").val();
 
-            jQuery('#tempdivcontainer').load(myurlToUpdateDatePicker, datePickerDataToPost ,function postSuccessFunction(html) {
+    jQuery('#tempdivcontainer').load(myurlToUpdateDatePicker, datePickerDataToPost ,function postSuccessFunction(html) {
         var datePicker = jQuery('#tempdivcontainer #WYSIWYGDatepicker').html();
         jQuery('#tempdivcontainer').empty();
         if (datePicker == 0){
             updateErrorMessage("Could not update the text input parameters in the database. Please contact software administrator."); 
         } else {
-           var datePickerErrorMessage = "<br>[JavaScript Conflict: Date Picker Object can not be displayed.\n\
+            var datePickerErrorMessage = "<br>[JavaScript Conflict: Date Picker Object can not be displayed.\n\
 It \"will\" be displayed in the built form.]<br>";
-           jQuery("#WYSIWYGForm").children("#"+formElementName).replaceWith('<div id ='+formElementName+' class="witsCCMSFormElementDatePicker">'+datePickerErrorMessage+'</div>');
+            jQuery("#WYSIWYGForm").children("#"+formElementName).replaceWith('<div id ='+formElementName+' class="witsCCMSFormElementDatePicker">'+datePickerErrorMessage+'</div>');
             var elementToHighlight = jQuery("#WYSIWYGForm").children("#"+formElementName);
             jQuery( "#dialog-box-editFormElements").dialog('close');
             jQuery("#dialog-box-editFormElements").children("#content").empty();
             highlightNewConstructedFormElement(elementToHighlight);        
         }  
     });
-//            });
 }
 

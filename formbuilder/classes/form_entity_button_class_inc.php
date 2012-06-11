@@ -72,6 +72,11 @@ class form_entity_button extends form_entity_handler {
         $this->isSetOrResetChoice = NULL;
         $this->formnumber = NULL;
     }
+    
+    public function setInitParams($formElementName,$formNumber){
+        $this->buttonFormName=$formElementName;
+        $this->formnumber=$formNumber;
+    }
 
     /*!
      * \brief This member function allows you to insert a new button in a form with
@@ -100,6 +105,21 @@ class form_entity_button extends form_entity_handler {
             return FALSE;
         }
     }
+    
+    public function updateFormElement($optionID,$formNumber,$formElementName, $buttonName, $buttonLabel, $isSetToResetOrSubmit) {
+              if ($this->objDBbuttonEntity->checkIfButtonExists($optionID) == TRUE) {
+            $this->objDBbuttonEntity->updateSingle($optionID,$formNumber,$formElementName, $buttonName, $buttonLabel, $isSetToResetOrSubmit);
+            $this->formnumber = $formNumber;
+            $this->buttonFormName = $formElementName;
+            $this->buttonName = $buttonName;
+            $this->buttonLabel = $buttonLabel;
+            $this->isSetOrResetChoice = $isSetToResetOrSubmit;
+            
+            return TRUE;
+        } else {
+            return FALSE;
+        }  
+    }
 
     /*!
      * \brief This member function gets the button name if the private
@@ -125,13 +145,195 @@ class form_entity_button extends form_entity_handler {
         $WYSIWYGButtonInsertForm = "<b>Button HTML ID and Name Menu</b>";
         $WYSIWYGButtonInsertForm.="<div id='labelNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGButtonInsertForm.= $this->buildInsertIdForm('button', $formName, "70") . "<br>";
-        $WYSIWYGButtonInsertForm.= $this->buildInsertFormElementNameForm('button', "70") . "<br>";
+        $WYSIWYGButtonInsertForm.= $this->buildInsertFormElementNameForm('button', "70",NULL) . "<br>";
         $WYSIWYGButtonInsertForm.="</div>";
         $WYSIWYGButtonInsertForm.="<b>Button Properties Menu</b>";
         $WYSIWYGButtonInsertForm.="<div id='buttonPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
         $WYSIWYGButtonInsertForm.= $this->insertButtonParametersForm() . "<br>";
         $WYSIWYGButtonInsertForm.="</div>";
         return $WYSIWYGButtonInsertForm;
+    }
+    
+    public function getWYSIWYGButtonEditForm($formNumber,$formElementName){
+        
+      $buttonParameters = $this->objDBbuttonEntity->listButtonParameters($formNumber,$formElementName);
+        if (empty($buttonParameters)) {
+            return 0;
+        } else {
+          $WYSIWYGButtonEditForm="<div id='editFormElementTabs'>	
+         <ul>
+		<li><a href='#editFormElementPropertiesContainer'>Edit Button Group Properties</a></li>
+		<li><a href='#editFormElementOptionsContainer'>Edit Individual Button Properties</a></li>
+	</ul>";
+        $WYSIWYGButtonEditForm.= "<div id='editFormElementPropertiesContainer'>";
+        
+        $WYSIWYGButtonEditForm.= "<b>There are no group button properties to edit. Individual button properties can be edited.</b>";
+
+        $WYSIWYGButtonEditForm.= "</div>";
+        
+        $WYSIWYGButtonEditForm.= "<div id='editFormElementOptionsContainer'>";
+        $WYSIWYGButtonEditForm.= "<b>Edit Individual Buttons</b>";
+        $WYSIWYGButtonEditForm.="<div id='buttonOptionsContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+                
+        $WYSIWYGButtonEditForm.="<style>
+            .singleOptionContainer{
+            color: #222222;
+            font-size: 72.5%;
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background: none repeat scroll 0 0 #EEEEEE;
+            border-top: 1px solid #CCCCCC;
+            padding: 10px 20px;
+            width: 700px;
+            display:block;
+            overflow: hidden;
+            }
+            
+.singleOptionContainer:hover {
+
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+       background: none repeat scroll 0 0 #CFCFCF;
+
+	}
+        
+.buttonValueContainer{
+width: 180px;
+float:left;
+}
+
+.buttonLabelContainer{
+width: 180px;
+float:left;
+}
+
+.buttonTypeContainer{
+width: 130px;
+float:left;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+.deleteOptionLink, .editOptionLink {
+    display: block;
+    float: right;
+    width: 80px;
+}
+
+        </style>";
+        $optionNumber = 1;
+        
+        
+                $WYSIWYGButtonEditForm.= "<div class='formOptionsListContainer'>";
+                $WYSIWYGButtonEditForm.= "<div class='singleOptionContainer' id='optionTitle'>";
+                $WYSIWYGButtonEditForm.= "<div class='buttonValueContainer'><b>Button Name</b></div>";
+                $WYSIWYGButtonEditForm.= "<div class='buttonLabelContainer'><b>Button Label</b></div>";
+//                $WYSIWYGDropDownEditForm.= "<div class='optionBreakSpaceContainer'><b>Break Space</b></div>";
+                $WYSIWYGButtonEditForm.= "<div class='buttonTypeContainer'><b>Button Type</b></div>"; 
+                $WYSIWYGButtonEditForm.= "</div>";
+      
+
+                        foreach ($buttonParameters as $thisbuttonParameter) {
+
+//$checkboxName = $thisCheckboxParameter["checkboxname"];
+//$buttonFormName = $thisbuttonParameter["buttonformname"];
+            $buttonName = $thisbuttonParameter["buttonname"];
+            $buttonLabel = $thisbuttonParameter["buttonlabel"];
+            $isSetToResetOrSubmit = $thisbuttonParameter["issettoresetorsubmit"];
+            $id = $thisbuttonParameter["id"];
+                $WYSIWYGButtonEditForm.= "<div class='singleOptionContainer' id='option".$optionNumber."' optionID='".$id."' formNumber='".$formNumber."' formElementName='".$formElementName."' buttonName='".$buttonName."' buttonLabel='".$buttonLabel."' buttonType='".$isSetToResetOrSubmit."'>";
+                $WYSIWYGButtonEditForm.= "<div class='buttonValueContainer'>".$buttonName."</div>";
+                $WYSIWYGButtonEditForm.= "<div class='buttonLabelContainer'>".$buttonLabel."</div>";
+                if ($isSetToResetOrSubmit == 'submit'){
+                   $WYSIWYGButtonEditForm.= "<div class='buttonTypeContainer'>submit</div>";   
+                }else{
+                    $WYSIWYGButtonEditForm.= "<div class='buttonTypeContainer'>reset</div>";  
+                }
+                $WYSIWYGButtonEditForm.= "<a class='deleteOptionLink' href='#delete'>Delete</a>";
+                $WYSIWYGButtonEditForm.= "<a class='editOptionLink' href='#edit'>Edit</a>";
+                $WYSIWYGButtonEditForm.= "</div>";
+                $optionNumber++;
+        }
+                   
+        $WYSIWYGButtonEditForm.= "</div>";
+        $WYSIWYGButtonEditForm.= "</div>";
+        
+        $WYSIWYGButtonEditForm.= "</div>";
+        $WYSIWYGButtonEditForm.= "</div>";
+        
+        
+         $WYSIWYGButtonEditForm.= "<style>
+            
+.editFormElementOptionsHeadingSpacer{
+height:150px;
+border-bottom: 2px solid #666666;
+overflow: hidden;
+}
+
+.formElementOptionUpdateHeading{
+float:right;
+margin-top:110px;
+margin-right:50px;
+position:relative;
+color: #222222;
+font-family: 'Droid Serif',Cambria,Georgia,Palatino,'Palatino Linotype','Myriad Pro',Serif;
+font-size: 3.0em;
+}
+
+.editFormElementOptionsSideSeperator{
+float:right;
+clear:none;
+width:2px;
+height:425px;
+margin-right:100px;
+background:#666666;
+}
+
+.editFormElementFormContainer{
+width:780px;
+margin-left:10px;
+}
+
+.formElementOptionsFormButtonsContainer{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-style: double;
+    border-bottom-style: double;
+    border-top-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    padding:5px;
+    margin-bottom:5px;
+    margin-top:5px;
+    height:30px;
+}
+
+.formElementOptionsFormSuperContainer{
+min-height:425px;
+}
+</style>";
+        $WYSIWYGButtonEditForm.="<div class='formElementOptionsFormSuperContainer'>";
+        $WYSIWYGButtonEditForm.= "<div class='editFormElementOptionsSideSeperator'></div>";
+        $WYSIWYGButtonEditForm.="<div class='editFormElementOptionsHeadingSpacer'><div class='formElementOptionUpdateHeading'>Update Single Button</div></div>";
+        $WYSIWYGButtonEditForm.= "<div class='editFormElementFormContainer'>";
+        
+        
+        $WYSIWYGButtonEditForm .= "<b>Button Name Menu</b>";
+        $WYSIWYGButtonEditForm.="<div id='labelNameAndIDContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGButtonEditForm.= $this->buildInsertFormElementNameForm('button', "70",NULL) . "<br>";
+        $WYSIWYGButtonEditForm.="</div>";
+        $WYSIWYGButtonEditForm.="<b>Button Properties Menu</b>";
+        $WYSIWYGButtonEditForm.="<div id='buttonPropertiesContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGButtonEditForm.= $this->insertButtonParametersForm() . "<br>";
+        $WYSIWYGButtonEditForm.="</div>";
+        $WYSIWYGButtonEditForm.= "<div class='formElementOptionsFormButtonsContainer'></div>";
+        $WYSIWYGButtonEditForm.= "</div>";
+        $WYSIWYGButtonEditForm.= "</div>";
+        return $WYSIWYGButtonEditForm;     
+        
+        
+        }
     }
 
     /*!
@@ -196,17 +398,17 @@ $constructedButton="";
      * \return A constructed button.
      */
     private function buildWYSIWYGButtonEntity() {
-
-        $this->objButton = new button($this->buttonName);
-        $this->objButton->setValue($this->buttonLabel);
-
-
-        if ($this->isSetOrResetChoice == "submit") {
-            $this->objButton->setToSubmit();  //If you want to make the button a submit button
-        } else {
-            $this->objButton->setToReset();
-        }
-        return $this->objButton->show();
+        return $this->constructButtonEntity($this->buttonFormName,$this->formnumber);
+//        $this->objButton = new button($this->buttonName);
+//        $this->objButton->setValue($this->buttonLabel);
+//
+//
+//        if ($this->isSetOrResetChoice == "submit") {
+//            $this->objButton->setToSubmit();  //If you want to make the button a submit button
+//        } else {
+//            $this->objButton->setToReset();
+//        }
+//        return $this->objButton->show();
     }
 
     /*!

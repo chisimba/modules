@@ -75,6 +75,11 @@ class form_entity_checkbox extends form_entity_handler {
         $this->loadClass('label', 'htmlelements');
         $this->objDBcheckboxEntity = $this->getObject('dbformbuilder_checkbox_entity', 'formbuilder');
     }
+    
+    public function setUpFormElement($formNumber,$formElementName){
+        $this->formNumber=$formNumber;
+        $this->checkboxName=$formElementName;
+    }
 
     /*!
      * \brief This member function allows you to insert a new checkbox in a form with
@@ -110,6 +115,32 @@ class form_entity_checkbox extends form_entity_handler {
         } else {
             return FALSE;
         }
+    }
+    
+      public function updateCheckBoxOption($optionID,$formNumber,$formElementName, $option, $value, $isChecked,$breakSpace, $formElementLabel, $labelLayout) {
+              if ($this->objDBcheckboxEntity->checkIfOptionExists($optionID) == TRUE) {
+            $this->objDBcheckboxEntity->updateSingle($optionID,$formNumber,$formElementName, $option, $value, $isChecked, $breakSpace, $formElementLabel, $labelLayout);
+             $this->formNumber = $formNumber;
+            $this->checkboxValue = $value;
+            $this->checkboxName = $formElementName;
+            $this->checkboxLabel = $option;
+            $this->isCheckedBoolean = $isChecked;
+            $this->checkboxLayoutOption = $breakSpace;
+            
+            return TRUE;
+        } else {
+            return FALSE;
+        }  
+    }
+    
+
+    public function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout){
+        $this->objDBcheckboxEntity->updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout);
+               
+
+            $this->formNumber = $formNumber;
+            $this->checkboxName = $formElementName;
+
     }
 
     /*!
@@ -155,11 +186,11 @@ class form_entity_checkbox extends form_entity_handler {
         $WYSIWYGCheckBoxInsertForm.="</div>";
         $WYSIWYGCheckBoxInsertForm.= "<b>Check Box Label Menu</b>";
         $WYSIWYGCheckBoxInsertForm.="<div id='checkboxLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGCheckBoxInsertForm.= $this->insertFormLabelOptions("checkbox", "labelOrientation");
+        $WYSIWYGCheckBoxInsertForm.= $this->insertFormLabelOptions("checkbox", "labelOrientation",NULL,NULL);
         $WYSIWYGCheckBoxInsertForm.= "</div>";
         $WYSIWYGCheckBoxInsertForm.= "<b>Check Box Option Layout Menu</b>";
         $WYSIWYGCheckBoxInsertForm.= "<div id='checkboxLayoutContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGCheckBoxInsertForm.= $this->buildLayoutForm('checkbox', $formName, "checkbox") . "";
+        $WYSIWYGCheckBoxInsertForm.= $this->buildLayoutForm('checkbox', $formName, "checkbox",NULL) . "";
         $WYSIWYGCheckBoxInsertForm.= "</div>";
         $WYSIWYGCheckBoxInsertForm.="<b>Insert Check Box Options Menu</b>";
         $WYSIWYGCheckBoxInsertForm.="<div id='checkboxOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
@@ -167,6 +198,207 @@ class form_entity_checkbox extends form_entity_handler {
         $WYSIWYGCheckBoxInsertForm.= "</div>";
 
         return $WYSIWYGCheckBoxInsertForm;
+    }
+    
+    public function getWYSIWYGCheckBoxEditForm($formNumber,$formElementName){
+        $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($formNumber, $formElementName);
+        if (empty($checkboxParameters)) {
+            return 0;
+        } else {
+            $formElementLabel = "";
+            $labelOrientation = "";
+            foreach ($checkboxParameters as $thisCheckboxParameter) {
+
+//$checkboxName = $thisCheckboxParameter["checkboxname"];
+                //$checkboxValue = $thisCheckboxParameter["checkboxvalue"];
+                //$checkboxLabel = $thisCheckboxParameter["checkboxlabel"];
+                //$isChecked = $thisCheckboxParameter["ischecked"];
+                //$breakspace = $thisCheckboxParameter["breakspace"];
+                $formElementLabel = $thisCheckboxParameter["label"];
+                $labelOrientation = $thisCheckboxParameter["labelorientation"];
+            }
+
+            $WYSIWYGCheckBoxEditForm = "<div id='editFormElementTabs'>	
+         <ul>
+		<li><a href='#editFormElementPropertiesContainer'>Edit Check Box Properties</a></li>
+		<li><a href='#editFormElementOptionsContainer'>Edit Check Box Options</a></li>
+	</ul>";
+            $WYSIWYGCheckBoxEditForm.= "<div id='editFormElementPropertiesContainer'>";
+             $WYSIWYGCheckBoxEditForm.= "<b>Check Box Label Properties</b>";
+        $WYSIWYGCheckBoxEditForm.="<div id='checkboxLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGCheckBoxEditForm.= $this->insertFormLabelOptions("checkbox", "labelOrientation",$formElementLabel, $labelOrientation);
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+
+            $WYSIWYGCheckBoxEditForm.= "<div id='editFormElementOptionsContainer'>";
+            $WYSIWYGCheckBoxEditForm.= "<b>Edit Check Box Options</b>";
+            $WYSIWYGCheckBoxEditForm.="<div id='checkboxOptionsContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+            $optionNumber = 1;
+
+            $WYSIWYGCheckBoxEditForm.="<style>
+            .singleOptionContainer{
+            color: #222222;
+            font-size: 72.5%;
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background: none repeat scroll 0 0 #EEEEEE;
+            border-top: 1px solid #CCCCCC;
+            padding: 10px 20px;
+            width: 700px;
+            display:block;
+            overflow: hidden;
+            }
+            
+.singleOptionContainer:hover {
+
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+       background: none repeat scroll 0 0 #CFCFCF;
+
+	}
+        
+.optionValueContainer{
+width: 150px;
+float:left;
+}
+
+.optionLabelContainer{
+width: 150px;
+float:left;
+}
+
+.optionBreakSpaceContainer{
+width: 120px;
+float:left;
+}
+
+.defaultOptionContainer{
+width: 100px;
+float:left;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+.deleteOptionLink, .editOptionLink {
+    display: block;
+    float: right;
+    width: 60px;
+}
+
+        </style>";
+            
+            
+              $WYSIWYGCheckBoxEditForm.= "<div class='formOptionsListContainer'>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='singleOptionContainer' id='optionTitle'>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionValueContainer'><b>Option Value</b></div>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionLabelContainer'><b>Option Label</b></div>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionBreakSpaceContainer'><b>Break Space</b></div>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='defaultOptionContainer'><b>Default Selected</b></div>"; 
+                $WYSIWYGCheckBoxEditForm.= "</div>";
+                
+                            foreach ($checkboxParameters as $thisCheckboxParameter) {
+
+//$checkboxName = $thisCheckboxParameter["checkboxname"];
+                $checkboxValue = $thisCheckboxParameter["checkboxvalue"];
+                $checkboxLabel = $thisCheckboxParameter["checkboxlabel"];
+                $isChecked = $thisCheckboxParameter["ischecked"];
+                $breakspace = $thisCheckboxParameter["breakspace"];
+                $formElementLabel = $thisCheckboxParameter["label"];
+                $labelOrientation = $thisCheckboxParameter["labelorientation"];
+                $id = $thisCheckboxParameter["id"];
+                
+                 $WYSIWYGCheckBoxEditForm.= "<div class='singleOptionContainer' id='option".$optionNumber."' optionID='".$id."' formNumber='".$formNumber."' formElementName='".$formElementName."' optionLabel='".$checkboxLabel."' optionValue='".$checkboxValue."' defaultValue='".$isChecked."' breakspace='".$breakspace."' formElementLabel='".$formElementLabel."' labelOrientation='".$labelOrientation."'>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionValueContainer'>".$checkboxValue."</div>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionLabelContainer'>".$checkboxLabel."</div>";
+                $WYSIWYGCheckBoxEditForm.= "<div class='optionBreakSpaceContainer'>".$breakspace."</div>";
+                if ($isChecked == TRUE){
+                  $WYSIWYGCheckBoxEditForm.= "<div class='defaultOptionContainer'>yes</div>";  
+                }else{
+                  $WYSIWYGCheckBoxEditForm.= "<div class='defaultOptionContainer'>no</div>";  
+                }
+                
+                $WYSIWYGCheckBoxEditForm.= "<a class='deleteOptionLink' href='#delete'>Delete</a>";
+                $WYSIWYGCheckBoxEditForm.= "<a class='editOptionLink' href='#edit'>Edit</a>";
+                $WYSIWYGCheckBoxEditForm.= "</div>";
+                
+                $optionNumber++;
+            }
+
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        
+        $WYSIWYGCheckBoxEditForm.= "<style>
+            
+.editFormElementOptionsHeadingSpacer{
+height:150px;
+border-bottom: 2px solid #666666;
+overflow: hidden;
+}
+
+.formElementOptionUpdateHeading{
+float:right;
+margin-top:110px;
+margin-right:50px;
+position:relative;
+color: #222222;
+font-family: 'Droid Serif',Cambria,Georgia,Palatino,'Palatino Linotype','Myriad Pro',Serif;
+font-size: 3.0em;
+}
+
+.editFormElementOptionsSideSeperator{
+float:right;
+clear:none;
+width:2px;
+height:620px;
+margin-right:100px;
+background:#666666;
+}
+
+.editFormElementFormContainer{
+width:780px;
+margin-left:10px;
+}
+
+.formElementOptionsFormButtonsContainer{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-style: double;
+    border-bottom-style: double;
+    border-top-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    padding:5px;
+    margin-bottom:5px;
+    margin-top:5px;
+    height:30px;
+}
+
+.formElementOptionsFormSuperContainer{
+min-height:620px;
+}
+</style>";
+        $WYSIWYGCheckBoxEditForm.="<div class='formElementOptionsFormSuperContainer'>";
+        $WYSIWYGCheckBoxEditForm.= "<div class='editFormElementOptionsSideSeperator'></div>";
+        $WYSIWYGCheckBoxEditForm.="<div class='editFormElementOptionsHeadingSpacer'><div class='formElementOptionUpdateHeading'>Update Single Check Box Option</div></div>";
+        $WYSIWYGCheckBoxEditForm.= "<div class='editFormElementFormContainer'>";
+        
+        $WYSIWYGCheckBoxEditForm.= "<b>Check Box Option Layout Menu</b>";
+        $WYSIWYGCheckBoxEditForm.= "<div id='checkboxLayoutContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGCheckBoxEditForm.= $this->buildLayoutForm('checkbox', "", "checkbox",NULL) . "";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.="<b>Insert Check Box Options Menu</b>";
+        $WYSIWYGCheckBoxEditForm.="<div id='checkboxOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGCheckBoxEditForm.= $this->insertOptionAndValueForm('checkbox', 0) . "";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.= "<div class='formElementOptionsFormButtonsContainer'></div>";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        $WYSIWYGCheckBoxEditForm.= "</div>";
+        return $WYSIWYGCheckBoxEditForm;
+        }
     }
 
     /*!
@@ -198,6 +430,8 @@ class form_entity_checkbox extends form_entity_handler {
     protected function constructCheckBoxEntity($checkboxName,$formNumber) {
         $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($formNumber,$checkboxName);
         $constructedCheckbox = "";
+        $checkBoxLabel=NULL;
+        $labelOrientation=NULL;
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 
 //$checkboxName = $thisCheckboxParameter["checkboxname"];
@@ -250,6 +484,8 @@ class form_entity_checkbox extends form_entity_handler {
 
         $checkboxParameters = $this->objDBcheckboxEntity->listCheckboxParameters($this->formNumber,$this->checkboxName);
         $constructedCheckbox = "";
+        $checkBoxLabel=NULL;
+        $labelOrientation=NULL;
         foreach ($checkboxParameters as $thisCheckboxParameter) {
 //Store the values of the array in variables
 //$checkboxName = $thisCheckboxParameter["checkboxname"];

@@ -1,4 +1,4 @@
-u<?php
+<?php
 
 /*! \file form_editor.php
  * \brief The template file is called by the action designWYSIWYGForm in the controller.php.
@@ -28,6 +28,10 @@ $editFormElementTextArea = '<script language="JavaScript" src="' . $this->getRes
 $editFormElementHTMLHeading = '<script language="JavaScript" src="' . $this->getResourceUri('js/editHTMLHeading.js', 'formbuilder') . '" type="text/javascript"></script>';
 $editFormElementDatePicker = '<script language="JavaScript" src="' . $this->getResourceUri('js/editDatePicker.js', 'formbuilder') . '" type="text/javascript"></script>';
 $editFormElementRadio = '<script language="JavaScript" src="' . $this->getResourceUri('js/editRadio.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementDropDown = '<script language="JavaScript" src="' . $this->getResourceUri('js/editDropDown.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementCheckBox = '<script language="JavaScript" src="' . $this->getResourceUri('js/editCheckBox.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementMSDropDown = '<script language="JavaScript" src="' . $this->getResourceUri('js/editMSDropDown.js', 'formbuilder') . '" type="text/javascript"></script>';
+$editFormElementButton = '<script language="JavaScript" src="' . $this->getResourceUri('js/editButton.js', 'formbuilder') . '" type="text/javascript"></script>';
 
 //$jqplotLibrary = '<script language="JavaScript" src="'.$this->getResourceUri('js/jqplot/jquery.jqplot.js', 'formbuilder').'" type="text/javascript"></script>';
 //$jqplotCSS = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('js/jqplot/jquery.jqplot.css', 'formbuilder').'"';
@@ -43,7 +47,10 @@ $this->appendArrayVar('headerParams', $editFormElementTextArea);
 $this->appendArrayVar('headerParams', $editFormElementHTMLHeading);
 $this->appendArrayVar('headerParams', $editFormElementDatePicker);
 $this->appendArrayVar('headerParams', $editFormElementRadio);
-
+$this->appendArrayVar('headerParams', $editFormElementDropDown);
+$this->appendArrayVar('headerParams', $editFormElementCheckBox);
+$this->appendArrayVar('headerParams', $editFormElementMSDropDown);
+$this->appendArrayVar('headerParams', $editFormElementButton);
 
 
 $this->appendArrayVar('headerParams', $editFormElementOptionManager);

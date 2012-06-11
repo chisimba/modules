@@ -1,5 +1,5 @@
 function LoadEditHTMLHeadingForm(formNumber,formElementName,formElementType){
-        var myurlToEditHTMLHeading = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToEditFormElement]").val();
+    var myurlToEditHTMLHeading = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToEditFormElement]").val();
     var dataToPost ={
         "formNumber":formNumber,
         "formElementName":formElementName,
@@ -25,53 +25,53 @@ function setUpEditHTMLHeadingForm(formNumber,formElementName){
     fontSize.button();
     textAlignment.button();
 
-  jQuery("#HeadingPropertiesContainer").children().children('.ui-button-text').css('width','150px');
-        var allFields = jQuery([]).add(formElementText);
+    jQuery("#HeadingPropertiesContainer").children().children('.ui-button-text').css('width','150px');
+    var allFields = jQuery([]).add(formElementText);
 
-        jQuery( "#dialog-box-editFormElements" ).dialog( "option", "buttons", {
-                                           "Help": function() {
-                  setUpFormElementModalHelp('htmlheading');
-              },
-            "Cancel": function() {
-             insertFormElement();
-             jQuery("#dialog-box-editFormElements").dialog("close");
-             jQuery("#dialog-box-editFormElements").children("#content").empty();
-            },
-         "Update HTML Heading Parameters": function() {
-                var bValid = true;
-                allFields.removeClass('ui-state-error');
+    jQuery( "#dialog-box-editFormElements" ).dialog( "option", "buttons", {
+        "Help": function() {
+            setUpFormElementModalHelp('htmlheading');
+        },
+        "Cancel": function() {
+            insertFormElement();
+            jQuery("#dialog-box-editFormElements").dialog("close");
+            jQuery("#dialog-box-editFormElements").children("#content").empty();
+        },
+        "Update HTML Heading Parameters": function() {
+            var bValid = true;
+            allFields.removeClass('ui-state-error');
 
-                bValid = bValid && checkLength(formElementText," desired text for HTML Heading",1,550);
-                if (bValid) {
+            bValid = bValid && checkLength(formElementText," desired text for HTML Heading",1,550);
+            if (bValid) {
 
 
-                    var fontSizes= jQuery('input:radio[name=fontSize]:checked').val();
-                    var textAlignments=jQuery('input:radio[name=textAlignment]:checked').val();
-                    var formElementTexts= formElementText.val();
-                    updateHTMLHeading(formNumber,formElementName,fontSizes,textAlignments,formElementTexts);
-                }
-
+                var fontSizes= jQuery('input:radio[name=fontSize]:checked').val();
+                var textAlignments=jQuery('input:radio[name=textAlignment]:checked').val();
+                var formElementTexts= formElementText.val();
+                updateHTMLHeading(formNumber,formElementName,fontSizes,textAlignments,formElementTexts);
             }
-        });
- jQuery(".ui-dialog-buttonset").css('width','920px');
-            jQuery(".ui-dialog-buttonpane").find("button").css('float', 'right');
-          var  btnHelp = jQuery('.ui-dialog-buttonpane').find('button:contains("Help")');
-          btnHelp.css('float', 'left');
+
+        }
+    });
+    jQuery(".ui-dialog-buttonset").css('width','920px');
+    jQuery(".ui-dialog-buttonpane").find("button").css('float', 'right');
+    var  btnHelp = jQuery('.ui-dialog-buttonpane').find('button:contains("Help")');
+    btnHelp.css('float', 'left');
 }
 
 function updateHTMLHeading(formNumber,formElementName,fontSize,textAlignment,formElementText){
- var HTMLHeadingdataToPost = {
-                "update":1,
-                "formNumber":formNumber,
-                "formElementName": formElementName,
-                "HTMLHeadingValue": formElementText,
-                "fontSize": fontSize,
-                "textAlignment": textAlignment
-            };
+    var HTMLHeadingdataToPost = {
+        "update":1,
+        "formNumber":formNumber,
+        "formElementName": formElementName,
+        "HTMLHeadingValue": formElementText,
+        "fontSize": fontSize,
+        "textAlignment": textAlignment
+    };
 
-            var myurlToUpdateHTMLHeading = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceHTMLHeading]").val();
+    var myurlToUpdateHTMLHeading = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceHTMLHeading]").val();
 
-            jQuery('#tempdivcontainer').load(myurlToUpdateHTMLHeading, HTMLHeadingdataToPost ,function postSuccessFunction(html) {
+    jQuery('#tempdivcontainer').load(myurlToUpdateHTMLHeading, HTMLHeadingdataToPost ,function postSuccessFunction(html) {
                 
         var HTMLHeading = jQuery('#tempdivcontainer #WYSIWYGHTMLHeading').html();
         jQuery('#tempdivcontainer').empty();
@@ -84,7 +84,5 @@ function updateHTMLHeading(formNumber,formElementName,fontSize,textAlignment,for
             jQuery("#dialog-box-editFormElements").children("#content").empty();
             highlightNewConstructedFormElement(elementToHighlight);        
         }  
-            });
+    });
 }
-
-

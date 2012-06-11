@@ -112,7 +112,31 @@ class dbformbuilder_dropdown_entity extends dbTable {
                 ));
         return $id;
     }
+    
+    function checkIfOptionExists($id){
+           $sql = "where id like '".$id."'";
 
+///Return the number of entries. Note that is function in part of the parent class dbTable.
+        $numberofDuplicates = $this->getRecordCount($sql);
+        if ($numberofDuplicates < 1) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    function updateSingle($optionID,$formNumber,$ddName, $ddLabel, $ddValue, $defaultValue, $label, $labelOrientation) {
+        $UpdateSQL = "UPDATE tbl_formbuilder_dropdown_entity
+        SET ddoptionlabel='".$ddLabel."', ddoptionvalue='".$ddValue."', defaultvalue='".$defaultValue."', label='".$label."', labelorientation='".$labelOrientation."' WHERE dropdownname='".$ddName."' and formnumber='".$formNumber."' and id='".$optionID."'";
+        $this->_execute($UpdateSQL);
+    }
+
+    function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout){
+        $UpdateSQL = "UPDATE tbl_formbuilder_dropdown_entity
+        SET label='".$formElementLabel."', labelorientation='".$formElementLabelLayout."' WHERE dropdownname='".$formElementName."' and formnumber='".$formNumber."'";
+        $this->_execute($UpdateSQL);
+    }
+    
     /*!
      * \brief This member function deletes a drop down element according to its form element
      * indentifier.

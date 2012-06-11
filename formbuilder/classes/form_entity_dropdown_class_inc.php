@@ -118,7 +118,7 @@ class form_entity_dropdown extends form_entity_handler {
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "<b>Drop Down Label Menu</b>";
         $WYSIWYGDropDownInsertForm.= "<div id='ddLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
-        $WYSIWYGDropDownInsertForm.= $this->insertFormLabelOptions("dropdown", "labelOrientation");
+        $WYSIWYGDropDownInsertForm.= $this->insertFormLabelOptions("dropdown", "labelOrientation",NULL,NULL);
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "<div id='optionAndValueContainer'>";
         $WYSIWYGDropDownInsertForm.="<b>Insert Drop Down Options Menu</b>";
@@ -127,6 +127,195 @@ class form_entity_dropdown extends form_entity_handler {
         $WYSIWYGDropDownInsertForm.= "</div>";
         $WYSIWYGDropDownInsertForm.= "</div>";
         return $WYSIWYGDropDownInsertForm;
+    }
+    
+    public function getWYSIWYGDropDownEditForm($formNumber,$formElementName){
+      $ddParameters = $this->objDBddEntity->listDropdownParameters($formNumber, $formElementName);
+        if (empty($ddParameters)) {
+            return 0;
+        } else {
+
+            $formElementLabel = "";
+            $labelOrientation = "";
+            foreach ($ddParameters as $thisDDParameter) {
+
+                //$ddValue = $thisDDParameter["ddoptionvalue"];
+                //$ddOptionLabel = $thisDDParameter["ddoptionlabel"];
+                //$defaultValue = $thisDDParameter["defaultvalue"];
+                $formElementLabel = $thisDDParameter["label"];
+                $labelOrientation = $thisDDParameter["labelorientation"];
+            }
+              $WYSIWYGDropDownEditForm="<div id='editFormElementTabs'>	
+         <ul>
+		<li><a href='#editFormElementPropertiesContainer'>Edit Drop Down List Properties</a></li>
+		<li><a href='#editFormElementOptionsContainer'>Edit Drop Down List Options</a></li>
+	</ul>";
+        $WYSIWYGDropDownEditForm.= "<div id='editFormElementPropertiesContainer'>";
+        
+        $WYSIWYGDropDownEditForm.= "<b>Drop Down Label Properties</b>";
+        $WYSIWYGDropDownEditForm.= "<div id='ddLabelContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGDropDownEditForm.= $this->insertFormLabelOptions("dropdown", "labelOrientation",$formElementLabel,$labelOrientation);
+        $WYSIWYGDropDownEditForm.= "</div>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        
+        $WYSIWYGDropDownEditForm.= "<div id='editFormElementOptionsContainer'>";
+        $WYSIWYGDropDownEditForm.= "<b>Edit Drop Down List Options</b>";
+        $WYSIWYGDropDownEditForm.="<div id='dropdownOptionsContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $optionNumber = 1;
+        
+        $WYSIWYGDropDownEditForm.="<style>
+            .singleOptionContainer{
+            color: #222222;
+            font-size: 72.5%;
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background: none repeat scroll 0 0 #EEEEEE;
+            border-top: 1px solid #CCCCCC;
+            padding: 10px 20px;
+            width: 700px;
+            display:block;
+            overflow: hidden;
+            }
+            
+.singleOptionContainer:hover {
+
+    -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+       background: none repeat scroll 0 0 #CFCFCF;
+
+	}
+        
+.optionValueContainer{
+width: 180px;
+float:left;
+}
+
+.optionLabelContainer{
+width: 180px;
+float:left;
+}
+
+.defaultOptionContainer{
+width: 130px;
+float:left;
+}
+
+a:link, a:visited {
+    text-decoration: underline;
+}
+
+.deleteOptionLink, .editOptionLink {
+    display: block;
+    float: right;
+    width: 80px;
+}
+
+        </style>";
+        
+
+                $WYSIWYGDropDownEditForm.= "<div class='formOptionsListContainer'>";
+                $WYSIWYGDropDownEditForm.= "<div class='singleOptionContainer' id='optionTitle'>";
+                $WYSIWYGDropDownEditForm.= "<div class='optionValueContainer'><b>Option Value</b></div>";
+                $WYSIWYGDropDownEditForm.= "<div class='optionLabelContainer'><b>Option Label</b></div>";
+//                $WYSIWYGDropDownEditForm.= "<div class='optionBreakSpaceContainer'><b>Break Space</b></div>";
+                $WYSIWYGDropDownEditForm.= "<div class='defaultOptionContainer'><b>Default Selected</b></div>"; 
+                $WYSIWYGDropDownEditForm.= "</div>";
+      
+
+            foreach ($ddParameters as $thisDDParameter) {
+
+                $ddValue = $thisDDParameter["ddoptionvalue"];
+                $ddOptionLabel = $thisDDParameter["ddoptionlabel"];
+                $defaultValue = $thisDDParameter["defaultvalue"];
+                $formElementLabel = $thisDDParameter["label"];
+                $labelOrientation = $thisDDParameter["labelorientation"];
+                $id = $thisDDParameter["id"];
+                
+                $WYSIWYGDropDownEditForm.= "<div class='singleOptionContainer' id='option".$optionNumber."' optionID='".$id."' formNumber='".$formNumber."' formElementName='".$formElementName."' optionLabel='".$ddOptionLabel."' optionValue='".$ddValue."' defaultValue='".$defaultValue."' formElementLabel='".$formElementLabel."' labelOrientation='".$labelOrientation."'>";
+                $WYSIWYGDropDownEditForm.= "<div class='optionValueContainer'>".$ddValue."</div>";
+                $WYSIWYGDropDownEditForm.= "<div class='optionLabelContainer'>".$ddOptionLabel."</div>";
+//                $WYSIWYGDropDownEditForm.= "<div class='optionBreakSpaceContainer'>".$breakspace."</div>";
+                if ($defaultValue == TRUE){
+                  $WYSIWYGDropDownEditForm.= "<div class='defaultOptionContainer'>yes</div>";  
+                }else{
+                  $WYSIWYGDropDownEditForm.= "<div class='defaultOptionContainer'>no</div>";  
+                }
+                $WYSIWYGDropDownEditForm.= "<a class='deleteOptionLink' href='#delete'>Delete</a>";
+                $WYSIWYGDropDownEditForm.= "<a class='editOptionLink' href='#edit'>Edit</a>";
+                $WYSIWYGDropDownEditForm.= "</div>";
+                $optionNumber++;
+            }
+            
+        $WYSIWYGDropDownEditForm.= "</div>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        
+        $WYSIWYGDropDownEditForm.= "</div>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        
+   $WYSIWYGDropDownEditForm.= "<style>
+            
+.editFormElementOptionsHeadingSpacer{
+height:150px;
+border-bottom: 2px solid #666666;
+overflow: hidden;
+}
+
+.formElementOptionUpdateHeading{
+float:right;
+margin-top:110px;
+margin-right:50px;
+position:relative;
+color: #222222;
+font-family: 'Droid Serif',Cambria,Georgia,Palatino,'Palatino Linotype','Myriad Pro',Serif;
+font-size: 3.0em;
+}
+
+.editFormElementOptionsSideSeperator{
+float:right;
+clear:none;
+width:2px;
+height:425px;
+margin-right:100px;
+background:#666666;
+}
+
+.editFormElementFormContainer{
+width:780px;
+margin-left:10px;
+}
+
+.formElementOptionsFormButtonsContainer{
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-style: double;
+    border-bottom-style: double;
+    border-top-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    padding:5px;
+    margin-bottom:5px;
+    margin-top:5px;
+    height:30px;
+}
+
+.formElementOptionsFormSuperContainer{
+min-height:425px;
+}
+</style>";
+        $WYSIWYGDropDownEditForm.="<div class='formElementOptionsFormSuperContainer'>";
+        $WYSIWYGDropDownEditForm.= "<div class='editFormElementOptionsSideSeperator'></div>";
+        $WYSIWYGDropDownEditForm.="<div class='editFormElementOptionsHeadingSpacer'><div class='formElementOptionUpdateHeading'>Update Drop Down List Option</div></div>";
+        $WYSIWYGDropDownEditForm.= "<div class='editFormElementFormContainer'>";
+        
+
+        $WYSIWYGDropDownEditForm.="<b>Drop Down Options Menu</b>";
+        $WYSIWYGDropDownEditForm.="<div id='ddOptionAndValueContainer' class='ui-widget-content ui-corner-all'style='border:1px solid #CCCCCC;padding:10px 15px 10px 15px;margin:0px 0px 10px 0px;'> ";
+        $WYSIWYGDropDownEditForm.= $this->insertOptionAndValueForm('drop down list', 0) . "<br>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        $WYSIWYGDropDownEditForm.= "<div class='formElementOptionsFormButtonsContainer'></div>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        $WYSIWYGDropDownEditForm.= "</div>";
+        return $WYSIWYGDropDownEditForm;     
+        }
     }
 
     /*!
@@ -156,6 +345,26 @@ class form_entity_dropdown extends form_entity_handler {
         } else {
             return FALSE;
         }
+    }
+    
+        public function updateOptionandValue($optionID,$formNumber,$formElementName, $option, $value, $defaultSelected, $formElementLabel, $labelOrientation) {
+              if ($this->objDBddEntity->checkIfOptionExists($optionID) == TRUE) {
+            $this->objDBddEntity->updateSingle($optionID,$formNumber,$formElementName, $option, $value, $defaultSelected, $formElementLabel, $labelOrientation);
+              $this->ddName = $formElementName;
+            $this->formNumber = $formNumber;
+            
+            return TRUE;
+        } else {
+            return FALSE;
+        }  
+    }
+    
+
+    public function updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout){
+        $this->objDBddEntity->updateMetaData($formNumber,$formElementName,$formElementLabel,$formElementLabelLayout);
+                
+        $this->formNumber = $formNumber;
+        $this->ddName = $formElementName;
     }
 
     /*!
@@ -189,7 +398,8 @@ class form_entity_dropdown extends form_entity_handler {
 
         $ddName = $ddParameters["0"]['dropdownname'];
         $ddUnderConstruction = new dropdown($ddName);
-
+        $ddLabel=NULL;
+        $labelOrientation=NULL;
         foreach ($ddParameters as $thisDDParameter) {
 
             $ddValue = $thisDDParameter["ddoptionvalue"];
@@ -241,6 +451,11 @@ class form_entity_dropdown extends form_entity_handler {
 
         $ddParameters = $this->objDBddEntity->listDropdownParameters($this->formNumber,$this->ddName);
         $this->objDD = new dropdown($this->ddName);
+        $ddLabel=NULL;
+        $ddValue=NULL;
+        $ddOptionLabel=NULL;
+        $defaultValue=NULL;
+        $labelOrientation=NULL;
         foreach ($ddParameters as $thisDDParameter) {
 
             $ddValue = $thisDDParameter["ddoptionvalue"];

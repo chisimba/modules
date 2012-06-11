@@ -1,5 +1,5 @@
 function LoadEditRadioForm(formNumber,formElementName,formElementType){
-        var myurlToEditRadio = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToEditFormElement]").val();
+    var myurlToEditRadio = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToEditFormElement]").val();
     var dataToPost ={
         "formNumber":formNumber,
         "formElementName":formElementName,
@@ -12,7 +12,6 @@ does not exist or is empty. Please contact your software administrator.</p>');
             jQuery( "#dialog-box-editFormElements").children("#content").fadeIn("slow");     
         }else{
             
-//            jQuery( "#dialog-box-editFormElements").children("#content").css("min-height","450px");
             setUpEditRadioForm(formNumber,formElementName);
             jQuery( "#dialog-box-editFormElements").children("#content").fadeIn("slow");   
        
@@ -23,88 +22,78 @@ does not exist or is empty. Please contact your software administrator.</p>');
 
 function setUpEditRadioForm(formNumber,formElementName){
 
+    var layoutOption = jQuery(':input[name=formElementLayout]');
+    var defaultOption = jQuery('#defaultOptionButton');
+    var formElementLabel = jQuery(':input[name=formElementLabel]');
+    var formElementLabelLayout = jQuery(':input[name=labelOrientation]');
+    defaultOption.button();
+    layoutOption.button();
+    formElementLabelLayout.button();
+    var allFields = jQuery([]).add(formElementLabel);
 
-//            var optionValue = jQuery(':input[name=optionValue]');
-//            var optionLabel = jQuery(':input[name=optionLabel]');
-            var layoutOption = jQuery(':input[name=formElementLayout]');
-            var defaultOption = jQuery('#defaultOptionButton');
-            var formElementLabel = jQuery(':input[name=formElementLabel]');
-            var formElementLabelLayout = jQuery(':input[name=labelOrientation]');
-            defaultOption.button();
-            layoutOption.button();
-            formElementLabelLayout.button();
-            var allFields = jQuery([]).add(formElementLabel);
-            
-            
-            
-            
-            
-
-
-  jQuery("#editFormElementTabs").children().children('.ui-button-text').css('width','150px');
+    jQuery("#editFormElementTabs").children().children('.ui-button-text').css('width','150px');
         
 
-        jQuery( "#dialog-box-editFormElements" ).dialog( "option", "buttons", {
-                                           "Help": function() {
-                  setUpFormElementModalHelp('radio');
-              },
-            "Cancel": function() {
+    jQuery( "#dialog-box-editFormElements" ).dialog( "option", "buttons", {
+        "Help": function() {
+            setUpFormElementModalHelp('radio');
+        },
+        "Cancel": function() {
              
-             insertFormElement();
-             jQuery("#dialog-box-editFormElements").dialog("close");
-             jQuery("#dialog-box-editFormElements").children("#content").empty();
-             updateRadio(2,formNumber,formElementName);
-            },
-         "Update Radio Parameters": function() {
-                var bValid = true;
-                allFields.removeClass('ui-state-error');
+            insertFormElement();
+            jQuery("#dialog-box-editFormElements").dialog("close");
+            jQuery("#dialog-box-editFormElements").children("#content").empty();
+            updateRadio(2,formNumber,formElementName);
+        },
+        "Update Radio Parameters": function() {
+            var bValid = true;
+            allFields.removeClass('ui-state-error');
 
-                //bValid = bValid && checkLength(formElementText," desired text for HTML Heading",1,550);
-                if (bValid) {
+            if (bValid) {
 
-                    var formElementLabelLayouts = jQuery('input:radio[name=labelOrientation]:checked').val();
-                    var formElementLabels = formElementLabel.val();
-//                    var fontSizes= jQuery('input:radio[name=fontSize]:checked').val();
-//                    var textAlignments=jQuery('input:radio[name=textAlignment]:checked').val();
-//                    var formElementTexts= formElementText.val();
-             updateRadio(1,formNumber,formElementName,formElementLabels,formElementLabelLayouts);
+                var formElementLabelLayouts = jQuery('input:radio[name=labelOrientation]:checked').val();
+                var formElementLabels = formElementLabel.val();
+
+                updateRadio(1,formNumber,formElementName,formElementLabels,formElementLabelLayouts);
                      
-                }
-
             }
-        });
- jQuery(".ui-dialog-buttonset").css('width','920px');
-            jQuery(".ui-dialog-buttonpane").find("button").css('float', 'right');
-          var  btnHelp = jQuery('.ui-dialog-buttonpane').find('button:contains("Help")');
+
+        }
+    });
+    jQuery(".ui-dialog-buttonset").css('width','920px');
+    jQuery(".ui-dialog-buttonpane").find("button").css('float', 'right');
+    var  btnHelp = jQuery('.ui-dialog-buttonpane').find('button:contains("Help")');
           
                 
-          btnHelp.css('float', 'left');
+    btnHelp.css('float', 'left');
     var formElementType = "radio";
     var formElementLargeName = "Radio Button";
-       var updateRadioParametersButtonLabel = "Update Radio Parameters";
-     var  btnUpdate = jQuery('.ui-dialog-buttonpane').find('button:contains("'+updateRadioParametersButtonLabel+'")');
-    setUpEditLinkForMovableOptions(formElementType,formElementLargeName,btnUpdate);
+    var updateRadioParametersButtonLabel = "Update Radio Parameters";
+    var  btnUpdate = jQuery('.ui-dialog-buttonpane').find('button:contains("'+updateRadioParametersButtonLabel+'")');
+    setUpEditLinkForOptions(formElementType,formElementLargeName,btnUpdate,true);
     setUpDeleteLink(formElementType);
     hideFormElementOptionSuperContainer();
-            $("#editFormElementTabs").tabs({ 
-    fx: { opacity: 'toggle' } 
-});
+    $("#editFormElementTabs").tabs({ 
+        fx: {
+            opacity: 'toggle'
+        } 
+    });
             
 
 }
 
 function updateRadio(realUpdate,formNumber,formElementName,formElementLabel,formElementLabelLayout){
-     var RadioDataToPost = {
-         "update":realUpdate,
+    var RadioDataToPost = {
+        "update":realUpdate,
         "formNumber":formNumber,
         "formElementName":formElementName,
-       "formElementLabel": formElementLabel,
-       "formElementLabelLayout":formElementLabelLayout
+        "formElementLabel": formElementLabel,
+        "formElementLabelLayout":formElementLabelLayout
     };
 
     var myurlToUpdateRadio = jQuery("#ajaxCallUrlsHiddenInputs").children(":input[name=urlToProduceRadio]").val();
     
-     jQuery('#tempdivcontainer').load(myurlToUpdateRadio, RadioDataToPost ,function postSuccessFunction(html) {  
+    jQuery('#tempdivcontainer').load(myurlToUpdateRadio, RadioDataToPost ,function postSuccessFunction(html) {  
         var radio = jQuery('#tempdivcontainer #WYSIWYGRadio').html();
         jQuery('#tempdivcontainer').empty();
         if (radio == 0){
