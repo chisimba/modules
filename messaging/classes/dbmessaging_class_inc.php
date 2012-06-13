@@ -946,6 +946,8 @@ class dbmessaging extends dbTable
         return array();
     }
     
+/* ------------------ Functions for stausbar ------------------*/
+
     /**
      *
      * Method to get the number of instant messages for the user
@@ -956,7 +958,7 @@ class dbmessaging extends dbTable
     public function getInstantMessages()
     {
         $this->_setMessagesTable();
-        $sql = "SELECT * FROM tbl_messaging_messages as m";
+        $sql = "SELECT *, m.id as mid FROM tbl_messaging_messages as m";
         $sql .= " LEFT JOIN tbl_users as u";
         $sql .= " ON m.sender_id = u.userid";
         $sql .= " WHERE recipient_id = '$this->userId'";
@@ -966,6 +968,20 @@ class dbmessaging extends dbTable
         $messages = $this->getArray($sql);
         
         return $messages;
+    }
+    
+    /**
+     *
+     * Method to update the message as read
+     * 
+     * @access public
+     * @param string $id The id of the message to update
+     * @return VOID 
+     */
+    public function updateMessage($id)
+    {
+        $this->_setMessagesTable();
+        return $this->update('id', $id, array('delivery_state' => 1));
     }
 }
 ?>
