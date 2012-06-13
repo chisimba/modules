@@ -145,7 +145,7 @@ class dbcalendar extends dbTable
     * @param string $eventStartId - Record ID of the Start (First Day) of the multiday event. If none is provided, the function will generate one.
     * Needed for when updating an event
     */
-    public function insertMultiDayEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $eventStartId=NULL)
+    public function insertMultiDayEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $eventStartId=NULL, $timeFrom = NULL, $timeTo = NULL)
     {
         // Switch Dates if the former is greater than the latter
             $this->objDateFunctions->smallDateBigDate($date, $date2);
@@ -157,7 +157,7 @@ class dbcalendar extends dbTable
 
             // if the day difference is 0, treat this as a single day event
             if ($dayDifference == 0) {
-                $event = $this->insertSingle($date, 0, NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified);
+                $event = $this->insertSingle($date, 0, NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $timeFrom, $timeTo);
 
                 return $event;
             } else {
@@ -169,7 +169,7 @@ class dbcalendar extends dbTable
 
                 if ($eventStartId == NULL) {
                     // Insert record to get record id of first day of event
-                    $eventStartId = $this->insertSingle($date, 1, NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified);
+                    $eventStartId = $this->insertSingle($date, 1, NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $timeFrom, $timeTo);
                 }
 
                 // Create New Variable for Next Day
@@ -181,7 +181,7 @@ class dbcalendar extends dbTable
                     // Calculate the next day
                     $nextDay = $this->objDateFunctions->nextDay($nextDay);
                     // Insert into database
-                    $this->insertSingle($nextDay, 1, $eventStartId, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified);
+                    $this->insertSingle($nextDay, 1, $eventStartId, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $timeFrom, $timeTo);
                 }
 
                 $this->commitTransaction();
@@ -887,6 +887,44 @@ class dbcalendar extends dbTable
         $sql = '  ('.$filterSQL.') AND eventDate > "'.$startDate.'" AND eventDate < "'.$endDate.'"';
 
         return $sql;
+    }
+    
+    /**
+     *
+     * Method to get the alerts
+     * 
+     * @access public
+     * @param integer $alertTime The alert interval
+     * @return array $alerts The alerts for the statusbar 
+     */
+    public function getAlerts($alertTime, $userId = NULL)
+    {    
+        
+        $eventDate = date("Y-m-d", $alertTime);
+        
+        $sql = "SELECT * FROM tbl_calendar ";
+        $sql .= "WHERE `eventdate` <= '$eventDate' ";
+        $sql .= "AND `alert_state` = '0' ";
+        $sql .= "AND `userorcontext` = '0' ";
+        $sql .= "AND `userFirstEntry` = '$userId' ";
+        $sql .= "ORDER BY eventdate ASC, timefrom ASC";
+       
+        $alerts = $this->getArray($sql);
+       
+        return $alerts;
+    }
+    
+    /**
+     *
+     * Method to update event alert
+     * 
+     * @access public
+     * @param string $id The id ov the event to update
+     * @return VOID 
+     */
+    public function updateAlert($id)
+    {
+        return $this->update('id', $id, array('alert_state' => 1));
     }
 
 } //end of class

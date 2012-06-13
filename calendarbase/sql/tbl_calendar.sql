@@ -81,6 +81,11 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
+    'alert_state' => array(
+        'type' => 'text',
+        'length' => 1,
+        'default' => 0,
+        ),
     );
 
 //create other indexes here...

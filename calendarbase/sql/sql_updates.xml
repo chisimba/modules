@@ -34,10 +34,10 @@
     <update>
         <table>tbl_calendar</table>
         <version>1.110</version>
-        <description>added column for alarm in statusbar</description>
+        <description>added column for alerts in statusbar</description>
         <data>
             <add>
-                <name>alarm_state</name>
+                <name>alert_state</name>
                 <type>text</type>
                 <length>1</length>
                 <default>0</default>
