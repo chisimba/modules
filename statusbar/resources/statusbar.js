@@ -20,16 +20,27 @@
 jQuery(function() {
 
     jQuery(document).ready(function() {
-
+        var period = ajax_poll * 1000;
+        setInterval(function() {
+            jQuery.ajax({
+                type: "POST",
+                url: "index.php?module=statusbar&action=ajaxShowMain",
+                success: function(ret) {
+                    jQuery("#statusbar").html(ret);
+                }
+            });
+        }, period);
     });
     
     jQuery('#statusbar_settings').live('click', function() {
         jQuery.ajax({
             type: "POST",
-            url: "index.php?module=statusbar&action=ajaxShowOrientation",
+            url: "index.php?module=statusbar&action=ajaxShowSettings",
             success: function(ret) {
-                jQuery("#statusbar_orientation_div").html(ret);
-                var orientation = jQuery('#input_orientation').val();
+                var obj = jQuery.parseJSON(ret)
+                jQuery('#statusbar_orientation_div').html(obj.orientation);
+                jQuery('#statusbar_interval_div').html(obj.interval);
+                var orientation = jQuery('#input_statusbar_orientation').val();
                 jQuery.ajax({
                     type: "POST",
                     url: "index.php?module=statusbar&action=ajaxShowPosition",
@@ -56,8 +67,8 @@ jQuery(function() {
         return false;
     });
     
-    jQuery('#input_orientation').live('change', function() {
-        var orientation = jQuery('#input_orientation').val();
+    jQuery('#input_statusbar_orientation').live('change', function() {
+        var orientation = jQuery('#input_statusbar_orientation').val();
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowPosition",
@@ -69,12 +80,13 @@ jQuery(function() {
     });
     
     jQuery('#statusbar_settings_save').live('click', function() {
-        var orientation = jQuery("#input_orientation").val();
-        var position = jQuery("#input_position").val();
+        var orientation = jQuery("#input_statusbar_orientation").val();
+        var position = jQuery("#input_statusbar_position").val();
+        var alerts = jQuery("#input_statusbar_alert").val();
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxSaveSettings",
-            data: "orientation=" + orientation + "&position=" + position,
+            data: "orientation=" + orientation + "&position=" + position + "&alert=" + alerts,
             success: function(ret) {
                 jQuery.ajax({
                     type: "POST",
@@ -98,7 +110,7 @@ jQuery(function() {
     });
     
     jQuery("#statusbar_display_hide").live('click', function() {
-        var position = jQuery("#input_position").val();
+        var position = jQuery("#input_statusbar_position").val();
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxSaveSettings",
@@ -120,8 +132,8 @@ jQuery(function() {
     });
 
     jQuery("#statusbar_display_show").live('click', function() {
-        var orientation = jQuery("#input_orientation").val();
-        var position = jQuery("#input_position").val();
+        var orientation = jQuery("#input_statusbar_orientation").val();
+        var position = jQuery("#input_statusbar_position").val();
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxSaveSettings",
@@ -149,7 +161,7 @@ jQuery(function() {
         });
     });
     
-    jQuery("#statusbar_buddies").live("click", function() {
+    jQuery(".statusbar_buddies_on").live("click", function() {
         jQuery("#dialog_statusbar_message").dialog("open");
     });
 
@@ -158,8 +170,18 @@ jQuery(function() {
     });
     
     jQuery("#statusbar_message_send").live("click", function() {
-        var recipient = jQuery("#input_to").val();
-        var message = jQuery("#input_message").val();
+        var recipient = jQuery("#input_statusbar_to").val();
+        var message = jQuery("#input_statusbar_message").val();
+        if (recipient == '')
+        {
+            alert(no_recipient);
+            return false;
+        }
+        if (message == '')
+        {
+            alert(no_message);
+            return false;
+        }
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxSaveMessage",
@@ -171,15 +193,81 @@ jQuery(function() {
         });
     });
     
-    jQuery("#statusbar_messaging").live("click", function() {
+    jQuery(".statusbar_messaging_on").live("click", function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowMessage",
             success: function(ret) {
                 var obj = jQuery.parseJSON(ret)
+                jQuery('#input_statusbar_message_id').val(obj.id);
                 jQuery('#statusbar_message_from').html(obj.from);
                 jQuery('#statusbar_message_message').html(obj.message);
                 jQuery("#dialog_statusbar_message_show").dialog("open");
+            }
+        });
+    });
+
+    jQuery(".statusbar_alert_on").live("click", function() {
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=statusbar&action=ajaxShowCalendarAlerts",
+            success: function(ret) {
+                var obj = jQuery.parseJSON(ret)
+                jQuery('#input_statusbar_calendar_id').val(obj.id);
+                jQuery('#input_statusbar_alert_type').val(obj.type);
+                jQuery('#statusbar_alert_title').html(obj.title);
+                jQuery('#statusbar_alert_from').html(obj.from);
+                jQuery("#dialog_statusbar_calendar_alert_show").dialog("open");
+            }
+        });
+    });
+    
+    jQuery(".statusbar_email_on").live("click", function() {
+        var path = jQuery(location).attr('pathname');
+        window.location.assign(path + '?module=internalmail');
+    });
+
+    jQuery(".statusbar_document_on").live("click", function() {
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=statusbar&action=ajaxShowContentAlerts",
+            success: function(ret) {
+                var obj = jQuery.parseJSON(ret)
+                jQuery('#input_statusbar_content_id').val(obj.id);
+                jQuery('#input_statusbar_contextcode').val(obj.context);
+                jQuery('#statusbar_alert_description').html(obj.description);
+                jQuery('#statusbar_alert_link').html(obj.link);
+                jQuery("#dialog_statusbar_content_alert_show").dialog("open");
+            }
+        });
+    });
+    
+    jQuery('[class^="contextcode_"]').live('click', function() {
+        var contextcode = jQuery(this).attr('class').replace('contextcode_', '');
+        var uri = jQuery(this).html();
+        jQuery.ajax({
+            type: "POST",
+            url: "index.php?module=statusbar&action=ajaxSetContext",
+            data: 'contextcode=' + contextcode,
+            success: function(ret) {
+                if (ret == 'true')
+                {
+                    uri = uri.replace(/&amp;/g, '&');
+                    var id = jQuery("#input_statusbar_content_id").val();
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "index.php?module=statusbar&action=ajaxUpdateContentAlert",
+                        data: "id=" + id,
+                        success: function (data) {
+                            jQuery(".statusbar_document_count").html(data);
+                        }
+                    });    
+                    window.location = uri;
+                }
+                else
+                {
+                    return false;
+                }
             }
         });
     });
@@ -187,11 +275,118 @@ jQuery(function() {
 
 var updateInstantMessages = function(myDialog)
 {
+    var id = jQuery("#input_statusbar_message_id").val();
     jQuery.ajax({
         type: "POST",
-        url: "index.php?module=statusbar&action=ajaxUpdateMessages",
+        url: "index.php?module=statusbar&action=ajaxUpdateMessage",
+        data: "id=" + id,
         success: function (data) {
-            return false;
+            jQuery(".statusbar_message_count").html(data);
+            if (data == 0)
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowMain",
+                    success: function(ret) {
+                        jQuery("#statusbar").html(ret);
+                    }
+                });
+            }
+//            if (data > 0)
+//            {
+//                jQuery.ajax({
+//                    type: "POST",
+//                    url: "index.php?module=statusbar&action=ajaxShowMessage",
+//                    success: function(ret) {
+//                        var obj = jQuery.parseJSON(ret)
+//                        jQuery('#input_statusbar_message_id').val(obj.id);
+//                        jQuery('#statusbar_message_from').html(obj.from);
+//                        jQuery('#statusbar_message_message').html(obj.message);
+//                        jQuery("#dialog_statusbar_message_show").dialog("open");
+//                    }
+//                });
+//            }
         }
     });    
+}
+
+var updateCalendarAlert = function(myDialog)
+{
+    var id = jQuery("#input_statusbar_calendar_id").val();
+    var type = jQuery("#input_statusbar_alert_type").val();
+    jQuery.ajax({
+        type: "POST",
+        url: "index.php?module=statusbar&action=ajaxUpdateCalendarAlert",
+        data: "id=" + id + "&type=" + type,
+        success: function (data) {
+            jQuery(".statusbar_alert_count").html(data);
+            if (data > 0)
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowCalendarAlerts",
+                    success: function(ret) {
+                        var obj = jQuery.parseJSON(ret)
+                        jQuery('#input_statusbar_alert_id').val(obj.id);
+                        jQuery('#input_statusbar_alert_type').val(obj.type);
+                        jQuery('#statusbar_alert_title').html(obj.title);
+                        jQuery('#statusbar_alert_from').html(obj.from);
+                        jQuery("#dialog_statusbar_alert_show").dialog("open");
+                    }
+                });
+            }
+            else
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowMain",
+                    success: function(ret) {
+                        jQuery("#statusbar").html(ret);
+                    }
+                });
+            }
+        }
+    });    
+}
+
+var updateContentAlert = function(myDialog)
+{
+    var id = jQuery("#input_statusbar_content_id").val();
+    jQuery.ajax({
+        type: "POST",
+        url: "index.php?module=statusbar&action=ajaxUpdateContentAlert",
+        data: "id=" + id,
+        success: function (data) {
+            jQuery(".statusbar_document_count").html(data);
+            if (data > 0)
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowContentAlerts",
+                    success: function(ret) {
+                        var obj = jQuery.parseJSON(ret)
+                        jQuery('#input_statusbar_content_id').val(obj.id);
+                        jQuery('#statusbar_alert_description').html(obj.description);
+                        jQuery('#statusbar_alert_link').html(obj.link);
+                        jQuery("#dialog_statusbar_content_alert_show").dialog("open");
+                    }
+                });
+            }
+            else
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowMain",
+                    success: function(ret) {
+                        jQuery("#statusbar").html(ret);
+                    }
+                });
+            }
+        }
+    });    
+}
+
+function ajax_polling()
+{
+    
 }

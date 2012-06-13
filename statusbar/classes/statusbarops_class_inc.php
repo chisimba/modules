@@ -96,6 +96,25 @@ class statusbarops extends object
      * @var string
      */
     public $userId;
+
+    /**
+     * 
+     * Variable to hold the period of the alert
+     * 
+     * @access public
+     * @var integer
+     */
+    public $alert;
+
+    /**
+     * 
+     * Variable to hold the script string
+     * 
+     * @access public
+     * @var string
+     */
+    public $script;
+
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -106,11 +125,13 @@ class statusbarops extends object
     {
         try {
             // Load core system objects.
+            $this->objUser = $this->getObject('user', 'security');
+            $this->userId = $this->objUser->userId();
             $this->objLanguage = $this->getObject('language', 'language');
-            $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
-            $this->objSvars = $this->getObject('serializevars', 'utilities');
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
+            $this->objSvars = $this->getObject('serializevars', 'utilities');
+            $this->objModules = $this->getObject('modules', 'modulecatalogue');
 
             // Load html elements.
             $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -123,6 +144,7 @@ class statusbarops extends object
             
             // Load db classes,
             $this->objDBsettings = $this->getObject('dbstatusbar_settings', 'statusbar');
+            $this->objDBbridging = $this->getObject('dbstatusbar_bridging', 'statusbar');
             $this->getParams();
             
             //load module classes
@@ -130,6 +152,9 @@ class statusbarops extends object
             $this->objBuddies = $this->newObject('dbbuddies', 'buddies');
             $this->objMessaging = $this->newObject('dbmessaging', 'messaging');
             $this->objLoggedinUsers = $this->newObject('loggedinusers', 'security');
+            $this->objBookmarks = $this->newObject('bookmarksops', 'bookmarks');
+            $this->objCalendar = $this->newObject('dbcalendar', 'calendarbase');
+            $this->objUserContext = $this->getObject('usercontext', 'context');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -167,7 +192,7 @@ class statusbarops extends object
      */
     public function getParams()
     {
-        $settings = $this->objDBsettings->getSettings($this->PKId);
+        $settings = $this->objDBsettings->getSettings($this->userId);
         if (!empty($settings))
         {
             foreach ($settings as $setting)
@@ -183,6 +208,9 @@ class statusbarops extends object
                     case 'display':
                         $this->display = $setting['value'];
                         break;
+                    case 'alert':
+                        $this->alert = $setting['value'];
+                        break;
                 }
             }
         }
@@ -191,6 +219,7 @@ class statusbarops extends object
             $this->orientation = 'horizontal';
             $this->position = 'left top';
             $this->display = 'yes';
+            $this->alert = 15;
         }                
     }
     
@@ -209,89 +238,93 @@ class statusbarops extends object
         $onlineUsersLabel = $this->objLanguage->languageText('mod_statusbar_onlineusers', 'statusbar', 'ERROR: mod_statusbar_onlineusers');
         $emailLabel = $this->objLanguage->languageText('mod_statusbar_email', 'statusbar', 'ERROR: mod_statusbar_email');
         $messageLabel = $this->objLanguage->languageText('mod_statusbar_messaging', 'statusbar', 'ERROR: mod_statusbar_messaging');
-        $alarmLabel = $this->objLanguage->languageText('mod_statusbar_alarm', 'statusbar', 'ERROR: mod_statusbar_alarm');
+        $alertLabel = $this->objLanguage->languageText('mod_statusbar_calendaralert', 'statusbar', 'ERROR: mod_statusbar_calendaralert');
         $documentLabel = $this->objLanguage->code2Txt('mod_statusbar_document', 'statusbar', NULL, 'ERROR: mod_statusbar_document');
         $pictureLabel = $this->objLanguage->languageText('mod_statusbar_picture', 'statusbar', 'ERROR: mod_statusbar_picture');
         $buddiesLabel = $this->objLanguage->languageText('mod_statusbar_buddies', 'statusbar', 'ERROR: mod_statusbar_buddies');
-        $bookmarkLabel = $this->objLanguage->languageText('mod_statusbar_bookmarkpage', 'statusbar', 'ERROR: mod_statusbar_bookmarkpage');
-        $gotoLabel = $this->objLanguage->languageText('mod_statusbar_gotobookmarks', 'statusbar', 'ERROR: mod_statusbar_gotobookmarks');
         $settingsLabel = $this->objLanguage->languageText('mod_statusbar_settings', 'statusbar', 'ERROR: mod_statusbar_settings');
         $showLabel = $this->objLanguage->languageText('mod_statusbar_showbar', 'statusbar', 'ERROR: mod_statusbar_showbar');
         $hideLabel = $this->objLanguage->languageText('mod_statusbar_hidebar', 'statusbar', 'ERROR: mod_statusbar_hidebar');
+        $noBuddiesLabel = $this->objLanguage->languageText('mod_statusbar_nobuddies', 'statusbar', 'ERROR: mod_statusbar_nobuddies');
         
         $onlineUsers = $this->ajaxGetOnlineUsers();
-        $this->objIcon->setIcon('group', 'png');
-        $this->objIcon->title = $onlineUsersLabel;
-        $this->objIcon->alt = $onlineUsersLabel;
-        $onlineIcon = $this->objIcon->show();
-        $onlineLink = '<a href="#" id="statusbar_online_users" title="' . $onlineUsersLabel . '"' . '>' . $onlineIcon . '</a>' . $onlineUsers;
+        $onlineLink = "<span title=\"$onlineUsersLabel\"><div class=\"statusbar_online_users\"><span class=\"statusbar_online_count\">$onlineUsers</span></div></span>";
 
-        $unreadMail = $this->ajaxGetUnreadEmailCount();
-        $this->objIcon->setIcon('email', 'png');
-        $this->objIcon->title = $emailLabel;
-        $this->objIcon->alt = $emailLabel;
-        $emailIcon = $this->objIcon->show();
-        $uri = $this->uri(array(), 'internalmail');
-        $emailLink = '<a href="' . $uri . '" id="statusbar_email" title="' . $emailLabel . '"' . '>' . $emailIcon . '</a>' . $unreadMail;
+        if ($this->objModules->checkIfRegistered('internalmail'))
+        {
+            $unreadMail = $this->ajaxGetUnreadEmailCount();
+            $class = ($unreadMail > 0) ? 'statusbar_email_on' : 'statusbar_email_off';
+            $unreadMail = ($unreadMail > 0) ? '<span class="statusbar_email_count">' . $unreadMail . '</span>' : '&nbsp;';
+            $emailLink = "<span title=\"$emailLabel\"><div class=\"$class\">$unreadMail</div></span>";
+        }
+            
+        if ($this->objModules->checkIfRegistered('messaging'))
+        {
+            $instantMessages = $this->ajaxGetUnreadInstantMessages();
+            $class = (count($instantMessages) > 0) ? 'statusbar_messaging_on' : 'statusbar_messaging_off';
+            $instantMessages = (count($instantMessages) > 0) ? '<span class="statusbar_message_count">' . count($instantMessages) . '</span>' : '&nbsp;';
+            $messageLink = "<span title=\"$messageLabel\"><div class=\"$class\">$instantMessages</div></span>";
+        }
+            
+        if ($this->objModules->checkIfRegistered('calendar'))
+        {
+            $events = $this->ajaxGetCalendarAlerts();
+            $class = (count($events) > 0) ? 'statusbar_alert_on' : 'statusbar_alert_off';
+            $alerts = (count($events) > 0) ? '<span class="statusbar_alert_count">' . count($events) . '</span>' : '&nbsp;';
+            $alertLink = "<span title=\"$alertLabel\"><div class=\"$class\">$alerts</div></span>";
+        }
 
-        $instantMessages = $this->ajaxGetUnreadInstantMessages();        
-        $this->objIcon->setIcon('user_comment', 'png');
-        $this->objIcon->title = $messageLabel;
-        $this->objIcon->alt = $messageLabel;
-        $messageIcon = $this->objIcon->show();
-        $messageLink = '<a href="#" id="statusbar_messaging" title="' . $messageLabel . '"' . '>' . $messageIcon . '</a>' . count($instantMessages);
-
-        $this->objIcon->setIcon('alarm', 'png');
-        $this->objIcon->title = $alarmLabel;
-        $this->objIcon->alt = $alarmLabel;
-        $alarmIcon = $this->objIcon->show();
-        $alarmLink = '<a href="#" id="statusbar_alarm" title="' . $alarmLabel . '"' . '>' . $alarmIcon . '</a>';
-
-        $this->objIcon->setIcon('page', 'png');
-        $this->objIcon->title = $documentLabel;
-        $this->objIcon->alt = $documentLabel;
-        $documentIcon = $this->objIcon->show();
-        $documentLink = '<a href="#" id="statusbar_document" title="' . $documentLabel . '"' . '>' . $documentIcon . '</a>';
-
+        if ($this->objModules->checkIfRegistered('contextcontent'))
+        {
+            $events = $this->ajaxGetContentAlerts();
+            $class = (count($events) > 0) ? 'statusbar_document_on' : 'statusbar_document_off';
+            $alerts = (count($events) > 0) ? '<span class="statusbar_document_count">' . count($events) . '</span>' : '&nbsp;';
+            $documentLink = "<span title=\"$documentLabel\"><div class=\"$class\">$alerts</div></span>";
+        }
+            
         $this->objIcon->setIcon('camera', 'png');
         $this->objIcon->title = $pictureLabel;
         $this->objIcon->alt = $pictureLabel;
         $pictureIcon = $this->objIcon->show();
         $pictureLink = '<a href="#" id="statusbar_picture" title="' . $pictureLabel . '"' . '>' . $pictureIcon . '</a>';
 
-        $buddies = $this->ajaxGetBuddies();
-        $this->objIcon->setIcon('buddies', 'png');
-        $this->objIcon->title = $buddiesLabel;
-        $this->objIcon->alt = $buddiesLabel;
-        $buddiesIcon = $this->objIcon->show();
-        if ($buddies['all'] == 0)
+        if ($this->objModules->checkIfRegistered('buddies'))
         {
-            $uri = $this->uri(array(), 'buddies');
-            $buddiesLink = '<a href="' . $uri . '" title="' . $buddiesLabel . '"' . '>' . $buddiesIcon . '</a>';
-        }
-        else
-        {
-            if ($buddies['online'] > 0)
+            $buddies = $this->ajaxGetBuddies();
+            $this->objIcon->setIcon('buddies', 'png');
+            if ($buddies['all'] == 0)
             {
-                $buddiesLink = '<a href="#" id="statusbar_buddies" title="' . $buddiesLabel . '"' . '>' . $buddiesIcon . '</a>' . count($buddies['online']);
+                $this->objIcon->title = $buddiesLabel;
+                $this->objIcon->alt = $buddiesLabel;
+                $buddiesIcon = $this->objIcon->show();
+
+                $uri = $this->uri(array(), 'buddies');
+                $buddiesLink = '<a href="' . $uri . '" title="' . $buddiesLabel . '"' . '>' . $buddiesIcon . '</a>';
             }
             else
             {
-                $buddiesLink = $buddiesIcon;
+                if (count($buddies['online']) > 0)
+                {
+                    $buddiesLink = "<span title=\"$buddiesLabel\"><div class=\"statusbar_buddies_on\"><span class=\"statusbar_buddies_count\">" . count($buddies['online']) . "</span></div></span>";
+                }
+                else
+                {
+                    $this->objIcon->title = $noBuddiesLabel;
+                    $this->objIcon->alt = $noBuddiesLabel;
+                    $buddiesIcon = $this->objIcon->show();
+                    $buddiesLink = $buddiesIcon;
+                }
             }
         }
 
-        $this->objIcon->setIcon('bookmark', 'png');
-        $this->objIcon->title = $bookmarkLabel;
-        $this->objIcon->alt = $bookmarkLabel;
-        $bookmarkIcon = $this->objIcon->show();
-        $bookmarkLink = '<a href="#" id="statusbar_add_bookmark" title="' . $bookmarkLabel . '"' . '>' . $bookmarkIcon . '</a>';
+        if ($this->objModules->checkIfRegistered('bookmarks'))
+        {        
+            $bookmarkLink = $this->objBookmarks->showLink();
+            $bookmarkParams = $this->objBookmarks->bookmarkParams();
+            $this->appendArrayVar('headerParams', $bookmarkParams['headerParams']);
 
-        $this->objIcon->setIcon('bookmark_go', 'png');
-        $this->objIcon->title = $gotoLabel;
-        $this->objIcon->alt = $gotoLabel;
-        $gotoIcon = $this->objIcon->show();
-        $gotoLink = '<a href="#" id="statusbar_goto_bookmark" title="' . $gotoLabel . '"' . '>' . $gotoIcon . '</a>';
+            $gotoLink = $this->objBookmarks->showGotoLink();
+        }
 
         $this->objIcon->setIcon('cog', 'png');
         $this->objIcon->title = $settingsLabel;
@@ -322,19 +355,39 @@ class statusbarops extends object
         {
             if ($this->orientation == 'horizontal')
             {
-                $objTable->width = '440px';
                 $objTable->startRow();
-                $objTable->addCell($onlineLink, '', '', 'center', '', '', '');
-                $objTable->addCell($emailLink, '', '', 'center', '', '', '');
-                $objTable->addCell($messageLink, '', '', 'center', '', '', '');
-                $objTable->addCell($alarmLink, '', '', 'center', '', '', '');
-                $objTable->addCell($documentLink, '', '', 'center', '', '', '');
-                $objTable->addCell($pictureLink, '', '', 'center', '', '', '');
-                $objTable->addCell($buddiesLink, '', '', 'center', '', '', '');
-                $objTable->addCell($bookmarkLink, '', '', 'center', '', '', '');
-                $objTable->addCell($gotoLink, '', '', 'center', '', '', '');
-                $objTable->addCell($settingsLink, '', '', 'center', '', '', '');
-                $objTable->addCell($displayLink, '', '', 'center', '', '', '');
+                $objTable->addCell($onlineLink, '25px', '', 'center', '', '', '');
+                if ($this->objModules->checkIfRegistered('internalmail'))
+                {
+                    $objTable->addCell($emailLink, '25px', '', 'center', '', '', '');
+                }
+                if ($this->objModules->checkIfRegistered('messaging'))
+                {
+                    $objTable->addCell($messageLink, '25px', '', 'center', '', '', '');
+                }
+                if ($this->objModules->checkIfRegistered('calendar'))
+                {                
+                    $objTable->addCell($alertLink, '25px', '', 'center', '', '', '');
+                }
+                if ($this->objModules->checkIfRegistered('contextcontent'))
+                {
+                    $objTable->addCell($documentLink, '25px', '', 'center', '', '', '');
+                }
+                $objTable->addCell($pictureLink, '25px', '', 'center', '', '', '');
+                if ($this->objModules->checkIfRegistered('buddies'))
+                {
+                    $objTable->addCell($buddiesLink, '25px', '', 'center', '', '', '');
+                }
+                if ($this->objModules->checkIfRegistered('bookmarks'))
+                {
+                    $objTable->addCell($bookmarkLink, '25px', '', 'center', '', '', '');
+                    if (!empty($gotoLink))
+                    {
+                        $objTable->addCell($gotoLink, '25px', '', 'center', '', '', '');
+                    }
+                }
+                $objTable->addCell($settingsLink, '25px', '', 'center', '', '', '');
+                $objTable->addCell($displayLink, '25px', '', 'center', '', '', '');
                 $objTable->endRow();        
             }
             else
@@ -343,30 +396,51 @@ class statusbarops extends object
                 $objTable->startRow();
                 $objTable->addCell($onlineLink, '', '', 'center', '', '', '');
                 $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($emailLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($messageLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($alarmLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($documentLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
+                if ($this->objModules->checkIfRegistered('internalmail'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($emailLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                }
+                if ($this->objModules->checkIfRegistered('messaging'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($messageLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                }
+                if ($this->objModules->checkIfRegistered('calendar'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($alertLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                }
+                if ($this->objModules->checkIfRegistered('contextcontent'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($documentLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                }
                 $objTable->startRow();
                 $objTable->addCell($pictureLink, '', '', 'center', '', '', '');
                 $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($buddiesLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($bookmarkLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
-                $objTable->startRow();
-                $objTable->addCell($gotoLink, '', '', 'center', '', '', '');
-                $objTable->endRow();        
+                if ($this->objModules->checkIfRegistered('buddies'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($buddiesLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                }
+                if ($this->objModules->checkIfRegistered('internalmail'))
+                {
+                    $objTable->startRow();
+                    $objTable->addCell($bookmarkLink, '', '', 'center', '', '', '');
+                    $objTable->endRow();        
+                    if (!empty($gotoLink))
+                    {
+                        $objTable->startRow();
+                        $objTable->addCell($gotoLink, '', '', 'center', '', '', '');
+                        $objTable->endRow();        
+                    }
+                }
                 $objTable->startRow();
                 $objTable->addCell($settingsLink, '', '', 'center', '', '', '');
                 $objTable->endRow();        
@@ -404,6 +478,11 @@ class statusbarops extends object
      */
     public function showStatusbar()
     {
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $ajaxPollingInterval = $this->objSysConfig->getValue('AJAX_POLL', 'statusbar');
+        $this->objSvars = $this->getObject('serializevars', 'utilities');
+        $this->script = '<script type="text/javascript">var ajax_poll=' . $ajaxPollingInterval . '</script>';
+        
         $dialog = $this->newObject('dialog', 'jquerycore');
         $dialog->setCssId('statusbar');
         $dialog->setContent($this->showMain());
@@ -419,8 +498,9 @@ class statusbarops extends object
         $dialog->setModal(FALSE);
         $dialog->unsetButtons();
         $string = $dialog->show();
+        $this->script .= $dialog->script;
         
-        return $string . $this->showSettingsDialog() . $this->showInstantMessaging() . $this->showInstantMessages();
+        return $string . $this->showSettingsDialog() . $this->showInstantMessaging() . $this->showInstantMessages() . $this->ajaxShowCalendarAlerts() . $this->ajaxShowContentAlerts();
     }
     
     /**
@@ -451,6 +531,7 @@ class statusbarops extends object
         
         $orientationDiv = '<div id="statusbar_orientation_div"></div>';
         $positionDiv = '<div id="statusbar_position_div"></div>';
+        $intervalDiv = '<div id="statusbar_interval_div"></div>';
         
         $objButton = new button('save', $saveLabel);
         $objButton->setId('statusbar_settings_save');
@@ -471,7 +552,7 @@ class statusbarops extends object
             'action' => 'savesettings',
         ), 'statusbar'));
         $objForm->extra = ' enctype="multipart/form-data"';
-        $objForm->addToForm($orientationDiv . $positionDiv . $buttonsTable);
+        $objForm->addToForm($orientationDiv . $positionDiv . $intervalDiv . $buttonsTable);
         $form = $objForm->show();
         
         $dialog = $this->newObject('dialog', 'jquerycore');
@@ -481,6 +562,7 @@ class statusbarops extends object
         $dialog->setWidth(420);
         $dialog->unsetButtons();
         $string = $dialog->show();
+        $this->script .= $dialog->script;
 
         return $string;        
     }
@@ -492,13 +574,13 @@ class statusbarops extends object
      * @access public 
      * @return VOID
      */
-    public function ajaxShowOrientation()
+    public function ajaxShowOrientation($isAjax = TRUE)
     {
         $orientationLabel = $this->objLanguage->languageText('mod_statusbar_orientation', 'statusbar', 'ERROR: mod_statusbar_orientation');
         $horizontalLabel = $this->objLanguage->languageText('mod_statusbar_horizontal', 'statusbar', 'ERROR: mod_statusbar_horizontal');
         $verticalLabel = $this->objLanguage->languageText('mod_statusbar_vertical', 'statusbar', 'ERROR: mod_statusbar_vertical');
 
-        $objDrop = new dropdown('orientation');
+        $objDrop = new dropdown('statusbar_orientation');
         $objDrop->addOption('horizontal', $horizontalLabel);
         $objDrop->addOption('vertical', $verticalLabel);
         $objDrop->setSelected($this->orientation);
@@ -512,8 +594,15 @@ class statusbarops extends object
         $objTable->endRow();
         $orientationTable = $objTable->show();
         
-        echo $orientationTable;
-        die();
+        if ($isAjax)
+        {
+            echo $orientationTable;
+            die();
+        }
+        else
+        {
+            return $orientationTable;
+        }
     }
     
     /**
@@ -536,7 +625,7 @@ class statusbarops extends object
         
         $orientation = $this->getParam('orientation');
 
-        $objDrop = new dropdown('position');
+        $objDrop = new dropdown('statusbar_position');
         if ($orientation == 'horizontal')
         {
             $objDrop->addOption('left top', $leftTopLabel);
@@ -571,6 +660,52 @@ class statusbarops extends object
     }
     
     /**
+     * Method to show the position options for the orientation
+     * 
+     * @access public
+     * @return VOID
+     */
+    public function ajaxShowInterval($isAjax = TRUE)
+    {
+        $intervalLabel = $this->objLanguage->languageText('mod_statusbar_alertperiod', 'statusbar', 'ERROR: mod_statusbar_alertperiod');
+        $minutesLabel = $this->objLanguage->languageText('word_minutes', 'system', 'ERROR: word_minutes');
+        
+        if ($this->objModules->checkIfRegistered('calendar'))
+        {
+            $objDrop = new dropdown('statusbar_alert');
+            $objDrop->addOption('15', '15 ' . $minutesLabel);
+            $objDrop->addOption('30', '30 ' . $minutesLabel);
+            $objDrop->addOption('45', '45 ' . $minutesLabel);
+            $objDrop->addOption('60', '60 ' . $minutesLabel);
+            $objDrop->setSelected($this->alert);
+            $intervalDrop = $objDrop->show();
+
+            $objTable = new htmltable();
+            $objTable->cellpadding = '4';
+            $objTable->startRow();
+            $objTable->addCell('<b>' . $intervalLabel . ': </b>', '200px', '', '', '', '', '');
+            $objTable->addCell($intervalDrop, '', '', '', '', '', '');
+            $objTable->endRow();        
+            $interval = $objTable->show();        
+        }
+        else
+        {
+            $objInput = new textinput('statusbar_alert', $this->alert, 'hidden');
+            $interval = $objInput->show();
+        }
+  
+        if ($isAjax)
+        {
+            echo $interval;
+            die();        
+        }
+        else
+        {
+            return $interval;
+        }
+    }
+    
+    /**
      *
      * Method to get count of unread email
      * 
@@ -579,10 +714,9 @@ class statusbarops extends object
      */
     public function ajaxGetUnreadEmailCount()
     {
-        $unreadEmail = $this->objEmail->getAllUnreadMail();
-        $count = count($unreadEmail);
-        
-        return $count;        
+        $unreadEmail = $this->objEmail->getUnreadEmailCount();
+
+        return $unreadEmail;
     }
     
     /**
@@ -637,13 +771,21 @@ class statusbarops extends object
         $cancelLabel = $this->objLanguage->languageText('word_cancel', 'system', 'ERROR: word_cancel');
         $confirmLabel = $this->objLanguage->languageText('mod_statusbar_confirmsend', 'statusbar', 'mod_statusbar_confirmsend');
         $successLabel = $this->objLanguage->languageText('word_success', 'system', 'ERROR: word_success');
+        $recipientErrorLabel = $this->objLanguage->languageText('mod_statusbar_recipienterror', 'statusbar', 'ERROR: mod_statusbar_recipienterror');
+        $messageErrorLabel = $this->objLanguage->languageText('mod_statusbar_messageerror', 'statusbar', 'ERROR: mod_statusbar_messageerror');
         
-        $objDrop = new dropdown('to');
+        $arrayVars = array();
+        $arrayVars['no_recipient'] = $recipientErrorLabel;
+        $arrayVars['no_message'] = $messageErrorLabel;
+        
+        // pass error to javascript.
+        $this->objSvars->varsToJs($arrayVars);
+        $objDrop = new dropdown('statusbar_to');
         $objDrop->addOption('', $selectLabel);
         $objDrop->addFromArray($buddies['online']);
         $toDrop = $objDrop->show();
         
-        $objText = new textarea('message', '');
+        $objText = new textarea('statusbar_message', '');
         $messageText = $objText->show();
 
         $objButton = new button('send', $sendLabel);
@@ -683,6 +825,7 @@ class statusbarops extends object
         $dialog->setWidth(745);
         $dialog->unsetButtons();
         $string = $dialog->show();
+        $this->script .= $dialog->script;
 
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
@@ -697,6 +840,7 @@ class statusbarops extends object
         $dialog->setContent($successTable);
         $dialog->setWidth(370);
         $string .= $dialog->show();
+        $this->script .= $dialog->script;
 
         return $string;        
     }
@@ -727,6 +871,9 @@ class statusbarops extends object
         $messageLabel = $this->objLanguage->languageText('word_message', 'system', 'ERROR: word_message');
         $instantMessageLabel = $this->objLanguage->languageText('mod_statusbar_instantmessage', 'statusbar', 'ERROR: mod_statusbar_instantmessage');
         
+        $objInput = new textinput('statusbar_message_id', '', 'hidden', '');
+        $idInput = $objInput->show();
+        
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
         $objTable->startRow();
@@ -742,11 +889,206 @@ class statusbarops extends object
         $dialog = $this->newObject('dialog', 'jquerycore');
         $dialog->setCssId('dialog_statusbar_message_show');
         $dialog->setTitle($instantMessageLabel);
-        $dialog->setContent($messageTable);
+        $dialog->setContent($idInput . $messageTable);
+        $dialog->setBeforeClose('updateInstantMessages(this)');
         $dialog->setWidth(500);
         $string = $dialog->show();
+        $this->script .= $dialog->script;
 
         return $string;        
+    }
+    
+    /**
+     *
+     * Method to show upcoming calendar events
+     * 
+     * @access public
+     * @return array $alerts The number of upcoming calendar events 
+     */
+    public function ajaxGetCalendarAlerts()
+    {
+        $timestamp = strtotime("+$this->alert minutes", time());
+        $contexts = $this->objUserContext->getUserContext($this->userId);
+
+        $alerts = array();
+        
+        $userEvents = $this->objCalendar->getAlerts($timestamp, $this->userId, NULL);
+        if (count($userEvents) > 0)
+        {
+            foreach ($userEvents as $event)
+            {
+                $alerts[] = $event;
+            }
+        }
+        
+        if (count($contexts) > 0)
+        {
+            $contextEvents = array();
+            foreach ($contexts as $contextCode)
+            {
+                $contextEvents = $this->objDBbridging->getContextCalendarAlerts($timestamp, $contextCode);
+            }
+            
+            if (count($contextEvents) > 0)
+            {
+                foreach ($contextEvents as $event)
+                {
+                    $alerts[] = $event;
+                }
+            }
+        }
+        
+        foreach ($alerts as $key => $alert)
+        {
+            $eventTime = strtotime($alert['eventdate'] . ' ' . $alert['timefrom']);
+            if ($eventTime > $timestamp)
+            {
+                unset($alerts[$key]);
+            }
+        }
+
+        return $alerts;
+    }
+    
+    /**
+     *
+     * Method to show new document alerts
+     * 
+     * @access public
+     * @return array $alerts The number of new documents events 
+     */
+    public function ajaxGetContentAlerts()
+    {
+        $timestamp = time();
+        $contexts = $this->objUserContext->getUserContext($this->userId);
+
+        $alerts = array();
+        
+        if (count($contexts) > 0)
+        {
+            $contextEvents = array();
+            foreach ($contexts as $contextCode)
+            {
+                $contextEvents = $this->objDBbridging->getContextContentAlerts($timestamp, $contextCode);
+            }
+          
+            if (count($contextEvents) > 0)
+            {
+                foreach ($contextEvents as $event)
+                {
+                    $alerts[] = $event;
+                }
+            }
+        }
+        
+        foreach ($alerts as $key => $alert)
+        {
+            $eventTime = strtotime($alert['createdon']);
+            if ($eventTime > $timestamp)
+            {
+                unset($alerts[$key]);
+            }
+        }
+
+        return $alerts;
+    }
+    
+    /**
+     *
+     * Method to display calendar alerts 
+     * 
+     * @access public
+     * @return string $string The alert dialog
+     */
+    public function ajaxShowCalendarAlerts()
+    {
+        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
+        $fromLabel = $this->objLanguage->languageText('word_from', 'system', 'ERROR: word_from');
+        $alertLabel = $this->objLanguage->languageText('mod_statusbar_calendaralert', 'statusbar', 'ERROR: mod_statusbar_calendaralert');
+        
+        $objInput = new textinput('statusbar_calendar_id', '', 'hidden', '');
+        $idInput = $objInput->show();
+        
+        $objInput = new textinput('statusbar_alert_type', '', 'hidden', '');
+        $typeInput = $objInput->show();
+        
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell('<b>' . $titleLabel . ': </b>', '', '', '', '', '', '');
+        $objTable->addCell('<div id="statusbar_alert_title"></div>', '', '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell('<b>' . $fromLabel . ': </b>', '', '', '', '', '', '');
+        $objTable->addCell('<div id="statusbar_alert_from"></div>', '', '', '', '', '', '');
+        $objTable->endRow();
+        $alertTable = $objTable->show();
+
+        $dialog = $this->newObject('dialog', 'jquerycore');
+        $dialog->setCssId('dialog_statusbar_calendar_alert_show');
+        $dialog->setTitle($alertLabel);
+        $dialog->setContent($idInput . $typeInput . $alertTable);
+        $dialog->setBeforeClose('updateCalendarAlert(this)');
+        $dialog->setWidth(500);
+        $string = $dialog->show();
+        $this->script .= $dialog->script;
+
+        return $string;        
+    }
+
+    /**
+     *
+     * Method to display content alerts 
+     * 
+     * @access public
+     * @return string $string The alert dialog
+     */
+    public function ajaxShowContentAlerts()
+    {
+        $descriptionLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
+        $linkLabel = $this->objLanguage->languageText('word_link', 'system', 'ERROR: word_link');
+        $alertLabel = $this->objLanguage->languageText('mod_statusbar_contentalert', 'statusbar', 'ERROR: mod_statusbar_contentalert');
+        
+        $objInput = new textinput('statusbar_content_id', '', 'hidden', '');
+        $idInput = $objInput->show();
+               
+        $objTable = new htmltable();
+        $objTable->cellpadding = '4';
+        $objTable->startRow();
+        $objTable->addCell('<b>' . $descriptionLabel . ': </b>', '', '', '', '', '', '');
+        $objTable->addCell('<div id="statusbar_alert_description"></div>', '', '', '', '', '', '');
+        $objTable->endRow();
+        $objTable->startRow();
+        $objTable->addCell('<b>' . $linkLabel . ': </b>', '', '', '', '', '', '');
+        $objTable->addCell('<div id="statusbar_alert_link"></div>', '', '', '', '', '', '');
+        $objTable->endRow();
+        $alertTable = $objTable->show();
+
+        $dialog = $this->newObject('dialog', 'jquerycore');
+        $dialog->setCssId('dialog_statusbar_content_alert_show');
+        $dialog->setTitle($alertLabel);
+        $dialog->setContent($idInput . $alertTable);
+        $dialog->setBeforeClose('updateContentAlert(this)');
+        $dialog->setWidth(500);
+        $string = $dialog->show();
+        $this->script .= $dialog->script;
+
+        return $string;        
+    }
+    
+    /**
+     *
+     * Method to return the statusbar params
+     * 
+     * @access public
+     * @return array The array of params 
+     */
+    public function statusbarParams()
+    {
+        $headerParams = $this->getJavascriptFile('statusbar.js', 'statusbar');
+        $headerParams .= "\n" . $this->script;
+        $array = array('headerParams' => $headerParams);
+        return $array;
     }
 }
 ?>

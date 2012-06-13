@@ -114,25 +114,22 @@ class statusbar extends controller
         $this->PKId = $this->objUser->PKId();
         $this->userId = $this->objUser->userId();
         $this->objLanguage = $this->getObject('language', 'language');
+
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
-        // Create an instance of the database class
-        $this->objDBsettings = $this->getObject('dbstatusbar_settings', 'statusbar');
-        $this->objDBsettings->PKId = $this->PKId;
         
-        $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('statusbar.js',
-          'statusbar'));
-        $this->appendArrayVar('headerParams',
-          $this->getJavaScriptFile('jquery.bgiframe.min.js',
-          'jquerycore'));
+        // Create an instance of the database class
+        $this->objDBsettings = $this->getObject('dbstatusbar_settings', 'statusbar');        
+        $this->objDBbridging = $this->getObject('dbstatusbar_bridging', 'statusbar');
+        
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('statusbar.js', 'statusbar'));
+               
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         $this->objOps = $this->getObject('statusbarops', 'statusbar');
-        $this->objOps->PKId = $this->PKId;
-        $this->objOps->userId = $this->userId;
         
         $this->objMessage = $this->getObject('dbmessaging', 'messaging');
+        $this->objCalendar = $this->getObject('dbcalendar', 'calendarbase');
         //Log this module call
         $this->objLog->log();
     }
@@ -184,6 +181,23 @@ class statusbar extends controller
     
     /**
      *
+     * Method corresponding to the ajaxShowSettings action. 
+     * 
+     * @access private
+     * @return VOID
+     */
+    private function __ajaxShowSettings()
+    {
+        $settings = array();       
+        $settings['orientation'] = $this->objOps->ajaxShowOrientation(FALSE);
+        $settings['interval'] = $this->objOps->ajaxShowInterval(FALSE);
+
+        echo json_encode($settings);
+        die();
+    }
+        
+    /**
+     *
      * Method corresponding to the ajaxShowOrientation action. 
      * 
      * @access private
@@ -206,12 +220,14 @@ class statusbar extends controller
         $orientation = $this->getParam('orientation', $this->objOps->orientation);
         $position = $this->getParam('position', $this->objOps->position);
         $display = $this->getParam('display', $this->objOps->display);
+        $alert = $this->getParam('alert', $this->objOps->alert);
         
         $this->objOps->orientation = $orientation;
         $this->objOps->position = $position;
         $this->objOps->display = $display;
+        $this->objOps->alert = $alert;
 
-        $this->objDBsettings->saveSettings($orientation, $position, $display);
+        $this->objDBsettings->saveSettings($orientation, $position, $display, $alert);
         
         echo 'true';
         die();
@@ -245,16 +261,16 @@ class statusbar extends controller
     private function __ajaxShowMessage()
     {
         $messages = $this->objMessage->getInstantMessages();
-        
+
         $message = array();
+        $message['id'] = $messages[0]['mid'];
         $message['from'] = $messages[0]['firstname'] . '&nbsp;' . $messages[0]['surname'];
         $message['message'] = $messages[0]['message'];
         
         echo json_encode($message);
         die();
     }
-    
-        
+            
     /**
      *
      * Method corresponding to the ajaxShowPosition action. 
@@ -269,18 +285,6 @@ class statusbar extends controller
         
     /**
      *
-     * Method corresponding to the ajaxDisplayToggle action. 
-     * 
-     * @access private
-     * @return VOID
-     */
-    private function __ajaxDisplayToggle()
-    {
-        //return $this->objOps->ajaxDisplayToggle();
-    }
-        
-    /**
-     *
      * Method corresponding to the ajaxShowMain action. 
      * 
      * @access private
@@ -290,7 +294,164 @@ class statusbar extends controller
     {
         return $this->objOps->showMain(TRUE);
     }
+    
+    /**
+     *
+     * Method corrsponding to the ajaxUpdateMessage action
+     * 
+     * @accesss private
+     * @return VOID 
+     */
+    private function __ajaxUpdateMessage()
+    {
+        $id = $this->getParam('id');
         
+        $this->objMessage->updateMessage($id);
+        $messages = $this->objMessage->getInstantMessages();
+        
+        $count = count($messages);
+        
+        if ($count > 0)
+        {
+            echo $count;
+        }
+        else
+        {
+            echo 0;
+        }
+        die();        
+    }
+        
+    /**
+     *
+     * Method corresponding to the ajaxShowCalendarAlerts action
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __ajaxShowCalendarAlerts()
+    {
+        $events = $this->objOps->ajaxGetCalendarAlerts();
+        $from = date('H:i', strtotime($events[0]['timefrom']));
+        $to = date('H:i', strtotime($events[0]['timeto']));
+        
+        $alerts = array();
+        $alerts['id'] = ($events[0]['userorcontext'] == 1) ? $events[0]['b_id'] : $events[0]['id'];
+        $alerts['type'] = ($events[0]['userorcontext'] == 1) ? 'context' : 'user';
+        $alerts['title'] = $events[0]['eventtitle'];
+        $alerts['from'] = $from . '&nbsp;-&nbsp;' . $to;
+        
+        echo json_encode($alerts);
+        die();
+    }
+    
+    /**
+     *
+     * Method corresponding to the ajaxShowContentAlerts action
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __ajaxShowContentAlerts()
+    {
+        $events = $this->objOps->ajaxGetContentAlerts();
+
+        $alerts = array();
+        $alerts['id'] = $events[0]['b_id'];
+        $alerts['description'] = $events[0]['description'];
+
+        $linkClass = " class='contextcode_" . $events[0]['contextcode'] . "'";
+        $alerts['link'] = "<a href='#' id='location_" . $events[0]['b_id'] . "'" . $linkClass . ">" . $events[0]['link'] . "</a>";
+        
+        echo json_encode($alerts);
+        die();
+    }
+    
+    /**
+     *
+     * Method corrsponding to the ajaxUpdateCalendarAlert action
+     * 
+     * @accesss private
+     * @return VOID 
+     */
+    private function __ajaxUpdateCalendarAlert()
+    {
+        $id = $this->getParam('id');
+        $type = $this->getParam('type');
+        
+        if ($type == 'user')
+        {
+            $this->objCalendar->updateAlert($id);
+        }
+        else
+        {
+            $this->objDBbridging->updateAlert($id);
+        }
+        
+        $alerts = $this->objOps->ajaxGetCalendarAlerts();
+        
+        $count = count($alerts);
+        
+        if ($count > 0)
+        {
+            echo $count;
+        }
+        else
+        {
+            echo '';
+        }
+        die();        
+    }
+        
+    /**
+     *
+     * Method corrsponding to the ajaxUpdateContentAlert action
+     * 
+     * @accesss private
+     * @return VOID 
+     */
+    private function __ajaxUpdateContentAlert()
+    {
+        $id = $this->getParam('id');
+        $this->objDBbridging->updateAlert($id);
+        
+        $alerts = $this->objOps->ajaxGetContentAlerts();
+        
+        $count = count($alerts);
+        
+        if ($count > 0)
+        {
+            echo $count;
+        }
+        else
+        {
+            echo '';
+        }
+        die();        
+    }
+        
+    /**
+     *
+     * Method to set the context
+     * 
+     * @access private
+     * @return VOID 
+     */
+    private function __ajaxSetContext()
+    {
+        $contextcode = $this->getParam('contextcode');
+        
+        $context = $this->objContext->getContextCode();
+
+        if ($contextcode != $context)
+        {
+            $this->objContext->leaveContext();
+            $this->objContext->joinContext($contextcode);
+        }
+        echo 'true';
+        die();
+    }
+    
     /**
     * 
     * Method to return an error when the action is not a valid 

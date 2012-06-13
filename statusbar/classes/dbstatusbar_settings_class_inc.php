@@ -70,12 +70,12 @@ class dbstatusbar_settings extends dbtable
 
     /**
      * 
-     * Variable to hold the PKId
+     * Variable to hold the userId
      * 
      * @access public
      * @var string
      */
-    public $PKId;
+    public $userId;
 
     /**
     *
@@ -85,6 +85,8 @@ class dbstatusbar_settings extends dbtable
     */
     public function init()
     {
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
         //Set the parent table to our demo table
         parent::init('tbl_statusbar_settings');
         $this->table = 'tbl_statusbar_settings';
@@ -95,50 +97,61 @@ class dbstatusbar_settings extends dbtable
      * Get the statusbar settings.
      *
      * @access public
-     * @param string $PKId The PKId of the user to get settings for
+     * @param string $userId The userId of the user to get settings for
      * @return array The array of setting
      */
     public function getSettings()
     {
-        return $this->fetchAll("WHERE user_id = '$this->PKId'");
+        return $this->fetchAll("WHERE user_id = '$this->userId'");
     }
     
-    /**
+    /** 
      *
      * Method to save the settings
      * 
      * @access public
      * @param string $orientation The orientation setting for the user
      * @param string $position The position setting for the user
+     * @param string $display To show or hide the statusbar
+     * @param integer $alert The period ahead to check for alerts
      * @return VOID
      */
-    public function saveSettings($orientation, $position, $display)
+    public function saveSettings($orientation, $position, $display, $alert)
     {
-        $this->delete('user_id', $this->PKId);
+        $this->delete('user_id', $this->userId);
         
         $data = array();
-        $data['user_id'] = $this->PKId;
+        $data['user_id'] = $this->userId;
         $data['param'] = 'orientation';
         $data['value'] = $orientation;
-        $data['created_by'] = $this->PKId;
+        $data['created_by'] = $this->userId;
         $data['date_created'] = date('Y-m-d H:i:s');
         
         $this->insert($data);
 
         $data = array();
-        $data['user_id'] = $this->PKId;
+        $data['user_id'] = $this->userId;
         $data['param'] = 'position';
         $data['value'] = $position;
-        $data['created_by'] = $this->PKId;
+        $data['created_by'] = $this->userId;
         $data['date_created'] = date('Y-m-d H:i:s');
         
         $this->insert($data);
 
         $data = array();
-        $data['user_id'] = $this->PKId;
+        $data['user_id'] = $this->userId;
         $data['param'] = 'display';
         $data['value'] = $display;
-        $data['created_by'] = $this->PKId;
+        $data['created_by'] = $this->userId;
+        $data['date_created'] = date('Y-m-d H:i:s');
+
+        $this->insert($data);
+
+        $data = array();
+        $data['user_id'] = $this->userId;
+        $data['param'] = 'alert';
+        $data['value'] = $alert;
+        $data['created_by'] = $this->userId;
         $data['date_created'] = date('Y-m-d H:i:s');
 
         $this->insert($data);
