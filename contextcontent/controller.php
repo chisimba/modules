@@ -97,8 +97,8 @@ class contextcontent extends controller {
             //Load Activity Streamer
 
             if ($this->objModuleCatalogue->checkIfRegistered('activitystreamer') && $this->objUser->isLoggedIn()) {
-                // $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-                // $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+                $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+                $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
                 $this->eventsEnabled = TRUE;
             } else {
                 $this->eventsEnabled = FALSE;
@@ -414,16 +414,16 @@ class contextcontent extends controller {
             return $this->nextAction(NULL, array('error' => 'couldnotcreatechapter'));
         } else {
             //add to activity log
+            $contextinfo = $this->objContext->getContext($this->contextCode);
             if ($this->eventsEnabled) {
-                $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent') . " " . $this->contextCode;
-                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
-                    'link' => $this->uri(array()),
+                $message = $this->objUser->fullname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent') . " " . $this->objContext->getTitle($this->contextCode);
+                $this->eventDispatcher->post($this->objActivityStreamer, "contextcontent", array('title' => $message,
+                    'link' => $this->uri(array('action' => 'showcontextchapters', 'chapterid' => $chapterId), 'contextcontent'),
                     'contextcode' => $this->contextCode,
                     'author' => $this->objUser->fullname(),
                     'description' => $message));
             }
             //send alerts [ JC OK
-            $contextinfo = $this->objContext->getContext($this->contextCode);
             $alerts = explode("|", $contextinfo['alerts']);
             //--$index;
             foreach ($alerts as $alert) {
@@ -452,9 +452,10 @@ class contextcontent extends controller {
             return $this->nextAction(NULL, array('error' => 'couldnotcreatechapter'));
         } else {
             //add to activity log
+            $contextinfo = $this->objContext->getContext($this->contextCode);
             if ($this->eventsEnabled) {
-                $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent') . " " . $this->contextCode;
-                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
+                $message = $this->objUser->fullname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewchapter', 'contextcontent') . " " . $this->objContext->getTitle($this->contextCode);
+                $this->eventDispatcher->post($this->objActivityStreamer, "contextcontent", array('title' => $message,
                     'link' => $this->uri(array()),
                     'contextcode' => $this->contextCode,
                     'author' => $this->objUser->fullname(),
@@ -739,16 +740,16 @@ class contextcontent extends controller {
         $this->setVar('mode', 'add');
         $this->setVar('formaction', 'savepage');
         //add to activity log
+        $contextinfo = $this->objContext->getContext($this->contextCode);
         if ($this->eventsEnabled) {
-            $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->contextCode . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
-            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
+            $message = $this->objUser->fullname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->objContext->getTitle($this->contextCode) . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
+            $this->eventDispatcher->post($this->objActivityStreamer, "contextcontent", array('title' => $message,
                 'link' => $this->uri(array()),
                 'contextcode' => $this->contextCode,
                 'author' => $this->objUser->fullname(),
                 'description' => $message));
         }
         //send alerts [ JOC OK
-        $contextinfo = $this->objContext->getContext($this->contextCode);
         $alerts = explode("|", $contextinfo['alerts']);
         //--$index;
         foreach ($alerts as $alert) {
@@ -780,16 +781,16 @@ class contextcontent extends controller {
         $this->setVar('mode', 'add');
         $this->setVar('formaction', 'savepage');
         //add to activity log
+        $contextinfo = $this->objContext->getContext($this->contextCode);
         if ($this->eventsEnabled) {
-            $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->contextCode . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
-            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
-                'link' => $this->uri(array()),
+            $message = $this->objUser->fullname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->objContext->getTitle($this->contextCode) . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
+            $this->eventDispatcher->post($this->objActivityStreamer, "contextcontent", array('title' => $message,
+                'link' => $this->uri(array('action' => 'viewpage', 'id' => $pageId), 'contextcontent'),
                 'contextcode' => $this->contextCode,
                 'author' => $this->objUser->fullname(),
                 'description' => $message));
         }
         //send alerts [ JOC OK
-        $contextinfo = $this->objContext->getContext($this->contextCode);
         $alerts = explode("|", $contextinfo['alerts']);
         //--$index;
         foreach ($alerts as $alert) {
@@ -842,9 +843,10 @@ class contextcontent extends controller {
         $this->setVar('mode', 'add');
         $this->setVar('formaction', 'savepage');
         //add to activity log
+        $contextinfo = $this->objContext->getContext($this->contextCode);
         if ($this->eventsEnabled) {
-            $message = $this->objUser->getsurname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->contextCode . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
-            $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title' => $message,
+            $message = $this->objUser->fullname() . " " . $this->objLanguage->languageText('mod_contextcontent_addednewpage', 'contextcontent') . " " . $this->objContext->getTitle($this->contextCode) . " " . $this->objLanguage->languageText('word_chapter', 'contextcontent') . ": " . $chapterTitle;
+            $this->eventDispatcher->post($this->objActivityStreamer, "contextcontent", array('title' => $message,
                 'link' => $this->uri(array()),
                 'contextcode' => $this->contextCode,
                 'author' => $this->objUser->fullname(),
