@@ -21,8 +21,7 @@ $fields = array(
 		'length' => 150
 		),
 	'description' => array(
-		'type' => 'text',
-		'length' => 250
+		'type' => 'clob',
 		),
 	'created_by' => array(
 		'type' => 'text',
