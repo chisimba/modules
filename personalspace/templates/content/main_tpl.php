@@ -11,6 +11,8 @@ $downIcon = $objIcon->show();
 $objIcon->setIcon('delete');
 $deleteIcon = $objIcon->show();
 
+$objLanguage = $this->getObject('language', 'language');
+
 
 // Set JavaScript Variables
 ?>
@@ -136,7 +138,7 @@ foreach ($wideBlocks as $wideBlock) {
             $bData = $bData[0];
             $title = $bData["title"];
             //parse some abstractions
-            $title = $this->objLanguage->abstractText($title);
+            $title = $objLanguage->abstractText($title);
             if ($title == '') {
                 $title = $wideBlock['blockname'] . ' | ';
             }
