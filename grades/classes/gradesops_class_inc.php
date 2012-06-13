@@ -2819,7 +2819,7 @@ class gradesops extends object
             
             if (empty($unlinkedStrandsArray))
             {
-                $noSubjects = $this->error($noStrandsLabel);
+                $noStrands = $this->error($noStrandsLabel);
 
                 $this->objIcon->title = $addLabel;
                 $this->objIcon->alt = $addLabel;
