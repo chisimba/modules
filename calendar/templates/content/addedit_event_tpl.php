@@ -245,7 +245,7 @@ $table->addCell($detailsTextArea->show(), NULL, NULL, NULL, NULL, 'colspan="3"')
 $table->endRow();
 
 $table->startRow();
-$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite', 'calendar') . ':', 'input_url');
+$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite', 'calendarbase') . ':', 'input_url');
 $table->addCell($urlLabel->show());
 
 $urlInput = new textinput('url');
@@ -300,6 +300,7 @@ if ($mode == 'edit') {
 }
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('mod_calendarbase_saveevent', 'calendarbase'));
+$submitButton->setId('input_submitform');
 $submitButton->setToSubmit();
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
@@ -307,9 +308,9 @@ $returnUrl = $this->uri(array('month' => $month, 'year' => $year, 'events' => $c
 $cancelButton->setOnClick("window.location='$returnUrl'");
 
 $form->addToForm(//'<p>'
-//.$submitButton->show()
-        '<input value="Save Event" type="submit" name="submitform" id="input_submitform" class="button" />'
-        . ' / ' . $cancelButton->show()
+$submitButton->show(). ' / ' . $cancelButton->show()
+//        '<input value="Save Event" type="submit" name="submitform" id="input_submitform" class="button" />'
+        
 //.'</p>'
 );
 

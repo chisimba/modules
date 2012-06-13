@@ -221,15 +221,15 @@ class calendar extends controller {
                     break;
                 case 1: // Save Course Event
                 
-                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
+                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId, NULL, NULL, NULL, $timeFrom, $timeTo);
                     break;
                 case 2: // Save Single group Event
-                   $event = $this->objCalendar->insertMultiDayGroupEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId,$groupid);
+                   $event = $this->objCalendar->insertMultiDayGroupEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId, NULL, NULL, NULL, $groupid , $timeFrom, $timeTo);
                   break;
 
 
                 case 3: // Save Site Event
-                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId);
+                    $event = $this->objCalendar->insertMultiDayContextEvent($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId, NULL, $timeFrom, $timeTo);
                     $eventsList = 'site';
                     break;
             }
@@ -237,7 +237,7 @@ class calendar extends controller {
             // Insert Single Day event
             switch ($eventFor) {
                 case 0: // Save Single User Event
-                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $this->userId, 0, NULL, $timeFrom, $timeTo);
+                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl, $this->userId, 0, NULL, NULL, $timeFrom, $timeTo);
                     $eventsList = 'user';
                     break;
                 case 1: // Save Single Course Event

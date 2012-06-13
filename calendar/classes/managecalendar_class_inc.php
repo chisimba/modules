@@ -182,7 +182,7 @@ class managecalendar extends object
     * @param string $dateLastModified - Date the entry was last updated.
     * @param string $eventStartId - Record ID of the Start (First Day) of the multiday event. If none is provided, the function will generate one.
     */
-    function insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $user, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL)
+    function insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $user, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL, $timeFrom = NULL, $timeTo = NULL)
     {
         if ($dateFirstEntry == NULL) {
             $dateFirstEntry = strftime('%Y-%m-%d %H:%M:%S', mktime());
@@ -206,7 +206,9 @@ class managecalendar extends object
                 $userLastModified, // User Last Modified
                 $dateFirstEntry, // date first entry
                 $dateLastModified, // date of last entry
-                $eventStartId
+                $eventStartId,
+                $timeFrom,
+                $timeTo
             );
 
         return $lastInsert;
@@ -226,7 +228,7 @@ class managecalendar extends object
     * @param string $dateLastModified - Date the entry was last updated.
     * @param string $eventStartId - Record ID of the Start (First Day) of the multiday event. If none is provided, the function will generate one.
     */
-    function insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL)
+    function insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL, $timeFrom = NULL, $timeTo = NULL)
     {
 
         if ($dateFirstEntry == NULL) {
@@ -251,14 +253,16 @@ class managecalendar extends object
                 $userLastModified, // User Last Modified
                 $dateFirstEntry, // date first entry
                 $dateLastModified, // date of last entry
-                $eventStartId
+                $eventStartId,
+                $timeFrom,
+                $timeTo
             );
 
         return $lastInsert;
     }
 
     
-    function insertMultiDayGroupEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL,$groupid)
+    function insertMultiDayGroupEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $userLastModified = NULL, $dateFirstEntry = NULL, $dateLastModified = NULL, $eventStartId=NULL,$groupid, $timeFrom = NULL, $timeTo = NULL)
     {
 
         if ($dateFirstEntry == NULL) {
@@ -283,7 +287,9 @@ class managecalendar extends object
                 $userLastModified, // User Last Modified
                 $dateFirstEntry, // date first entry
                 $dateLastModified, // date of last entry
-                $eventStartId
+                $eventStartId,
+                $timeFrom,
+                $timeTo
             );
 
         return $lastInsert;
