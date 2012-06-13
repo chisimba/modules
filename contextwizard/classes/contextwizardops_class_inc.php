@@ -499,7 +499,7 @@ class contextwizardops extends object
      */
     public function ajaxGetStrands()
     {
-        $selectStrandLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectsubject', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectsubject');
+        $selectStrandLabel = $this->objLanguage->code2Txt('mod_contextwizard_selectstrand', 'contextwizard', NULL, 'ERROR: mod_contextwizard_selectstrand');
 
         $subjectId =$this->getParam('subject_id');
         $strands = $this->objDBbridging->getLinkedItems('subject_id', 'strand_id', $subjectId);
