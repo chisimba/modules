@@ -85,11 +85,11 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
         },
         success: function(data) {
             if(data == "FALSE") {
-                jQuery("#responsearea").fadeIn("Error submitting data");
+                jQuery("#responsearea").fadeIn("There was a problem saving your note");
             } else {
-                jQuery("#responsearea").text("Data saved Successfully");
+                jQuery("#responsearea").text("Your note was saved Successfully");
                 jQuery("#responsearea").show();
-                jQuery('#responsearea').fadeOut('slow');
+                jQuery('#responsearea').fadeOut(5000);
                 
                 jQuery("#input_id").val(data);
                 tmpUrl = jQuery("#input_uri").val();
@@ -105,7 +105,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
             }
         },
         error: function() {
-            jQuery("#responsearea").fadeIn("Error submitting data");
+            jQuery("#responsearea").fadeIn("There was a problem saving your note");
         }
     });
 }

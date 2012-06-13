@@ -300,9 +300,15 @@ class noteops extends object {
         $saveButton = $objButton->show();
 
         $objButton = new button('cancel', $cancelLabel);
-        $objButton->setToSubmit();
+        //$objButton->setToSubmit();
+        if ($mode == 'add') {
+            $uri = $this->uri(array());
+        } else {
+            $uri = $this->uri(array('action'=>'shownote', 'id'=>$idInputValue));
+        }
+        $objButton->setOnClick('javascript: window.location=\''.$uri.'\'');
         $cancelButton = $objButton->show();
-
+        
         $objTable->startRow();
         $objTable->addCell($idInput . $saveButton . '&nbsp;' . $cancelButton, '', '', '', '', 'colspan="2"');
         $objTable->endRow();
@@ -571,7 +577,8 @@ class noteops extends object {
         $shareIcon = $this->objIcon->show();
         //$shareLink->link = $shareIcon;
 
-        $title->str .= "&nbsp;" . $editLink->show() . "&nbsp;" . $deleteLink->show() . "&nbsp;" . $shareIcon;
+        /* disabled the share button since it is not yet complete */
+        $title->str .= "&nbsp;" . $editLink->show() . "&nbsp;" . $deleteLink->show();/* . "&nbsp;" . $shareIcon;*/
         $str = "<div>";
         $str .= $title->show();
         $str .= $contentValue;
@@ -647,6 +654,7 @@ class noteops extends object {
     }
     
     public function getShareOptions() {
+        /* work in progress */
         echo "This is the returned data from the ajax call. Holla!!";
         die();
     }
