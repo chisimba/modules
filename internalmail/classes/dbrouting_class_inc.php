@@ -302,5 +302,26 @@ class dbrouting extends dbTable
         }
         return $name;
     }
+    
+    /**
+     *
+     * Method to return all unread email for statusbar
+     * 
+     * @access public
+     * @return integer $count The count of unread email
+     */
+    public function getUnreadEmailCount()
+    {
+        $sql = "SELECT * FROM $this->table";
+        $sql .= " WHERE `recipient_id` = '$this->userId'";
+        $sql .= " AND `read_email` = '0'";
+        $sql .= " AND `folder_id` NOT IN ('init_2','init_3','init_4')";
+
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return count($data);
+        }
+        return NULL;
+    }
 }
 ?>
