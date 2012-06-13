@@ -410,7 +410,7 @@ class gradesops extends object
                     $dataArray = $this->objDBsubjects->getSubject($id);
                     break;
                 case 'strand':
-                    $dataArray = $this->objDBsubjects->getStrand($id);
+                    $dataArray = $this->objDBstrands->getStrand($id);
                     break;
                 case 'class':
                     $dataArray = $this->objDBclasses->getClass($id);
