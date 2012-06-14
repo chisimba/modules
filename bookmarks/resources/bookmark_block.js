@@ -48,6 +48,7 @@ jQuery(function() {
             success: function(ret) {
                 if (ret == 'true')
                 {
+                    uri = uri = uri.replace(/&amp;/g, '&');
                     window.location = 'http://' + domain + path + '?' + uri;
                 }
                 else

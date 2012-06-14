@@ -106,7 +106,7 @@ jQuery(function() {
 
     jQuery('[class^="contextcode_"]').live('click', function() {
         var contextcode = jQuery(this).attr('class').replace('contextcode_', '');
-        var location = jQuery(this).html();
+        var uri = jQuery(this).html();
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=bookmarks&action=ajaxSetContext",
@@ -114,7 +114,8 @@ jQuery(function() {
             success: function(ret) {
                 if (ret == 'true')
                 {
-                    window.location = location;
+                    uri = uri.replace(/&amp;/g, '&');
+                    window.location = uri;
                 }
                 else
                 {
