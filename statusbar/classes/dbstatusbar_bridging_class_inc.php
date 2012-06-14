@@ -373,5 +373,140 @@ class dbstatusbar_bridging extends dbtable
         
         return $alerts;
     }
+
+    /**
+     *
+     * Method to get photo gallery alerts
+     * 
+     * @access public
+     * @param string $alert The alert date
+     * @return $array The array of context calendar alerts
+     */
+    public function getPhotoGalleryAlerts($alert)
+    {        
+        $events = $this->getGalleryEvents($alert);
+        $entries = $this->getGalleryBridgingEntries();
+
+        $this->createGalleryEntries($events, $entries);
+        
+        $alerts = $this->getGalleryAlerts($alert);
+
+        return $alerts;
+        
+    }
+    
+    /**
+     *
+     * Method to get bridging entries
+     * 
+     * @access public
+     * @return array $entries The bridging table entries
+     */
+    public function getGalleryBridgingEntries()
+    {
+        $sql = "SELECT * FROM tbl_statusbar_bridging";
+        $sql .= " WHERE `photo_id` IS NOT NULL";
+        $sql .= " AND `user_id` = '$this->userId'";
+        
+        $entries = $this->getArray($sql);
+        
+        return $entries;
+    }
+    
+    /**
+     *
+     * Method to get gallery events
+     * 
+     * @access public
+     * @param timestamp $alert The alert timestamp
+     * @return array $events The context content events
+     */
+    public function getGalleryEvents($alert)
+    {
+        $date = date('Y-m-d H:i:s', $alert);
+        
+        $sql = "SELECT *, i.id AS i_id, a.id AS a_id, b.id AS b_id FROM tbl_photogallery_images AS i";
+        $sql .= " LEFT JOIN tbl_photogallery_albums AS a ON a.id = i.album_id";
+        $sql .= " LEFT JOIN tbl_buddies AS b ON a.user_id = b.buddyid";
+        $sql .= " WHERE a.is_shared = '1'";
+        $sql .= " AND b.userid = '$this->userId'";
+        $sql .= " AND i.date_created <= '$date'";
+
+        $events = $this->getArray($sql);
+
+        return $events;
+    }
+    
+    /**
+     *
+     * Method to create bridging entries
+     * 
+     * @access public
+     * @param array $events The calendar events array
+     * @param array $entries The briding entries 
+     * @return VOID
+     */
+    public function createGalleryEntries($events, $entries)
+    {
+        if (!empty($events))
+        {
+            if (empty($entries))
+            {
+                foreach ($events as $event)
+                {
+                    $data['photo_id'] = $event['id'];
+                    $data['user_id'] = $this->userId;
+                    $this->insert($data);
+                }
+            }
+            else
+            {
+                foreach ($events as $key => $event)
+                {
+                    foreach ($entries as $entry)
+                    {
+                        if ($event['id'] == $entry['photo_id'])
+                        {
+                            unset($events[$key]);
+                        }
+                    }
+                }
+
+                foreach ($events as $event)
+                {
+                    $data['photo_id'] = $event['id'];
+                    $data['user_id'] = $this->userId;
+                    $this->insert($data);
+                }
+            }
+        }
+    }
+    
+    /**
+     *
+     * Method to get context alerts
+     * 
+     * @access public
+     * @param timestamp $alert The alert timestamp
+     * @param string $contextCode The context code
+     * @return array $alerts The context calendar alerts
+     */
+    public function getGaleryAlerts($alert)
+    {
+        $date = date('Y-m-d H:i:s', $alert);
+        
+        $sql = "SELECT *, a.id AS a_id, b.id AS b_id, b.alert_state AS b_alert_state FROM tbl_activity AS a";
+        $sql .= " LEFT JOIN tbl_statusbar_bridging AS b";
+        $sql .= " ON a.id = b.activity_id";
+        $sql .= " WHERE a.contextcode = '$contextCode'";
+        $sql .= " AND a.createdon <= '$date'";
+        $sql .= " AND b.user_id = '$this->userId'";
+        $sql .= " AND b.alert_state = '0'";
+        $sql .= " ORDER BY a.createdon ASC";
+        
+        $alerts = $this->getArray($sql);
+        
+        return $alerts;
+    }
 }
 ?>

@@ -21,14 +21,23 @@ jQuery(function() {
 
     jQuery(document).ready(function() {
         var period = ajax_poll * 1000;
-        setInterval(function() {
-            jQuery.ajax({
-                type: "POST",
-                url: "index.php?module=statusbar&action=ajaxShowMain",
-                success: function(ret) {
-                    jQuery("#statusbar").html(ret);
-                }
-            });
+        setInterval(function() { 
+            var bookmarks = jQuery("#dialog_add_bookmark").dialog('isOpen');
+            var settings = jQuery("#dialog_statusbar_settings").dialog('isOpen');
+            var message = jQuery("#dialog_statusbar_message").dialog('isOpen');
+            var calendar = jQuery("#dialog_statusbar_calendar_alert_show").dialog('isOpen');
+            var content = jQuery("#dialog_statusbar_content_alert_show").dialog('isOpen');
+
+            if (bookmarks == false && settings == false && message == false && calendar == false && content == false)
+            {
+                jQuery.ajax({
+                    type: "POST",
+                    url: "index.php?module=statusbar&action=ajaxShowMain",
+                    success: function(ret) {
+                        jQuery("#statusbar").html(ret);
+                    }
+                });
+            }
         }, period);
     });
     

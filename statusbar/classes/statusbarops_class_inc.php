@@ -148,11 +148,11 @@ class statusbarops extends object
             $this->getParams();
             
             //load module classes
+            $this->objBookmarks = $this->getObject('bookmarksops', 'bookmarks');
             $this->objEmail = $this->newObject('dbrouting', 'internalmail');
             $this->objBuddies = $this->newObject('dbbuddies', 'buddies');
             $this->objMessaging = $this->newObject('dbmessaging', 'messaging');
             $this->objLoggedinUsers = $this->newObject('loggedinusers', 'security');
-            $this->objBookmarks = $this->newObject('bookmarksops', 'bookmarks');
             $this->objCalendar = $this->newObject('dbcalendar', 'calendarbase');
             $this->objUserContext = $this->getObject('usercontext', 'context');
         }
@@ -246,6 +246,7 @@ class statusbarops extends object
         $showLabel = $this->objLanguage->languageText('mod_statusbar_showbar', 'statusbar', 'ERROR: mod_statusbar_showbar');
         $hideLabel = $this->objLanguage->languageText('mod_statusbar_hidebar', 'statusbar', 'ERROR: mod_statusbar_hidebar');
         $noBuddiesLabel = $this->objLanguage->languageText('mod_statusbar_nobuddies', 'statusbar', 'ERROR: mod_statusbar_nobuddies');
+        $bookmarkLabel = $this->objLanguage->languageText('mod_statusbar_bookmark', 'statusbar', 'ERROR: mod_statusbar_bookmark');
         
         $onlineUsers = $this->ajaxGetOnlineUsers();
         $onlineLink = "<span title=\"$onlineUsersLabel\"><div class=\"statusbar_online_users\"><span class=\"statusbar_online_count\">$onlineUsers</span></div></span>";
@@ -319,10 +320,13 @@ class statusbarops extends object
 
         if ($this->objModules->checkIfRegistered('bookmarks'))
         {        
-            $bookmarkLink = $this->objBookmarks->showLink();
-            $bookmarkParams = $this->objBookmarks->bookmarkParams();
-            $this->appendArrayVar('headerParams', $bookmarkParams['headerParams']);
+            $this->objIcon->setIcon('bookmark', 'png');
+            $this->objIcon->title = $bookmarkLabel;
+            $this->objIcon->alt = $bookmarkLabel;
+            $bookmarkIcon = $this->objIcon->show();
 
+            $bookmarkLink = '<div id="add_bookmark" title="' . $bookmarkLabel . '"' . '>' . $bookmarkIcon . '</a>';
+            $this->objBookmarks = $this->getObject('bookmarksops', 'bookmarks');
             $gotoLink = $this->objBookmarks->showGotoLink();
         }
 
@@ -481,7 +485,8 @@ class statusbarops extends object
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $ajaxPollingInterval = $this->objSysConfig->getValue('AJAX_POLL', 'statusbar');
         $this->objSvars = $this->getObject('serializevars', 'utilities');
-        $this->script = '<script type="text/javascript">var ajax_poll=' . $ajaxPollingInterval . '</script>';
+        $this->script = '';
+        $this->script .= '<script type="text/javascript">var ajax_poll=' . $ajaxPollingInterval . '</script>';
         
         $dialog = $this->newObject('dialog', 'jquerycore');
         $dialog->setCssId('statusbar');
@@ -500,6 +505,10 @@ class statusbarops extends object
         $string = $dialog->show();
         $this->script .= $dialog->script;
         
+        if ($this->objModules->checkIfRegistered('bookmarks'));
+        {
+            $string .= $this->objBookmarks->showLink(FALSE);
+        }
         return $string . $this->showSettingsDialog() . $this->showInstantMessaging() . $this->showInstantMessages() . $this->ajaxShowCalendarAlerts() . $this->ajaxShowContentAlerts();
     }
     
@@ -1086,6 +1095,11 @@ class statusbarops extends object
     public function statusbarParams()
     {
         $headerParams = $this->getJavascriptFile('statusbar.js', 'statusbar');
+        if ($this->objModules->checkIfRegistered('bookmarks'));
+        {
+            $params = $this->objBookmarks->bookmarkParams();
+            $headerParams .= "\n" . $params['headerParams'];
+        }
         $headerParams .= "\n" . $this->script;
         $array = array('headerParams' => $headerParams);
         return $array;

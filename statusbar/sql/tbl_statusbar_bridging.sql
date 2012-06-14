@@ -28,6 +28,10 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
     ),
+    'photo_id' => array(
+        'type' => 'text',
+        'length' => 32,
+    ),
     'alert_state' => array(
         'type' => 'text',
         'length' => 1,
