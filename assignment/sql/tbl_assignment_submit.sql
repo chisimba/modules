@@ -31,7 +31,7 @@ $fields = array(
 		),
 	'online' => array(
 		'type' => 'clob',
-		),	
+		),
 	'datesubmitted' => array(
 		'type' => 'timestamp'
 		),
@@ -50,11 +50,11 @@ $fields = array(
 		'length' => 14
 		)
 	);
-// Other indicies 
+// Other indicies
 $name = 'assignment_idx';
 $indexes = array(
     'fields' => array(
-        'assignment_id' => array()
+        'assignmentid' => array()
     )
 );
 ?>
