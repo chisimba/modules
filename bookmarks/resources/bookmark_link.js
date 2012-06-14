@@ -30,7 +30,7 @@ jQuery(function() {
 
     });
     
-    jQuery('#add_bookmark').click(function() {
+    jQuery('#add_bookmark').live('click', function() {
         jQuery('#dialog_add_bookmark').dialog('open');
     });
     

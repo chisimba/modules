@@ -68,7 +68,8 @@ class bookmarksops extends object
      * @access public
      * @var string
      */
-    private $script;
+    public $script;
+
     /**
      * Standard init function called by the constructor call of Object
      *
@@ -657,7 +658,7 @@ class bookmarksops extends object
      * @access public
      * @return string The bookmark link string 
      */
-    public function showLink()
+    public function showLink($toolbar = TRUE)
     {
         $addBookmarkLabel = $this->objLanguage->languageText('mod_bookmarks_addbookmark', 'bookmarks', 'ERROR: mod_bookmarks_addbookmark');
         $bookmarkPageLabel = $this->objLanguage->languageText('mod_bookmarks_bookmarkpage', 'bookmarks', 'ERROR: mod_bookmarks_bookmarkpage');
@@ -766,8 +767,15 @@ class bookmarksops extends object
         $bookmarkIcon = $this->objIcon->show();
 
         $link = '<a href="#" id="add_bookmark"><strong>' . $bookmarkIcon . '</strong></a>';
-        
-        return $link . $dialog;
+       
+        if ($toolbar)
+        {
+            return $link . $dialog;
+        }
+        else
+        {
+            return $dialog;
+        }
     }
     
     /**
