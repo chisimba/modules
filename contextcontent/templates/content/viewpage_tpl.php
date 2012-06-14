@@ -170,6 +170,20 @@ $pageintroheader->cssClass = "pagetitle";
 $pageintroheader->str = $page['menutitle'];
 $content.= $pageintroheader->show() . $objWashout->parseText($page['pagecontent']);
 
+$objModule = $this->getObject('modules', 'modulecatalogue');
+$pageNotes = $objModule->checkIfRegistered("pagenotes");
+if ($pageNotes) {
+    $objContextModules =  $this->getObject('dbcontextmodules', 'context');
+    $objContext = $this->getObject('dbcontext', 'context');
+    if($objContextModules->isContextPlugin($objContext->getContextCode(), 'pagenotes')) {
+        $objBlock = $this->getObject ( 'blocks', 'blocks' );
+        $pageNotesInput= $objBlock->showBlock('widepagenotecontrol', 'pagenotes', NULL, 100, TRUE);
+        $pageNotesRendered = $objBlock->showBlock('pagenoteswidebl', 'pagenotes', NULL, 100, TRUE);
+        $content .= '<div class=\'pagenotes\'>' . $pageNotesInput . $pageNotesRendered . '</div>';
+    }
+}
+
+
 $form = "";
 
 if (count($chapters) > 1 && $this->isValid('movetochapter')) {
