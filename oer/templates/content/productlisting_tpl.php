@@ -23,6 +23,21 @@ $objFix->fixThree();
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>
     <div id="Canvas_Content_Body_Region3">
+        <div class="featurebox">
+            <div class='featureboxtopcontainer'>
+                <h5 class="featureboxheader">
+                    Important notice
+                </h5>
+                <div class="featureboxcontent" style="overflow: hidden; ">
+                    <span class="warning" style="font-weight: normal;">Please note that this site is for staging purposes, it 
+                    is not a production site. It contains code that is undergoing
+                    development, and that is deployed here for testing. The site
+                    only has enough content for basic testing purposes, and quite
+                    likely has bugs.
+                    </span>
+                </div>
+            </div>
+        </div>
         {
         "display" : "block",
         "module" : "oer",
