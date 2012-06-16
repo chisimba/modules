@@ -130,7 +130,6 @@ class statusbarops extends object
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $this->objConfirm = $this->newObject('confirm', 'utilities');
-            $this->objSvars = $this->getObject('serializevars', 'utilities');
             $this->objModules = $this->getObject('modules', 'modulecatalogue');
 
             // Load html elements.
