@@ -324,7 +324,7 @@ class statusbarops extends object
             $this->objIcon->alt = $bookmarkLabel;
             $bookmarkIcon = $this->objIcon->show();
 
-            $bookmarkLink = '<div id="add_bookmark" title="' . $bookmarkLabel . '"' . '>' . $bookmarkIcon . '</a>';
+            $bookmarkLink = '<div id="add_bookmark" style="cursor: pointer;" title="' . $bookmarkLabel . '"' . '>' . $bookmarkIcon . '</a>';
             $this->objBookmarks = $this->getObject('bookmarksops', 'bookmarks');
             $gotoLink = $this->objBookmarks->showGotoLink();
         }
