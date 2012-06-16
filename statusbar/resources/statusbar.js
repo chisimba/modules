@@ -30,7 +30,6 @@ jQuery(function() {
 
             if (bookmarks == false && settings == false && message == false && calendar == false && content == false)
             {
-                alert('noting open');
                 jQuery.ajax({
                     type: "POST",
                     url: "index.php?module=statusbar&action=ajaxShowMain",
@@ -38,10 +37,6 @@ jQuery(function() {
                         jQuery("#statusbar").html(ret);
                     }
                 });
-            }
-            else
-            {
-                alert('dialog open');
             }
         }, period);
     });
