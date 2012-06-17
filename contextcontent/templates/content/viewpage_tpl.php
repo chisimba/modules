@@ -1,5 +1,7 @@
 <?php
 $res ="";
+$prvpage = "";
+$nextpage = "";
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 
