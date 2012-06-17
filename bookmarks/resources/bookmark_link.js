@@ -35,7 +35,6 @@ jQuery(function() {
     });
     
     jQuery('#dialog_add_bookmark').live('dialogopen', function(event, ui) {
-        jQuery('.ui-dialog-titlebar-close').hide();
         jQuery('#input_bookmark_name').val('');
         jQuery('#input_location').val(bookmark);
         jQuery('#input_visible_location').val(bookmark);
