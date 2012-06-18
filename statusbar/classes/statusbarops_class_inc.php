@@ -500,6 +500,7 @@ class statusbarops extends object
         $dialog->setResizable(FALSE);
         $dialog->setAutoOpen(TRUE);
         $dialog->setModal(FALSE);
+        $dialog->setDialogClass('dialog_fixed');
         $dialog->unsetButtons();
         $string = $dialog->show();
         $this->script .= $dialog->script;
