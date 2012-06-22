@@ -146,7 +146,7 @@ class utility extends object {
         // get previous and next link
         if ($prevPageNum == 2) {
             // display prev but not as a link
-            $prevLink = '&#171; ' . $prevLabel;
+            $prevLink = "";//'&#171; ' . $prevLabel;
         } else {
             $link = new link($this->uri(array("action" => "view", 'prevnotepage' => $prevPageNum), $this->module));
             $link->link = $prevLabel;
@@ -155,7 +155,7 @@ class utility extends object {
 
         $noteListCount = $this->objDbmynotes->getListCount($this->uid, $prevPageNum, $nextPageNum + 1);
         if ($noteListCount <= 5) {
-            $nextLink = $nextLabel . ' &#187;';
+            $nextLink = "";//$nextLabel . ' &#187;';
         } else {
             $link = new link($this->uri(array("action" => "view", 'nextnotepage' => $nextPageNum), $this->module));
             $link->link = $nextLabel . ' &#187;';
