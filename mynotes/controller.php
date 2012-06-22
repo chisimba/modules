@@ -263,7 +263,6 @@ class mynotes extends controller {
      * @access private
      * 
      */
-
     private function __ajaxGetNotes() {
         return $this->objNoteOps->getNotes();
     }
@@ -274,7 +273,6 @@ class mynotes extends controller {
      * 
      * @access private
      */
-
     private function __search() {
         return 'searchresults_tpl.php';
     }
@@ -282,15 +280,23 @@ class mynotes extends controller {
     /*
      * Method to show individual note with all it's details
      * 
+     * @access private
+     * 
      */
-
     private function __showNote() {
         return 'shownote_tpl.php';
     }
 
+    /*
+     * A method to retrieve sharing options.
+     * 
+     * @access private
+     * 
+     */
     private function __ajaxGetShare() {
         return $this->objNoteOps->getShareOptions();
     }
+    
     /**
      * 
      * Method to return an error when the action is not a valid 
@@ -357,7 +363,7 @@ class mynotes extends controller {
      *
      * @return boolean TRUE|FALSE
      *
-     */
+     
     public function requiresLogin() {
         $action = $this->getParam('action', 'NULL');
         switch ($action) {
@@ -368,8 +374,8 @@ class mynotes extends controller {
                 return TRUE;
                 break;
         }
-    }
-
+        return TRUE;
+    }*/
 }
 
 ?>
