@@ -74,7 +74,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
     var myId = jQuery("#input_id").val();
     
     jQuery.ajax({
-        type: "POST",
+        type: "GET",
         url: myUrl,
         data: {
             title: myTitle, 
@@ -102,6 +102,9 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
                     tmpUrl += "&id=" + data;
                     jQuery("#input_uri").val(tmpUrl);
                 }
+                
+                // refresh the tags
+                //refreshTags();
             }
         },
         error: function() {
@@ -141,3 +144,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
         }
     })
 })(jQuery);
+
+function refreshTags() {
+    alert("refreshing tags");
+}
