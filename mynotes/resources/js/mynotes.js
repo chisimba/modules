@@ -34,7 +34,7 @@ jQuery(function() {
             }
             
             jQuery.ajax({
-                type: "POST",
+                type: "GET",
                 url: "index.php?module=mynotes&action=ajaxGetNotes",
                 data: "nextnotepage="+nextPage+"&prevnotepage="+ prevPage,
                 success: function(ret) {
@@ -44,7 +44,7 @@ jQuery(function() {
         } else {
             // this is a list of all the notes that I have.
             jQuery.ajax({
-                type: "POST",
+                type: "GET",
                 url: "index.php?module=mynotes&action=ajaxGetNotes&viewall=true",
                 success: function(ret) {
                     jQuery("#middledynamic_area").html(ret); 
