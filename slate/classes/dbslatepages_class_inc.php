@@ -3,7 +3,7 @@
  *
  * Database access for slate pages
  *
- * Database access for slate pages, used to get data to edit and show the 
+ * Database access for slate pages, used to get data to edit and show the
  * slate pages.
  *
  * PHP version 5
@@ -52,7 +52,7 @@ $GLOBALS['kewl_entry_point_run'])
 *
  * Database access for slate pages
  *
- * Database access for slate pages, used to get data to edit and show the 
+ * Database access for slate pages, used to get data to edit and show the
  * slate pages.
  *
 *
@@ -78,7 +78,7 @@ class dbslatepages extends dbtable
 
     /**
      *
-     * Get the slate pages 
+     * Get the slate pages
      *
      * @return string The text of the init_overview
      * @access public
@@ -88,18 +88,18 @@ class dbslatepages extends dbtable
     {
         return $this->getAll();
     }
-    
+
     /**
      *
      * Save a link when coming from edit
-     * 
+     *
      * @param string $id The record id
      * @param string $page The URL for the page
      * @param string $title The title for the page
      * @param string $description The description of the page
      * @access public
      * @return boolean TRUE|FALSE
-     * 
+     *
      */
     public function savePage()
     {
@@ -115,14 +115,14 @@ class dbslatepages extends dbtable
         );
         return $result;
     }
-    
+
     /**
      *
      * Save a page when coming from add
-     * 
+     *
      * @access public
      * @return string The id of the saved record
-     * 
+     *
      */
     public function addPage()
     {
@@ -137,20 +137,65 @@ class dbslatepages extends dbtable
         );
         return $this->insert($data);
     }
-    
+
     /**
      *
      * Retrieve a page data by its primary key, id
-     * 
+     *
      * @param string $id The primary key
      * @return string array An array of page data
      * @access public
-     *  
+     *
      */
     public function getPageById($id)
     {
         $filter = "WHERE id = '$id'";
         return $this->getAll($filter);
+    }
+
+    /**
+     *
+     * Delete a slate page data
+     *
+     * @param string $id The primary key (id) of the page to delete
+     * @return boolean
+     * @access public
+     * 
+     */
+    public function deletePage($id)
+    {
+        $page = $this->getPageById($id);
+        $pageId = $page[0]['page'];
+        $uri = $this->uri(array('page' => $pageId), 'slate');
+        $uri = str_replace('&amp;', '&', $uri);
+        $pageid = md5($uri);
+        $this->delete('pageid', $pageid, 'tbl_slate_pageblocks');
+        $ret = $this->delete('id', $id);
+        if ($ret) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Get a list of used pages for use by AJAX to determine
+     * if a given page can be used.
+     *
+     * @return string array An array of used pages
+     * @access public
+     *
+     */
+    public function getTakenPages()
+    {
+        $stmt = "SELECT page FROM tbl_slate_pages";
+        $arTaken = $this->getArray($stmt);
+        $retAr = array();
+        foreach ($arTaken as $key=>$value) {
+            $retAr[] = $value['page'];
+        }
+        unset($arTaken);
+        return $retAr;
     }
 }
 ?>

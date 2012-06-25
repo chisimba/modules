@@ -179,6 +179,25 @@ class slateui extends object
         $edIcon->setIcon('edit');
         $delIcon = $this->newObject('geticon', 'htmlelements');
         $delIcon->setIcon('delete');
+        $d = $this->objLanguage->languageText(
+              'mod_slate_defaultpage','slate', "The default slate page, it cannot be deleted.");
+        $l = $this->objLanguage->languageText(
+              'mod_slate_default','slate', "DEFAULT");
+        $st = $this->objLanguage->languageText(
+              'mod_slate_defaulttitle','slate', "Default slate");
+        $linkUrl = $this->uri(array(),'slate');
+        $al = new link($linkUrl);
+        $al->link = $st;
+        $al->cssClass = "slate_page_link";
+        $table->startRow();
+        $table->addCell($al->show());
+        $table->addCell($l);
+        $table->addCell($d);
+        if ($this->objUser->isAdmin()) {
+            $table->addCell("");
+            $table->addCell("");
+        }
+        unset($d, $al, $l, $st);
         foreach ($arData as $linkItem) {
             $id = $linkItem['id'];
             $linkPage = $linkItem['page'];
@@ -215,11 +234,11 @@ class slateui extends object
             $table->endRow();
         }
         if ($this->objUser->isAdmin()) {
-            $ret = $this->insertAddIcon('showadd', "Add a page ");
+            $ret = '<div class="slate_addlink">' . $this->insertAddIcon('showadd', "Add a page ") . "</div>";
         } else {
             $ret = NULL;
         }
-        return $table->show() . $ret;
+        return $ret . $table->show() . $ret;
     }
 
     /**
@@ -302,15 +321,22 @@ class slateui extends object
         $table->endRow();
 
         // Input for the page.
+
         $label = $this->objLanguage->languageText(
           'mod_slate_page', 'slate', "Page number for link");
         $table->startRow();
         $table->addCell($label);
-        $textinput = new textinput('page');
-        $textinput->size = 60;
+        if ($this->mode == 'edit' ) {
+            $textinput = new hiddeninput('page');
+            $extra = $page;
+        } else {
+            $textinput = new textinput('page');
+            $textinput->size = 60;
+            $textinput->cssClass = 'required';
+            $extra = NULL;
+        }
         $textinput->setValue($page);
-         $textinput->cssClass = 'required';
-        $table->addCell($textinput->show());
+        $table->addCell($textinput->show() . $extra);
         $table->endRow();
 
         // Input for the description
@@ -347,6 +373,15 @@ class slateui extends object
         $hidId->cssId = "id";
         $hidId->value = $id;
         $hiddenFields .= $hidId->show() . "\n\n";
+        // A route back to manage slate.
+        $back = $this->uri(array('action'=>'manage'), 'slate');
+        $this->loadClass('link','htmlelements');
+        $ln = new link($back);
+        $ln->cssClass = "slate_page_link";
+        $label = $this->objLanguage->languageText(
+          'mod_slate_manage', 'slate', "Manage slates");
+        $ln->link = $label;
+        $ret = $ln->show() . "<br />";
 
          // Createform, add fields to it and display.
         $formData = new form('slatepageEditor', NULL);
@@ -354,7 +389,7 @@ class slateui extends object
             $this->makeHeading()
           . $table->show()
           . $hiddenFields
-          . $msgArea);
+          . $ret . $msgArea);
         return $formData->show();
     }
 

@@ -217,12 +217,28 @@ class slate extends controller
             // retrieve the confirmation code from the querystring
             $id=$this->getParam("id", FALSE);
             if ($id) {
-                $objDb->delete('id', $id);
+                $objDb->deletePage($id);
             }
             die("RECORD_DELETED");
         } else {
             die("ILLEGAL_DELETE_NOTADMIN");
         }
+    }
+
+    /**
+     *
+     * Print a JSON array of taken pages for use by AJAX
+     *
+     * @access private
+     * @return VOID
+     *
+     */
+    private function __gettaken()
+    {
+        $objDb = $this->getObject('dbslatepages', 'slate');
+        $retAr = $objDb->getTakenPages();
+        $ret = json_encode($retAr);
+        die($ret);
     }
 
     /**
