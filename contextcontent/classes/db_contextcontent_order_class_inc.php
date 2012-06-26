@@ -961,7 +961,14 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        if ($page['parentid'] == 'root')
+        {
+            $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        }
+        else
+        {
+            $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        }
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
@@ -993,7 +1000,14 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder > ' . $page['pageorder'] . ' ORDER BY pageorder ';
+        if ($page['parentid'] == 'root')
+        {
+            $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        }
+        else
+        {
+            $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        }
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
