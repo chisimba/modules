@@ -961,7 +961,7 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
+        $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder < ' . $page['pageorder'] . ' ORDER BY pageorder DESC';
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
@@ -993,7 +993,7 @@ class db_contextcontent_order extends dbtable {
             return FALSE;
         }
 
-        $nextPageSQL = ' WHERE parentid=\'' . $page['parentid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder > ' . $page['pageorder'] . ' ORDER BY pageorder ';
+        $nextPageSQL = ' WHERE chapterid=\'' . $page['chapterid'] . '\' AND contextcode =\'' . $page['contextcode'] . '\' AND pageorder > ' . $page['pageorder'] . ' ORDER BY pageorder ';
         $nextPage = $this->getAll($nextPageSQL);
 
         if (count($nextPage) == 0) {
