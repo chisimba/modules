@@ -206,7 +206,7 @@ class formmanager extends object {
         return $objForm->show();
     }
 
-    public function createAddQuestionForm($test) {
+    public function createAddQuestionForm($test, $mode = 'add') {
 
         // set up html elements
         $objHead = $this->loadClass('htmlheading', 'htmlelements');

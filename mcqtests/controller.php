@@ -495,19 +495,26 @@ class mcqtests extends controller {
                 break;
 
             case 'addquestion':
-                $id = $this->getParam('id', NULL);
-                $count = $this->getParam('count');
-                $contextCode = $this->contextCode;
-                $test = $this->dbTestadmin->getTests($contextCode, 'id,name,totalmark', $id);
+                if ($this->contextUsers->isContextLecturer())
+                {
+                    $id = $this->getParam('id', NULL);
+                    $count = $this->getParam('count');
+                    $contextCode = $this->contextCode;
+                    $test = $this->dbTestadmin->getTests($contextCode, 'id,name,totalmark', $id);
 
-                // Get the total number of questions if this isn't the first
-                if ($count > 1) {
-                    $count = $this->dbQuestions->countQuestions($id);
+                    // Get the total number of questions if this isn't the first
+                    if ($count > 1) {
+                        $count = $this->dbQuestions->countQuestions($id);
+                    }
+                    $test[0]['count'] = $count;
+                    $this->setVarByRef('test', $test[0]);
+                    $this->setVar('mode', 'add');
+                    return 'addquestion_tpl.php';
                 }
-                $test[0]['count'] = $count;
-                $this->setVarByRef('test', $test[0]);
-                $this->setVar('mode', 'add');
-                return 'addquestion_tpl.php';
+                else
+                {
+                    return $this->nextAction('newhome');
+                }
                 break;
             // add the question to the database
             case 'applyaddquestion':
@@ -588,9 +595,15 @@ class mcqtests extends controller {
 
 
             case 'addstep':
-                $this->setVar('mode', 'add');
-                return 'addstep_tpl.php';
-
+                if ($this->contextUsers->isContextLecturer())
+                {
+                    $this->setVar('mode', 'add');
+                    return 'addstep_tpl.php';
+                }
+                else
+                {
+                    return $this->nextAction('newhome');
+                }
             case 'savestep':
                 $currentstep = $this->getParam('currentstep');
 

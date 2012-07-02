@@ -108,7 +108,14 @@ if (!empty($data)) {
             }
             // Link to answer test or display completed test
             if (($closed && !$dispZero) || (!$closed && $dispZero)) {
-                $openLink = $line['name'];
+                //$openLink = $line['name'];
+                $objLink = new link($this->uri(array(
+                    'action' => 'showtest',
+                    'id' => $line['id'],
+                    'studentId' => $this->objUser->userId(),
+                )));
+                $objLink->link = $line['name'];
+                $openLink = $objLink->show();
             } else {
                 $objLink->title = $title;
                 if ($action == 'answertest') {

@@ -16,6 +16,7 @@ $objLayer = &$this->loadClass('layer', 'htmlelements');
 $objLink = &$this->loadClass('link', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
 
+
 // set up language items
 $studentLabel = ucfirst($this->objLanguage->languageText('mod_context_readonly', 'context'));
 $heading = $this->objLanguage->languageText('mod_mcqtests_testresults', 'mcqtests');
@@ -56,10 +57,32 @@ $alpha = array(
 );
 $percent = round($result['mark']/$totalmark*100, 2);
 $studentName = $this->objUser->fullName($result['studentid']);
-$str = '<font size="3"><b>'.$studentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$studentName.'<br />';
-$str.= '<b>'.$testLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['name'].'<br />';
-$str.= '<b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$totalmark.'<br />';
-$str.= '<b>'.$markLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['mark'].'&nbsp;&nbsp;('.$percent.'%)<p /></font>';
+
+$objTable = new htmltable();
+$objTable->width = '450px';
+$objTable->cellpadding = 4;
+if($this->objUser->userId() != $result['studentid'])
+{
+    $objTable->startRow();
+    $objTable->addCell($this->objUser->getUserImage($result['studentid'], TRUE), '20%', '', '', '', 'rowspan = 4', '');
+    $objTable->addCell('<b>'.$studentLabel.':</b>', '20%', '', '', '', 'style="white-space: nowrap"', '');
+    $objTable->addCell($studentName, '', '', '', '', 'style="white-space: nowrap"', '');
+    $objTable->endRow();
+}
+$objTable->startRow();
+$objTable->addCell('<b>' . $testLabel . ':</b>', '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->addCell($result['name'], '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell('<b>' . $totalLabel . ':</b>', '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->addCell($totalmark, '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell('<b>' . $markLabel . ':</b>', '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->addCell($result['mark'] . '&nbsp;&nbsp;(' . $percent . ' %)' , '', '', '', '', 'style="white-space: nowrap"', '');
+$objTable->endRow();
+
+$str = '<div style="width:450px; border: 1px solid black;">' . $objTable->show() . '</div>';
 
 $objTable = new htmltable();
 $objTable->cellpadding = 5;
@@ -69,9 +92,9 @@ $objTable->addCell('', '15%');
 $objTable->endRow();
 if (!empty($data)) {
     $qNum = $data[0]['questionorder'];
-    $objIcon->setIcon('greentick');
+    $objIcon->setIcon('accept', 'png');
     $tickIcon = $objIcon->show();
-    $objIcon->setIcon('redcross');
+    $objIcon->setIcon('delete', 'png');
     $crossIcon = $objIcon->show();
     foreach($data as $line) {
 //        if ($line['questiontype'] == 'freeform' && $line['answerorder'] != 1) {
@@ -134,15 +157,16 @@ if (!empty($data)) {
             $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['commenttext'].'<br />';
         }
 
-        $objLayer = new layer();
+        //$objLayer = new layer();
         //$objLayer->align = 'left';
         //$objLayer->left = '; float:left'; //margin-right: 20px;
         //$objLayer->cssClass = 'forumTopic';
         $parsedQuestion = $this->objWashout->parseText($line['question']);
-        $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>'.$parsedQuestion.$content;
+        //$objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>'.$parsedQuestion.$content;
         ; //&nbsp;&nbsp;&nbsp;
-        $contentLayer = $objLayer->show();
-
+        //$contentLayer = $objLayer->show();
+        $contentLayer = '<div class="viewquiz"><div class="coolwidget_100"><b>' . $questionLabel . '&nbsp;' . $line['questionorder'] . ':</b>' . $parsedQuestion . $content . '</div></div>';
+        
 //        $objLayer = new layer();
 //        $objLayer->cssClass = 'forumContent';
 //        $objLayer->str = $question;
@@ -169,25 +193,35 @@ if (!empty($data)) {
         $qNum = $line['questionorder'];
     }
 }
+if ($this->contextUsers->isContextLecturer())
+{
 $links = '';
-if ($qNum < $data[0]['count']) {
+    if ($qNum < $data[0]['count']) {
+        $objLink = new link($this->uri(array(
+            'action' => 'showtest',
+            'id' => $result['testid'],
+            'qnum' => $qNum,
+            'studentId' => $result['studentid']
+        )));
+        $objLink->link = $nextLabel;
+        $links = $objLink->show() .'&nbsp;&nbsp;|&nbsp;&nbsp;';
+    }
+
     $objLink = new link($this->uri(array(
-        'action' => 'showtest',
-        'id' => $result['testid'],
-        'qnum' => $qNum,
-        'studentId' => $result['studentid']
+        'action' => 'liststudents',
+        'id' => $result['testid']
     )));
-    $objLink->link = $nextLabel;
-    $links = $objLink->show() .'&nbsp;&nbsp;|&nbsp;&nbsp;';
+    $objLink->link = $exitLabel;
+    $links.= $objLink->show();
 }
-
-$objLink = new link($this->uri(array(
-    'action' => 'liststudents',
-    'id' => $result['testid']
-)));
-$objLink->link = $exitLabel;
-$links.= $objLink->show();
-
+else
+{
+    $objLink = new link($this->uri(array(
+        'action' => 'newhome',
+    ), 'mcqtests'));
+    $objLink->link = $exitLabel;
+    $links = $objLink->show();
+}
 $objLayer = new layer();
 $objLayer->str = '<p />'.$links;
 $objLayer->cssClass = '';

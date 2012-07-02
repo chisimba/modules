@@ -403,14 +403,14 @@ $objLink = new link($this->uri(array(
     ''
 )));
 $objLink->link = $backLabel;*/
-$homeLink.= /*$objLink->show() .*/'</p>';
-
-$objLayer = new layer();
-$objLayer->cssClass = '';
-$objLayer->align = 'center';
-$objLayer->str = $homeLink;
-$back = $objLayer->show();
-$str.= $back;
+//$homeLink.= /*$objLink->show() .*/'</p>';
+//
+//$objLayer = new layer();
+//$objLayer->cssClass = '';
+//$objLayer->align = 'center';
+//$objLayer->str = $homeLink;
+//$back = $objLayer->show();
+//$str.= $back;
 
 /*
 //echo $str;
