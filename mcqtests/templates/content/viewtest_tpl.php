@@ -8,7 +8,6 @@
  */
 // set up layout template
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
-
 // Classes used in this module
 $objHeading = $this->loadClass('htmlheading', 'htmlelements');
 $objTable = $this->loadClass('htmltable', 'htmlelements');
@@ -97,18 +96,15 @@ $this->setVarByRef('heading', $heading);
 // Create Table for the test information
 $objTable = new htmltable();
 $objTable->cellpadding = '5';
-$objTable->cellspacing = '2';
+$objTable->cellspacing = '0';
 $objTable->width = '99%';
-
-// Add Context and Name of Chapter
-$objTable->startRow();
-$objTable->addCell('');//'<b>'.$chapterLabel.'</b>: '.$data['node'], '50%');
-$objTable->endRow();
+$objTable->cssClass="mcq_overview";
 
 // Add Activity Status and percentage of mark
 $objTable->startRow();
 $objTable->addCell('<b>'.$statusLabel.'</b>: '.$objLanguage->languageText('mod_mcqtests_'.$data['status'], 'mcqtests'));
 $objTable->addCell('<b>% '.$percentLabel.'</b>: '.$data['percentage']);
+$objTable->addCell("");
 $objTable->endRow();
 
 // Add Start date
@@ -127,13 +123,18 @@ if ($data['timed']) {
         $duration.= $mins.'&nbsp;'.$minLabel;
     }
     $objTable->addCell('<b>'.$durationLabel.'</b>: '.$duration);
+} else {
+    $objTable->addCell("");
 }
 $objTable->endRow();
 
 // Add Cosing date
-$objTable->addRow(array(
-    '<b>'.$dateLabel.'</b>: '.$this->objDate->formatDate($data['closingdate'])
-));
+$objTable->startRow();
+$objTable->addCell('<b>'.$dateLabel.'</b>: ' 
+  . $this->objDate->formatDate($data['closingdate']));
+$objTable->addCell("");
+$objTable->addCell("");
+$objTable->endRow();
 
 // Add test type
 if (isset($data['testtype']) && !empty($data['testtype'])) {
@@ -141,9 +142,11 @@ if (isset($data['testtype']) && !empty($data['testtype'])) {
 } else {
     $testType = $formativeLabel;
 }
-$objTable->addRow(array(
-    "<b>".$testTypeLabel.": </b>".$testType
-));
+$objTable->startRow();
+$objTable->addCell("<b>".$testTypeLabel.": </b>".$testType);
+$objTable->addCell("");
+$objTable->addCell("");
+$objTable->endRow();
 
 // Add question sequence
 if (isset($data['qsequence']) && !empty($data['qsequence'])) {
@@ -152,7 +155,7 @@ if (isset($data['qsequence']) && !empty($data['qsequence'])) {
     $qSequence = $sequentialLabel;
 }
 $objTable->addRow(array(
-    "<b>".$qSequenceLabel.": </b>".$qSequence
+    "<b>".$qSequenceLabel.": </b>".$qSequence, "", ""
 ));
 
 // Add answer sequence
@@ -162,7 +165,7 @@ if (isset($data['asequence']) && !empty($data['asequence'])) {
     $aSequence = $sequentialLabel;
 }
 $objTable->addRow(array(
-    "<b>".$aSequenceLabel.": </b>".$aSequence
+    "<b>".$aSequenceLabel.": </b>".$aSequence, "",""
 ));
 
 // add computer lab
@@ -172,12 +175,12 @@ if (isset($data['comlab']) && !empty($data['comlab'])) {
     $comLab = $anyLabLabel;
 }
 $objTable->addRow(array(
-    "<b>".$computerLabel.": </b>".$comLab
+    "<b>".$computerLabel.": </b>".$comLab, "", ""
 ));
 
 // Description
 $objTable->startRow();
-$objTable->addCell($data['description'], NULL, "top", NULL, NULL, ' colspan="2"'); // colspans to two
+$objTable->addCell($data['description'], NULL, "top", NULL, NULL, ' colspan="3"');
 $objTable->endRow();
 
 // Show Table
@@ -224,22 +227,17 @@ if ($confirm == 'yes') {
 
 // Create a New table for the questions
 $objTable = new htmltable();
-$objTable->cellpadding = 4;
-$objTable->cellspacing = 2;
+$objTable->cellpadding = 0;
+$objTable->cellspacing = 0;
 $objTable->width = '99%';
+$objTable->cssClass="mcq_questions";
 $objTable->startRow();
-$objTable->addCell('', '', '', '', 'heading');
+$objTable->addCell('', '1%', '', '', 'heading');
 $objTable->addCell($questionLabel, '', '', '', 'heading');
-$objTable->addCell($markLabel, '', '', '', 'heading');
-$objTable->addCell($actionLabel, '', '', '', 'heading', 'colspan="2"');
+$objTable->addCell($markLabel, '', '4%', '', 'heading');
+$objTable->addCell($actionLabel, '', '8%', '', 'heading', 'colspan="2"');
 $objTable->endRow();
-$objTable->startRow();
-$objTable->addCell('', '1%');
-$objTable->addCell('');
-$objTable->addCell('', '4%');
-$objTable->addCell('', '4%');
-$objTable->addCell('', '8%');
-$objTable->endRow();
+
 
 // Add questions to table
 if (!empty($questions)) {
