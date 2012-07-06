@@ -5,6 +5,8 @@ $nextpage = "";
 $objFile = $this->getObject('dbfile', 'filemanager');
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 
+$objModule = $this->getObject('modules', 'modulecatalogue');
+
 //Add link back to the chapter list on the middle links
 $middle = '';
 if(empty($pagelft)) {
@@ -29,8 +31,14 @@ $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontext
 $addPageFromFileLink = new link($this->uri(array('action' => 'addpagefromfile', 'id' => $page['id'], 'context' => $this->contextCode, 'chapterid' => $page['chapterid'])));
 $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile', 'contextcontent', 'Create page from file');
 
-$addScormLink = new link($this->uri(array('action' => 'addscormpage', 'id' => $page['id'], 'context' => $this->contextCode, 'chapter' => $page['chapterid'])));
-$addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages', 'contextcontent');
+$scormInstalled = $objModule->checkIfRegistered("scorm");
+if ($scormInstalled) {
+    $addScormLink = new link($this->uri(array('action' => 'addscormpage', 'id' => $page['id'], 'context' => $this->contextCode, 'chapter' => $page['chapterid'])));
+    $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages', 'contextcontent');
+    $scormLink = $addScormLink->show();
+} else {
+    $scormLink = NULL;
+}
 
 //A link to editing a page
 $editLink = new link($this->uri(array('action' => 'editpage', 'id' => $page['id'], 'context' => $this->contextCode)));
@@ -48,7 +56,9 @@ $list = array();
 if ($this->isValid('addpage')) {
     $list[] = $addLink->show();
     //   $list[] = $addPageFromFileLink->show();
-    $list[] = $addScormLink->show();
+    if ($scormInstalled) {
+        $list[] = $scormLink;
+    }
 }
 
 if ($this->isValid('editpage')) {
@@ -121,7 +131,6 @@ $topTable->addCell($prevPage, '50%', 'top');
 $topTable->addCell($nextPage, '50%', 'top', 'right');
 $topTable->endRow();
 
-
 $this->loadClass('link', 'htmlelements');
 
 $this->setVar('pageTitle', htmlentities($this->objContext->getTitle() . ' - ' . $page['menutitle']));
@@ -172,7 +181,7 @@ $pageintroheader->cssClass = "pagetitle";
 $pageintroheader->str = $page['menutitle'];
 $content.= $pageintroheader->show() . $objWashout->parseText($page['pagecontent']);
 
-$objModule = $this->getObject('modules', 'modulecatalogue');
+
 $pageNotes = $objModule->checkIfRegistered("pagenotes");
 if ($pageNotes) {
     $objContextModules =  $this->getObject('dbcontextmodules', 'context');
@@ -286,33 +295,4 @@ if ($showcomment == 1) {
 }
 
 echo '<div id="context_content">' . $res . "</div>";
-
-/*
-  <script type="text/javascript">
-  //<![CDATA[
-
-  function togglePageOptions()
-  {
-  Effect.toggle('pageoptions', 'slide');
-  window.setInterval("adjustLayout();", 200);
-
-  }
-
-  function changeBookmark (type) {
-  var url = 'index.php';
-  var pars = 'module=contextcontent&action=changebookmark&id=<?php echo $page['id']; ?>&type='+type;
-  var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showBookmarkResponse} );
-  }
-
-  function showBookmarkResponse (originalRequest) {
-  var newData = originalRequest.responseText;
-
-  if (newData != '') {
-  $('bookmarkOptions').innerHTML = newData;
-  adjustLayout();
-  }
-  }
-  //]]>
-  </script>
- */
 ?>

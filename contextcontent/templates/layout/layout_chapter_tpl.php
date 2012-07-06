@@ -1,5 +1,6 @@
 <?php
 $showNav = TRUE;
+$objModule = $this->getObject('modules', 'modulecatalogue');
 if (isset($hideNavSwitch) && $hideNavSwitch) {
     $showNav = FALSE;
 }
@@ -126,11 +127,15 @@ if (isset($currentChapter)) {
 
         $addPageFromFileLink = new link($this->uri(array('action'=>'addpagefromfile', 'chapterid'=>$currentChapter)));
         $addPageFromFileLink->link = $this->objLanguage->languageText('mod_contextcontent_createpagefromfile', 'contextcontent', 'Create page from file');
-
-        $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter)));
-        $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
-
-        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$addScormLink->show().'</p>';
+        $scormInstalled = $objModule->checkIfRegistered("scorm");
+        if ($scormInstalled) {
+            $addScormLink = new link ($this->uri(array('action'=>'addscormpage', 'id'=>$id, 'context'=>$this->contextCode, 'chapter'=>$currentChapter)));
+            $addScormLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextscormpages','contextcontent');
+            $scormLink = $addScormLink->show();
+        } else {
+            $scormLink = NULL;
+        }
+        $left .= '<hr /><p>'.$addLink->show().'&nbsp;&nbsp;'.$scormLink.'</p>';
     }
 
     $returnLink = new link ($this->uri(NULL));
