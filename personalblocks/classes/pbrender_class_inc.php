@@ -640,7 +640,7 @@ class pbrender extends dbTable
             $active = $ar['active'];
             $blockcontent = $ar['blockcontent'];
         } else {
-        	$location="left";
+            $location="left";
             $blockname="";
             $blocktype = "personal";
             $blockcontent="";
@@ -713,13 +713,16 @@ class pbrender extends dbTable
             //Check if they have edit/author rights
             if ($this->objUser->isContextAuthor() || $this->objUser->isContextEditor()) {
             	$curContext = TRUE;
+                die("TRUE");
             } else {
             	$curContext = FALSE;
+                die("FALSE");
             }
             $contextCode = $objContext->getContextCode();
         } else {
             $curContext = FALSE;
             $contextCode="";
+            die("NOT IN CONTEXT");
         }
         $indicator = $this->getBlockTypeIcon($blocktype);
         //If they are not in a context, or have no rights to it then don't show context block
