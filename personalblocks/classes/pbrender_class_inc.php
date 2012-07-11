@@ -711,14 +711,15 @@ class pbrender extends dbTable
         $objContext = $this->getObject('dbcontext', 'context');
         if($objContext->isInContext()){
             //Check if they have edit/author rights
-            if ($this->objUser->isContextAuthor() || $this->objUser->isContextEditor()) {
+            $contextCode = $objContext->getContextCode();
+            $userId = $this->objUser->userId();
+            if ($this->objUser->isContextLecturer($userId, $contextCode) || 
+              $this->objUser->isAdmin()) {
             	$curContext = TRUE;
-                //die("TRUE");
             } else {
             	$curContext = FALSE;
-                //die("FALSE");
             }
-            $contextCode = $objContext->getContextCode();
+            
         } else {
             $curContext = FALSE;
             $contextCode="";
