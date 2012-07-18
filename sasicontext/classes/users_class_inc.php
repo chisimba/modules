@@ -122,14 +122,14 @@ class users extends object {// extends abauth implements ifauth {
 
     /*
      * Method that get the users on the class list
-     * 
+     *
      * @param var $subject
      * @return array $classlist
      *
     */
     public function getClassList($subject) {
 
-        $param = array('Module' => $subject, 'Year' => 2010);
+        $param = array('Module' => $subject, 'Year' => date('Y'));
         $data = $this->objSasiwebserver->getData('Browse_Class_List', $param);
         $simpledata = $data['Browse_Class_ListResult']['Class_List']['row'];
         return $simpledata;
