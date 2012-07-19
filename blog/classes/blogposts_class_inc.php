@@ -221,8 +221,12 @@ class blogposts extends object
                 //$post['post_content']=quoted_printable_decode($post['post_content']);
                 $objFeatureBox = $this->getObject('featurebox', 'navigation');
                 // build the top level stuff
-                $rawDate = date('Y-m-d H:i:s', $post['post_ts']);
-                $dt = $objHumanizeDate->getDifference($rawDate);
+                $showabsolutedate = $this->sysConfig->getValue('showabsolutedate', 'blog', 'FALSE');
+                if (strtoupper($showabsolutedate) == 'TRUE') {
+                    $dt = date('r', $post['post_ts']);
+                } else {
+                    $dt = $objHumanizeDate->getDifference(date('Y-m-d H:i:s', $post['post_ts']));
+                }
                 $this->objUser = $this->getObject('user', 'security');
                 $userid = $this->objUser->userId();
                 if ($showsticky == FALSE) {
