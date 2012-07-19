@@ -46,7 +46,7 @@ class block_contextleft extends object
     {
         // Instantiate the rendering class
         $objPbrender = $this->getObject("pbrender", "personalblocks");
-        return $objPbrender->renderLeft(FALSE, "context");
+        return $objPbrender->renderLeft(TRUE, "context");
     }
 }
 ?>

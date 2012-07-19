@@ -46,7 +46,7 @@ class block_contextmiddle extends object
     {
         // Instantiate the rendering class
         $objPbrender = $this->getObject("pbrender", "personalblocks");
-        return $objPbrender->renderMiddle(FALSE, "context");
+        return $objPbrender->renderMiddle(TRUE, "context");
     }
 }
 ?>

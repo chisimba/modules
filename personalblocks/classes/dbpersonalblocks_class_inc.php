@@ -236,7 +236,7 @@ class dbpersonalblocks extends dbTable
     * @access public
     *
     */
-    public function getMiddleBlocksContext($creatorId)
+    public function getMiddleBlocksContext($context)
     {
         $where = " WHERE context='" . $context
           . "' AND active=1 AND location='middle'"

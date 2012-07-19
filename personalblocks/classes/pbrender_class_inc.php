@@ -101,8 +101,8 @@ class pbrender extends dbTable
     public function findContext()
     {
         $contextObject = $this->getObject('dbcontext', 'context');
-        $contextCode = $this->contextObject->getContextCode();
-        if (!$contextCode || $contextCode="") {
+        $contextCode = $contextObject->getContextCode();
+        if (!$contextCode || $contextCode=="") {
             return FALSE;
         } else {
             return $contextCode;
@@ -120,7 +120,7 @@ class pbrender extends dbTable
     */
     public function renderLeft($showName=FALSE, $blockType='personal')
     {
-        if ($blockType = 'personal') {
+        if ($blockType == 'personal') {
             $creatorId = $this->findUser();
             $ar = $this->objDb->getLeftBlocks($creatorId);
         } else {
@@ -133,11 +133,23 @@ class pbrender extends dbTable
         if (isset($ar)) {
             if (count($ar) > 0) {
                 foreach ($ar as $line) {
-                    if ($showName) {
-                        $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
+                    $blockcontent = $line['blockcontent'];
+                    $blockcontent = $this->objWashout->parseText($blockcontent);
+                    if ($blockType !== 'personal') {
+                        $userId = $line['creatorid'];
+                        $blockcontent .= $this->getUserPresence($userId);
                     }
-                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
-                    $ret .= "<div class='personalblock'>" . $blockcontent . "</div>";
+                    if ($showName) {
+                        $blockname = $line['blockname'];
+                        $blockname = $this->addFeaturBoxHeader($blockname);
+                        $blockcontent = $blockname 
+                          . '<div class="featureboxcontent">' 
+                          . $blockcontent . '</div>';
+                    }
+                    $ret .= "<div class=\"featurebox\">" 
+                      . $blockcontent 
+                      . $this->addFeaturBoxBottom()
+                      . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("left");
@@ -159,7 +171,7 @@ class pbrender extends dbTable
     */
     public function renderRight($showName=FALSE, $blockType='personal')
     {
-        if ($blockType = 'personal') {
+        if ($blockType == 'personal') {
             $creatorId = $this->findUser();
             $ar = $this->objDb->getRightBlocks($creatorId);
         } else {
@@ -171,12 +183,23 @@ class pbrender extends dbTable
         if (isset($ar)) {
             if (count($ar) > 0) {
                 foreach ($ar as $line) {
-                    if ($showName) {
-                    	$blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
+                    $blockcontent = $line['blockcontent'];
+                    $blockcontent = $this->objWashout->parseText($blockcontent);
+                    if ($blockType !== 'personal') {
+                        $userId = $line['creatorid'];
+                        $blockcontent .= $this->getUserPresence($userId);
                     }
-                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
-                    //$blockcontent = htmlentities($line['blockcontent']);
-                    $ret .= "<div class='personalblock'>" . $blockcontent . "</div>";
+                    if ($showName) {
+                        $blockname = $line['blockname'];
+                        $blockname = $this->addFeaturBoxHeader($blockname);
+                        $blockcontent = $blockname 
+                          . '<div class="featureboxcontent">' 
+                          . $blockcontent . '</div>';
+                    }
+                    $ret .= "<div class=\"featurebox\">" 
+                      . $blockcontent 
+                      . $this->addFeaturBoxBottom()
+                      . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("right");
@@ -184,6 +207,58 @@ class pbrender extends dbTable
         } else {
             $ret = $this->emptyBlocks("right");
         }
+        return $ret;
+    }
+    
+    /**
+     * Get userimage and name
+     * 
+     * @param string $userId The userid to look up
+     * @return string Rendered small image and name
+     * @access private 
+     */
+    private function getUserPresence($userId)
+    {
+        $fullName = $this->objUser->fullName($userId);
+        $userImg =  $this->objUser->getSmallUserImage($userId);
+        return "<div class='userpresence'>" . $userImg . " " . $fullName . "</div>";
+    }
+    
+    /**
+     *
+     * Make a featurebox header for the title
+     * 
+     * @param string $blockname The content of the header
+     * @return string The rendered featureblock header
+     * @access private
+     * 
+     */
+    private function addFeaturBoxHeader($blockname)
+    {
+        $ret = "<div class='featureboxtopcontainer'>\n"
+          . "<div class='featureboxtopleft'></div>\n"
+          . "<div class='featureboxtopborder'></div>\n"
+          . "<div class='featureboxtopright'></div>\n"
+          . "</div>"
+          . "<h5 class='featureboxheader'>$blockname</h5>";
+        return $ret;
+    }
+    
+    /**
+     *
+     * Make a featurebox bottom 
+     * 
+     * @return string The rendered featureblock bottom
+     * @access private
+     * 
+     */
+    private function addFeaturBoxBottom()
+    {
+        $ret = "<div class='featureboxbottomcontainer'>\n"
+          . "<div class='featureboxbottomleft'></div>\n"
+          . "<div class='featureboxbottomborder'></div>\n"
+          . "<div class='featureboxbottomright'></div>\n"
+          . "</div>";
         return $ret;
     }
 
@@ -198,7 +273,7 @@ class pbrender extends dbTable
     */
     public function renderMiddle($showName=FALSE, $blockType='personal')
     {
-        if ($blockType = 'personal') {
+        if ($blockType == 'personal') {
             $creatorId = $this->findUser();
             $ar = $this->objDb->getMiddleBlocks($creatorId);
         } else {
@@ -210,11 +285,23 @@ class pbrender extends dbTable
         if (isset($ar)) {
             if (count($ar) > 0) {
                 foreach ($ar as $line) {
-                    if ($showName) {
-                        $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
+                    $blockcontent = $line['blockcontent'];
+                    $blockcontent = $this->objWashout->parseText($blockcontent);
+                    if ($blockType !== 'personal') {
+                        $userId = $line['creatorid'];
+                        $blockcontent .= $this->getUserPresence($userId);
                     }
-                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
-                    $ret .= "<div class=\"middleblock\">" . $blockcontent . "</div>";
+                    if ($showName) {
+                        $blockname = $line['blockname'];
+                        $blockname = $this->addFeaturBoxHeader($blockname);
+                        $blockcontent = $blockname 
+                          . '<div class="featureboxcontent">' 
+                          . $blockcontent . '</div>';
+                    }
+                    $ret .= "<div class=\"featurebox\">" 
+                      . $blockcontent 
+                      . $this->addFeaturBoxBottom()
+                      . "</div>";
                 }
             } else {
                 $ret = $this->emptyBlocks("middle");
@@ -222,7 +309,7 @@ class pbrender extends dbTable
         } else {
             $ret = $this->emptyBlocks("middle");
         }
-        return $ret;
+        return $ret; 
     }
 
     /**
