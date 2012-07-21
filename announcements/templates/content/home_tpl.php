@@ -1,4 +1,14 @@
 <?php
+// Initialise variables
+$userContexts=array();
+$allAnn = "";
+$courseAnn ="";
+$content="";
+
+// Load the viewer javascript
+$this->appendArrayVar('headerParams',
+$this->getJavaScriptFile('announceview.js',
+    'announcements'));
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -9,10 +19,6 @@ $objIcon->setIcon('add');
 $addLink = new link ($this->uri(array('action'=>'add')));
 $addLink->link = $objIcon->show();
 
-$allAnn = "";
-$courseAnn ="";
-
-$content="";
 $cc = $this->objContext->getContextCode();
 if ($cc != '') {
     $numContextAnnouncements = $this->objAnnouncements->getNumContextAnnouncements($cc);

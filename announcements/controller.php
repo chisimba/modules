@@ -395,6 +395,16 @@ class announcements extends controller
                 $rowClass = ($rowClass == 'even')? 'odd' : 'even';
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
                 $link->link = $announcement['title'];
+
+                
+                $vLink = '<a class="an_vw_msg" href="javascript:void(null)" id="' 
+                  . $announcement['id'] . '">'
+                  . $announcement['title'] . '</a>';
+                $message = "<div id='msg_" . $announcement['id'] 
+                  . "' class='announcement_hider' style='display: none;'>" 
+                  . $announcement['message'] . "</div>";
+                
+                
                 //Get and set the edit icon
                 $objEdIcon = $this->getObject('geticon', 'htmlelements');
                 $objEdIcon->setIcon('edit');
@@ -409,7 +419,11 @@ class announcements extends controller
                 $deleteLink = $objIcon->getDeleteIconWithConfirm($announcement['id'], $deleteArray, 'announcements');
                 $table->startRow($rowClass);
                 $table->addCell($objDateTime->formatDate($announcement['createdon']), "180");
-                $table->addCell($link->show());
+                
+                
+                $table->addCell($vLink . "<br />" . $message);
+                
+                
                 $table->addCell($this->objUser->fullName($announcement['createdby']), "200");
                 if ($announcement['contextid'] == 'site') {
                     $type = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements', 'Site');
