@@ -1,42 +1,30 @@
 <?php
 /**
 *
-* A sample SQL file for gallery. Please adapt this to your requirements.
+* A sample SQL file for imagegallery. Please adapt this to your requirements.
 *
 */
 // Table Name
-$tablename = 'tbl_gallery_images';
+$tablename = 'tbl_imagegallery_galleries';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Storage of images for the gallery module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Storage of galleries for the imagegallery module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
     'id' => array(
         'type' => 'text',
-        'length' => 32
-    ),
-    'gallery_id' => array(
-        'type' => 'text',
         'length' => 32,
-    ),
-    'album_id' => array(
-        'type' => 'text',
-        'length' => 32,
-    ),
-    'context_code' => array(
-        'type' => 'text',
-        'length' => 250,
     ),
     'user_id' => array(
         'type' => 'text',
         'length' => 32,
     ),
-    'file_id' => array(
+    'context_code' => array(
         'type' => 'text',
         'length' => 32,
     ),
-    'name' => array(
+    'title' => array(
         'type' => 'text',
         'length' => 250,
     ),
@@ -44,32 +32,28 @@ $fields = array(
         'type' => 'text',
         'length' => 250,
     ),
-    'caption' => array(
+    'cover_image_id' => array(
         'type' => 'text',
-        'length' => 250,
+        'length' => 32,
     ),
     'is_shared' => array(
         'type' => 'integer',
         'length' => 1,
         'default' => 0,
     ),
-    'view_count' => array(
-        'type' => 'integer',
-        'length' => 1,
-    ),
     'display_order' => array(
         'type' => 'integer',
         'length' => 1,
-    ),    
+    ),
     'date_created' => array(
-        'type' => 'timestamp',
+        'type' => 'timestamp'
     ),
     'created_by' => array(
         'type' => 'text',
         'length' => 32,
     ),
     'date_updated' => array(
-        'type' => 'timestamp',
+        'type' => 'timestamp'
     ),
     'updated_by' => array(
         'type' => 'text',
@@ -79,15 +63,13 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_gallery_images_idx';
+$name = 'tbl_imagegallery_galleries_idx';
 
 $indexes = array(
     'fields' => array(
-         'id' => array(),
-         'gallery_id' => array(),
-         'album_id' => array(),
-         'context_code' => array(),
-         'user_id' => array(),
+        'id' => array(),
+        'user_id' => array(),
+        'context_code' => array(),
     )
 );
 ?>

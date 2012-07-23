@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * A left block for Image gallery.
+ * A middle block for imagegallery.
  *
- * A left block for Image gallery. This a place where you can upload your images and share them with your friends.
+ * A middle block for imagegallery. This a place where you can upload your images and share them with your friends.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @version    0.001
- * @package    gallery
+ * @package    imagegallery
  * @author     Kevin Cyster kcyster@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A left block for Image gallery.
+ * A middle block for imagegallery.
  *
- * A left block for Image gallery. This a place where you can upload your images and share them with your friends.
+ * A middle block for imagegallery. This a place where you can upload your images and share them with your friends.
  *
  * @category  Chisimba
  * @author    Kevin Cyster kcyster@gmail.com
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_galleryleft extends object
+class block_imagegalleryinvalid extends object
 {
     /**
      * The title of the block
@@ -59,6 +59,7 @@ class block_galleryleft extends object
      * @access public
      */
     public $title;
+
     /**
      * Standard init function
      *
@@ -68,7 +69,10 @@ class block_galleryleft extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->objLanguage = $this->getObject('language', 'language');
+        $titleLabel = $this->objLanguage->languageText('mod_imagegallery_invalidaction', 'imagegallery', 'ERROR: mod_imagegallery_invalidaction');
+        
+        $this->title = ucfirst(strtolower($titleLabel));
     }
     /**
      * Standard block show method.
@@ -77,7 +81,7 @@ class block_galleryleft extends object
      */
     public function show() 
     {
-        return "This is a demonstration left block.";
+        return '<div class="error">' . $this->objLanguage->languageText('mod_imagegallery_actionerror', 'imagegallery', 'ERROR: mod_imagegallery_actionerror') . '</div>';
     }
 }
 ?>

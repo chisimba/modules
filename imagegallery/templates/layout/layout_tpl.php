@@ -1,9 +1,9 @@
 <?php
 /**
 *
-*  A layout template for Image gallery
+*  A layout template for imagegallery
 *  Author: Kevin Cyster kcyster@gmail.com
-*  Date: June 14, 2012, 11:07 am
+*  Date: June 19, 2012, 8:18 pm
 *
 *  A layout template for use with dynamic canvas content. This layout
 *  template is required in any module that will be parsing JSON templates.

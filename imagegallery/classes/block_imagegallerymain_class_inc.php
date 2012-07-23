@@ -1,7 +1,9 @@
 <?php
 /**
  *
- * A block for gallery.
+ * A middle block for imagegallery.
+ *
+ * A middle block for imagegallery. This a place where you can upload your images and share them with your friends.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +19,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @version    0.001
- * @package    schoolusers
+ * @package    imagegallery
  * @author     Kevin Cyster kcyster@gmail.com
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -38,7 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A block for gallery.
+ * A middle block for imagegallery.
+ *
+ * A middle block for imagegallery. This a place where you can upload your images and share them with your friends.
  *
  * @category  Chisimba
  * @author    Kevin Cyster kcyster@gmail.com
@@ -46,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_galleryinvalid extends object
+class block_imagegallerymain extends object
 {
     /**
      * The title of the block
@@ -66,9 +70,9 @@ class block_galleryinvalid extends object
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
-        $titleLabel = $this->objLanguage->languageText('mod_gallery_invalidaction', 'gallery', 'ERROR: mod_gallery_invalidaction');
+        $this->objOps = $this->getObject('imagegalleryops', 'imagegallery');
         
-        $this->title = ucfirst(strtolower($titleLabel));
+        $this->title = $this->objLanguage->languageText('mod_imagegallery_imagegallery', 'imagegallery', 'ERROR: mod_imagegallery_imagegallery');
     }
     /**
      * Standard block show method.
@@ -77,7 +81,7 @@ class block_galleryinvalid extends object
      */
     public function show() 
     {
-        return '<div class="error">' . $this->objLanguage->languageText('mod_gallery_actionerror', 'gallery', 'ERROR: mod_gallery_actionerror') . '</div>';
+        return $this->objOps->showMain();
     }
 }
 ?>

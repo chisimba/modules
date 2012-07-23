@@ -1,8 +1,8 @@
 <?php
 /**
-*  A main content template for Image gallery
+*  A main content template for imagegallery
 *  Author: Kevin Cyster kcyster@gmail.com
-*  Date: June 14, 2012, 11:07 am
+*  Date: June 19, 2012, 8:18 pm
 *
 */
 ob_start();
@@ -14,8 +14,8 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region1">
         {
             "display" : "block",
-            "module" : "gallery",
-            "block" : "galleryleft"
+            "module" : "imagegallery",
+            "block" : "imagegalleryleft"
         }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
@@ -23,8 +23,8 @@ $objFix->fixThree();
     <div id="Canvas_Content_Body_Region2">
         {
             "display" : "block",
-            "module" : "gallery",
-            "block" : "galleryalbums"
+            "module" : "imagegallery",
+            "block" : "imagegalleryinvalid"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
