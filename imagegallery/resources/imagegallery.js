@@ -22,6 +22,10 @@ jQuery(function() {
     
     // Things to do on loading the page.
     jQuery(document).ready(function() {
+	jQuery(function() {
+            jQuery( "#sortable" ).sortable();
+            jQuery( "#sortable" ).disableSelection();
+	});
     });
     
     jQuery(".gallery_user, .gallery_context").live("click", function() {
@@ -65,8 +69,8 @@ jQuery(function() {
         }
     }); 
     
-    jQuery(".gallery").live("click", function() {
-        var id = this.id;
+    jQuery(".gallery_albums").live("click", function() {
+        var id = jQuery(this).parent().attr('id');
         if (id != '')
         {
             if (jQuery("#main_tabs").length > 0)
@@ -79,13 +83,20 @@ jQuery(function() {
         }
     });
     
+    jQuery(".gallery_empty").live("click", function() {
+        var id = jQuery(this).parent().attr('id');
+        var dialog_id = "dialog_gallery_options_" + id;
+        jQuery("#" + dialog_id).dialog("open");
+        return false;
+    });
+    
     jQuery(".gallery_options").live("click", function() {
         var id = this.id;
         var dialog_id = "dialog_gallery_options_" + id;
         jQuery("#" + dialog_id).dialog("open");
         return false;
     });
-    
+
     jQuery(".gallery_edit").live("click", function() {
         var id = this.id;
         var tabs;
@@ -197,6 +208,13 @@ jQuery(function() {
                 return false;
             }
         });
+        return false;
+    });
+    
+    jQuery(".album_empty").live("click", function() {
+        var id = jQuery(".album_empty").parent().attr("id");
+        var dialog_id = "dialog_album_options_" + id;
+        jQuery("#" + dialog_id).dialog("open");
         return false;
     });
     
@@ -373,7 +391,6 @@ jQuery(function() {
             data: "image_id=" + id,
             success: function(ret) {
                 var obj = jQuery.parseJSON(ret)
-                jQuery("#image_title").html(obj.title);                
                 jQuery("#image_caption").html(obj.caption);                
                 jQuery("#image_description").html(obj.desc);                
                 jQuery("#image_shared").html(obj.shared);
@@ -397,7 +414,6 @@ jQuery(function() {
                 var obj = jQuery.parseJSON(ret)
                 jQuery("#input_image_edit_image_id").val(obj.image_id);                
                 jQuery("#input_image_edit_album_id").val(obj.album_id);                
-                jQuery("#input_image_edit_title").val(obj.title);                
                 jQuery("#input_image_edit_caption").val(obj.caption);                
                 jQuery("#input_image_edit_description").val(obj.desc);                
                 jQuery("#input_image_edit_shared").val([obj.shared]);                
@@ -411,12 +427,6 @@ jQuery(function() {
     });
 
     jQuery("#form_image_edit").submit(function() {
-        if (jQuery("#input_image_edit_title").val() == '')
-        {
-            alert(no_image_title);
-            jQuery("#input_image_edit_title").select();
-            return false;
-        }
         if (jQuery("#input_image_edit_caption").val() == '')
         {
             alert(no_image_caption);
@@ -454,7 +464,6 @@ jQuery(function() {
                 var obj = jQuery.parseJSON(ret)
                 jQuery("#input_image_edit_image_id").val(obj.image_id);                
                 jQuery("#input_image_edit_album_id").val(obj.album_id);                
-                jQuery("#input_image_edit_title").val(obj.title);                
                 jQuery("#input_image_edit_caption").val(obj.caption);                
                 jQuery("#input_image_edit_description").val(obj.desc);                
                 jQuery("#input_image_edit_shared").val([obj.shared]);                

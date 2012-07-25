@@ -36,10 +36,6 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
     ),
-    'title' => array(
-        'type' => 'text',
-        'length' => 250,
-    ),
     'description' => array(
         'type' => 'text',
         'length' => 250,

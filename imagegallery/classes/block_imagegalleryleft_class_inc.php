@@ -68,7 +68,11 @@ class block_imagegalleryleft extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUserMenu = $this->getObject('usermenu', 'toolbar');
+
+        $titleLabel = $this->objLanguage->languageText('word_menu', 'system', 'ERROR: word_menu');        
+        $this->title = $titleLabel;
     }
     /**
      * Standard block show method.
@@ -77,7 +81,7 @@ class block_imagegalleryleft extends object
      */
     public function show() 
     {
-        return "This is a demonstration left block.";
+        return $this->objUserMenu->show();
     }
 }
 ?>

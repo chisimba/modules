@@ -649,13 +649,13 @@ class imagegalleryops extends object
                 {
                     $string .= '<div class="gallery" id="' . $gallery['id'] . '">';
                     $title = $gallery['title'] . ' - ' . $clickLabel;                    
-                    $string .= '<div id="' . $random . '" title="' . $title . '">' . $image . '</div>';
+                    $string .= '<div id="' . $random . '" title="' . $title . '" class="gallery_albums">' . $image . '</div>';
                 }
                 else
                 {
-                    $string .= '<div class="gallery_options" id="' . $gallery['id'] . '">';
+                    $string .= '<div class="gallery" id="' . $gallery['id'] . '">';
                     $title = $gallery['title'] . ' - ' . $emptyClickLabel;
-                    $string .= '<div id="' . $random . '" title="' . $title . '">' . $image . '</div>';
+                    $string .= '<div id="' . $random . '" title="' . $title . '" class="gallery_empty">' . $image . '</div>';
                 }
                                 
                 switch (count($albums))
@@ -673,6 +673,10 @@ class imagegalleryops extends object
                         {
                             $array = array('count' => count($images));
                             $string .= '<em class="warning">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</em>';
+                        }
+                        else
+                        {
+                            $string .= '<br />';
                         }
                         break;
                     default:
@@ -886,7 +890,7 @@ class imagegalleryops extends object
      */
     private function showGalleryOptionsDialog($id, $options)
     {
-        $optionsLabel = $this->objLanguage->languageText('mod_imagegallery_galleyoptions', 'imagegallery', 'ERROR: mod_imagegallery_galleyoptions');
+        $optionsLabel = $this->objLanguage->languageText('mod_imagegallery_galleryoptions', 'imagegallery', 'ERROR: mod_imagegallery_galleryoptions');
         $closeLabel = $this->objLanguage->languageText('word_close', 'system', 'ERROR: word_close');
         
         $dialog = $this->newObject('dialog', 'jquerycore');
@@ -1278,9 +1282,9 @@ class imagegalleryops extends object
                 }
                 else
                 {
-                    $string .= '<div class="album_options" id="' . $album['id'] . '">';
+                    $string .= '<div class="album" id="' . $album['id'] . '">';
                     $title = $album['title'] . ' - ' . $emptyClickLabel;
-                    $string .= '<div id="' . $random . '" title="' . $title . '">' . $image . '</div>';
+                    $string .= '<div id="' . $random . '" title="' . $title . '" class="album_empty">' . $image . '</div>';
                 }
                                 
                 switch (count($images))
@@ -1789,8 +1793,9 @@ class imagegalleryops extends object
             }
             if($result['fileid'] != '')
             {
+                unset($fields['title']);
                 unset($fields['description']);
-                $fields['title'] = $result['name'];
+                $fields['caption'] = $result['name'];
                 $fields['file_id'] = $result['fileid'];
 
                 $this->objDBimages->addImage($fields);                
@@ -1819,7 +1824,7 @@ class imagegalleryops extends object
         $editLabel = $this->objLanguage->languageText('mod_imagegallery_editimagedata', 'imagegallery', 'ERROR: mod_imagegallery_editimagedata');
         $deleteLabel = $this->objLanguage->languageText('mod_imagegallery_deleteimage', 'imagegallery', 'ERROR: mod_imagegallery_deleteimage');
         $confirmLabel = $this->objLanguage->languageText('mod_imagegallery_confirmimage', 'imagegallery', 'ERROR: mod_imagegallery_confirmimage');
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
+        $captionLabel = $this->objLanguage->languageText('word_caption', 'system', 'ERROR: word_caption');
         $detailsLabel = $this->objLanguage->languageText('mod_imagegallery_viewimagedetails', 'imagegallery', 'ERROR: mod_imagegallery_viewimagedetails');
         $optionsLabel = $this->objLanguage->languageText('mod_imagegallery_imageoptions', 'imagegallery', 'ERROR: mod_imagegallery_imageoptions');
         $coverLabel = $this->objLanguage->languageText('mod_imagegallery_setalbumcover', 'imagegallery', 'ERROR: mod_imagegallery_setalbumcover');
@@ -1855,7 +1860,7 @@ class imagegalleryops extends object
                 $objTooltip->load();
                 
                 $string .= '<div class="image" id="' . $image['id'] . '">';
-                $title = $image['title'] . ' - ' . $clickLabel;
+                $title = $image['caption'] . ' - ' . $clickLabel;
                 
                 if (empty($image['context_code']))
                 {
@@ -1871,7 +1876,7 @@ class imagegalleryops extends object
                 $link->title = $title;
                 $string .= $link->show();
                 
-                $string .= '<div id="title_' . $image['id'] . '"><b>' . $titleLabel . ': </b>' . $image['title'] . '</div>';
+                $string .= '<div id="title_' . $image['id'] . '"><b>' . $captionLabel . ': </b>' . $image['caption'] . '</div>';
 
                 $shared = ($image['is_shared'] == 1) ? $yesLabel : $noLabel;                
                 $string .= '<div id="shared_' . $image['id'] . '"><b>' . $sharedLabel . ': </b>' . $shared . '</div>';
@@ -1884,7 +1889,7 @@ class imagegalleryops extends object
 
                 $string .= '</div>';    
                 
-                $options = '<b>' . $image['title'] . '</b><br /><br />';
+                $options = '<b>' . $image['caption'] . '</b><br /><br />';
                 
                 $this->objIcon->setIcon('picture_go', 'png');
                 $this->objIcon->title = $viewLabel;
@@ -2008,7 +2013,7 @@ class imagegalleryops extends object
         $objLink->link = $album['title'];
         $albumLink = $objLink->show();
 
-        $content = '<h1>' . $galleriesLink . '&nbsp;|&nbsp;' . $galleryLink . '&nbsp;|&nbsp;' . $albumLink . '&nbsp;|&nbsp;' . $image['title'] . '</h1>';
+        $content = '<h1>' . $galleriesLink . '&nbsp;|&nbsp;' . $galleryLink . '&nbsp;|&nbsp;' . $albumLink . '&nbsp;|&nbsp;' . $image['caption'] . '</h1>';
         $content .= $this->viewImage($imageId);
         
         return $content;
@@ -2024,17 +2029,12 @@ class imagegalleryops extends object
     private function showViewImageDetailsDialog()
     {
         $viewLabel = $this->objLanguage->languageText('mod_imagegallery_viewimagedetails', 'imagegallery', 'ERROR: mod_imagegallery_viewimagedetails');
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
         $captionLabel = $this->objLanguage->languageText('word_caption', 'system', 'ERROR: word_caption');
         $descLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
         $shareLabel = $this->objLanguage->languageText('word_shared', 'system', 'ERROR: word_shared');
         
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
-        $objTable->startRow();
-        $objTable->addCell('<b>' . $titleLabel . ': </b>', '150px', '', '', '', '', '');
-        $objTable->addCell('<div id="image_title"></div>', '', '', '', '', '', '');
-        $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell('<b>' . $captionLabel . ': </b>', '150px', '', '', '', '', '');
         $objTable->addCell('<div id="image_caption"></div>', '', '', '', '', '', '');
@@ -2069,7 +2069,6 @@ class imagegalleryops extends object
     private function showEditImageDialog()
     {
         $editLabel = $this->objLanguage->languageText('mod_imagegallery_editimagedata', 'imagegallery', 'ERROR: mod_imagegallery_editimagedata');
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
         $captionLabel = $this->objLanguage->languageText('word_caption', 'system', 'ERROR: word_caption');
         $descLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
         $sharedLabel = $this->objLanguage->languageText('word_shared', 'system', 'ERROR: word_shared');
@@ -2080,7 +2079,6 @@ class imagegalleryops extends object
         $noDescLabel = $this->objLanguage->languageText('mod_imagegallery_imagedesc', 'imagegallery', 'ERROR: mod_imagegallery_imagedesc');
         
         $arrayVars = array();
-        $arrayVars['no_image_title'] = $noTitleLabel;
         $arrayVars['no_image_caption'] = $noCaptionLabel;
         $arrayVars['no_image_desc'] = $noDescLabel;
         $this->objSvars->varsToJs($arrayVars);
@@ -2093,9 +2091,6 @@ class imagegalleryops extends object
         
         $objInput = new textinput('tabs', '', 'hidden', '');
         $hiddenInput .= $objInput->show();
-
-        $objInput = new textinput('image_edit_title', '', '', '50');
-        $titleInput = $objInput->show();
 
         $objInput = new textinput('image_edit_caption', '', '', '50');
         $captionInput = $objInput->show();
@@ -2117,10 +2112,6 @@ class imagegalleryops extends object
         
         $objTable = new htmltable();
         $objTable->cellpadding = '4';
-        $objTable->startRow();
-        $objTable->addCell('<b>' . $titleLabel . ': </b>', '200px', '', '', '', '', '');
-        $objTable->addCell($titleInput, '', '', '', '', '', '');
-        $objTable->endRow();
         $objTable->startRow();
         $objTable->addCell('<b>' . $captionLabel . ': </b>', '200px', '', '', '', '', '');
         $objTable->addCell($captionInput, '', '', '', '', '', '');
@@ -2198,7 +2189,7 @@ class imagegalleryops extends object
                 $objLink->link = $album['title'];
                 $albumLink = $objLink->show();
 
-                $content = '<h1>' . $galleriesLink . '&nbsp;|&nbsp;' . $galleryLink . '&nbsp;|&nbsp;' . $albumLink . '&nbsp;|&nbsp;' . $image['title'] . '</h1>';
+                $content = '<h1>' . $galleriesLink . '&nbsp;|&nbsp;' . $galleryLink . '&nbsp;|&nbsp;' . $albumLink . '&nbsp;|&nbsp;' . $image['caption'] . '</h1>';
                 $content .= $this->viewImage($imageId, $selected);
 
                 $tab = array(
@@ -2242,7 +2233,6 @@ class imagegalleryops extends object
     {
         $sharedImagesLabel = $this->objLanguage->languageText('mod_imagegallery_sharedimages', 'imagegallery', 'ERROR: mod_imagegallery_sharedimages');
         $ownerLabel = $this->objLanguage->languageText('word_owner', 'system', 'ERROR: word_owner');
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
         $captionLabel = $this->objLanguage->languageText('word_caption', 'system', 'ERROR: word_caption');
         $descLabel = $this->objLanguage->languageText('word_description', 'system', 'ERROR: word_description');
         $closeLabel = $this->objLanguage->languageText('word_close', 'system', 'ERROR: word_close');
@@ -2261,6 +2251,7 @@ class imagegalleryops extends object
         $confirmCommentLabel = $this->objLanguage->languageText('mod_imagegallery_commentconfirm', 'imagegallery', 'ERROR: mod_imagegallery_commentconfirm');
         $lastCommentsLabel = $this->objLanguage->code2Txt('mod_imagegallery_recentcomments', 'imagegallery', array('count' => 5), 'ERROR: mod_imagegallery_recentcomments');
         $noCommentsLabel = $this->objLanguage->languageText('mod_imagegallery_nocommentsfound', 'imagegallery', 'ERROR: mod_imagegallery_nocommentsfound');
+        $postedLabel = $this->objLanguage->languageText('mod_imagegallery_postedon', 'imagegallery', 'ERROR: mod_imagegallery_postedon');
 
         $image = $this->objDBimages->getImage($imageId);
         $comments = $this->objDBcomments->getImageComments($imageId);
@@ -2277,7 +2268,7 @@ class imagegalleryops extends object
                     $this->objIcon->title = $editCommentLabel;
                     $this->objIcon->alt = $editCommentLabel;
                     $icon = $this->objIcon->show();                
-                    $editCommentLink = '<br /><a href="#" class="image_edit_comment" id="' . $comment['id'] . '">' . $icon . '&nbsp;' . $editCommentLabel . '</a><br />'; 
+                    $editCommentLink = '<br /><a href="#" class="image_edit_comment" id="' . $comment['id'] . '">' . $icon . '&nbsp;' . $editCommentLabel . '</a>'; 
                 }
                 else
                 {
@@ -2300,7 +2291,7 @@ class imagegalleryops extends object
                     }
                     $message = $confirmCommentLabel;
                     $this->objConfirm->setConfirm($icon . '&nbsp;' . $deleteCommentLabel, $location, $message);
-                    $deleteCommentLink = '<br />' . $this->objConfirm->show();
+                    $deleteCommentLink = '&nbsp;' . $this->objConfirm->show();
                 }
                 else
                 {
@@ -2308,7 +2299,7 @@ class imagegalleryops extends object
                 }
                  
                 $section = array();
-                $section['title'] = $this->objUser->fullName($comment['user_id']);
+                $section['title'] = $this->objUser->fullName($comment['user_id']) . '&nbsp;-&nbsp;' . $postedLabel . ': ' . date('j M Y, H:i');
                 $section['content'] = $comment['comment_text'] . $editCommentLink . $deleteCommentLink;
                 $accordion->addSection($section);    
             }
@@ -2324,6 +2315,7 @@ class imagegalleryops extends object
         $sharedState = ($image['is_shared'] == 1) ? $yesLabel : $noLabel;
         
         $info = getimagesize($this->objFileMan->getFullFilePath($image['file_id']));
+
         if (isset($info[0])) {
             $width = $info[0];
         } else {
@@ -2411,10 +2403,6 @@ class imagegalleryops extends object
             $objTable->endRow();
         }
         $objTable->startRow();
-        $objTable->addCell('<b>' . $titleLabel . ': </b>', '200px', '', '', '', '', '');
-        $objTable->addCell($image['title'], '', '', '', '', '', '');
-        $objTable->endRow();
-        $objTable->startRow();
         $objTable->addCell('<b>' . $captionLabel . ': </b>', '200px', '', '', '', '', '');
         $objTable->addCell($caption, '', '', '', '', '', '');
         $objTable->endRow();
@@ -2463,7 +2451,7 @@ class imagegalleryops extends object
         
         $dialog = $this->newObject('dialog', 'jquerycore');
         $dialog->setCssId('dialog_view_image');
-        $dialog->setTitle($image['title']);
+        $dialog->setTitle($image['caption']);
         $dialog->setContent($imageElement);
         $dialog->setShow("slide");
         $dialog->setHide("drop");
@@ -2483,7 +2471,7 @@ class imagegalleryops extends object
     private function showSharedImages()
     {
         $ownerLabel = $this->objLanguage->languageText('word_owner', 'system', 'ERROR: word_owner');
-        $titleLabel = $this->objLanguage->languageText('word_title', 'system', 'ERROR: word_title');
+        $captionLabel = $this->objLanguage->languageText('word_caption', 'system', 'ERROR: word_caption');
         $clickLabel = $this->objLanguage->languageText('mod_imagegallery_viewfullimage', 'imagegallery', 'ERROR: mod_imagegallery_viewfullimage');
         $noSharedLabel = $this->objLanguage->languageText('mod_imagegallery_noshared', 'imagegallery', 'ERROR: mod_imagegallery_noshared');
         
@@ -2519,7 +2507,7 @@ class imagegalleryops extends object
                 $objTooltip->load();
                 
                 $string .= '<div class="image" id="' . $image['image_id'] . '">';
-                $title = $image['title'] . ' - ' . $clickLabel;
+                $title = $image['caption'] . ' - ' . $clickLabel;
                 
                 $uri = $this->uri(array('action' => 'view', 'image_id' => $image['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
                 $link = new link($uri);
@@ -2529,8 +2517,8 @@ class imagegalleryops extends object
                 $string .= $link->show();
                 
                 $string .= '<div id="owner"_' . $image['image_id'] . '"><b>' . $ownerLabel . ': </b>' . $owner . '</div>';
-                
-                $string .= '<div id="title_' . $image['image_id'] . '"><b>' . $titleLabel . ': </b>' . $image['image_title'] . '</div>';
+
+                $string .= '<div id="title_' . $image['image_id'] . '"><b>' . $captionLabel . ': </b>' . $image['caption'] . '</div>';
                 
                 $string .= '</div>';
             }
@@ -2618,39 +2606,59 @@ class imagegalleryops extends object
             {
                 if ($key == 0)
                 {
-                    if ($shared)
+                    if (count($images) > 1)
                     {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
-                    }
-                    elseif (empty($image['context_code']))
-                    {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['id']), 'imagegallery');
+                        if ($shared)
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
+                        }
+                        elseif (empty($image['context_code']))
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['id']), 'imagegallery');
+                        }
+                        else
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['id'], 'tabs' => '2|' . $selected), 'imagegallery');
+                        }
+                        $objLink = new link($uri);
+                        $objLink->link = $next;
+                        $nextLink = $objLink->show();
+
+                        if ($shared)
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
+                        }    
+                        elseif (empty($image['context_code']))
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['id']), 'imagegallery');
+                        }
+                        else
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['id'], 'tabs' => '2|' . $selected), 'imagegallery');
+                        }
+                        $objLink = new link($uri);
+                        $objLink->link = $last;
+                        $lastLink = $objLink->show();
+
+                        $string = $firstGrey . '&nbsp;' . $prevGrey . '&nbsp;' . $nextLink . '&nbsp;' . $lastLink;
                     }
                     else
                     {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[1]['id'], 'tabs' => '2|' . $selected), 'imagegallery');
-                    }
-                    $objLink = new link($uri);
-                    $objLink->link = $next;
-                    $nextLink = $objLink->show();
+                        if ($shared)
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[0]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
+                        }    
+                        elseif (empty($image['context_code']))
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[0]['id']), 'imagegallery');
+                        }
+                        else
+                        {
+                            $uri = $this->uri(array('action' => 'view', 'image_id' => $images[0]['id'], 'tabs' => '2|' . $selected), 'imagegallery');
+                        }
 
-                    if ($shared)
-                    {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
-                    }    
-                    elseif (empty($image['context_code']))
-                    {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['id']), 'imagegallery');
+                        $string = $firstGrey . '&nbsp;' . $prevGrey . '&nbsp;' . $nextGrey . '&nbsp;' . $lastGrey;
                     }
-                    else
-                    {
-                        $uri = $this->uri(array('action' => 'view', 'image_id' => $images[(count($images) - 1)]['id'], 'tabs' => '2|' . $selected), 'imagegallery');
-                    }
-                    $objLink = new link($uri);
-                    $objLink->link = $last;
-                    $lastLink = $objLink->show();
-
-                    $string = $firstGrey . '&nbsp;' . $prevGrey . '&nbsp;' . $nextLink . '&nbsp;' . $lastLink;
                 }
                 elseif ($key == (count($images) - 1))
                 {
@@ -2889,6 +2897,76 @@ class imagegalleryops extends object
         $string = $dialog->show();
         
         return $string;        
+    }
+    
+    /**
+     *
+     * Method to show a random shared image in a block
+     * 
+     * @access public
+     * @return string $string The html display string 
+     */
+    public function showRandomImage()
+    {
+        $noSharedLabel = $this->objLanguage->languageText('mod_imagegallery_noshared', 'imagegallery', 'ERROR: mod_imagegallery_noshared');
+        $clickLabel = $this->objLanguage->languageText('mod_imagegallery_viewfullimage', 'imagegallery', 'ERROR: mod_imagegallery_viewfullimage');
+        $ownerLabel = $this->objLanguage->languageText('word_owner', 'system', 'ERROR: word_owner');
+
+        $javascriptFile = $this->getJavaScriptFile('imagegallery_block.js', 'imagegallery');
+        $this->appendArrayVar('headerParams', $javascriptFile);
+
+        $sharedImages = $this->objDBimages->getSharedImages();
+        
+        if (!empty($sharedImages))
+        {
+            $thumbnails = array();
+            foreach ($sharedImages as $key => $image)
+            {
+                if (!empty($image['user_id']))
+                {
+                    $owner = $this->objUser->fullname($image['user_id']);
+                }
+                else
+                {
+                    $context = $this->objContext->getContext($image['context_code']);
+                    $owner = $context['title'];
+                }
+
+                $filename = $this->objFileMan->getFileName($image['file_id']); 
+                $path = $this->objThumbnails->getThumbnail($image['file_id'], $filename);
+                $thumbnails[$key]['source'] = $path;
+                $thumbnails[$key]['image_id'] = $image['image_id'];
+                $thumbnails[$key]['caption'] = $image['caption'] . ' - ' . $clickLabel;
+                $thumbnails[$key]['owner'] = '<b>' . $ownerLabel . ':&nbsp;</b>' . $owner;
+
+                $objTooltip = $this->newObject('tooltip', 'jquerycore');
+
+                $thumbnails[$key]['title'] = $thumbnails[$key]['caption'];
+            }
+
+            $arrayVars = array();
+            $arrayVars['random_images'] = json_encode($thumbnails);
+            $this->objSvars->varsToJs($arrayVars);
+
+            $string = '<div id="' . $thumbnails[0]['image_id'] . '" class="random_image">';
+            $title = $thumbnails[0]['title'];
+
+            $uri = $this->uri(array('action' => 'view', 'image_id' => $thumbnails[0]['image_id'], 'tabs' => '1|', 'shared' => 'true'), 'imagegallery');
+            $link = new link($uri);
+            $link->link = '<img class="random_image" src="' . $thumbnails[0]['source'] . '" />';
+            $link->cssClass = "random_image";
+            $link->title = $title;
+            
+            $string .= $link->show();
+            $string .= '<p class="random_image">' . $thumbnails[0]['owner'] . '</p>';
+            $string .= '</div>';
+
+            return $string;
+        }
+        else
+        {
+            return $this->error($noSharedLabel);
+        }        
     }
 }
 ?>

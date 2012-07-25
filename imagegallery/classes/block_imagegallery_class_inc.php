@@ -69,7 +69,11 @@ class block_imagegallery extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->objOps = $this->getObject('imagegalleryops', 'imagegallery');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $titleLabel = $this->objLanguage->languageText('mod_imagegallery_random', 'imagegallery', 'ERROR: mod_imagegallery_random');
+        
+        $this->title = $titleLabel;
     }
     /**
      * Standard block show method.
@@ -78,7 +82,7 @@ class block_imagegallery extends object
      */
     public function show() 
     {
-        return "This is a demonstration right block.";
+        return $this->objOps->showRandomImage();
     }
 }
 ?>

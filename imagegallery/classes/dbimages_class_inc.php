@@ -289,19 +289,19 @@ class dbimages extends dbtable
      */
     public function getSharedImages()
     {
-        $sql = "SELECT *, i.id AS image_id, i.title AS image_title FROM `$this->table` AS i";
+        $sql = "SELECT *, i.id AS image_id FROM `$this->table` AS i";
         $sql .= " LEFT JOIN `tbl_imagegallery_galleries` AS g ON i.gallery_id = g.id";
         $sql .= " WHERE g.is_shared = '1' AND (i.user_id != '$this->userId' OR i.user_id IS NULL)";
         
         $galleryImages = $this->getArray($sql);
 
-        $sql = "SELECT *, i.id AS image_id, i.title AS image_title  FROM `$this->table` AS i";
+        $sql = "SELECT *, i.id AS image_id FROM `$this->table` AS i";
         $sql .= " LEFT JOIN `tbl_imagegallery_albums` AS a ON i.album_id = a.id";
         $sql .= " WHERE a.is_shared = '1' AND (i.user_id != '$this->userId' OR i.user_id IS NULL)";
         
         $albumImages = $this->getArray($sql);
 
-        $sql = "SELECT *, id AS image_id, title AS image_title  FROM `$this->table`";
+        $sql = "SELECT *, id AS image_id FROM `$this->table`";
         $sql .= " WHERE `is_shared` = '1' AND (`user_id` != '$this->userId' OR `user_id` IS NULL)";
         
         $images = $this->getArray($sql);

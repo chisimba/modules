@@ -354,7 +354,6 @@ class imagegallery extends controller
         $image = $this->objDBimages->getImage($imageId);
         
         $data = array();
-        $data['title'] = $image['title'];
         $data['caption'] = (empty($image['caption'])) ? '<em class="warning">' . $noneLabel . '</em>' : $image['caption'];
         $data['desc'] = (empty($image['description'])) ? '<em class="warning">' . $noneLabel . '</em>' : $image['description'];
         $data['shared'] = ($image['is_shared'] == 1) ? $yesLabel : $noLabel;
@@ -501,7 +500,6 @@ class imagegallery extends controller
         $data = array();
         $data['image_id'] = $image['id'];
         $data['album_id'] = $image['album_id'];
-        $data['title'] = $image['title'];
         $data['caption'] = $image['caption'];
         $data['desc'] = $image['description'];
         $data['shared'] = ($image['is_shared'] == 1) ? 'on' : '';
@@ -522,7 +520,6 @@ class imagegallery extends controller
     {
         $albumId = $this->getParam('image_edit_album_id');
         $imageId = $this->getParam('image_edit_image_id');
-        $title = $this->getParam('image_edit_title');
         $caption = $this->getParam('image_edit_caption');
         $desc = $this->getParam('image_edit_description');
         $share = $this->getParam('image_edit_shared');
@@ -530,7 +527,6 @@ class imagegallery extends controller
         $location = $this->getParam('location');
 
         $fields = array();
-        $fields['title'] = $title;
         $fields['caption'] = $caption;
         $fields['description'] = $desc;
         $fields['is_shared'] = ($share == 'on') ? '1' : '0';
