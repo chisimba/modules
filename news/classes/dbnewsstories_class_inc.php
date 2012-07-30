@@ -276,14 +276,13 @@ ORDER BY storydate DESC, datecreated DESC LIMIT '.$limit;
     */
     public function getStory($id)
     {
-        $sql = 'SELECT tbl_news_stories.*, categoryname, name as location, geonameid, filename, tbl_news_stories.id as storyid FROM tbl_news_stories
-INNER JOIN tbl_news_categories ON (tbl_news_stories.storycategory=tbl_news_categories.id)
-LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid)
-LEFT JOIN tbl_files ON (tbl_news_stories.storyimage=tbl_files.id)
-WHERE tbl_news_stories.id = \''.$id.'\'';
-
+        $sql = 'SELECT tbl_news_stories.*, categoryname, name as location, geonameid,  
+        filename, tbl_news_stories.id as storyid FROM tbl_news_stories 
+        INNER JOIN tbl_news_categories ON (tbl_news_stories.storycategory=tbl_news_categories.id) 
+        LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid) 
+        LEFT JOIN tbl_files ON (tbl_news_stories.storyimage=tbl_files.id) 
+        WHERE tbl_news_stories.id = \''.$id.'\'';
         $results = $this->getArray($sql);
-
         if (count($results) == 0) {
             return FALSE;
         } else {

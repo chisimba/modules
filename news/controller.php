@@ -492,19 +492,16 @@ class news extends controller {
      */
     private function __viewstory() {
         $id = $this->getParam('id');
-
         $this->setLayoutTemplate(NULL);
-
         $story = $this->objNewsStories->getStory($id);
-
         // If story does not exist
         if ($story == FALSE) {
+            
             return $this->nextAction('home', array('error' => 'nostory'));
         } else {
 
             // Get Category
             $category = $this->objNewsCategories->getCategory($story['storycategory']);
-
             // Check that category exists
             if ($category == FALSE) {
                 return $this->nextAction('home', array('error' => 'nostory'));
