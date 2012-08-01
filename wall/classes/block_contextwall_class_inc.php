@@ -60,6 +60,13 @@ class block_contextwall extends object
      */
     public $title;
     /**
+    *
+    * @var string $objLanguage String object property for holding the language object
+    * @access public
+    *
+    */
+    public $objLanguage;
+    /**
      * Standard init function
      *
      * Create title
@@ -68,7 +75,9 @@ class block_contextwall extends object
      */
     public function init() 
     {
-        $this->title = "Context wall";
+        $this->objLanguage = & $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->code2txt('mod_wall_contextwall', 'wall');
+        $this->title = ucfirst($this->title);
     }
     /**
      * Standard block show method.
