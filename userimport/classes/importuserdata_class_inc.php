@@ -26,6 +26,8 @@ class importuserdata extends object
 
         // Create or get instances of the user, sqlusers and passwords classes
         $this->objConfig=$this->getObject('altconfig','config');
+        $this->objConfig2=$this->getObject('dbsysconfig','sysconfig');
+        $this->UWC_data=$this->objConfig2->getValue('uwc_data','userimport');
         $this->objUser=$this->getObject('user','security');
         $this->objUserAdmin=$this->getObject('useradmin_model','security');
         $this->objUserAdmin2=$this->getObject('useradmin_model2','security');
@@ -289,7 +291,11 @@ class importuserdata extends object
     */
     function checkForUser($username,$firstname,$surname,$email)
     {
-        $data=$this->objUser->getAll("where username='".addslashes($username)."' and firstname='".addslashes($firstname)."' and surname='".addslashes($surname)."' and emailAddress='".addslashes($email)."'");
+        if ($this->UWC_data==1){
+            $data=$this->objUser->getAll("where username='".addslashes($username)."' and emailAddress='".addslashes($email)."'");
+        } else {
+            $data=$this->objUser->getAll("where username='".addslashes($username)."' and firstname='".addslashes($firstname)."' and surname='".addslashes($surname)."' and emailAddress='".addslashes($email)."'");
+        }
         $count=count($data);
         if ($count==0){
             return FALSE;
