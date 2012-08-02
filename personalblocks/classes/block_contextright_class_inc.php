@@ -15,7 +15,26 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class block_contextright extends object
 {
+    /**
+     * The title of the block
+     *
+     * @var    object
+     * @access public
+     */
     public $title;
+    /**
+    *
+    * @var string $objLanguage String object property for holding the language object
+    * @access public
+    *
+    */
+    public $objLanguage;
+    /**
+     * The type of block
+     *
+     * @var    object
+     * @access public
+     */
     public $blockType;
 
     /**
@@ -23,7 +42,9 @@ class block_contextright extends object
     */
     public function init()
     {
-        $this->title="Context blocks: right";
+        $this->objLanguage = & $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->code2txt('mod_personalblocks_contextright', 'personalblocks');
+        $this->title = ucfirst($this->title);
         $this->blockType = "none";
     }
 

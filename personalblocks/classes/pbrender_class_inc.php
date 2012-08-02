@@ -53,7 +53,7 @@ class pbrender extends dbTable
         $this->objLanguage = $this->getObject("language", "language");
         $this->loadClass("htmltable", "htmlelements");
         $this->objDb = $this->getObject("dbpersonalblocks", "personalblocks");
- 		$this->objWashout = $this->getObject("washout", "utilities");
+ 	$this->objWashout = $this->getObject("washout", "utilities");
     }
 
     /**
