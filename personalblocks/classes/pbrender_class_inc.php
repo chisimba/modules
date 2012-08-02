@@ -286,6 +286,7 @@ class pbrender extends dbTable
             if (count($ar) > 0) {
                 foreach ($ar as $line) {
                     $blockcontent = $line['blockcontent'];
+                    $blockcontent = str_replace('"', '&quot;',$blockcontent);
                     $blockcontent = $this->objWashout->parseText($blockcontent);
                     if ($blockType !== 'personal') {
                         $userId = $line['creatorid'];
