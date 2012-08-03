@@ -23,6 +23,7 @@ echo $header->show();
 
 $form = new form('addpage', $this->uri(array('action'=>$formaction)));
 $formTable = $this->newObject('htmltable', 'htmlelements');
+$formTable->cssClass = 'ctxtcnt-add-table';
 
 //if ($mode=='add') {
     $label = new label ($this->objLanguage->languageText('mod_contextcontent_parent','contextcontent'), 'input_parentnode');
@@ -73,29 +74,20 @@ if ($mode=='edit') {
     $headerScripts->setDefaultFiles($page['headerscripts']);
 }
 
-
 $label = new label ('<strong class="metatagstrong">'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
-
 $jsForHeader = $this->objLanguage->languageText('mod_contextcontent_enterjavascriptmetatags','contextcontent', 'Enter any JavaScript or Meta Tags that you need to be loaded into the [-HEAD-] tags');
-
 $jsForHeader = str_replace('[-HEAD-]', '&lt;head&gt;', $jsForHeader);
 
-$formTable->startRow();
-$formTable->addCell($label->show().'<p class="jsforheader">'.$jsForHeader.'</p>', '240');
-$formTable->addCell($headerScripts->show());
-$formTable->endRow();
-
-$formTable->startRow();
-$formTable->addCell('&nbsp;');
-$formTable->addCell('&nbsp;');
-$formTable->endRow();
-
-$button = new button('submitform', $this->objLanguage->languageText('mod_contextcontent_savepage','contextcontent'));
+$saveButtonText = '<span class=\'save\'>' 
+   . $this->objLanguage->languageText('mod_contextcontent_savepage','contextcontent')
+   . '</span>';
+$button = new button('submitform', $saveButtonText);
+$button->cssId = 'ctxtcnt-add-submit';
 $button->setToSubmit();
 
 $formTable->startRow();
-$formTable->addCell('&nbsp;');
-$formTable->addCell($button->show());
+$formTable->addCell($label->show().'<br /><span class="jsforheader">'.$jsForHeader.'</span>', '240');
+$formTable->addCell($headerScripts->show(). $button->show());
 $formTable->endRow();
 
 $form->addToForm($formTable->show());
@@ -108,7 +100,6 @@ if ($mode == 'edit') {
 } else {
     $hiddeninput = new hiddeninput('chapter', $chapter);
     $form->addToForm($hiddeninput->show());
-
 }
 
 // Rules
