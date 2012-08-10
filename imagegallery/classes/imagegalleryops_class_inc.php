@@ -1673,16 +1673,14 @@ class imagegalleryops extends object
             
             $albumId  = $this->objDBalbums->addAlbum($fields);
         }
-        
+
         $results = $this->uploadFiles($gallery['context_code']);
-
         $fields['album_id'] = $albumId;
-        
         $this->addImageToTable($fields, $results);
-
         return $albumId;
     }
-    
+
+
     /**
      *
      * Method to do the physical upload to the database and file system
@@ -1693,23 +1691,18 @@ class imagegalleryops extends object
      */
     private function uploadFiles($contextCode = NULL)
     {
-        if (empty($contextCode))
-        {
+        if (empty($contextCode)) {
             $this->objUpload->setUploadFolder('users/' . $this->userId . '/images/');
-        }
-        else
-        {
+        } else {
             $this->objUpload->setUploadFolder('context/' . $contextCode . '/images/');
         }
         $results = $this->objUpload->uploadFilesArray('files');
 
         $mimetypes = $this->objArchive->getSupportedTypes();
-        if($results)
-        {
-            foreach($results as $file)
-            {                       
-                if( in_array($file['mimetype'], $mimetypes) )
-                {
+        if($results) {
+            foreach($results as $file) {
+                // If it is a zip archive
+                if ( in_array($file['mimetype'], $mimetypes) ) {
                     $filePath = $this->objFileMan->getFilePath($file['fileid']);
                     $zip = $this->objArchive->open($filePath);
                     $filePath = str_replace(".", "_", $filePath);
@@ -1718,7 +1711,6 @@ class imagegalleryops extends object
                     $this->objDir->mkdirs($fullFilePath);
                     $zip->extractTo($fullFilePath);
                     $this->objFileMan->deleteFile($file['fileid'],TRUE);
-
                     //list files in
                     $handle = opendir($fullFilePath);
                     if ($handle)
@@ -1734,6 +1726,7 @@ class imagegalleryops extends object
                                     $mimetype, "images", 1, $this->userId, NULL, $this->getParam('creativecommons_files', ''));
                                 // Get Media Info
                                 $fileInfo = $this->objAnalyzeMediaFile->analyzeFile($fullFilePath . "/" . $dirfile);
+                                                                
                                 // Add Information to Databse
                                 $this->objMediaFileInfo->addMediaFileInfo($fileId, $fileInfo[0]);
                                 // Check whether mimetype needs to be updated
@@ -1753,21 +1746,19 @@ class imagegalleryops extends object
                                 $infoArray['mimetype'] = $mimetype;
                                 $infoArray['errorcode'] = 0;
                                 $infoArray['size'] = filesize($fullFilePath . "/" . $dirfile);
-
                                 $results[$dirfile] = $infoArray;
-                            }
-                            else
-                            {
+                            } else {
                                 @unlink($fullFilePath . "/" . $dirfile);
                             }
                         }
                     }
                     closedir($handle);                            
-                }
+                } 
             }
         }
         return $results;
     }
+
     
     /**
      *
@@ -1795,10 +1786,13 @@ class imagegalleryops extends object
             {
                 unset($fields['title']);
                 unset($fields['description']);
-                $fields['caption'] = $result['name'];
+                $fileName = $result['name'];
+                $fileName = str_replace('_', ' ', $fileName);
+                $fileName = str_replace('-', ' ', $fileName);
+                $fileName = str_replace('.', ' .', $fileName);
+                $fields['caption'] = $fileName;
                 $fields['file_id'] = $result['fileid'];
-
-                $this->objDBimages->addImage($fields);                
+                $this->objDBimages->addImage($fields);
             }
         }
     }
