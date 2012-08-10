@@ -94,7 +94,6 @@ class demodata_installscripts extends dbtable
             $this->createUsers($userXml);
         }
 
-
         // Unzip the userimages demo file.
         $zip = new ZipArchive();
         if ($zip->open($userImages) === TRUE) {
