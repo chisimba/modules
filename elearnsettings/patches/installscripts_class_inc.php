@@ -67,6 +67,14 @@ class elearnsettings_installscripts extends dbtable
      * @var    object
      */
     private $objAltConfig;
+    
+    /**
+     * Instance of the dbconfig class in the sysconfig module.
+     *
+     * @access private
+     * @var    object
+     */
+    private $dbConfig;
 
     /**
      * The object property initialiser.
