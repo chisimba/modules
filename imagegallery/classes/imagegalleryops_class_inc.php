@@ -661,40 +661,40 @@ class imagegalleryops extends object
                 switch (count($albums))
                 {
                     case 0:
-                        $string .= '<em class="warning">(' . strtolower($emptyLabel) . ')</em><br /><br />';
+                        $string .= '<div class="gallery_info">(' . strtolower($emptyLabel) . ')</div>';
                         break;
                     case 1:
-                        $string .= '<em class="warning">' . $oneAlbumLabel . '</em><br />';
+                        $string .= '<div class="gallery_info">' . $oneAlbumLabel . '</div>';
                         if (count($images) == 1)
                         {
-                            $string .= '<em class="warning">' . $oneImageLabel . '</em>';
+                            $string .= '<div class="gallery_info">' . $oneImageLabel . '</div>';
                         }
                         elseif (count($images) > 1)
                         {
                             $array = array('count' => count($images));
-                            $string .= '<em class="warning">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</em>';
+                            $string .= '<div class="gallery_info">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</div>';
                         }
                         else
                         {
-                            $string .= '<br />';
+                            $string .= '';
                         }
                         break;
                     default:
                         $array = array('count' => count($albums));
-                        $string .= '<em class="warning">' . $this->objLanguage->code2Txt('mod_imagegallery_manyalbums', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyalbums') . '</em><br />';
+                        $string .= '<div class="gallery_info">' . $this->objLanguage->code2Txt('mod_imagegallery_manyalbums', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyalbums') . '</div>';
                         if (count($images) == 1)
                         {
-                            $string .= '<em class="warning">' . $oneImageLabel . '</em>';
+                            $string .= '<div class="gallery_info">' . $oneImageLabel . '</div>';
                         }
                         elseif (count($images) > 1)
                         {
                             $array = array('count' => count($images));
-                            $string .= '<em class="warning">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</em>';
+                            $string .= '<div class="gallery_info">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</div>';
                         }
                         break;                        
                 }
                 
-                $string .= '<div id="title_' . $gallery['id'] . '"><b>' . $titleLabel . ': </b>' . $gallery['title'] . '</div>';
+                $string .= '<br /><div id="title_' . $gallery['id'] . '"><b>' . $titleLabel . ': </b>' . $gallery['title'] . '</div>';
 
                 $shared = ($gallery['is_shared'] == 1) ? $yesLabel : $noLabel;                
                 $string .= '<div id="shared_' . $gallery['id'] . '"><b>' . $sharedLabel . ': </b>' . $shared . '</div>';
@@ -1290,14 +1290,14 @@ class imagegalleryops extends object
                 switch (count($images))
                 {
                     case 0:
-                        $string .= '<em class="warning">(' . strtolower($emptyLabel) . ')</em><br />';
+                        $string .= '<em class="album_info">(' . strtolower($emptyLabel) . ')</em><br />';
                         break;
                     case 1:
-                        $string .= '<br /><em class="warning">' . $oneImageLabel . '</em>';
+                        $string .= '<br /><em class="album_info">' . $oneImageLabel . '</em>';
                         break;
                     default:
                         $array = array('count' => count($images));
-                        $string .= '<br /><em class="warning">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</em>';
+                        $string .= '<br /><em class="album_info">' . $this->objLanguage->code2Txt('mod_imagegallery_manyimages', 'imagegallery', $array, 'ERROR: mod_imagegallery_manyimages') . '</em>';
                         break;                        
                 }
 
@@ -1692,14 +1692,19 @@ class imagegalleryops extends object
     private function uploadFiles($contextCode = NULL)
     {
         if (empty($contextCode)) {
-            $this->objUpload->setUploadFolder('users/' . $this->userId . '/images/');
+            $uploadFolder = 'users/' . $this->userId . '/images/';
+            $this->objUpload->setUploadFolder($uploadFolder);
         } else {
-            $this->objUpload->setUploadFolder('context/' . $contextCode . '/images/');
+            $uploadFolder = 'context/' . $contextCode . '/images/';
+            $this->objUpload->setUploadFolder($uploadFolder);
         }
         $results = $this->objUpload->uploadFilesArray('files');
 
         $mimetypes = $this->objArchive->getSupportedTypes();
         if($results) {
+            $objConfig = $this->getObject('altconfig','config');
+            $removePattern = $objConfig->getsiteRootPath();
+            
             foreach($results as $file) {
                 // If it is a zip archive
                 if ( in_array($file['mimetype'], $mimetypes) ) {
@@ -1722,10 +1727,17 @@ class imagegalleryops extends object
                             {
                                 $infoArray = array();
                                 // 1) Add to Database
-                                $fileId = $this->objFileMan->addFile($dirfile, $fullFilePath . "/" . $dirfile, filesize($fullFilePath . "/" . $dirfile),
-                                    $mimetype, "images", 1, $this->userId, NULL, $this->getParam('creativecommons_files', ''));
+                                
+                                
+                                
+                                $fixedPath = str_replace($removePattern . 'usrfiles/', '', $fullFilePath);
+                                $fileId = $this->objFileMan->addFile($dirfile, $fixedPath 
+                                  . "/" . $dirfile, filesize($fullFilePath . "/" . $dirfile),
+                                  $mimetype, "images", 1, $this->userId, NULL, 
+                                  $this->getParam('creativecommons_files', ''));
                                 // Get Media Info
-                                $fileInfo = $this->objAnalyzeMediaFile->analyzeFile($fullFilePath . "/" . $dirfile);
+                                $fileInfo = $this->objAnalyzeMediaFile->analyzeFile($fullFilePath 
+                                  . "/" . $dirfile);
                                                                 
                                 // Add Information to Databse
                                 $this->objMediaFileInfo->addMediaFileInfo($fileId, $fileInfo[0]);
@@ -1734,7 +1746,8 @@ class imagegalleryops extends object
                                 {
                                     $this->objFileMan->updateMimeType($fileId, $fileInfo[1]);
                                 }
-                                $this->objThumbnails->createThumbailFromFile($fullFilePath . "/" . $dirfile, $fileId);                                        
+                                $this->objThumbnails->createThumbailFromFile($fullFilePath 
+                                  . "/" . $dirfile, $fileId);                                        
                                 // Update Return Array Details                                        
                                 $infoArray['fileid'] = $fileId;
                                 $infoArray['success'] = TRUE;
@@ -1881,7 +1894,7 @@ class imagegalleryops extends object
                 $optionIcon = $this->objIcon->show();
                 $string .= '<a href="#" class="image_options" id="' . $image['id'] . '">' . $optionIcon . '&nbsp;' . $optionsLabel . '</a><br />'; 
 
-                $string .= '</div>';    
+                //$string .= '</div>';    
                 
                 $options = '<b>' . $image['caption'] . '</b><br /><br />';
                 
@@ -1942,6 +1955,7 @@ class imagegalleryops extends object
                 $options .= $link->show() . '<br />';
 
                 $string .= $this->showImageOptionsDialog($image['id'], $options);
+                $string .= '</div>';  
             }
         }  
         $string .= '<div id="upload_dialog"></div>';        
@@ -2309,7 +2323,7 @@ class imagegalleryops extends object
         $sharedState = ($image['is_shared'] == 1) ? $yesLabel : $noLabel;
         
         $info = getimagesize($this->objFileMan->getFullFilePath($image['file_id']));
-
+  
         if (isset($info[0])) {
             $width = $info[0];
         } else {
