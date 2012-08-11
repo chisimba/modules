@@ -79,14 +79,14 @@ class wiki extends controller {
         $this->userId = $this->objUser->userId();
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
-								if($this->objModules->checkIfRegistered('activitystreamer'))
-								{
-									$this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
-									$this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
-									$this->eventsEnabled = TRUE;
-								} else {
-									$this->eventsEnabled = FALSE;
-								}
+        if($this->objModules->checkIfRegistered('activitystreamer'))
+        {
+                $this->objActivityStreamer = $this->getObject('activityops', 'activitystreamer');
+                $this->eventDispatcher->addObserver ( array ($this->objActivityStreamer, 'postmade' ) );
+                $this->eventsEnabled = TRUE;
+        } else {
+                $this->eventsEnabled = FALSE;
+        }
         $contextExists = $this->objModules->checkIfRegistered('context');
         $this->setSession('context_exists', $contextExists);
         $wikiId = $this->getSession('wiki_id');
@@ -129,7 +129,7 @@ class wiki extends controller {
             case 'change_visibility':
             case 'context_wiki':
                 return TRUE;
-                //Allow viewing anonymously
+            //Allow viewing anonymously
             case 'view_rules':
             case 'view_all':
             case 'view_page':
@@ -222,22 +222,22 @@ class wiki extends controller {
                 }else{
                     $summary = $sum;
                 }
-						         	//add to activity log
-						         	if($this->eventsEnabled)
-						         	{
-						         	  //The message to be posted
-                  $message = $this->objUser->getsurname()." ". $this->objLanguage->languageText('mod_wiki_updatedwikialert', 'wiki')."-".$name;
-                  $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-						 																				'link'=> $this->uri(array()),
-						 																				'contextcode' => $this->objContext->getContextCode(),
-						 																				'author' => $this->objUser->fullname(),
-						 																				'description'=>$message));
-						 																				
-												 				 $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
-						 																				'link'=> $this->uri(array()),
-						 																				'contextcode' => null,
-						 																				'author' => $this->objUser->fullname(),
-						 																				'description'=>$message));
+                //add to activity log
+                if($this->eventsEnabled)
+                {
+                //The message to be posted
+                $message = $this->objUser->getsurname()." ". $this->objLanguage->languageText('mod_wiki_updatedwikialert', 'wiki')."-".$name;
+                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+                    'link'=> $this->uri(array()),
+                    'contextcode' => $this->objContext->getContextCode(),
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
+
+                $this->eventDispatcher->post($this->objActivityStreamer, "context", array('title'=> $message,
+                    'link'=> $this->uri(array()),
+                    'contextcode' => null,
+                    'author' => $this->objUser->fullname(),
+                    'description'=>$message));
 						         	}
                 $data = array();
                 $data['page_name'] = strip_tags($name);
@@ -269,12 +269,18 @@ class wiki extends controller {
                 break;
 
             case 'view_page':
-                $name = $this->getParam('name');
+                // Let it be the context wiki if in context
+                if ($this->objContext->isInContext()) {
+                    $contextCode =  $this->objContext->getContextCode();
+                } else {
+                    $contextCode = FALSE;
+                }
+                $name = $this->getParam('name', $contextCode);
                 if(!empty($name)){
                     $page = $this->objDbwiki->getPage($name);
                     if(empty($page)){
                         return $this->nextAction('add_page', array(
-                            'name' => $name,
+                           'name' => $name,
                         ), 'wiki');
                     }elseif($page['page_status'] == 6){
                         return $this->nextAction('deleted_page', array(
