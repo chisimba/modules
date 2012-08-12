@@ -116,14 +116,21 @@ class imagegalleryops extends object
      */
     private function error($errorText)
     {
-        $error = $this->objLanguage->languageText('word_error', 'system', 'WORD: word_error, not found');
-        
-        $this->objIcon->title = $error;
-        $this->objIcon->alt = $error;
-        $this->objIcon->setIcon('exclamation', 'png');
-        $errorIcon = $this->objIcon->show();
-        
-        $string = '<span style="color: red">' . $errorIcon . '&nbsp;<b>' . $errorText . '</b></span>';
+        $string = '<span class="error">' . $errorText . '</span>';
+        return $string;
+    }
+    
+    /**
+     *
+     * Method to generate a warning string for display
+     * 
+     * @access private
+     * @param string $errorText The error string
+     * @return string $string The formated error string
+     */
+    private function warning($errorText)
+    {
+        $string = '<span class="warning">' . $errorText . '</span>';
         return $string;
     }
     
@@ -2372,13 +2379,13 @@ class imagegalleryops extends object
 
         if (!$shared)
         {
-            $caption = (empty($image['caption'])) ? '<em class="warning">' . $noneEditLabel . '</em>' : $image['caption'];
-            $description = (empty($image['description'])) ? '<em class="warning">' . $noneEditLabel . '</em>' : $image['description'];
+            $caption = (empty($image['caption'])) ? '<span class="warning">' . $noneEditLabel . '</span>' : $image['caption'];
+            $description = (empty($image['description'])) ? '<span class="warning">' . $noneEditLabel . '</span>' : $image['description'];
         }
         else
         {
-            $caption = (empty($image['caption'])) ? '<em class="warning">' . $noneLabel . '</em>' : $image['caption'];
-            $description = (empty($image['description'])) ? '<em class="warning">' . $noneLabel . '</em>' : $image['description'];
+            $caption = (empty($image['caption'])) ? '<span class="warning">' . $noneLabel . '</span>' : $image['caption'];
+            $description = (empty($image['description'])) ? '<span class="warning">' . $noneLabel . '</span>' : $image['description'];
         }
         
         $objTable = new htmltable();
