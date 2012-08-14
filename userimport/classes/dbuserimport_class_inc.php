@@ -108,7 +108,8 @@ class dbuserimport extends dbTable
                 $userPK=$this->objUser->PKId($line['userid']);
                 if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='userimport')&&
                     ( count($this->objContextGroups->userContexts($line['userid'],array('contextcode')))<2) ){
-                    $this->objUserAdmin->setUserDelete($line['userid']);
+                    //$this->objUserAdmin->setUserDelete($line['userid']);
+                    $this->objUserAdmin->batchProcessOption(array($userPK),'delete');
                 } else {
                 // Here they didn't cascade-delete, so we have to remove them specifically.
                     if ($groupId==NULL){
