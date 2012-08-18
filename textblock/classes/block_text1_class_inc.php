@@ -26,14 +26,14 @@ class block_text1 extends textblockbase
     function init()
     {
     	parent::init();
-		$this->setData("text1");
+	$this->setData("text1");
     }
     
     /**
     * Method to output a block with text content
     */
     function show()
-	{
+    {
         return $this->blockContents;
     }
 }

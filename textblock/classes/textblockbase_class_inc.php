@@ -50,6 +50,7 @@ class textblockbase extends object {
             $cssClass = "";
             $divEnd = "";
             $divStart = "";
+            $ret="";
             $useDiv = FALSE;
             $this->cssId = $ar['css_id'];
             if ($this->cssId !== "" && $this->cssId !== NULL) {
@@ -62,7 +63,8 @@ class textblockbase extends object {
                 $useDiv = TRUE;
             }
             $objWashout = $this->getObject("washout", "utilities");
-            $ret = $objWashout->parseText($ar['blocktext']);
+            $pText = $ar['blocktext'];
+            $ret = $objWashout->parseText($pText, TRUE);
             if ($useDiv) {
                 $ret = "<div $cssClass>$ret</div>";
             }
