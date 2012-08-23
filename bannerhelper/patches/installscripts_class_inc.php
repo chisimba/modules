@@ -118,18 +118,21 @@ class bannerhelper_installscripts extends dbtable
     public function makeDefaultFile()
     {
         $about = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/about.txt';
+        $plMenu = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/plmenu.txt';
         $banner0 = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/banner0.txt';
         $banner1 = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/banner1.txt';
         $banner2 = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/banner2.txt';
         $banner3 = $this->objAltConfig->getModulePath() . 'bannerhelper/resources/banner3.txt';
 
         $targetAbout = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/about.txt';
+        $targetPlMenu = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/plmenu.txt';
         $targetBanner0 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner0.txt';
         $targetBanner1 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner1.txt';
         $targetBanner2 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner2.txt';
         $targetBanner3 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner3.txt';
 
         copy($about, $targetAbout);
+        copy($plMenu, $targetPlMenu);
         copy($banner0, $targetBanner0);
         copy($banner1, $targetBanner1);
         copy($banner2, $targetBanner2);
