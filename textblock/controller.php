@@ -58,28 +58,68 @@ class textblock extends controller
             case 'text':
             case 'view':
                 // Set the layout template to compatible one
-                $this->setLayoutTemplate('layout_tpl.php');
-                return 'narrowblockview_tpl.php';
+                if ($this->objUser->isAdmin()) {
+                    $this->setLayoutTemplate('layout_tpl.php');
+                    return 'narrowblockview_tpl.php';
+                } else {
+                    $this->setVar('str', 
+                      "<br /><span class='error'>" 
+                        . $this->objLanguage->languageText(
+                          "phrase_nopermission",NULL,"You have no permission for"
+                        ).": ".$this->action) . "</span>";
+                    return 'dump_tpl.php';
+                }
                 break;
             case 'widetext':
                 // Set the layout template to compatible one
-                $this->setLayoutTemplate('layout_tpl.php');
-                return 'wideblockview_tpl.php';
+                if ($this->objUser->isAdmin()) {
+                    $this->setLayoutTemplate('layout_tpl.php');
+                    return 'wideblockview_tpl.php';
+                } else {
+                    $this->setVar('str', 
+                      "<br /><span class='error'>" 
+                        . $this->objLanguage->languageText(
+                          "phrase_nopermission",NULL,"You have no permission for"
+                        ).": ".$this->action) . "</span>";
+                    return 'dump_tpl.php';
+                }
                 break;
             case 'deleteajax':
-                $this->objDb->delete("id", $this->getParam('id', Null));
-                die("RECORD_DELETED");
+                if ($this->objUser->isAdmin()) {
+                    $this->objDb->delete("id", $this->getParam('id', Null));
+                    die("RECORD_DELETED");
+                } else {
+                    die("ERR_NOPERMISSION");
+                }
                 break;
             case 'ajaxedit':
-                // Set the layout template to compatible one
-                $this->setLayoutTemplate('layout_tpl.php');
-                return "editajax_tpl.php";
+                if ($this->objUser->isAdmin()) {
+                    // Set the layout template to compatible one
+                    $this->setLayoutTemplate('layout_tpl.php');
+                    return "editajax_tpl.php";
+                } else {
+                    $this->setVar('str', 
+                      "<br /><span class='error'>" 
+                        . $this->objLanguage->languageText(
+                          "phrase_nopermission",NULL,"You have no permission for"
+                        ).": ".$this->action) . "</span>";
+                    return 'dump_tpl.php';
+                }
                 break;
             case 'save':
-            	$objUser = $this->getObject("user", "security");
-                $this->objDb->saveRecord($this->getParam('mode', Null), $objUser->userId());
-                $blockType = $this->getParam('blocktype', 'narrowblock');
-                return $this->nextAction($blockType);
+                if ($this->objUser->isAdmin()) {
+                    $this->objDb->saveRecord($this->getParam('mode', Null), 
+                      $this->objUser->userId());
+                    $blockType = $this->getParam('blocktype', 'narrowblock');
+                    return $this->nextAction($blockType);
+                } else {
+                    $this->setVar('str', 
+                      "<br /><span class='error'>" 
+                        . $this->objLanguage->languageText(
+                          "phrase_nopermission",NULL,"You have no permission for"
+                        ).": ".$this->action) . "</span>";
+                    return 'dump_tpl.php';
+                }
                 break;
             default:
                 $this->setVar('str', $this->objLanguage->languageText("phrase_actionunknown",NULL,"Unknown action").": ".$this->action);
