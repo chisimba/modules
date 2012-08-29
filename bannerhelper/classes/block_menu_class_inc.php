@@ -81,7 +81,7 @@ class block_menu extends object
     public function show() 
     {
         $objFget = $this->getObject('fsbannerhelper', 'bannerhelper');
-        return $objFget->getContentsForDisplay("plmenu");
+        return "<pre>" . htmlentities($objFget->getContentsForDisplay("plmenu")) . "</pre>";
     }
 }
 ?>
