@@ -33,12 +33,11 @@ jQuery(function() {
             // Set up the URL to call for JSON data
             ajaxUri = 'index.php?module=slate&action=gettaken';
             arChk = jQuery.getJSON(ajaxUri);
-            jQuery.each(arChk, function() {
+            /*jQuery.each(arChk, function() {
                 alert("one");
-            });
+            });*/
             if (valCh in arChk) {
                 jQuery("#input_page").css("background", "red");
-
                 alert('Page exists: ' + valCh);
             } else {
                 jQuery("#savePage").attr("disabled", "disabled");
