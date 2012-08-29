@@ -366,13 +366,16 @@ class wallops extends object {
         } else {
             $numPostsTxt = NULL;
         }
-
-
         $objCommentDb = $this->getObject('dbcomment', 'wall');
         // See if they are in myprofile else default link to wall
         $currentModule = $this->getParam('module', 'wall');
         // Get the current user Id
-        $myUserId = $this->objUser->userId();
+        $amLoggedIn = $this->objUser->isLoggedIn();
+        if ($amLoggedIn) {
+            $myUserId = $this->objUser->userId();
+        } else {
+            $myUserId = "NOT_LOGGED_IN";
+        }
         foreach ($posts as $post) {
             // Set variables to NULL because they are used with .= later.
             $comments = NULL;
@@ -425,18 +428,24 @@ class wallops extends object {
             }
             $del = NULL;
             if ($testIfLoggedIn) {
-                if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid']) {
-                    $delLink = $this->uri(array(
-                        'action' => 'delete',
-                        'id' => $id
-                            ), 'wall');
-                    $delLink = "#";
-                    $delLink = str_replace('&amp;', '&', $delLink);
-                    $del = '<a class="delpost" id="'
-                            . $id . '" href="' . $delLink . '">X</a>';
+                if ($amLoggedIn) {
+                    if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid']) {
+                        $delLink = $this->uri(array(
+                            'action' => 'delete',
+                            'id' => $id
+                                ), 'wall');
+                        $delLink = "#";
+                        $delLink = str_replace('&amp;', '&', $delLink);
+                        $del = '<a class="delpost" id="'
+                                . $id . '" href="' . $delLink . '">[x]</a>';
+                    } else {
+                        $del = NULL;
+                    }
                 } else {
-                    $del = NULL;
+                    $del=NULL;
                 }
+            } else {
+                $del = NULL;
             }
             // Render the content for display.
             $ret .= "<div class='wallpostrow' id='wpr__" . $id . "'>$del<div class='msg'>\n" . $img
