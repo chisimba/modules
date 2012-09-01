@@ -30,6 +30,8 @@ class contentblockbase extends object
         $this->objDb = $this->getObject("dbcontentblocks", "contentblocks");
         //Create an instance of the language object
         $this->objLanguage = &$this->getObject("language", "language");
+        // Don't wrap content block titles.
+        $this->wrapStr = FALSE;
     }
     
     /**

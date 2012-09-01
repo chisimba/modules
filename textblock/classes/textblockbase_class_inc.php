@@ -25,10 +25,12 @@ class textblockbase extends object {
      * Constructor for the class
      */
     public function init() {
-        //Create an instance of the textblock DBtable object
+        // Create an instance of the textblock DBtable object.
         $this->objDb = $this->getObject("dbtextblock", "textblock");
         //Create an instance of the language object
         $this->objLanguage = &$this->getObject("language", "language");
+        // Don't wrap textblock titles.
+        $this->wrapStr = FALSE;
     }
 
     /**
