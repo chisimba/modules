@@ -162,6 +162,16 @@ class dbsimpleblog extends dbtable
         $content = trim($this->getParam('post_content', NULL));
         $status = $this->getParam('post_status', NULL);
         $blogId = $this->getParam('blogid', NULL);
+        $blogType = $this->getParam('post_type', NULL);
+        if ($blogType == 'site') {
+            $blogId = 'site';
+        }
+        if ($blogType == 'context') {
+            $objContext = $this->getObject('dbcontext', 'context');
+            if($objContext->isInContext()){
+                $blogId = $objContext->getcontextcode();
+            }
+        }
         $id = TRIM($this->getParam('id', NULL));
         // if edit use update
         if ($mode=="edit") {

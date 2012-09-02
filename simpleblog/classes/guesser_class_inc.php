@@ -95,7 +95,7 @@ class guesser extends object
     public function guessBlogId()
     {
         
-        // First check if walltype is set in querystring.
+        // First check if blogid is set in querystring.
         $blogId = $this->getParam('blogid', FALSE);
         if ($blogId) {
             return $blogId;
@@ -107,25 +107,29 @@ class guesser extends object
             return $objContext->getcontextcode();
         }
         
-        // if they are in the simpleblog module and there is no blogId, then it is a personal blog.
-        $objBestGuess = $this->getObject('bestguess', 'utilities');
-        $currentModule = $objBestGuess->identifyModule();
-        if ($currentModule == "simpleblog") {
-            // Check for a userid
-            $userId = $objBestGuess->guessUserId();
-            $objDb = $this->getObject('dbblogs', 'simpleblog');
-            $uid = $objDb->getUserBlogId($userId);
-            if (!$uid == "") {
-                return $objDb->getUserBlogId($userId);
+        // If not logged in and there is no blogid, then render the default blog.
+        if (!$this->objUser->isLoggedIn()) {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            return $objSysConfig->getValue('simpleblog_defaultblog', 'simpleblog');
+        } else {
+            // Figure out who they are, it must be their blog
+            $objBestGuess = $this->getObject('bestguess', 'utilities');
+            $currentModule = $objBestGuess->identifyModule();
+            if ($currentModule == "simpleblog") {
+                // Check for a userid
+                $userId = $objBestGuess->guessUserId();
+                $objDb = $this->getObject('dbblogs', 'simpleblog');
+                $uid = $objDb->getUserBlogId($userId);
+                if (!$uid == "") {
+                    return $objDb->getUserBlogId($userId);
+                } else {
+                    return FALSE;
+                }
             } else {
+                // We need to write some code for being unable to figure it out.
                 return FALSE;
             }
-        } else {
-            // We need to write some code for it.
-            return FALSE;
         }
-
     }
-
 }
 ?>

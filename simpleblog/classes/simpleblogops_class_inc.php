@@ -90,16 +90,12 @@ class simpleblogops extends object
      *
      */
     public $objDd;
-
-
-
-
-
-
-
-
-    
-
+    /**
+     *
+     * @var string $hasEditAddDelRights Does the user have full access rights
+     * @access private
+     *
+     */
     private $hasEditAddDelRights=FALSE;
 
     /**
@@ -118,7 +114,7 @@ class simpleblogops extends object
         // Get the blog posts db.
         $this->objDbPosts = $this->getObject('dbsimpleblog', 'simpleblog');
         // Set the jQuery version to the latest functional.
-        $this->setVar('JQUERY_VERSION', '1.4.2');
+        //$this->setVar('JQUERY_VERSION', '1.4.2');
         // Load jQuery Oembed.
         $oEmb = $this->getObject('jqoembed', 'oembed');
         $oEmb->loadOembedPlugin();
@@ -133,7 +129,6 @@ class simpleblogops extends object
 
         // Get the page number
         $page = $this->getParam('page', 0);
-
 
         // Set some parameters required by the wall
         $ar = array(
@@ -151,7 +146,6 @@ class simpleblogops extends object
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('oembed.js', 'simpleblog'));
         // Load the WALL Javascript which we need
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('wall.js', 'wall'));
-
     }
 
 
@@ -161,6 +155,7 @@ class simpleblogops extends object
      *
      * @param string $id The id (primary key) of the post to edit
      * @return string The rendered edit link with icon
+     * @access private
      *
      */
     private function builtEditLink($id)
@@ -169,8 +164,6 @@ class simpleblogops extends object
           'action' =>'edit',
           'mode' => 'edit',
           'postid' => $id), 'simpleblog');
-        $editUri = 'javascript:void(0);';
-
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $edIcon = $this->objIcon->getEditIcon($editUri);
         return '<span id="' . $id . '" class="simpleblog_editicon">'
@@ -248,6 +241,7 @@ class simpleblogops extends object
      *
      * @param string $post The post entry to format
      * @return string The formatted post
+     * @access public
      * 
      */
     public function formatItem($post)

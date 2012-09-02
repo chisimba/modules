@@ -186,7 +186,27 @@ class editor extends object
         $statusLabel =  $this->objLanguage->languageText("mod_simpleblog_statuslabel",
             "simpleblog", "Indicate the publication status of this post");
         $statusFormElement = $statusLabel . ": " . $objRadioElement->show();
-
+        
+        // Whether it is personal, site, or context.
+        $typeLabel =  $this->objLanguage->languageText("mod_simpleblog_typelabel",
+            "simpleblog", "Indicate the blog type for this post");
+        $objRadioElement = new radio('post_type');
+        $objRadioElement->addOption('personal',
+          $this->objLanguage->languageText("mod_simpleblog_personal",
+          "simpleblog", "My personal blog"));
+        $objRadioElement->addOption('site',
+          $this->objLanguage->languageText("mod_simpleblog_site",
+          "simpleblog", "Site blog"));
+        // If they are in a context, then display the context blog
+        $objContext = $this->getObject('dbcontext', 'context');
+        if($objContext->isInContext()){
+            $objRadioElement->addOption('context',
+              $this->objLanguage->languageText("mod_simpleblog_context",
+              "simpleblog", "[-CONTEXT-] blog"));
+        }
+        $typeFormElement = $typeLabel . ": " . $objRadioElement->show();
+        
+        
         // The blog content editor unlabled.
         $editor = $this->newObject('htmlarea', 'htmlelements');
         $editor->name = 'post_content';
@@ -218,6 +238,7 @@ class editor extends object
         $objForm->addToForm( $blogidFormElement . $postIdFormElement
           . "<div class='title_form_element'>" . $postTitleFormElement . "</div>"
           . "<div class='status_form_element'>" . $statusFormElement . "</div>"
+          . "<div class='type_form_element'>" . $typeFormElement . "</div>"
           . "<div class='content_form_element'>" . $contentFormElement . "</div>"
           . "<div class='savebutton_form_element'>" . $saveFormElement . "</div>");
         return $objForm->show();

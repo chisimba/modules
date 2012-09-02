@@ -32,12 +32,12 @@ jQuery(function() {
     jQuery("#input_post_title").live("blur", function(){
         jQuery("#input_post_title").css("border","none");
     });
-    jQuery(".simpleblog_editicon").live("click", function(){
+    /*jQuery(".simpleblog_editicon").live("click", function(){
         id = jQuery(this).attr("id");
         elocation = '#wrapper_'+id;
         jQuery(elocation).load('index.php?module=simpleblog&action=geteditorajax&mode=edit&postid='+id);
         //alert(elocation);
-    });
+    });*/
     jQuery(".simpleblog_delicon").live("click", function(){
         id = jQuery(this).attr("id");
         var target='index.php?module=simpleblog';

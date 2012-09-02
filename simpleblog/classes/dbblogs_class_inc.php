@@ -176,6 +176,5 @@ class dbblogs extends dbtable
         return $this->getRow('blogid', $blogId);
     }
 
-    
 }
 ?>
