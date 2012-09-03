@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * A link for adding posts
+ * Simple blog site blog block
  *
- * Create a link for adding posts as a block so it can be added to the default
- * interface as a block.
+ * Simple blog site blog block which can be used by other modules to render
+ * a site blog, for example by the SLATE module.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
  *
  * @version    0.001
  * @package    simpleblog
- * @author     Derek Keats <derek@dkeats.com>
+ * @author     Administrative User admin@localhost.local
  * @copyright  2011 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
@@ -41,34 +41,26 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
-  * A link for adding posts
+ * Simple blog site blog block
  *
- * Create a link for adding posts as a block so it can be added to the default
- * interface as a block.
+ * Simple blog site blog block which can be used by other modules to render
+ * a site blog, for example by the SLATE module.
  *
  * @category  Chisimba
- * @author    Derek Keats <derek@dkeats.com>
+ * @author    Administrative User admin@localhost.local
  * @version   0.001
  * @copyright 2011 AVOIR
  *
  */
-class block_addpost extends object
+class block_siteblog extends object
 {
     /**
+     * The title of the block
      *
-     * @var string The title of the block
+     * @var    object
      * @access public
-     * 
      */
     public $title;
-
-    /**
-     *
-     * @var string Object $objUser String for the user object
-     * @access public
-     *
-     */
-    public $objUser;
     /**
      *
      * @var string Object $objLanguage String for the language object
@@ -88,22 +80,13 @@ class block_addpost extends object
     {
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
-        // Instantiate the user object.
-        $this->objUser = $this->getObject('user', 'security');
         $this->title = $this->objLanguage->languageText(
-                "mod_simpleblog_writepost", "simpleblog",
-                "Write a new post");
-        if(!$this->objUser->isLoggedIn()) {
-            $this->blockType="invisible";
-        }
-        
-        $this->objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
-        if (!$this->objSec->checkBloggingRights()) {
-            $this->blockType="invisible";
-        }
+                "mod_simpleblog_siteposts", "simpleblog",
+                "Site posts");
     }
-    
+
     /**
+     * 
      * Standard block show method.
      *
      * @return string $this->display block rendered
@@ -112,14 +95,9 @@ class block_addpost extends object
      */
     public function show() 
     {
-        $paramArray=array(
-            'action'=>'edit',
-            'mode'=>'add');
-        $url=$this->uri($paramArray, 'simpleblog');
-        $linkTxt = $this->objLanguage->languageText(
-            "mod_simpleblog_writepostlink", "simpleblog",
-            "Write a new blog post");
-        return "<a href='" . $url . "'>" . $linkTxt . "</a>";
+        $blogId = 'site';
+        $objUser = $this->getObject('user', 'security');
+        return $objPostOps->showCurrentPosts($blogId);
     }
 }
 ?>

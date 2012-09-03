@@ -88,9 +88,19 @@ class block_aboutblog extends object
         $this->objLanguage = $this->getObject('language', 'language');
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
-        $this->title = $this->objLanguage->languageText(
+        $objGuesser = $this->getObject('guesser', 'simpleblog');
+        $this->blogId = $objGuesser->guessBlogId();
+        $objDb = $this->getObject('dbblogs', 'simpleblog');
+        $ar = $objDb->getBlogInfo($this->blogId);
+        $title=$ar['blog_name'];
+        if (!$title == "") {
+            $this->title=$title;
+        } else {
+            $this->title = $this->objLanguage->languageText(
                 "mod_simpleblog_aboutblog", "simpleblog",
                 "About this blog");
+        }
+        $this->description = $ar['blog_description'];
     }
     /**
      * Standard block show method.
@@ -99,14 +109,30 @@ class block_aboutblog extends object
      */
     public function show() 
     {
-        $objGuesser = $this->getObject('guesser', 'simpleblog');
-        $blogId = $objGuesser->guessBlogId();
-        //die($blogId);
-        $objDb = $this->getObject('dbblogs', 'simpleblog');
-        $ar = $objDb->getBlogInfo($blogId);
-        $this->title=$ar['blog_name'];
-        return $ar['blog_description'];
+
         
+        if ($this->description == "") {
+            switch ($this->blogId) {
+                case 'site':
+                    return $this->siteBlogAbout();
+                    break;
+                default:
+                    
+                    break;
+            }
+
+            
+        } else {
+            return $this->description;
+        }
+    }
+    
+    public function siteBlogAbout()
+    {
+        
+        return $this->objLanguage->languageText(
+                "mod_simpleblog_siteblog", "simpleblog",
+                "You are viewing the site blog");
     }
 }
 ?>

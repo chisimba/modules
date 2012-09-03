@@ -120,6 +120,7 @@ class editdescription extends object
         $userId = $this->objUser->userId();
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
+        
         if ($hasRights) {
             // Load the form elements
             $this->loadEditElements();

@@ -61,6 +61,13 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class simpleblogsecurity extends object
 {
+    /**
+     *
+     * @var string Object $objUser String for the user object
+     * @access public
+     *
+     */
+    public $objUser;
 
     /**
     *
@@ -71,6 +78,8 @@ class simpleblogsecurity extends object
     */
     public function init()
     {
+        // Instantiate the user object.
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -83,19 +92,49 @@ class simpleblogsecurity extends object
      * @return boolean TRUE if the user has the rights, false if not
      * 
      */
-    public function checkRights($blogId, $userId, $chRights=FALSE)
+    public function checkRights($bloggerId, $userId, $blogType)
     {
-        // Check if they are the owner
-        $objDb = $this->getObject('dbblogs', 'simpleblog');
-        $bloggerId = $objDb->getOwnerId($blogId);
         if ($userId == $bloggerId) {
             return TRUE;
-        } elseif ($chRights) {
-            // Not implemented yet
-            return FALSE;
+        } elseif ($blogType == 'site') {
+            // If they are admin they can edit site posts by others
+            if ($this->objUser->isAdmin()) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } elseif ($blogType == 'context') {
+            // Edit context posts if they are in a context & are admin of it.
+            return FALSE; // LEAVE IT FALSE NOW until I can come up with a better way
         } else {
             return FALSE;
         }
+    }
+    
+    /**
+     *
+     * Check if a user should be able to create a blog based on
+     * is admin or membership of the SimpleBlogger group
+     * 
+     * @return boolean If they have rights or not 
+     * @access public
+     */
+    public function checkBloggingRights()
+    {
+        $ret=FALSE;
+        $objUser = $this->getObject('user', 'security');
+        $userId = $objUser->userId();
+        // Admins can make blogs
+        $objGa = $this->getObject('gamodel','groupadmin');
+        $groupId = $objGa->getId("SimpleBloggers");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $edGroup = $objGroupOps->isGroupMember($groupId, $userId);     
+        if ($objUser->isLoggedIn()) {
+            if ($objUser->isAdmin() || $edGroup ) {
+                $ret = TRUE;
+            }
+        }
+        return $ret;
     }
 }
 ?>

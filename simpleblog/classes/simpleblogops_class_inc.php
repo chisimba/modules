@@ -248,7 +248,10 @@ class simpleblogops extends object
     {
         $before = "<div class='simpleblog_post_before'></div>\n";
         $id = $post['id'];
-        if ($this->checkEditAddDelRights()) {
+        $blogId = $post['blogid'];
+        $bloggerId = $post['userid'];
+        $blogType = $post['post_type'];
+        if ($this->checkEditAddDelRights($bloggerId, $blogType)) {
             $edit = $this->builtEditLink($id);
             $del = $this->buildDeleteLink($id);
             $edel = "<div class='simpleblog_edel'>" . $edit . $del . "</div>";
@@ -292,26 +295,19 @@ class simpleblogops extends object
           . "</div>\n\n";
     }
 
-    private function checkEditAddDelRights()
+    private function checkEditAddDelRights($bloggerId, $blogType)
     {
         // If they are not logged in they cannot have rights.
         if ($this->objUser->isLoggedIn()) {
-            if ($this->hasEditAddDelRights) {
-                return TRUE;
+            $this->objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
+            if (!$this->objSec->checkBloggingRights()) {
+                // If they don't have any blogging rights, then no edit/del.
+                return FALSE;
             } else {
-                $objBestGuess = $this->getObject('bestguess', 'utilities');
-                $blogger = $objBestGuess->guessUserId();
-
-                $myId = $this->objUser->userId();
-//                die($blogger . " = " . $myId);
-                // If they are the blogger
-                if ($blogger == $myId) {
-                    $this->hasEditAddDelRights = TRUE;
-                    return TRUE;
-                } else {
-                    // Check if they are in the group for editing current blog
-                    return FALSE;
-                }
+                // Check if they have rights to THIS post.
+                $userId = $this->objUser->userId();
+                $res = $this->objSec->checkRights($bloggerId, $userId, $blogType);
+                return $res;
             }
         } else {
             return FALSE;
@@ -331,15 +327,15 @@ class simpleblogops extends object
     public function noBlogYet($isCurrentBlogger=FALSE)
     {
         if ($isCurrentBlogger) {
-            $ret = $this->objLanguage->languageText(
+            $ret = '<div class="warning">'
+              . $this->objLanguage->languageText(
                 "mod_simplelblog_yourfirstblog",
                 "simpleblog",
-                "You have no blog posts. You can create one now."
-             );
-            // THe edit form
+                "You have no blog posts. You can create one now. Please take the time to enter a discription of your blog before you make your first post."
+             ) . '</div>';
+            // The edit form.
             $objDesc = $this->getObject('editdescription', 'simpleblog');
             $ret .= $objDesc->getForm(TRUE);
-            //$ret .= "PUT EDITOR HERE";
             return $ret;
         } else {
             return $this->objLanguage->languageText(

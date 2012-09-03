@@ -1,7 +1,7 @@
 <?php
 
 //Table Name
-$tablename = 'tbl_simpleblog_pageblocks';
+$tablename = 'tbl_simpleblog_moduleblocks';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'This table holds data pertaining to the blocks displayed on the simpleblog module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -16,10 +16,6 @@ $fields = array(
         'type' => 'text',
         'length' => 25,
         'notnull' => TRUE,
-        ),
-    'pageid' => array(
-        'type' => 'text',
-        'length' => 32
         ),
     'block' => array(
         'type' => 'text',
@@ -38,7 +34,7 @@ $fields = array(
     'module' => array(
         'type' => 'text',
         'length' => 50
-        ),
+        ), 
     'datelastupdated' => array(
         'type' => 'timestamp'
         ),
@@ -48,11 +44,11 @@ $name = 'tbl_simpleblog_pageblocks_idx';
 
 $indexes = array(
     'fields' => array(
-        'pageid' => array(),
+        'userid' => array(),
         'block' => array(),
         'side' => array(),
         'position' => array(),
         'module' => array(),
-     )
+    )
 );
 ?>

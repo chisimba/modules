@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * A middle block for Simple blog.
+ * Simple blog site blog block
  *
- * A middle block for Simple blog. A simplified version of the blog module that makes use of the blog module but creates a simplified, dynamic canvas interface allowing users to turn on side blocks using page level blocks..
+ * Simple blog site blog block which can be used by other modules to render
+ * a site blog, for example by the SLATE module.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A middle block for Simple blog.
+ * Simple blog site blog block
  *
- * A middle block for Simple blog. A simplified version of the blog module that makes use of the blog module but creates a simplified, dynamic canvas interface allowing users to turn on side blocks using page level blocks..
+ * Simple blog site blog block which can be used by other modules to render
+ * a site blog, for example by the SLATE module.
  *
  * @category  Chisimba
  * @author    Administrative User admin@localhost.local
@@ -59,6 +61,13 @@ class block_simpleblogmiddle extends object
      * @access public
      */
     public $title;
+    /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
 
     /**
      * Standard init function
@@ -69,28 +78,32 @@ class block_simpleblogmiddle extends object
      */
     public function init() 
     {
-        $this->title = "Simpleblog posts";
+        // Get an instance of the languate object
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText(
+                "mod_simpleblog_posts", "simpleblog",
+                "Simpleblog posts");
     }
 
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
+     * @access public
+     * 
      */
     public function show() 
     {
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
+        
+        
         $objUser = $this->getObject('user', 'security');
         $userId = $objUser->userId();
         $loggedIn = FALSE;
         if ($objUser->isLoggedIn()) {
            $loggedIn=TRUE;
-            if ($userId == $blogId) {
-                die("YOU IS THE BLOGGER YOU IS");
-            }
         }
-
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         if ($blogId) {
             return $objPostOps->showCurrentPosts($blogId);

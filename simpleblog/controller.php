@@ -86,7 +86,7 @@ class simpleblog extends controller
     public function init()
     {
         // Load the module block ajax helper.
-        $this->objAjax = $this->getObject('pageblockajax', 'canvas');
+        $this->objAjax = $this->getObject('moduleblockajax', 'canvas');
         // Get the activity logger class.
         $this->objLog=$this->newObject('logactivity', 'logger');
         // Log this module call.
@@ -200,7 +200,13 @@ class simpleblog extends controller
 
     public function __savedescription()
     {
-        die("SAVENOTREADY");
+        $objDb = $this->getObject('dbdescriptions', 'simpleblog');
+        $objDb->saveBlog();
+        return $this->nextAction('edit', 
+          array('mode' => 'add', 
+                'blogid'=>$this->objUser->userId()
+          )
+        );
     }
 
     /**

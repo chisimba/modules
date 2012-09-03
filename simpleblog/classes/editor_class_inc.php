@@ -114,32 +114,20 @@ class editor extends object
         $this->loadClass ('hiddeninput', 'htmlelements');
     }
 
-    public function editForm($id=FALSE)
+    /**
+     *
+     * Get the edit form for adding and editing posts after first checking
+     * that the user has rights
+     * 
+     * @param string $id The id of the post to edit
+     * @return string The edit form
+     * @access public
+     *  
+     */
+    public function editForm()
     {
         $objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
         $userId = $this->objUser->userId();
-        $objGuesser = $this->getObject('guesser', 'simpleblog');
-        $blogId = $objGuesser->guessBlogId();
-        if ($objSec->checkRights($blogId, $userId)) {
-            // Load the form elements
-            $this->loadEditElements();
-            return $this->buildEditForm();
-        } else {
-            return '<div class="error">' 
-              . $this->objLanguage->languageText("mod_simpleblog_norights",
-                "simpleblog",
-                "You do not have rights to edit or create posts in this blog.")
-              . '</div>';
-        }
-        
-    }
-
-    public function buildEditForm()
-    {
-        // Set up empty values so we can use same form for add and edit
-        $title = '';
-        $content = '';
-        $status = '';
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'edit') {
             $id = $this->getParam('postid', FALSE);
@@ -149,11 +137,65 @@ class editor extends object
                 $content = trim($ar['post_content']);
                 $status = $ar['post_status'];
                 $blogId = $ar['blogid'];
+                $bloggerId = $post['userid'];
+                $postType = $ar['post_type'];
+                if ($objSec->checkRights($bloggerId, $userId, $blogType)) {
+                    return $this->buildEditForm($id, $ar);
+                } else {
+                    return $this->noRights();
+                }
+            }
+        } elseif ($mode == 'add') {
+            if ($objSec->checkBloggingRights()) {
+                return $this->buildEditForm(FALSE, FALSE);
+            } else {
+                return $this->noRights();
+            }
+        } else {
+            return $this->noRights();
+        }
+    }
+    
+    private function noRights()
+    {
+        return '<div class="error">' 
+            . $this->objLanguage->languageText("mod_simpleblog_norights",
+            "simpleblog",
+            "You do not have rights to edit or create posts in this blog.")
+            . '</div>';
+    } 
+    
+    /**
+     *
+     * Build the edit form for adding and editing posts  
+     * 
+     * @return string The edit form
+     * @access private
+     *  
+     */
+    private function buildEditForm($id, $ar)
+    {
+        // Set up empty values so we can use same form for add and edit
+        $title = '';
+        $content = '';
+        $status = '';
+        $postType = 'personal';
+        $mode = $this->getParam('mode', 'add');
+        if ($mode == 'edit') {
+            if ($id) {
+                $title = trim($ar['post_title']);
+                $content = trim($ar['post_content']);
+                $status = $ar['post_status'];
+                $blogId = $ar['blogid'];
+                $postType = $ar['post_type'];
             }
         } else {
             $objGuesser = $this->getObject('guesser', 'simpleblog');
             $blogId =  $objGuesser->guessBlogId();
         }
+        
+        // Load the form elements.
+        $this->loadEditElements();
 
         //Set up the form action URL
         $paramArray=array(
@@ -204,6 +246,7 @@ class editor extends object
               $this->objLanguage->languageText("mod_simpleblog_context",
               "simpleblog", "[-CONTEXT-] blog"));
         }
+        $objRadioElement->setSelected($postType);
         $typeFormElement = $typeLabel . ": " . $objRadioElement->show();
         
         

@@ -16,17 +16,7 @@
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
             hendrerit sem sodales dui tempus mollis. Quisque orci dolor,
             adipiscing non laoreet ut, venenatis id nunc. Aliquam sagittis
-            urna et felis scelerisque quis pulvinar lectus vestibulum. Nam vel
-            est quis mi blandit dapibus. Duis in lorem neque. Fusce vel suscipit
-            turpis. Pellentesque at ipsum urna. Aliquam at dolor vel arcu gravida
-            fringilla vitae ultrices nisl. Nulla hendrerit rutrum vehicula.
-            Phasellus vehicula velit vitae massa dignissim mollis. Etiam vitae
-            tortor augue, vel cursus sem. Suspendisse suscipit pellentesque
-            fringilla. Nulla libero est, dictum vel ornare vel, aliquet vitae
-            libero. Vestibulum ligula lectus, pellentesque volutpat vestibulum
-            eu, bibendum eget nulla. Vivamus convallis nulla in lectus elementum
-            interdum. Phasellus purus est, facilisis tincidunt tincidunt vitae,
-            tincidunt eu lectus.
+            urna et felis scelerisque quis pulvinar lectus vestibulum. 
         </blog_description>
     </tbl_simpleblog_blogs>
     <tbl_simpleblog_blogs>
@@ -85,7 +75,7 @@
         <datecreated>2011-01-16 09:16:25</datecreated>
         <modifierid></modifierid>
         <datemodified></datemodified>
-        <editgroup>siteblog</editgroup>
+        <editgroup>SimpleBlog</editgroup>
     </tbl_simpleblog_rightsgroups>
     
 

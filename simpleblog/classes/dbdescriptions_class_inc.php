@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * Database access for Simple blog
+ * Database access for Simple blog descriptions
  *
- * Database access for Simple blog. This is a sample database model class
- * that you will need to edit in order for it to work.
+ * Database access for Simple blog descriptions. This is the class that
+ * manages data for the blog descriptions for users, contexts and site.
  *
  * PHP version 5
  *
@@ -49,17 +49,17 @@ $GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
+* 
+* Database access for Simple blog descriptions
 *
-* Database access for Simple blog
-*
-* Database access for Simple blog. This is a sample database model class
-* that you will need to edit in order for it to work.
+* Database access for Simple blog descriptions. This is the class that
+* manages data for the blog descriptions for users, contexts and site.
 *
 * @package   simpleblog
 * @author     Derek Keats <derek.keats@wits.ac.za>
 *
 */
-class dbsimpleblog extends dbtable
+class dbdescriptions extends dbtable
 {
 
     /**
@@ -74,45 +74,7 @@ class dbsimpleblog extends dbtable
         // Instantiate the user object
         $this->objUser = $this->getObject('user', 'security');
         //Set the parent table to our demo table
-        parent::init('tbl_simpleblog_posts');
-    }
-
-    /**
-     *
-     * Get more older posts for appending to the bottom of existing posts
-     * by Ajax
-     *
-     * @param integer $wallType The wall type (1,2,3)
-     * @param integer $page The starting page
-     * @param string $keyName The name of the key (contextcode usually)
-     * @param string $keyValue The value of the key (usually contextcode)
-     * @param integer $num The number of records to return (pagesize)
-     * @return string array An array of posts if any
-     * @access public
-     *
-     */
-    public function getPosts($blogId, $page, $pageSize=10)
-    {
-        // Subtract 1 from page since the first page is 0
-        $page=$page-1;
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
-            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
-            ORDER BY datecreated DESC ';
-
-        $startPoint = $page * $pageSize;
-        $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
-        return $posts;
+        parent::init('tbl_simpleblog_blogs');
     }
 
     /**
@@ -123,9 +85,9 @@ class dbsimpleblog extends dbtable
      * @return string An indication of the reuslts ('true' or 'norights')
      *
      */
-    public function deletePost($id)
+    public function deleteBlog($id)
     {
-        $chSql = "SELECT id, userid FROM tblsimpleblog_posts WHERE id='$id'";
+        $chSql = "SELECT id, userid FROM tblsimpleblog_blogs WHERE id='$id'";
         $ar = $this->getArray($chSql);
         $me = $this->objUser->userId();
         $bloggerid = $ar[0]['userid'];
@@ -153,33 +115,24 @@ class dbsimpleblog extends dbtable
     }
 
 
-    public function savePost()
+    public function saveBlog()
     {
         $mode = $this->getParam('mode', 'add');
         //The current user
         $userId = $this->objUser->userId();
-        $title = trim($this->getParam('post_title', NULL));
-        $content = trim($this->getParam('post_content', NULL));
+        $title = trim($this->getParam('blog_name', NULL));
+        $description = trim($this->getParam('blog_description', NULL));
         $status = $this->getParam('post_status', NULL);
         $blogId = $this->getParam('blogid', NULL);
-        $blogType = $this->getParam('post_type', NULL);
-        if ($blogType == 'site') {
-            $blogId = 'site';
-        }
-        if ($blogType == 'context') {
-            $objContext = $this->getObject('dbcontext', 'context');
-            if($objContext->isInContext()){
-                $blogId = $objContext->getcontextcode();
-            }
+        if ($blogId == "") {
+            $blogId = $userId;
         }
         $id = TRIM($this->getParam('id', NULL));
         // if edit use update
         if ($mode=="edit") {
             $rsArray=array(
-                'post_title'=>$title,
-                'post_content'=>$content,
-                'post_status'=>$status,
-                'post_type' => $blogType,
+                'blog_name'=>$title,
+                'blog_description'=>$description,
                 'modifierid'=>$userId,
                 'blogid'=>$blogId,
                 'datemodified'=>date('Y-m-d H:m:s')
@@ -187,17 +140,13 @@ class dbsimpleblog extends dbtable
             $this->update("id", $id, $rsArray);
         } elseif ($mode=="add" || $mode="translate") {
             $this->insert(array(
-                'post_title'=>$title,
-                'post_content'=>$content,
-                'post_status'=>$status,
-                'post_type' => $blogType,
+                'blog_name'=>$title,
+                'blog_description'=>$description,
                 'userid'=>$userId,
                 'blogid'=>$blogId,
                 'datecreated'=>date('Y-m-d H:m:s')
             ));
         }
-
     }
-    
 }
 ?>

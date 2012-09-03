@@ -6,5 +6,5 @@
 *
 */
 $objBuildCanvas = $this->getObject('buildcanvas', 'canvas');
-echo $objBuildCanvas->show('page');
+echo $objBuildCanvas->show('module');
 ?>

@@ -69,7 +69,7 @@ class block_simpleblogright extends object
      */
     public function init() 
     {
-        $this->title = "Left block sample";
+        $this->title = "Right block sample";
     }
     /**
      * Standard block show method.

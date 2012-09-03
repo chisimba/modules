@@ -43,6 +43,10 @@ $fields = array(
             'type' => 'text',
             'length' => 50,
             ),
+    'post_type' => array(
+            'type' => 'text',
+            'length' => 50,
+            ),
     );
 
 
