@@ -143,7 +143,7 @@ class simpleblogops extends object
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('simpleblog.js', 'simpleblog'));
         // Load the OEMBED parser
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('oembed.js', 'simpleblog'));
+        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('oembed.js', 'simpleblog'));
         // Load the WALL Javascript which we need
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('wall.js', 'wall'));
     }
@@ -258,8 +258,9 @@ class simpleblogops extends object
         } else {
             $edel=NULL;
         }
+        $postTitle = $post['post_title'];
         $title = "<div class='simpleblog_post_title'>"
-          . $post['post_title'] . $edel . "</div>\n";
+          . $postTitle . $edel . "</div>\n";
         $content = "<div class='simpleblog_post_content'>"
           . $post['post_content'] . "</div>\n";
         $poster = $post['firstname'] . " " . $poster = $post['surname'];
@@ -288,7 +289,7 @@ class simpleblogops extends object
 
         $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"
         . "<a class='wall_link' id='wall_link_{$id }' href='javascript:void(0);'>"
-        . $wallText . $numPosts . "</div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
+        . $wallText . $numPosts . "</a></div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
 
         return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
           . $before . $title . $content . $foot . $wall
