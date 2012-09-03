@@ -4,7 +4,7 @@
   <!-- MODULE: simpleblog, Table tbl_simpleblog_info create data used by this module -->
     <tbl_simpleblog_blogs>
         <id>init_1</id>
-        <blogid>init_1</blogid>
+        <blogid>1</blogid>
         <userid>1</userid>
         <datecreated>2011-01-10 22:16:25</datecreated>
         <modifierid>1</modifierid>
@@ -12,79 +12,29 @@
         <blogtype>personal</blogtype>
         <blog_name>The Administrative User Blog</blog_name>
         <blog_description>
-            The weblog of Administrative User.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            hendrerit sem sodales dui tempus mollis. Quisque orci dolor,
-            adipiscing non laoreet ut, venenatis id nunc. Aliquam sagittis
-            urna et felis scelerisque quis pulvinar lectus vestibulum. 
+            The weblog of Administrative User. This is the
+            default blog for the default administrative user.
         </blog_description>
     </tbl_simpleblog_blogs>
     <tbl_simpleblog_blogs>
         <id>init_2</id>
-        <blogid>init_2</blogid>
-        <userid>2</userid>
+        <blogid>site</blogid>
+        <userid>1</userid>
         <datecreated>2011-01-14 11:16:25</datecreated>
-        <modifierid>2</modifierid>
+        <modifierid>1</modifierid>
         <datemodified>2011-01-16 22:16:25</datemodified>
         <blogtype>personal</blogtype>
         <blog_name>The Squishy Banana Blog</blog_name>
         <blog_description>
-            The weblog of Squishy Banana.
-            In ut ligula ut ipsum consectetur sagittis at vitae metus. Quisque
-            tortor arcu, volutpat sit amet lobortis et, egestas quis magna. Nam
-            mattis enim eget eros vehicula sed pulvinar sapien eleifend. Morbi
-            at elit lacus, bibendum porta tortor. Suspendisse in felis nec magna
-            tristique sagittis. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Nullam purus orci, rutrum lobortis varius et,
-            luctus in sem. Vestibulum dictum, nulla a auctor fringilla, massa
-            nisl rutrum quam, eget placerat nisl purus ut orci. Proin non est
-            velit. Etiam sodales lobortis gravida. Mauris at velit quis libero
-            ullamcorper ornare eget eleifend risus. Nulla facilisi. Nam
-            condimentum, erat a fermentum ultricies, libero eros pharetra nulla,
-            non rhoncus sem sem vel lacus
+            The site blog for chisimba.com is used to display posts
+            from users who wish to contribute to the site content. Anyone
+            with blogging rights can post to the site blog.
         </blog_description>
     </tbl_simpleblog_blogs>
-    <tbl_simpleblog_blogs>
-        <id>init_3</id>
-        <blogid>init_3</blogid>
-        <userid>1</userid>
-        <datecreated>2011-01-16 09:16:25</datecreated>
-        <modifierid></modifierid>
-        <datemodified></datemodified>
-        <blogtype>site</blogtype>
-        <blog_name>The site blog of the Demo Site</blog_name>
-        <blog_description>
-            Our demo site blog
-            Duis sit amet lacus augue. Donec rhoncus iaculis molestie. Fusce id
-            neque massa, sed vestibulum arcu. Vestibulum dictum euismod nisi,
-            sed imperdiet enim malesuada a. Nulla ultrices, massa ac iaculis
-            interdum, augue metus feugiat est, vel placerat augue tortor a orci.
-            Aliquam vel erat lectus, vitae iaculis velit. Phasellus auctor
-            egestas enim, eget scelerisque risus iaculis eu. Vivamus hendrerit
-            ipsum vitae felis egestas sit amet imperdiet dui mattis. Sed sodales
-            erat a orci sagittis ullamcorper. 
-        </blog_description>
-    </tbl_simpleblog_blogs>
-
-
-    <!-- MODULE: simpleblog, Table tbl_simpleblog_rightsgroups who has edit rights on a blog -->
-    <tbl_simpleblog_rightsgroups>
-        <id>init_1</id>
-        <blogid>init_1</blogid>
-        <userid>1</userid>
-        <datecreated>2011-01-16 09:16:25</datecreated>
-        <modifierid></modifierid>
-        <datemodified></datemodified>
-        <editgroup>SimpleBlog</editgroup>
-    </tbl_simpleblog_rightsgroups>
-    
-
-
-
 
     <!-- MODULE: simpleblog, Table tbl_simpleblog_posts create some sample blogposts -->
     <tbl_simpleblog_posts>
-        <id>init_1</id>
+        <id>1</id>
         <blogid>init_1</blogid>
         <userid>1</userid>
         <datecreated>2011-01-16 09:16:25</datecreated>
@@ -117,7 +67,7 @@
     </tbl_simpleblog_posts>
     <tbl_simpleblog_posts>
         <id>init_2</id>
-        <blogid>init_1</blogid>
+        <blogid>site</blogid>
         <userid>1</userid>
         <datecreated>2011-01-17 19:06:00</datecreated>
         <modifierid></modifierid>
@@ -127,7 +77,8 @@
         </post_title>
         <post_content>
             &lt;p&gt;
-            Phasellus ut metus orci. Aliquam erat volutpat. Quisque in est
+            You should probably replace this! Phasellus ut metus orci. 
+            Aliquam erat volutpat. Quisque in est
             quis metus faucibus accumsan. Nam in lorem id nibh consequat
             volutpat nec eu neque. Etiam rutrum varius tellus, at consequat
             dui fermentum et. Fusce condimentum, lorem sed blandit posuere,
@@ -154,7 +105,7 @@
     </tbl_simpleblog_posts>
     <tbl_simpleblog_posts>
         <id>init_3</id>
-        <blogid>init_1</blogid>
+        <blogid>1</blogid>
         <userid>1</userid>
         <datecreated>2011-01-13 19:06:00</datecreated>
         <modifierid></modifierid>
@@ -186,7 +137,7 @@
     
     <tbl_simpleblog_posts>
         <id>init_4</id>
-        <blogid>init_1</blogid>
+        <blogid>1</blogid>
         <userid>1</userid>
         <datecreated>2010-12-13 19:06:00</datecreated>
         <modifierid></modifierid>
@@ -231,7 +182,7 @@
     </tbl_simpleblog_posts>
     <tbl_simpleblog_posts>
         <id>init_5</id>
-        <blogid>init_1</blogid>
+        <blogid>1</blogid>
         <userid>1</userid>
         <datecreated>2010-12-02 07:06:00</datecreated>
         <modifierid></modifierid>
