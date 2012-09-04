@@ -10,16 +10,33 @@ MODULE_ISVISIBLE: 1
 MODULE_HASADMINPAGE: 0
 MODULE_LANGTERMS: _MODULECODE
 MODULE_CATEGORY: _MODULECODE
+MODULE_STATUS: Alpha
 
+/* Please delete the things that are not needed in this file */
 
+COMMENT: Database tables to create
 TABLE: tbl__MODULECODE_text
 
+COMMENT: How to make it appear on the menu
 MENU_CATEGORY: Developer
+COMMENT: Note that you can also put it on an admin page (for example) using
+COMMENT:     PAGE: admin_site
+COMMENT:     PAGE: admin_site|manage|manage_MODULECODE|mod__MODULECODE_manage
+COMMENT:     Note that mod__MODULECODE_manage must be present as a text element.
+
+COMMENT: Blocks registered. Blocks that are not for dynamic assignment should NOT be registered.
 WIDEBLOCK: _MODULECODEmiddle
 BLOCK: _MODULECODEleft
 BLOCK: _MODULECODEright
 
-UPDATE_DESCRIPTION: Initial code created by Module builder
+UPDATE_DESCRIPTION: [_AUTHORNAME] Initial code created by Module builder
+
+COMMENT: Example of how to set the config parameters and their defaults. 
+COMMENT:    Note that you can use this for text or numbers. Make sure that 
+COMMENT:    you give SUITABLE explanatory text, not just something to 
+COMMENT:    fill up space
+CONFIG: _MODULECODE_demonumber|5|_MODULECODE_demonumberdisplay
+TEXT: _MODULECODE_demonumberdisplay|Explanation for _MODULECODE_demonumberdisplay|Number of rabbits this module will pull out of a hat.
 
 COMMENT: Never use the word SUBMIT for buttons. It is so 1990s!
 COMMENT: Generally avoid RESET buttons
@@ -34,3 +51,6 @@ USES: word_delete|The word delete|Delete
 COMMENT: -------- PUT ONLY MODULE SPECIFIC STRINGS HERE --------------
 TEXT: mod__MODULECODE_title|The title for the _MODULECODE module|_SHORTDESCRIPTION
 TEXT: mod__MODULECODE_description|The description of the _MODULECODE module|_LONGDESCRIPTION
+
+TEXT: mod__MODULECODE_about_title|About _SHORTDESCRIPTION||About _SHORTDESCRIPTION
+TEXT: mod__MODULECODE_about|_LONGDESCRIPTION|_LONGDESCRIPTION

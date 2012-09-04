@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * Database access for _SHORTDESCRIPTION
+ * User Interface elements for _MODULECODE
  *
- * Database access for _SHORTDESCRIPTION. This is a database model class
- * that provides data access to the default module table - tbl__MODULECODE_text.
+ * User Interface elements for _MODULECODE. This class contains code for
+ * rendering elements that make up the user interface for this module.
  *
  * PHP version 5
  *
@@ -50,44 +50,43 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
- * Database access for _SHORTDESCRIPTION
+ * User Interface elements for _MODULECODE
  *
- * Database access for _SHORTDESCRIPTION. This is a database model class
- * that provides data access to the default module table - tbl__MODULECODE_text.
+ * User Interface elements for _MODULECODE. This class contains code for
+ * rendering elements that make up the user interface for this module.
 *
 * @package   _MODULECODE
 * @author    _AUTHORNAME _EMAIL
 *
 */
-class db_MODULECODE extends dbtable
+class _MODULECODEui extends object
 {
 
     /**
     *
-    * Intialiser for the _MODULECODE database connector
+    * Intialiser for the _MODULECODE UI builder
     * @access public
     * @return VOID
     *
     */
     public function init()
     {
-        //Set the parent table to our demo table
-        parent::init('tbl__MODULECODE_text');
+
     }
 
     /**
      *
-     * Get the text of the init_overview that we have in the sample database.
+     * Get a particular UI element and return it for rendering. The element
+     * requested must be a method of this class.
      *
-     * @return string The text of the init_overview
+     * @param string The name of the element
+     * @return string The element contents for rendering
      * @access public
      *
      */
-    public function getOverview()
+    public function geUiElement($elementName)
     {
-        return $this->getAll(' WHERE id=\'init_overview\' ');
-
+        return "WORKING HERE;
     }
-
 }
 ?>
