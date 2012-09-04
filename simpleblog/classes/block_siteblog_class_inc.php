@@ -96,7 +96,7 @@ class block_siteblog extends object
     public function show() 
     {
         $blogId = 'site';
-        $objUser = $this->getObject('user', 'security');
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         return $objPostOps->showCurrentPosts($blogId);
     }
 }
