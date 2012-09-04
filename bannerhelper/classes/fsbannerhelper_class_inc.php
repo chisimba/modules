@@ -108,7 +108,7 @@ class fsbannerhelper extends object
         } else {
             $ed=NULL;
         }
-        return $strContent . " " . $ed;
+        return $strContent . "<br />" . $ed;
     }
     
     /**
