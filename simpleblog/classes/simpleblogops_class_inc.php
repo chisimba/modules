@@ -180,7 +180,6 @@ class simpleblogops extends object
      */
     public function buildDeleteLink($id)
     {
-        
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $delUri = 'javascript:void(0);';
         $delIcon = $this->objIcon->getDeleteIcon($delUri);
@@ -221,14 +220,32 @@ class simpleblogops extends object
      */
     public function showCurrentPosts($blogId)
     {
-        // Get an instance of the humanize date class.
-        $this->objDd = $this->getObject('translatedatedifference', 'utilities');
-        $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+        $page = $this->getParam('page', 1);
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
+        $posts = $this->objDbPosts->getPosts($blogId, $page, FALSE);
+        $recs = $this->objDbPosts->getRecordCount(" WHERE blogid='$blogId' ");
+        $totalPages = ceil($recs/$pageSize);
+        $nextLink = NULL;
+        $prevLink = NULL;
+        if ($page < $totalPages) {
+            // There is a next page
+            $nextPage = $page + 1;
+            $nUri = $this->uri(array('page' => $nextPage), 'simpleblog');
+            $nextLink = "<div class='simpleblog_next'><a href='$nUri'>Page $nextPage</div>";
+        }
+        if ($page > 1) {
+            // There is a previous page
+            $prevPage = $page - 1;
+            $nUri = $this->uri(array('page' => $prevPage), 'simpleblog');
+            $prevLink = "<div class='simpleblog_prev'><a href='$nUri'>Page $prevPage</div>";
+        }
         $ret ="";
         if (count($posts) > 0) {
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $ret .= $prevLink . " " . $nextLink;
         } else {
             $ret = "nodata";
         }
@@ -246,6 +263,8 @@ class simpleblogops extends object
      */
     public function formatItem($post)
     {
+        // Get an instance of the humanize date class.
+        $objDd = $this->getObject('translatedatedifference', 'utilities');
         $before = "<div class='simpleblog_post_before'></div>\n";
         $id = $post['id'];
         $blogId = $post['blogid'];
@@ -268,10 +287,10 @@ class simpleblogops extends object
                 "simpleblog", "Posted by")
                 . " " . $poster;
         // Convert the post date into human time.
-        $postDate = $this->objDd->getDifference($post['datecreated']);
+        $postDate = $objDd->getDifference($post['datecreated']);
         $editDate = $post['datemodified'];
         if ($editDate !==NULL) {
-            $editDate = $this->objDd->getDifference($editDate);
+            $editDate = $objDd->getDifference($editDate);
         }
         $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
 

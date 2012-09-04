@@ -91,8 +91,12 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getPosts($blogId, $page, $pageSize=10)
+    public function getPosts($blogId, $page, $pageSize=FALSE)
     {
+        if (!$pageSize) {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
+        }
         // Subtract 1 from page since the first page is 0
         $page=$page-1;
         // The base SQL, uses joins to avoid going back and forth to the db
@@ -175,7 +179,7 @@ class dbsimpleblog extends dbtable
                 'post_type' => $blogType,
                 'modifierid'=>$userId,
                 'blogid'=>$blogId,
-                'datemodified'=>date('Y-m-d H:m:s')
+                'datemodified'=>$this->now()
             );
             $this->update("id", $id, $rsArray);
         } elseif ($mode=="add" || $mode="translate") {
@@ -186,7 +190,7 @@ class dbsimpleblog extends dbtable
                 'post_type' => $blogType,
                 'userid'=>$userId,
                 'blogid'=>$blogId,
-                'datecreated'=>date('Y-m-d H:m:s')
+                'datecreated'=>$this->now()
             ));
         }
 

@@ -146,7 +146,7 @@ class editdescription extends object
         $status = '';
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'edit') {
-            $id = $this->getParam('postid', FALSE);
+            $id = $this->getParam('id', FALSE);
             if ($id) {
                 $ar = $this->objDbPosts->getForEdit($id);
                 $title = trim($ar['blog_name']);

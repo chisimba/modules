@@ -139,6 +139,14 @@ class simpleblog extends controller
         return "main_tpl.php";
     }
 
+    /**
+     *
+     * Edit a blog post
+     * 
+     * @return string The edit template populated
+     * @acecess public
+     *  
+     */
     public function __edit()
     {
         $objEditor = $this->getObject('editor', 'simpleblog');
@@ -147,29 +155,14 @@ class simpleblog extends controller
         return 'edit_tpl.php';
     }
 
-    public function __geteditorajax()
-    {
-        $objEditor = $this->getObject('editor', 'simpleblog');
-        $objSkin = $this->getObject('skinjavascript', 'skin');
-        $name="testing";
-        $objConfig = $this->getObject('altconfig', 'config');
-        $siteRoot = $objConfig->getsiteRoot();
-        $base = '<script language="JavaScript" src="' . $this->getResourceUri('ckeditor/ckeditor.js', 'ckeditor') . '" type="text/javascript"></script>';
-        $baseajax = '<script language="JavaScript" src="' . $this->getResourceUri('ckeditor/_source/core/ajax.js', 'ckeditor') . '" type="text/javascript"></script>';
-        echo $base;
-        echo $baseajax;
-        $initVars = '
-<script type="text/javascript">
-    var instancename=\'' . $name . '\';
-    var siteRootPath=\'' . $siteRoot . '\';
-
-</script>
-';
-        echo $initVars;
-        echo $objEditor->editForm();
-        die();
-    }
-
+    /**
+     *
+     * Save a blog post
+     * 
+     * @return string Next action
+     * @access public
+     * 
+     */
     public function __savepost()
     {
         $objDb = $this->getObject('dbsimpleblog', 'simpleblog');
@@ -177,6 +170,14 @@ class simpleblog extends controller
         return $this->nextAction();
     }
 
+    /**
+     *
+     * Delete a blog post by its ID from the link
+     * 
+     * @access public
+     * @return VOID
+     *  
+     */
     public function __delpost()
     {
         $postId=$this->getParam('postid', FALSE);
@@ -196,7 +197,8 @@ class simpleblog extends controller
             $blogType = $ar['post_type'];
             $objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
             $userId = $this->objUser->userId();
-            if ($objSec->checkRights($blogId, $userId, $blogType)) {
+            if ($objSec->checkRights($bloggerId, $userId, $blogType)) {
+                
                 // PUT SECURITY HERE
                 if ($objDbPosts->deletePost($postId)) {
                     echo "{postid}_deleted";
@@ -212,7 +214,22 @@ class simpleblog extends controller
         }
         die('unknownerror');
     }
+    
+    public function __editdescription()
+    {
+        $this->getObject('editdescription', 'simpleblog');
+        $str = $objDesc->getForm(TRUE);
+        $this->setVarByRef('str', $str);
+        return 'edit_tpl.php';
+    }
 
+    /**
+     *
+     * Sasve the blog description
+     * 
+     * @return string Nextaction 
+     * 
+     */
     public function __savedescription()
     {
         $objDb = $this->getObject('dbdescriptions', 'simpleblog');
