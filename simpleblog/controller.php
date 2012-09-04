@@ -181,21 +181,36 @@ class simpleblog extends controller
     {
         $postId=$this->getParam('postid', FALSE);
         if ($postId) {
+            // Eliminate non bloggers.
+            $this->objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
+            if (!$this->objSec->checkBloggingRights()) {
+                // If they don't have any blogging rights, then no edit/del.
+                die('norighttodelete');
+            }
+            // Get the blog posts db.
+            $objDbPosts = $this->getObject('dbsimpleblog', 'simpleblog');
+            
+            $ar = $objDbPosts->getForEdit($postId);
+            $blogId = $ar['blogid'];
+            $bloggerId = $ar['userid'];
+            $blogType = $ar['post_type'];
             $objSec = $this->getObject('simpleblogsecurity', 'simpleblog');
             $userId = $this->objUser->userId();
-            $objGuesser = $this->getObject('guesser', 'simpleblog');
-            $blogId = $objGuesser->guessBlogId();
-            if ($objSec->checkRights($blogId, $userId)) {
+            if ($objSec->checkRights($blogId, $userId, $blogType)) {
                 // PUT SECURITY HERE
-                echo "{postid}_deleted";
-                die();
+                if ($objDbPosts->deletePost($postId)) {
+                    echo "{postid}_deleted";
+                    die();
+                } else {
+                    die('unknownerror');
+                }
             } else {
                 echo 'norighttodelete';
             }
         } else {
             echo 'nopostid';
         }
-        die();
+        die('unknownerror');
     }
 
     public function __savedescription()

@@ -125,18 +125,11 @@ class dbsimpleblog extends dbtable
      */
     public function deletePost($id)
     {
-        $chSql = "SELECT id, userid FROM tblsimpleblog_posts WHERE id='$id'";
-        $ar = $this->getArray($chSql);
-        $me = $this->objUser->userId();
-        $bloggerid = $ar[0]['userid'];
-        if ($me == $bloggerid) {
-            // I can delete
-            $this->delete('id', $id);
-            return "true";
+        if ($this->delete('id', $id)) {
+            return TRUE;
         } else {
-            return 'norights';
+            return FALSE;
         }
-
     }
 
     /**
