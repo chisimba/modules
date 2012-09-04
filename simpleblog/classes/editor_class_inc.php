@@ -137,8 +137,8 @@ class editor extends object
                 $content = trim($ar['post_content']);
                 $status = $ar['post_status'];
                 $blogId = $ar['blogid'];
-                $bloggerId = $post['userid'];
-                $postType = $ar['post_type'];
+                $bloggerId = $ar['userid'];
+                $blogType = $ar['post_type'];
                 if ($objSec->checkRights($bloggerId, $userId, $blogType)) {
                     return $this->buildEditForm($id, $ar);
                 } else {
