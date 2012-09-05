@@ -228,24 +228,48 @@ class simpleblogops extends object
         $totalPages = ceil($recs/$pageSize);
         $nextLink = NULL;
         $prevLink = NULL;
+        $counter = 0;
+        $pageList = NULL;
+        $wordPage = $this->objLanguage->languageText("word_page", "system", "Page");
+        $wordStart = $this->objLanguage->languageText("word_start", "system", "Le start");
+        $wordEnd = $this->objLanguage->languageText("word_end", "system", "La fin");
+        while ($counter < $totalPages) {
+            $counter++;
+            $pgUri = $this->uri(array('page' => $counter), 'simpleblog');
+            if ($counter == $page) {
+                $pageList .= " [$counter] ";
+            } else {
+                $pageList .= " <a href='$pgUri'>$counter</a> ";
+            }
+            
+        }
+        $pageList = "<div class='simpleblog_allpages'>$pageList</div>";
         if ($page < $totalPages) {
             // There is a next page
             $nextPage = $page + 1;
             $nUri = $this->uri(array('page' => $nextPage), 'simpleblog');
-            $nextLink = "<div class='simpleblog_next'><a href='$nUri'>Page $nextPage</div>";
+            $nextLink = "<a href='$nUri'>$wordPage $nextPage</a>";
+        } else {
+            $nextLink = $wordEnd;
         }
         if ($page > 1) {
             // There is a previous page
             $prevPage = $page - 1;
             $nUri = $this->uri(array('page' => $prevPage), 'simpleblog');
-            $prevLink = "<div class='simpleblog_prev'><a href='$nUri'>Page $prevPage</div>";
+            $prevLink = "<a href='$nUri'>$wordPage $prevPage</a>";
+        } else {
+            $prevLink = $wordStart;
         }
         $ret ="";
         if (count($posts) > 0) {
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
-            $ret .= $prevLink . " " . $nextLink;
+            $ret .= "<table class='simpleblog_pagenav'><tr>"
+              . "<td class='simpleblog_prev'>"
+              . "$prevLink</td><td class='simpleblog_allpages'>"
+              . "$pageList</td><td class='simpleblog_next'>"
+              . "$nextLink</td></tr></table>";
         } else {
             $ret = "nodata";
         }
