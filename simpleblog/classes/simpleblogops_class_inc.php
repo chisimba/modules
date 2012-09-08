@@ -293,7 +293,7 @@ class simpleblogops extends object
                 $ret .= $this->formatItem($post);
             }
         } else {
-            $ret = "nodata";
+            $ret = NULL;
         }
         return $ret;
     }
@@ -310,6 +310,71 @@ class simpleblogops extends object
     public function showLastMonth($blogId) 
     {
         $posts = $this->objDbPosts->getLastMonth($blogId);
+        if (count($posts) > 0) {
+            $ret ="";
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
+    }
+    
+    /**
+     *
+     * Show archive list of posts
+     * 
+     * @param string $blogId The blog to show from
+     * @return string The formatted posts for viewing
+     * @access public
+     * 
+     */
+    public function showArchiveList($blogId) 
+    {
+        $ar = $this->objDbPosts->getArchivePosts($blogId);
+        $lastMonth = $this->objLanguage->languageText("mod_simpleblog_lastmo", "simpleblog", "Last month");
+        $thisMonth = $this->objLanguage->languageText("mod_simpleblog_thismo", "simpleblog", "This month");
+        $uri = $this->uri(array(
+          'by' => 'thismonth'
+        ), 'simpleblog');
+        $ret = "<a href='$uri' alt='$thisMonth'>$thisMonth</a><br />";
+        $uri = $this->uri(array(
+          'by' => 'lastmonth'
+        ), 'simpleblog');
+        $ret .= "<a href='$uri' alt='$lastMonth'>$lastMonth</a><br /><hr>";        
+        if (count($ar) > 0) {
+            $ret = $ret . "\n\n<ul>";
+            foreach ($ar as $item) {
+                $uri = $this->uri(array(
+                  'by' => 'archive',
+                  'year' => $item['year'],
+                  'month' => $item['month']
+                ), 'simpleblog');
+                $linkTxt = $item['month'] . ' ' . $item['year'];
+                $ret .= "<li><a href='$uri' alt='$linkTxt'>$linkTxt</a></li>";
+            }
+            $ret = $ret . "</ul>";
+        } else {
+            $ret = NULL;
+        }
+        return "<div class='simpleblog_archive'>" . $ret . "</div>";
+    }
+    
+    /** 
+     * 
+     * Show all posts for a given month and year for a given blogid.
+     * 
+     * @param string $blogId  The blog to show from
+     * @param type $year The year to show
+     * @param type $month The month in that year to show
+     * @return string The formatted posts for viewing
+     * @accesss public
+     * 
+     */
+    public function showArchive($blogId, $year, $month) 
+    {
+        $posts = $this->objDbPosts->getPostsByYearMonth($blogId, $year, $month);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {

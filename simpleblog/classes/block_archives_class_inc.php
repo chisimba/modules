@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * Simple blog site blog block
+ * An archives block for Simple blog.
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * An archives block for Simple blog. This block provides a list of posts by 
+ * year and month, linked to show the posts for that month and year.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
  *
  * @version    0.001
  * @package    simpleblog
- * @author     Administrative User admin@localhost.local
- * @copyright  2011 AVOIR
+* @author     Derek Keats <derek@dkeats.com>
+ * @copyright  2010 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://www.chisimba.com
  * 
@@ -41,18 +41,19 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Simple blog site blog block
+ * An archives block for Simple blog.
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * An archives block for Simple blog. This block provides a list of posts by 
+ * year and month, linked to show the posts for that month and year.
  *
  * @category  Chisimba
- * @author    Administrative User admin@localhost.local
+ * @package    simpleblog
+ * @author     Derek Keats <derek@dkeats.com>
  * @version   0.001
- * @copyright 2011 AVOIR
+ * @copyright 2010 AVOIR
  *
  */
-class block_siteblog extends object
+class block_archives extends object
 {
     /**
      * The title of the block
@@ -61,14 +62,6 @@ class block_siteblog extends object
      * @access public
      */
     public $title;
-    /**
-     *
-     * @var string Object $objLanguage String for the language object
-     * @access public
-     *
-     */
-    public $objLanguage;
-
     /**
      * Standard init function
      *
@@ -81,43 +74,20 @@ class block_siteblog extends object
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-                "mod_simpleblog_siteposts", "simpleblog",
-                "Site posts");
+            "mod_simpleblog_archive", "simpleblog",
+            "Archive");
     }
-
     /**
-     * 
      * Standard block show method.
      *
      * @return string $this->display block rendered
-     * @access public
-     * 
      */
     public function show() 
     {
-        $blogId = 'site';
-        $this->setSession('blogid', 'site', 'simpleblog');
-        $by = $this->getParam('by', FALSE);
+        $objGuesser = $this->getObject('guesser', 'simpleblog');
+        $blogId = $objGuesser->guessBlogId();
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        if ($by) {
-            if($by == 'thismonth') {
-                return $objPostOps->showThisMonth($blogId);
-            }
-            if($by == 'lastmonth') {
-                return $objPostOps->showLastMonth($blogId);
-            }
-            if($by == 'archive') {
-                $year = $this->getParam('year', FALSE);
-                $month = $this->getParam('month', FALSE);
-                if ($year && $month) {
-                    return $objPostOps->showArchive($blogId, $year, $month);
-                } else {
-                    return NULL;
-                }
-            }
-        } else {
-            return $objPostOps->showCurrentPosts($blogId);
-        }
+        return $objPostOps->showArchiveList($blogId);
     }
 }
 ?>

@@ -88,14 +88,22 @@ class guesser extends object
      *
      * Use some parameters to guess the wall type.
      *
+     * @param BOOLEAN $resetSession Whether we want to reset the session blog
      * @return integer The wall type (0,1,2)
      * @access public
      *
      */
-    public function guessBlogId()
+    public function guessBlogId($resetSession=FALSE)
     {
+        if (!$resetSession) {
+            // First check if there is a session param set
+            $blogId = $this->getSession('blogid');
+            if ($blogId) {
+                return $blogId;
+            }
+        }
         
-        // First check if blogid is set in querystring.
+        // Then check if blogid is set in querystring.
         $blogId = $this->getParam('blogid', FALSE);
         if ($blogId) {
             return $blogId;

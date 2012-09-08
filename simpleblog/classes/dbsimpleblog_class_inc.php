@@ -121,10 +121,6 @@ class dbsimpleblog extends dbtable
      * Get posts by current year and current month (used for 'archive' records)
      *
      * @param integer $blogId The blog id
-     * @param integer $page The starting page
-     * @param string $year The year to return
-     * @param string $keyValue The value of the key (usually contextcode)
-     * @param integer $num The number of records to return (pagesize)
      * @return string array An array of posts if any
      * @access public
      *
@@ -185,6 +181,56 @@ class dbsimpleblog extends dbtable
         $posts = $this->getArray($baseSql);
         return $posts;
     }
+    
+    /**
+     * 
+     * Get a list of years and months for archive posts
+     * 
+     * @param string $blogId The id of the blog to render
+     * @return string array An array of years and months
+     * @access public 
+     *
+     */
+    public function getArchivePosts($blogId)
+    {
+        $sql = 'SELECT 
+          DISTINCT CONCAT( YEAR( datecreated ) , \' \', MONTHNAME( datecreated ) ) 
+          AS \'YearMonth\', YEAR( datecreated ) as \'year\', 
+          MONTHNAME( datecreated ) as \'month\', blogid 
+          FROM `tbl_simpleblog_posts`
+          WHERE blogId = "' . $blogId . ' "
+          ORDER BY datecreated DESC';
+        return $this->getArray($sql);
+    }
+    
+    /**
+     * 
+     * Get archive posts by blogid, year and month
+     * 
+     * @param string $blogId The id of the blog to render
+     * @param string $year The years of the posts to render
+     * @param string $month The month within the given year
+     * @return string array An array of the posts for the given blog, year and month
+     */
+    public function getPostsByYearMonth($blogId, $year, $month) 
+    {
+        $sql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND YEAR( tbl_simpleblog_posts.datecreated )  = \'' . $year . '\' 
+            AND MONTHNAME( tbl_simpleblog_posts.datecreated ) = \'' . $month . '\' 
+            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            ORDER BY datecreated DESC';
+        return $this->getArray($sql);
+    }
 
     /**
      *
@@ -217,6 +263,14 @@ class dbsimpleblog extends dbtable
     }
 
 
+    /**
+     * 
+     * Save the submitted post
+     * 
+     * @return string $id The primary key of the inserted, or updated record.
+     * @access public
+     * 
+     */
     public function savePost()
     {
         $mode = $this->getParam('mode', 'add');
@@ -249,8 +303,9 @@ class dbsimpleblog extends dbtable
                 'datemodified'=>$this->now()
             );
             $this->update("id", $id, $rsArray);
+            return $id;
         } elseif ($mode=="add" || $mode="translate") {
-            $this->insert(array(
+            return $this->insert(array(
                 'post_title'=>$title,
                 'post_content'=>$content,
                 'post_status'=>$status,
@@ -260,7 +315,8 @@ class dbsimpleblog extends dbtable
                 'datecreated'=>$this->now()
             ));
         }
-
+        // There must have been an error, neither edit nor add nor translate.
+        return FALSE;
     }
     
 }
