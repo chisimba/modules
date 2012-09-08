@@ -349,8 +349,10 @@ class simpleblogops extends object
         $postTitle = $post['post_title'];
         $title = "<div class='simpleblog_post_title'>"
           . $postTitle . $edel . "</div>\n";
+        $objWashout = $this->getObject('washout', 'utilities');
+        $content = $objWashout->parseText($post['post_content']);
         $content = "<div class='simpleblog_post_content'>"
-          . $post['post_content'] . "</div>\n";
+          . $content . "</div>\n";
         $poster = $post['firstname'] . " " . $poster = $post['surname'];
         $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
                 "simpleblog", "Posted by")
