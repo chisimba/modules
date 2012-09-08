@@ -79,14 +79,11 @@ class dbsimpleblog extends dbtable
 
     /**
      *
-     * Get more older posts for appending to the bottom of existing posts
-     * by Ajax
+     * Get more posts according to page and page size
      *
-     * @param integer $wallType The wall type (1,2,3)
+     * @param integer $blogId The blog id
      * @param integer $page The starting page
-     * @param string $keyName The name of the key (contextcode usually)
-     * @param string $keyValue The value of the key (usually contextcode)
-     * @param integer $num The number of records to return (pagesize)
+     * @param string $pageSize Number of records per page
      * @return string array An array of posts if any
      * @access public
      *
@@ -116,6 +113,76 @@ class dbsimpleblog extends dbtable
 
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
+        return $posts;
+    }
+    
+    /**
+     *
+     * Get posts by current year and current month (used for 'archive' records)
+     *
+     * @param integer $blogId The blog id
+     * @param integer $page The starting page
+     * @param string $year The year to return
+     * @param string $keyValue The value of the key (usually contextcode)
+     * @param integer $num The number of records to return (pagesize)
+     * @return string array An array of posts if any
+     * @access public
+     *
+     */
+    public function getCurrentMonth($blogId)
+    {
+        // The base SQL, uses joins to avoid going back and forth to the db
+        $baseSql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE ) 
+            AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE )
+            ORDER BY datecreated DESC ';
+        $posts = $this->getArray($baseSql);
+        return $posts;
+    }
+    
+    /**
+     *
+     * Get posts by current year and current month (used for 'archive' records)
+     *
+     * @param integer $blogId The blog id
+     * @param integer $page The starting page
+     * @param string $year The year to return
+     * @param string $keyValue The value of the key (usually contextcode)
+     * @param integer $num The number of records to return (pagesize)
+     * @return string array An array of posts if any
+     * @access public
+     *
+     */
+    public function getLastMonth($blogId)
+    {
+        // The base SQL, uses joins to avoid going back and forth to the db
+        $baseSql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE  - INTERVAL 1 MONTH) 
+            AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE  - INTERVAL 1 MONTH)
+            ORDER BY datecreated DESC ';
+        $posts = $this->getArray($baseSql);
         return $posts;
     }
 

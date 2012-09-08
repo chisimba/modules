@@ -179,6 +179,7 @@ class editor extends object
         $title = '';
         $content = '';
         $status = '';
+        $tags ='';
         $postType = 'personal';
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'edit') {
@@ -255,6 +256,13 @@ class editor extends object
         $editor->name = 'post_content';
         $editor->setContent($content);
         $contentFormElement = $editor->show();
+        
+        // Tags.
+        //$objTags = new textinput('post_tags', $tags);
+        //$objTags->id='post_tags';
+        //$tagsLabel = $this->objLanguage->languageText("mod_simpleblog_tags",
+        //    "simpleblog", "Tags for this post");
+        //$tagsFormElement = $tagsLabel . ":<br />" . $objTags->show();
 
         // Put the blogid in a hidden input
         $objHidden =  new hiddeninput ( 'blogid', $blogId );
@@ -283,6 +291,7 @@ class editor extends object
           . "<div class='status_form_element'>" . $statusFormElement . "</div>"
           . "<div class='type_form_element'>" . $typeFormElement . "</div>"
           . "<div class='content_form_element'>" . $contentFormElement . "</div>"
+          //. "<div class='tags_form_element'>" . $tagsFormElement . "</div>"
           . "<div class='savebutton_form_element'>" . $saveFormElement . "</div>");
         return $objForm->show();
     }

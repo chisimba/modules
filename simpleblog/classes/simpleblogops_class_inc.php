@@ -113,8 +113,6 @@ class simpleblogops extends object
         $this->objUser = $this->getObject('user', 'security');
         // Get the blog posts db.
         $this->objDbPosts = $this->getObject('dbsimpleblog', 'simpleblog');
-        // Set the jQuery version to the latest functional.
-        //$this->setVar('JQUERY_VERSION', '1.4.2');
         // Load jQuery Oembed.
         $oEmb = $this->getObject('jqoembed', 'oembed');
         $oEmb->loadOembedPlugin();
@@ -214,6 +212,7 @@ class simpleblogops extends object
      *
      * Show the last N posts, specified by the number stored in sysconfig.
      *
+     * @param string $blogId The blog to show from
      * @return string The rendered text of the last N posts
      * @access public
      *
@@ -270,6 +269,52 @@ class simpleblogops extends object
               . "$prevLink</td><td class='simpleblog_allpages'>"
               . "$pageList</td><td class='simpleblog_next'>"
               . "$nextLink</td></tr></table>";
+        } else {
+            $ret = "nodata";
+        }
+        return $ret;
+    }
+    
+    /**
+     *
+     * Show all the posts for the current month
+     * 
+     * @param string $blogId The blog to show from
+     * @return string The formatted posts for viewing
+     * @access public
+     * 
+     */
+    public function showThisMonth($blogId) 
+    {
+        $posts = $this->objDbPosts->getCurrentMonth($blogId);
+        if (count($posts) > 0) {
+            $ret ="";
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
+        } else {
+            $ret = "nodata";
+        }
+        return $ret;
+    }
+    
+    /**
+     *
+     * Show all the posts for the previous month
+     * 
+     * @param string $blogId The blog to show from
+     * @return string The formatted posts for viewing
+     * @access public
+     * 
+     */
+    public function showLastMonth($blogId) 
+    {
+        $posts = $this->objDbPosts->getLastMonth($blogId);
+        if (count($posts) > 0) {
+            $ret ="";
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
         } else {
             $ret = "nodata";
         }
@@ -339,6 +384,16 @@ class simpleblogops extends object
           . "</div>\n\n";
     }
 
+    /**
+     *
+     * Check the rights of the user
+     * 
+     * @param string $bloggerId The userId of the blogger
+     * @param string $blogType The type of blog (personal, site, context)
+     * @return boolean TRUE|FALSE
+     * @access private
+     * 
+     */
     private function checkEditAddDelRights($bloggerId, $blogType)
     {
         // If they are not logged in they cannot have rights.

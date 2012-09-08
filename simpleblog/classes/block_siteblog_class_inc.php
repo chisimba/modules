@@ -96,8 +96,18 @@ class block_siteblog extends object
     public function show() 
     {
         $blogId = 'site';
+        $by = $this->getParam('by', FALSE);
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        return $objPostOps->showCurrentPosts($blogId);
+        if ($by) {
+            if($by == 'thismonth') {
+                return $objPostOps->showThisMonth($blogId);
+            }
+            if($by == 'lastmonth') {
+                return $objPostOps->showLastMonth($blogId);
+            }
+        } else {
+            return $objPostOps->showCurrentPosts($blogId);
+        }
     }
 }
 ?>
