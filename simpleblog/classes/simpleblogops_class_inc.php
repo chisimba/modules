@@ -412,6 +412,30 @@ class simpleblogops extends object
         return $ret;
     }
     
+    
+    /**
+     * 
+     * Get a post for a given id record.
+     * 
+     * @param string $id The record id to show 
+     * @return string The formatted posts
+     * @access public
+     * 
+     */
+    public function showById($id) 
+    {
+        $posts = $this->objDbPosts->getPostsById($id);
+        if (count($posts) > 0) {
+            $ret ="";
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
+    }
+    
     /**
      * 
      * Get Tag cloud for a blog identified by blogid
@@ -483,6 +507,15 @@ class simpleblogops extends object
             $edel=NULL;
         }
         $postTitle = $post['post_title'];
+        $by = $this->getParam('by', NULL);
+        if ($by !== 'id') {
+            $titleUri = $this->uri(array(
+                'by' => 'id',
+                'id' => $id
+            ), 'simpleblog');
+            $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
+              . '">' . $postTitle . '</a>';
+        }
         $title = "<div class='simpleblog_post_title'>"
           . $postTitle . $edel . "</div>\n";
         $objWashout = $this->getObject('washout', 'utilities');

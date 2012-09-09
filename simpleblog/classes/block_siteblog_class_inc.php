@@ -124,6 +124,15 @@ class block_siteblog extends object
                 }
                 
             }
+            if($by == 'id') {
+                $id = $this->getParam('id', FALSE);
+                if ($id) {
+                    return $objPostOps->showById($id);
+                } else {
+                    return NULL;
+                }
+                
+            }
         } else {
             return $objPostOps->showCurrentPosts($blogId);
         }

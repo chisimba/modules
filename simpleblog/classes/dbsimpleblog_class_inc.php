@@ -146,6 +146,23 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    public function getPostsById($id) 
+    {
+        $sql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+            AND tbl_simpleblog_posts.id = \'' . $id . '\' ';
+        return $this->getArray($sql);
+    }
+    
     /**
      * 
      * Get an associative array of tags and their count
