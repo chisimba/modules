@@ -96,20 +96,55 @@ class block_simpleblogmiddle extends object
     {
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
-        
-        
-        $objUser = $this->getObject('user', 'security');
-        $userId = $objUser->userId();
-        $loggedIn = FALSE;
-        if ($objUser->isLoggedIn()) {
-           $loggedIn=TRUE;
-        }
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        $by = $this->getParam('by', FALSE);
+        if ($by) {
+            if($by == 'thismonth') {
+                return $objPostOps->showThisMonth($blogId);
+            }
+            if($by == 'lastmonth') {
+                return $objPostOps->showLastMonth($blogId);
+            }
+            if($by == 'archive') {
+                $year = $this->getParam('year', FALSE);
+                $month = $this->getParam('month', FALSE);
+                if ($year && $month) {
+                    return $objPostOps->showArchive($blogId, $year, $month);
+                } else {
+                    return NULL;
+                }
+            }
+            if($by == 'tag') {
+                $tag = $this->getParam('tag', FALSE);
+                if ($tag) {
+                    return $objPostOps->showTag($blogId, $tag);
+                } else {
+                    return NULL;
+                }
+                
+            }
+            if($by == 'id') {
+                $id = $this->getParam('id', FALSE);
+                if ($id) {
+                    return $objPostOps->showById($id);
+                } else {
+                    return NULL;
+                }
+                
+            }
+        } else {
+            return $objPostOps->showCurrentPosts($blogId);
+        }
+/*
+        
+        
+        
+        
         if ($blogId) {
             return $objPostOps->showCurrentPosts($blogId);
         } else {
             return $objPostOps->noBlogYet($loggedIn);
-        }
+        }*/
     }
 }
 ?>

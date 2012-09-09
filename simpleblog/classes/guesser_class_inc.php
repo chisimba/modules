@@ -93,36 +93,29 @@ class guesser extends object
      * @access public
      *
      */
-    public function guessBlogId($resetSession=FALSE)
-    {
-        if (!$resetSession) {
-            // First check if there is a session param set
-            $blogId = $this->getSession('blogid');
-            if ($blogId) {
-                return $blogId;
-            }
-        }
-        
+    public function guessBlogId()
+    {        
         // Then check if blogid is set in querystring.
         $blogId = $this->getParam('blogid', FALSE);
         if ($blogId) {
             return $blogId;
         }
-
+        
         // If they are in a context, then display the context blog
         $objContext = $this->getObject('dbcontext', 'context');
         if($objContext->isInContext()){
             return $objContext->getcontextcode();
         }
         
-        // If not logged in and there is no blogid, then get the default blog type.
+        // If they are not logged in, then display the default blog.
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $defaultBlog = $objSysConfig->getValue('simpleblog_defaultblog', 'simpleblog');
         if (!$this->objUser->isLoggedIn()) {
-            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $defaultBlog = $objSysConfig->getValue('simpleblog_defaultblog', 'simpleblog');
             return $defaultBlog;
         } else {
-            // It must be their blog.
-            return $this->objUser->userId();
+            // It must be their blog. (this is not ready yet, need to add check if they have blog)
+            $userId = $this->objUser->userId();
+            return $defaultBlog;
         }
     }
 }

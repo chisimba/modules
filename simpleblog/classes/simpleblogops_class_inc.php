@@ -475,10 +475,15 @@ class simpleblogops extends object
      */
     private function getMax($cloudAr) 
     {
-        foreach ($cloudAr as $tag=>$freq) { 
-            $chAr[] = $freq;
+        $chAr = array();
+        if (!empty($cloudAr)) {
+            foreach ($cloudAr as $tag=>$freq) { 
+                $chAr[] = $freq;
+            }
+            return max($chAr);
+        } else {
+            return NULL;
         }
-        return max($chAr);
     }
 
     /**
