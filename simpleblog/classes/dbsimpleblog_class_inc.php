@@ -110,10 +110,65 @@ class dbsimpleblog extends dbtable
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
             ORDER BY datecreated DESC ';
-
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
         return $posts;
+    }
+    
+    /**
+     * 
+     * Get posts for a particular tag and blogid
+     * 
+     * @param string $blogId The plog to get the tags for
+     * @param string $tag The tag to retrieve posts against
+     * @return string array An array of blog posts for the given tag
+     * @access public
+     * 
+     */
+    public function getPostsByTag($blogId, $tag) 
+    {
+        $blogId=trim($blogId);
+        $tag = trim($tag);
+        $sql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+            AND tbl_simpleblog_posts.blogId = \'' . $blogId . '\' 
+            AND tbl_simpleblog_posts.post_tags LIKE \'%' . $tag . '%\'  
+            ORDER BY datecreated DESC ';
+        return $this->getArray($sql);
+    }
+    
+    /**
+     * 
+     * Get an associative array of tags and their count
+     * 
+     * @param string $blogId The blog id to get tag counts for
+     * @return string array An associative array of tags and their frequency
+     * @access public
+     * 
+     */
+    public function getTagCloudArray($blogId) 
+    {
+        $sql = 'SELECT post_tags FROM tbl_simpleblog_posts
+            WHERE blogId = \'' . $blogId . '\' AND post_tags IS NOT NULL';
+        $ar = $this->getArray($sql);
+        $res = array();
+        foreach ($ar as $postTag) {
+            $tagsAr = explode(',', $postTag['post_tags']);
+            foreach ($tagsAr as $tag) {
+                $res[] = trim($tag);
+            }
+        }
+        //var_dump(array_count_values ($res)); die();
+        return array_count_values ($res);
     }
     
     /**
@@ -281,6 +336,7 @@ class dbsimpleblog extends dbtable
         $status = $this->getParam('post_status', NULL);
         $blogId = $this->getParam('blogid', NULL);
         $blogType = $this->getParam('post_type', NULL);
+        $postTags = $this->getParam('post_tags', NULL);
         if ($blogType == 'site') {
             $blogId = 'site';
         }
@@ -300,7 +356,8 @@ class dbsimpleblog extends dbtable
                 'post_type' => $blogType,
                 'modifierid'=>$userId,
                 'blogid'=>$blogId,
-                'datemodified'=>$this->now()
+                'datemodified'=>$this->now(),
+                'post_tags' => $postTags
             );
             $this->update("id", $id, $rsArray);
             return $id;
@@ -312,7 +369,8 @@ class dbsimpleblog extends dbtable
                 'post_type' => $blogType,
                 'userid'=>$userId,
                 'blogid'=>$blogId,
-                'datecreated'=>$this->now()
+                'datecreated'=>$this->now(),
+                'post_tags' => $postTags
             ));
         }
         // There must have been an error, neither edit nor add nor translate.

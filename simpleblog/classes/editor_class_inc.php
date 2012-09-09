@@ -179,7 +179,7 @@ class editor extends object
         $title = '';
         $content = '';
         $status = '';
-        $tags ='';
+        $postTags ='';
         $postType = 'personal';
         $mode = $this->getParam('mode', 'add');
         if ($mode == 'edit') {
@@ -189,6 +189,7 @@ class editor extends object
                 $status = $ar['post_status'];
                 $blogId = $ar['blogid'];
                 $postType = $ar['post_type'];
+                $postTags = $ar['post_tags'];
             }
         } else {
             $objGuesser = $this->getObject('guesser', 'simpleblog');
@@ -258,11 +259,11 @@ class editor extends object
         $contentFormElement = $editor->show();
         
         // Tags.
-        //$objTags = new textinput('post_tags', $tags);
-        //$objTags->id='post_tags';
-        //$tagsLabel = $this->objLanguage->languageText("mod_simpleblog_tags",
-        //    "simpleblog", "Tags for this post");
-        //$tagsFormElement = $tagsLabel . ":<br />" . $objTags->show();
+        $objTags = new textinput('post_tags', $postTags);
+        $objTags->id='post_tags';
+        $tagsLabel = $this->objLanguage->languageText("mod_simpleblog_tags",
+            "simpleblog", "Tags for this post");
+        $tagsFormElement = $tagsLabel . ":<br />" . $objTags->show();
 
         // Put the blogid in a hidden input
         $objHidden =  new hiddeninput ( 'blogid', $blogId );
@@ -291,7 +292,7 @@ class editor extends object
           . "<div class='status_form_element'>" . $statusFormElement . "</div>"
           . "<div class='type_form_element'>" . $typeFormElement . "</div>"
           . "<div class='content_form_element'>" . $contentFormElement . "</div>"
-          //. "<div class='tags_form_element'>" . $tagsFormElement . "</div>"
+          . "<div class='tags_form_element'>" . $tagsFormElement . "</div>"
           . "<div class='savebutton_form_element'>" . $saveFormElement . "</div>");
         return $objForm->show();
     }

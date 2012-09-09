@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_simpleblog_posts</table>
+        <version>0.028</version>
+        <description>Added a field for tags</description>
+        <data>
+            <add>
+                <name>post_tags</name>
+                <type>clob</type>
+            </add>
+        </data>
+    </update>
+</updates>

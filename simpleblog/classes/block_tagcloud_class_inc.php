@@ -1,10 +1,9 @@
 <?php
 /**
  *
- * Simple blog site blog block
+ * Simple blog tag cloud
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * Simple blog tag cloud provides a tag cloud for the simple blog
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,18 +40,17 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Simple blog site blog block
+ * Simple blog tag cloud
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * Simple blog tag cloud provides a tag cloud for the simple blog
  *
  * @category  Chisimba
- * @author    Administrative User admin@localhost.local
+ * @author    Derek Keats <derek@dkeats.com>
  * @version   0.001
  * @copyright 2011 AVOIR
  *
  */
-class block_siteblog extends object
+class block_tagcloud extends object
 {
     /**
      * The title of the block
@@ -81,8 +79,8 @@ class block_siteblog extends object
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-                "mod_simpleblog_siteposts", "simpleblog",
-                "Site posts");
+                "mod_simpleblog_tagcloud", "simpleblog",
+                "Tag cloud");
     }
 
     /**
@@ -95,38 +93,10 @@ class block_siteblog extends object
      */
     public function show() 
     {
-        $blogId = 'site';
-        $this->setSession('blogid', 'site', 'simpleblog');
-        $by = $this->getParam('by', FALSE);
+        $objGuesser = $this->getObject('guesser', 'simpleblog');
+        $blogId = $objGuesser->guessBlogId();
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        if ($by) {
-            if($by == 'thismonth') {
-                return $objPostOps->showThisMonth($blogId);
-            }
-            if($by == 'lastmonth') {
-                return $objPostOps->showLastMonth($blogId);
-            }
-            if($by == 'archive') {
-                $year = $this->getParam('year', FALSE);
-                $month = $this->getParam('month', FALSE);
-                if ($year && $month) {
-                    return $objPostOps->showArchive($blogId, $year, $month);
-                } else {
-                    return NULL;
-                }
-            }
-            if($by == 'tag') {
-                $tag = $this->getParam('tag', FALSE);
-                if ($tag) {
-                    return $objPostOps->showTag($blogId, $tag);
-                } else {
-                    return NULL;
-                }
-                
-            }
-        } else {
-            return $objPostOps->showCurrentPosts($blogId);
-        }
+        return $objPostOps->getTagCloud($blogId);
     }
 }
 ?>

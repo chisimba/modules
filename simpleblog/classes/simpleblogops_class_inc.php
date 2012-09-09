@@ -335,6 +335,7 @@ class simpleblogops extends object
         $ar = $this->objDbPosts->getArchivePosts($blogId);
         $lastMonth = $this->objLanguage->languageText("mod_simpleblog_lastmo", "simpleblog", "Last month");
         $thisMonth = $this->objLanguage->languageText("mod_simpleblog_thismo", "simpleblog", "This month");
+        $blogHome = $this->objLanguage->languageText("mod_simpleblog_home", "simpleblog", "Blog home");
         $uri = $this->uri(array(
           'by' => 'thismonth'
         ), 'simpleblog');
@@ -342,7 +343,9 @@ class simpleblogops extends object
         $uri = $this->uri(array(
           'by' => 'lastmonth'
         ), 'simpleblog');
-        $ret .= "<a href='$uri' alt='$lastMonth'>$lastMonth</a><br /><hr>";        
+        $ret .= "<a href='$uri' alt='$lastMonth'>$lastMonth</a><br />"; 
+        $uri = $this->uri(array(), 'simpleblog');
+        $ret .= "<a href='$uri' alt='$blogHome'>$blogHome</a><br /><hr />"; 
         if (count($ar) > 0) {
             $ret = $ret . "\n\n<ul>";
             foreach ($ar as $item) {
@@ -381,9 +384,77 @@ class simpleblogops extends object
                 $ret .= $this->formatItem($post);
             }
         } else {
-            $ret = "nodata";
+            $ret = NULL;
         }
         return $ret;
+    }
+    
+    /**
+     * 
+     * Get posts for a given tag.
+     * 
+     * @param string $blogId The blog to show from
+     * @param type $tag The tag to lookup
+     * @return string The formatted posts
+     * 
+     */
+    public function showTag($blogId, $tag) 
+    {
+        $posts = $this->objDbPosts->getPostsByTag($blogId, $tag);
+        if (count($posts) > 0) {
+            $ret ="";
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
+    }
+    
+    /**
+     * 
+     * Get Tag cloud for a blog identified by blogid
+     * 
+     * @param string $blogId The blog to get tag cloud for
+     * @return string Formatted tag cloud
+     * @access public
+     * 
+     */
+    public function getTagCloud($blogId) {
+        $cloudAr = $this->objDbPosts->getTagCloudArray($blogId);
+        $ret = '';
+        $maxFreq = $this->getMax($cloudAr);
+        foreach ($cloudAr as $tag=>$freq) {
+            $cssClass = 'tag';
+            $pct = floor(($freq/$maxFreq) * 100);
+             //round the number to the nearest 10  
+            $pct =  round($pct,-1);  
+            $uri = $this->uri(array(
+                'blogid' => $blogId,
+                'by' => 'tag',
+                'tag' => $tag
+            ), 'simpleblog');
+            $ln = "<a href='$uri' class='$cssClass' id='$tag' alt='$tag'>$tag</a> ";
+            $ret .= ' <span class="tag_' . $pct . '">' . $ln . '</span> ';
+        }
+        return $ret;
+    }
+    
+    /**
+     * 
+     * Get the maximum frequency of occurrence
+     * 
+     * @param string Array $cloudAr A 2-d array of tags and frequency
+     * @return integer Maximum frequency
+     * @access private
+     */
+    private function getMax($cloudAr) 
+    {
+        foreach ($cloudAr as $tag=>$freq) { 
+            $chAr[] = $freq;
+        }
+        return max($chAr);
     }
 
     /**
@@ -428,9 +499,18 @@ class simpleblogops extends object
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
         }
+        
+        $postTags = $post['post_tags'];
+        if (!$postTags == "") {
+            $postTags = $this->formatTags($postTags, $blogId);
+        }
+        $tags = "\n<div class='simpleblog_post_tags'>" . $postTags . "</div>\n";
         $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
+        
 
-        $wallText = "<span class='simpleblog_view_wall'>View wall</span>";
+        $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
+                "simpleblog", "Blog wall");
+        $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
 
 
         //$numPosts = $this->objDbwall->countPosts(4, FALSE, 'identifier', $id);
@@ -447,8 +527,41 @@ class simpleblogops extends object
         . $wallText . $numPosts . "</a></div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
 
         return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
-          . $before . $title . $content . $foot . $wall
+          . $before . $title . $content . $tags . $foot . $wall
           . "</div>\n\n";
+    }
+    
+    /**
+     * 
+     * Format the tags for display under the post
+     * 
+     * @param string array $postTags Array of tages and frequencies
+     * @param string $blogId The blog to get tags from
+     * @return string Formatted tag group for post
+     * @access private
+     * 
+     */
+    private function formatTags($postTags, $blogId) 
+    {
+        $tagsAr = explode(',', $postTags);
+        $ret ="";
+        $viewingTag = $this->getParam('tag', FALSE);
+        foreach ($tagsAr as $tag) {
+            $tag = trim($tag);
+            $cssClass = 'tag';
+            if ($viewingTag) {
+                if ($viewingTag == $tag) {
+                    $cssClass = 'tag_active';
+                }
+            }
+            $uri = $this->uri(array(
+                'blogid' => $blogId,
+                'by' => 'tag',
+                'tag' => $tag
+            ), 'simpleblog');
+            $ret .= "<a href='$uri' class='$cssClass' id='$tag' alt='$tag'>$tag</a> ";
+        }
+        return $ret;
     }
 
     /**
@@ -479,7 +592,6 @@ class simpleblogops extends object
             return FALSE;
         }
     }
-
 
     /**
      *
