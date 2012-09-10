@@ -303,6 +303,31 @@ class dbsimpleblog extends dbtable
             ORDER BY datecreated DESC';
         return $this->getArray($sql);
     }
+    
+    /**
+     * 
+     * Get posts from a search. Note that the table must be MYISAM.
+     * 
+     * @param string $blogId The blog to look in
+     * @param string $searchTerm The phrase to search for
+     * @return string Array Array of results
+     * @access public
+     * 
+     */
+    public function getPostsFromSearch($blogId, $searchTerm)
+    {
+        $sql = 'SELECT tbl_simpleblog_posts.*,
+            tbl_users.userid,
+            tbl_users.firstname,
+            tbl_users.surname
+            FROM tbl_simpleblog_posts, tbl_users 
+            WHERE MATCH(post_title, post_content) AGAINST (\'' . $searchTerm . '\' IN BOOLEAN MODE)
+            AND tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' " 
+            ORDER BY datecreated DESC';
+        return $this->getArray($sql);
+    }
+    
 
     /**
      *

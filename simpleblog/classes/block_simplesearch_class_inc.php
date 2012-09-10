@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * A right block for Simple blog.
+ * A search block for Simple blog.
  *
- * A right block for Simple blog. A simplified version of the blog module that makes use of the blog module but creates a simplified, dynamic canvas interface allowing users to turn on side blocks using page level blocks..
+ * A search block for Simple blog. A simplified search for the simpleblog module.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A right block for Simple blog.
+ * A search block for Simple blog.
  *
- * A right block for Simple blog. A simplified version of the blog module that makes use of the blog module but creates a simplified, dynamic canvas interface allowing users to turn on side blocks using page level blocks..
+ * A search block for Simple blog. A simplified search for the simpleblog module.
  *
  * @category  Chisimba
  * @package    simpleblog
@@ -51,7 +51,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_simpleblogright extends object
+class block_simplesearch extends object
 {
     /**
      * The title of the block
@@ -61,6 +61,13 @@ class block_simpleblogright extends object
      */
     public $title;
     /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
+    /**
      * Standard init function
      *
      * Create title
@@ -69,16 +76,23 @@ class block_simpleblogright extends object
      */
     public function init() 
     {
-        $this->title = "Right block sample";
+        // Get an instance of the languate object
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText(
+                "mod_simpleblog_search", "simpleblog",
+                "Search blogs");
     }
     /**
-     * Standard block show method.
+     * 
+     * Render the search box
      *
-     * @return string $this->display block rendered
+     * @return string Search block rendered
+     * 
      */
     public function show() 
     {
-        return "This is a demonstration right block.";
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        return $objPostOps->renderSearchBox();
     }
 }
 ?>

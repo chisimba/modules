@@ -132,6 +132,10 @@ class block_simpleblogmiddle extends object
                 }
                 
             }
+            if($by == 'search') {
+                return $objPostOps->getPostsFromSearch($blogId);
+            }
+            
         } else {
             return $objPostOps->showCurrentPosts($blogId);
         }

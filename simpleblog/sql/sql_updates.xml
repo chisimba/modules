@@ -11,4 +11,18 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_simpleblog_posts</table>
+        <version>0.033</version>
+        <description>Added a full text index</description>
+         <SQL>
+          ALTER TABLE tbl_simpleblog_posts ENGINE=myisam;
+         </SQL>
+         <SQL>
+          ALTER TABLE tbl_simpleblog_posts ADD FULLTEXT(post_title);
+         </SQL>
+         <SQL>
+          ALTER TABLE tbl_simpleblog_posts ADD FULLTEXT(post_content);
+         </SQL>
+    </update>
 </updates>

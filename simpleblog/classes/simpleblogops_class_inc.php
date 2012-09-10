@@ -412,7 +412,6 @@ class simpleblogops extends object
         return $ret;
     }
     
-    
     /**
      * 
      * Get a post for a given id record.
@@ -433,6 +432,42 @@ class simpleblogops extends object
         } else {
             $ret = NULL;
         }
+        return $ret;
+    }
+    
+    public function getPostsFromSearch($blogId)
+    {
+        $searchTerm = $this->getParam('searchphrase', FALSE);
+        if ($searchTerm) {
+            $searchTerm = trim($searchTerm);
+            $posts = $this->objDbPosts->getPostsFromSearch($blogId, $searchTerm);
+            //die(var_dump($posts));
+            return $this->formatSearchResults($blogId, $searchTerm, $posts);
+        } else {
+            return NULL;
+        }
+    }
+    
+    public function formatSearchResults($blogId, $searchTerm, $posts)
+    {
+        $ret = "<h3>Searching for <em>$searchTerm</em> in blog <em>$blogId</em></h3>";
+        
+        //if(count($posts) > 0) {
+            foreach ($posts as $post) {
+                $id = $post['id'];
+                $titleUri = $this->uri(array(
+                    'by' => 'id',
+                    'id' => $id,
+                    'highlight' => $searchTerm
+                ), 'simpleblog');
+                $postTitle = $post['post_title'];
+                $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
+                  . '">' . $postTitle . '</a>';
+                $ret .= $postTitle . "<br />";
+            }
+        //} else {
+         //   $ret .= "<br /><span class='warning'>No results</span>";
+        //}
         return $ret;
     }
     
@@ -525,6 +560,11 @@ class simpleblogops extends object
           . $postTitle . $edel . "</div>\n";
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
+        // If we are coming from a search
+        $hilite = $this->getParam('highlight', FALSE);
+        if ($hilite) {
+            $content = str_replace($hilite, '<span class="hilite">' . $hilite . '</span>', $content);
+        }
         $content = "<div class='simpleblog_post_content'>"
           . $content . "</div>\n";
         $poster = $post['firstname'] . " " . $poster = $post['surname'];
@@ -660,6 +700,50 @@ class simpleblogops extends object
                 "The user has not yet created a blog");
         }
 
+    }
+    
+    /**
+     * 
+     * Render a search box for use in a search block
+     * 
+     * @return string The rendered search box
+     * @access public
+     * 
+     */
+    public function renderSearchBox()
+    {
+        $this->loadClass('form','htmlelements');
+        $this->loadClass('textinput','htmlelements');
+        // The URI for the search
+        $formAction = $this->uri(array(
+          'by' => 'search'
+        ), 'simpleblog');
+        
+        // The word search
+        $wordSearch = $this->objLanguage->languageText('word_search');
+        
+        //Create the form element.
+        $objForm = new form('sb_search');
+        $objForm->extra = ' class="sb_searchform" ';
+        $objForm->setAction($formAction);
+        $objForm->displayType=3;
+        
+        // Create the search input.
+        $objSearchInp = new textinput('searchphrase', $wordSearch . "...");
+        $objSearchInp->setCss('sb_searchfield');
+        $extra = 'onfocus="if (this.value == \'' . $wordSearch . '...\') {this.value = \'\';}"'
+         . ' onblur="if (this.value == \'\') {this.value = \'' . $wordSearch . '...\';}"';
+        $objSearchInp->extra = $extra;
+        $objForm->addToForm($objSearchInp->show());
+       
+        //Add a save button
+        $objButton = $this->newObject('button', 'htmlelements');
+        $objButton->button('go',$this->objLanguage->languageText('word_go'));
+        $objButton->setCSS('sb_searchbutton');
+        $objButton->sexyButtons=FALSE;
+        $objButton->setToSubmit();
+        $objForm->addToForm($objButton->show());
+        return $objForm->show();
     }
 }
 ?>
