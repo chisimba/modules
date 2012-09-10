@@ -435,39 +435,78 @@ class simpleblogops extends object
         return $ret;
     }
     
+    /**
+     * 
+     * Retrieve the posts from a search result and format
+     * them for display
+     * 
+     * @param string $blogId The blog we are searching
+     * @return string The formatted search results (or NULL if none)
+     * @access public
+     * 
+     */
     public function getPostsFromSearch($blogId)
     {
         $searchTerm = $this->getParam('searchphrase', FALSE);
         if ($searchTerm) {
             $searchTerm = trim($searchTerm);
             $posts = $this->objDbPosts->getPostsFromSearch($blogId, $searchTerm);
-            //die(var_dump($posts));
             return $this->formatSearchResults($blogId, $searchTerm, $posts);
         } else {
             return NULL;
         }
     }
     
+    /**
+     * 
+     * Fomat search results
+     * 
+     * @param string $blogId The blog we searched
+     * @param string $searchTerm The terms we searched for
+     * @param string Array $posts An array of results
+     * @return string The formatted results for display
+     * @access public
+     * 
+     */
     public function formatSearchResults($blogId, $searchTerm, $posts)
     {
         $ret = "<h3>Searching for <em>$searchTerm</em> in blog <em>$blogId</em></h3>";
-        
-        //if(count($posts) > 0) {
+        $searchTerm = preg_replace("/[^A-Za-z0-9\s\s+]/","",$searchTerm);
+        $searchTerm = urlencode($searchTerm);
+        if(count($posts) > 0) {
+            $ret .= "<div class='sb_searchresults'>";
+            // Get an instance of the humanize date class.
+            $objDd = $this->getObject('translatedatedifference', 'utilities');
             foreach ($posts as $post) {
                 $id = $post['id'];
                 $titleUri = $this->uri(array(
                     'by' => 'id',
                     'id' => $id,
-                    'highlight' => $searchTerm
+                    'highlight' =>  $searchTerm
                 ), 'simpleblog');
                 $postTitle = $post['post_title'];
                 $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
                   . '">' . $postTitle . '</a>';
-                $ret .= $postTitle . "<br />";
+                // The author
+                $poster = $post['firstname'] . " " . $poster = $post['surname'];
+                $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
+                  "simpleblog", "Posted by")
+                . " " . $poster;
+                // Convert the post date into human time.
+                $postDate = $objDd->getDifference($post['datecreated']);
+                $editDate = $post['datemodified'];
+                if ($editDate !==NULL) {
+                    $editDate = $objDd->getDifference($editDate);
+                }
+                $ret .= "<div class='sb_searchresult'>" . $postTitle 
+                  . "<br />&nbsp;&nbsp;&nbsp;" . $poster. " " . $editDate . "</div>";
+
+        
             }
-        //} else {
-         //   $ret .= "<br /><span class='warning'>No results</span>";
-        //}
+            $ret = $ret . "</div>";
+        } else {
+           $ret .= "<br /><span class='warning'>No results</span>";
+        }
         return $ret;
     }
     
@@ -556,15 +595,18 @@ class simpleblogops extends object
             $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
               . '">' . $postTitle . '</a>';
         }
-        $title = "<div class='simpleblog_post_title'>"
-          . $postTitle . $edel . "</div>\n";
+        $clear = ' <br style="clear:both;" />';
+        $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
+          . $postTitle . "</div>" . $edel . "</div>\n";
+        
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
         // If we are coming from a search
-        $hilite = $this->getParam('highlight', FALSE);
+        $hilite = urldecode($this->getParam('highlight', FALSE));
         if ($hilite) {
             $content = str_replace($hilite, '<span class="hilite">' . $hilite . '</span>', $content);
         }
+        
         $content = "<div class='simpleblog_post_content'>"
           . $content . "</div>\n";
         $poster = $post['firstname'] . " " . $poster = $post['surname'];
