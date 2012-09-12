@@ -1,8 +1,9 @@
 <?php
 // load the ext js and module specific scripts
-$extbase = '<script language="javascript" src="'.$this->getResourceUri('ext-3.0.3/adapter/ext/ext-base.js','htmlelements').'" type="text/javascript"></script>';
-$extalljs = '<script language="javascript" src="'.$this->getResourceUri('ext-3.0.3/ext-all.js','htmlelements').'" type="text/javascript"></script>';
-$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.0.3/resources/css/ext-all.css','htmlelements').'"/>';
+$extbase = '<script language="javascript" src="'.$this->getResourceUri('ext-3.4.0/adapter/ext/ext-base.js','ext').'" type="text/javascript"></script>';
+$extalljs = '<script language="javascript" src="'.$this->getResourceUri('ext-3.4.0/ext-all.js','ext').'" type="text/javascript"></script>';
+$extallcss = '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('ext-3.4.0/resources/css/ext-all.css','ext').'"/>';
+
 
 
 $this->appendArrayVar('headerParams', $extbase);
