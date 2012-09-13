@@ -26,19 +26,31 @@ class webpresenttoolbar2 extends object
     {
         $objUser = $this->getObject('user', 'security');
         $userIsLoggedIn = $objUser->isLoggedIn();
-
-        $menuOptions = array(
-            array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'webpresent', 'status'=>'both'),
-            array('action'=>'home', 'text'=>'V-Meetings', 'actioncheck'=>array(), 'module'=>'realtime', 'status'=>'both'),
-            array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'webpresent', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
-            array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
-            array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
-            array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'webpresent', 'status'=>'login'),
-            array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
-            array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
-        );
-
+        $objConf = $this->getObject('altconfig', 'config');
+        if($objConf->getallowSelfRegister() == 'TRUE') {
+            $menuOptions = array(
+                array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'webpresent', 'status'=>'both'),
+                array('action'=>'home', 'text'=>'V-Meetings', 'actioncheck'=>array(), 'module'=>'realtime', 'status'=>'both'),
+                array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'webpresent', 'status'=>'both'),
+                array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
+                array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
+                array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
+                array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'webpresent', 'status'=>'login'),
+                array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
+                array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
+             );
+        } else { 
+            $menuOptions = array(
+                array('action'=>'upload', 'text'=>'Upload', 'actioncheck'=>array('upload'), 'module'=>'webpresent', 'status'=>'both'),
+                array('action'=>'home', 'text'=>'V-Meetings', 'actioncheck'=>array(), 'module'=>'realtime', 'status'=>'both'),
+                array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'webpresent', 'status'=>'both'),
+                array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
+                array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
+                array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
+                array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'webpresent', 'status'=>'login'),
+                array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
+            );
+        }
         $usedDefault = FALSE;
         $str = '';
 
@@ -49,15 +61,15 @@ class webpresenttoolbar2 extends object
             if ($option['status'] == 'both') {
                 $okToAdd = TRUE;
 
-                // 2) Check Items to be added only if user is not logged in
+            // 2) Check Items to be added only if user is not logged in
             } else if ($option['status'] == 'login' && !$userIsLoggedIn) {
                 $okToAdd = TRUE;
 
-                // 3) Check Items to be added only if user IS logged in
+            // 3) Check Items to be added only if user IS logged in
             } else if ($option['status'] == 'loggedin' && $userIsLoggedIn) {
                 $okToAdd = TRUE;
 
-                // 4) Check if User is Admin
+            // 4) Check if User is Admin
             } else if ($option['status'] == 'admin' && $objUser->isAdmin() && $userIsLoggedIn) {
                 $okToAdd = TRUE;
             } else {
@@ -95,7 +107,6 @@ class webpresenttoolbar2 extends object
 
         // Add Home Link
         $home = $this->generateItem(NULL, '_default', 'Home', $usedDefault);
-
 
         // Return Toolbar
         return '<div id="modernbricksmenum"><ul>'.$home.$str.'</ul>';
