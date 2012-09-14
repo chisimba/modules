@@ -142,7 +142,6 @@ $table->addCell($leftContents, '60%', 'top', 'left');
 $table->addCell('&nbsp;&nbsp;&nbsp;', '3%');
 
 
-
 if (count($latestFiles) == 0) {
     $latestFilesContent = '';
 } else {

@@ -10,7 +10,7 @@ $this->appendArrayVar('headerParams', $extbase);
 $this->appendArrayVar('headerParams', $extalljs);
 $this->appendArrayVar('headerParams', $extallcss);
 
-$objLatestFiles= $this->getObject('viewerutils','webpresent');
+$objLatestFiles = $this->getObject('viewerutils','webpresent');
 
 $featured=
         "Ext.onReady(function(){

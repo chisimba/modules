@@ -267,7 +267,8 @@ public function getFeatured(){
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $latest10Desc=$objLanguage->languageText("mod_webpresent_latest10desc", "webpresent");
         $latest10Str=$objLanguage->languageText("mod_webpresent_latest10str", "webpresent");
-        if (count($latestFiles) == 0) {
+        $fCount = count($latestFiles);
+        if ($fCount == 0) {
             $latestFilesContent = '';
         } else {
             $latestFilesContent = '';
