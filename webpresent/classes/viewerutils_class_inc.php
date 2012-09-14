@@ -256,6 +256,7 @@ public function getFeatured(){
               </div>';
         return $str;
     }
+    
     public function getLatestUploads(){
         $objLanguage = $this->getObject('language', 'language');
         $this->loadClass('link', 'htmlelements');
@@ -268,6 +269,7 @@ public function getFeatured(){
         $latest10Desc=$objLanguage->languageText("mod_webpresent_latest10desc", "webpresent");
         $latest10Str=$objLanguage->languageText("mod_webpresent_latest10str", "webpresent");
         $fCount = count($latestFiles);
+        //die($fCount);
         if ($fCount == 0) {
             $latestFilesContent = '';
         } else {
@@ -286,13 +288,13 @@ public function getFeatured(){
 
           <font style="font-size:13pt;color:#5e6eb5;">
 
-          '.$latest10Str.'
+          ' . $latest10Str . '
 
            </font>
                   </ul>
                    <br/>
                    <p>
-                '.$latest10Desc.'
+                ' . $latest10Desc . '
                    </p>
               ';
             $row='<div class="sectionstats">';
@@ -353,7 +355,7 @@ public function getFeatured(){
                 $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
                 '<p>'.$objDisplayLicense->show($license).'</p>';
 
-            $row.=$this->createCell(
+                $row.=$this->createCell(
                     $columnDiv,
                     $filename,
                     $fileLink,
@@ -362,7 +364,7 @@ public function getFeatured(){
                     $uploaderLink->show(),
                    '<p>'.$objDisplayLicense->show($license).'</p>',
                    $file['id']
-            );
+                );
 
                 $column++;
                 $counter++;
