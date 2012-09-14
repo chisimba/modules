@@ -217,7 +217,7 @@ class simpleblogops extends object
      * @access public
      *
      */
-    public function showCurrentPosts($blogId)
+    public function showCurrentPosts($blogId, $userId=FALSE)
     {
         $page = $this->getParam('page', 1);
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');

@@ -328,6 +328,46 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    /**
+     *
+     * Get posts by a particular user and blog, according to 
+     * page and page size
+     *
+     * @param integer $blogId The blog id
+     * @param integer $userId The blog id
+     * @param integer $page The starting page
+     * @param string $pageSize Number of records per page
+     * @return string array An array of posts if any
+     * @access public
+     *
+     */
+    public function getPostsByUser($blogId, $userId, $page, $pageSize=FALSE)
+    {
+        if (!$pageSize) {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
+        }
+        // Subtract 1 from page since the first page is 0
+        $page=$page-1;
+        // The base SQL, uses joins to avoid going back and forth to the db
+        $baseSql = 'SELECT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username,
+              (SELECT COUNT(tbl_wall_posts.id)
+                   FROM tbl_wall_posts
+                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+              ) AS comments
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND tbl_simpleblog_posts.userid = "' . $userId . ' "
+            ORDER BY datecreated DESC ';
+        $startPoint = $page * $pageSize;
+        $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
+        return $posts;
+    }
 
     /**
      *
