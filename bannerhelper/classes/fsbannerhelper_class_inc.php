@@ -91,7 +91,7 @@ class fsbannerhelper extends object
      * @access public
      * 
      */
-    public function getContentsForDisplay($file=FALSE)
+    public function getContentsForDisplay($file=FALSE, $encode = FALSE)
     {
         if (!$file) {
             // Read the file from querystring and default to 'default'.
@@ -107,6 +107,9 @@ class fsbannerhelper extends object
             $ed = $this->getEditIcon($file);
         } else {
             $ed=NULL;
+        }
+        if ($encode) {
+            $strContent = htmlentities($strContent);
         }
         return $strContent . "<br />" . $ed;
     }

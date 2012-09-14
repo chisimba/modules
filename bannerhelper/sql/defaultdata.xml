@@ -49,7 +49,7 @@
     <tbl_bannerhelper_moduleblocks>
         <id>init_on_install_6</id>
         <userid>1</userid>
-        <block>block|menu|bannerhelper</block>
+        <block>block|menublk|bannerhelper</block>
         <side>middle</side>
         <position>1</position>
         <module>bannerhelper</module>

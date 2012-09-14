@@ -52,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_menu extends object
+class block_menublk extends object
 {
     /**
      * The title of the block
@@ -80,9 +80,9 @@ class block_menu extends object
      */
     public function show() 
     {
-        //$objFget = $this->getObject('fsbannerhelper', 'bannerhelper');
-        return "Edit the prelogin menu here";
-        //return "<pre>" . htmlentities($objFget->getContentsForDisplay("plmenu")) . "</pre>";
+        $objFget = $this->getObject('fsbannerhelper', 'bannerhelper');
+        //return "Edit the prelogin menu here";
+        return "<pre>" . $objFget->getContentsForDisplay("plmenu", TRUE) . "</pre>";
     }
 }
 ?>
