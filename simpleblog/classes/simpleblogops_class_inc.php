@@ -691,6 +691,9 @@ class simpleblogops extends object
         if ($by !== 'id') {
             $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
               . '">' . $postTitle . '</a>';
+        } else {
+            $this->setVar('og_title', $postTitle);
+            $this->setVar('og_content', $post['post_content']);
         }
         $clear = ' <br style="clear:both;" />';
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
