@@ -127,6 +127,12 @@ class simpleblogops extends object
 
         // Get the page number
         $page = $this->getParam('page', 0);
+        
+        // Load the link class used by several methods
+        $this->loadClass('link', 'htmlelements');
+        
+        // Get the jQuery Twitter button object
+        $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
 
         // Set some parameters required by the wall
         $ar = array(
@@ -207,6 +213,84 @@ class simpleblogops extends object
         }
         $this->appendArrayVar('headerParams', $script);
     }
+    
+    /**
+     *
+     * Show the last N posts, specified by the number stored in sysconfig for
+     * a particular blog given user identified by userid in the querystring.
+     *
+     * @param string $blogId The blog to show from
+     * @param string $userId The userid of the user to show from
+     * @return string The rendered text of the last N posts
+     * @access public
+     *
+     */
+    public function getPostsByUser($blogId, $userId) 
+    {
+        $page = $this->getParam('page', 1);
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
+        $posts = $this->objDbPosts->getPostsByUser($blogId, $userId, $page, $pageSize);
+        $recs = $this->objDbPosts->getRecordCount(" WHERE blogid='$blogId' AND userid='$userId'");
+        $totalPages = ceil($recs/$pageSize);
+        $nextLink = NULL;
+        $prevLink = NULL;
+        $counter = 0;
+        $pageList = NULL;
+        $wordPage = $this->objLanguage->languageText("word_page", "system", "Page");
+        $wordStart = $this->objLanguage->languageText("word_start", "system", "Start");
+        $wordEnd = $this->objLanguage->languageText("word_end", "system", "End");
+        while ($counter < $totalPages) {
+            $counter++;
+            $pgUri = $this->uri(array(
+                'page' => $counter,
+                'by' => 'user',
+                'userid' => $userId
+              ), 'simpleblog'
+            );
+            if ($counter == $page) {
+                $pageList .= " [$counter] ";
+            } else {
+                $pageList .= " <a href='$pgUri'>$counter</a> ";
+            }
+            
+        }
+        $pageList = "<div class='simpleblog_allpages'>$pageList</div>";
+        if ($page < $totalPages) {
+            // There is a next page
+            $nextPage = $page + 1;
+            $nUri = $this->uri(array(
+                'page' => $nextPage,
+                'by' => 'user',
+                'userid' => $userId
+              ), 'simpleblog');
+            $nextLink = "<a href='$nUri'>$wordPage $nextPage</a>";
+        } else {
+            $nextLink = $wordEnd;
+        }
+        if ($page > 1) {
+            // There is a previous page
+            $prevPage = $page - 1;
+            $nUri = $this->uri(array('page' => $prevPage), 'simpleblog');
+            $prevLink = "<a href='$nUri'>$wordPage $prevPage</a>";
+        } else {
+            $prevLink = $wordStart;
+        }
+        $ret ="";
+        if (count($posts) > 0) {
+            foreach ($posts as $post) {
+                $ret .= $this->formatItem($post);
+            }
+            $ret .= "<table class='simpleblog_pagenav'><tr>"
+              . "<td class='simpleblog_prev'>"
+              . "$prevLink</td><td class='simpleblog_allpages'>"
+              . "$pageList</td><td class='simpleblog_next'>"
+              . "$nextLink</td></tr></table>";
+        } else {
+            $ret = NULL;
+        }
+        return $ret;
+    }
 
     /**
      *
@@ -230,8 +314,8 @@ class simpleblogops extends object
         $counter = 0;
         $pageList = NULL;
         $wordPage = $this->objLanguage->languageText("word_page", "system", "Page");
-        $wordStart = $this->objLanguage->languageText("word_start", "system", "Le start");
-        $wordEnd = $this->objLanguage->languageText("word_end", "system", "La fin");
+        $wordStart = $this->objLanguage->languageText("word_start", "system", "Start");
+        $wordEnd = $this->objLanguage->languageText("word_end", "system", "End");
         while ($counter < $totalPages) {
             $counter++;
             $pgUri = $this->uri(array('page' => $counter), 'simpleblog');
@@ -559,7 +643,8 @@ class simpleblogops extends object
             return NULL;
         }
     }
-
+    
+    
     /**
      *
      * Format a post item
@@ -586,18 +671,27 @@ class simpleblogops extends object
             $edel=NULL;
         }
         $postTitle = $post['post_title'];
+        // The URI for this post
+        $titleUri = $this->uri(array(
+            'by' => 'id',
+            'id' => $id
+        ), 'simpleblog');
+        // The retweet button style
+        $style = 'vertical';
+        $via = NULL;
+        $related = NULL;
+        // The retweet button
+        $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
+        //$rt = $this->objJqTwitter->retweetCounter($titleUri, $postTitle, $style);
         $by = $this->getParam('by', NULL);
         if ($by !== 'id') {
-            $titleUri = $this->uri(array(
-                'by' => 'id',
-                'id' => $id
-            ), 'simpleblog');
+
             $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
               . '">' . $postTitle . '</a>';
         }
         $clear = ' <br style="clear:both;" />';
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
-          . $postTitle . "</div>" . $edel . "</div>\n";
+          . $postTitle . "</div>" . $edel . $rt . "</div>\n";
         
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
@@ -610,6 +704,13 @@ class simpleblogops extends object
         $content = "<div class='simpleblog_post_content'>"
           . $content . "</div>\n";
         $poster = $post['firstname'] . " " . $poster = $post['surname'];
+        $link = new link ($this->uri(array(
+            'by'=>'user', 
+            'userid'=>$bloggerId), 
+          'simpleblog')
+        );
+        $link->link = $poster;
+        $poster = $link->show();
         $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
                 "simpleblog", "Posted by")
                 . " " . $poster;
@@ -631,7 +732,6 @@ class simpleblogops extends object
         $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
                 "simpleblog", "Blog wall");
         $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
-
 
         //$numPosts = $this->objDbwall->countPosts(4, FALSE, 'identifier', $id);
         $numPosts = $post['comments'];

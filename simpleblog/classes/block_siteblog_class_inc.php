@@ -96,7 +96,7 @@ class block_siteblog extends object
     public function show() 
     {
         $blogId = 'site';
-        $this->setSession('blogid', 'site', 'simpleblog');
+        //$this->setSession('blogid', 'site', 'simpleblog');
         $by = $this->getParam('by', FALSE);
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         if ($by) {
@@ -135,6 +135,18 @@ class block_siteblog extends object
             }
             if($by == 'search') {
                 return $objPostOps->getPostsFromSearch($blogId);
+            }
+            if($by == 'user') {
+                $userId = $this->getParam('userid', FALSE);
+                if ($userId) {
+                    if ($userId == $blogId) {
+                        return $objPostOps->showCurrentPosts($blogId);
+                    } else {
+                        return $objPostOps->getPostsByUser($blogId, $userId);
+                    }
+                } else {
+                    return NULL;
+                }
             }
         } else {
             return $objPostOps->showCurrentPosts($blogId);

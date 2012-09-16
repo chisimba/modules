@@ -146,6 +146,15 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    /**
+     * 
+     * Get a post by its id
+     * 
+     * @param string $id The id of the post to retrieve
+     * @return string array An array containing the single blog post
+     * @access public
+     * 
+     */
     public function getPostsById($id) 
     {
         $sql = 'SELECT tbl_simpleblog_posts.*,
@@ -341,7 +350,7 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getPostsByUser($blogId, $userId, $page, $pageSize=FALSE)
+    public function getPostsByUser($blogId, $userId, $page=1, $pageSize=FALSE)
     {
         if (!$pageSize) {
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
