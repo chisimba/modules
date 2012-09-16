@@ -685,7 +685,7 @@ class simpleblogops extends object
         // The retweet button
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
         // Google plus button
-        $plsBtn = $this->objPlusButton->getButton($postTitle, 'tall', htmlspecialchars_decode($titleUri));
+        $plsBtn = $this->objPlusButton->getButton('tall', htmlspecialchars_decode($titleUri));
         
         $by = $this->getParam('by', NULL);
         if ($by !== 'id') {
