@@ -81,6 +81,9 @@ class tweetbutton extends object
         $a->setAttribute('class', 'twitter-share-button');
         $a->setAttribute('data-count', $style);
         $a->setAttribute('href', 'http://twitter.com/share');
+        if ($text) {
+            $a->setAttribute('data-text', $text);
+        }
         if ($via) {
             $a->setAttribute('data-via', $via);
         }
