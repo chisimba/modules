@@ -81,15 +81,17 @@ class gplusbttn extends object
      * @param  string $uri     The URI to post. Defaults to the current page.
      * @return string The generated HTML.
      */
-    public function getButton($text='Tweet', $style='tall', $uri=NULL)
+    public function getButton($style='tall', $uri=FALSE)
     {
         // Create the HTML document.
         $doc = new DOMDocument('UTF-8');
         // Create the link.
-        $div = $doc->createElement('div');
-        $div->setAttribute('class', 'g-plusone');
-        $div->setAttribute('data-size', $style);
-        $div->setAttribute('href', $uri);
+        $div = $doc->createElement('g:plusone');
+        $div->setAttribute('size', $style);
+        if ($uri) {
+            $div->setAttribute('href', $uri);
+        }
+        
         $doc->appendChild($div);
         // Return the serialised document.
         return '<div class=\'social_button_' . $style . '\'>' . $doc->saveHTML() . '</div>';
