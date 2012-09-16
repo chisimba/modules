@@ -132,7 +132,9 @@ class simpleblogops extends object
         $this->loadClass('link', 'htmlelements');
         
         // Get the jQuery Twitter button object
-        $this->objTweetButton = $this->getObject('tweetbutton', 'twitter');
+        $this->objTweetButton = $this->getObject('tweetbttn', 'socialweb');
+        // Get the google plus button
+        $this->objPlusButton = $this->getObject('gplusbttn', 'socialweb');
 
         // Set some parameters required by the wall
         $ar = array(
@@ -682,16 +684,18 @@ class simpleblogops extends object
         $related = NULL;
         // The retweet button
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
-        //$rt = $this->objJqTwitter->retweetCounter($titleUri, $postTitle, $style);
+        // Google plus button
+        $plsBtn = $this->objPlusButton->getButton($postTitle, 'tall', htmlspecialchars_decode($titleUri));
+        
         $by = $this->getParam('by', NULL);
         if ($by !== 'id') {
-
             $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
               . '">' . $postTitle . '</a>';
         }
         $clear = ' <br style="clear:both;" />';
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
-          . $postTitle . "</div>" . $edel . $rt . "</div>\n";
+          . $postTitle . "</div><div class='social_buttons'>" . $edel 
+          . $plsBtn . '</div>' . $rt . "</div>\n";
         
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
