@@ -151,7 +151,7 @@ class presentationprovider extends object
             $this->width = 290;
             $this->height = 24;
             $objPresentation = $this->getObject('viewer', 'webpresent');
-            $this->html = $objPresentation->showFlash($id)
+            $this->html = $objPresentation->showFlash($id);
             
             // Turn the appropriate class properties into an array.
             $ar = $this->createArray();

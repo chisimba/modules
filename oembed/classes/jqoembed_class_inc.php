@@ -89,9 +89,13 @@ class jqoembed extends object
     public function loadOembedPlugin()
     {
         $script = '<script language="javascript" src="'
-          . $this->getResourceUri("jquery.oembed.js", "oembed")
+          . $this->getResourceUri("starfishmod/jquery.oembed.js", "oembed")
           . '" type="text/javascript"></script>';
         $this->appendArrayVar('headerParams', $script);
+        $css = '<link rel="stylesheet" type="text/css" href="' 
+          . $this->getResourceUri("starfishmod/jquery.oembed.css", "oembed")
+          . '">';
+        $this->appendArrayVar('headerParams', $css);
         return TRUE;
     }
 
