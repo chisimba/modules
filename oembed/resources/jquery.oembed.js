@@ -54,7 +54,7 @@
         maxWidth: null,
         maxHeight: null,
         embedMethod: "replace",  	// "auto", "append", "fill"		
-        defaultOEmbedProvider: "oohembed", 	// "oohembed", "embed.ly", "none"
+        defaultOEmbedProvider: "none", 	// "oohembed", "embed.ly", "none"
         allowedProviders: null,
         disallowedProviders: null,
         customProviders: null, // [ new $.fn.oembed.OEmbedProvider("customprovider", null, ["customprovider\\.com/watch.+v=[\\w-]+&?"]) ]	
