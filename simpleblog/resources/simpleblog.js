@@ -47,7 +47,7 @@ jQuery(function() {
             type: "POST",
             data: "&action=delpost&postid="+id,
             success: function(msg) {
-                alert(msg);
+                //alert(msg);
                 jQuery('#wrapper_'+id).slideUp('slow', function() {
                     jQuery('#wrapper_'+id).remove();
                 })
