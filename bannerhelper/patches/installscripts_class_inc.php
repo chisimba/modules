@@ -131,12 +131,26 @@ class bannerhelper_installscripts extends dbtable
         $targetBanner2 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner2.txt';
         $targetBanner3 = $this->objAltConfig->getSiteRootPath() . 'usrfiles/bannerhelper/banner3.txt';
 
-        copy($about, $targetAbout);
-        copy($plMenu, $targetPlMenu);
-        copy($banner0, $targetBanner0);
-        copy($banner1, $targetBanner1);
-        copy($banner2, $targetBanner2);
-        copy($banner3, $targetBanner3);
+        // Copy files but not if they already exist (prevents 
+        //   updates from copying files over edited files).
+        if (!file_exists($targetAbout)) {
+            copy($about, $targetAbout);
+        }
+        if (!file_exists($targetPlMenu)) {
+            copy($plMenu, $targetPlMenu);
+        }
+        if (!file_exists($targetBanner0)) {
+            copy($banner0, $targetBanner0);
+        }
+        if (!file_exists($targetBanner1)) {
+            copy($banner2, $targetBanner1);
+        }
+        if (!file_exists($targetBanner2)) {
+            copy($banner2, $targetBanner2);
+        }
+        if (!file_exists($targetBanner3)) {
+            copy($banner3, $targetBanner3);
+        }
     }
 }
 ?>
