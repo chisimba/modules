@@ -94,6 +94,6 @@ class gplusbttn extends object
         
         $doc->appendChild($div);
         // Return the serialised document.
-        return '<div class=\'social_button_' . $style . '\'>' . $doc->saveHTML() . '</div>';
+        return '<div class=\'social_button\'>' . $doc->saveHTML() . '</div>';
     }
 }
