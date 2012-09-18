@@ -76,6 +76,14 @@ class dbsfanswers extends dbtable
         parent::init('tbl_simplefeedback_answers');
     }
     
+    /**
+     * 
+     * Save a form submission
+     * 
+     * @return boolean TRUE
+     * @access public
+     * 
+     */
     public function save()
     {
         $surveyId = $this->getParam('surveyid', NULL);
@@ -96,6 +104,25 @@ class dbsfanswers extends dbtable
             ));
         }
         return TRUE;
+    }
+    
+    /**
+     *  
+     * Return an array of the responses joined on the question table.
+     * 
+     * @param String $surveyId The survey id to look up
+     * @return string array Array of results
+     * @access public
+     * 
+     */
+    public function getAnswers($surveyId) 
+    {
+        $sql = 'SELECT *
+            FROM tbl_simplefeedback_answers INNER JOIN tbl_simplefeedback_questions
+            ON tbl_simplefeedback_answers.surveyid = tbl_simplefeedback_questions.surveyid
+            WHERE  tbl_simplefeedback_answers.surveyid=\'' . $surveyId . '\' 
+            AND tbl_simplefeedback_answers.questionno = tbl_simplefeedback_questions.questionno';
+        return $this->getArray($sql);
     }
 }
 ?>

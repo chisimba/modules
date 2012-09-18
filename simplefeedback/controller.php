@@ -147,6 +147,23 @@ class simplefeedback extends controller
     
     /**
     * 
+    * Method corresponding to the results action. It shows the
+    * results of the feedback mini survey.
+    * @access private
+    * 
+    */
+    private function __results()
+    {
+        if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser->isAdmin()) {
+                return "results_tpl.php";
+            }
+        }
+        return $this->nextAction(NULL);
+    }
+    
+    /**
+    * 
     * Method corresponding to the view action. It shows the default
     * dynamic canvas template, showing you how to create block based
     * view templates

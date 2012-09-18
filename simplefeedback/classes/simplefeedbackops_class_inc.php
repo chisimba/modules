@@ -186,6 +186,68 @@ class simplefeedbackops extends dbtable
         $objForm->addToForm($objButton->show());
         return $objForm->show();
     }
+    
+    /**
+     * 
+     * Render all the responses to the survey
+     * 
+     * @param string $surveyId The surveyid of the responses to return
+     * @return string The rendered results
+     * @access public
+     * 
+     */
+    public function showResults($surveyId)
+    {
+        $qDb = $this->getObject('dbsfanswers', 'simplefeedback');
+        $arA = $qDb->getAnswers($surveyId);
+        $doc = new DOMDocument('UTF-8');
+        $table = $doc->createElement('table');
+        $class = "odd";
+        foreach ($arA as $response) {
+            // Create a table row
+            $tr = $doc->createElement('tr');
+            
+            // Add a cell to the row
+            $fn = $response['fullname'];
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($fn));
+            $tr->appendChild($td);
+            
+            // Add a cell to the row
+            $qno = $response['questionno'];
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($qno));
+            $tr->appendChild($td);
+            
+            // Add a cell to the row
+            $q = $response['question'];
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($q));
+            $tr->appendChild($td);
+            
+            // Add a cell to the row
+            $ans = $response['answer'];
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($ans));
+            $tr->appendChild($td);
+            
+            // Add the row to the table
+            $table->appendChild($tr);
+            
+            // Convoluted odd/even
+            if ($class == "odd") { 
+                $class = "even";
+            } else {
+                $class = "odd";
+            }
+        }
+        $doc->appendChild($table);
+        return $doc->saveHTML();
+    }
 
 }
 ?>
