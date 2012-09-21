@@ -248,10 +248,10 @@ class assignment extends controller {
     }
 
     private function __saveassignment() {
-//        echo '<pre>';
-//        var_dump($_POST);
-//        echo '</pre>';
-//        die;
+        //echo '<pre>';
+        //var_dump($_POST);
+        //echo '</pre>';
+        //die("<br />----------------------------");
         $name = $this->getParam('name');
         $type = $this->getParam('type');
         $resubmit = $this->getParam('resubmit');

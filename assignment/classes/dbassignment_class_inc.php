@@ -162,9 +162,10 @@ class dbassignment extends dbtable {
         }
         $this->addReminderToCalendar(
                 $name,
-                $desciption,
+                $description,
                 $opening_date,
-                $closing_date, $id);
+                $closing_date, 
+                $id);
         return $id;
     }
 
@@ -177,7 +178,7 @@ class dbassignment extends dbtable {
      * @param <type> $id
      */
     private function addReminderToCalendar(
-    $name, $desciption, $opening_date, $closing_date, $id
+    $name, $description, $opening_date, $closing_date, $id
     ) {
 
         $objModule = $this->getObject('modules', 'modulecatalogue');

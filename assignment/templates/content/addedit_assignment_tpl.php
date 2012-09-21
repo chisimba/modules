@@ -167,7 +167,7 @@ $tableUploadableOptions->addCell($this->objLanguage->languageText('mod_assignmen
 $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 $allowedFileTypes = $objSysConfig->getValue('FILETYPES_ALLOWED', 'assignment');
 if (is_null($allowedFileTypes)) {
-    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx', 'pdf', 'zip');
+    $arrAllowedFileTypes = array('doc', 'odt', 'rtf', 'txt', 'docx', 'mp3', 'ppt', 'pptx','odp', 'pdf', 'zip');
 } else {
     $arrAllowedFileTypes = explode(',', $allowedFileTypes);
 }
@@ -450,6 +450,9 @@ $s_table->addCell($objTimePicker->show());
 $s_table->endRow();
 $datestable->addCell($s_table->show());
 $datestable->endRow();
+
+
+
 // Closing date
 $datestable->startRow();
 $datestable->addCell($this->objLanguage->languageText('mod_assignment_closingdate', 'assignment', 'Closing Date'));
@@ -470,6 +473,10 @@ $s_table->addCell($objTimePicker->show());
 $s_table->endRow();
 $datestable->addCell($s_table->show());
 $datestable->endRow();
+
+
+
+
 // Description
 $objEditor = $this->newObject('htmlarea', 'htmlelements');
 $objEditor->init('description', NULL, '500px', '500px');
