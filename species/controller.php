@@ -317,6 +317,8 @@ class species extends controller
         switch ($action)
         {
             case 'view':
+            case 'showsp':
+            case 'byletter';
                 return FALSE;
                 break;
             default:

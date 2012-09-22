@@ -81,8 +81,8 @@ class block_wikioverview extends object
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-                "mod_species_repimg", "species",
-                "Summary");
+                "mod_species_wikipovrv", "species",
+                "Wikipedia overview");
     }
     
     /**
