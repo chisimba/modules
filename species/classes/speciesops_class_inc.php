@@ -354,10 +354,7 @@ class speciesops extends object
      */
     private function checkStub($wikiTxt)
     {
-        if (
-                strpos($wikiTxt, 'This article about an') &&
-                strpos($wikiTxt, 'stub') 
-            ) {
+        if (strpos($wikiTxt, 'Wikipedia:Stub')) {
             return TRUE;
         } else {
             return FALSE;
