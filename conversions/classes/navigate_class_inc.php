@@ -66,7 +66,7 @@ class navigate extends object
         $gform->addToForm($this->objconvButton2->show());
         $gform = $gform->show();
         $gobjFeatureBox = $this->getObject('featurebox', 'navigation');
-        $gret = $gobjFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_goTo", "conversions") , $gform);
+        $gret = $gobjFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_goto", "conversions") , $gform);
         return $gret;
     }
     /**
