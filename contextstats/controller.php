@@ -175,6 +175,7 @@
        */
       private function __home()
       {
+          $start = 0;
           $count = count($this->getContextRange($start, $this->pagesize, $this->fromdate, $this->todate));
           $pages = ceil($count / $this->pagesize);
           $this->setVarByRef('pages', $pages);

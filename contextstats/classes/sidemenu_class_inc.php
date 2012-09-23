@@ -83,7 +83,7 @@
           
           //$strdiv = '<div id="disabledate">'.$dateToInput->show().'</div>';
           
-          $output .= '<input type="text" disabled value="' . date('d F Y') . '" name="date"/>';
+          $output .= '<input id="datetext" type="text" disabled value="' . date('d F Y') . '" name="date"/>';
           
           $objHead->str = $this->objLanguage->languageText('mod_contextstats_phraseshow', 'contextstats') . ': ';
           
