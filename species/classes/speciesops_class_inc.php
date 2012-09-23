@@ -61,6 +61,14 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class speciesops extends object
 {
+    
+    /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
 
     /**
     *
@@ -71,7 +79,8 @@ class speciesops extends object
     */
     public function init()
     {
-
+        // Get an instance of the languate object
+        $this->objLanguage = $this->getObject('language', 'language');
     }
 
     /**
@@ -186,7 +195,7 @@ class speciesops extends object
         // Get the washout parser for OEMB parsing
         $objWasher = $this->getObject('washout', 'utilities');
         $record = $objDbspecies->getRecord($id);
-        $latin = $record['scientificname'] . "&nbsp;&nbsp;($id)";
+        $latin = $record['scientificname'];
         $common = $record['fullname'];
         $wikiname = str_replace('  ', ' ', $common);
         $wikiname = str_replace(' ', '_', $wikiname);
@@ -204,7 +213,15 @@ class speciesops extends object
           . '<div class="species_txt">'. $wikiTxt . '</div>'
           . '</div>';
         if ($isStub) {
-            $ret .= "THIS IS STUB";
+            $doc = new DOMDocument('UTF-8');
+            $div = $doc->createElement('div');
+            $div->setAttribute('class', 'species_stub');
+            $doc->appendChild($div);
+            $stub = $this->objLanguage->languageText(
+                "mod_species_stub", "species",
+                "This article is a stub in Wikipedia");
+            $div->appendChild($doc->createTextNode($stub));
+            $ret .= $doc->saveHTML();
         }
         return $ret;
     }
