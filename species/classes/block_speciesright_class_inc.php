@@ -82,7 +82,7 @@ class block_speciesright extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
                 "mod_species_repimg", "species",
-                "Representative image");
+                "Flickr images");
 
     }
     

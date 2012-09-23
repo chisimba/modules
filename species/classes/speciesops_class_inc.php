@@ -64,7 +64,7 @@ class speciesops extends object
 
     /**
     *
-    * Intialiser for the species database connector
+    * Intialiser for the species operations class
     * @access public
     * @return VOID
     *
@@ -80,6 +80,7 @@ class speciesops extends object
      * with the letter clicked.
      * 
      * @return string A linked alphabetic list
+     * @access public
      * 
      */
     public function alphaLinked()
@@ -103,6 +104,17 @@ class speciesops extends object
         return $ret;
     }
     
+    /**
+     * 
+     * List species once a letter has been clicked, list all species whose
+     * alphabetical name begins with the particular letter.
+     * 
+     * @param string $letter The letter of the alphabet chosen
+     * @param string $field The database field to search, normally alphabeticalname
+     * @return string A formatted table of species
+     * @access public
+     * 
+     */
     public function listSpeciesByLetter($letter, $field='alphabeticalname') {
         $objDbspecies = & $this->getObject('dbspecies', 'species');
         $spArr = $objDbspecies->getListByLetter($letter, $field);
@@ -154,13 +166,19 @@ class speciesops extends object
             } else {
                 $class = "odd";
             }
-
-
         }
         $tab->appendChild($table);
         return $tab->saveHTML();
     }
     
+    /**
+     * 
+     * Show the info for a particular species by the record id
+     * 
+     * @param string $id The record id for the species in the database
+     * @return The formatter species record from Wikipedia
+     * @access public
+     */
     public function showSpecies($id)
     {
         // Create an instance of the database class
@@ -179,7 +197,6 @@ class speciesops extends object
         $page = $this->getWikipediaPage($uri);
         $isStub = $this->checkStub($page);
         $wikiTxt = $this->getContent($page);
-        //$infoBox = $this->getInfoBox($page);
         $wikiTxt = $this->italicizeSpecies($wikiTxt, $latin);
         $commonLinked = "<a href='$uri' target='_blank'>$common</a>";
         $ret = '<div class="species_speciesrecord">'
@@ -194,7 +211,15 @@ class speciesops extends object
         return $ret;
     }
     
-    
+    /**
+     * 
+     * Use curl to retrieve a wikipedia page
+     * 
+     * @param string $uri The wikipedia URI to retrieve
+     * @return string The contents of the page
+     * @access private
+     * 
+     */
     private function getWikipediaPage($uri)
     {
         $objCurl = $this->getObject('curlwrapper', 'utilities');
@@ -202,7 +227,17 @@ class speciesops extends object
         $this->appendArrayVar('headerParams', $this->getWikipediaCss());
         return $page;
     }
-      
+   
+    /**
+     * 
+     * Get the page content from the DIV with id=bodyContent by using the 
+     * dom document
+     * 
+     * @param string $page The retrieved Wikipedia page
+     * @return string The extracted content
+     * @access private
+     * 
+     */
     private function getContent($page)
     {
         $tree = new DOMDocument();
@@ -222,6 +257,34 @@ class speciesops extends object
         return NULL;
     }
     
+    /**
+     * 
+     * Get an array of thumbnails from the Wikipedia page
+     * 
+     * @param string $page The wikipedia page contents
+     * @return string Array An array of HTML links to thumb images
+     * @access private
+     * 
+     */
+    private function getImageThumbs($page)
+    {
+        $tree = new DOMDocument();
+        @$tree->loadHTML($page);
+        $arImgs = array();
+        foreach($tree->getElementsByTagName('div') as $div) {
+            if($div->getAttribute('id') == "bodyContent") {
+                foreach($div->getElementsByTagName('img') as $img) {
+                    if($div->getAttribute('class') == "thumbimage") {
+                        $arImgs[] = $img->getAttribute('src');
+                    }
+                }
+            }
+        }
+        return $arImgs;
+    }
+    
+    
+    //@@@DEPRECATED@@@@
     private function getInfoBox($page) {
         $tree = new DOMDocument();
         @$tree->loadHTML($page);
@@ -238,30 +301,61 @@ class speciesops extends object
         }
         return $output;
     }
+
     
-    private function getAllThumbImages($page) {
-        
-    }
-    
+    /**
+     * 
+     * Get the wikipedia CSS from the filters module
+     * 
+     * @return string The formatted link for the page header
+     * @access private
+     * 
+     */
     private function getWikipediaCss()
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" "
           . "href=\"" . $this->getResourceUri("css/wikipedia.css", "filters") . "\" />";
     }
     
+    /**
+     * 
+     * Italicise occurrences of the latin name in the text.
+     * 
+     * @param $string $wikiTxt The text to look in
+     * @param string $latin The latin name
+     * @return string The text with italics added
+     * @access private
+     * 
+     */
     private function italicizeSpecies($wikiTxt, $latin) {
-        return str_replace($latin, ' <i class="species_latin">' . $latin . '</i>', $wikiTxt);
+        return str_replace($latin, '<i class="species_latin">' . $latin . '</i>', $wikiTxt);
     }
     
+    /**
+     * 
+     * Get the wikipedia icon
+     * 
+     * @return string The IMG tag for the icon
+     * @access private
+     * 
+     */
     private function getWikipediaIcon()
     {
         $icon = $this->getResourceURI('icons/wikipedia64.png');
         return "<img src='$icon' class='speciesrecord_wikipicon'>";
     }
-    
+
+    /**
+     * 
+     * Check if an article returned is a stub
+     * 
+     * @param string $wikiTxt The text of the page
+     * @return boolean TRUE|FALSE
+     * @access private
+     * 
+     */
     private function checkStub($wikiTxt)
     {
-        //die($wikiTxt);
         if (
                 strpos($wikiTxt, 'This article about an') &&
                 strpos($wikiTxt, 'stub') 
