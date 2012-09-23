@@ -186,7 +186,7 @@ class speciesops extends object
         // Get the washout parser for OEMB parsing
         $objWasher = $this->getObject('washout', 'utilities');
         $record = $objDbspecies->getRecord($id);
-        $latin = $record['scientificname'];
+        $latin = $record['scientificname'] . "&nbsp;&nbsp;($id)";
         $common = $record['fullname'];
         $wikiname = str_replace('  ', ' ', $common);
         $wikiname = str_replace(' ', '_', $wikiname);
