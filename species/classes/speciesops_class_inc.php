@@ -186,24 +186,22 @@ class speciesops extends object
         // Get the washout parser for OEMB parsing
         $objWasher = $this->getObject('washout', 'utilities');
         $record = $objDbspecies->getRecord($id);
-        //var_dump($record); die();
         $latin = $record['scientificname'];
         $common = $record['fullname'];
         $wikiname = str_replace('  ', ' ', $common);
         $wikiname = str_replace(' ', '_', $wikiname);
         $uri = 'http://en.wikipedia.org/wiki/' . $wikiname;
-        //$wikiLink = '[quickembed:http://en.wikipedia.org/wiki/' . $wikiname . ']';
-        //$wikiTxt = $objWasher->parseText($wikiLink);
         $page = $this->getWikipediaPage($uri);
         $isStub = $this->checkStub($page);
         $wikiTxt = $this->getContent($page);
         $wikiTxt = $this->italicizeSpecies($wikiTxt, $latin);
         $commonLinked = "<a href='$uri' target='_blank'>$common</a>";
         $ret = '<div class="species_speciesrecord">'
-          . '<div class="speciesrecord_common">' . $commonLinked . '</div>'
-          . '<div class="speciesrecord_latin">' . $latin . '</div>'
-          . '<div class="speciesrecord_wikitxt">' . $this->getWikipediaIcon() 
-          . $wikiTxt . '</div>'
+          . '<div class="species_titletop>"'
+          . '<span class="speciesrecord_common">' . $commonLinked . '</span><br />'
+          . '<span class="speciesrecord_latin">' . $latin . '</span>'
+          . $this->getWikipediaIcon() . '</div>'
+          . '<div class="species_txt">'. $wikiTxt . '</div>'
           . '</div>';
         if ($isStub) {
             $ret .= "THIS IS STUB";
