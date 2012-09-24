@@ -40,6 +40,11 @@ $objFix->fixThree();
             "module" : "species",
             "block" : "speciesmiddle"
         }
+        {
+            "display" : "block",
+            "module" : "species",
+            "block" : "speciessound"
+        }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>

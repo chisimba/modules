@@ -192,8 +192,6 @@ class speciesops extends object
     {
         // Create an instance of the database class
         $objDbspecies = & $this->getObject('dbspecies', 'species');
-        // Get the washout parser for OEMB parsing
-        $objWasher = $this->getObject('washout', 'utilities');
         $record = $objDbspecies->getRecord($id);
         $latin = $record['scientificname'];
         $common = $record['fullname'];
