@@ -81,6 +81,48 @@ class flickr extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     
+    public function getImages($scientificName)
+    {
+        
+        $scientificName = str_replace(" ", "+", $scientificName);
+        $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $apiKey = $sysConfig->getValue('api_key', 'flickrshow');
+        $baseUri = "http://api.flickr.com/services/rest/?method=flickr.photos.search";
+        // Correct for weirdness with honeyguides
+        if (strtolower($scientificName) == "indicator+indicator") {
+            $scientificName = "Greater+Honeyguide+Indicator+indicator";
+        }
+        if (strtolower($scientificName) == "indicator+minor") {
+            $scientificName = "Lesser+Honeyguide";
+        }
+        if (strtolower($scientificName) == "indicator+variegatus") {
+            $scientificName = "Scaly-throated+Honeyguide";
+        }
+        
+        $resUri = $baseUri . "&api_key=" . $apiKey
+          . "&text=" . $scientificName . "&format=json&nojsoncallback=1";
+        $obj = json_decode($this->getResults($resUri));
+        $res="";
+        $c = 0;
+        $ar = array();
+        if (isset($obj->photos)) {
+            foreach ($obj->photos->photo as $photo) {
+                
+                $src = "http://farm". $photo->farm . ".static.flickr.com/" 
+                  . $photo->server . "/" . $photo->id  . "_" 
+                  . $photo->secret  . "_m.jpg";
+                $ln = "http://www.flickr.com/photos/" . $photo->owner 
+                  . "/" . $photo->id;
+                $ar[$c]['src'] = $src;
+                $ar[$c]['link'] = $ln;
+                if ($c == 1) {
+                    return $ar;
+                }
+                $c++;
+            }
+        }
+        return $ar;
+    }
 
     
     /**

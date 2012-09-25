@@ -186,6 +186,17 @@ class eol extends object
         }
     }
     
+    /**
+     * 
+     * Get up to two images for the given species identified by its
+     * scientific name. It returns the thumbnail, and sets the full size
+     * image to $this->fullImage
+     * 
+     * @param string $scientificName The latin species name
+     * @return string The URL for the thumbnail image
+     * @access public
+     * 
+     */
     public function getImage($scientificName)
     {
         $obj = $this->jsonSearch($scientificName);
@@ -202,6 +213,8 @@ class eol extends object
             $this->eolImage = $obj->dataObjects[0]->eolMediaURL;
         } else {
             $url = NULL;
+            $this->fullImage = NULL;
+            $this->eolImage = NULL;
         }
         return $url;
     }

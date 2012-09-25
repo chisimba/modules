@@ -77,11 +77,20 @@ class block_speciessound extends object
      */
     public function init() 
     {
+        
+        $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $findSounds = strtolower(
+          $sysConfig->getValue('species_findsounds', 'flickrshow')
+        );
+        
+        
         // Check if is should display
         $action = $this->getParam('action', NULL);
-        if ($action != 'showsp') {
+        if ($action != 'showsp' || $findSounds !== 'true') {
             $this->blockType="invisible";
         }
+        
+
         
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
@@ -96,25 +105,27 @@ class block_speciessound extends object
      */
     public function show() 
     {
-        $action = $this->getParam('action', NULL);
-        switch ($action) {
-            case "showsp":
-                $id = $this->getParam('id', FALSE);
-                if ($id) {
-                    $objDb = $this->getObject('dbspecies', 'species');
-                    $searchTerm = $objDb->getScientificName($id);
-                    $objEol = $this->getObject('eol', 'species');
-                    $ret = $objEol->getSound($searchTerm);
-                } else {
-                    $ret = NULL;
-                }
-                break;
-                
-            default:
-                $ret=NULL;
-                break;
+        if ($this->blockType != "invisible") {
+            $action = $this->getParam('action', NULL);
+            switch ($action) {
+                case "showsp":
+                    $id = $this->getParam('id', FALSE);
+                    if ($id) {
+                        $objDb = $this->getObject('dbspecies', 'species');
+                        $searchTerm = $objDb->getScientificName($id);
+                        $objEol = $this->getObject('eol', 'species');
+                        $ret = $objEol->getSound($searchTerm);
+                    } else {
+                        $ret = NULL;
+                    }
+                    break;
+
+                default:
+                    $ret=NULL;
+                    break;
+            }
+            return $ret;
         }
-        return $ret;
     }
 }
 ?>
