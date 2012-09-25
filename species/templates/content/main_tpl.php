@@ -8,6 +8,8 @@
 ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
 $objFix->fixThree();
+$dog=1;
+$cat=2;
 ?>
 
 <div id="threecolumn">
@@ -15,13 +17,21 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "species",
-            "block" : "speciesleft"
+            "wrapStr" : 0,
+            "block" : "alphalinked"
         }
+
         {
             "display" : "block",
             "module" : "species",
             "block" : "wikioverview"
         }
+        {
+            "display" : "block",
+            "module" : "species",
+            "block" : "flickrimgs"
+        }
+
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>
@@ -29,7 +39,8 @@ $objFix->fixThree();
         {
             "display" : "block",
             "module" : "species",
-            "block" : "speciesright"
+            "block" : "groups"
+
         }
         <div id="rightdynamic_area" class="rightdynamic_area_layer"></div>
         <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>

@@ -175,6 +175,21 @@ class species extends controller
         return "main_tpl.php";
     }
     
+    
+    /**
+    * 
+    * Method corresponding to the bygroup action for viewing a the detals of 
+    * groups (e.g. Albatross, Apalis) identified by the group from the querystring.
+    * 
+    * @access private
+    * 
+    */
+    private function __bygroup()
+    {
+        // All the action is in the blocks
+        return "main_tpl.php";
+    }
+    
     /**
     * 
     * Method corresponding to the edit action. It sets the mode to 
@@ -318,7 +333,8 @@ class species extends controller
         {
             case 'view':
             case 'showsp':
-            case 'byletter';
+            case 'byletter':
+            case 'bygroup':
                 return FALSE;
                 break;
             default:

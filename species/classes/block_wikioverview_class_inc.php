@@ -78,6 +78,11 @@ class block_wikioverview extends object
      */
     public function init() 
     {
+        // Check if is should display
+        $action = $this->getParam('action', NULL);
+        if ($action != 'showsp') {
+            $this->blockType="invisible";
+        }
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
@@ -106,13 +111,14 @@ class block_wikioverview extends object
                     $this->appendArrayVar('headerParams',
                       $this->getJavaScriptFile('species.js',
                       'species'));
+                    $ret = "<div id='wikioverviewcontents'></div>";
                 }
                 break;
             default:
-                
+                $ret = NULL;
                 break;
         }
-        return "<div id='wikioverviewcontents'></div>";
+        return $ret;
     }
 }
 ?>

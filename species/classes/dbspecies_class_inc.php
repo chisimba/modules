@@ -86,6 +86,15 @@ class dbspecies extends dbtable
         return $this->getAll();
     }
     
+    /**
+     * 
+     * Get a record by the primary key ($id)
+     * 
+     * @param string $id The PK of the record to return
+     * @return string Array The record
+     * @access public
+     * 
+     */
     public function getRecord($id)
     {
         $filter = "WHERE id = '$id'";
@@ -93,11 +102,58 @@ class dbspecies extends dbtable
         return $ret[0];
     }
     
+    /**
+     * 
+     * Get a list of records by alphabet letter
+     * 
+     * @param string $letter The letter
+     * @param string $field The field to use
+     * @return string Array Array of results data
+     * @access public
+     * 
+     */
     public function getListByLetter($letter, $field)
     {
         $filter = " WHERE $field LIKE '$letter%' ";
         return $this->getAll($filter);
     }
+    
+    /**
+     * 
+     * Get a list of records by group name
+     * 
+     * @param string $group The group
+     * @return string Array An array of results data
+     * @access public
+     * 
+     */
+    public function getGroup($group)
+    {
+        $filter = " WHERE alphabeticalname LIKE '$group%' ";
+        return $this->getAll($filter);
+    }
+    
+    /**
+     * 
+     * Get a list of the groupings from the alphabetical name, for example
+     * Albatros, Apalis, Avocet....
+     * 
+     * @param string $letter The letter
+     * @return string Array Array of results data
+     * @access public
+     * 
+     */
+    public function getGroupings()
+    {
+        $sql = 'SELECT DISTINCT 
+            SUBSTRING_INDEX(alphabeticalname, \',\', 1) AS groupname
+            FROM tbl_species_list; ';
+        return $this->getArray($sql);
+    }
+    
+    
+    
+    
 
     public function getScientificName($id)
     {

@@ -102,7 +102,7 @@ class speciesops extends object
                 'letter' => $letter
             ), 'species');
             $url = str_replace("&amp;", "&", $url);
-            // Use the DOM to make a link
+            // Use the DOM to make a link.
             $doc = new DOMDocument('UTF-8');
             $a = $doc->createElement('a');
             $a->setAttribute('href', $url);
@@ -136,7 +136,7 @@ class speciesops extends object
             // Create a table row
             $tr = $tab->createElement('tr');
             
-            // The linked alphabetical name
+            // The linked alphabetical name.
             $td = $tab->createElement('td');
             $td->setAttribute('class', $class);
             $id = $species['id'];
@@ -155,10 +155,10 @@ class speciesops extends object
             $td->appendChild($aLink);
             $tr->appendChild($td);
             
-            // The linked scientific name
+            // The linked scientific name.
             $td = $tab->createElement('td');
             $td->setAttribute('class', $class);
-            // Use the DOM to make a link
+            // Use the DOM to make a link.
             $aLink = $tab->createElement('a');
             $aLink->setAttribute('href', $url);
             $aLink->appendChild($tab->createTextNode($scientificName));
@@ -182,6 +182,34 @@ class speciesops extends object
     
     /**
      * 
+     * Return a list of all the groups 
+     * 
+     * @return string Linked list of groups
+     * @access public 
+     * 
+     */
+    public function showGroupings()
+    {
+        $objDbspecies = & $this->getObject('dbspecies', 'species');
+        $arList = $objDbspecies->getGroupings();
+        $ret="";
+        $doc = new DOMDocument('UTF-8');
+        foreach ($arList as $group) {
+            $url = $this->uri(array(
+                'action' => 'bygroup',
+                'group' => $group['groupname']
+            ), 'species');
+            $url = str_replace("&amp;", "&", $url);
+            $link = $doc->createElement('a');
+            $link->setAttribute('href', $url);
+            $link->appendChild($doc->createTextNode(" " . $group['groupname'] . " "));
+            $doc->appendChild($link);
+        }
+        return $doc->saveHTML();
+    }
+    
+    /**
+     * 
      * Show the info for a particular species by the record id
      * 
      * @param string $id The record id for the species in the database
@@ -190,7 +218,7 @@ class speciesops extends object
      */
     public function showSpecies($id)
     {
-        // Create an instance of the database class
+        // Create an instance of the database class.
         $objDbspecies = & $this->getObject('dbspecies', 'species');
         $record = $objDbspecies->getRecord($id);
         $latin = $record['scientificname'];
@@ -222,6 +250,74 @@ class speciesops extends object
             $ret .= $doc->saveHTML();
         }
         return $ret;
+    }
+    
+    
+    public function showOneGroup($group)
+    {
+        $objDbspecies = & $this->getObject('dbspecies', 'species');
+        $spArr = $objDbspecies->getGroup($group);
+        $ret = "";
+        $tab = new DOMDocument('UTF-8');
+        $table = $tab->createElement('table');
+        $table->setAttribute('class', "species_onegroup_table");
+        $class = "odd";
+        $objEol = $this->getObject('eol', 'species');
+        foreach ($spArr as $species) {
+            // Retrieve the data.
+            $id = $species['id'];
+            $alphabeticalName = $species['alphabeticalname'];
+            $fullName = $species['fullname'];
+            $scientificName = $species['scientificname'];
+            // Create a table row.
+            $tr = $tab->createElement('tr');
+            // Url linking to species detail.
+            $url = $this->uri(array(
+                'action' => 'showsp',
+                'id' => $id
+            ), 'species');
+            $url = str_replace("&amp;", "&", $url);
+            // Use the DOM to make a link for fullname.
+            $td = $tab->createElement('td');
+            $td->setAttribute('class', $class);
+            $aLink = $tab->createElement('a');
+            $aLink->setAttribute('href', $url);
+            $aLink->appendChild($tab->createTextNode($fullName));
+            $td->appendChild($aLink);
+            $tr->appendChild($td);
+            
+            // Use the DOM to make a link for latin name.
+            $td = $tab->createElement('td');
+            $td->setAttribute('class', $class);
+            $aLink = $tab->createElement('a');
+            $aLink->setAttribute('href', $url);
+            $aLink->appendChild($tab->createTextNode($scientificName));
+            $td->appendChild($aLink);
+            // Add the cell to the row
+            $tr->appendChild($td);
+            
+            $thumbUrl = $objEol->getImage($scientificName);
+            $fullUrl = $objEol->eolImage;
+            $img = $tab->createElement('img');
+            $img->setAttribute('src', $thumbUrl);
+            
+            // Add a table cell for the first image.
+            $td = $tab->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($img);
+            $tr->appendChild($td);
+            
+            // Add the row to the table.
+            $table->appendChild($tr);
+            // Convoluted odd/even
+            if ($class == "odd") { 
+                $class = "even";
+            } else {
+                $class = "odd";
+            }
+        }
+        $tab->appendChild($table);
+        return $tab->saveHTML();
     }
     
     /**

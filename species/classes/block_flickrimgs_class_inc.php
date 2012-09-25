@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * A right block for Species.
+ * A flickrimgs block for Species.
  *
- * A right block for Species. Manage a database of information about species within a group, for example birds. Store common name, Latin name, a link to one or more free content images from Flickr, as well as imported text from Wikipedia where it exists..
+ * A flickrimgs block for Species. Show flickr images for the selected species
+ * in a narrow block.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +41,11 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A right block for Species.
+ * A flickrimgs block for Species.
  *
- * A right block for Species. Manage a database of information about species within a group, for example birds. Store common name, Latin name, a link to one or more free content images from Flickr, as well as imported text from Wikipedia where it exists..
- *
+ * A flickrimgs block for Species. Show flickr images for the selected species
+ * in a narrow block.
+ * 
  * @category  Chisimba
  * @package    species
  * @author     Derek Keats derek@localhost.local
@@ -51,7 +53,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_speciesright extends object
+class block_flickrimgs extends object
 {
     /**
      * The title of the block
@@ -78,6 +80,11 @@ class block_speciesright extends object
      */
     public function init() 
     {
+        // Check if is should display
+        $action = $this->getParam('action', NULL);
+        if ($action != 'showsp') {
+            $this->blockType="invisible";
+        }
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
@@ -110,13 +117,14 @@ class block_speciesright extends object
                     $this->appendArrayVar('headerParams',
                       $this->getJavaScriptFile('flickrimages.js',
                       'species'));
+                    $ret = "<div id='speciesimages'></div>";
                 }
                 break;
             default:
-                
+                $ret = NULL;
                 break;
         }
-        return "<div id='speciesimages'></div>";
+        return $ret;
     }
 }
 ?>

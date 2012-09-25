@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * Get a sound file
+ * List groups.
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * List groups with links.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Get a sound file
+ * A left block for Species.
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * A left block for Species. Manage a database of information about species within a group, for example birds. Store common name, Latin name, a link to one or more free content images from Flickr, as well as imported text from Wikipedia where it exists..
  *
  * @category  Chisimba
  * @author    Derek Keats derek@localhost.local
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_speciessound extends object
+class block_groups extends object
 {
     /**
      * The title of the block
@@ -59,7 +59,6 @@ class block_speciessound extends object
      * @access public
      */
     public $title;
-    
     /**
      *
      * @var string Object $objLanguage String for the language object
@@ -67,7 +66,6 @@ class block_speciessound extends object
      *
      */
     public $objLanguage;
-
     /**
      * Standard init function
      *
@@ -77,17 +75,13 @@ class block_speciessound extends object
      */
     public function init() 
     {
-        // Check if is should display
-        $action = $this->getParam('action', NULL);
-        if ($action != 'showsp') {
-            $this->blockType="invisible";
-        }
-        
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
+        // Instantiate the user object.
+        $this->objUser = $this->getObject('user', 'security');
         $this->title = $this->objLanguage->languageText(
-                "mod_species_eolsound", "species",
-                "Sound file results");
+                "mod_species_allgrous", "species",
+                "Groups");
     }
     /**
      * Standard block show method.
@@ -96,25 +90,8 @@ class block_speciessound extends object
      */
     public function show() 
     {
-        $action = $this->getParam('action', NULL);
-        switch ($action) {
-            case "showsp":
-                $id = $this->getParam('id', FALSE);
-                if ($id) {
-                    $objDb = $this->getObject('dbspecies', 'species');
-                    $searchTerm = $objDb->getScientificName($id);
-                    $objEol = $this->getObject('eol', 'species');
-                    $ret = $objEol->getSound($searchTerm);
-                } else {
-                    $ret = NULL;
-                }
-                break;
-                
-            default:
-                $ret=NULL;
-                break;
-        }
-        return $ret;
+        $objOps = $this->getObject('speciesops', 'species');
+        return $objOps->showGroupings();
     }
 }
 ?>

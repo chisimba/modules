@@ -106,6 +106,13 @@ class block_speciesmiddle extends object
                     $ret = $objOps->showSpecies($id);
                 }
                 break;
+            case "bygroup":
+                $group = $this->getParam('group', FALSE);
+                if ($group) {
+                    $objOps = $this->getObject('speciesops', 'species');
+                    $ret = $objOps->showOneGroup($group);
+                }
+                break;
                 
         }
         return $ret;

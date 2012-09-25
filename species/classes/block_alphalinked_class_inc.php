@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * A left block for Species.
+ * A alphalinked block for Species.
  *
- * A left block for Species. Manage a database of information about species within a group, for example birds. Store common name, Latin name, a link to one or more free content images from Flickr, as well as imported text from Wikipedia where it exists..
+ * A alphalinked block for Species. Produces a linked alphabet pointing to groups that
+ * start with that particular letter.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A left block for Species.
+ * A alphalinked block for Species.
  *
- * A left block for Species. Manage a database of information about species within a group, for example birds. Store common name, Latin name, a link to one or more free content images from Flickr, as well as imported text from Wikipedia where it exists..
+ * A alphalinked block for Species. Produces a linked alphabet pointing to groups that
+ * start with that particular letter.
  *
  * @category  Chisimba
  * @author    Derek Keats derek@localhost.local
@@ -50,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_speciesleft extends object
+class block_alphalinked extends object
 {
     /**
      * The title of the block
@@ -90,7 +92,6 @@ class block_speciesleft extends object
      */
     public function show() 
     {
-        //return "TEST";
         $objOps = $this->getObject('speciesops', 'species');
         return $objOps->alphaLinked();
     }

@@ -167,8 +167,12 @@ class eol extends object
     
     /**
      * 
-     * @return boolean
+     * Check if a browser is Firefox (because Firefox cannot embed MP3 via
+     * the HTML5 AUDIO tag)
+     * 
+     * @return boolean TRUE|FALSE
      * @access private
+     * 
      */
     private function isFirefox()
     {
@@ -180,6 +184,26 @@ class eol extends object
         } else {
             return FALSE;
         }
+    }
+    
+    public function getImage($scientificName)
+    {
+        $obj = $this->jsonSearch($scientificName);
+        $id = $obj->results[0]->id;
+        $uri = "http://eol.org/api/pages/1.0/$id.json?details=0&images=2&sounds=0&subjects=overview&text=0";
+        $page = $this->getResults($uri);
+        $obj = json_decode($page);
+        /*echo "<pre>";
+        print_r($obj);
+        die("</pre>");*/
+        if (isset($obj->dataObjects[0])) {
+            $url = $obj->dataObjects[0]->eolThumbnailURL;
+            $this->fullImage = $obj->dataObjects[0]->mediaURL;
+            $this->eolImage = $obj->dataObjects[0]->eolMediaURL;
+        } else {
+            $url = NULL;
+        }
+        return $url;
     }
 
     /**
