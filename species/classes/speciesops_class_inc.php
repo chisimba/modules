@@ -236,8 +236,33 @@ class speciesops extends object
         $wikiname = str_replace(' ', '_', $wikiname);
         $uri = 'http://en.wikipedia.org/wiki/' . $wikiname;
         $page = $this->objWikipedia->getWikipediaPage($uri);
-        $isStub = $this->objWikipedia->checkStub($page);
         $wikiTxt = $this->objWikipedia->getContent($page);
+        // If it didn't find the common name, then try the latin name.
+        if (strstr($wikiTxt, "Other reasons this message may be displayed")) {
+            $wikiname = str_replace(' ', '_', $latin);
+            $uri = 'http://en.wikipedia.org/wiki/' . $wikiname;
+            $page = $this->objWikipedia->getWikipediaPage($uri);
+            $wikiTxt = $this->objWikipedia->getContent($page);
+            // If it still didn't find it.
+            if (strstr($wikiTxt, "Other reasons this message may be displayed")) {
+                $doc = new DOMDocument('UTF-8');
+                $div = $doc->createElement('div');
+                $div->setAttribute('class', 'species_stub');
+                $wikiTxt = "Unable to locate an article on Wikipedia using common name or scientific name.";
+                $div->appendChild($doc->createTextNode($wikiTxt));
+                $doc->appendChild($div);
+                $wikiTxt = $doc->saveHTML();
+            }
+        }
+        // Serialize item to Javascript for the summary block.
+        $fullName = str_replace("'", "\'", $wikiname);
+        $arrayVars['fullName'] = $fullName;
+        $objSerialize = $this->getObject('serializevars', 'utilities');
+        $objSerialize->varsToJs($arrayVars);
+        
+        // Check if the article is a stub on Wikipedia.
+        $isStub = $this->objWikipedia->checkStub($page);
+        // Italicize the latin name.
         $wikiTxt = $this->objWikipedia->italicizeSpecies($wikiTxt, $latin);
         $commonLinked = "<a href='$uri' target='_blank'>$common</a>";
         $ret = '<div class="species_speciesrecord">'
@@ -251,11 +276,11 @@ class speciesops extends object
             $doc = new DOMDocument('UTF-8');
             $div = $doc->createElement('div');
             $div->setAttribute('class', 'species_stub');
-            $doc->appendChild($div);
             $stub = $this->objLanguage->languageText(
                 "mod_species_stub", "species",
                 "This article is a stub in Wikipedia");
             $div->appendChild($doc->createTextNode($stub));
+            $doc->appendChild($div);
             $ret .= $doc->saveHTML();
         }
         return $ret;
@@ -355,17 +380,18 @@ class speciesops extends object
     public function renderChangeBlock()
     {
         // Add valid groups to this array to auto generate links.
-        $groups = array('birds', 'mammals', 'plants');
+        $groups = array('birds', 'mammals', 'plants_proteaceae');
         $doc = new DOMDocument('UTF-8');
         foreach ($groups as $group) {
             $url = $this->uri(array(
                 'action' => 'setdata',
                 'data' => $group
             ), 'species');
+            $groupRep = str_replace('_', ': ', $group);
             $url = str_replace("&amp;", "&", $url);
             $link = $doc->createElement('a');
             $link->setAttribute('href', $url);
-            $link->appendChild($doc->createTextNode(" " . $group . " "));
+            $link->appendChild($doc->createTextNode(" " . $groupRep . " "));
             $doc->appendChild($link);
         }
         return $doc->saveHTML();

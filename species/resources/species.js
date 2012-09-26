@@ -18,10 +18,9 @@
  *
  */
 jQuery(function() {
-
-    
     // Things to do on loading the page.
     jQuery(document).ready(function() {
+        
         var url="http://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + fullName + "&redirects&prop=text&callback=?";
         jQuery.getJSON(url,function(data){
             wikiHTML = data.parse.text["*"];
@@ -31,5 +30,4 @@ jQuery(function() {
             jQuery("#wikioverviewcontents").append(res2);
         });
     });
-
 });

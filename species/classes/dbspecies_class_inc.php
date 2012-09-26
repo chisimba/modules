@@ -76,9 +76,9 @@ class dbspecies extends dbtable
                 $this->table = 'tbl_birds_list';
                 parent::init('tbl_birds_list');
                 break;
-            case 'plants':
-                $this->table = 'tbl_plants_list';
-                parent::init('tbl_plants_list');
+            case 'plants_proteaceae':
+                $this->table = 'tbl_plants_proteaceae_list';
+                parent::init('tbl_plants_proteaceae_list');
                 break;
             case 'mammals':
                 $this->table = 'tbl_mammals_list';

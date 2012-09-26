@@ -102,12 +102,12 @@ class block_wikioverview extends object
             case "showsp":
                 $id = $this->getParam('id', FALSE);
                 if ($id) {
-                    $objDbspecies = & $this->getObject('dbspecies', 'species');
-                    $fullName = $objDbspecies->getFullName($id);
+                    //$objDbspecies = & $this->getObject('dbspecies', 'species');
+                    //$fullName = $objDbspecies->getFullName($id);
                     // Serialize item to Javascript
-                    $arrayVars['fullName'] = str_replace(" ", "+", $fullName);
-                    $objSerialize = $this->getObject('serializevars', 'utilities');
-                    $objSerialize->varsToJs($arrayVars);
+                    //$arrayVars['fullName'] = str_replace(" ", "+", $fullName);
+                    //$objSerialize = $this->getObject('serializevars', 'utilities');
+                    //$objSerialize->varsToJs($arrayVars);
                     $this->appendArrayVar('headerParams',
                       $this->getJavaScriptFile('species.js',
                       'species'));

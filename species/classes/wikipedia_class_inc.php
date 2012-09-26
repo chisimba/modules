@@ -111,6 +111,7 @@ class wikipedia extends object
      */
     public function getContent($page)
     {
+        $wasFound = FALSE;
         $tree = new DOMDocument();
         @$tree->loadHTML($page);
         $count = 1;
