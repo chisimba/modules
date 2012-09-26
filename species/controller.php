@@ -346,6 +346,7 @@ class species extends controller
             case 'showsp':
             case 'byletter':
             case 'bygroup':
+            case 'setdata';
                 return FALSE;
                 break;
             default:
