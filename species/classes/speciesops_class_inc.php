@@ -344,6 +344,33 @@ class speciesops extends object
         return $tab->saveHTML();
     }
     
+    /**
+     * 
+     * Render a block for changing the group (data table referenced)
+     * 
+     * @return string A list of hyperlinks to change data
+     * @access public
+     * 
+     */
+    public function renderChangeBlock()
+    {
+        // Add valid groups to this array to auto generate links.
+        $groups = array('birds', 'mammals', 'plants');
+        $doc = new DOMDocument('UTF-8');
+        foreach ($groups as $group) {
+            $url = $this->uri(array(
+                'action' => 'setdata',
+                'data' => $group
+            ), 'species');
+            $url = str_replace("&amp;", "&", $url);
+            $link = $doc->createElement('a');
+            $link->setAttribute('href', $url);
+            $link->appendChild($doc->createTextNode(" " . $group . " "));
+            $doc->appendChild($link);
+        }
+        return $doc->saveHTML();
+    }
+    
 
     
     /**

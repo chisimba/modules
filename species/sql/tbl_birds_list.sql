@@ -5,10 +5,10 @@
 *
 */
 // Table Name
-$tablename = 'tbl_species_list';
+$tablename = 'tbl_birds_list';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Storage of species primary data for the species module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Storage of species primary data for birds in the species module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -32,7 +32,7 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_species_list_idx';
+$name = 'tbl_birds_list_idx';
 
 $indexes = array(
     'fields' => array(

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<defaultdata>
+
+   <tbl_mammals_list>
+       <id>2001</id>
+       <alphabeticalname>Galago, Mohol</alphabeticalname>
+       <fullname>Mohol Galago</fullname>
+       <scientificname>Galago moholi</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2002</id>
+       <alphabeticalname>Galago, Brown Greater</alphabeticalname>
+       <fullname>Brown Greater Galago</fullname>
+       <scientificname>Otolemur crassicaudatus</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2003</id>
+       <alphabeticalname>Monkey, Vervet</alphabeticalname>
+       <fullname>Vervet Monkey</fullname>
+       <scientificname>Chlorocebus pygerythrus</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2004</id>
+       <alphabeticalname>Monkey, Sykes'</alphabeticalname>
+       <fullname>Sykes' Monkey</fullname>
+       <scientificname>Cercopithecus albogularis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2005</id>
+       <alphabeticalname>Baboon,Chacma</alphabeticalname>
+       <fullname>Chacma Baboon</fullname>
+       <scientificname>Papio ursinus</scientificname>
+   </tbl_mammals_list>
+
+</defaultdata>
+
+
+ 

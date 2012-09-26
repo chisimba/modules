@@ -26,6 +26,7 @@ $cat=2;
             "module" : "species",
             "block" : "wikioverview"
         }
+        
         {
             "display" : "block",
             "module" : "species",
@@ -42,6 +43,13 @@ $cat=2;
             "block" : "groups"
 
         }
+        {
+            "display" : "block",
+            "module" : "species",
+            "block" : "changegroup"
+
+        }        
+
         <div id="rightdynamic_area" class="rightdynamic_area_layer"></div>
         <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>
     </div>

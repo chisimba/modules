@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * Get a sound file
+ * Change groups (mammals, birds, plants, etc).
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * Change groups (mammals, birds, plants, etc). It changes the database table
+ * referenced to get the list of species.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Get a sound file
+ * Change groups (mammals, birds, plants, etc).
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * Change groups (mammals, birds, plants, etc). It changes the database table
+ * referenced to get the list of species.
  *
  * @category  Chisimba
  * @author    Derek Keats derek@localhost.local
@@ -50,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_speciessound extends object
+class block_changegroup extends object
 {
     /**
      * The title of the block
@@ -59,7 +61,6 @@ class block_speciessound extends object
      * @access public
      */
     public $title;
-    
     /**
      *
      * @var string Object $objLanguage String for the language object
@@ -67,7 +68,6 @@ class block_speciessound extends object
      *
      */
     public $objLanguage;
-
     /**
      * Standard init function
      *
@@ -77,25 +77,14 @@ class block_speciessound extends object
      */
     public function init() 
     {
-        
-        $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $findSounds = strtolower(
-          $sysConfig->getValue('species_findsounds', 'flickrshow')
-        );
-        
-        // Check if is should display
-        $action = $this->getParam('action', NULL);
-        if ($action != 'showsp' || $findSounds !== 'true') {
-            $this->blockType="invisible";
-        }
-        
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
+        // Instantiate the user object.
+        $this->objUser = $this->getObject('user', 'security');
         $this->title = $this->objLanguage->languageText(
-          "mod_species_eolsound", "species",
-          "Sound file results");
+                "mod_species_changegroup", "species",
+                "Change organisms");
     }
-    
     /**
      * Standard block show method.
      *
@@ -103,27 +92,8 @@ class block_speciessound extends object
      */
     public function show() 
     {
-        if ($this->blockType != "invisible") {
-            $action = $this->getParam('action', NULL);
-            switch ($action) {
-                case "showsp":
-                    $id = $this->getParam('id', FALSE);
-                    if ($id) {
-                        $objDb = $this->getObject('dbspecies', 'species');
-                        $searchTerm = $objDb->getScientificName($id);
-                        $objEol = $this->getObject('eol', 'species');
-                        $ret = $objEol->getSound($searchTerm);
-                    } else {
-                        $ret = NULL;
-                    }
-                    break;
-
-                default:
-                    $ret=NULL;
-                    break;
-            }
-            return $ret;
-        }
+        $objOps = $this->getObject('speciesops', 'species');
+        return $objOps->renderChangeBlock();
     }
 }
 ?>

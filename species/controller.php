@@ -190,6 +190,17 @@ class species extends controller
         return "main_tpl.php";
     }
     
+    private function __setdata()
+    {
+        $data = $this->getParam('data', FALSE);
+        if ($data) {
+            $this->setSession('speciesgroup', $data, 'species');
+        } else {
+            $this->setSession('speciesgroup', 'birds', 'species');
+        }
+        return $this->nextAction(NULL);
+    }
+    
     /**
     * 
     * Method corresponding to the edit action. It sets the mode to 

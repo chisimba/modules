@@ -69,8 +69,22 @@ class dbspecies extends dbtable
     */
     public function init()
     {
-        //Set the parent table to our demo table
-        parent::init('tbl_species_list');
+        // Set the parent table.
+        $table = $this->getSession('speciesgroup', 'birds', 'species');
+        switch ($table) {
+            case 'birds':
+                $this->table = 'tbl_birds_list';
+                parent::init('tbl_birds_list');
+                break;
+            case 'plants':
+                $this->table = 'tbl_plants_list';
+                parent::init('tbl_plants_list');
+                break;
+            case 'mammals':
+                $this->table = 'tbl_mammals_list';
+                parent::init('tbl_mammals_list');
+                break;
+        }
     }
     
     /**
@@ -147,7 +161,7 @@ class dbspecies extends dbtable
     {
         $sql = 'SELECT DISTINCT 
             SUBSTRING_INDEX(alphabeticalname, \',\', 1) AS groupname
-            FROM tbl_species_list; ';
+            FROM ' . $this->table . '; ';
         return $this->getArray($sql);
     }
     
