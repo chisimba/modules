@@ -67,6 +67,14 @@ class block_speciessound extends object
      *
      */
     public $objLanguage;
+    
+    /**
+     *
+     * @var string $blockType Used to set the block invisible
+     * @access private
+     * 
+     */
+    private $blockType=NULL;
 
     /**
      * Standard init function
@@ -80,12 +88,12 @@ class block_speciessound extends object
         
         $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $findSounds = strtolower(
-          $sysConfig->getValue('species_findsounds', 'flickrshow')
+          $sysConfig->getValue('species_findsounds', 'species')
         );
         
         // Check if is should display
         $action = $this->getParam('action', NULL);
-        if ($action != 'showsp' || $findSounds !== 'true') {
+        if ($action !== 'showsp' || $findSounds !== 'true') {
             $this->blockType="invisible";
         }
         
