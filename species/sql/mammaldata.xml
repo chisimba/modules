@@ -548,31 +548,398 @@
        <scientificname>Lemniscomys rosalia</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>209</id>
-       <alphabeticalname></alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <id>2091</id>
+       <alphabeticalname>Mouse, Southern Multimammate</alphabeticalname>
+       <fullname>Southern Multimammate Mouse</fullname>
+       <scientificname>Mastomys coucha</scientificname>
    </tbl_mammals_list>
-    </defaultdata>
    <tbl_mammals_list>
-       <id>209</id>
-       <alphabeticalname></alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <id>2092</id>
+       <alphabeticalname>Mouse, Natal Multimammate</alphabeticalname>
+       <fullname>Natal Multimammate Mouse</fullname>
+       <scientificname>Mastomys natalensis</scientificname>
    </tbl_mammals_list>
-    </defaultdata>
    <tbl_mammals_list>
-       <id>209</id>
-       <alphabeticalname></alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <id>2093</id>
+       <alphabeticalname>Mouse, Desert Pygmy</alphabeticalname>
+       <fullname>Desert Pygmy Mouse</fullname>
+       <scientificname>Mus indutus</scientificname>
    </tbl_mammals_list>
-    </defaultdata>
    <tbl_mammals_list>
-       <id>209</id>
-       <alphabeticalname></alphabeticalname>
+       <id>2094</id>
+       <alphabeticalname>Mouse, African Pygmy</alphabeticalname>
+       <fullname>African Pygmy Mouse</fullname>
+       <scientificname>Mus minutoides</scientificname>
+   </tbl_mammals_list>
+    <tbl_mammals_list>
+       <id>2095</id>
+       <alphabeticalname>Mouse, Neave's</alphabeticalname>
+       <fullname>Neave's Mouse</fullname>
+       <scientificname>Mus neavei</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2096</id>
+       <alphabeticalname>Mouse, Orange</alphabeticalname>
+       <fullname>Orange Mouse</fullname>
+       <scientificname>Mus orangiae</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2097</id>
+       <alphabeticalname>Rat, Verreaux's White-footed</alphabeticalname>
+       <fullname>Verreaux's White-footed Rat</fullname>
+       <scientificname>Myomyscus verreauxii</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2098</id>
+       <alphabeticalname>Mouse, Four-striped Grass</alphabeticalname>
+       <fullname>Four-striped Grass Mouse</fullname>
+       <scientificname>Rhabdomys pumilio</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2099</id>
+       <alphabeticalname>Rat, Black-tailed Tree</alphabeticalname>
+       <fullname>Black-tailed Tree Rat</fullname>
+       <scientificname>Thallomys nigricauda</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2100</id>
+       <alphabeticalname>Rat, Acacia</alphabeticalname>
+       <fullname>Acacia rat</fullname>
+       <scientificname>Thallomys paedulcus</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2101</id>
+       <alphabeticalname>Rat, Shortridge's</alphabeticalname>
+       <fullname>Shortridge's Rat</fullname>
+       <scientificname>Thallomys shortridgei</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2102</id>
+       <alphabeticalname>Zelotomys, Woosnam's</alphabeticalname>
+       <fullname>Woosnam's Zelotomys</fullname>
+       <scientificname>Zelotomys woosnami</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2103</id>
+       <alphabeticalname>Rabbit, Riverine</alphabeticalname>
+       <fullname>Riverine Rabbit</fullname>
+       <scientificname>Bunolagus monticularis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2104</id>
+       <alphabeticalname>Rockhare, Natal Red</alphabeticalname>
+       <fullname>Natal Red Rockhare</fullname>
+       <scientificname>Pronolagus crassicaudatus</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2105</id>
+       <alphabeticalname>Hare, Jameson's Red Rock</alphabeticalname>
+       <fullname>Jameson's Red Rock Hare</fullname>
+       <scientificname>Pronolagus randensis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2106</id>
+       <alphabeticalname>Hare, Smith's Red Rock</alphabeticalname>
+       <fullname>Smith's Red Rockhare</fullname>
+       <scientificname>Pronolagus rupestris</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2107</id>
+       <alphabeticalname>Hare, Cape</alphabeticalname>
+       <fullname>Cape Hare</fullname>
+       <scientificname>Lepus capensis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2108</id>
+       <alphabeticalname>Hare, African Savanna</alphabeticalname>
+       <fullname>African Savanna Hare</fullname>
+       <scientificname>Lepus microtis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2109</id>
+       <alphabeticalname>Hare, Scrub</alphabeticalname>
+       <fullname>Scrub Har</fullname>
+       <scientificname>Lepus saxatilis</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2110</id>
+       <alphabeticalname>Southern African Hedgehog Atelerix frontalis</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
-    </defaultdata>
- 
+   <tbl_mammals_list>
+       <id>2111</id>
+       <alphabeticalname>Reddish-gray Musk Shrew Crocidura cyanea</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2112</id>
+       <alphabeticalname>Greater Red Musk Shrew Crocidura flavescens</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2113</id>
+       <alphabeticalname>Tiny Musk Shrew Crocidura fuscomurina</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2114</id>
+       <alphabeticalname>Lesser Red Musk Shrew Crocidura hirta</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2115</id>
+       <alphabeticalname>Maquassie Musk Shrew Crocidura maquassiensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2116</id>
+       <alphabeticalname>Swamp Musk Shrew Crocidura mariquensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2117</id>
+       <alphabeticalname>Lesser Gray-brown Musk Shrew Crocidura silacea</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2118</id>
+       <alphabeticalname>Least Dwarf Shrew Suncus infinitesimus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2119</id>
+       <alphabeticalname>Lesser Dwarf Shrew Suncus varilla</alphabeticalname>
+       <fullname></fullname>
+       <scientificname>Dark-footed Forest Shrew Myosorex cafer</scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2120</id>
+       <alphabeticalname>Long-tailed Forest Shrew Myosorex longicaudatus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2121</id>
+       <alphabeticalname>Sclater's Tiny Mouse Shrew Myosorex sclateri</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2122</id>
+       <alphabeticalname>Thin Mouse Shrew Myosorex tenuis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2123</id>
+       <alphabeticalname>Forest Shrew Myosorex varius</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2124</id>
+       <alphabeticalname>Straw-coloured Fruit Bat Eidolon helvum</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2125</id>
+       <alphabeticalname>Wahlberg's Epauletted Fruit Bat Epomophorus wahlbergi</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2126</id>
+       <alphabeticalname>Egyptian fruit bat Rousettus aegyptiacus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2127</id>
+       <alphabeticalname>Damara Woolly Bat Kerivoula argentata</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2128</id>
+       <alphabeticalname>Lesser Woolly Bat Kerivoula lanosa</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>    
+   <tbl_mammals_list>
+       <id>2129</id>
+       <alphabeticalname>Dubious Trumpet-eared Bat Phoniscus aerosa</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2130</id>
+       <alphabeticalname>Lesueur's Hairy Bat Cistugo lesueuri</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2131</id>
+       <alphabeticalname>Angolan Hairy Bat Cistugo seabrai</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2132</id>
+       <alphabeticalname>Rufous Mouse-eared Bat Myotis bocagii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2133</id>
+       <alphabeticalname>Cape Hairy Bat Myotis tricolor</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2134</id>
+       <alphabeticalname>Welwitch's Bat Myotis welwitschii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2135</id>
+       <alphabeticalname>Long-tailed House Bat Eptesicus hottentotus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list> 
+   <tbl_mammals_list>
+       <id>2136</id>
+       <alphabeticalname>Butterfly Bat Glauconycteris variegata</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2137</id>
+       <alphabeticalname>Anchieta's Pipistrelle Hypsugo anchietae</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2138</id>
+       <alphabeticalname>Botswanan Long-eared Bat Laephotis botswanae</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2139</id>
+       <alphabeticalname>De Winton's Long-eared Bat Laephotis wintoni</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2140</id>
+       <alphabeticalname>Cape Serotine Neoromicia capensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2141</id>
+       <alphabeticalname>Melck's House Bat Neoromicia melckorum</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2142</id>
+       <alphabeticalname>Banana Pipistrelle Neoromicia nanus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list> 
+   <tbl_mammals_list>
+       <id>2143</id>
+       <alphabeticalname>Rendall's Serotine Neoromicia rendalli</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2144</id>
+       <alphabeticalname>Neoromicia zuluensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2145</id>
+       <alphabeticalname>Schlieffen's Twilight Bat Nycticeinops schlieffeni</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2146</id>
+       <alphabeticalname> Banana Pipistrelle Neoromicia nanus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2147</id>
+       <alphabeticalname>Rendall's Serotine Neoromicia rendalli</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2148</id>
+       <alphabeticalname>RÜppel's Pipistrelle Pipistrellus rueppelli</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2149</id>
+       <alphabeticalname>Rusty Pipistrelle Pipistrellus rusticus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list> 
+   <tbl_mammals_list>
+       <id>2150</id>
+       <alphabeticalname>Light-winged Lesser House Bat Scotoecus albofuscus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2151</id>
+       <alphabeticalname>African Yellow Bat Scotophilus dinganii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2152</id>
+       <alphabeticalname>Greenish Yellow Bat Scotophilus viridis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2153</id>
+       <alphabeticalname>Lesser Long-fingered Bat Miniopterus fraterculus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2154</id>
+       <alphabeticalname>Natal Long-fingered Bat Miniopterus natalensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2155</id>
+       <alphabeticalname>Ansorge's Free-tailed Bat Chaerephon ansorgei</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2156</id>
+       <alphabeticalname></alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list> 

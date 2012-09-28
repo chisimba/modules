@@ -326,11 +326,8 @@ class speciesops extends object
             $aLink->setAttribute('href', $url);
             $aLink->appendChild($tab->createTextNode($fullName));
             $td->appendChild($aLink);
-            $tr->appendChild($td);
-            
-            // Use the DOM to make a link for latin name.
-            $td = $tab->createElement('td');
-            $td->setAttribute('class', $class);
+            $br = $tab->createElement('br');
+            $td->appendChild($br);
             $aLink = $tab->createElement('a');
             $aLink->setAttribute('href', $url);
             $aLink->appendChild($tab->createTextNode($scientificName));
@@ -348,10 +345,24 @@ class speciesops extends object
                     $td = $tab->createElement('td');
                     $td->setAttribute('class', $class);
                     $a = $tab->createElement('a');
-                    $a->setAttribute('href', $photo['link']);
+                    $a->setAttribute('href', $url);
                     $a->setAttribute('title', $scientificName);
                     $a->appendChild($img);
-                    $td->appendChild($a);
+                    // Put the image in a div for styling
+                    $imDiv = $tab->createElement('div');
+                    $imDiv->setAttribute('class', 'species_thumb');
+                    $imDiv->appendChild($a);
+                    $br = $tab->createElement('br');
+                    $imDiv->appendChild($br);
+                    // Put the name and flickr link below the image.
+                    $a = $tab->createElement('a');
+                    $a->setAttribute('href', $photo['link']);
+                    $a->setAttribute('target', "_blank");
+                    $imgTitle = $this->objLanguage->languageText("mod_species_viewonflickr", "species", "View on Flickr");
+                    $a->setAttribute('title', $imgTitle);
+                    $a->appendChild($tab->createTextNode($fullName . ", " . $scientificName));
+                    $imDiv->appendChild($a);
+                    $td->appendChild($imDiv);
                     $tr->appendChild($td);
                 }
             }

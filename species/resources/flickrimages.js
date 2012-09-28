@@ -49,7 +49,7 @@ jQuery(function() {
             jQuery.each(data.photos.photo, function(i,item) {
                 src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
                 fullsrc = "http://www.flickr.com/photos/"+item.owner+"/"+item.id;
-                imgLinked = "<a title='"+item.title+"' href='"+fullsrc+"'>"+"<img src='"+src+"'></a>";
+                imgLinked = "<a title='View "+item.title+" on Flickr' href='"+fullsrc+"'>"+"<img src='"+src+"'></a>";
                 //jQuery("<img/>").attr("src", src).appendTo("#speciesimages");
                 jQuery(imgLinked).appendTo("#speciesimages");
                 //id: 7268806836
