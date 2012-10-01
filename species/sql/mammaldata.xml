@@ -1,945 +1,324 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<defaultdata>
-
    <tbl_mammals_list>
-       <id>2001</id>
-       <alphabeticalname>Mole, Duthie's Golden</alphabeticalname>
-       <fullname>Duthie's Golden Mole</fullname>
-       <scientificname>Chlorotalpa duthieae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2002</id>
-       <alphabeticalname>Mole, Sclater's Golden</alphabeticalname>
-       <fullname>Sclater's Golden Mole</fullname>
-       <scientificname>Chlorotalpa sclateri</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2003</id>
-       <alphabeticalname>Mole, Cape Golden</alphabeticalname>
-       <fullname>Cape Golden Mole</fullname>
-       <scientificname>Chrysochloris asiatica</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2004</id>
-       <alphabeticalname>Mole, Visagie's Golden</alphabeticalname>
-       <fullname>Visagie's Golden Mole</fullname>
-       <scientificname>Chrysochloris visagiei</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2005</id>
-       <alphabeticalname>Mole, Giant Golden</alphabeticalname>
-       <fullname>Giant Golden Mole</fullname>
-       <scientificname>Chrysospalax trevelyani</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2006</id>
-       <alphabeticalname>Mole, Rough-haired Golden</alphabeticalname>
-       <fullname>Rough-haired Golden Mole</fullname>
-       <scientificname>Chrysospalax villosus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2007</id>
-       <alphabeticalname>Mole, De Winton's Golden</alphabeticalname>
-       <fullname>De Winton's Golden Mole</fullname>
-       <scientificname>Cryptochloris wintoni</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2008</id>
-       <alphabeticalname>Mole, Van Zyl's Golden</alphabeticalname>
-       <fullname>Van Zyl's Golden Mole</fullname>
-       <scientificname>Cryptochloris zyli</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2009</id>
-       <alphabeticalname>Mole, Grant's Golden</alphabeticalname>
-       <fullname>Grant's Golden Mole</fullname>
-       <scientificname>Eremitalpa granti</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2010</id>
-       <alphabeticalname>Mole, Fynbos Golden</alphabeticalname>
-       <fullname>Fynbos Golden Mole</fullname>
-       <scientificname>Amblysomus corriae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2011</id>
-       <alphabeticalname>Mole, Hottentot Golden</alphabeticalname>
-       <fullname>Hottentot Golden Mole</fullname>
-       <scientificname>Amblysomus hottentotus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2012</id>
-       <alphabeticalname>Mole, Marley's Golden</alphabeticalname>
-       <fullname>Marley's Golden Mole</fullname>
-       <scientificname>Amblysomus marleyi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2013</id>
-       <alphabeticalname>Mole, Robust Golden</alphabeticalname>
-       <fullname>Robust Golden Mole</fullname>
-       <scientificname>Amblysomus robustus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2014</id>
-       <alphabeticalname>Mole, Highveld Golden</alphabeticalname>
-       <fullname>Highveld Golden Mole</fullname>
-       <scientificname>Amblysomus septentrionalis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2015</id>
-       <alphabeticalname>Mole, Yellow Golden</alphabeticalname>
-       <fullname>Yellow Golden Mole</fullname>
-       <scientificname>Calcochloris obtusirostris</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2016</id>
-       <alphabeticalname>Mole, Gunning's Golden
-       </alphabeticalname>
-       <fullname>Gunning's Golden Mole</fullname>
-       <scientificname>Neamblysomus gunningi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2017</id>
-       <alphabeticalname>Mole, Juliana's Golden</alphabeticalname>
-       <fullname>Juliana's Golden Mole</fullname>
-       <scientificname>Neamblysomus julianae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2018</id>
-       <alphabeticalname>Elephant-shrew, Short-snouted Sengi </alphabeticalname>
-       <fullname>Short-snouted Sengi</fullname>
-       <scientificname>Elephantulus brachyrhynchus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2019</id>
-       <alphabeticalname>Elephant-shrew, Cape Sengi</alphabeticalname>
-       <fullname>Cape Sengi</fullname>
-       <scientificname>Elephantulus edwardii</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2020</id>
-       <alphabeticalname>Elephant-shrew, Bushveld Sengi</alphabeticalname>
-       <fullname>Bushveld Sengi</fullname>
-       <scientificname>Elephantulus intufi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2021</id>
-       <alphabeticalname>Elephant-shrew, </alphabeticalname>
+       <id>2247</id>
+       <alphabeticalname>Cape Fox Vulpes chama</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2022</id>
-       <alphabeticalname>Elephant-shrew, Eastern Rock Sengi</alphabeticalname>
-       <fullname>Eastern Rock Sengi</fullname>
-       <scientificname>Elephantulus myurus</scientificname>
+       <id>2248</id>
+       <alphabeticalname>Side-striped Jackal Canis adustus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2023</id>
-       <alphabeticalname>Elephant-shrew, Western Rock Sengi</alphabeticalname>
-       <fullname>Western Rock Sengi</fullname>
-       <scientificname>Elephantulus rupestris</scientificname>
+       <id>2249</id>
+       <alphabeticalname>Black-backed Jackal Canis mesomelas</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2024</id>
-       <alphabeticalname>Elephant-shrew, Short-eared</alphabeticalname>
-       <fullname>Short-eared Elephant Shrew</fullname>
-       <scientificname>Macroscelides proboscideus/scientificname>
+       <id>2250</id>
+       <alphabeticalname>Bat-eared Fox Otocyon megalotis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2025</id>
+       <id>2251</id>
+       <alphabeticalname>African Wild Dog Lycaon pictus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2252</id>
+       <alphabeticalname>Striped Polecat Ictonyx striatus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2253</id>
+       <alphabeticalname>African Striped Weasel Poecilogale albinucha</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2254</id>
+       <alphabeticalname>Ratel Mellivora capensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2255</id>
+       <alphabeticalname>Speckle-throated Otter Lutra maculicollis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2256</id>
+       <alphabeticalname>African Clawless Otter Aonyx capensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2257</id>
+       <alphabeticalname>Antarctic Fur Seal Arctocephalus gazella</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2258</id>
+       <alphabeticalname>Cape Fur Seal Arctocephalus pusillus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2259</id>
+       <alphabeticalname>Subantarctic Fur Seal Arctocephalus tropicalis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2260</id>
+       <alphabeticalname>Leopard Seal Hydrurga leptonyx</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2261</id>
+       <alphabeticalname>Weddell Seal Leptonychotes weddellii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2262</id>
+       <alphabeticalname>Crabeater Seal Lobodon carcinophagus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2263</id>
+       <alphabeticalname>Southern Elephant Seal Mirounga leonina</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2264</id>
+       <alphabeticalname>Burchell's Zebra Equus burchellii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2265</id>
+       <alphabeticalname>Plains Zebra Equus quagga</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2266</id>
+       <alphabeticalname>Mountain Zebra Equus zebra</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2267</id>
+       <alphabeticalname>Black Rhinoceros Diceros bicornis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2268</id>
+       <alphabeticalname>White Rhinoceros Ceratotherium simum</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2269</id>
+       <alphabeticalname>Warthog Phacochoerus aethiopicus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2270</id>
+       <alphabeticalname>Bushpig Potamochoerus larvatus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2271</id>
+       <alphabeticalname>Hippopotamus Hippopotamus amphibius</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2272</id>
+       <alphabeticalname>Hartebeest Alcelaphus buselaphus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2273</id>
+       <alphabeticalname>Black Wildebeest Connochaetes gnou</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2274</id>
+       <alphabeticalname>Blue Wildebeest Connochaetes taurinus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2275</id>
+       <alphabeticalname>Bontebok Damaliscus pygargus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2276</id>
+       <alphabeticalname>Springbok Antelope Antidorcas marsupialis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2277</id>
+       <alphabeticalname>Suni Neotragus moschatus </alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2278</id>
+       <alphabeticalname>Klipspringer Oreotragus oreotragus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2279</id>
+       <alphabeticalname>Steenbok Raphicerus campestris</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2280</id>
+       <alphabeticalname>Cape Grysbok Raphicerus melanotis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2281</id>
+       <alphabeticalname>Giraffe Giraffa camelopardalis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2282</id>
+       <alphabeticalname>Sharpe's Grysbok Raphicerus sharpei</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2283</id>
+       <alphabeticalname>African Buffalo Syncerus caffer</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2284</id>
+       <alphabeticalname>Nyala Tragelaphus angasii</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2285</id>
+       <alphabeticalname>Common Eland Tragelaphus oryx</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2286</id>
+       <alphabeticalname>Bushbuck Tragelaphus scriptus</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2287</id>
+       <alphabeticalname>Greater Kudu Tragelaphus strepsiceros</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2288</id>
+       <alphabeticalname>Blue Duiker Cephalophus monticola</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2289</id>
+       <alphabeticalname>Red Forest Duiker Cephalophus natalensis</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2290</id>
+       <alphabeticalname>Common Duiker Sylvicapra grimmia</alphabeticalname>
+       <fullname></fullname>
+       <scientificname></scientificname>
+   </tbl_mammals_list>
+   <tbl_mammals_list>
+       <id>2291</id>
        <alphabeticalname></alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2026</id>
-       <alphabeticalname>Aardvark</alphabeticalname>
-       <fullname>Aardvark</fullname>
-       <scientificname>Aardvark orycteropus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2027</id>
-       <alphabeticalname>Hyrax, Southern Tree</alphabeticalname>
-       <fullname>Southern Tree Hyrax</fullname>
-       <scientificname>Dendrohyrax arboreus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2028</id>
-       <alphabeticalname>Hyrax, Yellow-spotted Rock</alphabeticalname>
-       <fullname>Yellow-spotted Rock Hyrax</fullname>
-       <scientificname>Heterohyrax brucei</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2029</id>
-       <alphabeticalname>Hyrax, Cape</alphabeticalname>
-       <fullname>Cape Hyrax</fullname>
-       <scientificname>Procavia capensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2030</id>
-       <alphabeticalname>Elephant, African Bush</alphabeticalname>
-       <fullname>African Bush Elephant</fullname>
-       <scientificname>Loxodonta africana</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2031</id>
-       <alphabeticalname>Galago, Mohol</alphabeticalname>
-       <fullname>Mohol Galago</fullname>
-       <scientificname>Galago moholi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2032</id>
-       <alphabeticalname>Galago, Brown Greater</alphabeticalname>
-       <fullname>Brown Greater Galago</fullname>
-       <scientificname>Otolemur crassicaudatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2033</id>
-       <alphabeticalname>Monkey, Vervet</alphabeticalname>
-       <fullname>Vervet Monkey</fullname>
-       <scientificname>Chlorocebus pygerythrus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2034</id>
-       <alphabeticalname>Monkey, Sykes'</alphabeticalname>
-       <fullname>Sykes' Monkey</fullname>
-       <scientificname>Cercopithecus albogularis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2035</id>
-       <alphabeticalname>Mole Rat, Namaqua Dune</alphabeticalname>
-       <fullname>Namaqua Dune Mole Rat</fullname>
-       <scientificname>Bathyergus janetta</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2036</id>
-       <alphabeticalname>Mole Rat, Cape Dune</alphabeticalname>
-       <fullname>Cape Dune Mole Rat</fullname>
-       <scientificname>Bathyergus suillus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2037</id>
-       <alphabeticalname>Mole Rat, Damaraland</alphabeticalname>
-       <fullname>Damaraland Mole Rat</fullname>
-       <scientificname>Cryptomys damarensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2038</id>
-       <alphabeticalname>Mole Rat, Common</alphabeticalname>
-       <fullname>Common Mole Rat</fullname>
-       <scientificname>Cryptomys hottentotus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2039</id>
-       <alphabeticalname>Mole Rat, Cape</alphabeticalname>
-       <fullname>Cape Mole Rat</fullname>
-       <scientificname>Georychus capensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2040</id>
-       <alphabeticalname>Porcupine, Cape</alphabeticalname>
-       <fullname>Cape Porcupine</fullname>
-       <scientificname>Hystrix africaeaustralis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2041</id>
-       <alphabeticalname>Rat, Dassie</alphabeticalname>
-       <fullname>Dassie Rat</fullname>
-       <scientificname>Petromus typicus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2042</id>
-       <alphabeticalname>Rat, Greater Cane</alphabeticalname>
-       <fullname>Greater Cane Rat</fullname>
-       <scientificname>Thryonomys swinderianus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2043</id>
-       <alphabeticalname>Springhare</alphabeticalname>
-       <fullname>Springhare</fullname>
-       <scientificname>Pedetes capensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2044</id>
-       <alphabeticalname>Squirrel, South African Ground</alphabeticalname>
-       <fullname>South African Ground Squirrel</fullname>
-       <scientificname>Xerus inauris</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2045</id>
-       <alphabeticalname>Squirrel, Mountain Ground</alphabeticalname>
-       <fullname>Mountain Ground Squirrel</fullname>
-       <scientificname>Xerus princeps</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2046</id>
-       <alphabeticalname>Squirrel, Smith's Bush</alphabeticalname>
-       <fullname>Smith's Bush Squirrel</fullname>
-       <scientificname>Paraxerus cepapi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2047</id>
-       <alphabeticalname>Squirrel, Red Bush</alphabeticalname>
-       <fullname>Red Bush Squirrel</fullname>
-       <scientificname>Paraxerus palliatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2048</id>
-       <alphabeticalname>Dormouse, Small-eared</alphabeticalname>
-       <fullname>Small-eared Dormouse</fullname>
-       <scientificname>Graphiurus microtis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2049</id>
-       <alphabeticalname>Dormouse, Woodland</alphabeticalname>
-       <fullname>Woodland Dormouse/fullname>
-       <scientificname>Graphiurus murinus</scientificname>
-   </tbl_mammals_list>
-   
-   <tbl_mammals_list>
-       <id>2050</id>
-       <alphabeticalname>Dormouse, Spectacled</alphabeticalname>
-       <fullname>Spectacled Dormouse</fullname>
-       <scientificname>Graphiurus ocularis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2051</id>
-       <alphabeticalname></alphabeticalname>
+       <id>2292</id>
+       <alphabeticalname>Roan Antelope Hippotragus equinus</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2052</id>
-       <alphabeticalname>Dormouse, Rock</alphabeticalname>
-       <fullname>Rock Dormouse</fullname>
-       <scientificname>Graphiurus platyops</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2053</id>
-       <alphabeticalname>Dormouse, Stone</alphabeticalname>
-       <fullname>Stone Dormouse</fullname>
-       <scientificname>Graphiurus rupicola</scientificname>
-   </tbl_mammals_list>
-<tbl_mammals_list>
-       <id>2054</id>
-       <alphabeticalname>Mouse, Barbour's Rock</alphabeticalname>
-       <fullname>Barbour's Rock Mouse</fullname>
-       <scientificname>Petromyscus barbouri</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2055</id>
-       <alphabeticalname>Mouse, Pygmy Rock</alphabeticalname>
-       <fullname>Pygmy Rock Mouse</fullname>
-       <scientificname>Petromyscus collinus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2056</id>
-       <alphabeticalname>Mouse, Brukkaros Pygmy Rock</alphabeticalname>
-       <fullname>Brukkaros Pygmy Rock Mouse</fullname>
-       <scientificname>Petromyscus monticularis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2057</id>
-       <alphabeticalname>Mouse, Gray Glimbing</alphabeticalname>
-       <fullname>Gray Glimbing Mouse</fullname>
-       <scientificname>Dendromus melanotis</scientificname>
-   </tbl_mammals_list>
-<tbl_mammals_list>
-       <id>2058</id>
-       <alphabeticalname>Mouse, Brant's Climbing</alphabeticalname>
-       <fullname>Brant's Climbing Mouse</fullname>
-       <scientificname>Dendromus mesomelas</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2059</id>
-       <alphabeticalname>Mouse, Chestnut Climbing</alphabeticalname>
-       <fullname>Chestnut Climbing Mouse</fullname>
-       <scientificname>Dendromus mystacalis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2060</id>
-       <alphabeticalname>Mouse, Nyika Climbing</alphabeticalname>
-       <fullname>Nyika Climbing Mouse</fullname>
-       <scientificname>Dendromus nyikae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2061</id>
-       <alphabeticalname>Mouse, Gerbil</alphabeticalname>
-       <fullname>Gerbil Mous</fullname>
-       <scientificname>Malacothrix typica</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2062</id>
-       <alphabeticalname>Mouse, Kreb's Fat</alphabeticalname>
-       <fullname>Kreb's Fat Mouse</fullname>
-       <scientificname>Steatomys krebsii</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2063</id>
-       <alphabeticalname>Mouse, Fat</alphabeticalname>
-       <fullname>Fat Mouse</fullname>
-       <scientificname>Steatomys pratensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2064</id>
-       <alphabeticalname>Rat, White-tailed</alphabeticalname>
-       <fullname>White-tailed Rat</fullname>
-       <scientificname>Mystromys albicaudatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2065</id>
-       <alphabeticalname>Rat, Gambian Pouched</alphabeticalname>
-       <fullname>Gambian Pouched Rat</fullname>
-       <scientificname>Cricetomys gambianus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2066</id>
-       <alphabeticalname>Mouse, South African Pouched</alphabeticalname>
-       <fullname>South African Pouched Mouse</fullname>
-       <scientificname>Saccostomus campestris</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2067</id>
-       <alphabeticalname>Mouse, Spiny</alphabeticalname>
-       <fullname>Spiny Mouse</fullname>
-       <scientificname>Acomys spinosissimus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2068</id>
-       <alphabeticalname>Mouse, Cape Spiny</alphabeticalname>
-       <fullname>Cape Spiny Mouse</fullname>
-       <scientificname>Acomys subspinosus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2069</id>
-       <alphabeticalname>Rat, Angoni Vlei</alphabeticalname>
-       <fullname>Angoni Vlei Rat</fullname>
-       <scientificname>Otomys angoniensi</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2070</id>
-       <alphabeticalname>Rat, Vlei</alphabeticalname>
-       <fullname>Vlei Rat</fullname>
-       <scientificname>Otomys irroratus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2071</id>
-       <alphabeticalname>Rat, Laminate Vlei</alphabeticalname>
-       <fullname>Laminate Vlei Rat</fullname>
-       <scientificname>Otomys laminatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2072</id>
-       <alphabeticalname>Rat, Saunder's Vlei</alphabeticalname>
-       <fullname>Saunder's Vlei Rat</fullname>
-       <scientificname>Otomys saundersiae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2073</id>
-       <alphabeticalname>Rat, Sloggett's Vlei</alphabeticalname>
-       <fullname>Sloggett's Vlei Rat</fullname>
-       <scientificname>Otomys sloggetti</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2074</id>
-       <alphabeticalname>Rat, Karoo Bush</alphabeticalname>
-       <fullname>Karoo Bush Rat</fullname>
-       <scientificname>Otomys unisulcatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2075</id>
-       <alphabeticalname>Rat, Brants's Whistling</alphabeticalname>
-       <fullname>Brants's Whistling Rat</fullname>
-       <scientificname>Parotomys brantsii</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2076</id>
-       <alphabeticalname>Rat, Littledale's Whistling</alphabeticalname>
-       <fullname>Littledale's Whistling Rat</fullname>
-       <scientificname>Parotomys littledalei</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2077</id>
-       <alphabeticalname>Gerbil, Cape Short-eared</alphabeticalname>
-       <fullname>Cape Short-eared Gerbil</fullname>
-       <scientificname>Desmodillus auricularis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2078</id>
-       <alphabeticalname>Gerbil, Hairy-footed</alphabeticalname>
-       <fullname>Hairy-footed Gerbil</fullname>
-       <scientificname>Gerbillurus paeba</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2079</id>
-       <alphabeticalname>Gerbil, Bushy-tailed Hairy-footed</alphabeticalname>
-       <fullname>Bushy-tailed Hairy-footed Gerbil</fullname>
-       <scientificname>Gerbillurus vallinus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2080</id>
-       <alphabeticalname>Gerbil, Cape</alphabeticalname>
-       <fullname>Cape Gerbil</fullname>
-       <scientificname>Tatera afra</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2081</id>
-       <alphabeticalname>Gerbil, Highveld</alphabeticalname>
-       <fullname>Highveld Gerbil</fullname>
-       <scientificname>Tatera brantsii</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2082</id>
-       <alphabeticalname>Gerbil, Bushveld</alphabeticalname>
-       <fullname>Bushveld Gerbil</fullname>
-       <scientificname>Tatera leucogaster</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2083</id>
-       <alphabeticalname>Rat, Red Rock</alphabeticalname>
-       <fullname>Red Rock Rat</fullname>
-       <scientificname>Aethomys chrysophilus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2084</id>
-       <alphabeticalname>Rat, Grant's Rock</alphabeticalname>
-       <fullname>Grant's Rock Rat</fullname>
-       <scientificname>Aethomys granti</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2085</id>
-       <alphabeticalname>Rat, Tete Veld Aethomys</alphabeticalname>
-       <fullname>Tete Veld Aethomys</fullname>
-       <scientificname>Aethomys ineptus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2086</id>
-       <alphabeticalname>Rat, Namaqua Rock</alphabeticalname>
-       <fullname>Namaqua Rock Rat</fullname>
-       <scientificname>Aethomys namaquensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2087</id>
-       <alphabeticalname>Dasymys, Common</alphabeticalname>
-       <fullname>ommon Dasymys</fullname>
-       <scientificname>Dasymys incomtus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2088</id>
-       <alphabeticalname>Rat, Mozambique Thicket</alphabeticalname>
-       <fullname>Mozambique Thicket Rat</fullname>
-       <scientificname>Grammomys cometes</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2089</id>
-       <alphabeticalname>Rat, Woodland Thicket</alphabeticalname>
-       <fullname>Woodland Thicket Rat</fullname>
-       <scientificname>Grammomys dolichurus</scientificname>
-   </tbl_mammals_list>
-   
-   
-   
-   
-   <tbl_mammals_list>
-       <id>2090</id>
-       <alphabeticalname>Mouse, Single-striped Grass</alphabeticalname>
-       <fullname>Single-striped Grass Mouse</fullname>
-       <scientificname>Lemniscomys rosalia</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2091</id>
-       <alphabeticalname>Mouse, Southern Multimammate</alphabeticalname>
-       <fullname>Southern Multimammate Mouse</fullname>
-       <scientificname>Mastomys coucha</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2092</id>
-       <alphabeticalname>Mouse, Natal Multimammate</alphabeticalname>
-       <fullname>Natal Multimammate Mouse</fullname>
-       <scientificname>Mastomys natalensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2093</id>
-       <alphabeticalname>Mouse, Desert Pygmy</alphabeticalname>
-       <fullname>Desert Pygmy Mouse</fullname>
-       <scientificname>Mus indutus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2094</id>
-       <alphabeticalname>Mouse, African Pygmy</alphabeticalname>
-       <fullname>African Pygmy Mouse</fullname>
-       <scientificname>Mus minutoides</scientificname>
-   </tbl_mammals_list>
-    <tbl_mammals_list>
-       <id>2095</id>
-       <alphabeticalname>Mouse, Neave's</alphabeticalname>
-       <fullname>Neave's Mouse</fullname>
-       <scientificname>Mus neavei</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2096</id>
-       <alphabeticalname>Mouse, Orange</alphabeticalname>
-       <fullname>Orange Mouse</fullname>
-       <scientificname>Mus orangiae</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2097</id>
-       <alphabeticalname>Rat, Verreaux's White-footed</alphabeticalname>
-       <fullname>Verreaux's White-footed Rat</fullname>
-       <scientificname>Myomyscus verreauxii</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2098</id>
-       <alphabeticalname>Mouse, Four-striped Grass</alphabeticalname>
-       <fullname>Four-striped Grass Mouse</fullname>
-       <scientificname>Rhabdomys pumilio</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2099</id>
-       <alphabeticalname>Rat, Black-tailed Tree</alphabeticalname>
-       <fullname>Black-tailed Tree Rat</fullname>
-       <scientificname>Thallomys nigricauda</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2100</id>
-       <alphabeticalname>Rat, Acacia</alphabeticalname>
-       <fullname>Acacia rat</fullname>
-       <scientificname>Thallomys paedulcus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2101</id>
-       <alphabeticalname>Rat, Shortridge's</alphabeticalname>
-       <fullname>Shortridge's Rat</fullname>
-       <scientificname>Thallomys shortridgei</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2102</id>
-       <alphabeticalname>Zelotomys, Woosnam's</alphabeticalname>
-       <fullname>Woosnam's Zelotomys</fullname>
-       <scientificname>Zelotomys woosnami</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2103</id>
-       <alphabeticalname>Rabbit, Riverine</alphabeticalname>
-       <fullname>Riverine Rabbit</fullname>
-       <scientificname>Bunolagus monticularis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2104</id>
-       <alphabeticalname>Rockhare, Natal Red</alphabeticalname>
-       <fullname>Natal Red Rockhare</fullname>
-       <scientificname>Pronolagus crassicaudatus</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2105</id>
-       <alphabeticalname>Hare, Jameson's Red Rock</alphabeticalname>
-       <fullname>Jameson's Red Rock Hare</fullname>
-       <scientificname>Pronolagus randensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2106</id>
-       <alphabeticalname>Hare, Smith's Red Rock</alphabeticalname>
-       <fullname>Smith's Red Rockhare</fullname>
-       <scientificname>Pronolagus rupestris</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2107</id>
-       <alphabeticalname>Hare, Cape</alphabeticalname>
-       <fullname>Cape Hare</fullname>
-       <scientificname>Lepus capensis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2108</id>
-       <alphabeticalname>Hare, African Savanna</alphabeticalname>
-       <fullname>African Savanna Hare</fullname>
-       <scientificname>Lepus microtis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2109</id>
-       <alphabeticalname>Hare, Scrub</alphabeticalname>
-       <fullname>Scrub Har</fullname>
-       <scientificname>Lepus saxatilis</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2110</id>
-       <alphabeticalname>Southern African Hedgehog Atelerix frontalis</alphabeticalname>
+       <id>2293</id>
+       <alphabeticalname>Bluebuck Hippotragus leucophaeus</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2111</id>
-       <alphabeticalname>Reddish-gray Musk Shrew Crocidura cyanea</alphabeticalname>
+       <id>2294</id>
+       <alphabeticalname>Sable Antelope Hippotragus niger</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2112</id>
-       <alphabeticalname>Greater Red Musk Shrew Crocidura flavescens</alphabeticalname>
+       <id>2295</id>
+       <alphabeticalname>Gemsbok Oryx gazella</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2113</id>
-       <alphabeticalname>Tiny Musk Shrew Crocidura fuscomurina</alphabeticalname>
+       <id>2296</id>
+       <alphabeticalname>Grey Rhebok Pelea capreolus</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2114</id>
-       <alphabeticalname>Lesser Red Musk Shrew Crocidura hirta</alphabeticalname>
+       <id>2297</id>
+       <alphabeticalname>Impala Aepyceros melampus</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2115</id>
-       <alphabeticalname>Maquassie Musk Shrew Crocidura maquassiensis</alphabeticalname>
+       <id>2298</id>
+       <alphabeticalname>Waterbuck Kobus ellipsiprymnus</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2116</id>
-       <alphabeticalname>Swamp Musk Shrew Crocidura mariquensis</alphabeticalname>
+       <id>2299</id>
+       <alphabeticalname>Southern Reedbuck Redunca arundinum</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
-       <id>2117</id>
-       <alphabeticalname>Lesser Gray-brown Musk Shrew Crocidura silacea</alphabeticalname>
+       <id>2300</id>
+       <alphabeticalname>Mountain Reedbuck Redunca fulvorufula</alphabeticalname>
        <fullname></fullname>
        <scientificname></scientificname>
    </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2118</id>
-       <alphabeticalname>Least Dwarf Shrew Suncus infinitesimus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2119</id>
-       <alphabeticalname>Lesser Dwarf Shrew Suncus varilla</alphabeticalname>
-       <fullname></fullname>
-       <scientificname>Dark-footed Forest Shrew Myosorex cafer</scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2120</id>
-       <alphabeticalname>Long-tailed Forest Shrew Myosorex longicaudatus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2121</id>
-       <alphabeticalname>Sclater's Tiny Mouse Shrew Myosorex sclateri</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2122</id>
-       <alphabeticalname>Thin Mouse Shrew Myosorex tenuis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2123</id>
-       <alphabeticalname>Forest Shrew Myosorex varius</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2124</id>
-       <alphabeticalname>Straw-coloured Fruit Bat Eidolon helvum</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2125</id>
-       <alphabeticalname>Wahlberg's Epauletted Fruit Bat Epomophorus wahlbergi</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2126</id>
-       <alphabeticalname>Egyptian fruit bat Rousettus aegyptiacus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2127</id>
-       <alphabeticalname>Damara Woolly Bat Kerivoula argentata</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2128</id>
-       <alphabeticalname>Lesser Woolly Bat Kerivoula lanosa</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>    
-   <tbl_mammals_list>
-       <id>2129</id>
-       <alphabeticalname>Dubious Trumpet-eared Bat Phoniscus aerosa</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2130</id>
-       <alphabeticalname>Lesueur's Hairy Bat Cistugo lesueuri</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2131</id>
-       <alphabeticalname>Angolan Hairy Bat Cistugo seabrai</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2132</id>
-       <alphabeticalname>Rufous Mouse-eared Bat Myotis bocagii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2133</id>
-       <alphabeticalname>Cape Hairy Bat Myotis tricolor</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2134</id>
-       <alphabeticalname>Welwitch's Bat Myotis welwitschii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2135</id>
-       <alphabeticalname>Long-tailed House Bat Eptesicus hottentotus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list> 
-   <tbl_mammals_list>
-       <id>2136</id>
-       <alphabeticalname>Butterfly Bat Glauconycteris variegata</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2137</id>
-       <alphabeticalname>Anchieta's Pipistrelle Hypsugo anchietae</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2138</id>
-       <alphabeticalname>Botswanan Long-eared Bat Laephotis botswanae</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2139</id>
-       <alphabeticalname>De Winton's Long-eared Bat Laephotis wintoni</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2140</id>
-       <alphabeticalname>Cape Serotine Neoromicia capensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2141</id>
-       <alphabeticalname>Melck's House Bat Neoromicia melckorum</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2142</id>
-       <alphabeticalname>Banana Pipistrelle Neoromicia nanus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list> 
-   <tbl_mammals_list>
-       <id>2143</id>
-       <alphabeticalname>Rendall's Serotine Neoromicia rendalli</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2144</id>
-       <alphabeticalname>Neoromicia zuluensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2145</id>
-       <alphabeticalname>Schlieffen's Twilight Bat Nycticeinops schlieffeni</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2146</id>
-       <alphabeticalname> Banana Pipistrelle Neoromicia nanus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2147</id>
-       <alphabeticalname>Rendall's Serotine Neoromicia rendalli</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2148</id>
-       <alphabeticalname>RÜppel's Pipistrelle Pipistrellus rueppelli</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2149</id>
-       <alphabeticalname>Rusty Pipistrelle Pipistrellus rusticus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list> 
-   <tbl_mammals_list>
-       <id>2150</id>
-       <alphabeticalname>Light-winged Lesser House Bat Scotoecus albofuscus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2151</id>
-       <alphabeticalname>African Yellow Bat Scotophilus dinganii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2152</id>
-       <alphabeticalname>Greenish Yellow Bat Scotophilus viridis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2153</id>
-       <alphabeticalname>Lesser Long-fingered Bat Miniopterus fraterculus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2154</id>
-       <alphabeticalname>Natal Long-fingered Bat Miniopterus natalensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2155</id>
-       <alphabeticalname>Ansorge's Free-tailed Bat Chaerephon ansorgei</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2156</id>
-       <alphabeticalname></alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list> 

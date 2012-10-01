@@ -201,7 +201,8 @@ class eol extends object
     {
         $obj = $this->jsonSearch($scientificName);
         $id = $obj->results[0]->id;
-        $uri = "http://eol.org/api/pages/1.0/$id.json?details=0&images=2&sounds=0&subjects=overview&text=0";
+        $uri = "http://eol.org/api/pages/1.0/$id.json?"
+          . "details=0&images=2&sounds=0&subjects=overview&text=0";
         $page = $this->getResults($uri);
         $obj = json_decode($page);
         /*echo "<pre>";

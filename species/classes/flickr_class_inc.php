@@ -81,6 +81,14 @@ class flickr extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     
+    /**
+     * 
+     * Get images by scientific name from Flickr
+     * 
+     * @param string $scientificName The latin name for the species
+     * @return string Formatted and linked images
+     * @access public
+     */
     public function getImages($scientificName)
     {
         
@@ -99,15 +107,16 @@ class flickr extends object
             $scientificName = "Scaly-throated+Honeyguide";
         }
         
-        $resUri = $baseUri . "&api_key=" . $apiKey
-          . "&text=" . $scientificName . "&format=json&nojsoncallback=1";
+        $resUri = $baseUri 
+          . "&api_key=" . $apiKey
+          . "&text=" . $scientificName 
+          . "&format=json&nojsoncallback=1";
         $obj = json_decode($this->getResults($resUri));
         $res="";
         $c = 0;
         $ar = array();
         if (isset($obj->photos)) {
             foreach ($obj->photos->photo as $photo) {
-                
                 $src = "http://farm". $photo->farm . ".static.flickr.com/" 
                   . $photo->server . "/" . $photo->id  . "_" 
                   . $photo->secret  . "_m.jpg";

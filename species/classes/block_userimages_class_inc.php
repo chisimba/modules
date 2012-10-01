@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * Get a sound file
+ * A userimages block for Species.
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * A userimages block for Species. Show images loaded by approved users 
+ * identified by CONFIG: species_userlist.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Get a sound file
+ * A userimages block for Species.
  *
- * Get a sound file by using the Encyclopedia of Life API
+ * A userimages block for Species. Show images loaded by approved users 
+ * identified by CONFIG: species_userlist.
  *
  * @category  Chisimba
  * @author    Derek Keats derek@localhost.local
@@ -50,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_speciessound extends object
+class block_userimages extends object
 {
     /**
      * The title of the block
@@ -67,7 +69,7 @@ class block_speciessound extends object
      *
      */
     public $objLanguage;
-    
+
     /**
      * Standard init function
      *
@@ -77,28 +79,18 @@ class block_speciessound extends object
      */
     public function init() 
     {
-        // Check if is should display
         $this->blockType="";
+        // Check if is should display
         $action = $this->getParam('action', NULL);
         if ($action != 'showsp') {
             $this->blockType="invisible";
-        } else {
-            $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $findSounds = strtolower(
-              $sysConfig->getValue('species_findsounds', 'species')
-            );
-            if ($findSounds != 'true') {
-                $this->blockType="invisible";
-            }
         }
-        
-        // Get an instance of the language object
+        // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-          "mod_species_eolsound", "species",
-          "Sound file results");
+                "mod_species_userspecies", "species",
+                "Contributed images");
     }
-    
     /**
      * Standard block show method.
      *
@@ -106,24 +98,19 @@ class block_speciessound extends object
      */
     public function show() 
     {
-        if ($this->blockType != "invisible") {
+        if (!$this->blockType=="invisible") {
             $action = $this->getParam('action', NULL);
             switch ($action) {
                 case "showsp":
                     $id = $this->getParam('id', FALSE);
                     if ($id) {
-                        $objDb = $this->getObject('dbspecies', 'species');
-                        $searchTerm = $objDb->getScientificName($id);
-                        $objEol = $this->getObject('eol', 'species');
-                        $ret = $objEol->getSound($searchTerm);
-                    } else {
-                        $ret = NULL;
+                        $objImgs = $this->getObject('userimgs', 'species');
+                        $ret = $objImgs->showSpecies($id);
                     }
                     break;
-
                 default:
-                    $ret=NULL;
-                    break;
+                    $ret = NULL;
+
             }
             return $ret;
         }

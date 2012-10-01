@@ -64,6 +64,11 @@ $cat=2;
             "module" : "species",
             "block" : "speciessound"
         }
+        {
+            "display" : "block",
+            "module" : "species",
+            "block" : "userimages"
+        }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>
