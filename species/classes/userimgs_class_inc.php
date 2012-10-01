@@ -93,6 +93,55 @@ class userimgs extends object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
     
+    public function getMedImages($id) 
+    {
+        return $this->getImageArray($id, 'm');
+    }
+    
+    /**
+     * 
+     * Get an array of user contributed images
+     * 
+     * @param string $id The species ID
+     * @param String $size The size of image to return 'f', 'm', 's', 't
+     * @return string array The array of images
+     * @access public
+     * 
+     */
+    public function getImageArray($id, $size) {
+        $objDbspecies = & $this->getObject('dbspecies', 'species');
+        $fullName = strtolower($objDbspecies->getFullName($id));
+        $fullName = str_replace("  ", "_", $fullName);
+        $fullName = str_replace(" ", "_", $fullName);
+        $arUsers = $this->getArUsers();
+        $type = 'birds'; //change to read from sesssion
+        $ret = array();
+        $element=0;
+        foreach ($arUsers as $user) {
+            $lookDir = 'usrfiles/users/' . $user . '/' . $type . '/' . $fullName;
+            if (file_exists($lookDir)) {
+                if(is_dir($lookDir)) {
+                    $images = simplexml_load_file($lookDir . '/captions.xml');
+                    foreach ($images as $image) {
+                        $imgFile = $lookDir . '/' . $image->filename;
+                        $mFile = $lookDir . '/' . $size . '_' . $image->filename;
+                        if (file_exists($mFile)) {
+                            $ret[$element]['url'] = $mFile;
+                        } else {
+                            $ret[$element]['url'] = $imgFile;
+                        }
+                        $caption = "" . $image->caption . "" ;
+                        $ret[$element]['caption']  = $caption;
+                        $ret[$element]['photographer']  = "Photo by: " . $image->photographer->fullname .', ';
+                        $ret[$element]['licence'] = "Licence: " . $image->licence;
+                        $element++;
+                    }
+                }
+            }
+        }
+        return $ret;
+    }
+    
     /**
      * 
      * Show the user contributed images for this species.
@@ -102,7 +151,52 @@ class userimgs extends object
      * @access public
      * 
      */
-    public function showSpecies($id)
+    public function showSpecies($id, $size="m")
+    {
+        $species = $this->getImageArray($id, $size);
+
+        $ret = "";
+        $element=0;
+        foreach ($species as $sp) {
+            $url = $sp['url'];
+            $caption = $sp['caption'];
+            $photographer = $sp['photographer'];
+            $license = $sp['licence'];
+            $subcaption = $photographer . "   " . $license;
+            // Build up the display image using the DOM object.
+            $doc = new DOMDocument('UTF-8');
+            $img = $doc->createElement('img');
+            $img->setAttribute('src', $url);
+            $div = $doc->createElement('div');
+            $div->setAttribute('class', 'species_contrimages');
+            $div->appendChild($img);
+            $br = $doc->createElement('br');
+            $div->appendChild($br);
+            $div->appendChild($doc->createTextNode($caption));
+            $br = $doc->createElement('br');
+            $div->appendChild($br);
+            $div->appendChild($doc->createTextNode($subcaption));
+            $doc->appendChild($div);
+            $ret .= $doc->saveHTML();
+            $element++;
+        }
+        if ($ret=="") {
+            $ret = $this->objLanguage->languageText('mod_species_nousrfls', 'species', "There are no userfiles for this species.");
+        }
+        return $ret;
+    }
+    
+    
+    /**
+     * 
+     * Show the user contributed images for this species.
+     * 
+     * @param string $id The species ID
+     * @return string The formated images
+     * @access public
+     * 
+     */
+    public function oldshowSpecies($id, $size="m")
     {
         $objDbspecies = & $this->getObject('dbspecies', 'species');
         $fullName = strtolower($objDbspecies->getFullName($id));
@@ -138,7 +232,7 @@ class userimgs extends object
                         $br = $doc->createElement('br');
                         $div->appendChild($br);
                         $div->appendChild($doc->createTextNode($caption));
-                        //$br = $doc->createElement('br');
+                        $br = $doc->createElement('br');
                         $div->appendChild($br);
                         $div->appendChild($doc->createTextNode($subcaption));
                         $doc->appendChild($div);

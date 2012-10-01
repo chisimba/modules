@@ -57,6 +57,13 @@ $cat=2;
         {
             "display" : "block",
             "module" : "species",
+            "wrapStr" : 0,
+            "block" : "overview"
+
+        }
+        {
+            "display" : "block",
+            "module" : "species",
             "block" : "speciesmiddle"
         }
         {
