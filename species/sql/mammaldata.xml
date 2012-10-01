@@ -1,324 +1,318 @@
    <tbl_mammals_list>
        <id>2247</id>
-       <alphabeticalname>Cape Fox Vulpes chama</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Fox, Cape</alphabeticalname>
+       <fullname>Cape Fox</fullname>
+       <scientificname>Vulpes chama</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2248</id>
-       <alphabeticalname>Side-striped Jackal Canis adustus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Jackal, Side-striped</alphabeticalname>
+       <fullname>Side-striped Jackal</fullname>
+       <scientificname>Canis adustus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2249</id>
-       <alphabeticalname>Black-backed Jackal Canis mesomelas</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Jackal, Black-backed</alphabeticalname>
+       <fullname>Black-backed Jackal</fullname>
+       <scientificname>Canis mesomelas</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2250</id>
-       <alphabeticalname>Bat-eared Fox Otocyon megalotis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Fox, Bat-eared</alphabeticalname>
+       <fullname>Bat-eared Fox</fullname>
+       <scientificname>Otocyon megalotis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2251</id>
-       <alphabeticalname>African Wild Dog Lycaon pictus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Dog, African Wild</alphabeticalname>
+       <fullname>African Wild Dog</fullname>
+       <scientificname>Lycaon pictus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2252</id>
-       <alphabeticalname>Striped Polecat Ictonyx striatus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Polecat, Striped</alphabeticalname>
+       <fullname>Striped Polecat</fullname>
+       <scientificname>Ictonyx striatus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2253</id>
-       <alphabeticalname>African Striped Weasel Poecilogale albinucha</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Weasel, African Striped</alphabeticalname>
+       <fullname>African Striped Weasel</fullname>
+       <scientificname>Poecilogale albinucha</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2254</id>
-       <alphabeticalname>Ratel Mellivora capensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Ratel</alphabeticalname>
+       <fullname>Ratel</fullname>
+       <scientificname>Mellivora capensis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2255</id>
-       <alphabeticalname>Speckle-throated Otter Lutra maculicollis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Otter, Speckle-throated</alphabeticalname>
+       <fullname>Speckle-throated Otter</fullname>
+       <scientificname>Lutra maculicollis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2256</id>
-       <alphabeticalname>African Clawless Otter Aonyx capensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Otter, African Clawless</alphabeticalname>
+       <fullname>African Clawless Otter</fullname>
+       <scientificname>Aonyx capensis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2257</id>
-       <alphabeticalname>Antarctic Fur Seal Arctocephalus gazella</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Fur Seal, Antarctic</alphabeticalname>
+       <fullname>Antarctic Fur Seal</fullname>
+       <scientificname>Arctocephalus gazella</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2258</id>
-       <alphabeticalname>Cape Fur Seal Arctocephalus pusillus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Fur Seal, Cape</alphabeticalname>
+       <fullname>Cape Fur Seal</fullname>
+       <scientificname>Arctocephalus pusillus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2259</id>
-       <alphabeticalname>Subantarctic Fur Seal Arctocephalus tropicalis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Fur Seal, Subantarctic</alphabeticalname>
+       <fullname>Subantarctic Fur Seal</fullname>
+       <scientificname>Arctocephalus tropicalis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2260</id>
-       <alphabeticalname>Leopard Seal Hydrurga leptonyx</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Seal, Leopard</alphabeticalname>
+       <fullname>Leopard Seal</fullname>
+       <scientificname>Hydrurga leptonyx</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2261</id>
-       <alphabeticalname>Weddell Seal Leptonychotes weddellii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Seal, Weddell</alphabeticalname>
+       <fullname>Weddell Seal</fullname>
+       <scientificname>Leptonychotes weddellii</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2262</id>
-       <alphabeticalname>Crabeater Seal Lobodon carcinophagus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Seal, Crabeater</alphabeticalname>
+       <fullname>Crabeater Seal</fullname>
+       <scientificname>Lobodon carcinophagus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2263</id>
-       <alphabeticalname>Southern Elephant Seal Mirounga leonina</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Seal, Southern Elephant</alphabeticalname>
+       <fullname>Southern Elephant Seal</fullname>
+       <scientificname>Mirounga leonina</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2264</id>
-       <alphabeticalname>Burchell's Zebra Equus burchellii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Zebra, Burchell's</alphabeticalname>
+       <fullname>Burchell's Zebra</fullname>
+       <scientificname>Equus burchellii</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2265</id>
-       <alphabeticalname>Plains Zebra Equus quagga</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Zebra, Plains</alphabeticalname>
+       <fullname>Plains Zebra</fullname>
+       <scientificname>Equus quagga</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2266</id>
-       <alphabeticalname>Mountain Zebra Equus zebra</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Zebra, Mountain</alphabeticalname>
+       <fullname>Mountain Zebra</fullname>
+       <scientificname>Equus zebra</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2267</id>
-       <alphabeticalname>Black Rhinoceros Diceros bicornis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Rhinoceros, Black</alphabeticalname>
+       <fullname>Black Rhinoceros</fullname>
+       <scientificname>Diceros bicornis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2268</id>
-       <alphabeticalname>White Rhinoceros Ceratotherium simum</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Rhinoceros, White</alphabeticalname>
+       <fullname>White Rhinoceros</fullname>
+       <scientificname>Ceratotherium simum</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2269</id>
-       <alphabeticalname>Warthog Phacochoerus aethiopicus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Warthog</alphabeticalname>
+       <fullname>Warthog</fullname>
+       <scientificname>Phacochoerus aethiopicus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2270</id>
-       <alphabeticalname>Bushpig Potamochoerus larvatus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Bushpig</alphabeticalname>
+       <fullname>Bushpig</fullname>
+       <scientificname>Potamochoerus larvatus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2271</id>
-       <alphabeticalname>Hippopotamus Hippopotamus amphibius</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Hippopotamus</alphabeticalname>
+       <fullname>Hippopotamus</fullname>
+       <scientificname>Hippopotamus amphibius</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2272</id>
-       <alphabeticalname>Hartebeest Alcelaphus buselaphus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Hartebeest</alphabeticalname>
+       <fullname>Hartebeest</fullname>
+       <scientificname>Alcelaphus buselaphus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2273</id>
-       <alphabeticalname>Black Wildebeest Connochaetes gnou</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Wildebeest, Black</alphabeticalname>
+       <fullname>Black Wildebeest</fullname>
+       <scientificname>Connochaetes gnou</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2274</id>
-       <alphabeticalname>Blue Wildebeest Connochaetes taurinus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Wildebeest, Blue</alphabeticalname>
+       <fullname>Blue Wildebeest</fullname>
+       <scientificname>Connochaetes taurinus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2275</id>
-       <alphabeticalname>Bontebok Damaliscus pygargus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Bontebok</alphabeticalname>
+       <fullname>Bontebok</fullname>
+       <scientificname>Damaliscus pygargus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2276</id>
-       <alphabeticalname>Springbok Antelope Antidorcas marsupialis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Springbok</alphabeticalname>
+       <fullname>Springbok Antelope</fullname>
+       <scientificname>Antidorcas marsupialis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2277</id>
-       <alphabeticalname>Suni Neotragus moschatus </alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Suni</alphabeticalname>
+       <fullname>Suni</fullname>
+       <scientificname>Neotragus moschatus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2278</id>
-       <alphabeticalname>Klipspringer Oreotragus oreotragus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Klipspringer</alphabeticalname>
+       <fullname>Klipspringer</fullname>
+       <scientificname>Oreotragus oreotragus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2279</id>
-       <alphabeticalname>Steenbok Raphicerus campestris</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Steenbok</alphabeticalname>
+       <fullname>Steenbok</fullname>
+       <scientificname>Raphicerus campestris</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2280</id>
-       <alphabeticalname>Cape Grysbok Raphicerus melanotis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Grysbok</alphabeticalname>
+       <fullname>Cape Grysbok</fullname>
+       <scientificname>Raphicerus melanotis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2281</id>
-       <alphabeticalname>Giraffe Giraffa camelopardalis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Giraffe</alphabeticalname>
+       <fullname>Giraffe</fullname>
+       <scientificname>Giraffa camelopardalis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2282</id>
-       <alphabeticalname>Sharpe's Grysbok Raphicerus sharpei</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Grysbok, Sharpe's</alphabeticalname>
+       <fullname>Sharpe's Grysbok</fullname>
+       <scientificname>Raphicerus sharpei</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2283</id>
-       <alphabeticalname>African Buffalo Syncerus caffer</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Buffalo, African</alphabeticalname>
+       <fullname>African Buffalo</fullname>
+       <scientificname>Syncerus caffer</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2284</id>
-       <alphabeticalname>Nyala Tragelaphus angasii</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Nyala</alphabeticalname>
+       <fullname>Nyala</fullname>
+       <scientificname>Tragelaphus angasii</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2285</id>
-       <alphabeticalname>Common Eland Tragelaphus oryx</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Eland, Common</alphabeticalname>
+       <fullname>Common Eland</fullname>
+       <scientificname>Tragelaphus oryx</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2286</id>
-       <alphabeticalname>Bushbuck Tragelaphus scriptus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Bushbuck</alphabeticalname>
+       <fullname>Bushbuck</fullname>
+       <scientificname>Tragelaphus scriptus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2287</id>
-       <alphabeticalname>Greater Kudu Tragelaphus strepsiceros</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Kudu, Greater</alphabeticalname>
+       <fullname>Greater Kudu</fullname>
+       <scientificname>Tragelaphus strepsiceros</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2288</id>
-       <alphabeticalname>Blue Duiker Cephalophus monticola</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Duiker, Blue</alphabeticalname>
+       <fullname>Blue Duiker</fullname>
+       <scientificname>Cephalophus monticola</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2289</id>
-       <alphabeticalname>Red Forest Duiker Cephalophus natalensis</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Duiker, Red Forest</alphabeticalname>
+       <fullname>Red Forest Duiker</fullname>
+       <scientificname>Cephalophus natalensis</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2290</id>
-       <alphabeticalname>Common Duiker Sylvicapra grimmia</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
-   </tbl_mammals_list>
-   <tbl_mammals_list>
-       <id>2291</id>
-       <alphabeticalname></alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Duiker, Common</alphabeticalname>
+       <fullname>Common Duiker</fullname>
+       <scientificname>Sylvicapra grimmia</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2292</id>
-       <alphabeticalname>Roan Antelope Hippotragus equinus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Roan</alphabeticalname>
+       <fullname>Roan Antelope</fullname>
+       <scientificname>Hippotragus equinus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2293</id>
-       <alphabeticalname>Bluebuck Hippotragus leucophaeus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Bluebuck</alphabeticalname>
+       <fullname>Bluebuck</fullname>
+       <scientificname>Hippotragus leucophaeus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2294</id>
-       <alphabeticalname>Sable Antelope Hippotragus niger</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Sable</alphabeticalname>
+       <fullname>Sable Antelope</fullname>
+       <scientificname>Hippotragus niger</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2295</id>
-       <alphabeticalname>Gemsbok Oryx gazella</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Gemsbok</alphabeticalname>
+       <fullname>Gemsbok</fullname>
+       <scientificname>Oryx gazella</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2296</id>
-       <alphabeticalname>Grey Rhebok Pelea capreolus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Rhebok, Grey</alphabeticalname>
+       <fullname>Grey Rhebok</fullname>
+       <scientificname>Pelea capreolus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2297</id>
-       <alphabeticalname>Impala Aepyceros melampus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Impala</alphabeticalname>
+       <fullname>Impala</fullname>
+       <scientificname>Aepyceros melampus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2298</id>
-       <alphabeticalname>Waterbuck Kobus ellipsiprymnus</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Waterbuck</alphabeticalname>
+       <fullname>Waterbuck</fullname>
+       <scientificname>Kobus ellipsiprymnus</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2299</id>
-       <alphabeticalname>Southern Reedbuck Redunca arundinum</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Reedbuck, Southern</alphabeticalname>
+       <fullname>Southern Reedbuck</fullname>
+       <scientificname>Redunca arundinum</scientificname>
    </tbl_mammals_list>
    <tbl_mammals_list>
        <id>2300</id>
-       <alphabeticalname>Mountain Reedbuck Redunca fulvorufula</alphabeticalname>
-       <fullname></fullname>
-       <scientificname></scientificname>
+       <alphabeticalname>Reedbuck, Mountain</alphabeticalname>
+       <fullname>Mountain Reedbuck</fullname>
+       <scientificname>Redunca fulvorufula</scientificname>
    </tbl_mammals_list>
