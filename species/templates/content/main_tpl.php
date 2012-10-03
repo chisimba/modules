@@ -74,6 +74,16 @@ $cat=2;
         {
             "display" : "block",
             "module" : "species",
+            "block" : "eolimages"
+        }
+        {
+            "display" : "block",
+            "module" : "species",
+            "block" : "localsound"
+        }
+        {
+            "display" : "block",
+            "module" : "species",
             "block" : "userimages"
         }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>

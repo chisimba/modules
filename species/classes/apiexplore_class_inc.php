@@ -59,7 +59,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Derek Keats derek@localhost.local
 *
 */
-class eol extends object
+class apiexplore extends object
 {
     
     /**
@@ -92,105 +92,18 @@ class eol extends object
      * @access public
      * 
      */
-    public function getSound($latinName)
-    {
-        $sounds =  $this->getSoundData($latinName);
-        if (is_array($sounds)) {
-            return $this->renderSounds($sounds);
-        } else {
-            return $sounds;
-        }
-    }
-    
-    /**
-     * 
-     * Get a sound file for this species via the EOL API
-     * 
-     * @param string $latinName The latin name of the species to lookup
-     * @return string The embedded sound file with player
-     * @access public
-     * 
-     */
-    public function getImgs($latinName)
-    {
-        $images =  $this->getImageData($latinName, 2);
-        //echo "<pre>";
-        //print_r($images);
-        //echo("</pre>");
-        if (is_array($images)) {
-            return $this->renderImages($images);
-        } else {
-            return $images;
-        }
-    }
-    
-    /**
-     * 
-     * Get a sound file for this species via the EOL API
-     * 
-     * @param string $latinName The latin name of the species to lookup
-     * @return string The embedded sound file with player
-     * @access public
-     * 
-     */
-    public function getSoundData($latinName, $records='5')
-    {
-        $obj = $this->jsonSearch($latinName);
-        $id = $obj->results[0]->id;
-        $uri = $this->buildUri($id, 'sound', 5);
-        $page = $this->getResults($uri);
-        $obj = json_decode($page);
-        $ret = array();
-        // Check for at least one entry, then proceed.
-        if (isset($obj->dataObjects[0])) {
-            $count = 0;
-            foreach ($obj->dataObjects as $dataObject) {
-                if (isset($dataObject->mediaURL)) {
-                    $url = $dataObject->mediaURL;
-                    $licenseUrl = $dataObject->license;
-                    $licenseCode = $this->extractLicense($licenseUrl);
-                    $licenseIsFree = $this->isFree($licenseCode);
-                    $isTrusted = $this->isTrusted($dataObject->vettedStatus);
-                    if ($this->isMp3($url)) {
-
-                        $ret[$count]['uri'] =  $url;
-                        $ret[$count]['licenseurl'] =  $licenseUrl;
-                        $ret[$count]['licensecode'] =  $licenseCode;
-                        $ret[$count]['licenseisfree'] =  $licenseIsFree;
-                        if (isset($dataObject->location)) {
-                            $ret[$count]['location'] =  $dataObject->location;
-                        } else {
-                            $ret[$count]['location'] =  NULL;
-                        }
-                        $ret[$count]['rightsholder'] =  $dataObject->rightsHolder;
-                        $ret[$count]['istrusted'] =  $isTrusted;
-                        $count++;
-                    }
-                }
-
-            }
-        } else {
-            $ret = $this->noAudioFound($latinName);
-        }
-        return $ret;
-    }
-    
-    /**
-     * 
-     * Get data on images for the species from EOL
-     * 
-     * @param string $latinName The scientific name for the species
-     * @param integer $records The number of records to return
-     * @return string array An array of species image data
-     * 
-     */
-    public function getImageData($latinName, $records='5')
+    public function getData($latinName, $mediaType='sound', $records='5')
     {
         $obj = $this->jsonSearch($latinName);
         $id = $obj->results[0]->id;
         $uri = $this->buildUri($id, 'image', 2);
         $page = $this->getResults($uri);
         $obj = json_decode($page);
+        //$obj = simplexml_load_string($page);
+        //echo "<pre>";
+        //print_r($obj);
+        //echo("</pre>");
+        //die();
         $ret = array();
         // Check for at least one entry, then proceed.
         if (isset($obj->dataObjects[0])) {
@@ -203,18 +116,30 @@ class eol extends object
                     $licenseIsFree = $this->isFree($licenseCode);
                     $isTrusted = $this->isTrusted($dataObject->vettedStatus);
                     //if ($this->isMp3($url)) {
-                    $ret[$count]['uri'] =  $url;
-                    $ret[$count]['licenseurl'] =  $licenseUrl;
-                    $ret[$count]['licensecode'] =  $licenseCode;
-                    $ret[$count]['licenseisfree'] =  $licenseIsFree;
-                    $ret[$count]['istrusted'] =  $isTrusted;
-                    $count++;
-                    //}
+                    if (1==1) {
+
+                        $ret[$count]['uri'] =  $url;
+                        $ret[$count]['licenseurl'] =  $licenseUrl;
+                        $ret[$count]['licensecode'] =  $licenseCode;
+                        $ret[$count]['licenseisfree'] =  $licenseIsFree;
+                        if (isset($dataObject->location)) {
+                            $ret[$count]['location'] =  $dataObject->location;
+                        } else {
+                            $ret[$count]['location'] =  NULL;
+                        }
+                        if (isset($dataObject->rightsHolder)) {
+                            $ret[$count]['rightsholder'] =  $dataObject->rightsHolder;
+                        } else {
+                            $ret[$count]['rightsholder'] = NULL;
+                        }
+                        $ret[$count]['istrusted'] =  $isTrusted;
+                        $count++;
+                    }
                 }
 
             }
         } else {
-            $ret = $this->noImageFound($latinName);
+            $ret = $this->noAudioFound($latinName);
         }
         return $ret;
     }
@@ -249,6 +174,29 @@ class eol extends object
          }
     }
     
+    /**
+     * 
+     * Render the sound players for all found sounds.
+     * 
+     * @param string $latinName The latin name of the species
+     * @return string The rendered sounds
+     * @access public
+     * 
+     */
+    public function show($latinName)
+    {
+        //return NULL;
+        $images =  $this->getData($latinName);
+        echo "<pre>";
+        print_r($images);
+        echo("</pre>");
+        if (is_array($images)) {
+            return $this->renderImages($images);
+        } else {
+            return $images;
+        }
+    }
+        
     /**
      * 
      * Render the sound players for the sounds
@@ -298,7 +246,6 @@ class eol extends object
                 $frag->appendXML($lic);
                 $div->appendChild($frag);
             }
-            
             
             $doc->appendChild($div);
             $ret .= $doc->saveHTML();
@@ -385,79 +332,8 @@ class eol extends object
         }
     }
     
-    /**
-     * 
-     * Send a warning message if no sound file is found on EOL
-     * 
-     * @param string $latinName The latin name we are looking up
-     * @return string The warning message
-     * @access private
-     * 
-     */
-    private function noAudioFound($latinName)
-    {
-        $repArray = array('species'=>$latinName);
-        $res = $this->objLanguage->code2txt(
-                "mod_species_eolnosound", "species", $repArray,
-                "EOL has no linked sound file"
-          );
-        $doc = new DOMDocument('UTF-8');
-        $div = $doc->createElement('div');
-        $div->setAttribute('class', 'species_stub');
-        $div->appendChild($doc->createTextNode($res));
-        $doc->appendChild($div);
-        return $this->italicizeSpecies($doc->saveHTML(), $latinName);
-    }
+
     
-    /**
-     * 
-     * Send a warning message if no image file is found on EOL
-     * 
-     * @param string $latinName The latin name we are looking up
-     * @return string The warning message
-     * @access private
-     * 
-     */
-    private function noImageFound($latinName)
-    {
-        $repArray = array('species'=>$latinName);
-        $res = $this->objLanguage->code2txt(
-                "mod_species_eolnoimg", "species", $repArray,
-                "EOL has no linked sound file"
-          );
-        $doc = new DOMDocument('UTF-8');
-        $div = $doc->createElement('div');
-        $div->setAttribute('class', 'species_stub');
-        $div->appendChild($doc->createTextNode($res));
-        $doc->appendChild($div);
-        return $this->italicizeSpecies($doc->saveHTML(), $latinName);
-    }
-    
-    /**
-     * 
-     * Embed the found audio file in a player, detecting Firefox which
-     * won't play MP3 files as native HTML5 audio
-     * 
-     * @param type $url
-     * @return type
-     * @access private
-     * 
-     */
-    private function embedAudio($url)
-    {
-        $objPlayer = $this->getObject('soundplayer', 'species');
-        return $objPlayer->embedAudio($url);
-    }
-    
-    /**
-     * 
-     * Render the images for display in a middle block
-     * 
-     * @param string array $images An array of image info
-     * @return string Rendered images
-     * @access private
-     * 
-     */
     private function renderImages($images) 
     {
         $ret = '';
@@ -472,6 +348,10 @@ class eol extends object
             $div->appendChild($img);
             $br = $doc->createElement('br');
             $div->appendChild($br);
+            //$div->appendChild($doc->createTextNode($caption));
+
+            
+            
             // Add the creative commons license icon
             if ($licenseCode !== NULL) {
                $objCc = $this->getObject('displaylicense', 'creativecommons');
@@ -482,12 +362,16 @@ class eol extends object
                 $frag->appendXML($lic);
                 $div->appendChild($frag);
             }
+            
+            
             $doc->appendChild($div);
             $ret .= $doc->saveHTML();
         }
         return $ret;
     }
-
+    
+    
+    
     /**
      * 
      * Get up to two images for the given species identified by its
@@ -507,6 +391,9 @@ class eol extends object
           . "details=0&images=2&sounds=0&subjects=overview&text=0";
         $page = $this->getResults($uri);
         $obj = json_decode($page);
+        /*echo "<pre>";
+        print_r($obj);
+        die("</pre>");*/
         if (isset($obj->dataObjects[0])) {
             $url = $obj->dataObjects[0]->eolThumbnailURL;
             $this->fullImage = $obj->dataObjects[0]->mediaURL;
@@ -568,7 +455,5 @@ class eol extends object
           . $latinName . '</i>', $txt
         );
     }
-    
-    
 }
 ?>
