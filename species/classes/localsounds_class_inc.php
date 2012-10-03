@@ -91,6 +91,32 @@ class localsounds extends object
         $this->objConfig = $this->getObject('dbsysconfig', 'sysconfig');
     }
     
+    public function soundsExist($fullName)
+    {
+        // Convert the name to the folder name.
+        $fullName = strtolower($fullName);
+        $fullName = str_replace("  ", "_", $fullName);
+        $fullName = str_replace(" ", "_", $fullName);
+        // Get the type of grouping from the session.
+        $type = $this->getSession('speciesgroup', 'birds', 'species');
+        $userList = $this->objConfig->getValue('species_userlist', "species");
+        if (strstr($userList, ",")) {
+            // There are more than one.
+            $arUsers =  array($userList);
+        } else {
+            $arUsers =  explode(",", $userList);
+        }
+        foreach ($arUsers as $user) {
+            $lookDir = 'usrfiles/users/' . $user . '/' . $type . '/' . $fullName;
+            if (file_exists($lookDir)) {
+                if (file_exists($lookDir . '/sounds.xml')) {
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+    
     /**
      * 
      * Get all the existing local sounds, embeded in a player
@@ -113,7 +139,8 @@ class localsounds extends object
             $arUsers =  explode(",", $userList);
         }
         $ret = NULL;
-        $type = 'birds'; //change to read from sesssion
+        // get the type of grouping from the session.
+        $type = $this->getSession('speciesgroup', 'birds', 'species');
         $objPlayer = $this->getObject('soundplayer', 'species');
         foreach ($arUsers as $user) {
             $lookDir = 'usrfiles/users/' . $user . '/' . $type . '/' . $fullName;

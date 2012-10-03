@@ -79,7 +79,18 @@ class block_eolimages extends object
      */
     public function init() 
     {
-        $this->title = "Images via EOL";
+        // Check if is should display
+        $this->blockType="";
+        $action = $this->getParam('action', NULL);
+        if ($action != 'showsp') {
+            $this->blockType="invisible";
+        } else {
+            // Get an instance of the language object
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->title = $this->objLanguage->languageText(
+              "mod_species_eolimg", "species",
+              "Images via EOL");
+        }
     }
     
     /**
@@ -89,6 +100,7 @@ class block_eolimages extends object
      */
     public function show() 
     {
+        if ($this->blockType != "invisible") {
             $action = $this->getParam('action', NULL);
             switch ($action) {
                 case "showsp":
@@ -108,7 +120,7 @@ class block_eolimages extends object
                     break;
             }
             return $ret;
-        
+        }
     }
 }
 ?>

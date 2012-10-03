@@ -114,7 +114,8 @@ class userimgs extends object
         $fullName = str_replace("  ", "_", $fullName);
         $fullName = str_replace(" ", "_", $fullName);
         $arUsers = $this->getArUsers();
-        $type = 'birds'; //change to read from sesssion
+        // Get the type of grouping from the session.
+        $type = $this->getSession('speciesgroup', 'birds', 'species');
         $ret = array();
         $element=0;
         foreach ($arUsers as $user) {
@@ -186,67 +187,6 @@ class userimgs extends object
         return $ret;
     }
     
-    
-    /**
-     * 
-     * Show the user contributed images for this species.
-     * 
-     * @param string $id The species ID
-     * @return string The formated images
-     * @access public
-     * 
-     */
-    public function oldshowSpecies($id, $size="m")
-    {
-        $objDbspecies = & $this->getObject('dbspecies', 'species');
-        $fullName = strtolower($objDbspecies->getFullName($id));
-        $fullName = str_replace("  ", "_", $fullName);
-        $fullName = str_replace(" ", "_", $fullName);
-        $arUsers = $this->getArUsers();
-        $type = 'birds'; //change to read from sesssion
-        $ret = "";
-        foreach ($arUsers as $user) {
-            $lookDir = 'usrfiles/users/' . $user . '/' . $type . '/' . $fullName;
-            if (file_exists($lookDir)) {
-                if(is_dir($lookDir)) {
-                    $images = simplexml_load_file($lookDir . '/captions.xml');
-                    foreach ($images as $image) {
-                        $imgFile = $lookDir . '/' . $image->filename;
-                        $mFile = $lookDir . '/m_' . $image->filename;
-                        if (file_exists($mFile)) {
-                            $useImage = $mFile;
-                        } else {
-                            $useImage = $imgFile;
-                        }
-                        $caption = $image->caption;
-                        $photographer = "Photo by: " . $image->photographer->fullname .', ';
-                        $license = "Licence: " . $image->licence;
-                        $subcaption = $photographer . "   " . $license;
-                        // Build up the display image using the DOM object.
-                        $doc = new DOMDocument('UTF-8');
-                        $img = $doc->createElement('img');
-                        $img->setAttribute('src', $useImage);
-                        $div = $doc->createElement('div');
-                        $div->setAttribute('class', 'species_contrimages');
-                        $div->appendChild($img);
-                        $br = $doc->createElement('br');
-                        $div->appendChild($br);
-                        $div->appendChild($doc->createTextNode($caption));
-                        $br = $doc->createElement('br');
-                        $div->appendChild($br);
-                        $div->appendChild($doc->createTextNode($subcaption));
-                        $doc->appendChild($div);
-                        $ret .= $doc->saveHTML();
-                    }
-                }
-            }
-        }
-        if ($ret=="") {
-            $ret = $this->objLanguage->languageText('mod_species_nousrfls', 'species', "There are no userfiles for this species.");
-        }
-        return $ret;
-    }
-    
     /**
      * 
      * Get the contributing user list from the config setting species_userlist
@@ -265,9 +205,6 @@ class userimgs extends object
             return explode(",", $userList);
         }
     }
-    
-  
 
-    
 }
 ?>

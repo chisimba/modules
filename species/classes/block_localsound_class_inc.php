@@ -67,6 +67,13 @@ class block_localsound extends object
      *
      */
     public $objLanguage;
+    /**
+     *
+     * @var string Object $objDb String for the databse object
+     * @access public
+     *
+     */
+    public $objDb;
     
     /**
      * Standard init function
@@ -83,6 +90,18 @@ class block_localsound extends object
         if ($action != 'showsp') {
             $this->blockType="invisible";
         } else {
+            // First check if there are sounds, if not, make it invisible
+            $id = $this->getParam('id', FALSE);
+            if ($id) {
+                $this->objDb = $this->getObject('dbspecies', 'species');
+                $fullName = $this->objDb->getFullName($id);
+                $this->objSnd = $this->getObject('localsounds', 'species');
+                if ($this->objSnd->soundsExist($fullName)) {
+                    $this->blockType="";
+                } else {
+                    $this->blockType="invisible";
+                }
+            }
             $sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $findSounds = strtolower(
               $sysConfig->getValue('species_findsounds', 'species')
