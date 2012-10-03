@@ -463,7 +463,7 @@ class eol extends object
         $ret = '';
         foreach ($images as $image) {
             $url = $image['uri'];
-            $licenseCode = $image['licensecode'];
+            $licenseCode = trim($image['licensecode']);
             $doc = new DOMDocument('UTF-8');
             $img = $doc->createElement('img');
             $img->setAttribute('src', $url);
@@ -473,9 +473,20 @@ class eol extends object
             $br = $doc->createElement('br');
             $div->appendChild($br);
             // Add the creative commons license icon
-            if ($licenseCode !== NULL) {
-               $objCc = $this->getObject('displaylicense', 'creativecommons');
-               $lic = $objCc->show($licenseCode);
+            if ($licenseCode !== NULL && $licenseCode !=="") {
+                // There is no PD license.
+                if ($licenseCode == 'pd') {
+                    $imgDoc = new DOMDocument('UTF-8');
+                    $ccimg = $imgDoc->createElement('img');
+                    $ccimg->setAttribute('src', 
+                      'skins/_common/icons/creativecommons_v3/pd_big.png');
+                    $imgDoc->appendChild($ccimg);
+                    $lic = $imgDoc->saveHTML();
+                } else {
+                    $objCc = $this->getObject('displaylicense', 'creativecommons');
+                    $lic = $objCc->show($licenseCode);
+                }
+
                 
                 $frag = $doc->createDocumentFragment(); 
                 
