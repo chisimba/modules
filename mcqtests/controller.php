@@ -964,6 +964,7 @@ class mcqtests extends controller {
                 break;
 
             case 'doexport':
+                $na = 'n/a';
                 $testId = $this->getParam('testId');
                 $testData = $this->dbTestadmin->getTests('', 'totalmark', $testId);
                 $exportType = $this->getParam('exporttype');
@@ -994,9 +995,14 @@ class mcqtests extends controller {
                             $line.= $userAnswerList[0]['starttime'] . ",";
                             $line.= $userAnswerList[0]['endtime'] . ",";
                             if (isset($userAnswerList) && !empty($userAnswerList)) {
+                                $comma = '';
                                 foreach ($userAnswerList as $answer) {
-                                    $value = isset($answer['answerorder']) ? $answer['answerorder'] : 'NULL';
-                                    $line.= $value . ",";
+                                    $value =
+                                        ($answer['questiontype'] == 'freeform')
+                                        ? (!is_null($answer['answered']) ? $answer['answered'] : $na)
+                                        : (!is_null($answer['answerorder']) ? $answer['answerorder'] : $na);
+                                    $line.= $comma.$value;
+                                    $comma = ',';
                                 }
                             }
                             fwrite($outputFile, $line . "\n");

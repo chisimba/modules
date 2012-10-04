@@ -222,7 +222,7 @@ class dbmarked extends dbtable
      */
     public function getAnswersForOutput($testId, $studentId)
     {
-        $sql = "SELECT marked.studentid, questions.questionorder, answers.answerorder, results.starttime, results.endtime ";
+        $sql = "SELECT marked.studentid, marked.answered, questions.questionorder, questions.questiontype, answers.answerorder, results.starttime, results.endtime ";
         $sql.= "FROM ".$this->table." AS marked ";
         $sql.= "LEFT JOIN ".$this->questionTable." AS questions ON marked.questionid=questions.id ";
         $sql.= "LEFT JOIN ".$this->answerTable." AS answers ON marked.answerid=answers.id ";
