@@ -999,7 +999,7 @@ class mcqtests extends controller {
                                 foreach ($userAnswerList as $answer) {
                                     $value =
                                         ($answer['questiontype'] == 'freeform')
-                                        ? (!is_null($answer['answered']) ? ('"'.$answer['answered'].'"') : $na) //(str_replace('"', '\'', $answer['answered']))
+                                        ? (!is_null($answer['answered']) ? ('"'.str_replace('"', '\'', $answer['answered']).'"') : $na)
                                         : (!is_null($answer['answerorder']) ? $answer['answerorder'] : $na);
                                     $line.= $comma.$value;
                                     $comma = ',';
