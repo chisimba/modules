@@ -122,21 +122,24 @@ class userimgs extends object
             $lookDir = 'usrfiles/users/' . $user . '/' . $type . '/' . $fullName;
             if (file_exists($lookDir)) {
                 if(is_dir($lookDir)) {
-                    $images = simplexml_load_file($lookDir . '/captions.xml');
-                    foreach ($images as $image) {
-                        $imgFile = $lookDir . '/' . $image->filename;
-                        $mFile = $lookDir . '/' . $size . '_' . $image->filename;
-                        if (file_exists($mFile)) {
-                            $ret[$element]['url'] = $mFile;
-                        } else {
-                            $ret[$element]['url'] = $imgFile;
+                    if (file_exists($lookDir . '/captions.xml')) {
+                        $images = simplexml_load_file($lookDir . '/captions.xml');
+                        foreach ($images as $image) {
+                            $imgFile = $lookDir . '/' . $image->filename;
+                            $mFile = $lookDir . '/' . $size . '_' . $image->filename;
+                            if (file_exists($mFile)) {
+                                $ret[$element]['url'] = $mFile;
+                            } else {
+                                $ret[$element]['url'] = $imgFile;
+                            }
+                            $caption = "" . $image->caption . "" ;
+                            $ret[$element]['caption']  = $caption;
+                            $ret[$element]['photographer']  = "Photo by: " . $image->photographer->fullname .', ';
+                            $ret[$element]['licence'] = "Licence: " . $image->licence;
+                            $element++;
                         }
-                        $caption = "" . $image->caption . "" ;
-                        $ret[$element]['caption']  = $caption;
-                        $ret[$element]['photographer']  = "Photo by: " . $image->photographer->fullname .', ';
-                        $ret[$element]['licence'] = "Licence: " . $image->licence;
-                        $element++;
                     }
+                    
                 }
             }
         }

@@ -151,9 +151,7 @@ class localsounds extends object
                         foreach ($sounds as $sound) {
                             $soundFile = $lookDir . '/' . $sound->filename;
                             $caption = $sound->caption;
-                            $technician = "Sound by: " . $sound->recordedby->fullname .', ';
-                            $license = "Licence: " . $sound->licence;
-                            $subcaption = $technician . "   " . $license;
+                            $licenseCode = strtolower($sound->licence);
                             $embeded = $objPlayer->embedAudio($soundFile);
                             $doc = new DOMDocument('UTF-8');
                             $div = $doc->createElement('div');
@@ -166,7 +164,28 @@ class localsounds extends object
                             $div->appendChild($doc->createTextNode($caption));
                             $br = $doc->createElement('br');
                             $div->appendChild($br);
-                            $div->appendChild($doc->createTextNode($subcaption));
+                            $webUrl=$sound->recordedby->website;
+                            if ($webUrl !== "" && $webUrl !== NULL) {
+                                $div->appendChild($doc->createTextNode("Sound by: "));
+                                $a = $doc->createElement('a');
+                                $a->setAttribute('href', $webUrl);
+                                $technician = $sound->recordedby->fullname;
+                                $a->appendChild($doc->createTextNode($technician));
+                                
+                                $div->appendChild($a);
+                            } else {
+                                $technician = "Sound by: " . $sound->recordedby->fullname;
+                                $div->appendChild($doc->createTextNode($technician));
+                            }
+                            
+                            // Add the creative commons license icon
+                            if ($licenseCode !== NULL) {
+                                $objCc = $this->getObject('displaylicense', 'creativecommons');
+                                $lic = $objCc->show($licenseCode);
+                                $frag = $doc->createDocumentFragment(); 
+                                $frag->appendXML($lic);
+                                $div->appendChild($frag);
+                            }
                             $doc->appendChild($div);
                             $ret .= $doc->saveHTML();
                         }
