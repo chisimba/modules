@@ -46,7 +46,7 @@ class dbresults extends dbtable {
 
     /**
      * Method to clean up results for export
-     * fixes a UWC-specific problem 
+     * fixes a UWC-specific problem
      * @access public
      * @param string $data The data
      * @param string $flag Alter userId or not
@@ -115,6 +115,31 @@ class dbresults extends dbtable {
     }
 
     /**
+     * Method to get all results for a test for
+     * the export functionality.
+     *
+     * @access public
+     * @param string $testId The id of the test.
+     * @return array $data The results.
+     */
+    public function getResultsForExport($testId,$flag=0) {
+        $sql = "SELECT
+            {$this->table}.*,
+            tbl_users.username,
+            tbl_users.firstname,
+            tbl_users.surname
+        FROM {$this->table}, tbl_users
+        WHERE {$this->table}.testid='$testId'
+            AND {$this->table}.studentid = tbl_users.userId";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $this->cleanUp($data,$flag);
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * added by otim samuel, sotim@dicts.mak.ac.ug: 13th Jan 2006
      * for specific use within the gradebook module
      * Method to get all test results
@@ -128,7 +153,7 @@ class dbresults extends dbtable {
      */
     public function getAnnualResults($filter, $fields = '*', $tables = 'tbl_test_results') {
         $sql = "SELECT $fields FROM ".$tables;
-        $sql.= " WHERE $filter";        
+        $sql.= " WHERE $filter";
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;

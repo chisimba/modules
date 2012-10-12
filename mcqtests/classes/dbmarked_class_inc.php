@@ -213,20 +213,21 @@ class dbmarked extends dbtable
     }
 
     /**
-     * Method to get the answers selected by the user for a test for output
+     * Method to get the answers selected by the user
+     * for a test for the export functionality
+     *
      *
      * @access public
      * @param string $testId The id of the test
      * @param string $studentId The id of the student
      * @return array $data The students answers
      */
-    public function getAnswersForOutput($testId, $studentId)
+    public function getAnswersForExport($testId, $studentId)
     {
-        $sql = "SELECT marked.studentid, marked.answered, questions.questionorder, questions.questiontype, answers.answerorder, results.starttime, results.endtime ";
+        $sql = "SELECT marked.studentid, marked.answered, questions.questionorder, questions.questiontype, answers.answerorder ";
         $sql.= "FROM ".$this->table." AS marked ";
         $sql.= "LEFT JOIN ".$this->questionTable." AS questions ON marked.questionid=questions.id ";
         $sql.= "LEFT JOIN ".$this->answerTable." AS answers ON marked.answerid=answers.id ";
-        $sql.= "LEFT JOIN ".$this->resultsTable." AS results on marked.studentid=results.studentid AND marked.testid=results.testid ";
         $sql.= "WHERE marked.testid='".$testId."' AND marked.studentid='".$studentId."' ";
         $sql.= "ORDER BY questions.questionorder";
         $data = $this->getArray($sql);

@@ -85,11 +85,11 @@ if (!empty($data)) {
                         intval($line['mark']) == 0
                         && is_null($line['endtime'])
                     ) {
-                        $mark = '<span style="color: red;">legacy unmarked</span>';
+                        $mark = '<span style="color: red;">'.$this->objLanguage->languageText('mod_mcqtests_legacynotcompleted','mcqtests').'</span>';
                     } else if (
                         intval($line['mark']) == -1
                     ) {
-                        $mark = '<span style="color: red;">unmarked</span>';
+                        $mark = '<span style="color: red;">'.$this->objLanguage->languageText('mod_mcqtests_notcompleted','mcqtests').'</span>';
                     } else if ($line['mark'] == 0) {
                         $mark = 0;
                     } else {

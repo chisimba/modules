@@ -111,7 +111,7 @@ if ($addOkay==TRUE){
         // set up export results icon
         $objIcon->title = $exportLabel;
         $exportIcon = $objIcon->getLinkedIcon($this->uri(array(
-            'action' => 'export',
+            'action' => 'doexport',
             'testId' => $line['id']
         )) , 'exportcvs');
         $icons.= $exportIcon;

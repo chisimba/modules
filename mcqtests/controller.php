@@ -964,10 +964,11 @@ class mcqtests extends controller {
                 break;
 
             case 'doexport':
-                $na = 'n/a';
+                $na = $this->objLanguage->languageText('mod_mcqtests_na','mcqtests');
                 $testId = $this->getParam('testId');
                 $testData = $this->dbTestadmin->getTests('', 'totalmark', $testId);
-                $exportType = $this->getParam('exporttype');
+                $totalmark = (int)$testData[0]['totalmark'];
+                //$exportType = $this->getParam('exporttype');
                 $contentRoot = $this->objConfig->getcontentBasePath();
                 $fileLocation = $contentRoot . 'modules/mcqtests';
                 if (!is_dir($fileLocation)) {
@@ -975,63 +976,118 @@ class mcqtests extends controller {
                     $this->objMkdir->makedir();
                 }
                 $file = $fileLocation . '/' . $testId . '.csv';
-                if ($exportType == 'answers') {
-                    $usersResultList = $this->dbResults->getResults($testId,1);
-                    if (isset($usersResultList) && !empty($usersResultList)) {
-                        $outputFile = fopen($file, 'wb');
-                        fwrite($outputFile, '"Student Number","Student Surname","First Name","Start time","End time","Answers selected"' . "\n");
-                        foreach ($usersResultList as $user) {
-                            $userAnswerList = $this->dbMarked->getAnswersForOutput($testId, $user['studentid']);
-                            $line = $userAnswerList[0]['studentid'] . ",";
-                            if (!(isset($userAnswerList[0]['surname']))){
-                                $userAnswerList[0]['surname'] = $this->objUser->getSurname($userAnswerList[0]['studentid']);
-                            }
-                            if (!(isset($userAnswerList[0]['firstname']))){
-                                $userAnswerList[0]['firstname'] = $this->objUser->getFirstname($userAnswerList[0]['studentid']);
-                            }
-                            //$line.= ($userAnswerList[0]['fullname']) . ",";
-                            $line.= ($userAnswerList[0]['surname']) . ",";
-                            $line.= ($userAnswerList[0]['firstname']) . ",";
-                            $line.= $userAnswerList[0]['starttime'] . ",";
-                            $line.= $userAnswerList[0]['endtime'] . ",";
-                            if (isset($userAnswerList) && !empty($userAnswerList)) {
-                                $comma = '';
-                                foreach ($userAnswerList as $answer) {
-                                    $value =
-                                        ($answer['questiontype'] == 'freeform')
-                                        ? (!is_null($answer['answered']) ? ('"'.str_replace('"', '\'', $answer['answered']).'"') : $na)
-                                        : (!is_null($answer['answerorder']) ? $answer['answerorder'] : $na);
-                                    $line.= $comma.$value;
-                                    $comma = ',';
-                                }
-                            }
-                            fwrite($outputFile, $line . "\n");
-                        }
-                        fclose($outputFile);
-                        return $this->nextAction('emailresults', array(
-                            'file' => $file,
-                            'testId' => $testId
-                        ));
-                    } else {
-                        return $this->nextAction('');
-                    }
+                //if ($exportType == 'answers') {
+                $usersResultList = $this->dbResults->getResultsForExport($testId,0);
+                if (FALSE === $usersResultList) {
+                    return $this->nextAction('');
                 } else {
-                    $usersResultList = $this->dbResults->getResults($testId,1);
-                    if (isset($usersResultList) && !empty($usersResultList)) {
+                    $outputFile = fopen($file, 'wb');
+                    fwrite($outputFile, '"Student Number","Surname","First Name","Start time","End time","Score","Percentage","Answers selected"' . "\n");
+                    foreach ($usersResultList as $user) {
+                        $record = array();
+                        $record['studentno'] = $user['username'];
+                        $record['firstname'] = $user['firstname'];
+                        $record['surname'] = $user['surname'];
+                        $record['starttime'] = $user['starttime'];
+                        $endtime = $user['endtime'];
+                        $record['endtime'] = is_null($endtime)?'':$endtime;
+                        $mark = (int)$user['mark'];
+                        if ($mark == 0 && is_null($endtime)) {
+                            $record['mark'] = $this->objLanguage->languageText('mod_mcqtests_legacynotcompleted','mcqtests');
+                            $record['percentage'] = $na;
+                        } else if ($mark == -1) {
+                            $record['mark'] = $this->objLanguage->languageText('mod_mcqtests_notcompleted','mcqtests');
+                            $record['percentage'] = $na;
+                        } else {
+                            $record['mark'] = (string)$mark;
+                            $record['percentage'] = ((string)(round(($mark / $totalmark), 4) * 100)).'%';
+                        }
+                        $userAnswerList = $this->dbMarked->getAnswersForExport($testId, $user['studentid']);
+                        if (FALSE === $userAnswerList) {
+                            $record['answers'] = '';
+                        } else {
+                            $record['answers'] = '';
+                            $comma = '';
+                            foreach ($userAnswerList as $answer) {
+                                $value =
+                                    ($answer['questiontype'] == 'freeform')
+                                    ? (!is_null($answer['answered']) ? ('"'.str_replace('"', '\'', $answer['answered']).'"') : $na)
+                                    : (!is_null($answer['answerorder']) ? $answer['answerorder'] : $na);
+                                $record['answers'] .= $comma . $value;
+                                $comma = ',';
+                            }
+                        }
+                        /*
+                        $line = $userAnswerList[0]['studentid'] . ",";
+                        if (!(isset($userAnswerList[0]['surname']))){
+                            $userAnswerList[0]['surname'] = $this->objUser->getSurname($userAnswerList[0]['studentid']);
+                        }
+                        if (!(isset($userAnswerList[0]['firstname']))){
+                            $userAnswerList[0]['firstname'] = $this->objUser->getFirstname($userAnswerList[0]['studentid']);
+                        }
+                        //$line.= ($userAnswerList[0]['fullname']) . ",";
+                        $line.= ($userAnswerList[0]['surname']) . ",";
+                        $line.= ($userAnswerList[0]['firstname']) . ",";
+                        $line.= $userAnswerList[0]['starttime'] . ",";
+                        $line.= $userAnswerList[0]['endtime'] . ",";
+                        */
+                        /*
+                        if (isset($userAnswerList) && !empty($userAnswerList)) {
+                        }
+                        */
+                        $line = '';
+                        $line .= $record['studentno'].',';
+                        $line .= $record['surname'].',';
+                        $line .= $record['firstname'].',';
+                        $line .= $record['starttime'].',';
+                        $line .= $record['endtime'].',';
+                        $line .= $record['mark'].',';
+                        $line .= $record['percentage'].',';
+                        $line .= $record['answers'];
+                        fwrite($outputFile, $line . "\n");
+                    }
+                    fclose($outputFile);
+                    return $this->nextAction('emailresults', array(
+                        'file' => $file,
+                        'testId' => $testId
+                    ));
+                }
+                // } else {
+                    /*
+                    $usersResultList = $this->dbResults->getResultsForExport($testId,0);
+                    if (FALSE === $usersResultList) {
+                        return $this->nextAction('');
+                    } else {
                         $outputFile = fopen($file, 'wb');
                         fwrite($outputFile, '"Student Number","Surname","First Name","Score","Percentage"' . "\n");
                         foreach ($usersResultList as $user) {
-                            $line = $user['studentid'] . ",";
-                            if (!(isset($user['fullname']))){
-                                $user['fullname'] = $this->objUser->fullname($user['studentid']);
-                                $user['surname'] = $this->objUser->getSurname($user['studentid']);
-                                $user['firstname'] = $this->objUser->getFirstname($user['studentid']);
-                            }
-                            //$line.= ($user['fullname']) . ",";
-                            $line.= ($user['surname']) . ",";
-                            $line.= ($user['firstname']) . ",";
-                            @ $line.= $user['mark'] . ",";
-                            $line.= ( round(($user['mark'] / $testData[0]['totalmark']), 4) * 100) . "%,";
+                            $record = array();
+                            $record['studentno'] = $user['username'];
+                            $record['firstname'] = $user['firstname'];
+                            $record['surname'] = $user['surname'];
+                            //$record['starttime'] = $user['starttime'];
+                            //$record['endtime'] = is_null($user['endtime'])?$this->objLanguage->languageText('mod_mcqtests_testnotcompleted','mcqtests'):$user['endtime'];
+                            $record['mark'] = $user['mark'];
+                            $record['percentage'] = (string)(round(($user['mark'] / $testData[0]['totalmark']), 4) * 100);
+                            $line = '';
+                            $line .= $record['studentno'].',';
+                            $line .= $record['surname'].',';
+                            $line .= $record['firstname'].',';
+                            //$line .= $record['starttime'].',';
+                            //$line .= $record['endtime'].',';
+                            $line .= $record['mark'].',';
+                            $line .= $record['percentage'].'%';
+//                            $line = $user['studentid'] . ",";
+//                            if (!(isset($user['fullname']))){
+//                                $user['fullname'] = $this->objUser->fullname($user['studentid']);
+//                                $user['surname'] = $this->objUser->getSurname($user['studentid']);
+//                                $user['firstname'] = $this->objUser->getFirstname($user['studentid']);
+//                            }
+//                            //$line.= ($user['fullname']) . ",";
+//                            $line.= ($user['surname']) . ",";
+//                            $line.= ($user['firstname']) . ",";
+//                            @ $line.= $user['mark'] . ",";
+//                            $line.= ( round(($user['mark'] / $testData[0]['totalmark']), 4) * 100) . "%,";
                             fwrite($outputFile, $line . "\n");
                         }
                         fclose($outputFile);
@@ -1040,7 +1096,7 @@ class mcqtests extends controller {
                             'testId' => $testId
                         ));
                     }
-                }
+                    */
             case 'emailresults':
                 $testId = $this->getParam('testId');
                 $file = $this->getParam('file');
