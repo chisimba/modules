@@ -77,9 +77,35 @@ if (!empty($data)) {
                     $title = $ansLabel;
                 }
             }
-            $dispZero = FALSE;
+            //$dispZero = FALSE;
             // Calculate mark as a percentage for display
-            if ($line['mark'] != 'none') {
+            if ($line['mark'] == 'none') {
+                $mark = '';
+                if ($closed || !$line['comlab']) {
+                    $openLink = $line['name'];
+                } else {
+                    //$action = 'answertest';
+                    //$dispZero = FALSE;
+                    //$completedTest = FALSE;
+                    //if ($action == 'answertest') {
+                    $objLink = new link('#');
+                    $objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array(
+                        'action' => 'answertest',
+                        'id' => $line['id'],
+                        'mode' => 'notoolbar'
+                    )) ."', 'showtest', 'fullscreen,scrollbars')\"";
+    //                } else {
+    //                    $objLink = new link($this->uri(array(
+    //                        'action' => $action,
+    //                        'id' => $line['id']
+    //                    )));
+    //                }
+                    $objLink->link = $line['name'];
+                    $openLink = $objLink->show();
+                    //$objLink->title = $title;
+                }
+            } else {
+                // $line['mark'] != 'none'
                 if ($line['testtype'] != 'Summative') {
                     if (
                         intval($line['mark']) == 0
@@ -98,46 +124,30 @@ if (!empty($data)) {
                 } else {
                     $mark = $completedLabel;
                 }
-                $action = 'showstudenttest';
-                $title = $viewLabel;
+                //$action = 'showstudenttest';
+                //$title = $viewLabel;
                 $startDate = $completedLabel;
-                $dispZero = TRUE;
-            } else {
-                $mark = '';
-                $action = 'answertest';
+                //$dispZero = TRUE;
+                //$completedTest = TRUE;
+                if (!$closed) {
+                    $openLink = $line['name'];
+                } else {
+                    // Closed
+                    //$openLink = $line['name'];
+                    $objLink = new link($this->uri(array(
+                        'action' => 'showtest',
+                        'id' => $line['id'],
+                        'studentId' => $this->objUser->userId(),
+                    )));
+                    $objLink->link = $line['name'];
+                    $openLink = $objLink->show();
+                }
             }
             // Link to answer test or display completed test
-            if (($closed && !$dispZero) || (!$closed && $dispZero)) {
-                //$openLink = $line['name'];
-                $objLink = new link($this->uri(array(
-                    'action' => 'showtest',
-                    'id' => $line['id'],
-                    'studentId' => $this->objUser->userId(),
-                )));
-                $objLink->link = $line['name'];
-                $openLink = $objLink->show();
-            } else {
-                $objLink->title = $title;
-                if ($action == 'answertest') {
-                    $objLink = new link('#');
-                    $objLink->extra = "onclick=\"javascript:window.open('".$this->uri(array(
-                        'action' => $action,
-                        'id' => $line['id'],
-                        'mode' => 'notoolbar'
-                    )) ."', 'showtest', 'fullscreen,scrollbars')\"";
-                } else {
-                    $objLink = new link($this->uri(array(
-                        'action' => $action,
-                        'id' => $line['id']
-                    )));
-                }
-                $objLink->link = $line['name'];
-                if ($line['comlab'] == TRUE) {
-                    $openLink = $objLink->show();
-                } else {
-                    $openLink = $line['name'];
-                }
-            }
+            //if (($closed && !$dispZero) || (!$closed && $dispZero)) {
+//            if ($completedTest) {
+//            } else {
+//            }
             if ($line['timed']) {
                 $duration = floor($line['duration']/60) .$hrLabel.'&nbsp;';
                 $duration.= ($line['duration']%60) .$minLabel;
