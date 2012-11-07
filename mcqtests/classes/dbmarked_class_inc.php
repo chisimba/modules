@@ -178,12 +178,30 @@ class dbmarked extends dbtable
    public function getfreeformAnswers($studentId, $testId)
    {
 
+/*
         $sql = "SELECT distinct marked.questionid,marked.answered,quest.mark FROM";
         $sql.= " tbl_test_marked AS marked, tbl_test_answers AS ans, tbl_test_questions AS quest";
         $sql.= " WHERE marked.answered = ans.answer";
         $sql.= " AND marked.questionid = quest.id";
         $sql.= " AND marked.studentid = '$studentId'";
         $sql.= " AND marked.testid = '$testId'";
+*/
+        $sql = "SELECT DISTINCT
+                    questions.id AS questionid,
+                    questions.mark,
+                    marked.answered
+                FROM
+                    tbl_test_questions AS questions,
+                    tbl_test_marked AS marked,
+                    tbl_test_answers AS answers
+                WHERE
+                    questions.testid = '{$testId}'
+                    AND marked.studentid = '{$studentId}'
+                    AND questions.questiontype = 'freeform'
+                    AND questions.id = marked.questionid
+                    AND questions.testid = answers.testid
+                    AND questions.id = answers.questionid
+                    AND marked.answered = answers.answer";
 
         $data = $this->getArray($sql);
         if (!empty($data)) {
