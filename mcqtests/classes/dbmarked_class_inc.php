@@ -96,6 +96,7 @@ class dbmarked extends dbtable
      */
     public function getMarkedFreeForm($studentId, $questionId, $testId)
     {
+/*
         $sql = "SELECT DISTINCT answers.* FROM ".$this->table." AS marked,";
         $sql.= " tbl_test_answers AS answers";
         $sql.= " WHERE marked.answered = answers.answer";
@@ -103,25 +104,43 @@ class dbmarked extends dbtable
         $sql.= " AND marked.questionid='$questionId'";
         $sql.= " AND marked.testid='$testId'";
         $sql.= " ORDER BY marked.updated DESC";
+*/
+
+        $sql = "SELECT DISTINCT answers.*
+                FROM
+                    {$this->table} AS marked,
+                    tbl_test_answers AS answers
+                WHERE
+                    marked.studentid = '{$studentId}'
+                    AND marked.testid = '{$testId}'
+                    AND marked.questionid = '{$questionId}'
+                    AND answers.testid = '{$testId}'
+                    AND answers.questionid = '{$questionId}'
+                    AND marked.answered = answers.answer";
+
         $data = $this->getArray($sql);
         if (!empty($data)) {
-             return $data;
+            return $data;
+        } else {
+            return FALSE;
         }
-        return FALSE;
     }
     public function getMarkedFreeFormAnswer($studentId, $questionId, $testId)
     {
-        $sql = "SELECT answered FROM {$this->table}";
-        $sql .= " WHERE ";
-        $sql.= " studentid='$studentId'";
-        $sql.= " AND questionid='$questionId'";
-        $sql.= " AND testid='$testId'";
+        $sql = "SELECT answered
+                FROM
+                    {$this->table}
+                WHERE
+                    studentid='{$studentId}'
+                    AND testid='{$testId}'
+                    AND questionid='{$questionId}'";
         //$sql.= " ORDER BY marked.updated DESC";
         $data = $this->getArray($sql);
         if (!empty($data)) {
-             return $data;
+            return $data;
+        } else {
+            return FALSE;
         }
-        return FALSE;
     }
 
     /**
@@ -192,22 +211,24 @@ class dbmarked extends dbtable
                     marked.answered
                 FROM
                     tbl_test_questions AS questions,
-                    tbl_test_marked AS marked,
+                    {$this->table} AS marked,
                     tbl_test_answers AS answers
                 WHERE
                     questions.testid = '{$testId}'
-                    AND marked.studentid = '{$studentId}'
                     AND questions.questiontype = 'freeform'
-                    AND questions.id = marked.questionid
-                    AND questions.testid = answers.testid
-                    AND questions.id = answers.questionid
+                    AND answers.testid = '{$testId}'
+                    AND answers.questionid = questions.id
+                    AND marked.studentid = '{$studentId}'
+                    AND marked.testid = '{$testId}'
+                    AND marked.questionid = questions.id
                     AND marked.answered = answers.answer";
 
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
+        } else {
+            return FALSE;
         }
-        return FALSE;
    }
     /**
      * Method to delete a set of answers for a student on a specified test.

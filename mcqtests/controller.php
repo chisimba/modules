@@ -2266,15 +2266,17 @@ class mcqtests extends controller {
                         //                        }
                         $data[$key]['alternativeanswers'] = $this->dbAnswers->getAlternativeAnswers($testId, $line['questionid']);
                         $marked = $this->dbMarked->getMarkedFreeForm($studentId, $line['questionid'], $testId);
-                        $data[$key]['studcorrect'] = $marked[0]['correct'];
-                        $data[$key]['studans'] = $marked[0]['answer'];
-                        $data[$key]['studorder'] = $marked[0]['answerorder'];
-                        $data[$key]['studcomment'] = $marked[0]['commenttext'];
+                        if ($marked !== FALSE) {
+                            $data[$key]['studcorrect'] = $marked[0]['correct'];
+                            $data[$key]['studans'] = $marked[0]['answer'];
+                            $data[$key]['studorder'] = $marked[0]['answerorder'];
+                            $data[$key]['studcomment'] = $marked[0]['commenttext'];
+                        }
                         $markedAnswer = $this->dbMarked->getMarkedFreeFormAnswer($studentId, $line['questionid'], $testId);
-                        if ($markedAnswer) {
-                            $data[$key]['answered'] = $markedAnswer[0]['answered'];
-                        } else {
+                        if ($markedAnswer === FALSE) {
                             $data[$key]['answered'] = NULL;
+                        } else {
+                            $data[$key]['answered'] = $markedAnswer[0]['answered'];
                         }
                         break;
                     default:

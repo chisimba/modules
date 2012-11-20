@@ -135,13 +135,15 @@ if (!empty($data)) {
                 }
                 break;
             case 'freeform':
-                if (!empty($line['answered'])) {
+                //if (!empty($line['answered'])) {
+                if (is_null($line['answered'])) {
+                    $content.= $noAnsLabel;
+                } else {
                     //$ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
                     $content.= '<b>'.$yourAnsLabel.':'./*$ansNum.*/'</b>&nbsp;&nbsp;&nbsp;'.$line['answered'].'<br />';
-                } else {
-                    $content.= $noAnsLabel;
                 }
-                if (!$line['studcorrect']) {
+                //if (!$line['studcorrect']) {
+                if (!isset($line['studcorrect'])) {
                     $icon = $crossIcon;
                 } else {
                     $icon = $tickIcon;
@@ -166,7 +168,7 @@ if (!empty($data)) {
         ; //&nbsp;&nbsp;&nbsp;
         //$contentLayer = $objLayer->show();
         $contentLayer = '<div class="viewquiz"><div class="coolwidget_100"><b>' . $questionLabel . '&nbsp;' . $line['questionorder'] . ':</b>' . $parsedQuestion . $content . '</div></div>';
-        
+
 //        $objLayer = new layer();
 //        $objLayer->cssClass = 'forumContent';
 //        $objLayer->str = $question;
