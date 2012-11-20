@@ -85,7 +85,7 @@ jQuery(function() {
     });
 
     // The function for deleting a post
-    jQuery(".delpost").click(function() {
+    jQuery(".delpost").live("click", function(){
         var commentContainer = jQuery(this).parent();
         id = jQuery(this).attr("id");
         var string = 'id='+ id;

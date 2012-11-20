@@ -434,7 +434,7 @@ class wallops extends object {
                             'action' => 'delete',
                             'id' => $id
                                 ), 'wall');
-                        $delLink = "#";
+                        $delLink = "javascript:void(0);";
                         $delLink = str_replace('&amp;', '&', $delLink);
                         $del = '<a class="delpost" id="'
                                 . $id . '" href="' . $delLink . '">[x]</a>';
