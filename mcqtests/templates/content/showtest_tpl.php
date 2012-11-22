@@ -143,10 +143,10 @@ if (!empty($data)) {
                     $content.= '<b>'.$yourAnsLabel.':'./*$ansNum.*/'</b>&nbsp;&nbsp;&nbsp;'.$line['answered'].'<br />';
                 }
                 //if (!$line['studcorrect']) {
-                if (!isset($line['studcorrect'])) {
-                    $icon = $crossIcon;
-                } else {
+                if (isset($line['studcorrect']) && $line['studcorrect'] == '1') {
                     $icon = $tickIcon;
+                } else {
+                    $icon = $crossIcon;
                 }
                 break;
             default:
