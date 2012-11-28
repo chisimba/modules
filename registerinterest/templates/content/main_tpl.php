@@ -21,13 +21,6 @@ $objFix->fixThree();
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>
     <div id="Canvas_Content_Body_Region3">
-        {
-            "display" : "block",
-            "module" : "registerinterest",
-            "block" : "registerinterestright"
-        }
-        <div id="rightdynamic_area" class="rightdynamic_area_layer"></div>
-        <div id="rightfeedback_area" class="rightfeedback_area_layer"></div>
     </div>
     <div id="Canvas_Content_Body_Region2">
         {

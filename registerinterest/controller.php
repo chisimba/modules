@@ -146,7 +146,13 @@ class registerinterest extends controller
     private function __view()
     {
         // All the action is in the blocks
-        return "main_tpl.php";
+        if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser->isAdmin()) {
+                return "main_tpl.php";
+            }
+        }
+        // Redirect
+        header('location: ' . 'index.php');
     }
     
     /**
@@ -239,7 +245,6 @@ class registerinterest extends controller
         $action=$this->getParam('action','NULL');
         switch ($action)
         {
-            case 'view':
             case 'save':
                 return FALSE;
                 break;

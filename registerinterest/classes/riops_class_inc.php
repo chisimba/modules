@@ -82,7 +82,6 @@ class riops extends object
      */
     public function buildForm()
     {
-        
         // Load all the required HTML classes from HTMLElements module
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('textinput','htmlelements');
@@ -107,7 +106,6 @@ class riops extends object
         $em = $emLabel . "<br />" . $eMailAddr->show() . "<br />" . $emCheck;
         
         $buttonTitle = $this->objLanguage->languageText('word_save');
-        
         $button = new button('saveDetails', $buttonTitle);
         $button->cssId = 'ri_save_button';
         $button->setToSubmit();
@@ -118,6 +116,48 @@ class riops extends object
         
         return "<div class='registerinterest_form' id = 'ri_form'><div id='before_riform'></div>" . $myForm->show() . "</div>";
 
+    }
+    
+    public function listAll()
+    {
+        $objDb = $this->getObject('dbregisterinterest', 'registerinterest');
+        $dataArray = $objDb->getAll();
+        $doc = new DOMDocument('UTF-8');
+        $table = $doc->createElement('table');
+        $class = "odd";
+        foreach ($dataArray as $usr) {
+            $fullName = $usr['fullname'];
+            $emailAddress = $usr['email'];
+            $dateCreated = $usr['datecreated'];
+            $tr = $doc->createElement('tr');
+            // Fullname to table.
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($fullName));
+            $tr->appendChild($td);
+            // Email address to table.
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($emailAddress));
+            $tr->appendChild($td);
+            // Date registered to table.
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($dateCreated));
+            $tr->appendChild($td);
+            
+            // Add the row to the table
+            $table->appendChild($tr);
+            
+            // Convoluted odd/even
+            if ($class == "odd") { 
+                $class = "even";
+            } else {
+                $class = "odd";
+            }
+        }
+        $doc->appendChild($table);
+        return $doc->saveHTML();
     }
 
 }
