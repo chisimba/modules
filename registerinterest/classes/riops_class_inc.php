@@ -124,11 +124,29 @@ class riops extends object
         $dataArray = $objDb->getAll();
         $doc = new DOMDocument('UTF-8');
         $table = $doc->createElement('table');
+        $table->setAttribute('class', 'ri_viewall');
+        // Create the header row.
+        $tr = $doc->createElement('tr');
+        $th = $doc->createElement('td');
+        $th->appendChild($doc->createTextNode("Name"));
+        $tr->appendChild($th);
+        $th = $doc->createElement('td');
+        $th->appendChild($doc->createTextNode("Email"));
+        $tr->appendChild($th);
+        $th = $doc->createElement('td');
+        $th->appendChild($doc->createTextNode("Registered"));
+        $tr->appendChild($th);
+        // Add the row to the table.
+        $table->appendChild($tr);
+        
         $class = "odd";
         foreach ($dataArray as $usr) {
+            // Reatrieve the data.
+            $id = $usr['id'];
             $fullName = $usr['fullname'];
             $emailAddress = $usr['email'];
             $dateCreated = $usr['datecreated'];
+            // Create the table row.
             $tr = $doc->createElement('tr');
             // Fullname to table.
             $td = $doc->createElement('td');
@@ -146,10 +164,10 @@ class riops extends object
             $td->appendChild($doc->createTextNode($dateCreated));
             $tr->appendChild($td);
             
-            // Add the row to the table
+            // Add the row to the table.
             $table->appendChild($tr);
             
-            // Convoluted odd/even
+            // Convoluted odd/even.
             if ($class == "odd") { 
                 $class = "even";
             } else {
