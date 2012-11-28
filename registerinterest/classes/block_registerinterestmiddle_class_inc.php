@@ -69,7 +69,8 @@ class block_registerinterestmiddle extends object
      */
     public function init() 
     {
-        $this->title = "Register interest wideblock";
+        $this->wrapStr = FALSE;
+        $this->title = "People who have registered interest";
     }
     /**
      * Standard block show method.

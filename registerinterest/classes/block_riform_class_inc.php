@@ -76,6 +76,7 @@ class block_riform extends object
      */
     public function init() 
     {
+        $this->wrapStr = FALSE;
         $this->title = "Register interest in the API";
     }
     /**
