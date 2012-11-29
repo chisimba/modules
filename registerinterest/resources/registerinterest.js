@@ -24,7 +24,7 @@ jQuery(function() {
     jQuery(document).ready(function() {
     });
     
-    // Toggle the wall
+    // Save the intrest
     jQuery("#ri_save_button").live("click", function(e){
         e.preventDefault();
         data_string = jQuery("#form_edituser").serialize();
@@ -40,5 +40,21 @@ jQuery(function() {
             }
         });
     });
+    
+    // Send the message
+    jQuery("#ri_savemsg_button").live("click", function(e){
+        e.preventDefault();
+        data_string = jQuery("#form_editmsg").serialize();
+        alert("Not ready yet");
+        /*jQuery.ajax({
+            url: 'index.php?module=registerinterest&action=savemsg',
+            type: "POST",
+            data: data_string,
+            success: function(msg) {
+                jQuery("#ri_savemsg_button").attr("disabled", "");
+                jQuery("#before_riform").html('<span class="success">Message send.</span>');
 
+            }
+        });*/
+    });
 });

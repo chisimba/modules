@@ -117,7 +117,61 @@ class riops extends object
         return "<div class='registerinterest_form' id = 'ri_form'><div id='before_riform'></div>" . $myForm->show() . "</div>";
 
     }
+    /**
+     * 
+     * Build form for sending message to registered people.
+     * 
+     * @return string The form
+     * @access public
+     * 
+     */
+    public function buildMsgForm()
+    {
+        // Load all the required HTML classes from HTMLElements module
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('textinput','htmlelements');
+        $this->loadClass('textarea','htmlelements');
+        $this->loadClass('button','htmlelements');
+        
+        // Load the javascript.
+        $this->appendArrayVar('headerParams',
+          $this->getJavaScriptFile('registerinterest.js',
+          'registerinterest'));
+        
+        // Create the form and set the action to save
+        $formAction = $this->uri(array('action' => 'sendmsg'), 'registerinterest');
+        
+        
+        $myForm = new form('editmsg', $formAction);
+               
+        $subjectLabel = $this->objLanguage->languageText('mod_registerinterest_msgsubject', 'registerinterest');
+        $subject = new textinput('subject');
+        $sj = $subjectLabel . "<br />" . $subject->show();
+        
+        $msgLabel = $this->objLanguage->languageText('mod_registerinterest_msglabel', 'registerinterest');
+        $msg = new textarea('message');
+        $ms = $msgLabel . "<br />" . $msg->show();
+        
+        $buttonTitle = $this->objLanguage->languageText('word_send');
+        $button = new button('saveDetails', $buttonTitle);
+        $button->cssId = 'ri_savemsg_button';
+        $button->setToSubmit();
+        
+        $myForm->addToForm($sj . "<br />");
+        $myForm->addToForm($ms . "<br />");
+        $myForm->addToForm($button->show());
+        
+        return "<div class='registerinterest_form' id = 'ri_form'><div id='before_riform'></div>" . $myForm->show() . "</div>";
+
+    }
     
+    
+    /**
+     * 
+     * Render an HTML table of all registered people
+     * 
+     * @return string The rendered HTML table
+     */
     public function listAll()
     {
         $objDb = $this->getObject('dbregisterinterest', 'registerinterest');
@@ -175,6 +229,31 @@ class riops extends object
             }
         }
         $doc->appendChild($table);
+        return $doc->saveHTML();
+    }
+    
+    /**
+     * 
+     * Render a form for an admin to post a message.
+     * 
+     * @return type
+     * 
+     */
+    public function renderPostMessage()
+    {
+        // The link for the message writer.
+        $sendlink = $this->uri(array('action' => 'writemessage'), 'registerinterest');
+        $sendlink = str_replace("&amp;", "&", $sendlink);
+        
+        $doc = new DOMDocument('UTF-8');
+        $div = $doc->createElement('div');
+        $div->setAttribute('class', 'ri_msgpopper');
+        $a = $doc->createElement('a');
+        $a->setAttribute('class', 'ri_msglink');
+        $a->setAttribute('href', $sendlink);
+        $a->appendChild($doc->createTextNode("Send message"));
+        $div->appendChild($a);
+        $doc->appendChild($div);
         return $doc->saveHTML();
     }
 

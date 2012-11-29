@@ -1,9 +1,11 @@
 <?php
 /**
  *
- * A middle block for Register interest.
+ * A message writing block Register interest.
  *
- * A middle block for Register interest. Allows someone to enter name and email address in order to be contacted at sometime in the future about something of interest. For example, register to be notified about the upcoming API release, Lady GooGoo concert, etc..
+ * A middle block for Register interest. Allows an admin
+ * to write a message to send to all email addresses who 
+ * registered interest.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +42,11 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A middle block for Register interest.
+ * A message writing block Register interest.
  *
- * A middle block for Register interest. Allows someone to enter name and email address in order to be contacted at sometime in the future about something of interest. For example, register to be notified about the upcoming API release, Lady GooGoo concert, etc..
+ * A middle block for Register interest. Allows an admin
+ * to write a message to send to all email addresses who 
+ * registered interest.
  *
  * @category  Chisimba
  * @author    Derek Keats derek@dkeats.com
@@ -50,7 +54,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_registerinterestmiddle extends object
+class block_riwritemsg extends object
 {
     /**
      * The title of the block
@@ -70,7 +74,7 @@ class block_registerinterestmiddle extends object
     public function init() 
     {
         $this->wrapStr = FALSE;
-        $this->title = "People who have registered interest";
+        $this->title = "Write message";
     }
     /**
      * Standard block show method.
@@ -80,7 +84,7 @@ class block_registerinterestmiddle extends object
     public function show() 
     {
         $objOps = $this->getObject('riops', 'registerinterest');
-        return $objOps->renderPostMessage() . $objOps->listAll();
+        return $objOps->buildMsgForm();
     }
 }
 ?>

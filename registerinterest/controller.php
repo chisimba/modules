@@ -155,6 +155,18 @@ class registerinterest extends controller
         header('location: ' . 'index.php');
     }
     
+    private function __writemessage()
+    {
+        // All the action is in the blocks
+        if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser->isAdmin()) {
+                return "writemsg_tpl.php";
+            }
+        }
+        // Redirect
+        header('location: ' . 'index.php');
+    }
+    
     /**
     * 
     * Method corresponding to the save action. 
