@@ -4,7 +4,9 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
-$form = new form ('searchform', $this->uri(array('action'=>'tag')));
+
+// Build the search form.
+$form = new form ('searchform', $this->uri(array('action'=>'tag'), 'faq'));
 $form->method = 'GET';
 
 $module = new hiddeninput('module', 'faq');
@@ -35,10 +37,12 @@ $iconAdd->title = $objLanguage->languageText("faq_addnewentry", "faq");
 $iconAdd->align=false;
 $objLink->link = $iconAdd->show();
 
-$tagCloudLink = new link ($this->uri(array('action'=>'tagcloud')));
+$tagCloudLink = new link ($this->uri(array('action'=>'tagcloud'), 'faq'));
 $tagCloudLink->link = 'View All Tags';
 
-$tagCloudContent .= '<span style="text-align:center">' . $tagCloud . '</span><br />'.$tagCloudLink->show();
+$tagCloudContent .= '<span style="text-align:center">' . $tagCloud 
+  . '</span><br /><div class="faq_alltags">'.$tagCloudLink->show()
+  . "</faq>";
 
 
 // Add the Icon to the heading

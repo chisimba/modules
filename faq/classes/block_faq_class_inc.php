@@ -20,7 +20,7 @@ class block_faq extends object
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText('mod_faq_name');
@@ -47,7 +47,7 @@ class block_faq extends object
     /**
     * Method to show the form for selecting a category
     */
-    function showForm()
+    public function showForm()
     {
         $lbCategory = $this->objLanguage->languageText('mod_faq_selectcategory');
         $lbAllCats = $this->objLanguage->languageText('mod_faq_allcategories');
@@ -87,7 +87,7 @@ class block_faq extends object
     /**
     * Display link to FAQ
     */
-    function getLink()
+    public function getLink()
     {
         $url = $this->uri('', 'faq');
         $this->objIcon->setModuleIcon('faq');
@@ -104,7 +104,7 @@ class block_faq extends object
     /**
     * Display public function
     */
-    function show()
+    public function show()
     {
         return $this->showForm().$this->getLink();
     }

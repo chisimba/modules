@@ -14,34 +14,39 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 class dbFaqEntries extends dbTable {
 
     /**
+     * 
      * Constructor method to define the table
+     * @access public 
+     * @return VOID
+     * 
      */
-    function init() {
+    public function init() {
         parent::init('tbl_faq_entries');
-        //$this->USE_PREPARED_STATEMENTS=True;
     }
 
     /**
+     * 
      * Insert a record
+     * 
      * @param string $contextId The context ID
      * @param string $categoryId The category ID
      * @param string $question The question
      * @param string $answer The answer
      * @param string $userId The user ID
      * @param string $dateLastUpdated Date last updated
+     * @access public
+     * @return string Result of insert
      */
-    function insertSingle($contextId, $categoryId, $question, $answer, $userId, $dateLastUpdated, $tags) {
-        //$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
-
+    public function insertSingle($contextId, $categoryId, $question, $answer, $userId, $dateLastUpdated, $tags) {
         $ins = $this->insert(array(
-                    'contextid' => $contextId,
-                    'categoryid' => $categoryId,
-                    '_index' => $this->getNextIndex($contextId, $categoryId),
-                    'question' => $question,
-                    'answer' => $answer,
-                    'userid' => $userId,
-                    'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
-                ));
+            'contextid' => $contextId,
+            'categoryid' => $categoryId,
+            '_index' => $this->getNextIndex($contextId, $categoryId),
+            'question' => $question,
+            'answer' => $answer,
+            'userid' => $userId,
+            'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+        ));
 
         $idresults = $this->getIdByLastUpdateDate(strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated));
 
@@ -73,9 +78,8 @@ class dbFaqEntries extends dbTable {
      * Get id of specific entry
 
      */
-    function getIdByLastUpdateDate($dateLastUpdated) {
+    public function getIdByLastUpdateDate($dateLastUpdated) {
         $sql = "SELECT id FROM tbl_faq_entries  WHERE dateLastUpdated='" . $dateLastUpdated . "'";
-
         return $this->getArray($sql);
     }
 
@@ -83,9 +87,8 @@ class dbFaqEntries extends dbTable {
      * Get FAQ entries
      * @author Nonhlanhla Gangeni <noegang@gmail.com>
      */
-    function getEntries($contextId, $categoryId) {
+    public function getEntries($contextId, $categoryId) {
         $sql = "SELECT fc.categoryname as categoryname, fe.question as qn, fe.answer FROM tbl_faq_entries fe,tbl_faq_categories fc WHERE fe.contextid='" . $contextId . "' and fc.id= fe.categoryid";
-
         return $this->getArray($sql);
     }
 
@@ -95,14 +98,34 @@ class dbFaqEntries extends dbTable {
      * @param string $categoryId The category ID
      * @return array The FAQ entries
      */
-    function listAll($contextId, $categoryId) {
-        //$sql = "SELECT id, question, answer FROM tbl_faq";
-        //return $this->getArray($sql);
+    public function listAll($contextId, $categoryId) {
         if ($categoryId == "All Categories") {
             return $this->getAll("WHERE contextid='" . $contextId . "' ORDER BY _index");
         } else {
             return $this->getAll("WHERE contextid='" . $contextId . "' AND categoryid='" . $categoryId . "' ORDER BY _index");
         }
+    }
+    
+    /**
+     * Return all records
+     * @param string $contextId The context ID
+     * @param string $categoryId The category ID
+     * @return array The FAQ entries
+     */
+    public function getMostRecent($contextId) {
+        $sql = "SELECT tbl_faq_entries.id AS id, 
+            tbl_faq_entries.contextid, 
+            tbl_faq_entries.categoryid, 
+            tbl_faq_entries.question, 
+            tbl_faq_entries.userid, 
+            tbl_faq_entries.datelastupdated,
+            tbl_faq_categories.id AS categorycode,
+            tbl_faq_categories.categoryname
+            FROM tbl_faq_entries, tbl_faq_categories
+            WHERE tbl_faq_entries.contextid='{$contextId}' AND 
+            tbl_faq_entries.categoryid = tbl_faq_categories.id
+            ORDER BY  tbl_faq_entries.datelastupdated DESC ";
+        return $this->getArrayWithLimit($sql, 0, 4);
     }
 
     /**
@@ -110,7 +133,7 @@ class dbFaqEntries extends dbTable {
      * @param string $categoryId Category Id
      * @return int Number of Items
      */
-    function getNumCategoryItems($categoryId) {
+    public function getNumCategoryItems($categoryId) {
         return $this->getRecordCount("WHERE categoryid='{$categoryId}'");
     }
 
@@ -120,7 +143,7 @@ class dbFaqEntries extends dbTable {
      * @return array
      * @return array The FAQ entrry
      */
-    function listSingle($id) {
+    public function listSingle($id) {
         return $this->getRow('id', $id);
     }
 
@@ -130,7 +153,7 @@ class dbFaqEntries extends dbTable {
      * @param string $categoryId The category ID
      * @return int The next index
      */
-    function getNextIndex($contextId, $categoryId) {
+    public function getNextIndex($contextId, $categoryId) {
         $array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName} WHERE contextid='$contextId' AND categoryid='$categoryId'");
         return $array[0]['_max'] + 1;
     }
@@ -142,7 +165,7 @@ class dbFaqEntries extends dbTable {
      * @param string $answer The answer
      * @param string $userId The user ID
      */
-    function updateSingle($id, $question, $answer, $categoryId, $userId, $dateLastUpdated) {
+    public function updateSingle($id, $question, $answer, $categoryId, $userId, $dateLastUpdated) {
         $this->update("id", $id,
                 array(
                     'question' => $question,
@@ -177,7 +200,7 @@ class dbFaqEntries extends dbTable {
      * Delete a record
      * @param string $id ID
      */
-    function deleteSingle($id) {
+    public function deleteSingle($id) {
         $this->delete("id", $id);
         //$objIndexData = $this->getObject('indexdata', 'search');
         //$objIndexData->removeIndex('faq_entry_'.$id);
@@ -191,7 +214,7 @@ class dbFaqEntries extends dbTable {
      * @return array The FAQ entries
      */
 
-    function listAllByTag($tag) {
+    public function listAllByTag($tag) {
 
         $sql = 'SELECT tbl_faq_entries.id,
                 tbl_faq_entries.contextid,
@@ -206,13 +229,7 @@ class dbFaqEntries extends dbTable {
                 FROM tbl_faq_entries, tbl_faq_tags
                 WHERE
                 tbl_faq_tags.faqid = tbl_faq_entries.id  AND tbl_faq_tags.tag LIKE \'' . $tag . '\'';
-        // echo $sql;
-        // die();
-
-
-
         $list = $this->getArray($sql);
-
         $indexArray = array();
         $count = 0;
         foreach ($list as $num) {
@@ -220,7 +237,6 @@ class dbFaqEntries extends dbTable {
             $indexArray[] = $temp;
             $count++;
         }
-
         $listArray = array();
         $index = 1;
         foreach ($list as $element) {
@@ -237,9 +253,7 @@ class dbFaqEntries extends dbTable {
             } else {
                 $nextRow = null;
             }
-
             $newArray = array('id' => $element['id'], 'contextid' => $element['contextid'], 'categoryid' => $element['categoryid'], 'question' => $element['question'], 'answer' => $element['answer'], 'userid' => $element['userid'], 'datelastupdated' => $element['datelastupdated'], 'updated' => $element['updated'], '_index' => $element['_index'], 'puid' => $element['puid'], 'previd' => $prevRow['id'], 'nextid' => $nextRow['id']);
-
             $listArray[] = $newArray;
             $index++;
         }
@@ -252,7 +266,7 @@ class dbFaqEntries extends dbTable {
      * @param string $categoryId The category ID
      * @return array The FAQ entries
      */
-    function listAllWithNav($contextId, $categoryId) {
+    public function listAllWithNav($contextId, $categoryId) {
         if ($categoryId == "All Categories") {
             $list = $this->getAll("WHERE contextid='" . $contextId . "' ORDER BY _index");
         } else {
@@ -291,7 +305,5 @@ class dbFaqEntries extends dbTable {
         }
         return $listArray;
     }
-
 }
-
 ?>

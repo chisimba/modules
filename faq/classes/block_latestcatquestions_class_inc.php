@@ -18,7 +18,7 @@ class block_latestcatquestions extends object
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText('phrase_faq');
@@ -43,7 +43,7 @@ class block_latestcatquestions extends object
     /**
     * Method to show the table of the list of questions of a specified category
     */
-    function showQuestions($categoryId)
+    public function showQuestions($categoryId)
     {	
     	$contextId = $this->contextCode;
     	$lbCategory = $this->objLanguage->languageText('mod_faq_category');

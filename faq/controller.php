@@ -64,7 +64,7 @@ class faq extends controller {
         if ($this->contextCode == null) {
             $this->contextId = "root";
             $this->setVarByRef('contextId', $this->contextId);
-            $this->contextTitle = "Lobby";
+            $this->contextTitle = "Default";
             $this->setVarByRef('contextTitle', $this->contextTitle);
         }
         // ... we are in a context

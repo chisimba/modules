@@ -20,7 +20,7 @@ class block_faq extends object
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText('mod_faq_name');
@@ -42,7 +42,7 @@ class block_faq extends object
     /**
     * Method to show the form for selecting a category
     */
-    function showForm()
+    public function showForm()
     {
         $contextId = $this->contextCode;
        // $lbAllCats = $this->objLanguage->languageText('mod_faq_allcategories');

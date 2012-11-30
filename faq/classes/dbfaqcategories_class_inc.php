@@ -42,6 +42,19 @@ class dbfaqcategories extends dbTable
     }
     
     /**
+     * 
+    * Return the last four categories to be added (inserted by DWK)
+    * @param string $contextId The context ID
+    * @return array The categories
+    * 
+    */
+    public function getLatestContextCategories($contextId)
+    {
+        $sql = "SELECT * FROM tbl_faq_categories WHERE contextid='{$contextId}' ORDER BY datelastupdated DESC ";
+        return $this->getArrayWithLimit($sql, 0, 4);
+    }
+    
+    /**
     * Method to get the number of categories for a context
     * @param string $contextCode The Context Code
     * @return array The categories
@@ -156,7 +169,8 @@ class dbfaqcategories extends dbTable
     */
     public function getLastestCategory($contextId)
     {
-        $sql = 'SELECT id FROM tbl_faq_categories WHERE contextid = "'. $contextId.'" AND datelastupdated = (SELECT MAX(datelastupdated) FROM tbl_faq_categories)';
+        $sql = 'SELECT id FROM tbl_faq_categories WHERE contextid = "'
+          . $contextId.'" AND datelastupdated = (SELECT MAX(datelastupdated) FROM tbl_faq_categories)';
         $results = $this->getArray($sql);
         $latest = current($results);
         return $latest['id'];

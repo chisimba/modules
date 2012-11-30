@@ -24,9 +24,12 @@ class dbfaqtags extends dbtable {
     }
 
     public function getLastLimitTags($limit=50) {
+        $contextCode = $this->contextCode;
+        if ($contextCode == NULL || $contextCode == "") {
+            $contextCode = 'root';
+        }
         $sql = 'SELECT tbl_faq_tags.* , (SELECT count(tag) FROM tbl_faq_tags AS tags2 WHERE tbl_faq_tags.tag = tags2.tag) AS tagcount
-FROM tbl_faq_tags,tbl_faq_entries  where tbl_faq_tags.faqid=tbl_faq_entries.id  and tbl_faq_entries.contextid= "'.$this->contextCode.'" GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
-
+FROM tbl_faq_tags,tbl_faq_entries  where tbl_faq_tags.faqid=tbl_faq_entries.id  and tbl_faq_entries.contextid= "'. $contextCode .'" GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
         if (isset($limit) && $limit > 0) {
             $sql .= ' LIMIT '.$limit;
         }

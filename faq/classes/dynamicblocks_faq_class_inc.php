@@ -20,7 +20,7 @@ class dynamicblocks_faq extends object
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCategory = $this->getObject('dbfaqcategories');
@@ -34,7 +34,7 @@ class dynamicblocks_faq extends object
      * @param string $id Record Id of the Category
      * @return string Results
      */
-    function renderCategory($id)
+    public function renderCategory($id)
     {
         $category = $this->objCategory->listSingleId($id);
         

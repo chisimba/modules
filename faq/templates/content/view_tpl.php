@@ -97,7 +97,7 @@ if (!empty($list)) {
     $ret .= '<ol>';
     foreach ($list as $element) {
         $ret .= "<li><a href=\"#" . $element["id"] . "\">";
-        $ret .= /* $index . " : " . */ nl2br($objWashOut->parseText($element["question"]));
+        $ret .= $objWashOut->parseText($element["question"]);
         $ret .= "</a></li>";
         $index++;
     }
@@ -113,7 +113,7 @@ foreach ($list as $element) {
     $ret .= "<a id=\"" . $element["id"] . "\"></a>";
     $found = true;
     $ret .= '<div class="wrapperDarkBkg">';
-    $ret .= "<b>" . $index . ": " . "</b>" . nl2br($objWashOut->parseText($element["question"]));
+    $ret .= "<b>" . $index . ": " . "</b>" . $objWashOut->parseText($element["question"]);
         if ($isAdmin || $isLecturer) {
         // Edit an entry.
         $icon = $this->getObject('geticon', 'htmlelements');
@@ -170,9 +170,7 @@ foreach ($list as $element) {
         }
     }
     $ret .= '<div class="wrapperLightBkg">';
-    $ret .= "<p>";
-    $ret .= "<b>" . "</b>" . nl2br($objWashOut->parseText($element["answer"]));
-    $ret .= "</p>";
+    $ret .= $objWashOut->parseText($element["answer"]);
     $ret .= "&nbsp;";
     $ret .= '</div></div>';
     $index++;
