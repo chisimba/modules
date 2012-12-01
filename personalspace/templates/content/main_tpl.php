@@ -64,6 +64,8 @@ foreach ($smallBlocks as $smallBlock) {
 
         if ($title == '') {
             $title = $smallBlock['blockname'] . '|' . $smallBlock['moduleid'];
+        } else {
+            $title = $title . "(" . $smallBlock['moduleid']. ")";
         }
 
         $smallBlockOptions['block|' . $smallBlock['blockname'] . '|' . $smallBlock['moduleid']] = htmlentities($title);
@@ -127,6 +129,8 @@ foreach ($wideBlocks as $wideBlock) {
 
         if ($title == '') {
             $title = $wideBlock['blockname'] . '|' . $wideBlock['moduleid'];
+        } else {
+            $title = $title . " (" . $wideBlock['moduleid'] . ")";
         }
 
         $wideBlockOptions['block|' . $wideBlock['blockname'] . '|' . $wideBlock['moduleid']] = htmlentities($title);
