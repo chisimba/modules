@@ -45,8 +45,14 @@ $tagCloudContent .= '<span style="text-align:center">' . $tagCloud
   . "</faq>";
 
 
-// Add the Icon to the heading
-$objHeading->str = $contextTitle.': '.$objLanguage->languageText("phrase_faq","system", 'Frequently Asked Questions');
+// Display the contex as part of the title if they are in a context
+if ($contextTitle != NULL & $contextTitle != "Default") {
+    $objHeading->str = $contextTitle.': ' 
+      .$objLanguage->languageText("phrase_faq","system", 'Frequently Asked Questions');
+} else {
+    $objHeading->str =  $objLanguage->languageText("phrase_faq","system", 'Frequently Asked Questions');
+}
+
 // Make a tabbed box
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->width = '95%';
@@ -174,15 +180,7 @@ $catlabel = new label ($this->objLanguage->languageText('mod_faq_category', 'faq
 $faqTags = new textarea('faqtags');
 
 $formTable->startRow();
-//$formTable->addCell($catlabel->show());
-//$formTable->addCell($textInput->show().'<br />&nbsp;');
 $formTable->endRow();
-/*
-$formTable->startRow();
-$formTable->addCell($taglabel->show());
-$formTable->addCell($faqTags->show().'<br />&nbsp;');
-$formTable->endRow();
-*/
 $form->setDisplayType(1);
 $form->addToForm($textInput->show());
 $form->addToForm("&nbsp;");

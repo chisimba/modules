@@ -41,7 +41,6 @@ if ($error != "") {
 }
 
 // Add an entry if not displaying "All Categories".
-//	if ($categoryId != "All Categories") {
 if ($isAdmin || $isLecturer) {
 
 
