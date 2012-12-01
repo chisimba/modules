@@ -245,8 +245,8 @@ class editor extends object
         $objContext = $this->getObject('dbcontext', 'context');
         if($objContext->isInContext()){
             $objRadioElement->addOption('context',
-              $this->objLanguage->languageText("mod_simpleblog_context",
-              "simpleblog", "[-CONTEXT-] blog"));
+            ucfirst($this->objLanguage->code2Txt("mod_simpleblog_context",
+              "simpleblog", NULL, "[-CONTEXT-] blog")));
         }
         $objRadioElement->setSelected($postType);
         $typeFormElement = $typeLabel . ": " . $objRadioElement->show();
