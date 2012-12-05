@@ -159,7 +159,7 @@ class dbpersonalblocks extends dbTable
     public function getLeftBlocks($creatorId)
     {
         $where = " WHERE creatorid='" . $creatorId
-          . "' AND active=1 AND location='left'"
+          . "' AND active=1 AND location='left' AND blocktype='personal'"
           . " ORDER BY 'sortorder'";
     	return $this->getAll($where);
     }
@@ -175,7 +175,7 @@ class dbpersonalblocks extends dbTable
     public function getRightBlocks($creatorId)
     {
         $where = " WHERE creatorid='" . $creatorId
-        . "' AND active=1 AND location='right'"
+        . "' AND active=1 AND location='right' AND blocktype='personal'"
         . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
@@ -191,7 +191,7 @@ class dbpersonalblocks extends dbTable
     public function getMiddleBlocks($creatorId)
     {
         $where = " WHERE creatorid='" . $creatorId
-        . "' AND active=1 AND location='middle'"
+        . "' AND active=1 AND location='middle' AND blocktype='personal'"
         . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
