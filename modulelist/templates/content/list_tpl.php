@@ -48,7 +48,8 @@ if ($moduleList) {
     $other = 0;
     $unset = 0;
     $illegalStatuses = array();
-    
+    $stableModules = array();
+    $betaModules = array();
     foreach($moduleList as $moduleRow) {
         $noIcon = NULL;
         $header = new htmlHeading();
@@ -65,6 +66,7 @@ if ($moduleList) {
                 $alpha++;
                 break;
             case 'beta':
+                $betaModules[] = $theModule;
                 $beta++;
                 break;
             case 'invisible':
@@ -77,6 +79,7 @@ if ($moduleList) {
                 $deprecated++;
                 break;
             case 'stable':
+                $stableModules[] = $theModule;
                 $stable++;
                 break;
             case 'unset':
@@ -107,6 +110,14 @@ if ($moduleList) {
           . "</div><br />" . $noIcon 
           . "<br /><b>Status</b>: " . $moduleRow['status']
           . "<br /><b>Directory size</b>: " . $moduleRow['dirsize']);
+        // Unset everything 
+        unset(
+            $moduleRow['longname'], 
+            $moduleRow['version'],
+            $moduleRow['authors'],
+            $moduleRow['status'],
+            $moduleRow['description'],
+            $moduleRow['dirsize']);
     }
     if ($noIconCount > 0) {
         // Print a warning about modules with no icons
@@ -139,9 +150,17 @@ if ($moduleList) {
     }
 }   
 
+$stMods = "Here is your script for doing a release:<br /><br />"
+  . "#! /bin/bash<br />";
+foreach ($stableModules as $modCode) {
+    $stMods .= "cp ~/chisimba/modules/" . $modCode . "/ ~/chisimba/releases/3.3.1/ -R <br />";
+}
+
 if($this->objUser->isLoggedIn()) {
     $leftColumn .= $this->leftMenu->show();
 }
+
+$middleColumn .= "<br /><br /><br />" . $stMods;
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
