@@ -70,6 +70,7 @@ class riops extends object
     public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user','security');
     }
 
     /**
@@ -177,21 +178,22 @@ class riops extends object
         $objDb = $this->getObject('dbregisterinterest', 'registerinterest');
         $dataArray = $objDb->getAll();
         $doc = new DOMDocument('UTF-8');
-        $table = $doc->createElement('table');
-        $table->setAttribute('class', 'ri_viewall');
+        $domElements['table'] = $doc->createElement('table');
+        $domElements['table'] = $doc->createElement('table');
+        $domElements['table']->setAttribute('class', 'ri_viewall');
         // Create the header row.
-        $tr = $doc->createElement('tr');
-        $th = $doc->createElement('td');
-        $th->appendChild($doc->createTextNode("Name"));
-        $tr->appendChild($th);
-        $th = $doc->createElement('td');
-        $th->appendChild($doc->createTextNode("Email"));
-        $tr->appendChild($th);
-        $th = $doc->createElement('td');
-        $th->appendChild($doc->createTextNode("Registered"));
-        $tr->appendChild($th);
+        $domElements['tr'] = $doc->createElement('tr');
+        $domElements['th'] = $doc->createElement('td');
+        $domElements['th']->appendChild($doc->createTextNode("Name"));
+        $domElements['tr']->appendChild($domElements['th']);
+        $domElements['th'] = $doc->createElement('td');
+        $domElements['th']->appendChild($doc->createTextNode("Email"));
+        $domElements['tr']->appendChild($domElements['th']);
+        $domElements['th'] = $doc->createElement('td');
+        $domElements['th']->appendChild($doc->createTextNode("Registered"));
+        $domElements['tr']->appendChild($domElements['th']);
         // Add the row to the table.
-        $table->appendChild($tr);
+        $domElements['table']->appendChild($domElements['tr']);
         
         $class = "odd";
         foreach ($dataArray as $usr) {
@@ -201,26 +203,56 @@ class riops extends object
             $emailAddress = $usr['email'];
             $dateCreated = $usr['datecreated'];
             // Create the table row.
-            $tr = $doc->createElement('tr');
+            $domElements['tr'] = $doc->createElement('tr');
             // Fullname to table.
-            $td = $doc->createElement('td');
-            $td->setAttribute('class', $class);
-            $td->appendChild($doc->createTextNode($fullName));
-            $tr->appendChild($td);
+            $domElements['td'] = $doc->createElement('td');
+            $domElements['td']->setAttribute('class', $class);
+            $domElements['td']->appendChild($doc->createTextNode($fullName));
+            $domElements['tr']->appendChild($domElements['td']);
             // Email address to table.
-            $td = $doc->createElement('td');
-            $td->setAttribute('class', $class);
-            $td->appendChild($doc->createTextNode($emailAddress));
-            $tr->appendChild($td);
+            $domElements['td'] = $doc->createElement('td');
+            $domElements['td']->setAttribute('class', $class);
+            //check if user is admin so to display the correct control
+            if(!$this->objUser->isAdmin()){
+                $domElements['td']->appendChild($doc->createTextNode($emailAddress));
+            }  else {
+                $domElements['txtEmail'] = $doc->createElement('input');
+                $domElements['txtEmail']->setAttribute('value', $emailAddress);
+                $domElements['txtEmail']->setAttribute('type', 'text');
+                $domElements['txtEmail']->setAttribute('id', $id);
+                $domElements['txtEmail']->setAttribute('class', 'interestEmail');
+                $domElements['td']->appendChild($domElements['txtEmail']);
+            }
+            $domElements['tr']->appendChild($domElements['td']);
             // Date registered to table.
-            $td = $doc->createElement('td');
-            $td->setAttribute('class', $class);
-            $td->appendChild($doc->createTextNode($dateCreated));
-            $tr->appendChild($td);
+            $domElements['td'] = $doc->createElement('td');
+            $domElements['td']->setAttribute('class', $class);
+            $domElements['td']->appendChild($doc->createTextNode($dateCreated));
+            $domElements['tr']->appendChild($domElements['td']);
             
             // Add the row to the table.
-            $table->appendChild($tr);
+            $domElements['table']->appendChild($domElements['tr']);
             
+            //if user is admin, add the delete link
+            if($this->objUser->isAdmin()){
+                //create the delete link
+                $domElements['rmLink'] = $doc->createElement('a');
+                //create the confirmation object which to retrieve the javascript confirmation message from
+                $confirmLink = $this->getObject('confirm','utilities');
+                $confirmLink->setConfirm(NULL,  str_replace('amp;','',$this->uri(array('action'=>'remove','id'=>$id))),  $this->objLanguage->languageText('mod_registerinterest_removealert','registerinterest'));
+                //td element for the remove link
+                $domElements['td'] = $doc->createElement('td');
+                //assing the ID value
+                $domElements['td']->setAttribute('id', $usr['id']);
+                //add link text
+                //set the href attribute of the link
+                $domElements['rmLink']->setAttribute('href', $confirmLink->href);
+                $domElements['rmLink']->appendChild($doc->createTextNode($this->objLanguage->languageText('word_remove','system')));
+                $domElements['td']->appendChild($doc->createTextNode('|'));
+                $domElements['td']->appendChild($domElements['rmLink']);
+                $domElements['tr']->appendChild($domElements['td']);
+                $domElements['table']->appendChild($domElements['tr']);
+            }
             // Convoluted odd/even.
             if ($class == "odd") { 
                 $class = "even";
@@ -228,7 +260,21 @@ class riops extends object
                 $class = "odd";
             }
         }
-        $doc->appendChild($table);
+        //update form
+        $domElements['updtForm'] = $doc->createElement('form');
+        $domElements['updtForm']->setAttribute('method', 'POST');
+        $domElements['updtForm']->setAttribute('id', 'frmUpdate');
+        $domElements['updtForm']->setAttribute('action', str_replace('amp;', '', $this->uri(array('action'=>'update'))));
+        $domElements['updtForm']->setAttribute('name', 'frmUpdate');
+        //update button
+        $domElements['updtButton'] = $doc->createElement('input');
+        $domElements['updtButton']->setAttribute('type', 'submit');
+        $domElements['updtButton']->setAttribute('id', 'btnUpdate');
+        $domElements['updtButton']->setAttribute('name', 'btnUpdate');
+        $domElements['updtButton']->setAttribute('value',$this->objLanguage->languageText('word_update','system'));
+        $domElements['updtForm']->appendChild($domElements['table']);
+        $domElements['updtForm']->appendChild($domElements['updtButton']);
+        $doc->appendChild($domElements['updtForm']);
         return $doc->saveHTML();
     }
     
