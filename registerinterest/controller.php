@@ -181,6 +181,29 @@ class registerinterest extends controller
     }
     
     /**
+     * Method to remove a redord from the interest list
+     * 
+     * @access private
+     * @param type $id The user/record id
+     * @return NULL
+     */
+    private function __remove(){
+        $id = $this->getParam('id');
+        $this->objDbregisterinterest->remove($id);
+        return $this->__view();
+    }
+    /**
+     * Method to 
+     * 
+     * @access public
+     * @param NULL
+     * @return NULL
+     */
+    public function __update(){
+        $this->objDbregisterinterest->updateMail();
+    }
+
+    /**
     * 
     * Method to return an error when the action is not a valid 
     * action method
