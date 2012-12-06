@@ -73,6 +73,7 @@ class dbregisterinterest extends dbtable
     {
         //Set the parent table to our demo table
         parent::init('tbl_registerinterest_interested');
+        $this->jsAlert = $this->getObject('jsalerts','utilities');
     }
 
     /**
@@ -87,12 +88,32 @@ class dbregisterinterest extends dbtable
     {
         $fullName = $this->getParam('fullname', NULL);
         $emailAddress = $this->getParam('email', NULL);
-        $data = array(
-            'fullname' => $fullName,
-            'email' => $emailAddress,
-            'datecreated' => $this->now()
-        );
-        return $this->insert($data);
+        if(!empty($fullName) && strlen($fullName) > 1){
+            if(!empty($emailAddress) && ereg('@', $emailAddress) && strlen(str_replace('@','',$emailAddress))>2){
+                $data = array(
+                    'fullname' => $fullName,
+                    'email' => $emailAddress,
+                    'datecreated' => $this->now()
+                        );
+                return $this->insert($data);
+            }
+        }
+    }
+    /**
+     * Method to remove a record from the database
+     * 
+     * @access public
+     * @param type $id the record/user ID
+     * @return NULL 
+     */
+    public function remove($id){
+        $this->delete('id',$id);
+    }
+    
+    /**
+     * Method to update the records
+     */
+    public function updateMail(){
     }
 
 }
