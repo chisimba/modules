@@ -102,7 +102,7 @@ foreach ($forumsList as $forum)
     
     $forumLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'forum', 'id'=>$forum['id'])));
     $forumLink->link = $forum['forum_name'];
-    $forumLink->title = $this->objLanguage->languageText('mod_forum_goToForum', 'forum');
+    $forumLink->title = $this->objLanguage->languageText('mod_forum_gotoforum', 'forum');
     
     if ($forum['defaultforum'] == 'Y') {
         $forumLinkStr = '<strong>* </strong>';
