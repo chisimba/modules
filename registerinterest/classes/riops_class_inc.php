@@ -219,7 +219,6 @@ class riops extends object
                 $domElements['txtEmail'] = $doc->createElement('input');
                 $domElements['txtEmail']->setAttribute('value', $emailAddress);
                 $domElements['txtEmail']->setAttribute('type', 'text');
-                $domElements['txtEmail']->setAttribute('id', $id);
                 $domElements['txtEmail']->setAttribute('class', 'interestEmail');
                 $domElements['td']->appendChild($domElements['txtEmail']);
             }
@@ -266,14 +265,7 @@ class riops extends object
         $domElements['updtForm']->setAttribute('id', 'frmUpdate');
         $domElements['updtForm']->setAttribute('action', str_replace('amp;', '', $this->uri(array('action'=>'update'))));
         $domElements['updtForm']->setAttribute('name', 'frmUpdate');
-        //update button
-        $domElements['updtButton'] = $doc->createElement('input');
-        $domElements['updtButton']->setAttribute('type', 'submit');
-        $domElements['updtButton']->setAttribute('id', 'btnUpdate');
-        $domElements['updtButton']->setAttribute('name', 'btnUpdate');
-        $domElements['updtButton']->setAttribute('value',$this->objLanguage->languageText('word_update','system'));
         $domElements['updtForm']->appendChild($domElements['table']);
-        $domElements['updtForm']->appendChild($domElements['updtButton']);
         $doc->appendChild($domElements['updtForm']);
         return $doc->saveHTML();
     }
