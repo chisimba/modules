@@ -406,7 +406,7 @@ class artdir extends controller
                 $artistmail = $artist[0]['email'];
                 
                 //thump together an email string (this must be html email as the post is html
-                $objMailer = $this->getObject('email', 'mail');
+                $objMailer = $this->getObject('mailer', 'mail');
                 //munge together the bodyText...
                 $bodyText = $this->objLanguage->languageText("mod_artdir_sender", "artdir") . ", " . $yourname . ", " . $this->objLanguage->languageText("mod_artdir_hassentrequest", "artdir") . ": ";
                 $bodyText.= "<br /><br />";

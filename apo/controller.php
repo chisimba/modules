@@ -35,7 +35,7 @@ class apo extends controller {
 
     function init() {
         $this->loadclass('link', 'htmlelements');
-        $this->objattach = $this->getObject('email', 'mail');
+        $this->objattach = $this->getObject('mailer', 'mail');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objLog = $this->getObject('logactivity', 'logger');
         $this->objConfig = $this->getObject('altconfig', 'config');

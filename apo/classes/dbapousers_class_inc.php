@@ -178,7 +178,7 @@ class dbapousers extends dbtable {
     function sendEmail($subject, $message, $recipientEmailAddress) {
 
 
-        $objMail = $this->getObject('email', 'mail');
+        $objMail = $this->getObject('mailer', 'mail');
 //send to multiple addressed
         $list = array($recipientEmailAddress);
        // $list = array($senderEmailAddress);
