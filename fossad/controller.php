@@ -167,7 +167,7 @@ class fossad extends controller {
         $inviteattach=$objSysConfig->getValue('INVITE_ATTACH', 'fossad');
         $programattach=$objSysConfig->getValue('PROGRAM_ATTACH', 'fossad');
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('to', array($to));
         $objMailer->setValue('from', $contactemail);
         $objMailer->setValue('fromName', $emailName);

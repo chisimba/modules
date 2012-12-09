@@ -2088,7 +2088,7 @@ class forum extends controller {
 
     function sendEmailAlert($subject, $message, $linkUrl) {
         $recipients = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $message = html_entity_decode($message);
         $message = trim($message, "\x00..\x1F");
         $message = strip_tags($message);
@@ -2107,7 +2107,7 @@ class forum extends controller {
 
 
         $members = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         foreach ($members as $member) {
 
             $linkUrl = str_replace("amp;", "", $linkUrl);
