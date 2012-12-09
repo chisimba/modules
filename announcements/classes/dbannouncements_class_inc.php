@@ -260,7 +260,7 @@ class dbAnnouncements extends dbTable {
      */
     private function sendEmail($title, $message, $recipients) {
         //$recipients = array_unique($recipients);
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         //$message = trim($message, "\x00..\x1F");
         $message = preg_replace('/[\x00-\x1F]/', '', $message);
         $message = html_entity_decode($message);
