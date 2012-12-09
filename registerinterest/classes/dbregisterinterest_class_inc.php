@@ -112,8 +112,22 @@ class dbregisterinterest extends dbtable
     
     /**
      * Method to update the records
+     * 
+     * @access public
+     * @param NULL
+     * @return boolean TRUE if the record is successfully updated| FALSE if there was an error while updating the record
      */
     public function updateMail(){
+        //get the new value
+        $newValue = $this->getParam('newValue',NULL);
+        //get the ID
+        $id = $this->getParam('id',NULL);
+        //set the value to be changed
+        $valuesaArray = array(
+            'email'=>$newValue
+        );
+        //update database
+        return $this->update('id',$id,$valuesaArray);
     }
 
 }
