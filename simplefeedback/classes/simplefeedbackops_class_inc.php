@@ -58,7 +58,7 @@ $GLOBALS['kewl_entry_point_run'])
 * @author    Derek Keats derekkeats@gmail.com
 *
 */
-class simplefeedbackops extends dbtable
+class simplefeedbackops extends object
 {
     
     /**
@@ -233,6 +233,45 @@ class simplefeedbackops extends dbtable
             $td = $doc->createElement('td');
             $td->setAttribute('class', $class);
             $td->appendChild($doc->createTextNode($ans));
+            $tr->appendChild($td);
+            
+            // Add the row to the table
+            $table->appendChild($tr);
+            
+            // Convoluted odd/even
+            if ($class == "odd") { 
+                $class = "even";
+            } else {
+                $class = "odd";
+            }
+        }
+        $doc->appendChild($table);
+        return $doc->saveHTML();
+    }
+    
+    public function showForms()
+    {
+        $qDb = $this->getObject('dbsfsurveys', 'simplefeedback');
+        $arS = $qDb->getAll();
+        $class = "odd";
+        $table = $doc->createElement('table');
+        foreach ($arS as $survey) {
+            // Create a table row
+            $tr = $doc->createElement('tr');
+            
+            // Add a cell to the row
+            $title = $survey['title'];
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($title));
+            $tr->appendChild($td);
+            
+            // Add a cell to the row
+            $userId = $survey['userid'];
+            $owner = $this->objUser->fullName($userid);
+            $td = $doc->createElement('td');
+            $td->setAttribute('class', $class);
+            $td->appendChild($doc->createTextNode($owner));
             $tr->appendChild($td);
             
             // Add the row to the table

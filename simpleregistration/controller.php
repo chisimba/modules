@@ -521,7 +521,7 @@ class simpleregistration extends controller {
         $attachs = explode("|", $content['event_emailattachments']);
 
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('to', array($to));
         $objMailer->setValue('from', $contactemail);
         $objMailer->setValue('fromName', $emailName);
