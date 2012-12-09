@@ -125,7 +125,7 @@ class userinfo extends object {
         $receivers[]=array("emailaddress"=>$email);
         //// $this->objGroupOps->getUsersInGroup($groupid);
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
 
         foreach($receivers as $receiver) {
 

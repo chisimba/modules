@@ -623,7 +623,7 @@ class dbdocuments extends dbtable {
 
         $linkUrl = $this->uri(array('action' => 'home'));
         $linkUrl->link = "Link";
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $body = "xyz has forwarded you document titled xrf. To access it, click on link below
         " . $linkUrl->href;
         $subject = "hi";

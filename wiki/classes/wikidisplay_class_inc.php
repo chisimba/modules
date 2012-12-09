@@ -174,7 +174,7 @@ class wikidisplay extends object
         $this->objBizCard = $this->getObject('userbizcard', 'useradmin');
         $this->objUserAdmin = $this->getObject('useradmin_model2','security');
         $this->objConfig = $this->getObject('altconfig', 'config');
-		$this->objMailer = $this->getObject('email', 'mail');
+		$this->objMailer = $this->getObject('mailer', 'mail');
 		$this->objWash = $this->getObject('washout', 'utilities');
 		$this->objTextdiff = $this->getObject('wikitextdiff', 'wiki');
 
