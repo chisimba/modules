@@ -95,7 +95,7 @@ class mailmannews extends controller
                 $subject = $this->getParam('posttitle');
                 $content = $this->getParam('postcontent');
                 $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-                $objMailer = $this->getObject('email', 'mail');
+                $objMailer = $this->getObject('mailer', 'mail');
 
                 $emailadd = $this->sysConfig->getValue('mailmannews_listsend', 'mailmannews');
 

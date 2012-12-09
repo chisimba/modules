@@ -45,7 +45,7 @@ class mailmansignup extends object
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 			$this->objUser = $this->getObject('user', 'security');
-			$this->objMailer = $this->getObject('email', 'mail');
+			$this->objMailer = $this->getObject('mailer', 'mail');
 		}
 		catch(customException $e) {
 			echo customException::cleanUp();

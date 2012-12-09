@@ -49,7 +49,7 @@ class mayibuyeform extends controller {
         //Instantiate the language object
         $this->objLanguage = $this->getObject('language', 'language');
 
-        $this->objMail = $this->getObject('email', 'mail');
+        $this->objMail = $this->getObject('mailer', 'mail');
 
         $this->dbresearchform = $this->getObject('researchform', 'mayibuyeform');
 
@@ -195,7 +195,7 @@ class mayibuyeform extends controller {
 
     public function sendEmailNotification($subject, $message) {
 
-        $objMail = $this->getObject('email', 'mail');
+        $objMail = $this->getObject('mailer', 'mail');
         //send to multiple addressed   
         $list = array("pmahinga@uwc.ac.za");
         $objMail->to = ($list);

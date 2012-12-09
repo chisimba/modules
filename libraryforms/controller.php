@@ -38,7 +38,7 @@ class libraryforms extends controller {
         $this->dbfeedback = $this->getObject('feedbk', 'libraryforms');
         $this->objUser = $this->getObject('User', 'security');
         // Get a local reference to the mail
-        $this->objMail = $this->getObject('email', 'mail');
+        $this->objMail = $this->getObject('mailer', 'mail');
     }
 
 //end of function
@@ -296,7 +296,7 @@ class libraryforms extends controller {
 
     public function sendEmailNotification($subject, $message) {
 
-        $objMail = $this->getObject('email', 'mail');
+        $objMail = $this->getObject('mailer', 'mail');
         //send to multiple addressed   
         $list = array("pmalinga@uwc.ac.za", "arieluwc.uwc.ac.za", "library@uwc.ac.za");
         $objMail->to = ($list);
