@@ -108,7 +108,7 @@ class dbblogcomments extends dbTable
             $emailadd = $this->objUser->email($blogposter);
             $commentsemail = $this->objSysConfig->getValue('comments_email', 'blogcomments');
             
-            $objMailer = $this->getObject('email', 'mail');
+            $objMailer = $this->getObject('mailer', 'mail');
             $objMailer->setValue('to', array($emailadd));
             $objMailer->setValue('from', $commentsemail);
             $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_emailfromname", "blogcomments"));

@@ -1938,7 +1938,7 @@ class blog extends controller {
                         $mcount++;
                     }
                     //thump together an email string (this must be html email as the post is html
-                    $objMailer = $this->getObject('email', 'mail');
+                    $objMailer = $this->getObject('mailer', 'mail');
                     //munge together the bodyText...
                     $bodyText = $this->objLanguage->languageText("mod_blog_yourfriend", "blog") . ", " . $sendername . ", " . $this->objLanguage->languageText("mod_blog_interestedin", "blog") . ": <br /> " . "<a href='" . $this->uri(array(
                             'action' => 'viewsingle',

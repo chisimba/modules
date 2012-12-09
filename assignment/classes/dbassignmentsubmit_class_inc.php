@@ -212,7 +212,7 @@ class dbassignmentsubmit extends dbtable {
      */
     private function sendEmail($title, $message, $recipient) {
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $message = html_entity_decode($message);
         $message = strip_tags($message);
         $objMailer->setValue('to', array($recipient));
