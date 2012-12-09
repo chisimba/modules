@@ -946,7 +946,7 @@ class formbuilder extends controller {
 
 ///Set email parameters
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('to', $formEmail);
         $objMailer->setValue('from', 'noreply@formbuilder.wits.ac.za');
         $objMailer->setValue('fromName', 'Wits CCMS Form Builder');
@@ -1063,7 +1063,7 @@ class formbuilder extends controller {
 
 
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('to', $formEmail);
         $objMailer->setValue('from', 'noreply@formbuilder.wits.ac.za');
         $objMailer->setValue('fromName', 'Wits CCMS Form Builder');

@@ -107,7 +107,7 @@ class export extends object
     private function sendEmail($to, $from, $subject, $message, $recipients = '')
     {
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('from', $from);
         $objMailer->setValue('to', $to);
         $objMailer->setValue('subject', $subject);

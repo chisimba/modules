@@ -108,7 +108,7 @@ title='A simple block diagram of the major module entities and the flow relation
      * \return Constructed meta data help content.
      */
     private function buildFormMetaDataPageContent($isSeperateHelpBool) {
-        $pageContent = "";
+        $pageContent = NULL;
         if ($isSeperateHelpBool != 1) {
             $pageContent = $this->buildHelpNavigationMenu();
         }
