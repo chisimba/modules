@@ -103,7 +103,7 @@ class dbcmscomments extends dbTable
 			//get the email address
 			$emailadd = $this->objUser->email($puserid);
 
-			$objMailer = $this->getObject('email', 'mail');
+			$objMailer = $this->getObject('mailer', 'mail');
 			$objMailer->setValue('to', array($emailadd));
 			$objMailer->setValue('from', 'noreply@uwc.ac.za');
 			$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_blog_emailfromname", "blogcomments"));
