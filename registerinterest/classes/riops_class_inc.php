@@ -219,6 +219,7 @@ class riops extends object
                 $domElements['txtEmail'] = $doc->createElement('input');
                 $domElements['txtEmail']->setAttribute('value', $emailAddress);
                 $domElements['txtEmail']->setAttribute('type', 'text');
+                $domElements['txtEmail']->setAttribute('id', $id);
                 $domElements['txtEmail']->setAttribute('class', 'interestEmail');
                 $domElements['td']->appendChild($domElements['txtEmail']);
             }
