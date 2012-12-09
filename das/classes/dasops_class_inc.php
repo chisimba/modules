@@ -385,7 +385,7 @@ class dasops extends object {
 		$from  = $this->juser.'@'.$this->jserver;
 		
 		//set mailer
-		//$objEmail = $this->getObject('email', 'mail');
+		//$objEmail = $this->getObject('mailer', 'mail');
 		//$objEmail->setBaseMailerProperty('to', $to);
 		//$objEmail->setBaseMailerProperty('subject', $subject);
 		//$objEmail->setBaseMailerProperty('body', $body);
