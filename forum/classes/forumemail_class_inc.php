@@ -47,7 +47,7 @@ class forumemail extends object
     function setContextCode($context)
     {
         $this->contextCode = $context;
-        $this->objMailer =& $this->getObject('kngemail', 'utilities');
+        $this->objMailer = $this->getObject('mailer', 'mail');
     }
     
     /**
@@ -132,15 +132,23 @@ class forumemail extends object
             
             $body = '<html><head></head><body>'.$message.'</body></html>';
             
-            $this->objMailer->setup($senderId.'@'.$_SERVER['SERVER_NAME'], $this->objUser->fullname($senderId));
+            $from = $senderId.'@'.$_SERVER['SERVER_NAME'];
+            $fromName = $this->objUser->fullname($senderId);
             
             // Setup Alternate Message - Convert '&amp;' back to '&'
             $altMessage = str_replace('&amp;', '&', $message); 
             
             // Add alternative message - same version minus html tags
-            $this->objMailer->setAltBody(strip_tags($altMessage));
-            
-            return $this->objMailer->sendMail('', $subject, $this->emailList, $body, TRUE);
+            $messagePlain = strip_tags($altMessage);
+            $this->objMailer->setValue('to', $from);
+            $this->objMailer->setValue('bcc', $this->emailList);
+            $this->objMailer->setValue('from', $from);
+            $this->objMailer->setValue('fromName', $fromName);
+            $this->objMailer->setValue('subject', $subject);
+            $this->objMailer->setValue('useHTMLMail', TRUE);
+            $this->objMailer->setValue('body', $messagePlain);
+            $this->objMailer->setValue('htmlbody', $message);
+            return $this->objMailer->send();
         } else {
             return NULL;
         }
