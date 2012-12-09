@@ -71,7 +71,7 @@ class realtimemanager extends Object
         $emails.=',';
 
         //should be separated by commas
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $token = strtok($emails,",");
         while ($token){
 

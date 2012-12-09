@@ -868,7 +868,7 @@ Sincerely,<br />
         fwrite($fh, $stringData);
         fclose($fh);
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $objMailer->setValue('to', array($useremail));
         $objMailer->setValue('from', $siteEmail);
         $objMailer->setValue('fromName', $siteName . ' Registration System');
