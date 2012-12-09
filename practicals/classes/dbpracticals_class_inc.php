@@ -223,7 +223,7 @@ class dbpracticals extends dbtable {
      */
     private function sendEmail($title, $message, $recipients) {
 
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $message = html_entity_decode($message);
         $message = strip_tags($message);
         $list = array();
