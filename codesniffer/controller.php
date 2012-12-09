@@ -50,7 +50,7 @@ class codesniffer extends controller
                     	$codepath = $this->objConfig->getSiteRootPath();
                         exec("phpcs --report=full --standard=Chisimba $this->codePath > $this->reportPath/report.txt");
                         
-                        $objMailer = $this->getObject('email', 'mail');
+                        $objMailer = $this->getObject('mailer', 'mail');
 			            $objMailer->setValue('to', array('nextgen-online@mailman.uwc.ac.za'));
 			            $objMailer->setValue('from', 'noreply@uwc.ac.za');
 			            $objMailer->setValue('fromName', 'CodeSniffer');
