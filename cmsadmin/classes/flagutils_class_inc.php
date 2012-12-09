@@ -67,7 +67,7 @@
         {
             $recipients = array_unique($recipients);
 
-            $objMailer = $this->getObject('email', 'mail');
+            $objMailer = $this->getObject('mailer', 'mail');
             $objMailer->setValue('from', $this->_objUser->email());
             $objMailer->setValue('fromName', $this->_objUser->fullname());
             $objMailer->setValue('subject', $title);
