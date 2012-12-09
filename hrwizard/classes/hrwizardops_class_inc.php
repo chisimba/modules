@@ -11,7 +11,7 @@ class hrwizardops extends object {
 	{
 		$this->objLanguage = $this->getObject('language', 'language');
 		$this->objConfig = $this->getObject('altconfig', 'config');
-		$this->objMailer = $this->getObject('email', 'mail');
+		$this->objMailer = $this->getObject('mailer', 'mail');
 		
 	}
 	
@@ -175,7 +175,7 @@ class hrwizardops extends object {
     		if(file_exists($file))
     		{
     			str_replace('&nbsp;', '\r\n', $bodyText);
-    			$objMailer = $this->getObject('email', 'mail');
+    			$objMailer = $this->getObject('mailer', 'mail');
 				$objMailer->setValue('to', array($record[1]));
 				$objMailer->setValue('from', 'hr@uwc.ac.za');
 				$objMailer->setValue('fromName', $this->objLanguage->languageText("mod_hrwizard_emailfromname", "hrwizard"));
