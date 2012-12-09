@@ -372,7 +372,7 @@ class gift extends controller {
             $objGroups = $this->getObject('groupadminmodel', 'groupadmin');
             $groupId = $objGroups->getId($groupName);
             $users = $groupOps->getUsersInGroup($groupId);
-            $objMailer = $this->getObject('email', 'mail');
+            $objMailer = $this->getObject('mailer', 'mail');
             $recipients = array();
             foreach ($users as $user) {
                 $recipients[] = $this->objUser->email($user['auth_user_id']);

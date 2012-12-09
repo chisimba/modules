@@ -7,7 +7,7 @@ class geoops extends object
 	{
 		$this->objLanguage = $this->getObject('language', 'language');
 		$this->objConfig = $this->getObject('altconfig', 'config');
-		$this->objMailer = $this->getObject('email', 'mail');
+		$this->objMailer = $this->getObject('mailer', 'mail');
 	}
 	
 	public function uploadDataFile($featurebox = TRUE)

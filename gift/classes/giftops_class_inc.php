@@ -187,7 +187,7 @@ class giftops extends object {
 
         $objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
         $adminemail = $objSysconfig->getValue('adminmail', 'gifts');
-        $objMailer = $this->getObject('email', 'mail');
+        $objMailer = $this->getObject('mailer', 'mail');
         $to = array($adminemail, 'ana.m.ferreira@wits.ac.za');
         $objMailer->setValue('to', $to);
         $objMailer->setValue('from', 'noreply@wits.ac.za');
