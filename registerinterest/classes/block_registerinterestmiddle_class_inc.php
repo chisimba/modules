@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * A middle block for Register interest.
@@ -28,12 +29,12 @@
  */
 // security check - must be included in all scripts
 if (!
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
+        /**
+         * Description for $GLOBALS
+         * @global unknown $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
@@ -50,8 +51,8 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_registerinterestmiddle extends object
-{
+class block_registerinterestmiddle extends object {
+
     /**
      * The title of the block
      *
@@ -67,20 +68,21 @@ class block_registerinterestmiddle extends object
      *
      * @return NULL
      */
-    public function init() 
-    {
+    public function init() {
         $this->wrapStr = FALSE;
         $this->title = "People who have registered interest";
     }
+
     /**
      * Standard block show method.
      *
      * @return string $this->display block rendered
      */
-    public function show() 
-    {
+    public function show() {
         $objOps = $this->getObject('riops', 'registerinterest');
-        return $objOps->renderPostMessage() . $objOps->listAll();
+        return $objOps->listAll();
     }
+
 }
+
 ?>
