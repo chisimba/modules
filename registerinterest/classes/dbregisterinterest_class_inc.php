@@ -90,12 +90,18 @@ class dbregisterinterest extends dbtable
         $emailAddress = $this->getParam('email', NULL);
         if(!empty($fullName) && strlen($fullName) > 1){
             if(!empty($emailAddress) && ereg('@', $emailAddress) && strlen(str_replace('@','',$emailAddress))>2){
+                //check if record exist before inserting it
+                if(!$this->valueExists('email',$emailAddress)){
                 $data = array(
                     'fullname' => $fullName,
                     'email' => $emailAddress,
                     'datecreated' => $this->now()
                         );
                 return $this->insert($data);
+                }  else {
+                    //the value is already there, lets return TRUE
+                    return TRUE;
+                }
             }
         }
     }
