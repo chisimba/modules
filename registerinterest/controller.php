@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 
  * Register interest
@@ -29,69 +30,66 @@
  * @link      http://www.chisimba.com
  *
  */
- 
 // security check - must be included in all scripts
 if (!
-/**
- * The $GLOBALS is an array used to control access to certain constants.
- * Here it is used to check if the file is opening in engine, if not it
- * stops the file from running.
- * 
- * @global entry point $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- *         
- */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+        /**
+         * The $GLOBALS is an array used to control access to certain constants.
+         * Here it is used to check if the file is opening in engine, if not it
+         * stops the file from running.
+         * 
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         *         
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
 }
 // end security check
 
 /**
-* 
-* Controller class for Chisimba for the module registerinterest
-*
-* @author Derek Keats
-* @package registerinterest
-*
-*/
-class registerinterest extends controller
-{
-    
+ * 
+ * Controller class for Chisimba for the module registerinterest
+ *
+ * @author Derek Keats
+ * @package registerinterest
+ *
+ */
+class registerinterest extends controller {
+
     /**
-    * 
-    * @var string $objConfig String object property for holding the 
-    * configuration object
-    * @access public;
-    * 
-    */
+     * 
+     * @var string $objConfig String object property for holding the 
+     * configuration object
+     * @access public;
+     * 
+     */
     public $objConfig;
-    
+
     /**
-    * 
-    * @var string $objLanguage String object property for holding the 
-    * language object
-    * @access public
-    * 
-    */
+     * 
+     * @var string $objLanguage String object property for holding the 
+     * language object
+     * @access public
+     * 
+     */
     public $objLanguage;
+
     /**
-    *
-    * @var string $objLog String object property for holding the 
-    * logger object for logging user activity
-    * @access public
-    * 
-    */
+     *
+     * @var string $objLog String object property for holding the 
+     * logger object for logging user activity
+     * @access public
+     * 
+     */
     public $objLog;
 
     /**
-    * 
-    * Intialiser for the registerinterest controller
-    * @access public
-    * 
-    */
-    public function init()
-    {
+     * 
+     * Intialiser for the registerinterest controller
+     * @access public
+     * 
+     */
+    public function init() {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
@@ -99,12 +97,13 @@ class registerinterest extends controller
         // Create an instance of the database class
         $this->objDbregisterinterest = & $this->getObject('dbregisterinterest', 'registerinterest');
         //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
+        $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
+        //riops object
+        $this->objRiops = $this->getObject('riops', 'registerinterest');
     }
-    
-    
+
     /**
      * 
      * The standard dispatch method for the registerinterest module.
@@ -114,37 +113,34 @@ class registerinterest extends controller
      * which renders the module output.
      * 
      */
-    public function dispatch()
-    {
+    public function dispatch() {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action = $this->getParam('action', 'view');
         /*
-        * Convert the action into a method (alternative to 
-        * using case selections)
-        */
+         * Convert the action into a method (alternative to 
+         * using case selections)
+         */
         $method = $this->__getMethod($action);
         // Set the layout template to compatible one
         $this->setLayoutTemplate('layout_tpl.php');
         /*
-        * Return the template determined by the method resulting 
-        * from action
-        */
+         * Return the template determined by the method resulting 
+         * from action
+         */
         return $this->$method();
     }
-    
-    
-    /*------------- BEGIN: Set of methods to replace case selection ------------*/
+
+    /* ------------- BEGIN: Set of methods to replace case selection ------------ */
 
     /**
-    * 
-    * Method corresponding to the view action. It shows the default
-    * dynamic canvas template, showing you how to create block based
-    * view templates
-    * @access private
-    * 
-    */
-    private function __view()
-    {
+     * 
+     * Method corresponding to the view action. It shows the default
+     * dynamic canvas template, showing you how to create block based
+     * view templates
+     * @access private
+     * 
+     */
+    private function __view() {
         // All the action is in the blocks
         if ($this->objUser->isLoggedIn()) {
             if ($this->objUser->isAdmin()) {
@@ -154,9 +150,8 @@ class registerinterest extends controller
         // Redirect
         header('location: ' . 'index.php');
     }
-    
-    private function __writemessage()
-    {
+
+    private function __writemessage() {
         // All the action is in the blocks
         if ($this->objUser->isLoggedIn()) {
             if ($this->objUser->isAdmin()) {
@@ -166,20 +161,19 @@ class registerinterest extends controller
         // Redirect
         header('location: ' . 'index.php');
     }
-    
+
     /**
-    * 
-    * Method corresponding to the save action. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
+     * 
+     * Method corresponding to the save action. 
+     * 
+     * @access private
+     * 
+     */
+    private function __save() {
         $this->objDbregisterinterest->save();
         die();
     }
-    
+
     /**
      * Method to remove a redord from the interest list
      * 
@@ -187,99 +181,126 @@ class registerinterest extends controller
      * @param type $id The user/record id
      * @return NULL
      */
-    private function __remove(){
+    private function __remove() {
         $id = $this->getParam('id');
         $this->objDbregisterinterest->remove($id);
         return $this->__view();
     }
+
     /**
-     * Method to 
+     * Method to update the changes to a email address
      * 
      * @access public
      * @param NULL
      * @return NULL
      */
-    public function __update(){
+    public function __update() {
         $this->objDbregisterinterest->updateMail();
     }
 
+    public function __sendmessage() {
+        $message = $this->getParam('emailmessage', NULL);
+        $subject = $this->getParam('subject', NULL);
+        $userID = $this->objUser->getUserId($this->objUser->userName());
+        //get the jquery dialog object
+        $objDialog = $this->newObject('dialog', 'jquerycore');
+        //setting the title
+        $successTitleLabel = "<span class='success' >" . $this->objLanguage->languageText('phrase_messagestatus', 'system') . "</span>";
+        $objDialog->setTitle(ucwords($successTitleLabel));
+        $objDialog->setCssId('dialog_messagesuccess');
+        $objDialog->setCloseOnEscape(TRUE);
+        $objDialog->setResizable(FALSE);
+        $objDialog->setAutoOpen(TRUE);
+        $objDialog->setOpen("jQuery('.ui-dialog-titlebar-close').hide();");
+        if (!empty($message)) {
+            if ($this->objRiops->sendMessage($subject, $message, $userID)) {
+                $content = $this->objLanguage->languageText('phrase_msgsuccess', 'system');
+                $objDialog->setContent($content);
+                echo $objDialog->show();
+            } else {
+                $content = $this->objLanguage->languageText('phrase_msgerror', 'system');
+                $successTitleLabel = "<span class='error' >" . $this->objLanguage->languageText('phrase_messagestatus', 'system') . "</span>";
+                $objDialog->setContent($content);
+                echo $objDialog->show();
+            }
+        } else {
+            $content = $this->objLanguage->languageText('mod_registerinterest_emptymsg', 'registerinterest');
+            $objDialog->setContent($content);
+            echo $objDialog->show();
+        }
+        return "writemsg_tpl.php";
+    }
+
     /**
-    * 
-    * Method to return an error when the action is not a valid 
-    * action method
-    * 
-    * @access private
-    * @return string The dump template populated with the error message
-    * 
-    */
-    private function __actionError()
-    {
+     * 
+     * Method to return an error when the action is not a valid 
+     * action method
+     * 
+     * @access private
+     * @return string The dump template populated with the error message
+     * 
+     */
+    private function __actionError() {
         $this->setVar('str', "<h3>"
-          . $this->objLanguage->languageText("phrase_unrecognizedaction")
-          .": " . $action . "</h3>");
+                . $this->objLanguage->languageText("phrase_unrecognizedaction")
+                . ": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
-    
+
     /**
-    * 
-    * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action 
-    * is not a valid method it returns FALSE, if it is a valid method
-    * of this class it returns TRUE.
-    * 
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return boolean TRUE|FALSE
-    * 
-    */
-    function __validAction(& $action)
-    {
-        if (method_exists($this, "__".$action)) {
+     * 
+     * Method to check if a given action is a valid method
+     * of this class preceded by double underscore (__). If it __action 
+     * is not a valid method it returns FALSE, if it is a valid method
+     * of this class it returns TRUE.
+     * 
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return boolean TRUE|FALSE
+     * 
+     */
+    function __validAction(& $action) {
+        if (method_exists($this, "__" . $action)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
-    
+
     /**
-    * 
-    * Method to convert the action parameter into the name of 
-    * a method of this class.
-    * 
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return stromg the name of the method
-    * 
-    */
-    function __getMethod(& $action)
-    {
+     * 
+     * Method to convert the action parameter into the name of 
+     * a method of this class.
+     * 
+     * @access private
+     * @param string $action The action parameter passed byref
+     * @return stromg the name of the method
+     * 
+     */
+    function __getMethod(& $action) {
         if ($this->__validAction($action)) {
             return "__" . $action;
         } else {
             return "__actionError";
         }
     }
-    
-    /*------------- END: Set of methods to replace case selection ------------*/
-    
 
+    /* ------------- END: Set of methods to replace case selection ------------ */
 
     /**
-    *
-    * This is a method to determine if the user has to 
-    * be logged in or not. Note that this is an example, 
-    * and if you use it view will be visible to non-logged in 
-    * users. Delete it if you do not want to allow annonymous access.
-    * It overides that in the parent class
-    *
-    * @return boolean TRUE|FALSE
-    *
-    */
-    public function requiresLogin()
-    {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
+     *
+     * This is a method to determine if the user has to 
+     * be logged in or not. Note that this is an example, 
+     * and if you use it view will be visible to non-logged in 
+     * users. Delete it if you do not want to allow annonymous access.
+     * It overides that in the parent class
+     *
+     * @return boolean TRUE|FALSE
+     *
+     */
+    public function requiresLogin() {
+        $action = $this->getParam('action', 'NULL');
+        switch ($action) {
             case 'save':
                 return FALSE;
                 break;
@@ -287,6 +308,8 @@ class registerinterest extends controller
                 return TRUE;
                 break;
         }
-     }
+    }
+
 }
+
 ?>
