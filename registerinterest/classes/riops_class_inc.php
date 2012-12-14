@@ -277,7 +277,6 @@ class riops extends object {
                 $domElements['rmLink']->setAttribute('href', $confirmLink->href);
                 //$domElements['rmLink']->appendChild($domElements['delIcon']);
                 $domElements['rmLink']->appendChild($domElements['delIcon']);
-                $domElements['td']->appendChild($this->doc->createTextNode('|'));
                 $domElements['td']->appendChild($domElements['rmLink']);
                 $domElements['tr']->appendChild($domElements['td']);
                 $domElements['td']->appendChild($this->doc->createElement('br'));
