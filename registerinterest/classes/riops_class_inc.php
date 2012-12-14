@@ -160,7 +160,6 @@ class riops extends object {
         //$msg = new textarea('message');
         $msg = $this->getObject('htmlarea', 'htmlelements');
         $msg->setName('emailmessage');
-        $msg->setCssClass("emailmessage");
         $ms = $msgLabel . "<br />" . $msg->show();
 
         $buttonTitle = $this->objLanguage->languageText('word_send');
