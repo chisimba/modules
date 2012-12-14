@@ -110,10 +110,15 @@ class dbregisterinterest extends dbtable
      * 
      * @access public
      * @param type $id the record/user ID
-     * @return NULL 
+     * @return delete query result 
      */
     public function remove($id){
-        $this->delete('id',$id);
+        //check if the value has not already been removed
+        if($this->valueExists('id',$id)){
+            return $this->delete('id',$id);
+        }  else {
+            return FALSE;
+        }
     }
     
     /**
