@@ -88,6 +88,8 @@ jQuery(function() {
     
     // Send the message
     jQuery("#ri_savemsg_button").live("click", function(e){
+        e.preventDefault();
+        /*
         if(jQuery("#input_subject").val().length == 0){
             if(confirm("Are you sure you want to send the email without a subject?")){
                 return TRUE;
@@ -97,8 +99,8 @@ jQuery(function() {
             }
         }
         //e.preventDefault();
-        data_string = jQuery("#form_editmsg").serialize();
-        //alert("Not ready yet");
+        data_string = jQuery("#form_editmsg").serialize();*/
+        alert("Not ready yet");
         /*jQuery.ajax({
             url: 'index.php?module=registerinterest&action=savemsg',
             type: "POST",
