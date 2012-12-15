@@ -5,6 +5,7 @@
  * Official Facebook Like Button Generator
  * 
  * Generates the necessary HTML to include the official Facebook Like button.
+ * OpenGraph debugger https://developers.facebook.com/tools/debug
  * 
  * PHP version 5
  * 
@@ -83,49 +84,45 @@ class fblikebttn extends object
     public function init()
     {
         // Get the facebook ID from the facebook module
-        $objConfig=$this->newObject('dbsysconfig','sysconfig');
-        $appId = $objConfig->getValue('facebook_apid', 'socialweb');
+        $this->objConfig=$this->newObject('dbsysconfig','sysconfig');
+        $appId = $this->objConfig->getValue('facebook_apid', 'socialweb');
+        $this->setVar('fb_app_id', $appId);
+        $this->appId=$appId;
         if ($appId !== 'replaceme') {
-            // Load the JS which injects the DIV
-            $this->appendArrayVar('headerParams',
-              $this->getJavaScriptFile('socialweb.js',
-              'socialweb')
-            );
-            $doc = new DOMDocument('UTF-8');
-            // Create the script element.
-            //<div id="fb-root"></div> ---- get it in after <Body>
-            $script = '
-                <script>(function(d, s, id) {
-                  var js, fjs = d.getElementsByTagName(s)[0];
-                  if (d.getElementById(id)) return;
-                  js = d.createElement(s); js.id = id;
-                  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=' . $appId . '";
-                  fjs.parentNode.insertBefore(js, fjs);
-                }(document, \'script\', \'facebook-jssdk\'));</script>            
-            ';
-            //$this->appendArrayVar('headerParams', $script);
             $this->fbReady=TRUE;
         } else {
             $this->fbReady=FALSE;
         }
     }
     
+    /**
+     * 
+     * Render the script to activate the buttons
+     * 
+     * @return string The rendered script
+     * @access public
+     * 
+     */
     public function activateButtons()
     {
-        $objConfig=$this->newObject('dbsysconfig','sysconfig');
-        $appId = $objConfig->getValue('facebook_apid', 'socialweb');
-        
-        $script = '
-<script type="text/javascript">
-	window.fbAsyncInit = function() {
-	    FB.init({appId: \'' . $appId . '\', status: true, cookie: true, xfbml: true});
-	};
-	(function() {
-	    var e = document.createElement(\'script\'); e.async = true;
-	    e.src = document.location.protocol + \'//connect.facebook.net/en_US/all.js\';
-	    document.getElementById(\'fb-root\').appendChild(e);
-	}());
-	</script>';
+        $appId = $this->appId;
+        if ($appId !== 'replaceme') {
+            $script = '
+    <script type="text/javascript">
+            window.fbAsyncInit = function() {
+                FB.init({appId: \'' . $appId . '\', status: true, cookie: true, xfbml: true});
+            };
+            (function() {
+                var e = document.createElement(\'script\'); 
+                e.async = true;
+                e.src = document.location.protocol + \'//connect.facebook.net/en_US/all.js\';
+                document.getElementById(\'fb-root\').appendChild(e);
+            }());
+            </script>';
+            return $script;
+        } else { 
+            return NULL;
+        }
     }
     
     /**
