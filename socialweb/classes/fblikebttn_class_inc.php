@@ -86,6 +86,11 @@ class fblikebttn extends object
         $objConfig=$this->newObject('dbsysconfig','sysconfig');
         $appId = $objConfig->getValue('facebook_apid', 'socialweb');
         if ($appId !== 'replaceme') {
+            // Load the JS which injects the DIV
+            $this->appendArrayVar('headerParams',
+              $this->getJavaScriptFile('socialweb.js',
+              'socialweb')
+            );
             $doc = new DOMDocument('UTF-8');
             // Create the script element.
             //<div id="fb-root"></div> ---- get it in after <Body>
@@ -128,7 +133,6 @@ class fblikebttn extends object
             $div->setAttribute('data-send', 'true');
             $div->setAttribute('data-width', '450');
             $div->setAttribute('data-show-faces', 'true');
-
             if ($uri) {
                 $div->setAttribute('data-href', $uri);
             }

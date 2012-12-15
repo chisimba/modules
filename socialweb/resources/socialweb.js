@@ -23,7 +23,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
       // Load some demo content into the middle dynamic area.
-      jQuery("#middledynamic_area").load('packages/socialweb/resources/sample.txt');
+      jQuery('body').prepend('<div id="fb-root"></div>');
     });
 
 });
