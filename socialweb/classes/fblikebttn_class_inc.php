@@ -58,52 +58,87 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za/
  * @seealso   https://developers.google.com/+/plugins/+1button/
  */
-class gplusbttn extends object
+class fblikebttn extends object
 {
+    /**
+     *
+     * Property to hold whether we should display the facebook like 
+     * button or not
+     * 
+     * @var boolean TRUE|FALSE
+     * @access public
+     * 
+     */
+    public $fbReady;
     
+    /**
+     * 
+     * Constructor for the facebook like button. It adds the necessary
+     * script to the page header to load the FB SDK.
+     * 
+     * @access public
+     * @return void
+     * 
+     */
     public function init()
     {
-        $doc = new DOMDocument('UTF-8');
-        // Create the script element.
-        //<div id="fb-root"></div> ---- get it in after <Body>
-        $script = '
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=' . $appId . '";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, \'script\', \'facebook-jssdk\'));</script>            
-        ';
-        $this->appendArrayVar('headerParams', $script);
+        // Get the facebook ID from the facebook module
+        $objConfig=$this->newObject('dbsysconfig','sysconfig');
+        $appId = $objConfig->getValue('facebook_apid', 'socialweb');
+        if ($appId !== 'replaceme') {
+            $doc = new DOMDocument('UTF-8');
+            // Create the script element.
+            //<div id="fb-root"></div> ---- get it in after <Body>
+            $script = '
+                <script>(function(d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (d.getElementById(id)) return;
+                  js = d.createElement(s); js.id = id;
+                  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=' . $appId . '";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }(document, \'script\', \'facebook-jssdk\'));</script>            
+            ';
+            $this->appendArrayVar('headerParams', $script);
+            $this->fbReady=TRUE;
+        } else {
+            $this->fbReady=FALSE;
+        }
+
     }
     
     /**
      * Generates the necessary HTML to include the official FB LIke button.
      * 
-     * <div class="fb-like" data-href="http://localhost/scratch/index.php?module=simpleblog&amp;by=id&amp;id=gen10Srv19Nme23_77963_1347792858" data-send="true" data-width="450" data-show-faces="true"></div>
+     * <div class="fb-like" data-href="http://localhost/scratch/index.php?
+     * module=simpleblog&amp;by=id&amp;id=gen10Srv19Nme23_77963_1347792858" 
+     * data-send="true" data-width="450" data-show-faces="true"></div>
      *
      * @access public
-     * @param  string $text    The link text.
-     * @param  string $style   The style of the button (vertical, horizontal or none).
-     * @param  string $via     A Twitter account that will be mentioned in the suggested tweet.
-     * @param  string $related A related Twitter account.
      * @param  string $uri     The URI to post. Defaults to the current page.
      * @return string The generated HTML.
      */
-    public function getButton($style='tall', $uri=FALSE)
+    public function getButton($uri=FALSE)
     {
-        // Create the HTML document.
-        $doc = new DOMDocument('UTF-8');
-        // Create the link.
-        $div = $doc->createElement('g:plusone');
-        $div->setAttribute('size', $style);
-        if ($uri) {
-            $div->setAttribute('href', $uri);
+        if ($this->fbReady == TRUE) {
+            // Create the HTML document.
+            $doc = new DOMDocument('UTF-8');
+            // Create the link.
+            $div = $doc->createElement('div');
+            $div->setAttribute('class', 'fb-like');
+            $div->setAttribute('data-send', 'true');
+            $div->setAttribute('data-width', '450');
+            $div->setAttribute('data-show-faces', 'true');
+
+            if ($uri) {
+                $div->setAttribute('data-href', $uri);
+            }
+
+            $doc->appendChild($div);
+            return $doc->saveHTML();
+        } else {
+            return NULL;
         }
-        
-        $doc->appendChild($div);
-        // Return the serialised document.
-        return '<div class=\'social_button_' . $style . '\'>' . $doc->saveHTML() . '</div>';
+
     }
 }
+?>
