@@ -378,6 +378,8 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
         } else {
             $ret = NULL;
         }
@@ -401,6 +403,8 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
         } else {
             $ret = NULL;
         }
@@ -469,6 +473,8 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
         } else {
             $ret = NULL;
         }
@@ -492,6 +498,8 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
         } else {
             $ret = NULL;
         }
@@ -515,9 +523,12 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
         } else {
             $ret = NULL;
         }
+        
         return $ret;
     }
     
