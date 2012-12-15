@@ -350,6 +350,8 @@ class simpleblogops extends object
             foreach ($posts as $post) {
                 $ret .= $this->formatItem($post);
             }
+            $fbLike = $this->getObject('fblikebttn', 'socialweb');
+            $ret .= $fbLike->activateButtons();
             $ret .= "<table class='simpleblog_pagenav'><tr>"
               . "<td class='simpleblog_prev'>"
               . "$prevLink</td><td class='simpleblog_allpages'>"
