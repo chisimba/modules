@@ -103,12 +103,29 @@ class fblikebttn extends object
                   fjs.parentNode.insertBefore(js, fjs);
                 }(document, \'script\', \'facebook-jssdk\'));</script>            
             ';
-            $this->appendArrayVar('headerParams', $script);
+            //$this->appendArrayVar('headerParams', $script);
             $this->fbReady=TRUE;
         } else {
             $this->fbReady=FALSE;
         }
-
+    }
+    
+    public function activateButtons()
+    {
+        $objConfig=$this->newObject('dbsysconfig','sysconfig');
+        $appId = $objConfig->getValue('facebook_apid', 'socialweb');
+        
+        $script = '
+<script type="text/javascript">
+	window.fbAsyncInit = function() {
+	    FB.init({appId: \'' . $appId . '\', status: true, cookie: true, xfbml: true});
+	};
+	(function() {
+	    var e = document.createElement(\'script\'); e.async = true;
+	    e.src = document.location.protocol + \'//connect.facebook.net/en_US/all.js\';
+	    document.getElementById(\'fb-root\').appendChild(e);
+	}());
+	</script>';
     }
     
     /**
