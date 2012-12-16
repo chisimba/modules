@@ -86,7 +86,9 @@ class fblikebttn extends object
         // Get the facebook ID from the facebook module
         $this->objConfig=$this->newObject('dbsysconfig','sysconfig');
         $appId = $this->objConfig->getValue('facebook_apid', 'socialweb');
+        $appAdmin = $this->objConfig->getValue('facebook_adminuser', 'socialweb');
         $this->setVar('fb_app_id', $appId);
+        $this->setVar('fb_app_id', $appAdmin);
         $this->appId=$appId;
         if ($appId !== 'replaceme') {
             $this->fbReady=TRUE;
@@ -105,12 +107,11 @@ class fblikebttn extends object
      */
     public function activateButtons()
     {
-        $appId = $this->appId;
-        if ($appId !== 'replaceme') {
+        if ($this->fbReady==TRUE) {
             $script = '
     <script type="text/javascript">
             window.fbAsyncInit = function() {
-                FB.init({appId: \'' . $appId . '\', status: true, cookie: true, xfbml: true});
+                FB.init({appId: \'' . $this->appId . '\', status: true, cookie: true, xfbml: true});
             };
             (function() {
                 var e = document.createElement(\'script\'); 
@@ -141,6 +142,8 @@ class fblikebttn extends object
         if ($this->fbReady == TRUE) {
             // Create the HTML document.
             $doc = new DOMDocument('UTF-8');
+            $buttonWrapper = $doc->createElement('div');
+            $buttonWrapper->setAttribute('class', 'fblikebutton');
             // Create the link.
             $div = $doc->createElement('div');
             $div->setAttribute('class', 'fb-like');
@@ -150,8 +153,8 @@ class fblikebttn extends object
             if ($uri) {
                 $div->setAttribute('data-href', $uri);
             }
-
-            $doc->appendChild($div);
+            $buttonWrapper->appendChild($div);
+            $doc->appendChild($buttonWrapper);
             return $doc->saveHTML();
         } else {
             return NULL;
