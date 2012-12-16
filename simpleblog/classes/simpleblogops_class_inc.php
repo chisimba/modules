@@ -748,9 +748,6 @@ class simpleblogops extends object
         $tags = "\n<div class='simpleblog_post_tags'>" . $postTags . "</div>\n";
         $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
         
-        $fbL = $this->getObject('fblikebttn', 'socialweb');
-        $fbLikeButton = $fbL->getButton($titleUri);
-
         $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
                 "simpleblog", "Blog wall");
         $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
@@ -767,9 +764,11 @@ class simpleblogops extends object
         $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"
         . "<a class='wall_link' id='wall_link_{$id }' href='javascript:void(0);'>"
         . $wallText . $numPosts . "</a></div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
-
+        $fbL = $this->getObject('fblikebttn', 'socialweb');
+        // Add the Facebook like button.
+        $fbLikeButton = $fbL->getButton($titleUri);
         return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
-          . $before . $title . $content . $tags . $fbLikeButton . $foot . $wall
+          . $before . $title . $fbLikeButton . $content . $tags . $foot . $wall
           . "</div>\n\n";
     }
     
