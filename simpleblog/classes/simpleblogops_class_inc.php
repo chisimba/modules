@@ -699,6 +699,9 @@ class simpleblogops extends object
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
         // Google plus button
         $plsBtn = $this->objPlusButton->getButton('tall', htmlspecialchars_decode($titleUri));
+        // Add the Facebook like button.
+        $fbL = $this->getObject('fblikebttn', 'socialweb');
+        $fbLikeButton = $fbL->getButton($titleUri);
         
         $by = $this->getParam('by', NULL);
         if ($by !== 'id') {
@@ -711,7 +714,7 @@ class simpleblogops extends object
         $clear = ' <br style="clear:both;" />';
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
           . $postTitle . "</div><div class='social_buttons'>" . $edel 
-          . $plsBtn . '</div>' . $rt . "</div>\n";
+          . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
         
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
@@ -764,11 +767,9 @@ class simpleblogops extends object
         $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"
         . "<a class='wall_link' id='wall_link_{$id }' href='javascript:void(0);'>"
         . $wallText . $numPosts . "</a></div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
-        $fbL = $this->getObject('fblikebttn', 'socialweb');
-        // Add the Facebook like button.
-        $fbLikeButton = $fbL->getButton($titleUri);
+
         return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
-          . $before . $title . $fbLikeButton . $content . $tags . $foot . $wall
+          . $before . $title . $content . $tags . $foot . $wall
           . "</div>\n\n";
     }
     

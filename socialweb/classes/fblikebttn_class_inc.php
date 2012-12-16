@@ -144,8 +144,8 @@ class fblikebttn extends object
             $doc = new DOMDocument('UTF-8');
             $buttonWrapper = $doc->createElement('div');
             $buttonWrapper->setAttribute('class', 'fblikebutton');
-            $br = $doc->createElement('br');
-            $br->setAttribute('style', 'clear:both;');
+            //$br = $doc->createElement('br');
+            //$br->setAttribute('style', 'clear:both;');
             // Create the link.
             $div = $doc->createElement('div');
             $div->setAttribute('class', 'fb-like');
@@ -156,8 +156,9 @@ class fblikebttn extends object
                 $div->setAttribute('data-href', $uri);
             }
             $buttonWrapper->appendChild($div);
+            //$doc->appendChild($br);
             $doc->appendChild($buttonWrapper);
-            $doc->appendChild($br);
+            //$doc->appendChild($br);
             return $doc->saveHTML();
         } else {
             return NULL;
