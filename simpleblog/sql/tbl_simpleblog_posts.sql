@@ -65,7 +65,6 @@ $indexes = array(
     'fields' => array(
         'userid' => array(),
         'blogid' => array(),
-        'post_tags' => array(),
         'post_type' => array(),
         'post_content' => array(),
         'post_title' => array(),
