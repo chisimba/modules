@@ -23,7 +23,7 @@ jQuery(function() {
     // Things to do on loading the page.
     jQuery(document).ready(function() {
         //hide the textboxes
-    });
+        });
     
     // Save the intrest
     jQuery("#ri_save_button").live("click", function(e){
@@ -38,26 +38,28 @@ jQuery(function() {
                 var fullName =  jQuery("#input_fullname").val();
                 var email =  jQuery("#input_email").val();
                 if(jQuery.trim(fullName).length != 0){
-                        if(fullName.length > 1){
-                            if(jQuery.trim(email).length != 0){
-                                if(email.indexOf('@') != -1 && email.length > 2){
-                                    msg = "<span class='success' >Thank you for registering your interest.</span>";
-                                }else{
-                                    msg = "<span class='error' >Enter valid email address</span>";
-                                }
+                    if(fullName.length > 1){
+                        if(jQuery.trim(email).length != 0){
+                            if(email.indexOf('@') != -1 && email.length > 2){
+                                msg = "<span class='success' >Thank you for registering your interest.</span>";
+                                jQuery("#input_email").val('');
+                                jQuery("#input_fullname").val('');
                             }else{
                                 msg = "<span class='error' >Enter valid email address</span>";
                             }
                         }else{
-                            msg = "<span class='error' >Enter valid full names</span>";
+                            msg = "<span class='error' >Enter valid email address</span>";
+                            jQuery("#input_fullname").html(fullName);
                         }
+                    }else{
+                        msg = "<span class='error' >Enter valid full names</span>";
+                    }
                 }else{
                     msg = "<span class='error' >Enter valid full names</span>";
+                    jQuery("#input_email").html(email);
                 }
                 jQuery("#ri_save_button").attr("disabled", "");
                 jQuery("#before_riform").html(msg);
-                jQuery("#input_fullname").val('');
-                jQuery("#input_email").val('');
             }
         });
     });
@@ -79,7 +81,10 @@ jQuery(function() {
         jQuery.ajax({
             url: 'index.php?module=registerinterest&action=update',
             type: 'POST',
-            data: {'newValue': newValue,'id':id},
+            data: {
+                'newValue': newValue,
+                'id':id
+            },
             success:  jQuery("#before_riform").html("<span class='success' >Update request sent successfully</span>")
         })
         jQuery(this).html(newValue);
@@ -101,7 +106,7 @@ jQuery(function() {
         //e.preventDefault();
         data_string = jQuery("#form_editmsg").serialize();*/
         alert("Not ready yet");
-        /*jQuery.ajax({
+    /*jQuery.ajax({
             url: 'index.php?module=registerinterest&action=savemsg',
             type: "POST",
             data: data_string,
