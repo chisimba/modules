@@ -195,7 +195,9 @@ class registerinterest extends controller {
      * @return NULL
      */
     public function __update() {
-        $this->objDbregisterinterest->updateMail();
+        if ($this->objUser->isAdmin()) {
+            $this->objDbregisterinterest->updateMail();
+        }
     }
 
     public function __sendmessage() {
