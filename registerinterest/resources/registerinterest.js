@@ -85,7 +85,12 @@ jQuery(function() {
                 'newValue': newValue,
                 'id':id
             },
-            success:  jQuery("#before_riform").html("<span class='success' >Update request sent successfully</span>")
+            success: function(){
+                 jQuery("#before_riform").html("<span class='success' >Update request sent successfully</span>");
+                 setTimeout(function(){
+                      jQuery("#before_riform").text('')
+                 },5000)
+            }
         })
         jQuery(this).html(newValue);
         jQuery(this).attr('value',newValue);
@@ -94,8 +99,8 @@ jQuery(function() {
     // Send the message
     jQuery("#ri_savemsg_button").live("click", function(e){
         e.preventDefault();
-        /*
-        if(jQuery("#input_subject").val().length == 0){
+        alert("Not ready yet");
+        /*if(jQuery("#input_subject").val().length == 0){
             if(confirm("Are you sure you want to send the email without a subject?")){
                 return TRUE;
             }else{
@@ -104,9 +109,8 @@ jQuery(function() {
             }
         }
         //e.preventDefault();
-        data_string = jQuery("#form_editmsg").serialize();*/
-        alert("Not ready yet");
-    /*jQuery.ajax({
+        data_string = jQuery("#form_editmsg").serialize();
+   /* jQuery.ajax({
             url: 'index.php?module=registerinterest&action=savemsg',
             type: "POST",
             data: data_string,

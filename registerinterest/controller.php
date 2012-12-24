@@ -82,6 +82,7 @@ class registerinterest extends controller {
      * 
      */
     public $objLog;
+    public $objDbregisterinterest;
 
     /**
      * 
@@ -174,6 +175,32 @@ class registerinterest extends controller {
         die();
     }
 
+    private function __optout() {
+        $confirmation = $this->getParam('remove', NULL);
+        $id = $this->getParam('id', NULL);
+        
+        switch ($confirmation){
+        case strtolower('t'):
+            $confirmation = TRUE;
+            break;
+        }
+        
+        if ($confirmation && strlen($id) == 32) {
+                $this->objDbregisterinterest->remove($id);
+                header('location: index.php');
+        }
+        //check if the person's email address is in the database
+        if (!empty($id)) {
+            if ($this->objDbregisterinterest->valueExists('id', $id)) {
+                return 'optoutconfirm_tpl.php';
+            } else {
+                header('location: index.php');
+            }
+        } else {
+            header('location: index.php');
+        }
+    }
+
     /**
      * Method to remove a redord from the interest list
      * 
@@ -182,7 +209,7 @@ class registerinterest extends controller {
      * @return NULL
      */
     private function __remove() {
-        $id = $this->getParam('id');
+        $id = $this->getParam('id',NULL);
         $this->objDbregisterinterest->remove($id);
         return $this->__view();
     }
@@ -205,30 +232,31 @@ class registerinterest extends controller {
         $subject = $this->getParam('subject', NULL);
         $userID = $this->objUser->getUserId($this->objUser->userName());
         //get the jquery dialog object
-        $objDialog = $this->newObject('dialog', 'jquerycore');
+        $this->objDialog = $this->newObject('dialog', 'jquerycore');
         //setting the title
         $successTitleLabel = "<span class='success' >" . $this->objLanguage->languageText('phrase_messagestatus', 'system') . "</span>";
-        $objDialog->setTitle(ucwords($successTitleLabel));
-        $objDialog->setCssId('dialog_messagesuccess');
-        $objDialog->setCloseOnEscape(TRUE);
-        $objDialog->setResizable(FALSE);
-        $objDialog->setAutoOpen(TRUE);
-        $objDialog->setOpen("jQuery('.ui-dialog-titlebar-close').hide();");
+        $this->objDialog->setTitle(ucwords($successTitleLabel));
+        $this->objDialog->setCssId('dialog_messagesuccess');
+        $this->objDialog->setCloseOnEscape(TRUE);
+        $this->objDialog->setResizable(FALSE);
+        $this->objDialog->setAutoOpen(TRUE);
+        $this->objDialog->setOpen("jQuery('.ui-dialog-titlebar-close').hide();");
         if (!empty($message)) {
             if ($this->objRiops->sendMessage($subject, $message, $userID)) {
                 $content = $this->objLanguage->languageText('phrase_msgsuccess', 'system');
-                $objDialog->setContent($content);
-                echo $objDialog->show();
+                $this->objDialog->setContent($content);
+                echo $this->objDialog->show();
             } else {
                 $content = $this->objLanguage->languageText('phrase_msgerror', 'system');
                 $successTitleLabel = "<span class='error' >" . $this->objLanguage->languageText('phrase_messagestatus', 'system') . "</span>";
-                $objDialog->setContent($content);
-                echo $objDialog->show();
+                $this->objDialog->setContent($content);
+                echo $this->objDialog->show();
             }
         } else {
             $content = $this->objLanguage->languageText('mod_registerinterest_emptymsg', 'registerinterest');
-            $objDialog->setContent($content);
-            echo $objDialog->show();
+            $successTitleLabel = "<span class='error' >" . $this->objLanguage->languageText('phrase_messagestatus', 'system') . "</span>";
+            $this->objDialog->setContent($content);
+            echo $this->objDialog->show();
         }
         return "writemsg_tpl.php";
     }
@@ -246,7 +274,7 @@ class registerinterest extends controller {
         $this->setVar('str', "<h3>"
                 . $this->objLanguage->languageText("phrase_unrecognizedaction")
                 . ": " . $action . "</h3>");
-        return 'dump_tpl.php';
+        return 'main_tpl.php';
     }
 
     /**
@@ -304,6 +332,9 @@ class registerinterest extends controller {
         $action = $this->getParam('action', 'NULL');
         switch ($action) {
             case 'save':
+                return FALSE;
+                break;
+            case 'optout':
                 return FALSE;
                 break;
             default:

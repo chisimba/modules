@@ -182,11 +182,12 @@ class riops extends object {
      */
     public function listAll() {
         $dataArray = $this->objDB->getAll();
+        //if there are no values, return text indicating as such
+        if(count($dataArray) == 0){
+            return $this->objLanguage->languageText(" mod_registerinterest_noentries","registerinterest","There are no names on the list ");
+        }else{
         $domElements['table'] = $this->doc->createElement('table');
         $domElements['table']->setAttribute('class', 'ri_viewall');
-
-
-
         // The link for the message writer.
         $sendlink = $this->uri(array('action' => 'writemessage'), 'registerinterest');
         $sendlink = str_replace("&amp;", "&", $sendlink);
@@ -203,9 +204,6 @@ class riops extends object {
         $domElements['td']->appendChild($h3);
         $domElements['tr']->appendChild($domElements['td']);
         $domElements['table']->appendChild($domElements['tr']);
-
-
-
         // Create the header row.
         $domElements['tr'] = $this->doc->createElement('tr');
         $domElements['th'] = $this->doc->createElement('td');
@@ -292,40 +290,49 @@ class riops extends object {
         //update form
         $this->doc->appendChild($domElements['table']);
         return $this->doc->saveHTML();
+        }
     }
 
-    public function sendMessage($subject, $message, $userId) {
+    public function sendMessage($subject=NULL, $message, $userId,$optOut = TRUE) {
         $objMail = & $this->getObject('mailer', 'mail');
-        $recipents = array();
         //setting fromName
         $fromName = $this->objUser->fullname($userId);
-        //loop through the available email addresses
-        foreach ($this->objDB->getAll() as $data) {
-            array_push($recipents, $data['email']);
-        }
         //setting the email address using the servername and the username   
         $from = $this->objUser->userName() . '@' . $_SERVER['SERVER_NAME'];
-        //setting the message
-        $recipents = array_unique($recipents);
         //setting the subject
-        $subject = 'Register interest[' . $subject . ']';
-        $message = "
-        {$this->objLanguage->languageText('word_from', 'system')} : {$fromName} \n\r
-        {$this->objLanguage->languageText('word_subject', 'system')} : {$subject} \r
-        ________________________________________________\n\r
-                {$message} \n\r
-                ";
-        // Add alternative message - same version minus html tags
-        $plainMessage = strip_tags($message);
-        $objMail->setValue('to', $from);
-        $objMail->setValue('bcc', $recipents);
+        if(empty($subject)){
+            $subject = $this->objLanguage->languageText('phrase_nosubject','system');
+        }
+        $subject = '[Register interest]'. $subject;
+        $objMail->setValue('subject', $subject);
         $objMail->setValue('from', $from);
         $objMail->setValue('fromName', $fromName);
-        $objMail->setValue('subject', $subject);
-        $objMail->setValue('useHTMLMail', FALSE);
-        $objMail->setValue('body', $plainMessage);
-        $objMail->setValue('htmlbody', $message);
-        return $objMail->send();
+        // Add alternative message - same version minus html tags
+        //loop through the available email addresses
+        foreach ($this->objDB->getAll() as $data) {
+            //array_push($recipents, $data['email']);
+        $messageTwo = "
+        {$this->objLanguage->languageText('word_from', 'system')} : {$fromName} \n\r
+        {$this->objLanguage->languageText('word_subject', 'system')} : {$subject}
+        ________________________________________________\n
+        Hi {$data['fullname']} \n
+        ".strip_tags($message)." \n\r
+        ________________________________________________\n
+        {$this->objLanguage->languageText('mod_registerinterest_optoutmsg','registerinterest')} \n
+        http://{$_SERVER['SERVER_NAME']}/ch/?module=registerinterest&action=optout&id={$data['id']}
+                ";
+        $plainMessage = strip_tags($messageTwo);
+        $objMail->setValue('useHTMLMail', TRUE);
+        $objMail->setValue('htmlbody', $messageTwo);
+        $objMail->setValue('to', $data['email']);
+        $objMail->setValue('body', $messageTwo);
+        if($objMail->send()){
+            $retValue = TRUE;
+        }  else {
+            $retValue = FALSE;
+        }
+        }
+        return $retValue;
     }
 
 }
