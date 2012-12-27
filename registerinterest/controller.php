@@ -82,7 +82,6 @@ class registerinterest extends controller {
      * 
      */
     public $objLog;
-    public $objDbregisterinterest;
 
     /**
      * 
@@ -96,7 +95,7 @@ class registerinterest extends controller {
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the database class
-        $this->objDbregisterinterest = & $this->getObject('dbregisterinterest', 'registerinterest');
+        $this->objDB = & $this->getObject('dbregisterinterest', 'registerinterest');
         //Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
         //Log this module call
@@ -171,33 +170,30 @@ class registerinterest extends controller {
      * 
      */
     private function __save() {
-        $this->objDbregisterinterest->save();
+        $this->objDB->save();
         die();
     }
 
     private function __optout() {
         $confirmation = $this->getParam('remove', NULL);
         $id = $this->getParam('id', NULL);
-        
-        switch ($confirmation){
-        case strtolower('t'):
-            $confirmation = TRUE;
-            break;
-        default :
-            $confirmation = TRUE;
-            break;
+
+        switch ($confirmation) {
+            case strtolower('t'):
+                $confirmation = TRUE;
+                break;
         }
-        //if the user has confirmed the delete
+
         if ($confirmation && strlen($id) == 32) {
-                $this->objDbregisterinterest->remove($id);
-                header('location: index.php');
+            $this->objDB->remove($id);
+            header('location: index.php');
         }
         //check if the person's email address is in the database
-        if (!empty($id) && $this->objDbregisterinterest->valueExists('id', $id)) {
-                return 'optoutconfirm_tpl.php';
-            } else {
-                header('location: index.php');
-            }
+        if ($this->objDB->valueExists('id', $id) && !empty($id)) {
+            return 'optoutconfirm_tpl.php';
+        } else {
+            header('location: index.php');
+        }
     }
 
     /**
@@ -208,8 +204,8 @@ class registerinterest extends controller {
      * @return NULL
      */
     private function __remove() {
-        $id = $this->getParam('id',NULL);
-        $this->objDbregisterinterest->remove($id);
+        $id = $this->getParam('id', NULL);
+        $this->objDB->remove($id);
         return $this->__view();
     }
 
@@ -222,7 +218,7 @@ class registerinterest extends controller {
      */
     public function __update() {
         if ($this->objUser->isAdmin()) {
-            $this->objDbregisterinterest->updateMail();
+            $this->objDB->updateMail();
         }
     }
 
