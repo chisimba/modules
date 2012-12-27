@@ -86,10 +86,10 @@ jQuery(function() {
                 'id':id
             },
             success: function(){
-                 jQuery("#before_riform").html("<span class='success' >Update request sent successfully</span>");
-                 setTimeout(function(){
-                      jQuery("#before_riform").text('')
-                 },5000)
+                jQuery("#before_riform").html("<span class='success' >Update request sent successfully</span>");
+                setTimeout(function(){
+                    jQuery("#before_riform").text('')
+                },5000)
             }
         })
         jQuery(this).html(newValue);
@@ -98,27 +98,39 @@ jQuery(function() {
     
     // Send the message
     jQuery("#ri_savemsg_button").live("click", function(e){
-        e.preventDefault();
-        alert("Not ready yet");
-        /*if(jQuery("#input_subject").val().length == 0){
+        var noSubject = false;
+        //alert("Not ready yet");
+        if(jQuery("#input_subject").val().length == 0){
             if(confirm("Are you sure you want to send the email without a subject?")){
-                return TRUE;
+                noSubject = true;
             }else{
-                e.preventDefault();
-                jQuery("#input_subject").ficus();
+                //e.preventDefault();
+                noSubject = false;
+                jQuery("#input_subject").focus();
             }
+        }else{
+            noSubject = true;
         }
-        //e.preventDefault();
         data_string = jQuery("#form_editmsg").serialize();
-   /* jQuery.ajax({
-            url: 'index.php?module=registerinterest&action=savemsg',
-            type: "POST",
-            data: data_string,
-            success: function(msg) {
-                jQuery("#ri_savemsg_button").attr("disabled", "");
-                jQuery("#before_riform").html('<span class="success">Message send.</span>');
+        if(noSubject){
+            jQuery(this).attr('disabled',true);
+            jQuery("#form_editmsg").hide('fast');
+            var span = document.createElement('span');
+            jQuery(span).attr('id','ri_paragraph');
+            jQuery(span).text('Please wait....');
+            jQuery("#riwritemsg").append(span);
 
-            }
-        });*/
+            jQuery.ajax({
+                url: 'index.php?module=registerinterest&action=sendmessage',
+                type: "POST",
+                data: data_string,
+                success: function() {
+                    jQuery("#ri_savemsg_button").attr("disabled", "");
+                    jQuery("#before_riform").html('<span class="success">Message send.</span>');
+    
+                }
+            });
+        };
     });
+    
 });

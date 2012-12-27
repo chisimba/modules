@@ -183,22 +183,21 @@ class registerinterest extends controller {
         case strtolower('t'):
             $confirmation = TRUE;
             break;
+        default :
+            $confirmation = TRUE;
+            break;
         }
-        
+        //if the user has confirmed the delete
         if ($confirmation && strlen($id) == 32) {
                 $this->objDbregisterinterest->remove($id);
                 header('location: index.php');
         }
         //check if the person's email address is in the database
-        if (!empty($id)) {
-            if ($this->objDbregisterinterest->valueExists('id', $id)) {
+        if (!empty($id) && $this->objDbregisterinterest->valueExists('id', $id)) {
                 return 'optoutconfirm_tpl.php';
             } else {
                 header('location: index.php');
             }
-        } else {
-            header('location: index.php');
-        }
     }
 
     /**
