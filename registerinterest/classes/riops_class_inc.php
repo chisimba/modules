@@ -326,7 +326,7 @@ class riops extends object {
         Hi {$data['fullname']} \n
         " . $message . " \n\r
         ________________________________________________\n
-        {$this->objLanguage->languageText('mod_registerinterest_optoutmsg', 'registerinterest')} \n
+        {$this->objLanguage->languageText('mod_registerinterest_optoutmsg', 'registerinterest')} \r
                 ";
                 $plainMessage = strip_tags($messageTwo);
                 $objMail->setValue('useHTMLMail', TRUE);
