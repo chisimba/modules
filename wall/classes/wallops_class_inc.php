@@ -459,7 +459,7 @@ class wallops extends object {
 
             $ret .= "</div>\n";
 
-            if ($testIfLoggedIn) {
+            if ($this->objUser->isLoggedIn()) {
                 $ret .= $this->getReplyLink($id);
             }
             $ret .= $comments . " "
