@@ -427,7 +427,7 @@ class wallops extends object {
                 $fullName = '<a href="' . $fnLink . '">' . $fullName . '</a>';
             }
             $del = NULL;
-            if ($testIfLoggedIn) {
+            if ($this->objUser->isLoggedIn()) {
                 if ($amLoggedIn) {
                     if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid']) {
                         $delLink = $this->uri(array(
@@ -732,6 +732,17 @@ class wallops extends object {
                 }
                 break;
             case '3':
+                if (
+                        $userId == $commentor
+                        || $this->objUser->isAdmin()
+                        || $this->objUser->isContextAuthor()
+                        || $this->objUser->isContextEditor()) {
+                    return $delLink;
+                } else {
+                    return NULL;
+                }
+                break;
+                case '4':
                 if (
                         $userId == $commentor
                         || $this->objUser->isAdmin()
