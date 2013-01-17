@@ -429,7 +429,7 @@ class wallops extends object {
             $del = NULL;
             if ($this->objUser->isLoggedIn()) {
                 if ($amLoggedIn) {
-                    if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid']) {
+                    if ($myUserId == $post['posterid'] || $myUserId == $post['ownerid'] || $this->objUser->isAdmin()) {
                         $delLink = $this->uri(array(
                             'action' => 'delete',
                             'id' => $id
