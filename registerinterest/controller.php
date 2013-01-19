@@ -84,6 +84,20 @@ class registerinterest extends controller {
     public $objLog;
 
     /**
+     *
+     * @var object The registerinterest database object
+     * @access public
+     */
+    public $objDB;
+
+    /**
+     *
+     * @var object The user object
+     * @access public
+     */
+    public $objUser;
+
+    /**
      * 
      * Intialiser for the registerinterest controller
      * @access public
@@ -166,25 +180,93 @@ class registerinterest extends controller {
      * 
      * Method corresponding to the save action. 
      * 
+     * @param string $tableName The name of the table where the values have to inserted
      * @access private
+     * @return NULL 
      * 
      */
     private function __save() {
-        $this->objDB->save();
-        die();
+        //get the table ID
+        $tableID = $this->getParam('table', 1);
+        //if tableID = 2 then insert values to the interest table
+        if ($tableID == 2) {
+            if ($this->objUser->isAdmin()) {
+                //set table name according to given tableID
+                $this->objDB->_tableName = 'tbl_registerinterest';
+                //get interest value
+                $value = $this->getParam('txtValue', NULL);
+                if (!empty($value)) {
+                    if (!$this->objDB->valueExists('name', $value)) {
+                        //set the values to be inserted into the dfatabase
+                        $data = array(
+                            'id' => NULL,
+                            'datecreated' => $this->objDB->now(),
+                            'name' => $value
+                        );
+                        $this->objDB->save($data);
+                    }
+                }
+            }
+        } else {
+            //set table
+            $this->objDB->_tableName = 'tbl_registerinterest_interested';
+            //get the person's fullname
+            $fullName = $this->getParam('fullname', NULL);
+            //get the person's email address
+            $eMail = $this->getParam('email', NULL);
+            //remove the equal sign from email address
+            $eMail = str_replace('=', '', $eMail);
+            if (!empty($eMail) && !empty($fullName)) {
+                //generate the ID
+                $userid = $this->objDB->_serverName . "_" . rand(1000, 99999) . "_" . time();
+                $data = array(
+                    'id' => $userid,
+                    'datecreated' => $this->objDB->now(),
+                    'fullname' => $fullName,
+                    'email' => $eMail
+                );
+                //insert the values to database but only if the supplied email does not exist
+                if (!$this->objDB->valueExists('email', $eMail)) {
+                    $this->objDB->save($data);
+                }
+                //change the table name
+                $this->objDB->_tableName = 'tbl_registerinterest';
+                $valuesList = $this->objDB->getAll();
+                //change to records table
+                $this->objDB->_tableName = 'tbl_registerinterest_records';
+                $index = 0;
+                //get all the values from the database
+                foreach ($valuesList as $interest) {
+                    if ($this->getParam('interest' . $index, NULL) == $interest['id']) {
+                        $data = array(
+                            'userid' => $userid,
+                            'interestid' => $interest['id'],
+                            'id' => NULL
+                        );
+                        //insert the values to the database
+                        $this->objDB->save($data);
+                        $index++;
+                    }
+                }
+            }
+        }
+        /*         * END OF INTEREST ADDING* */
+
+        //die();
+        return 'main_tpl.php';
     }
 
     private function __optout() {
         $confirmation = $this->getParam('remove', NULL);
         $id = $this->getParam('id', NULL);
+        /*
+          switch ($confirmation) {
+          case :
+          $confirmation = TRUE;
+          break;
+          } */
 
-        switch ($confirmation) {
-            case strtolower('t'):
-                $confirmation = TRUE;
-                break;
-        }
-
-        if ($confirmation && strlen($id) == 32) {
+        if ($confirmation == strtolower('true') && strlen($id) == 32) {
             $this->objDB->remove($id);
             header('location: index.php');
         }
@@ -204,8 +286,10 @@ class registerinterest extends controller {
      * @return NULL
      */
     private function __remove() {
+        //get the table to execute the query in, set default to 1:tbl_registerinterest_interested
+        $tableID = $this->getParam('table', 1);
         $id = $this->getParam('id', NULL);
-        $this->objDB->remove($id);
+        $this->objDB->remove($id, $tableID);
         return $this->__view();
     }
 
@@ -238,6 +322,7 @@ class registerinterest extends controller {
         $this->objDialog->setOpen("jQuery('.ui-dialog-titlebar-close').hide();");
         if (!empty($message)) {
             if ($this->objRiops->sendMessage($subject, $message, $userID)) {
+                //echo "$message"."<script type='text/javascript' >alert(7)l</script>". $this->getJavaScriptFile('imageresize.js','registerinterest');
                 $content = $this->objLanguage->languageText('phrase_msgsuccess', 'system');
                 $this->objDialog->setContent($content);
                 echo $this->objDialog->show();

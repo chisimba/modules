@@ -39,8 +39,10 @@ class block_optout extends object {
         $id = $this->getParam('id', NULL);
         if (!empty($id) && strlen($id) == 32) {
             $this->objLink = $this->getObject('link', 'htmlelements');
-            $this->objLink->href = $this->uri(array('action' => 'optout', 'id' => $id, 'remove' => 't'));
-            $heading = '<h3>' . $this->objLanguage->languageText('mod_registerinterest_optoutconfirm', 'registerinterest') . '</h3>';
+            //get the ID for displaying the full name
+            $values = $this->objDb->getRow('id',$id);
+            $this->objLink->href = $this->uri(array('action' => 'optout', 'id' => $id, 'remove' => 'true'));
+            $heading = '<h4>'.$values['fullname'].'</h4><h3>' . $this->objLanguage->languageText('mod_registerinterest_optoutconfirm', 'registerinterest') . '</h3>';
             $this->objLink->link = $this->objLanguage->languageText('mod_registerinterest_removemsg', 'registerinterest');
             return $heading . $this->objLink->show();
         } else {
