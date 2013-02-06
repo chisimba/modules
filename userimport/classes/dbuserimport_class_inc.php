@@ -106,7 +106,8 @@ class dbuserimport extends dbTable
                 // Don't delete a user that wasn't added by the userimport method!
                 // Or if in more than one context!
                 $userPK=$this->objUser->PKId($line['userid']);
-                if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='userimport')&&
+                if (((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='userimport')||
+                    (trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='import'))&&
                     ( count($this->objContextGroups->userContexts($line['userid'],array('contextcode')))<2) ){
                     //$this->objUserAdmin->setUserDelete($line['userid']);
                     $this->objUserAdmin->batchProcessOption(array($userPK),'delete');

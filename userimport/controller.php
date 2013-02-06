@@ -63,11 +63,33 @@ class userimport extends controller
         }
         $this->result='';
 
+        // new function added for cron-based imports
+        $this->noLoginNeeded=$this->checkCronImport();
+
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
         $this->objLog->log();
     }
+
+    /**
+    * Method to check for cron import
+    */
+    public function checkCronImport()
+    {
+        $cron=$this->getParam('cronimport','0');
+        if ($cron=='1'){
+            $pass=$this->getParam('importpass','0');
+            if ($this->objConfig->getValue('autoimport','userimport') != sha1($pass)) { 
+                return FALSE; 
+            }
+            $this->contextCode=$this->getParam('classmodule','lobby');
+            return $this->objDBContext->valueExists('contextcode', $this->contextCode);
+        } else {
+            return FALSE;
+        }
+    }
+
 
     /**
     * This is the main method in the class
@@ -175,6 +197,7 @@ class userimport extends controller
     */
     function requiresLogin() // overides that in parent class
     {
+        if ($this->noLoginNeeded){ return FALSE; }
         return TRUE;
     }
 
@@ -188,6 +211,7 @@ class userimport extends controller
         if (($this->objUser->isAdmin())||($this->objUser->isContextLecturer())){
             return TRUE;
         }
+        if ($this->noLoginNeeded){ return TRUE; }
         // default option at the end - neither Admin nor Lecturer-in-context
         return FALSE;
     }
