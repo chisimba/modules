@@ -94,9 +94,9 @@ class riops extends object {
         //the hidden input
         $objHidden = new hiddeninput(' ', ' ');
         if ($this->objUser->isAdmin()) {
-            $heading = new htmlheading('Enter interests below.', 4);
+            $heading = new htmlheading($this->objLanguage->languageText('mod_registerinterest_enterinterest','registerinterest'), 4);
         } else {
-            $heading = new htmlheading('Select interests below.', 4);
+            $heading = new htmlheading($this->objLanguage->languageText('mod_registerinterest_selectinterest','registerinterest'), 4);
         }
         //the heading ID
         $heading->id = 'indicatorHeader';
