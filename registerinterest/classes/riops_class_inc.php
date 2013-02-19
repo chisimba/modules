@@ -465,7 +465,7 @@ class riops extends object {
             }
             //s$tempDoc->saveHTML();
             $optOutLink = $this->getObject('link', 'htmlelements');
-            $optOutLink->link = "Click here to opt-out";
+            $optOutLink->link = $this->objLanguage->languageText("phrase_optoutlink","system");
             //loop through the available email addresses
             foreach ($this->objDB->getAll() as $data) {
                 /**

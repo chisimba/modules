@@ -259,14 +259,12 @@ class registerinterest extends controller {
     private function __optout() {
         $confirmation = $this->getParam('remove', NULL);
         $id = $this->getParam('id', NULL);
-        /*
-          switch ($confirmation) {
-          case :
-          $confirmation = TRUE;
-          break;
-          } */
-
-        if ($confirmation == strtolower('true') && strlen($id) == 32) {
+        //convert to liwerstring
+        if(!empty($confirmation)){
+            $confirmation = strtolower($confirmation);
+        }
+//        Remove the record on user confirmation
+        if (strtolower($confirmation) == 'true') {
             $this->objDB->remove($id);
             header('location: index.php');
         }

@@ -37,7 +37,7 @@ class block_optout extends object {
 
     function buildform() {
         $id = $this->getParam('id', NULL);
-        if (!empty($id) && strlen($id) == 32) {
+        if (!empty($id)) {
             $this->objLink = $this->getObject('link', 'htmlelements');
             //get the ID for displaying the full name
             $values = $this->objDb->getRow('id',$id);
