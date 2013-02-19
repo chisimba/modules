@@ -69,7 +69,7 @@ class block_registerinterestright extends object
      */
     public function init() 
     {
-        $this->title = "Right block sample";
+        $this->title = "";
     }
     /**
      * Standard block show method.
@@ -78,7 +78,7 @@ class block_registerinterestright extends object
      */
     public function show() 
     {
-        return "This is a demonstration right block.";
+        return "";
     }
 }
 ?>
