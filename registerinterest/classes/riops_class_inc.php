@@ -390,7 +390,7 @@ class riops extends object {
      */
     public function sendMessage($subject = NULL, &$message, $userId) {
         if (!empty($message)) {
-            $templateLocation = $this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
+            //$templateLocation = $this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
             //$messageParagraph->appendChild($this->domDoc->createTextNode($message));
             //$this->domDoc->loadHTML($message);
             //get the message paragraph tag
@@ -407,61 +407,61 @@ class riops extends object {
                 $subject = $this->objLanguage->languageText('phrase_nosubject', 'system');
             }
             //load the message
-            $file = file_get_contents($this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/mailtemplate.html');
-            $template = file_get_contents($templateLocation . 'mailtemplate.html');
-            $this->domDoc->loadHTML($message);
+            //$file = file_get_contents($this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/mailtemplate.html');
+            //$template = file_get_contents($templateLocation . 'mailtemplate.html');
+            //$this->domDoc->loadHTML($message);
             //get the image tags/elements
-            $img = $this->domDoc->getElementsByTagName('img');
+            //$img = $this->domDoc->getElementsByTagName('img');
             //$messageParagraph = $this->domDoc->getElementById('messageDevider');
             //check for the thumbnais folder only when an image is uploaded
-            if ($img->length >= 1) {
+            //if ($img->length >= 1) {
                 //check if the thumbnail folder exists, if not create one
-                $this->objThumbnails->checkThumbnailFolder();
+              //  $this->objThumbnails->checkThumbnailFolder();
                 //get user files
-                $usrFiles = $this->objDBfile->getUserFiles($userId);
+              //  $usrFiles = $this->objDBfile->getUserFiles($userId);
                 //loop through the the image tags
-                foreach ($img as $image) {
+                //foreach ($img as $image) {
                     //loop through the files
-                    foreach ($usrFiles as $file) {
+                   // foreach ($usrFiles as $file) {
                         //get the file path
-                        $address = $image->getAttribute('src');
+                      //  $address = $image->getAttribute('src');
                         //if the file exists, get the thumbnail
-                        if ($file['path'] == str_replace($this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath(), '', $address)) {
-                            $fileInfo = $this->objDBfile->getFileDetailsFromPath($file['path']);
-                            $thumbnail = $this->objThumbnails->getThumbnail($fileInfo['id'], NULL, NULL, 'medium');
-                            $image->setAttribute('src', $this->objAltConfig->getSiteRoot() . $thumbnail);
-                            $image->removeAttribute('style');
-                        }
-                    }
-                }
-            }
+                       // if ($file['path'] == str_replace($this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath(), '', $address)) {
+                          //  $fileInfo = $this->objDBfile->getFileDetailsFromPath($file['path']);
+                            //$thumbnail = $this->objThumbnails->getThumbnail($fileInfo['id'], NULL, NULL, 'medium');
+                            //$image->setAttribute('src', $this->objAltConfig->getSiteRoot() . $thumbnail);
+                            //$image->removeAttribute('style');
+                        //}
+                    //}
+                //}
+            //}
             /**
              * @TODO: replace me as soon as you find a cleaner way  of doing this
              */
-            $this->domDoc->saveHTML();
+            //$this->domDoc->saveHTML();
             //create a temporary document to store the emai message template
-            $tempDoc = new DOMDocument('utf-8');
+            //$tempDoc = new DOMDocument('utf-8');
             //load the e-mail  template to the temporary doc
-            $tempDoc->loadHTML($template);
+            //$tempDoc->loadHTML($template);
             //get the banner image logo
-            $bannerLogo = $tempDoc->getElementById('bannerimage');
+            //$bannerLogo = $tempDoc->getElementById('bannerimage');
             //set the src property to the image in the user directory
-            $bannerLogo->setAttribute('src', $templateLocation . 'banner-logo.png');
+           // $bannerLogo->setAttribute('src', $templateLocation . 'banner-logo.png');
             //save the HTM L in the temporary DOMDocument
-            $tempDoc->saveHTML();
+           // $tempDoc->saveHTML();
             //the message Div to contain the message
-            $messageDevider = $tempDoc->getElementById('messageDevider');
+            //$messageDevider = $tempDoc->getElementById('messageDevider');
             //value to be used within the repetetive structure
             $index = 0;
-            foreach ($this->domDoc->getElementsByTagName('p') as $value) {
+            //foreach ($this->domDoc->getElementsByTagName('p') as $value) {
                 //get the element's child by index
-                $importedValue = $this->domDoc->getElementsByTagName('p')->item($index);
+           //     $importedValue = $this->domDoc->getElementsByTagName('p')->item($index);
                 //import the child into the message paragraph tag
-                $messageParagraph = $tempDoc->importNode($importedValue, TRUE);
+           //     $messageParagraph = $tempDoc->importNode($importedValue, TRUE);
                 //append the message paragraph into the message devider
-                $messageDevider->appendChild($messageParagraph);
+           //     $messageDevider->appendChild($messageParagraph);
                 //increase the index value by one, for the next child node
-                $index++;
+           //     $index++;
             }
             //s$tempDoc->saveHTML();
             $optOutLink = $this->getObject('link', 'htmlelements');
@@ -472,8 +472,9 @@ class riops extends object {
                  * @TODO: change the link to developer site
                  */
                 //set href attribute to opt-out the user using the ID
-                $optOutLink->href = "http://localhost/ch/index.php?module=registerinterest&action=optout&id={$data['id']}";
-                $message = $tempDoc->saveHTML();
+                $optOutLink->href = $this->uri(array('action'=>'optout','id'=>$data['id']), "registerinterest");
+                //$message = $tempDoc->saveHTML();
+                $message = $message.$optOutLink->show();
                 //set the HTML disabled message
                 $plainMessage = strip_tags(str_replace('<br />', '\r\n', $message));
                 $objMail->setValue('to', $data['email']);
@@ -488,9 +489,9 @@ class riops extends object {
                     $retValue = FALSE;
                 }
             }
-        } else {
+        //} else {
             $retValue = FALSE;
-        }
+        //}
         return TRUE;
     }
 
