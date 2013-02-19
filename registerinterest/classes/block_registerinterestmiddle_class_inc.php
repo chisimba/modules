@@ -54,6 +54,14 @@ if (!
 class block_registerinterestmiddle extends object {
 
     /**
+     * The language object
+     * 
+     * @var object
+     * @access public
+     */
+    var $objLanguage;
+    
+    /**
      * The title of the block
      *
      * @var    object
@@ -62,6 +70,13 @@ class block_registerinterestmiddle extends object {
     public $title;
 
     /**
+     * The config object
+     * 
+     * @access public
+     */
+    var $objConfig;
+    
+    /**
      * Standard init function
      *
      * Create title
@@ -69,8 +84,10 @@ class block_registerinterestmiddle extends object {
      * @return NULL
      */
     public function init() {
+        $this->objConfig = $this->getObject("altconfig","config");
+        $this->objLanguage = $this->getObject("language","language");
         $this->wrapStr = FALSE;
-        $this->title = "People who have registered interest";
+        $this->title = $this->objLanguage->languageText("mod_registerinterest_registered","registerinterest");
     }
 
     /**
