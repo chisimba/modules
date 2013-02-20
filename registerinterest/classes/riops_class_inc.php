@@ -465,7 +465,8 @@ class riops extends object {
             }
             //s$tempDoc->saveHTML();
             $optOutLink = $this->getObject('link', 'htmlelements');
-            $optOutLink->link = $this->objLanguage->languageText("phrase_optoutlink","system");
+            $label = $this->getObject("label","htmlelements");
+            $label->setLabel($this->objLanguage->languageText("mod_registerinterest_optoutconfirm","registerinterest"));
             //loop through the available email addresses
             foreach ($this->objDB->getAll() as $data) {
                 /**
@@ -473,16 +474,57 @@ class riops extends object {
                  */
                 //set href attribute to opt-out the user using the ID
                 $optOutLink->href = $this->uri(array('action'=>'optout','id'=>$data['id']), "registerinterest");
+                $optOutLink->link = $this->objLanguage->languageText("phrase_optoutlink","system");
                 //$message = $tempDoc->saveHTML();
-                $message = $message.$optOutLink->show();
+                $message = $message;
+                //get the message header
+                $header = $this->objLanguage->languageText('mod_registerinterest_messageheader','registerinterest');
+                //replace placeholder values with actual values
+                $header = str_replace('{username}', $data['fullname'], $header);
+                //the html message
+                $htmlMessage = "\n\r
+                    <table style='width: 100%;'>
+                    <thead >
+                    <tr  >
+                    <td style='text-align: center' >
+                    <img src='http://thumbzup.com/img/logo.png' />
+                    </td>
+                    </tr>
+                    <tr style='background: #2C3173;' >
+                    <td ><br /></td>
+                    </tr>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td>
+                    <font size='2' >
+                {$header}, \n\r<br /><br />
+                    {$message}
+                    </font>
+                    </td>
+                    </tr>
+                    <tr style='background: #e94c15;' >
+                    <td >
+                    <br />
+                    </td>
+                    </tr>
+                    <tr > \n\r <br />
+                    <font size='1' >
+                    ".$label->show()." \n\r <br />
+                    ".$optOutLink->show()."    
+                    </font>
+                    </tr>
+                    </tbody>
+                    </table>";
                 //set the HTML disabled message
-                $plainMessage = strip_tags(str_replace('<br />', '\r\n', $message));
+                $plainMessage = strip_tags($message);
                 $objMail->setValue('to', $data['email']);
                 $objMail->setValue('from', $from);
                 $objMail->setValue('fromName', $fromName);
                 $objMail->setValue('subject', $subject);
                 $objMail->setValue('body', $plainMessage);
-                $objMail->setValue('htmlbody', $message);
+                $objMail->setValue('htmlbody', $htmlMessage);
                 if ($objMail->send()) {
                     $retValue = TRUE;
                 } else {
