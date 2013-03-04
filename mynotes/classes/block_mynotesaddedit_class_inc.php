@@ -70,10 +70,6 @@ class block_mynotesaddedit extends object
      * @return NULL
      */
     public function init() {
-        // Load the functions specific to this page.
-        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/jquery.form.js'));
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/addedit.js'));
-        
         $this->objNoteOps = $this->getObject('noteops', 'mynotes');
         // Load language class.
         $this->objLanguage = $this->getObject('language', 'language');
@@ -93,6 +89,10 @@ class block_mynotesaddedit extends object
      * @return string $this->display block rendered
      */
     public function show() {
+        // Load the functions specific to this page.
+        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/jquery.form.js'));
+        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/addedit.js'));
+        
         return $this->objNoteOps->addEditNote($this->mode);
     }
 }
