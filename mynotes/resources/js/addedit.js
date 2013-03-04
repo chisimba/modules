@@ -74,7 +74,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
     var myId = jQuery("#input_id").val();
     
     jQuery.ajax({
-        type: "GET",
+        type: "POST",
         url: myUrl,
         data: {
             title: myTitle, 
