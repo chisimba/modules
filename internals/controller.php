@@ -148,6 +148,8 @@ class internals extends controller {
                     'status'=>$requestStatus,
                     'comments'=>$comments
                 );
+                //html to pdf test
+                
                 $objMail = & $this->getObject('mailer', 'mail');
                 //pdate the database
                 $objDB->update('id',$id,$values,'tbl_requests');
