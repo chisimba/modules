@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-
-
 <internals>
         <userid>
-            <annual></annual>
-            <sick></sick>
-            <martenity></martenity>
-            <familyres></familyres>
+            <leave>
+                <id>
+                    01ann
+                </id>
+                <name>
+                    Annual
+                </name>
+                <numberofdays>
+                    21
+                </numberofdays>
+            </leave>
         </userid>
 </internals>

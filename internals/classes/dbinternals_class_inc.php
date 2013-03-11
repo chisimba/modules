@@ -46,6 +46,10 @@ class dbinternals extends dbTable {
         return $requests;
     }
 
+    /**
+     * @access public
+     * @return array list of the leave types
+     */
     public function getLeaveList() {
         parent::init('tbl_leaves');
         $list = $this->getAll();
