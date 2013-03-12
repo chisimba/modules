@@ -121,28 +121,16 @@ class internals extends controller {
         $objUser = $this->getObject('user', 'security');
         //check if user is logged in
         if ($objUser->isLoggedIn()) {
-            //get the record file
-            $recordFile = file_get_contents($objConfig->getModulePath() . 'internals/sql/records.xml');
-            $domDoc->loadXML($recordFile);
-            $records = new SimpleXMLElement($recordFile);
-            //get the leaves file
-            $leaves = file_get_contents($objConfig->getModulePath() . 'internals/sql/internals_leaves.xml');
-            $domDoc->loadXML($leaves);
-            $leaveValues = new SimpleXMLElement($leaves);
-            
-            
             //instantiate the database object
             $dbObject = $this->getObject('dbinternals', 'internals');
-            //add the user to the internals module
-//            $dbObject->addUser($userId);
+            //call the function to add the user to the internals table
+            return $dbObject->addUser($userId);
         }
-        //redirect to the module home page
-        print_r($recordFile);//header('location: index.php?module=internals');
     }
-    
-    public function __removeUser(){
-        $userId = $this->getParam('id',NULL);
-        $objUser = $this->getObject('user','security');
+
+    public function __removeUser() {
+        $userId = $this->getParam('id', NULL);
+        $objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -237,7 +225,5 @@ class internals extends controller {
                 break;
         }
     }
-
 }
-
 ?>
