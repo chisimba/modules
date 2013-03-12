@@ -54,19 +54,19 @@ class dbinternals extends dbTable {
         parent::init('tbl_leaves');
         $list = $this->getAll();
         if (count($list) <= 0) {
-        $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
-        $actFile = file_get_contents($xmlFile);
-        $this->domDoc->loadXML($actFile);
-        $leaves = new SimpleXMLElement($actFile);
-        $loopTimes = count($leaves);
-        for($index = 0;$index< $loopTimes;$index++){
-            $arrayValues = array(
-                'id'=>$leaves->leave[$index]->id,
-                'name'=>$leaves->leave[$index]->name,
-                'numberofdays'=>$leaves->leave[$index]->daysdue
-            );
-            $this->insert($arrayValues);
-        }
+            $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
+            $actFile = file_get_contents($xmlFile);
+            $this->domDoc->loadXML($actFile);
+            $leaves = new SimpleXMLElement($actFile);
+            $loopTimes = count($leaves);
+            for ($index = 0; $index < $loopTimes; $index++) {
+                $arrayValues = array(
+                    'id' => $leaves->leave[$index]->id,
+                    'name' => $leaves->leave[$index]->name,
+                    'numberofdays' => $leaves->leave[$index]->daysdue
+                );
+                $this->insert($arrayValues);
+            }
             return $list;
         } else {
             return $list;
@@ -95,13 +95,50 @@ class dbinternals extends dbTable {
         );
         return $this->insert($data, 'tbl_requests');
     }
+    
+    public function getDaysLeft($leaveId,$userId){
+        $this->_tableName = 'tbl_leaverecords';
+        $stateMent = "WHERE id = '{$leaveId}' AND userid = '{$userId}'";
+        return count($this->getAll($stateMent));
+    }
 
+    /**
+     * Method to add the user to the leave mnagement database
+     * 
+     * @access public
+     * @param string $userId The users primary key from the user's table in the system
+     */
     public function addUser($userId) {
-        $value = array(
-            'id' => $userId,
-            'isinternalsadmin' => 'false'
-        );
-        return $this->insert($value);
+        if ($this->valueExists('id', $userId)) {
+            //prevent duplication
+            header('location:index.php?module=internals');
+        } else {
+            $values = array(
+                'id' => $userId,
+                'isinternalsadmin' => 'false'
+            );
+            //inser the values to the database
+            $this->insert($values);
+            //change the table
+            $this->_tableName = 'tbl_leaverecords';
+            //get the list of available leave types
+            $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
+            $actFile = file_get_contents($xmlFile);
+            $this->domDoc->loadXML($actFile);
+            $leaves = new SimpleXMLElement($actFile);
+            $loopTimes = count($leaves);
+            for ($index = 0; $index < $loopTimes; $index++) {
+                $daysDue = $leaves->leave[$index]->daysdue;
+                $daysDue = stripslashes($daysDue);
+                $daysDue = strip_tags($daysDue);
+                $arrayValues = array(
+                    'id' => $leaves->leave[$index]->id,
+                    'userid' => $userId,
+                    'daysleft' => $daysDue
+                );
+                $this->insert($arrayValues);
+            }
+        }
     }
 
     public function getAvailabelDays($userId) {
@@ -138,12 +175,12 @@ class dbinternals extends dbTable {
             $test .= $leave;
         }
         $loopTimes = count($leaves);
-        for($index = 0;$index< $loopTimes;$index++){
-            echo "<br />".$leaves->leave[$index]->id;
+        for ($index = 0; $index < $loopTimes; $index++) {
+            echo "<br />" . $leaves->leave[$index]->id;
             $arrayValues = array(
-                'id'=>$leaves->leave[$index]->id,
-                'name'=>$leaves->leave[$index]->name,
-                'numberofdays'=>$leaves->leave[$index]->daysdue
+                'id' => $leaves->leave[$index]->id,
+                'name' => $leaves->leave[$index]->name,
+                'numberofdays' => $leaves->leave[$index]->daysdue
             );
             $this->insert($arrayValues);
         }

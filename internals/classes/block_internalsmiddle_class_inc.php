@@ -43,7 +43,6 @@ class block_internalsmiddle extends Object {
         $btnSave = $this->getObject('button', 'htmlelements');
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
         $leaves = $this->dbInternals->getLeaveList();
-        $days = array();
         $labels = $this->getObject('label', 'htmlelements');
         $labels->labelValue = $this->objLanguage->languageText('phrase_selectleave', 'system');
         $tblLeave->startHeaderRow();
@@ -68,6 +67,8 @@ class block_internalsmiddle extends Object {
             $tblLeave->startRow();
             $tblLeave->addCell('&nbsp;');
             $tblLeave->endRow();
+            $test = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
+            echo $test;
         }
         //start second row
         $tblLeave->startRow();
@@ -140,9 +141,7 @@ class block_internalsmiddle extends Object {
                 $label->labelValue = $Item['name'] . '<br />';
                 $form->addToForm($link->show());
                 $link->extra = "id='" . ($Item['id']);
-//                                $txtNumberOfDays->formAddTorf($l);
             }
-            //construct the leave application form
         } else {
             $label->labelValue = "<h1>{$this->objLanguage->languageText('mod_internals_noleave', 'internals')}</h1>";
             $form->addToForm($label->show());
