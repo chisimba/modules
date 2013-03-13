@@ -83,6 +83,14 @@ class dbinternals extends dbTable {
         return $leaveRow['id'];
     }
 
+    /**
+     * 
+     * @param string $userID The database primary key for the user
+     * @param string $leaveID The ID of the leave type the user applied for
+     * @param date $startDate The date the user wishes ;to start leave
+     * @param date $endDate The date the leave will expire
+     * @return boolean TRUE if the values were successfuly inserted to the database
+     */
     public function postRequest($userID, $leaveID, $startDate, $endDate) {
         $data = array(
             'id' => NULL,
@@ -96,10 +104,18 @@ class dbinternals extends dbTable {
         return $this->insert($data, 'tbl_requests');
     }
     
+    /**
+     * Method to return the number of available days for the user
+     * 
+     * @acess public
+     * @param string $leaveId The ID of the leave type the user applied for
+     * @param string $userId The database primary key for the user
+     * @return array The values retrieved from the database
+     */
     public function getDaysLeft($leaveId,$userId){
         $this->_tableName = 'tbl_leaverecords';
         $stateMent = "WHERE id = '{$leaveId}' AND userid = '{$userId}'";
-        return count($this->getAll($stateMent));
+        return $this->getAll($stateMent);
     }
 
     /**
@@ -137,10 +153,15 @@ class dbinternals extends dbTable {
                     'daysleft' => $daysDue
                 );
                 $this->insert($arrayValues);
+                header('location:index.php?module=internals');
             }
         }
     }
 
+    /**
+     * 
+     * @param type $userId
+     
     public function getAvailabelDays($userId) {
         $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
         $actFile = file_get_contents($xmlFile);

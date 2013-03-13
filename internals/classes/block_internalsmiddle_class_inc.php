@@ -60,15 +60,15 @@ class block_internalsmiddle extends Object {
             $tblLeave->startRow();
             //radio button for leavve types
             $rdLeaveTypes = new radio('');
+            $test = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
             $rdLeaveTypes->addOption($item['id'], $item['name']);
             $tblLeave->addCell($rdLeaveTypes->show());
             $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
+            $tblLeave->addCell($test[0]['daysleft'], NULL, NULL, 'center', NULL, NULL);
             //
             $tblLeave->startRow();
             $tblLeave->addCell('&nbsp;');
             $tblLeave->endRow();
-            $test = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
-            echo $test;
         }
         //start second row
         $tblLeave->startRow();
@@ -86,6 +86,14 @@ class block_internalsmiddle extends Object {
         $labels->labelValue = $this->objLanguage->languageText('phrase_startdate', 'system');
         $tblLeave->addCell($labels->show());
 //                $txtStartDate->name = "startdate";
+        /**
+         * Date-picker
+         * @TODO: Calculate the number of days
+         */
+        $datePicker = $this->getObject('datepicker','htmlelements');
+        /**
+         * @todo calculate the number of days
+         */
         $tblLeave->addCell("<input id='startdate' type='date' placeholder='dd/mm/yyyy' name='startdate' /><span id='start_date_error' class='error' >enter start date</span>");
         $tblLeave->endRow();
         //End row
@@ -263,6 +271,10 @@ class block_internalsmiddle extends Object {
         return $form->show();
     }
 
+    /**
+     * 
+     * @return string or object||String is returned if the user has not registered yet
+     */
     public function show() {
         $userId = $this->objUser->getUserId($this->objUser->userName());
         if ($this->dbInternals->valueExists('id', $userId, 'tbl_internals')) {

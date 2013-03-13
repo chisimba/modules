@@ -47,6 +47,11 @@ class internals extends controller {
         return "main_tpl.php";
     }
 
+    /**
+     * Method to push the request to the module administrator
+     *
+     *  @access private
+     */
     private function __pushRequest() {
         //get database object
         $objDB = $this->getObject('dbinternals', 'internals');
@@ -74,14 +79,11 @@ class internals extends controller {
      * action method
      * 
      * @access private
-     * @return string The dump template populated with the error message
+     * @return string Redirect to module home page
      * 
      */
     private function __actionError() {
-        $this->setVar('str', "<h3>"
-                . $this->objLanguage->languageText("phrase_unrecognizedaction")
-                . ": " . $action . "</h3>");
-        return 'dump_tpl.php';
+        return header('location:index.php?module=internals');
     }
 
     /**
