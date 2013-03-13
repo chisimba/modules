@@ -73,18 +73,30 @@ class dbinternals extends dbTable {
         }
     }
 
+    /**
+     * @access public
+     * @return string Name of the leave
+     */
     public function getLeaveName($id) {
         $leaveRow = $this->getRow('id', $id, 'tbl_leaves');
         return $leaveRow['name'];
     }
 
+    /**
+     * Method to return the leave ID using it's ID
+     * 
+     * @param string $leavename
+     * @return The ID of the leave
+     */
     public function getLeaveId($leavename) {
         $leaveRow = $this->getRow('name', $leavename, 'tbl_leaves');
         return $leaveRow['id'];
     }
 
     /**
+     * Method to send the request to the database and to the module administrator
      * 
+     * @access public
      * @param string $userID The database primary key for the user
      * @param string $leaveID The ID of the leave type the user applied for
      * @param date $startDate The date the user wishes ;to start leave
@@ -92,6 +104,8 @@ class dbinternals extends dbTable {
      * @return boolean TRUE if the values were successfuly inserted to the database
      */
     public function postRequest($userID, $leaveID, $startDate, $endDate) {
+        //create the holidays array
+        
         $data = array(
             'id' => NULL,
             'userid' => $userID,

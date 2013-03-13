@@ -90,11 +90,13 @@ class block_internalsmiddle extends Object {
          * Date-picker
          * @TODO: Calculate the number of days
          */
-        $datePicker = $this->getObject('datepicker','htmlelements');
+        $startDate = $this->getObject('datepickajax','popupcalendar');
+        $startDate->buildCal();
+        $startDate->showCal();
         /**
          * @todo calculate the number of days
          */
-        $tblLeave->addCell("<input id='startdate' type='date' placeholder='dd/mm/yyyy' name='startdate' /><span id='start_date_error' class='error' >enter start date</span>");
+        $tblLeave->addCell($startDate->show('startdate','no','yes')."<span id='start_date_error' class='error' >enter start date</span>");
         $tblLeave->endRow();
         //End row
         //Start row
@@ -107,7 +109,10 @@ class block_internalsmiddle extends Object {
         //end date
         $labels->labelValue = $this->objLanguage->languageText('phrase_enddate', 'system');
         $tblLeave->addCell($labels->show());
-        $tblLeave->addCell("<input id='enddate' type='date' placeholder='dd/mm/yyyy' name='enddate' /><span id='end_date_error' class='error' >enter end date</span>");
+        $endDate = $this->getObject('datepickajax','popupcalendar');
+        $endDate->buildCal();
+        $endDate->showCal();
+        $tblLeave->addCell($endDate->show('enddate','no','yes')."<span id='end_date_error' class='error' >enter end date</span>");
         $tblLeave->endRow();
         //end row
         //Start row
