@@ -90,13 +90,13 @@ class block_internalsmiddle extends Object {
          * Date-picker
          * @TODO: Calculate the number of days
          */
-        $startDate = $this->getObject('datepickajax','popupcalendar');
+        $startDate = $this->getObject('datepickajax', 'popupcalendar');
         $startDate->buildCal();
         $startDate->showCal();
         /**
          * @todo calculate the number of days
          */
-        $tblLeave->addCell($startDate->show('startdate','no','yes')."<span id='start_date_error' class='error' >enter start date</span>");
+        $tblLeave->addCell($startDate->show('startdate', 'no', 'yes') . "<span id='start_date_error' class='error' >enter start date</span>");
         $tblLeave->endRow();
         //End row
         //Start row
@@ -109,10 +109,10 @@ class block_internalsmiddle extends Object {
         //end date
         $labels->labelValue = $this->objLanguage->languageText('phrase_enddate', 'system');
         $tblLeave->addCell($labels->show());
-        $endDate = $this->getObject('datepickajax','popupcalendar');
+        $endDate = $this->getObject('datepickajax', 'popupcalendar');
         $endDate->buildCal();
         $endDate->showCal();
-        $tblLeave->addCell($endDate->show('enddate','no','yes')."<span id='end_date_error' class='error' >enter end date</span>");
+        $tblLeave->addCell($endDate->show('enddate', 'no', 'yes') . "<span id='end_date_error' class='error' >enter end date</span>");
         $tblLeave->endRow();
         //end row
         //Start row
@@ -256,7 +256,144 @@ class block_internalsmiddle extends Object {
             }
             return $form->show() . $this->getjavascriptFile('internlsHelper.js', 'internals');
         } else {
+            $days = 13;
+            $startDate = '2013-03-14';
+            $endDate = '2013-03-28';
+            require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
+            $pdf = new TCPDF();
+            $html = "
+<div>
+<h1 align='center' >Leave Application Form</h1><br/>
+<table width='100%'>
+<thead>
+</thead>
+<tbody>
+<tr>
+<td >
+<b>Name:</b> <u>Monwabisi Sifumba</u>
+</td>
+<td>
+<b>Date:</b> <u>2013-03-04</u>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<b>Position:</b>
+<u>Web Developer</u>
+</td>
+</tr>
+</tbody>
+</table>
+<br/>
+<table>
+<tbody>
+<tr>
+<td>
+Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</b> to <b>{$endDate}</b> inclusive.
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<br/><br/>
+<tbody>
+<tr>
+<td>
+        Annual leave
+</td>
+<td>
+        Public Holiday
+</td>
+</tr>
+<tr>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+        Compassionate leave
+</td>
+<td>
+        Absent without pay
+</td>
+</tr>
+<tr>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+        Maternity
+</td>
+<td>
+        Others, please specify
+</td>
+</tr>
+</tbody>
+</table>
+<br/>
+<table border='1'>
+<thead>
+<tr>
+<td border='1'>
+No. of Days available
+</td>
+<td>
+No. of Days leave taken
+</td>
+<td>
+No. of Days leave balance
+</td>
+</tr>
+</thead>
+</table>
+</div>";
+            $pdf->SetAuthor("Monwai");
+            $pdf->SetTitle("TCPDF Example 001");
+            $pdf->SetSubject("TCPDF Tutorial");
+            $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
+            $pdf->AddPage('');
+            $pdf->setImageScale(5);
+            $pdf->writeHTML($html);
+//            $pageHeader = "<h1>LeaveApplication Form</h1>";
+            $left_column = "<b>Name: </b>Monwabisi Sifumba";
+            $right_column = "<b>Date:</b> 2013-03-14";
+            $first_column_width = 145;
+            $second_column_width = 75;
+// get current vertical position
+//            $current_y_position = $pdf->getY();
+// write the first column
+//            $pdf->writeHTMLCell($first_column_width, 0, 0, 0, $left_column, 0, 0, 0, true);
+//$pdf->CheckBox('newsletter', 5, true);
+// write the second column
+//            $pdf->writeHTMLCell($second_column_width, 0, 0, 0, $right_column, 0, 1, 0, true);
+// reset pointer to the last page
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/Untitled.png", 12, 73, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 11, 84, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 73, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 84, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 11, 95, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 95, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            
+            $pdf->lastPage();
+//            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
+            $pdf->Output();
+            $pdf->Output();
+
+
+            $objMail = $this->getObject('mailer', 'mail');
+            $objMail->setValue('to', "wsifumba@gmail.com");
+            $objMail->setValue('from', 'noreply@hermes');
+            $objMail->setValue('fromName', 'Monwabisi');
+            $objMail->setValue('subject', 'Leaves appliction');
+//            $objMail->setValue('body', $pdf->Output("example_001.pdf", "I"));
+//            $objMail->setValue('htmlbody', $pdf->Output("example_001.pdf", "I"));
             $form->addToForm("<h2>There are no requests pennding</h2>");
+//            $objMail->send();
             return $form->show();
         }
     }

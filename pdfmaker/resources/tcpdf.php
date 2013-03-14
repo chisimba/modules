@@ -7510,7 +7510,7 @@ if (!class_exists('TCPDF')) {
                                                                         $this->_out('>>');
                                                                         $this->_out('endobj');
                                                                     }
-                                                                    /*
+                                                                    /**
                                                                     * Convert color to javascript color.
                                                                     * @param string $color color name or #RRGGBB
                                                                     * @access protected
@@ -7541,7 +7541,7 @@ if (!class_exists('TCPDF')) {
                                                                         }
                                                                         return 'color.' . $color;
                                                                     }
-                                                                    /*
+                                                                    /**
                                                                     * Adds a javascript form field.
                                                                     * @param string $type field type
                                                                     * @param string $name field name
@@ -7622,7 +7622,7 @@ if (!class_exists('TCPDF')) {
                                                                         }
                                                                         $this->javascript.= "f" . $name . ".setItems([" . substr($s, 0, -1) . "]);\n";
                                                                     }
-                                                                    /*
+                                                                    /**
                                                                     * Creates a Combo-box field
                                                                     * @param string $name field name
                                                                     * @param int $w width

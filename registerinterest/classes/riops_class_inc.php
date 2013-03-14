@@ -389,10 +389,12 @@ class riops extends object {
      * @return boolean TRUE on success|else FALSE
      */
     public function sendMessage($subject = NULL, &$message, $userId) {
+        $domDoc = new DOMDocument('utf-8');
         if (!empty($message)) {
-            //$templateLocation = $this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
-            //$messageParagraph->appendChild($this->domDoc->createTextNode($message));
-            //$this->domDoc->loadHTML($message);
+            $templateLocation = $this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
+            $messageParagraph = $domDoc->createElement('p');
+            //$messageParagraph->appendChild($domDoc->createTextNode($message));
+            $domDoc->loadHTML($message);
             //get the message paragraph tag
             //create opt-out link
             //$optOutLink = $this->getObject('link', 'htmlelements');
@@ -525,7 +527,11 @@ class riops extends object {
                 $objMail->setValue('subject', $subject);
                 $objMail->setValue('body', $plainMessage);
                 $objMail->setValue('htmlbody', $htmlMessage);
-                if ($objMail->send()) {
+                /**
+                 * @todo Remove me when tesating is finished
+                 */
+                $a= 1;
+                if (/*$objMail->send()*/$a == 1) {
                     $retValue = TRUE;
                 } else {
                     $retValue = FALSE;
@@ -534,6 +540,13 @@ class riops extends object {
         //} else {
             $retValue = FALSE;
         //}
+            $domDoc->loadHTML(file_get_contents($templateLocation.'mailtemplate.html'));
+            $elms = $domDoc->getElementsByTagName('table');
+            foreach ($elms as $el){
+                $val = $domDoc->saveHTML($el);
+                echo $val;
+            }
+            echo $domDoc->saveHTML();
         return TRUE;
     }
 
