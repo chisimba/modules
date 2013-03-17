@@ -42,15 +42,15 @@ jQuery('#btnSave').die('click').live('click', function() {
 jQuery('#btnSaveLeave').die('click').live('click', function() {
     var leavename = jQuery('#txtSaveLeave').val();
     var numberofdays = jQuery('#txtNumDays').val();
-    if (numberofdays.length >= 1) {
-        if (leavename.length >= 1) {
+    if (leavename.length >= 1) {
+        if (numberofdays.length >= 1) {
             var leave_info = "leavename="+leavename+"&numberofdays="+numberofdays;
             jQuery.ajax({
                 url: 'index.php?module=internals&action=addLeavetype',
                 type: 'post',
                 data: leave_info,
                 success: function() {
-                    alert('Done')
+                    alert(leave_info)
                 }
             });
         }else{

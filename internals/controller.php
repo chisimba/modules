@@ -177,12 +177,13 @@ class internals extends controller {
         return $objMail->send();
     }
     
-    private function addLeavetype(){
+    public function __addLeavetype(){
         $objDB = $this->getObject('dbinternals','internals');
-        $leaveName = $this->getParam('leavename',NULL);
+        $leaveName = $this->getParam('leavename');
         $numberOfDays = $this->getParam('numberofdays');
-        $objDB->addLeaveType($leaveName,$numberOfDays);
-        header('location:index.php');
+//        $objDB->addLeaveType($leaveName,$numberOfDays);
+        echo $this->getParam('numberofdays');
+//        header('location:index.php');
     }
 
     /**

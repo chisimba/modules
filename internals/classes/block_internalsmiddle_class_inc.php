@@ -33,7 +33,7 @@ class block_internalsmiddle extends Object {
 
     /**
      * The function to return the form for leave application
-     * 
+     * private
      * @access public
      * @return object
      */
@@ -222,7 +222,7 @@ class block_internalsmiddle extends Object {
         //accept link
         $acceptLink = new link('#');
         $acceptLink->cssClass = 'acceptLink';
-        $acceptLink->link = $this->objLanguage->languageText('phrase_approve','system');
+        $acceptLink->link = $this->objLanguage->languageText('word_approve','system');
         //form to contain all controlls
         $form = new form('frmAdminRequests');
         $form->name = "frmAdminRequests";
