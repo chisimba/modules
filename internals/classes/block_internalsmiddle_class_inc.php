@@ -40,6 +40,7 @@ class block_internalsmiddle extends Object {
     public function biuldAppForm() {
         //leave application form
         $frmLeave = new form('frmLeave');
+        $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply','system')}</h2>");
         $btnSave = $this->getObject('button', 'htmlelements');
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
         $leaves = $this->dbInternals->getLeaveList();
@@ -55,6 +56,7 @@ class block_internalsmiddle extends Object {
         $tblLeave->startRow();
         $tblLeave->addCell('&nbsp;');
         $tblLeave->endRow();
+        $index = 0;
         //populate the dropdown list with the values from the database
         foreach ($leaves as $item) {
             $tblLeave->startRow();
@@ -65,10 +67,10 @@ class block_internalsmiddle extends Object {
             $tblLeave->addCell($rdLeaveTypes->show());
             $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
             $tblLeave->addCell($test[0]['daysleft'], NULL, NULL, 'center', NULL, NULL);
-            //
             $tblLeave->startRow();
             $tblLeave->addCell('&nbsp;');
             $tblLeave->endRow();
+            $index++;
         }
         //start second row
         $tblLeave->startRow();
@@ -96,7 +98,7 @@ class block_internalsmiddle extends Object {
         /**
          * @todo calculate the number of days
          */
-        $tblLeave->addCell($startDate->show('startdate', 'no', 'yes') . "<span id='start_date_error' class='error' >enter start date</span>");
+        $tblLeave->addCell($startDate->show('startdate', 'no', 'yes') . "<span id='start_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterstartdate','system')}</span>");
         $tblLeave->endRow();
         //End row
         //Start row
@@ -112,7 +114,7 @@ class block_internalsmiddle extends Object {
         $endDate = $this->getObject('datepickajax', 'popupcalendar');
         $endDate->buildCal();
         $endDate->showCal();
-        $tblLeave->addCell($endDate->show('enddate', 'no', 'yes') . "<span id='end_date_error' class='error' >enter end date</span>");
+        $tblLeave->addCell($endDate->show('enddate', 'no', 'yes') . "<span id='end_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterenddate','system')}</span>");
         $tblLeave->endRow();
         //end row
         //Start row
@@ -180,13 +182,14 @@ class block_internalsmiddle extends Object {
         $btnSave->name = "btnSaveLeave";
         $btnSave->cssId = "btnSaveLeave";
         $btnSave->value = $this->objLanguage->languageText('word_save', 'system');
-        $frmAddLeave = new form();
+        $frmAddLeave = new form('frmAddLeave');
         $frmAddLeave->name = "frmAddLeave";
         $frmAddLeave->cssId = "frmAddLeave";
-        $tblLayout = $this->getObject('htmltable', 'htmlelements');
+        $frmAddLeave->addToForm('<h2>Add leave types</h2>');
+        $tblLayout = new htmltable();
         //Build the form
         $tblLayout->startRow();
-        $lblValues->labelValue = "Enter leave name:";
+        $lblValues->labelValue = "{$this->objLanguage->languageText('phrase_leavename','system')}";
         $tblLayout->addCell($lblValues->show());
         $tblLayout->addCell($txtLang->show());
         $tblLayout->endRow();
@@ -219,9 +222,9 @@ class block_internalsmiddle extends Object {
         //accept link
         $acceptLink = new link('#');
         $acceptLink->cssClass = 'acceptLink';
-        $acceptLink->link = 'Approve';
+        $acceptLink->link = $this->objLanguage->languageText('phrase_approve','system');
         //form to contain all controlls
-        $form = $this->getObject('form', 'htmlelements');
+        $form = new form('frmAdminRequests');
         $form->name = "frmAdminRequests";
         $form->cssId = "frmAdminRequests";
         $valuesArray = array();
@@ -235,7 +238,7 @@ class block_internalsmiddle extends Object {
                 $rejectLink->extra = "x-data={$value['userid']}";
                 //send comments link, in case of rejected requests
                 $sendLink = new link('#');
-                $sendLink->link = "Send";
+                $sendLink->link = "{$this->objLanguage->languageText('word_send','system')}";
                 $sendLink->cssId = $value['id'];
                 $sendLink->cssClass = "sendLink";
                 //comentary paragraph
@@ -262,8 +265,8 @@ class block_internalsmiddle extends Object {
             require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
             $pdf = new TCPDF();
             $html = "
-<div>
-<h1 align='center' >Leave Application Form</h1><br/>
+<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/>
 <table width='100%'>
 <thead>
 </thead>
@@ -282,7 +285,7 @@ class block_internalsmiddle extends Object {
 </tr>
 <tr>
 <td>
-<b>Position:</b>
+&nbsp;<b>Position:</b>
 <u>Web Developer</u>
 </td>
 </tr>
@@ -293,7 +296,7 @@ class block_internalsmiddle extends Object {
 <tbody>
 <tr>
 <td>
-Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</b> to <b>{$endDate}</b> inclusive.
+<div> Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</b> to <b>{$endDate}</b> inclusive.</div>
 </td>
 </tr>
 </tbody>
@@ -303,22 +306,10 @@ Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</
 <tbody>
 <tr>
 <td>
-        Annual leave
+            Annual leave
 </td>
 <td>
-        Public Holiday
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-        Compassionate leave
-</td>
-<td>
-        Absent without pay
+            Public Holiday
 </td>
 </tr>
 <tr>
@@ -327,15 +318,27 @@ Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</
 </tr>
 <tr>
 <td>
-        Maternity
+            Compassionate leave
 </td>
 <td>
-        Others, please specify
+            Absent without pay
+</td>
+</tr>
+<tr>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+            Maternity
+</td>
+<td>
+            Others, please specify
 </td>
 </tr>
 </tbody>
 </table>
-<br/>
+<br/><br/><br/>
 <table border='1'>
 <thead>
 <tr>
@@ -350,6 +353,19 @@ No. of Days leave balance
 </td>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td align='center'>
+21
+</td>
+<td align='center'>
+13
+</td>
+<td align='center'>
+8
+</td>
+</tr>
+</tbody>
 </table>
 </div>";
             $pdf->SetAuthor("Monwai");
@@ -358,12 +374,9 @@ No. of Days leave balance
             $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
             $pdf->AddPage('');
             $pdf->setImageScale(5);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/thumbzup-logo.jpg", 100, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
+//            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
             $pdf->writeHTML($html);
-//            $pageHeader = "<h1>LeaveApplication Form</h1>";
-            $left_column = "<b>Name: </b>Monwabisi Sifumba";
-            $right_column = "<b>Date:</b> 2013-03-14";
-            $first_column_width = 145;
-            $second_column_width = 75;
 // get current vertical position
 //            $current_y_position = $pdf->getY();
 // write the first column
@@ -372,18 +385,18 @@ No. of Days leave balance
 // write the second column
 //            $pdf->writeHTMLCell($second_column_width, 0, 0, 0, $right_column, 0, 1, 0, true);
 // reset pointer to the last page
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/Untitled.png", 12, 73, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 11, 84, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 73, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 84, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 11, 95, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath()."pdfmaker/resources/images/unchkd.png", 105, 95, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            
-            $pdf->lastPage();
-//            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
-            $pdf->Output();
-            $pdf->Output();
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
 
+//            $pdf->lastPage();
+//            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
+//            $pdf->Output();
+//            $pdf->Output();
 
             $objMail = $this->getObject('mailer', 'mail');
             $objMail->setValue('to', "wsifumba@gmail.com");
@@ -392,9 +405,9 @@ No. of Days leave balance
             $objMail->setValue('subject', 'Leaves appliction');
 //            $objMail->setValue('body', $pdf->Output("example_001.pdf", "I"));
 //            $objMail->setValue('htmlbody', $pdf->Output("example_001.pdf", "I"));
-            $form->addToForm("<h2>There are no requests pennding</h2>");
+//            $form->addToForm("<h2>{$this->objLanguage->languageText('phrase_norequests','system')}</h2>");
 //            $objMail->send();
-            return $form->show();
+            return $form->show().$this->addLeaveType();;
         }
     }
 
@@ -407,7 +420,7 @@ No. of Days leave balance
     public function addUsers($userId) {
         $form = new form();
         $link = new link();
-        $link->link = "Click here to register";
+        $link->link = $this->objLanguage->languageText('phrase_registerlink','system');
         $link->href = $this->uri(array('action' => 'adduser', 'id' => $this->objUser->getUserId($this->objUser->userName())), 'internals');
         $form->addToForm($link->show());
         return $form->show();
@@ -429,7 +442,7 @@ No. of Days leave balance
                 return $this->buildUserForm();
             }
         } else {
-            return "<h1>You are not registered yet</h1>" . $this->addUsers($userId);
+            return "<h1>{$this->objLanguage->languageText('phrase_notregistered','system')}</h1>" . $this->addUsers($userId);
         }
     }
 

@@ -2,7 +2,7 @@
     <leave>
         <id>01ann</id>
         <name>
-            Annual
+            Annual leave
         </name>
         <daysdue>
             21
@@ -13,7 +13,18 @@
             02sic
         </id>
         <name>
-            Sick
+            Sick leave
+        </name>
+        <daysdue>
+            3
+        </daysdue>
+    </leave>
+    <leave>
+        <id>
+            02ski
+        </id>
+        <name>
+            Sick leave
         </name>
         <daysdue>
             3

@@ -12,38 +12,31 @@
  */
 class block_internalsright extends Object {
 
-        //put your code here
+    //put your code here
 
-        var $objLanguage;
-        var $objUser;
-        var $objAltConfig;
-        var $objDBleaves;
+    var $objLanguage;
+    var $objUser;
+    var $objAltConfig;
+    var $objDBleaves;
+    var $objBlockMiddle;
+    /**
+     * 
+     */
+    public function init() {
+        $this->objBlockMiddle = $this->getObject('block_internalsmiddle', 'internals');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        $this->title = $this->objLanguage->languageText('word_internals_title', 'system');
+    }
 
-        /**
-         * 
-         */
-        public function init() {
-                $this->objLanguage = $this->getObject('language', 'language');
-                $this->objUser = $this->getObject('user', 'security');
-                $this->objAltConfig = $this->getObject('altconfig', 'config');
-                $this->title = $this->objLanguage->languageText('word_internals_title','system');
-        }
+    public function addLeaveForm() {
         
-        public function buildList(){
-                $objLink = $this->getObject('link','htmlelements');
-                $list = $this->objDBleaves->getLeaveList();
-                //if list is not empty, display all applicable leaves
-                if(count($list) > 0){
-                        foreach ($list as $value){
-                                
-                        }
-                }
-        }
+    }
 
-
-        public function show(){
-                
-        }
+    public function show() {
+        
+    }
 
 }
 

@@ -53,24 +53,7 @@ class dbinternals extends dbTable {
     public function getLeaveList() {
         parent::init('tbl_leaves');
         $list = $this->getAll();
-        if (count($list) <= 0) {
-            $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
-            $actFile = file_get_contents($xmlFile);
-            $this->domDoc->loadXML($actFile);
-            $leaves = new SimpleXMLElement($actFile);
-            $loopTimes = count($leaves);
-            for ($index = 0; $index < $loopTimes; $index++) {
-                $arrayValues = array(
-                    'id' => $leaves->leave[$index]->id,
-                    'name' => $leaves->leave[$index]->name,
-                    'numberofdays' => $leaves->leave[$index]->daysdue
-                );
-                $this->insert($arrayValues);
-            }
-            return $list;
-        } else {
-            return $list;
-        }
+        return $list;
     }
 
     /**
@@ -105,7 +88,7 @@ class dbinternals extends dbTable {
      */
     public function postRequest($userID, $leaveID, $startDate, $endDate) {
         //create the holidays array
-        
+
         $data = array(
             'id' => NULL,
             'userid' => $userID,
@@ -117,7 +100,7 @@ class dbinternals extends dbTable {
         );
         return $this->insert($data, 'tbl_requests');
     }
-    
+
     /**
      * Method to return the number of available days for the user
      * 
@@ -126,7 +109,7 @@ class dbinternals extends dbTable {
      * @param string $userId The database primary key for the user
      * @return array The values retrieved from the database
      */
-    public function getDaysLeft($leaveId,$userId){
+    public function getDaysLeft($leaveId, $userId) {
         $this->_tableName = 'tbl_leaverecords';
         $stateMent = "WHERE id = '{$leaveId}' AND userid = '{$userId}'";
         return $this->getAll($stateMent);
@@ -147,81 +130,61 @@ class dbinternals extends dbTable {
                 'id' => $userId,
                 'isinternalsadmin' => 'false'
             );
-            //inser the values to the database
-            $this->insert($values);
             //change the table
             $this->_tableName = 'tbl_leaverecords';
-            //get the list of available leave types
-            $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
-            $actFile = file_get_contents($xmlFile);
-            $this->domDoc->loadXML($actFile);
-            $leaves = new SimpleXMLElement($actFile);
-            $loopTimes = count($leaves);
-            for ($index = 0; $index < $loopTimes; $index++) {
-                $daysDue = $leaves->leave[$index]->daysdue;
-                $daysDue = stripslashes($daysDue);
-                $daysDue = strip_tags($daysDue);
-                $arrayValues = array(
-                    'id' => $leaves->leave[$index]->id,
-                    'userid' => $userId,
-                    'daysleft' => $daysDue
-                );
-                $this->insert($arrayValues);
-                header('location:index.php?module=internals');
-            }
         }
     }
 
     /**
      * 
      * @param type $userId
-     
-    public function getAvailabelDays($userId) {
-        $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
-        $actFile = file_get_contents($xmlFile);
-//            $xmlFile = "
-//<leaves>
-//    <leave>
-//        <id>01ann</id>
-//        <leavename>
-//            Annual
-//        </leavename>
-//        <daysdue>
-//            21
-//        </daysdue>
-//    </leave>
-//    <leave>
-//        <id>
-//            02sic
-//        </id>
-//        <leavename>
-//            Sick
-//        </leavename>
-//        <daysdue>
-//            3
-//        </daysdue>
-//    </leave>
-//</leaves>";
-        $test = '';
-        $this->domDoc->loadXML($actFile);
-        $leaves = new SimpleXMLElement($actFile);
-//            $users = $recordsFile->getElementsByTagName('userid');
-        foreach ($leaves->leave as $leave) {
-            $test .= $leave;
-        }
-        $loopTimes = count($leaves);
-        for ($index = 0; $index < $loopTimes; $index++) {
-            echo "<br />" . $leaves->leave[$index]->id;
-            $arrayValues = array(
-                'id' => $leaves->leave[$index]->id,
-                'name' => $leaves->leave[$index]->name,
-                'numberofdays' => $leaves->leave[$index]->daysdue
-            );
-            $this->insert($arrayValues);
-        }
-    }
 
-    /**
+      public function getAvailabelDays($userId) {
+      $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
+      $actFile = file_get_contents($xmlFile);
+      //            $xmlFile = "
+      //<leaves>
+      //    <leave>
+      //        <id>01ann</id>
+      //        <leavename>
+      //            Annual
+      //        </leavename>
+      //        <daysdue>
+      //            21
+      //        </daysdue>
+      //    </leave>
+      //    <leave>
+      //        <id>
+      //            02sic
+      //        </id>
+      //        <leavename>
+      //            Sick
+      //        </leavename>
+      //        <daysdue>
+      //            3
+      //        </daysdue>
+      //    </leave>
+      //</leaves>";
+      $test = '';
+      $this->domDoc->loadXML($actFile);
+      $leaves = new SimpleXMLElement($actFile);
+      //            $users = $recordsFile->getElementsByTagName('userid');
+      foreach ($leaves->leave as $leave) {
+      $test .= $leave;
+      }
+      $loopTimes = count($leaves);
+      for ($index = 0; $index < $loopTimes; $index++) {
+      echo "<br />" . $leaves->leave[$index]->id;
+      $arrayValues = array(
+      'id' => $leaves->leave[$index]->id,
+      'name' => $leaves->leave[$index]->name,
+      'numberofdays' => $leaves->leave[$index]->daysdue
+      );
+      $this->insert($arrayValues);
+      }
+      }
+
+      /**
      * The function to update the request after approval or rejection
      * 
      * @acces public
@@ -232,8 +195,20 @@ class dbinternals extends dbTable {
         $this->update('status', 'pending');
     }
 
-    public function addLeaveType() {
-        
+    /**
+     * 
+     * @access public
+     * @param string $leaveName The name of the leave |ie: Annual or sick.....
+     * @param interg $numberOfDays the maximum number of days available for the leave type
+     * @return boolean TRUE|FALSE returns true if the values were successfully inserted to the database
+     */
+    public function addLeaveType($leaveName, $numberOfDays) {
+        $fields = array(
+            'id' => NULL,
+            'name' => $leaveName,
+            'numberfdays' => $numberOfDays
+        );
+        return $this->insert($fields, 'tbl_leaves');
     }
 
 }

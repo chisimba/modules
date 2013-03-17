@@ -157,7 +157,6 @@ class internals extends controller {
             'comments' => $comments
         );
         //html to pdf test
-
         $objMail = & $this->getObject('mailer', 'mail');
         //pdate the database
         $objDB->update('id', $id, $values, 'tbl_requests');
@@ -176,6 +175,14 @@ class internals extends controller {
         $objMail->setValue('htmlbody', "{$userFullName}<br /> your leave request has been " . $requestStatus);
         //send the message
         return $objMail->send();
+    }
+    
+    private function addLeavetype(){
+        $objDB = $this->getObject('dbinternals','internals');
+        $leaveName = $this->getParam('leavename',NULL);
+        $numberOfDays = $this->getParam('numberofdays');
+        $objDB->addLeaveType($leaveName,$numberOfDays);
+        header('location:index.php');
     }
 
     /**
