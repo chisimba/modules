@@ -151,6 +151,11 @@ class internals extends controller {
         $objDB = $this->getObject('dbinternals', 'internals');
         //comments
         $comments = $this->getParam('comments', NULL);
+        if (!empty($comments)) {
+            $statement = 'Reason being ' . $comments;
+        } else {
+            $statement = 'No reason was provided';
+        }
 //                $objDB->insert($values, 'tbl_requests');
         $values = array(
             'status' => $requestStatus,
@@ -171,18 +176,18 @@ class internals extends controller {
         $objMail->setValue('from', 'noreply@hermes');
         $objMail->setValue('fromName', 'Monwabisi');
         $objMail->setValue('subject', 'Leaves appliction');
-        $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus);
-        $objMail->setValue('htmlbody', "{$userFullName}<br /> your leave request has been " . $requestStatus);
+        $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
+        $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
         //send the message
         return $objMail->send();
     }
-    
-    public function __addLeavetype(){
-        $objDB = $this->getObject('dbinternals','internals');
+
+    public function __addLeavetype() {
+        $objDB = $this->getObject('dbinternals', 'internals');
         $leaveName = $this->getParam('leavename');
         $numberOfDays = $this->getParam('numberofdays');
-//        $objDB->addLeaveType($leaveName,$numberOfDays);
-        echo $this->getParam('numberofdays');
+        $objDB->addLeaveType($leaveName, $numberOfDays);
+//        echo $this->getParam('numberofdays').'<br />'.$this->getParam('leavename');
 //        header('location:index.php');
     }
 
@@ -235,5 +240,7 @@ class internals extends controller {
                 break;
         }
     }
+
 }
+
 ?>

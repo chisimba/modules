@@ -39,10 +39,12 @@ class block_internalsmiddle extends Object {
      */
     public function biuldAppForm() {
         //leave application form
+        $this->_tableName = "tbl_requests";
         $frmLeave = new form('frmLeave');
         $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply','system')}</h2>");
         $btnSave = $this->getObject('button', 'htmlelements');
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
+        //get all vailable leaves
         $leaves = $this->dbInternals->getLeaveList();
         $labels = $this->getObject('label', 'htmlelements');
         $labels->labelValue = $this->objLanguage->languageText('phrase_selectleave', 'system');
@@ -62,11 +64,14 @@ class block_internalsmiddle extends Object {
             $tblLeave->startRow();
             //radio button for leavve types
             $rdLeaveTypes = new radio('');
-            $test = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
+            $daysLeft = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
+            if(count($daysLeft) <= 0){
+                $daysLeft['daysleft'] = $item['numberofdays'];
+            }
             $rdLeaveTypes->addOption($item['id'], $item['name']);
             $tblLeave->addCell($rdLeaveTypes->show());
             $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
-            $tblLeave->addCell($test[0]['daysleft'], NULL, NULL, 'center', NULL, NULL);
+            $tblLeave->addCell($daysLeft['daysleft'], NULL, NULL, 'center', NULL, NULL);
             $tblLeave->startRow();
             $tblLeave->addCell('&nbsp;');
             $tblLeave->endRow();
@@ -185,7 +190,7 @@ class block_internalsmiddle extends Object {
         $frmAddLeave = new form('frmAddLeave');
         $frmAddLeave->name = "frmAddLeave";
         $frmAddLeave->cssId = "frmAddLeave";
-        $frmAddLeave->addToForm('<h2>Add leave types</h2>');
+        $frmAddLeave->addToForm('<h2>'.$this->objLanguage->languageText('mod_internals_addleave','internals').'</h2>');
         $tblLayout = new htmltable();
         //Build the form
         $tblLayout->startRow();
@@ -241,6 +246,7 @@ class block_internalsmiddle extends Object {
                 $sendLink->link = "{$this->objLanguage->languageText('word_send','system')}";
                 $sendLink->cssId = $value['id'];
                 $sendLink->cssClass = "sendLink";
+                $sendLink->extra = "x-data={$value['userid']}";
                 //comentary paragraph
                 $this->loadClass('textarea', 'htmlelements');
                 $comments = new textarea();

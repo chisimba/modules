@@ -42,21 +42,21 @@ jQuery('#btnSave').die('click').live('click', function() {
 jQuery('#btnSaveLeave').die('click').live('click', function() {
     var leavename = jQuery('#txtSaveLeave').val();
     var numberofdays = jQuery('#txtNumDays').val();
-    if (leavename.length >= 1) {
-        if (numberofdays.length >= 1) {
-            var leave_info = "leavename="+leavename+"&numberofdays="+numberofdays;
+    if (numberofdays.length >= 1) {
+        if (leavename.length >= 1) {
+            var leave_info = "&leavename=" + leavename + "&numberofdays=" + numberofdays;
             jQuery.ajax({
                 url: 'index.php?module=internals&action=addLeavetype',
                 type: 'post',
                 data: leave_info,
                 success: function() {
-                    alert(leave_info)
+                    alert('Done')
                 }
             });
-        }else{
+        } else {
             alert("Enter leave name");
         }
-    }else{
+    } else {
         alert("Enter number of days")
     }
 });
@@ -79,13 +79,17 @@ jQuery(function() {
         jQuery('textarea#' + req_Id).hide('slow');
         jQuery(this).hide('slow');
 //                alert(comments);
-        var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected&comments=' + comments + 'leaveid=' + leave_Id;
+        if(comments.length <=0){
+            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected';
+        }else{
+            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected&comments=' + comments;
+        }
         jQuery.ajax({
             url: 'index.php?module=internals&action=updateRequest',
             type: 'post',
             data: data_string,
             success: function() {
-                alert('request processed!')
+                alert(data_string)
             }
         });
     });

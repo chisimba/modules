@@ -34,11 +34,12 @@ class dbinternals extends dbTable {
      * Method to get the list of pennding requests
      * 
      * @access public
+     * @param string $userId
      * @return array List of pending requests
      */
     public function getLeaveRequests($userId = NULL) {
         parent::init('tbl_requests');
-        if (isset($userId)) {
+        if (!empty($userId)) {
             $requests = $this->getAll(NULL, "WHERE id='{$userId}' AND status='pending'");
         } else {
             $requests = $this->getAll();
@@ -132,6 +133,8 @@ class dbinternals extends dbTable {
             );
             //change the table
             $this->_tableName = 'tbl_leaverecords';
+            $this->insert($values);
+            //change table
         }
     }
 
@@ -206,7 +209,7 @@ class dbinternals extends dbTable {
         $fields = array(
             'id' => NULL,
             'name' => $leaveName,
-            'numberfdays' => $numberOfDays
+            'numberofdays' => $numberOfDays
         );
         return $this->insert($fields, 'tbl_leaves');
     }
