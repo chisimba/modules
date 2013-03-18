@@ -53,6 +53,37 @@ class internals extends controller {
      *  @access private
      */
     private function __pushRequest() {
+        $date = new DateTime();
+        $date->modify('+2 day');
+        $startDate = "2013-02-10";
+        $endDate = "2013-02-15";
+        $startMonth = substr($startDate, '5', '2');
+        $startDay = substr($startDate, '8','2');
+        $endMonth = substr($endDate, '5','2');
+        $endDay = substr($endDate, '8','2');
+        echo $startMonth.'<br/>'.$startDay;
+        echo "<br/>".$endMonth."<br/>".$endDay;
+        //weekend checker
+        if(strpos($date->format('Y-M-D'), 'Tue') == TRUE){
+//            checkdate(, $day, $year)$startDate
+        }
+        //holidays
+        $holidays = array(
+            date('Y').'-01-01',
+            date('Y').'-02-01',
+            date('Y').'-03-21',
+            date('Y').'-04-06',
+            date('Y').'-04-27',
+            date('Y').'-05-27',
+            date('Y').'-06-16',
+            date('Y').'-08-09',
+            date('Y').'-09-24',
+            date('Y').'-10-24',
+            date('Y').'-12-17',
+            date('Y').'-12-17',
+            date('Y').'-12-25',
+            date('Y').'-12-26'
+        );
         //get database object
         $objDB = $this->getObject('dbinternals', 'internals');
         $objUser = $this->getObject('user', 'security');
@@ -62,15 +93,14 @@ class internals extends controller {
         $leaveName = $this->getParam('leaveName', 'annual');
         //change the leave name to ID
         $leaveID = $objDB->getLeaveID($leaveName);
-        //number of days requested
-        $numDays = $this->getParam('txtdaysrequested', NULL);
         //start date
         $startDate = $this->getParam('startdate', NULL);
         //end date
         $endDate = $this->getParam('enddate', NULL);
+        
         //insert the data into the database
-        $objDB->postRequest($userId, $leaveID, $startDate, $endDate);
-        die();
+//        $objDB->postRequest($userId, $leaveID, $startDate, $endDate);
+//        die();
     }
 
     /**
@@ -151,10 +181,12 @@ class internals extends controller {
         $objDB = $this->getObject('dbinternals', 'internals');
         //comments
         $comments = $this->getParam('comments', NULL);
-        if (!empty($comments)) {
-            $statement = 'Reason being ' . $comments;
-        } else {
-            $statement = 'No reason was provided';
+        if ($requestStatus == 'reject') {
+            if (!empty($comments)) {
+                $statement = 'Reason being ' . $comments;
+            } else {
+                $statement = 'No reason was provided';
+            }
         }
 //                $objDB->insert($values, 'tbl_requests');
         $values = array(
