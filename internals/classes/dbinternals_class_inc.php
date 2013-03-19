@@ -85,16 +85,17 @@ class dbinternals extends dbTable {
      * @param string $leaveID The ID of the leave type the user applied for
      * @param date $startDate The date the user wishes ;to start leave
      * @param date $endDate The date the leave will expire
+     * @param string $days The total number ofd days requested by the user
      * @return boolean TRUE if the values were successfuly inserted to the database
      */
-    public function postRequest($userID, $leaveID, $startDate, $endDate) {
+    public function postRequest($userID, $leaveID, $startDate, $endDate,$days) {
         //create the holidays array
 
         $data = array(
             'id' => NULL,
             'userid' => $userID,
             'leaveid' => $leaveID,
-            'days' => '10',
+            'days' => $days,
             'status' => 'pending',
             'startdate' => $startDate,
             'enddate' => $endDate
@@ -132,9 +133,11 @@ class dbinternals extends dbTable {
                 'isinternalsadmin' => 'false'
             );
             //change the table
-            $this->_tableName = 'tbl_leaverecords';
+            $this->_tableName = 'tbl_internals';
             $this->insert($values);
             //change table
+            $this->_tableName = "tbl_leaverecords";
+            
         }
     }
 

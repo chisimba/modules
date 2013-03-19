@@ -27,7 +27,7 @@ jQuery('#btnSave').die('click').live('click', function() {
                 data: data_string,
                 success: function() {
                     //message to indicate that the request went through
-                    alert("Done!");
+                    alert(data_string);
                 }
             })
         } else {
