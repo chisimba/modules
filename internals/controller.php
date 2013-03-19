@@ -53,37 +53,78 @@ class internals extends controller {
      *  @access private
      */
     private function __pushRequest() {
-        $date = new DateTime();
-        $date->modify('+2 day');
-        $startDate = "2013-02-10";
-        $endDate = "2013-02-15";
-        $startMonth = substr($startDate, '5', '2');
-        $startDay = substr($startDate, '8','2');
-        $endMonth = substr($endDate, '5','2');
-        $endDay = substr($endDate, '8','2');
-        echo $startMonth.'<br/>'.$startDay;
-        echo "<br/>".$endMonth."<br/>".$endDay;
-        //weekend checker
-        if(strpos($date->format('Y-M-D'), 'Tue') == TRUE){
-//            checkdate(, $day, $year)$startDate
-        }
         //holidays
         $holidays = array(
-            date('Y').'-01-01',
-            date('Y').'-02-01',
-            date('Y').'-03-21',
-            date('Y').'-04-06',
-            date('Y').'-04-27',
-            date('Y').'-05-27',
-            date('Y').'-06-16',
-            date('Y').'-08-09',
-            date('Y').'-09-24',
-            date('Y').'-10-24',
-            date('Y').'-12-17',
-            date('Y').'-12-17',
-            date('Y').'-12-25',
-            date('Y').'-12-26'
+            date('Y') . '-01-01',
+            date('Y') . '-03-21',
+            date('Y') . '-03-31',
+            date('Y') . '-03-29',
+            date('Y') . '-04-01',
+            date('Y') . '-04-27',
+            date('Y') . '-05-05',
+            date('Y') . '-06-16',
+            date('Y') . '-08-09',
+            date('Y') . '-09-24',
+            date('Y') . '-12-16',
+            date('Y') . '-12-25',
+            date('Y') . '-12-26'
         );
+//        $startDate = "2013-01-01";
+//        $startYear = substr($startDate, '0', '4');
+//        $startMonth = substr($startDate, '5', '2');
+//        $startDay = substr($startDate, '8', '2');
+//        $endYear = substr($endDate, '0', '4');
+//        $endMonth = substr($endDate, '5', '2');
+//        $endDay = substr($endDate, '8', '2');
+//        //tests
+//        $startTest = substr($startDate, 5, 5);
+//        $startTest = str_replace('-', '', $startTest);
+//        $endTest = substr($endDate, 5, 5);
+//        $endTest = str_replace('-', '', $endTest);
+        $numberOfDays = 1;
+        $carriedOver = 0;
+        $minusDays = 0;
+        $date = new DateTime();
+
+        $date->setDate('2013', '01', '01');
+        $endDate = "2013-12-31";
+//        echo $date->format('Y-m-d');
+        for ($index = 0; $date->format('Y-m-d') < $endDate; $index++) {
+            //check if the date is valid
+            if (checkdate($date->format('m'), $date->format('d'), $date->format('Y'))) {
+                //check if holiday
+                if (in_array($date->format('Y-m-d'), $holidays)) {
+//                    echo $date->format('Y-m-d').'<br/>';
+                    $minusDays++;
+                }
+                $date->modify('+1 day');
+                if ($date->format('D') == 'Sat' || $date->format('D') == 'Sun') {
+                    //check if the day is a holiday
+                    if (in_array($date->format('Y-m-d'), $holidays)) {
+//                        echo $date->format('Y-m-d') . '<br/>';
+                        $carriedOver++;
+                    }
+                    continue;
+                } else {
+                    $numberOfDays++;
+                }
+//                continue;
+                //if date is not valid increase increase the months
+            } else {
+                $date->modify('+1 month');
+                $date->modify('+1 month');
+                if (!checkdate($date->fomat('m'), $date->format('d'), $date->format('Y'))) {
+                    $date->modify('+1 year');
+                }
+            }
+        }
+        echo $numberOfDays." working days<br/> {$minusDays} Total    holidays";
+//        echo $startMonth.'<br/>'.$startDay;
+//        echo "<br/>".$endMonth."<br/>".$endDay;
+        //weekend checker
+        if (strpos($date->format('Y-M-D'), 'Tue') == TRUE) {
+//            checkdate(, $day, $year)$startDate
+        }
         //get database object
         $objDB = $this->getObject('dbinternals', 'internals');
         $objUser = $this->getObject('user', 'security');
@@ -97,7 +138,7 @@ class internals extends controller {
         $startDate = $this->getParam('startdate', NULL);
         //end date
         $endDate = $this->getParam('enddate', NULL);
-        
+
         //insert the data into the database
 //        $objDB->postRequest($userId, $leaveID, $startDate, $endDate);
 //        die();
