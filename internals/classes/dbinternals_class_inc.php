@@ -92,7 +92,7 @@ class dbinternals extends dbTable {
         //create the holidays array
 
         $data = array(
-            'id' => NULL,
+            'id' =>'',
             'userid' => $userID,
             'leaveid' => $leaveID,
             'days' => $days,

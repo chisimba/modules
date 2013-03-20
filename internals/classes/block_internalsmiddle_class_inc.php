@@ -39,9 +39,9 @@ class block_internalsmiddle extends Object {
      */
     public function biuldAppForm() {
         //leave application form
-        $this->_tableName = "tbl_requests";
+//        $this->_tableName = "tbl_requests";
         $frmLeave = new form('frmLeave');
-        $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply','system')}</h2>");
+        $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply', 'system')}</h2>");
         $btnSave = $this->getObject('button', 'htmlelements');
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
         //get all vailable leaves
@@ -59,23 +59,27 @@ class block_internalsmiddle extends Object {
         $tblLeave->addCell('&nbsp;');
         $tblLeave->endRow();
         $index = 0;
-        //populate the dropdown list with the values from the database
-        foreach ($leaves as $item) {
-            $tblLeave->startRow();
-            //radio button for leavve types
-            $rdLeaveTypes = new radio('');
-            $daysLeft = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
-            if(count($daysLeft) <= 0){
-                $daysLeft['daysleft'] = $item['numberofdays'];
+        if (count($leaves) > 0) {
+            //populate the dropdown list with the values from the database
+            foreach ($leaves as $item) {
+                $tblLeave->startRow();
+                //radio button for leavve types
+                $rdLeaveTypes = new radio('');
+                $daysLeft = $this->dbInternals->getDaysLeft($item['id'], $this->objUser->getUserId($this->objUser->userName()));
+                $rdLeaveTypes->addOption($item['id'], $item['name']);
+                $tblLeave->addCell($rdLeaveTypes->show());
+                $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
+                if (count($daysLeft) <= 0) {
+//                    $daysLeft = $item['numberofdays'];
+                    $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
+                } else {
+                    $tblLeave->addCell($daysLeft[0]['daysleft'], NULL, NULL, 'center', NULL, NULL);
+                }
+                $tblLeave->startRow();
+                $tblLeave->addCell('&nbsp;');
+                $tblLeave->endRow();
+                $index++;
             }
-            $rdLeaveTypes->addOption($item['id'], $item['name']);
-            $tblLeave->addCell($rdLeaveTypes->show());
-            $tblLeave->addCell($item['numberofdays'], NULL, NULL, 'center', NULL, NULL);
-            $tblLeave->addCell($daysLeft['daysleft'], NULL, NULL, 'center', NULL, NULL);
-            $tblLeave->startRow();
-            $tblLeave->addCell('&nbsp;');
-            $tblLeave->endRow();
-            $index++;
         }
         //start second row
         $tblLeave->startRow();
@@ -103,7 +107,7 @@ class block_internalsmiddle extends Object {
         /**
          * @todo calculate the number of days
          */
-        $tblLeave->addCell($startDate->show('startdate', 'no', 'yes') . "<span id='start_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterstartdate','system')}</span>");
+        $tblLeave->addCell($startDate->show('startdate', 'no', 'yes') . "<span id='start_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterstartdate', 'system')}</span>");
         $tblLeave->endRow();
         //End row
         //Start row
@@ -119,7 +123,7 @@ class block_internalsmiddle extends Object {
         $endDate = $this->getObject('datepickajax', 'popupcalendar');
         $endDate->buildCal();
         $endDate->showCal();
-        $tblLeave->addCell($endDate->show('enddate', 'no', 'yes') . "<span id='end_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterenddate','system')}</span>");
+        $tblLeave->addCell($endDate->show('enddate', 'no', 'yes') . "<span id='end_date_error' class='error' >{$this->objLanguage->languageText('phrase_enterenddate', 'system')}</span>");
         $tblLeave->endRow();
         //end row
         //Start row
@@ -136,6 +140,9 @@ class block_internalsmiddle extends Object {
         $tblLeave->endRow();
 
         $frmLeave->addToForm($tblLeave->show());
+        if (count($leaves) <= 0) {
+            return $this->objLanguage->languageText('phrase_noappleave', 'system');
+        }
         return $frmLeave->show();
     }
 
@@ -190,11 +197,11 @@ class block_internalsmiddle extends Object {
         $frmAddLeave = new form('frmAddLeave');
         $frmAddLeave->name = "frmAddLeave";
         $frmAddLeave->cssId = "frmAddLeave";
-        $frmAddLeave->addToForm('<h2>'.$this->objLanguage->languageText('mod_internals_addleave','internals').'</h2>');
+        $frmAddLeave->addToForm('<h2>' . $this->objLanguage->languageText('mod_internals_addleave', 'internals') . '</h2>');
         $tblLayout = new htmltable();
         //Build the form
         $tblLayout->startRow();
-        $lblValues->labelValue = "{$this->objLanguage->languageText('phrase_leavename','system')}";
+        $lblValues->labelValue = "{$this->objLanguage->languageText('phrase_leavename', 'system')}";
         $tblLayout->addCell($lblValues->show());
         $tblLayout->addCell($txtLang->show());
         $tblLayout->endRow();
@@ -227,7 +234,7 @@ class block_internalsmiddle extends Object {
         //accept link
         $acceptLink = new link('#');
         $acceptLink->cssClass = 'acceptLink';
-        $acceptLink->link = $this->objLanguage->languageText('word_approve','system');
+        $acceptLink->link = $this->objLanguage->languageText('word_approve', 'system');
         //form to contain all controlls
         $form = new form('frmAdminRequests');
         $form->name = "frmAdminRequests";
@@ -243,7 +250,7 @@ class block_internalsmiddle extends Object {
                 $rejectLink->extra = "x-data={$value['userid']}";
                 //send comments link, in case of rejected requests
                 $sendLink = new link('#');
-                $sendLink->link = "{$this->objLanguage->languageText('word_send','system')}";
+                $sendLink->link = "{$this->objLanguage->languageText('word_send', 'system')}";
                 $sendLink->cssId = $value['id'];
                 $sendLink->cssClass = "sendLink";
                 $sendLink->extra = "x-data={$value['userid']}";
@@ -256,6 +263,7 @@ class block_internalsmiddle extends Object {
                 //accept link
                 $acceptLink->cssId = $value['id'];
                 $acceptLink->extra = "x-data={$value['userid']}";
+                $acceptLink->href = $this->uri(array('action' => 'accept','id'=>$value['id'],'x_data'=>$value['userid'],'status'=>'approved','leaveid'=>$value['leaveid']), 'internals');
                 $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br />' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
                 array_push($valuesArray, $userName);
                 $form->addToForm('<p >' . $userName . '</p>');
@@ -413,7 +421,8 @@ No. of Days leave balance
 //            $objMail->setValue('htmlbody', $pdf->Output("example_001.pdf", "I"));
 //            $form->addToForm("<h2>{$this->objLanguage->languageText('phrase_norequests','system')}</h2>");
 //            $objMail->send();
-            return $form->show().$this->addLeaveType();;
+            return $form->show() . $this->addLeaveType();
+            ;
         }
     }
 
@@ -426,7 +435,7 @@ No. of Days leave balance
     public function addUsers($userId) {
         $form = new form();
         $link = new link();
-        $link->link = $this->objLanguage->languageText('phrase_registerlink','system');
+        $link->link = $this->objLanguage->languageText('phrase_registerlink', 'system');
         $link->href = $this->uri(array('action' => 'adduser', 'id' => $this->objUser->getUserId($this->objUser->userName())), 'internals');
         $form->addToForm($link->show());
         return $form->show();
@@ -448,7 +457,7 @@ No. of Days leave balance
                 return $this->buildUserForm();
             }
         } else {
-            return "<h1>{$this->objLanguage->languageText('phrase_notregistered','system')}</h1>" . $this->addUsers($userId);
+            return "<h1>{$this->objLanguage->languageText('phrase_notregistered', 'system')}</h1>" . $this->addUsers($userId);
         }
     }
 

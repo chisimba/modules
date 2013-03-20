@@ -16,9 +16,10 @@ jQuery(document).ready(function() {
 });
 
 jQuery('#btnSave').die('click').live('click', function() {
+    var leave_Id = jQuery("input:radio:checked").attr('id');
     var startDate = jQuery("[name='startdate']").val();
     var endDate = jQuery("[name='enddate']").val();
-    data_string = jQuery('#form_frmLeave').serialize();
+    data_string = 'startdate='+startDate+'&enddate='+endDate+'&leaveid='+leave_Id;
     if (startDate.length > 0) {
         if (endDate.length > 0) {
             jQuery.ajax({
@@ -100,7 +101,6 @@ jQuery('input.transparentbgnb').die('click').live('click', function() {
 });
 //Handling request accept
 jQuery('.acceptLink').die('click').live('click', function() {
-    var leave_Id = jQuery("input:radio:checked").attr('id');
     var req_Id = jQuery(this).attr('id');
     var x_data = jQuery(this).attr('x-data');
     var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=approved&leaveid=' + leave_Id;
