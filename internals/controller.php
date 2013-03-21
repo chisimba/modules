@@ -11,7 +11,9 @@
  * @author monwabisi
  */
 class internals extends controller {
-var $objAltConfig;
+
+    var $objAltConfig;
+
     /**
      * 
      * The standard dispatch method for the species module.
@@ -77,11 +79,11 @@ var $objAltConfig;
         //set the end date
         $endDate = $this->getParam('enddate', NULL);
 //        echo $startDate.'<br/>'.$endDate;
-        $startYear = substr($startDate, '0','4');
-        $startMonth = substr($startDate,'5','2');
-        $startDay = substr($startDate,'8','2');
+        $startYear = substr($startDate, '0', '4');
+        $startMonth = substr($startDate, '5', '2');
+        $startDay = substr($startDate, '8', '2');
         //set the start date
-        $date->setDate($startYear,$startMonth,$startDay);
+        $date->setDate($startYear, $startMonth, $startDay);
         for ($index = 0; $date->format('Y-m-d') < $endDate; $index++) {
             //check if the date is valid
             if (checkdate($date->format('m'), $date->format('d'), $date->format('Y'))) {
@@ -109,7 +111,7 @@ var $objAltConfig;
             //increase day count 
             $date->modify('+1 day');
         }
-        echo $numberOfDays.'<br/>';
+//        echo $numberOfDays . '<br/>'.$minusDays.'<br/>';
         $numberOfDays = $numberOfDays - $minusDays;
         //get database object
         $objDB = $this->getObject('dbinternals', 'internals');
@@ -121,31 +123,50 @@ var $objAltConfig;
         $originalID = "";
         $originalDays = "";
         //change the leave name to ID
-        $leaveID = $this->getParam('leaveid',NULL);
+        $leaveID = $this->getParam('leaveid', NULL);
         //get all leaves to prepare leave selection
         $leaveList = $objDB->getLeaveList();
-        $leaveID = str_replace('input_','',$leaveID);
-        foreach($leaveList as $leave){
-            if($leaveID == $leave['id']){
-                $originalDays = $leave['numberofdays'];
+        $objDB->_tableName = "tbl_leaverecords";
+        $leaveRecords = $objDB->getAll();
+        $leaveID = str_replace('input_', '', $leaveID);
+        if (count($leaveRecords) <= 0) {
+            foreach ($leaveList as $leave) {
+                if ($leaveID == $leave['id']) {
+                    $originalDays = $leave['numberofdays'];
+                    //insert the number of days left
+                }
+            }
+        } else {
+            foreach ($leaveRecords as $leave) {
+                if ($leaveID == $leave['id']) {
+                    $originalDays = $leave['daysleft'];
+                    //insert the number of days left
+                }
             }
         }
+        print_r($leaveRecords);
 //        echo $originalDays.'<br/>';
         $daysLeft = $originalDays - $numberOfDays;
         echo $daysLeft;
 //        echo '<br/>'.$originalDays;
         //get the number of 
         $leaveRequestValues = array(
-            'id'=>$leaveID,
-            'userid'=>$userId,
-            'daysleft'=>$daysLeft
+            'id' => $leaveID,
+            'userid' => $userId,
+            'daysleft' => $daysLeft
         );
-        print_r($leaveRequestValues);
+//        print_r($leaveRequestValues);
         //insert the data into the database
         if ($numberOfDays > 0) {
-            $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays);
+//            $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays);
             $objDB->_tableName = "tbl_leaverecords";
-            $objDB->insert($leaveRequestValues,"tbl_leaverecords");
+            $leaveRecords = $objDB->getAll();
+            if (count($leaveRecords) == 0) {
+//                $objDB->insert($leaveRequestValues, "tbl_leaverecords");
+            } else {
+                $queryStatement = "UPDATE tbl_leaverecords SET daysleft={$daysLeft} WHERE userid={$userId}";
+//                $objDB->_execute($queryStatement);
+            }
         }
     }
 
@@ -156,7 +177,7 @@ var $objAltConfig;
         $endDate = '2013-03-28';
         require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
         $pdf = new TCPDF();
-            $html = "
+        $html = "
 <div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/>
 <table width='100%'>
@@ -260,15 +281,15 @@ No. of Days leave balance
 </tbody>
 </table>
 </div>";
-            $pdf->SetAuthor("Monwai");
-            $pdf->SetTitle("TCPDF Example 001");
-            $pdf->SetSubject("TCPDF Tutorial");
-            $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
-            $pdf->AddPage('');
-            $pdf->setImageScale(5);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/thumbzup-logo.jpg", 100, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->SetAuthor("Monwai");
+        $pdf->SetTitle("TCPDF Example 001");
+        $pdf->SetSubject("TCPDF Tutorial");
+        $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
+        $pdf->AddPage('');
+        $pdf->setImageScale(5);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/thumbzup-logo.jpg", 100, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
 //            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->writeHTML($html);
+        $pdf->writeHTML($html);
 // get current vertical position
 //            $current_y_position = $pdf->getY();
 // write the first column
@@ -277,24 +298,24 @@ No. of Days leave balance
 // write the second column
 //            $pdf->writeHTMLCell($second_column_width, 0, 0, 0, $right_column, 0, 1, 0, true);
 // reset pointer to the last page
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
 
 //            $pdf->lastPage();
 //            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
 
-            $objMail = $this->getObject('mailer', 'mail');
-            $objMail->setValue('to', "wsifumba@gmail.com");
-            $objMail->setValue('from', 'noreply@hermes');
-            $objMail->setValue('fromName', 'Monwabisi');
-            $objMail->setValue('subject', 'Leaves appliction');
-            $pdf->Output();
-            $pdf->Output();
+        $objMail = $this->getObject('mailer', 'mail');
+        $objMail->setValue('to', "wsifumba@gmail.com");
+        $objMail->setValue('from', 'noreply@hermes');
+        $objMail->setValue('fromName', 'Monwabisi');
+        $objMail->setValue('subject', 'Leaves appliction');
+        $pdf->Output();
+        $pdf->Output();
     }
 
     /**
