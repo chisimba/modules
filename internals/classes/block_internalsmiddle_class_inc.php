@@ -263,7 +263,7 @@ class block_internalsmiddle extends Object {
                 //accept link
                 $acceptLink->cssId = $value['id'];
                 $acceptLink->extra = "x-data={$value['userid']}";
-                $acceptLink->href = $this->uri(array('action' => 'accept','id'=>$value['id'],'x_data'=>$value['userid'],'status'=>'approved','leaveid'=>$value['leaveid']), 'internals');
+                $acceptLink->href = $this->uri(array('action' => 'accept','id'=>$value['id'],'x_data'=>$value['userid'],'status'=>'approved','leaveid'=>$value['leaveid'],'startdate'=>$value['startdate'],'enddate'=>$value['enddate']), 'internals');
                 $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br />' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
                 array_push($valuesArray, $userName);
                 $form->addToForm('<p >' . $userName . '</p>');

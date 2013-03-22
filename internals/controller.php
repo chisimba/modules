@@ -55,6 +55,12 @@ class internals extends controller {
      *  @access private
      */
     private function __pushRequest() {
+        //get database object
+        $objDB = $this->getObject('dbinternals', 'internals');
+        $objUser = $this->getObject('user', 'security');
+        //get all leaves
+        $objDB->_tableName = "tbl_leaves";
+        $leaveList = $objDB->getAll();
         //holidays
         $holidays = array(
             date('Y') . '-01-01',
@@ -84,7 +90,7 @@ class internals extends controller {
         $startDay = substr($startDate, '8', '2');
         //set the start date
         $date->setDate($startYear, $startMonth, $startDay);
-        for ($index = 0; $date->format('Y-m-d') < $endDate; $index++) {
+        for ($index = 0; $date->format('Y-m-d') <= $endDate; $index++) {
             //check if the date is valid
             if (checkdate($date->format('m'), $date->format('d'), $date->format('Y'))) {
                 //check if holiday
@@ -111,70 +117,133 @@ class internals extends controller {
             //increase day count 
             $date->modify('+1 day');
         }
-//        echo $numberOfDays . '<br/>'.$minusDays.'<br/>';
         $numberOfDays = $numberOfDays - $minusDays;
-        //get database object
-        $objDB = $this->getObject('dbinternals', 'internals');
-        $objUser = $this->getObject('user', 'security');
+        echo $numberOfDays . '<br/>'.$minusDays.'<br/>';
         //get user id
         $userId = $objUser->getUserId($objUser->userName());
         //leave name
         //the leave ID from the leaves table
         $originalID = "";
-        $originalDays = "";
         //change the leave name to ID
         $leaveID = $this->getParam('leaveid', NULL);
-        //get all leaves to prepare leave selection
-        $leaveList = $objDB->getLeaveList();
-        $objDB->_tableName = "tbl_leaverecords";
-        $leaveRecords = $objDB->getAll();
         $leaveID = str_replace('input_', '', $leaveID);
-        if (count($leaveRecords) <= 0) {
-            foreach ($leaveList as $leave) {
-                if ($leaveID == $leave['id']) {
-                    $originalDays = $leave['numberofdays'];
-                    //insert the number of days left
+        if(count($objDB->getRow("id","{$leaveID} AND userid={$userId}","tbl_leaverecords")) <=0){
+            echo "The field exists";
+        }else{
+        $objDB->_tableName = "tbl_leaverecords";
+            echo "The field does not exists<br/>".$leaveID."<br/>".$userId;
+            //put the default number of days as days left
+            foreach ($leaveList as $leaveItem){
+                if($leaveItem['id']==$leaveID){
+                    $leaveDefaultDays = $leaveItem['numberofdays'];
                 }
             }
-        } else {
-            foreach ($leaveRecords as $leave) {
-                if ($leaveID == $leave['id']) {
-                    $originalDays = $leave['daysleft'];
-                    //insert the number of days left
+            $leaveRecordsDefaultValues = array(
+                "id"=>$leaveID,
+                "userid"=>$userId,
+                "daysleft"=>$leaveDefaultDays
+            );
+            //insert the values to the database
+            $objDB->insert($leaveRecordsDefaultValues);
+        }
+        //get the remaining number of days and then subtract the requested ones
+        //change the table name
+        $objDB->_tableName = "tbl_leaverecords";
+        $leaveRecords = $objDB->getAll();
+        //variable to contain the number of remaining  days
+        $remainingDays = 0;
+        foreach($leaveRecords as $recordItem){
+            if($leaveID == $recordItem['id']){
+                if($userId == $recordItem['userid']){
+                    $remainingDays = $recordItem['daysleft'];
                 }
             }
         }
-        print_r($leaveRecords);
-//        echo $originalDays.'<br/>';
-        $daysLeft = $originalDays - $numberOfDays;
-        echo $daysLeft;
-//        echo '<br/>'.$originalDays;
-        //get the number of 
-        $leaveRequestValues = array(
-            'id' => $leaveID,
-            'userid' => $userId,
-            'daysleft' => $daysLeft
-        );
-//        print_r($leaveRequestValues);
-        //insert the data into the database
-        if ($numberOfDays > 0) {
-//            $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays);
-            $objDB->_tableName = "tbl_leaverecords";
-            $leaveRecords = $objDB->getAll();
-            if (count($leaveRecords) == 0) {
-//                $objDB->insert($leaveRequestValues, "tbl_leaverecords");
-            } else {
-                $queryStatement = "UPDATE tbl_leaverecords SET daysleft={$daysLeft} WHERE userid={$userId}";
-//                $objDB->_execute($queryStatement);
+        //subtract the requested days from the available days and then update the database
+        if($numberOfDays > 0){
+            $remainingDays = $remainingDays - $numberOfDays;
+            if($remainingDays > 0){
+                $queryString = "UPDATE tbl_leaverecords SET daysleft={$remainingDays} WHERE id='{$leaveID}' AND userid={$userId}";
+                $objDB->_execute($queryString);
+            }else{
+                //indicate that the number of days have ran out
             }
+        }  else {
+            //indicate the the user cannot apply for less than one day
         }
     }
 
     public function __accept() {
+        /**
+         * start of update request values
+         */
+        
+        //record Id
+        $id = $this->getParam('id', NULL);
+        //user ID
+        $userID = $this->getParam('x_data', NULL);
+        //request status
+        $requestStatus = $this->getParam('status', NULL);
+        //database object
+        $objDB = $this->getObject('dbinternals', 'internals');
+        //comments
+        $comments = $this->getParam('comments', NULL);
+        if ($requestStatus == 'reject') {
+            if (!empty($comments)) {
+                $statement = 'Reason being ' . $comments;
+            } else {
+                $statement = 'No reason was provided';
+            }
+        }
+//                $objDB->insert($values, 'tbl_requests');
+        $values = array(
+            'status' => $requestStatus,
+            'comments' => $comments
+        );
+        //html to pdf test
+        $objMail = & $this->getObject('mailer', 'mail');
+        //pdate the database
+        $objDB->update('id', $id, $values, 'tbl_requests');
+        //prepare to send message
+        $objUser = $this->getObject('user', 'security');
+        //get the user email address
+        $userEmail = $objUser->email($userID);
+        //get the user's full name
+        $userFullName = $objUser->fullname($userID);
+        //get the start date
+        $startDate = $this->getParam('startdate', NULL);
+        //get the end date
+        $endDate = $this->getParam('enddate', NULL);
+        /**
+         * get the request information from the databese
+         */
+        //change the table name
+        $objDB->_tableName = "tbl_leaverecords";
+        $requestInformation = $objDB->getAll();
+        foreach ($requestInformation as $requestItem){
+            
+        }
+        //Prepare the message
+//        $objMail->setValue('to', "wsifumba@gmail.com");
+//        $objMail->setValue('from', 'noreply@hermes');
+//        $objMail->setValue('fromName', 'Monwabisi');
+//        $objMail->setValue('subject', 'Leaves appliction');
+//        $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
+//        $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
+        /**
+         * end of update request values
+         */
+        
+        /**
+         * @todo
+         * get user ID
+         * 
+         * get the leave ID
+         * 
+         * get the request ID
+         */
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $days = 13;
-        $startDate = '2013-03-14';
-        $endDate = '2013-03-28';
         require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
         $pdf = new TCPDF();
         $html = "
@@ -308,14 +377,14 @@ No. of Days leave balance
 
 //            $pdf->lastPage();
 //            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
-
-        $objMail = $this->getObject('mailer', 'mail');
-        $objMail->setValue('to', "wsifumba@gmail.com");
-        $objMail->setValue('from', 'noreply@hermes');
-        $objMail->setValue('fromName', 'Monwabisi');
-        $objMail->setValue('subject', 'Leaves appliction');
-        $pdf->Output();
-        $pdf->Output();
+//
+//        $objMail = $this->getObject('mailer', 'mail');
+//        $objMail->setValue('to', "wsifumba@gmail.com");
+//        $objMail->setValue('from', 'noreply@hermes');
+//        $objMail->setValue('fromName', 'Monwabisi');
+//        $objMail->setValue('subject', 'Leaves appliction');
+//        $pdf->Output();
+//        $pdf->Output();
     }
 
     /**
@@ -427,7 +496,7 @@ No. of Days leave balance
         $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
         $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
         //send the message
-        return $objMail->send();
+//        return $objMail->send();
     }
 
     public function __addLeavetype() {
