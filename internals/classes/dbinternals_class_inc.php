@@ -1,4 +1,15 @@
 <?php
+// security check - must be included in all scripts
+if (!
+        /**
+         * Description for $GLOBALS
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
 
 /*
  * To change this template, choose Tools | Templates
@@ -48,6 +59,8 @@ class dbinternals extends dbTable {
     }
 
     /**
+     * get the list of available leave type
+     * 
      * @access public
      * @return array list of the leave types
      */
@@ -58,6 +71,8 @@ class dbinternals extends dbTable {
     }
 
     /**
+     * get leave name using the leave id as primary key
+     * 
      * @access public
      * @return string Name of the leave
      */
@@ -86,19 +101,21 @@ class dbinternals extends dbTable {
      * @param date $startDate The date the user wishes ;to start leave
      * @param date $endDate The date the leave will expire
      * @param string $days The total number ofd days requested by the user
+     * @param date $dateOfRequest Day when the request was made
      * @return boolean TRUE if the values were successfuly inserted to the database
      */
-    public function postRequest($userID, $leaveID, $startDate, $endDate,$days) {
+    public function postRequest($userID, $leaveID, $startDate, $endDate, $days,$dateOfRequest) {
         //create the holidays array
 
         $data = array(
-            'id' =>'',
+            'id' => '',
             'userid' => $userID,
             'leaveid' => $leaveID,
             'days' => $days,
             'status' => 'pending',
             'startdate' => $startDate,
-            'enddate' => $endDate
+            'enddate' => $endDate,
+            'requestdate'=>$dateOfRequest
         );
         return $this->insert($data, 'tbl_requests');
     }
@@ -137,60 +154,10 @@ class dbinternals extends dbTable {
             $this->insert($values);
             //change table
             $this->_tableName = "tbl_leaverecords";
-            
         }
     }
 
     /**
-     * 
-     * @param type $userId
-
-      public function getAvailabelDays($userId) {
-      $xmlFile = $this->altConfig->getModulePath() . 'internals/sql/internals_leaves.xml';
-      $actFile = file_get_contents($xmlFile);
-      //            $xmlFile = "
-      //<leaves>
-      //    <leave>
-      //        <id>01ann</id>
-      //        <leavename>
-      //            Annual
-      //        </leavename>
-      //        <daysdue>
-      //            21
-      //        </daysdue>
-      //    </leave>
-      //    <leave>
-      //        <id>
-      //            02sic
-      //        </id>
-      //        <leavename>
-      //            Sick
-      //        </leavename>
-      //        <daysdue>
-      //            3
-      //        </daysdue>
-      //    </leave>
-      //</leaves>";
-      $test = '';
-      $this->domDoc->loadXML($actFile);
-      $leaves = new SimpleXMLElement($actFile);
-      //            $users = $recordsFile->getElementsByTagName('userid');
-      foreach ($leaves->leave as $leave) {
-      $test .= $leave;
-      }
-      $loopTimes = count($leaves);
-      for ($index = 0; $index < $loopTimes; $index++) {
-      echo "<br />" . $leaves->leave[$index]->id;
-      $arrayValues = array(
-      'id' => $leaves->leave[$index]->id,
-      'name' => $leaves->leave[$index]->name,
-      'numberofdays' => $leaves->leave[$index]->daysdue
-      );
-      $this->insert($arrayValues);
-      }
-      }
-
-      /**
      * The function to update the request after approval or rejection
      * 
      * @acces public
@@ -202,6 +169,7 @@ class dbinternals extends dbTable {
     }
 
     /**
+     * Insert leave type to the database
      * 
      * @access public
      * @param string $leaveName The name of the leave |ie: Annual or sick.....
@@ -214,7 +182,24 @@ class dbinternals extends dbTable {
             'name' => $leaveName,
             'numberofdays' => $numberOfDays
         );
-        return $this->insert($fields, 'tbl_leaves');
+        $valueExists = FALSE;
+        $leaveRecord = $this->getAll();
+        if (count($leaveRecord) > 0) {
+            $leaveName = trim($leaveName);
+            $leaveName = strtolower($leaveName);
+            foreach ($leaveRecord as $record) {
+                $recordName = strtolower($record['name']);
+                $recordName = trim($record['name']);
+                if ($leaveName == $recordName) {
+                    return TRUE;
+                }
+            }
+        }
+        if (!$valueExists) {
+            return $this->insert($fields, 'tbl_leaves');
+        }else{
+            return TRUE;
+        }
     }
 
 }

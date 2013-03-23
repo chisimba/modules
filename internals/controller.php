@@ -1,5 +1,17 @@
 <?php
 
+// security check - must be included in all scripts
+if (!
+        /**
+         * Description for $GLOBALS
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -41,6 +53,8 @@ class internals extends controller {
     }
 
     /**
+     * Default mothod returned by the module
+     * 
      * @access public
      * @return string
      */
@@ -50,7 +64,7 @@ class internals extends controller {
     }
 
     /**
-     * Method to push the request to the module administrator
+     * Push the request to the module administrator
      *
      *  @access private
      */
@@ -103,7 +117,6 @@ class internals extends controller {
                     if (in_array($date->format('Y-m-d'), $holidays)) {
                         $carriedOver++;
                     }
-//                    continue;
                 } else {
                     $numberOfDays++;
                 }
@@ -118,30 +131,25 @@ class internals extends controller {
             $date->modify('+1 day');
         }
         $numberOfDays = $numberOfDays - $minusDays;
-        echo $numberOfDays . '<br/>'.$minusDays.'<br/>';
         //get user id
         $userId = $objUser->getUserId($objUser->userName());
-        //leave name
-        //the leave ID from the leaves table
-        $originalID = "";
-        //change the leave name to ID
+        //get the leave ID
         $leaveID = $this->getParam('leaveid', NULL);
         $leaveID = str_replace('input_', '', $leaveID);
-        if(count($objDB->getRow("id","{$leaveID} AND userid={$userId}","tbl_leaverecords")) <=0){
-            echo "The field exists";
-        }else{
-        $objDB->_tableName = "tbl_leaverecords";
-            echo "The field does not exists<br/>".$leaveID."<br/>".$userId;
+        if (count($objDB->getArray("SELECT * FROM tbl_leaverecords WHERE id='{$leaveID}' AND userid={$userId}")) > 0) {
+            continue;
+        } else {
+            $objDB->_tableName = "tbl_leaverecords";
             //put the default number of days as days left
-            foreach ($leaveList as $leaveItem){
-                if($leaveItem['id']==$leaveID){
+            foreach ($leaveList as $leaveItem) {
+                if ($leaveItem['id'] == $leaveID) {
                     $leaveDefaultDays = $leaveItem['numberofdays'];
                 }
             }
             $leaveRecordsDefaultValues = array(
-                "id"=>$leaveID,
-                "userid"=>$userId,
-                "daysleft"=>$leaveDefaultDays
+                "id" => $leaveID,
+                "userid" => $userId,
+                "daysleft" => $leaveDefaultDays
             );
             //insert the values to the database
             $objDB->insert($leaveRecordsDefaultValues);
@@ -152,36 +160,52 @@ class internals extends controller {
         $leaveRecords = $objDB->getAll();
         //variable to contain the number of remaining  days
         $remainingDays = 0;
-        foreach($leaveRecords as $recordItem){
-            if($leaveID == $recordItem['id']){
-                if($userId == $recordItem['userid']){
+        $totalDaysTaken = 0;
+        foreach ($leaveRecords as $recordItem) {
+            if ($leaveID == $recordItem['id']) {
+                if ($userId == $recordItem['userid']) {
                     $remainingDays = $recordItem['daysleft'];
+                    //get the total number of days requested by the user
+                    $totalDaysTaken = $recordItem['totaldaystaken'];
                 }
             }
         }
         //subtract the requested days from the available days and then update the database
-        if($numberOfDays > 0){
+        if ($numberOfDays > 0) {
             $remainingDays = $remainingDays - $numberOfDays;
-            if($remainingDays > 0){
-                $queryString = "UPDATE tbl_leaverecords SET daysleft={$remainingDays} WHERE id='{$leaveID}' AND userid={$userId}";
+            if ($remainingDays > 0) {
+                $totalDaysTaken = $totalDaysTaken + $numberOfDays;
+                $queryString = "UPDATE tbl_leaverecords SET daysleft={$remainingDays}, totaldaystaken={$totalDaysTaken} WHERE id='{$leaveID}' AND userid={$userId}";
                 $objDB->_execute($queryString);
-            }else{
+                //insert the values into the database
+                $dateOfRequest = date('Y-m-d');
+                $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays,$dateOfRequest);
+            } else {
                 //indicate that the number of days have ran out
             }
-        }  else {
+        } else {
             //indicate the the user cannot apply for less than one day
         }
     }
 
+    /**
+     * Accept leave application and output a pdf file with the corresponding information
+     * 
+     * @access public
+     * @return object PDF file
+     */
     public function __accept() {
+        $this->objAltConfig = $this->getObject('altconfig', 'config');
+        require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
         /**
          * start of update request values
          */
-        
         //record Id
         $id = $this->getParam('id', NULL);
         //user ID
         $userID = $this->getParam('x_data', NULL);
+        //leave id
+        $leaveID = $this->getParam('leaveid', NULL);
         //request status
         $requestStatus = $this->getParam('status', NULL);
         //database object
@@ -195,7 +219,6 @@ class internals extends controller {
                 $statement = 'No reason was provided';
             }
         }
-//                $objDB->insert($values, 'tbl_requests');
         $values = array(
             'status' => $requestStatus,
             'comments' => $comments
@@ -210,19 +233,36 @@ class internals extends controller {
         $userEmail = $objUser->email($userID);
         //get the user's full name
         $userFullName = $objUser->fullname($userID);
-        //get the start date
-        $startDate = $this->getParam('startdate', NULL);
-        //get the end date
-        $endDate = $this->getParam('enddate', NULL);
         /**
          * get the request information from the databese
          */
+        $daysLeft = 0;
+        $totalDaysTaken = 0;
         //change the table name
         $objDB->_tableName = "tbl_leaverecords";
         $requestInformation = $objDB->getAll();
-        foreach ($requestInformation as $requestItem){
-            
+        foreach ($requestInformation as $requestItem) {
+            if ($requestItem['id'] == $leaveID && $requestItem['userid'] == $userID) {
+                $daysLeft = $requestItem['daysleft'];
+                $totalDaysTaken = $requestItem['totaldaystaken'];
+            }
         }
+        //get the number of requested fays
+        $objDB->_tableName = "tbl_requests";
+        $sqlStatement = "SELECT * FROM tbl_requests WHERE leaveid='{$leaveID}' AND userid={$userID}";
+        $requestInformation = $objDB->getArray($sqlStatement);
+//        print_r($requestInformation);
+        $days = $requestInformation[0]['days'];
+        //get the start date
+        $startDate = $requestInformation[0]['startdate'];
+        //get the end date
+        $endDate = $requestInformation[0]['enddate'];
+        //get the default leave days
+        $objDB->_tableName = "tbl_leaves";
+        $sqlStatement = "SELECT * FROM tbl_leaves WHERE id='{$leaveID}'";
+        $requestInformation = $objDB->getArray($sqlStatement);
+        $defaultDays = $requestInformation[0]['numberofdays'];
+        //date object for today's date
         //Prepare the message
 //        $objMail->setValue('to', "wsifumba@gmail.com");
 //        $objMail->setValue('from', 'noreply@hermes');
@@ -233,32 +273,39 @@ class internals extends controller {
         /**
          * end of update request values
          */
-        
         /**
          * @todo
-         * get user ID
-         * 
-         * get the leave ID
-         * 
-         * get the request ID
          */
-        $this->objAltConfig = $this->getObject('altconfig', 'config');
-        $days = 13;
-        require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
         $pdf = new TCPDF();
+        $marginTop = 113;
+        $marginLeft = 14;
+        $htmlTable = "<br/><table>
+            <tbody>
+            <tr>";
+        $leaveList = $objDB->getAll();
+        $ndx = 0;
+        foreach ($leaveList as $leaveItem) {
+            if ($ndx == 2) {
+                $htmlTable .= "</tr><tr>";
+                $ndx = 0;
+            }
+            $htmlTable .= "<td>             " . $leaveItem['name'] . "<br/></td>";
+            $ndx++;
+        }
+        $htmlTable .= "</tr></tbody></table>";
         $html = "
 <div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/>
+<h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/><br/>
 <table width='100%'>
 <thead>
 </thead>
 <tbody>
 <tr>
 <td >
-<b>Name:</b> <u>Monwabisi Sifumba</u>
+<b>Name:</b> <u>{$userFullName}</u>
 </td>
 <td>
-<b>Date:</b> <u>2013-03-04</u>
+<b>Date:</b> <u></u>
 </td>
 </tr>
 <tr>
@@ -282,55 +329,19 @@ class internals extends controller {
 </td>
 </tr>
 </tbody>
-</table>
-<table>
-<br/><br/>
-<tbody>
-<tr>
-<td>
-            Annual leave
-</td>
-<td>
-            Public Holiday
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-            Compassionate leave
-</td>
-<td>
-            Absent without pay
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-            Maternity
-</td>
-<td>
-            Others, please specify
-</td>
-</tr>
-</tbody>
-</table>
+</table>";
+        $html .= $htmlTable . "
 <br/><br/><br/>
 <table border='1'>
 <thead>
 <tr>
-<td border='1'>
+<td align='center'>
 No. of Days available
 </td>
-<td>
+<td align='center'>
 No. of Days leave taken
 </td>
-<td>
+<td align='cente'>
 No. of Days leave balance
 </td>
 </tr>
@@ -338,26 +349,46 @@ No. of Days leave balance
 <tbody>
 <tr>
 <td align='center'>
-21
+{$defaultDays}
 </td>
 <td align='center'>
-13
+{$totalDaysTaken}
 </td>
 <td align='center'>
-8
+{$daysLeft}
 </td>
 </tr>
 </tbody>
 </table>
 </div>";
         $pdf->SetAuthor("Monwai");
-        $pdf->SetTitle("TCPDF Example 001");
         $pdf->SetSubject("TCPDF Tutorial");
         $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
         $pdf->AddPage('');
         $pdf->setImageScale(5);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/thumbzup-logo.jpg", 100, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
+        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/thumbzup-logo.jpg", 55, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
 //            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+//        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+        $ndx = 0;
+        foreach ($leaveList as $leaveItem) {
+            if ($ndx == 2) {
+                $marginTop += 11;
+                $marginLeft = 14;
+                $ndx = 0;
+            }
+            $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", $marginLeft, $marginTop, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            if ($leaveItem['id'] == $leaveID) {
+                $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/checked.png", $marginLeft, $marginTop, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            }
+            $marginLeft += 94;
+            $ndx++;
+        }
         $pdf->writeHTML($html);
 // get current vertical position
 //            $current_y_position = $pdf->getY();
@@ -367,14 +398,6 @@ No. of Days leave balance
 // write the second column
 //            $pdf->writeHTMLCell($second_column_width, 0, 0, 0, $right_column, 0, 1, 0, true);
 // reset pointer to the last page
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-        $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-
 //            $pdf->lastPage();
 //            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
 //
@@ -383,8 +406,8 @@ No. of Days leave balance
 //        $objMail->setValue('from', 'noreply@hermes');
 //        $objMail->setValue('fromName', 'Monwabisi');
 //        $objMail->setValue('subject', 'Leaves appliction');
-//        $pdf->Output();
-//        $pdf->Output();
+        $pdf->Output();
+        $pdf->Output();
     }
 
     /**
@@ -445,6 +468,10 @@ No. of Days leave balance
         }
     }
 
+    /**
+     * @access public
+     * @param NULL
+     */
     public function __removeUser() {
         $userId = $this->getParam('id', NULL);
         $objUser = $this->getObject('user', 'security');
@@ -499,6 +526,11 @@ No. of Days leave balance
 //        return $objMail->send();
     }
 
+    /**
+     * Add leeave type
+     * 
+     * @access public
+     */
     public function __addLeavetype() {
         $objDB = $this->getObject('dbinternals', 'internals');
         $leaveName = $this->getParam('leavename');
@@ -534,6 +566,7 @@ No. of Days leave balance
      * users. Delete it if you do not want to allow annonymous access.
      * It overides that in the parent class
      *
+     * @access public
      * @return boolean TRUE|FALSE
      *
      */

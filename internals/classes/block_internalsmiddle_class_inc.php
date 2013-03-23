@@ -1,5 +1,17 @@
 <?php
 
+// security check - must be included in all scripts
+if (!
+        /**
+         * Description for $GLOBALS
+         * @global entry point $GLOBALS['kewl_entry_point_run']
+         * @name   $kewl_entry_point_run
+         */
+        $GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -221,7 +233,7 @@ class block_internalsmiddle extends Object {
     }
 
     /**
-     * Function to return the Administrators form
+     * Biuld the Administrator's form
      * 
      * @access public
      * @return object Form
@@ -263,7 +275,7 @@ class block_internalsmiddle extends Object {
                 //accept link
                 $acceptLink->cssId = $value['id'];
                 $acceptLink->extra = "x-data={$value['userid']}";
-                $acceptLink->href = $this->uri(array('action' => 'accept','id'=>$value['id'],'x_data'=>$value['userid'],'status'=>'approved','leaveid'=>$value['leaveid'],'startdate'=>$value['startdate'],'enddate'=>$value['enddate']), 'internals');
+                $acceptLink->href = $this->uri(array('action' => 'accept', 'id' => $value['id'], 'x_data' => $value['userid'], 'status' => 'approved', 'leaveid' => $value['leaveid'], 'startdate' => $value['startdate'], 'enddate' => $value['enddate']), 'internals');
                 $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br />' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
                 array_push($valuesArray, $userName);
                 $form->addToForm('<p >' . $userName . '</p>');
@@ -442,7 +454,9 @@ No. of Days leave balance
     }
 
     /**
+     * Return the output
      * 
+     * @access public
      * @return string or object||String is returned if the user has not registered yet
      */
     public function show() {

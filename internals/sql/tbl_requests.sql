@@ -39,6 +39,10 @@ $fields = array(
         'enddate'=>array(
                 'type'=>'text',
                 'length'=>32
+        ),
+        'requestdate'=>array(
+            'type'=>'text',
+            'length'=>32
         )
 );
 ?>

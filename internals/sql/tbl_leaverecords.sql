@@ -18,6 +18,10 @@ $fields = array(
         'daysleft' => array(
                 'type' => 'text',
                 'length' => 32
+        ),
+        'totaldaystaken'=>array(
+                'type'=>'text',
+                'length'=>32
         )
 );
 ?>
