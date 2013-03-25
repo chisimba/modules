@@ -294,7 +294,7 @@ class internals extends controller {
         }
         $htmlTable .= "</tr></tbody></table>";
         $html = "
-<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/><br/>
 <table width='100%'>
 <thead>
@@ -331,7 +331,7 @@ class internals extends controller {
 </tbody>
 </table>";
         $html .= $htmlTable . "
-<br/><br/><br/>
+<br/><br/>
 <table border='1'>
 <thead>
 <tr>
@@ -366,7 +366,16 @@ No. of Days leave balance
         $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
         $pdf->AddPage('');
         $pdf->setImageScale(5);
-        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/thumbzup-logo.jpg", 55, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
+            $logoImage = "";
+            if(file_exists($this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.png')){
+                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.png';
+            }elseif(file_exists($this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.jpg')){
+                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.jpg';
+            }else{
+                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.gif';
+            }
+//            echo $logoImage;
+        $pdf->Image($logoImage, 55, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
 //            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
 //        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
 //        $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
@@ -390,6 +399,7 @@ No. of Days leave balance
             $ndx++;
         }
         $pdf->writeHTML($html);
+//        echo $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().$userID.'/logo.png';
 // get current vertical position
 //            $current_y_position = $pdf->getY();
 // write the first column
