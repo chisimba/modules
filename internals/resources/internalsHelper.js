@@ -51,7 +51,7 @@ jQuery('#btnSaveLeave').die('click').live('click', function() {
                 type: 'post',
                 data: leave_info,
                 success: function() {
-                    alert('Done')
+                    alert('leave added, please reload page to see changes')
                 }
             });
         } else {
@@ -90,7 +90,7 @@ jQuery(function() {
             type: 'post',
             data: data_string,
             success: function() {
-                alert(data_string)
+                alert('Request updated, please reload the page to see changes')
             }
         });
     });
@@ -110,7 +110,7 @@ jQuery('.acceptLink').die('click').live('click', function() {
         type: 'post',
         data: data_string,
         success: function() {
-            alert('request processed!')
+            
         }
     });
 });
