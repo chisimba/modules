@@ -55,7 +55,9 @@ class block_internalsmiddle extends Object {
         $frmLeave = new form('frmLeave');
         $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply', 'system')}</h2>");
         $btnSave = $this->getObject('button', 'htmlelements');
+        $btnSave->setToSubmit();
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
+        $tblLeave->cssId = "tblLeaves";
         //get all vailable leaves
         $leaves = $this->dbInternals->getLeaveList();
         $labels = $this->getObject('label', 'htmlelements');
@@ -248,7 +250,7 @@ class block_internalsmiddle extends Object {
         $acceptLink->cssClass = 'acceptLink';
         $acceptLink->link = $this->objLanguage->languageText('word_approve', 'system');
         //form to contain all controlls
-        $form = new form('frmAdminRequests');
+        $form = new form('frmAdminRequests',  $this->uri(array('module','internals')));
         $form->name = "frmAdminRequests";
         $form->cssId = "frmAdminRequests";
         $valuesArray = array();
@@ -266,6 +268,7 @@ class block_internalsmiddle extends Object {
                 $sendLink->cssId = $value['id'];
                 $sendLink->cssClass = "sendLink";
                 $sendLink->extra = "x-data={$value['userid']}";
+                $sendLink->href = $this->uri(array('action' => 'accept', 'id' => $value['id'], 'x_data' => $value['userid'], 'status' => 'rejected', 'leaveid' => $value['leaveid'], 'startdate' => $value['startdate'], 'enddate' => $value['enddate']), 'internals');
                 //comentary paragraph
                 $this->loadClass('textarea', 'htmlelements');
                 $comments = new textarea();
@@ -276,165 +279,20 @@ class block_internalsmiddle extends Object {
                 $acceptLink->cssId = $value['id'];
                 $acceptLink->extra = "x-data={$value['userid']}";
                 $acceptLink->href = $this->uri(array('action' => 'accept', 'id' => $value['id'], 'x_data' => $value['userid'], 'status' => 'approved', 'leaveid' => $value['leaveid'], 'startdate' => $value['startdate'], 'enddate' => $value['enddate']), 'internals');
-                $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br />' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
+                $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br/><br/>' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
                 array_push($valuesArray, $userName);
-                $form->addToForm('<p >' . $userName . '</p>');
+                if ($value['status'] == 'approved' || strtolower($value['status'] == 'rejected')) {
+                    continue;
+                } else {
+                    $form->addToForm("<p class='{$value['status']}' id='{$value['id']}' >" . $userName . '</p>');
+                }
                 $form->addToForm($comments->show());
                 $form->addToForm('<br />');
                 $form->addToForm($sendLink->show());
             }
-            return $form->show() . $this->getjavascriptFile('internlsHelper.js', 'internals');
-        } else {
-            $days = 13;
-            $startDate = '2013-03-14';
-            $endDate = '2013-03-28';
-            require $this->objAltConfig->getModulePath() . 'pdfmaker/resources/tcpdf.php';
-            $pdf = new TCPDF();
-            $html = "
-<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/>
-<table width='100%'>
-<thead>
-</thead>
-<tbody>
-<tr>
-<td >
-<b>Name:</b> <u>Monwabisi Sifumba</u>
-</td>
-<td>
-<b>Date:</b> <u>2013-03-04</u>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-&nbsp;<b>Position:</b>
-<u>Web Developer</u>
-</td>
-</tr>
-</tbody>
-</table>
-<br/>
-<table>
-<tbody>
-<tr>
-<td>
-<div> Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</b> to <b>{$endDate}</b> inclusive.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table>
-<br/><br/>
-<tbody>
-<tr>
-<td>
-            Annual leave
-</td>
-<td>
-            Public Holiday
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-            Compassionate leave
-</td>
-<td>
-            Absent without pay
-</td>
-</tr>
-<tr>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-            Maternity
-</td>
-<td>
-            Others, please specify
-</td>
-</tr>
-</tbody>
-</table>
-<br/><br/><br/>
-<table border='1'>
-<thead>
-<tr>
-<td border='1'>
-No. of Days available
-</td>
-<td>
-No. of Days leave taken
-</td>
-<td>
-No. of Days leave balance
-</td>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align='center'>
-21
-</td>
-<td align='center'>
-13
-</td>
-<td align='center'>
-8
-</td>
-</tr>
-</tbody>
-</table>
-</div>";
-            $pdf->SetAuthor("Monwai");
-            $pdf->SetTitle("TCPDF Example 001");
-            $pdf->SetSubject("TCPDF Tutorial");
-            $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
-            $pdf->AddPage('');
-            $pdf->setImageScale(5);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/thumbzup-logo.jpg", 100, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
-//            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->writeHTML($html);
-// get current vertical position
-//            $current_y_position = $pdf->getY();
-// write the first column
-//            $pdf->writeHTMLCell($first_column_width, 0, 0, 0, $left_column, 0, 0, 0, true);
-//$pdf->CheckBox('newsletter', 5, true);
-// write the second column
-//            $pdf->writeHTMLCell($second_column_width, 0, 0, 0, $right_column, 0, 1, 0, true);
-// reset pointer to the last page
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/Untitled.png", 15, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 113, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 124, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 14, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
-            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/unchkd.png", 109, 135, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+            return $this->addLeaveType().$form->show() . $this->getjavascriptFile('internlsHelper.js', 'internals');
+//            return $form->show() . ;
 
-//            $pdf->lastPage();
-//            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
-//            $pdf->Output();
-//            $pdf->Output();
-
-            $objMail = $this->getObject('mailer', 'mail');
-            $objMail->setValue('to', "wsifumba@gmail.com");
-            $objMail->setValue('from', 'noreply@hermes');
-            $objMail->setValue('fromName', 'Monwabisi');
-            $objMail->setValue('subject', 'Leaves appliction');
-//            $objMail->setValue('body', $pdf->Output("example_001.pdf", "I"));
-//            $objMail->setValue('htmlbody', $pdf->Output("example_001.pdf", "I"));
-//            $form->addToForm("<h2>{$this->objLanguage->languageText('phrase_norequests','system')}</h2>");
-//            $objMail->send();
-            return $form->show() . $this->addLeaveType();
-            ;
         }
     }
 
