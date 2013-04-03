@@ -52,7 +52,7 @@ class block_internalsright extends Object {
         $objForm = $this->getObject('form', 'htmlelements');
         $requests = $this->objDBleaves->getLeaveRequests();
         foreach ($requests as $value) {
-            $objForm->addToForm($value['status']);
+            $objForm->addToForm($value['userid']);
         }
         return $objForm->show();
     }

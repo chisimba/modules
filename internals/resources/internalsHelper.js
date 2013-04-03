@@ -28,8 +28,8 @@ jQuery('#btnSave').die('click').live('click', function() {
                 type: 'post',
                 data: data_string,
                 success: function() {
-                    //message to indicate that the request went through
-//                    alert();
+                    alert('Application successfully proccessed')
+                    window.location.reload()
                 }
             })
         } else {
@@ -52,7 +52,8 @@ jQuery('#btnSaveLeave').die('click').live('click', function() {
                 type: 'post',
                 data: leave_info,
                 success: function() {
-                    alert('leave added, please reload page to see changes')
+                    alert('leave type added')
+                    window.location.replace(window.location)
                 }
             });
         } else {

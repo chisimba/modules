@@ -25,6 +25,11 @@ if (!
 class internals extends controller {
 
     var $objAltConfig;
+    var $objLanguage;
+
+    public function init(){
+        $this->objLanguage = $this->getObject('language','language');
+    }
 
     /**
      * 
@@ -284,6 +289,7 @@ class internals extends controller {
          * get the request information from the databese
          */
         $daysLeft = 0;
+        $days --;
         $totalDaysTaken = 0;
         //change the table name
         $objDB->_tableName = "tbl_leaverecords";
@@ -294,38 +300,42 @@ class internals extends controller {
                 $totalDaysTaken = $requestItem['totaldaystaken'];
                 if ($requestStatus == 'rejected') {
                     $rejectedDays = $requestItem['daysleft'] + $days;
-                    $daysLeft = $rejectedDays;
+                    $daysLeft = $daysLeft - $rejectedDays;
                     if ($rejectedDays <= $defaultDays) {
-                        $queryStatement = "UPDATE tbl_leaverecords SET daysleft={$rejectedDays} WHERE id='{$requestItem['id']}'";
+                        $queryStatement = "UPDATE tbl_leaverecords SET daysleft={$rejectedDays}, daysleft={} WHERE id='{$requestItem['id']}'";
                         $objDB->_execute($queryStatement);
                     }
                 }
             }
         }
+        $formMessage = $this->objLanguage->languageText('mod_formmessage_internals','internals');
+        $formMessage = str_replace('@numberofdays',$days,$formMessage);
+        $formMessage = str_replace('@startdate','<b>'.$startDate.'</b>',$formMessage);
+        $formMessage = str_replace('@enddate', '<b>'.$endDate.'</b>', $formMessage);
         $htmlTable .= "</tr></tbody></table>";
         $html = "
 <div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/><br/>
+<h1 align='center' ><font size='30'  ><u>{$this->objLanguage->languageText('phrase_formheading','system')}</u></font></h1><br/><br/><br/>
 <table width='100%'>
 <thead>
 </thead>
 <tbody>
 <tr>
 <td >
-<b>Name:</b> <u>{$userFullName}</u>
+<b>{$this->objLanguage->languageText('word_name','system')}</b> <u>{$userFullName}</u>
 </td>
 <td>
-<b>Date:</b> <u>{$requestDate}</u>
-</td>
-</tr>
-<tr>
-<td>
+<b>{$this->objLanguage->languageText('word_date','system')}</b> <u>{$requestDate}</u>
 </td>
 </tr>
 <tr>
 <td>
-&nbsp;<b>Position:</b>
-<u>Web Developer</u>
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;<b>{$this->objLanguage->languageText('word_position','system')}</b>
+_____________________
 </td>
 </tr>
 </tbody>
@@ -335,7 +345,7 @@ class internals extends controller {
 <tbody>
 <tr>
 <td>
-<div> Please approve absence from work for <b>{$days}</b> days, from <b>{$startDate}</b> to <b>{$endDate}</b> inclusive.</div>
+<div> {$formMessage}</div>
 </td>
 </tr>
 </tbody>
@@ -388,7 +398,7 @@ Approved / Rejected By<br/> General manager<br/><br/><br/><br/>
 </tbody>
 </table>
 </div>";
-        $pdf->SetAuthor("Monwai");
+//        $pdf->SetAuthor("Monwai");
         $pdf->SetSubject("TCPDF Tutorial");
         $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
         $pdf->AddPage('');
@@ -444,7 +454,7 @@ Approved / Rejected By<br/> General manager<br/><br/><br/><br/>
         $objMail->setValue('subject', 'Leaves appliction');
         $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
         $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
-        $objMail->send();
+//        $objMail->send();
         $pdf->Output();
         $pdf->Output();
 //        echo $this->objAltConfig->getcontentPath();

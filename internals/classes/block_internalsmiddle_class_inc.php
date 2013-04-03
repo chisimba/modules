@@ -211,7 +211,7 @@ class block_internalsmiddle extends Object {
         $frmAddLeave = new form('frmAddLeave');
         $frmAddLeave->name = "frmAddLeave";
         $frmAddLeave->cssId = "frmAddLeave";
-        $frmAddLeave->addToForm('<h2>' . $this->objLanguage->languageText('mod_internals_addleave', 'internals') . '</h2>');
+        $frmAddLeave->addToForm('<h2>' . $this->objLanguage->languageText('phrase_addleavetype', 'system') . '</h2>');
         $tblLayout = new htmltable();
         //Build the form
         $tblLayout->startRow();
@@ -279,7 +279,7 @@ class block_internalsmiddle extends Object {
                 $acceptLink->cssId = $value['id'];
                 $acceptLink->extra = "x-data={$value['userid']}";
                 $acceptLink->href = $this->uri(array('action' => 'accept', 'id' => $value['id'], 'x_data' => $value['userid'], 'status' => 'approved', 'leaveid' => $value['leaveid'], 'startdate' => $value['startdate'], 'enddate' => $value['enddate']), 'internals');
-                $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' leave<br />Starting from ' . $value['startdate'] . '<br/><br/>' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
+                $userName = $this->objUser->fullName($value['userid']) . '<br />Requested ' . $value['days'] . ' day(s) of ' . $this->dbInternals->getLeaveName($value['leaveid']) . ' <br />Starting from ' . $value['startdate'] . '<br/><br/>' . $acceptLink->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $rejectLink->show();
                 array_push($valuesArray, $userName);
                 if ($value['status'] == 'approved' || strtolower($value['status'] == 'rejected')) {
                     continue;
@@ -290,10 +290,11 @@ class block_internalsmiddle extends Object {
                 $form->addToForm('<br />');
                 $form->addToForm($sendLink->show());
             }
+        }
             return $this->addLeaveType().$form->show() . $this->getjavascriptFile('internlsHelper.js', 'internals');
 //            return $form->show() . ;
 
-        }
+        
     }
 
     /**
