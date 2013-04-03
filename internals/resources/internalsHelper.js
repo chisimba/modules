@@ -13,6 +13,7 @@ jQuery(document).ready(function() {
 //                alert(jQuery('#leavetype').val());
     });
     jQuery('.requestComments, .sendLink').hide();
+    
 });
 
 jQuery('#btnSave').die('click').live('click', function() {
@@ -28,7 +29,7 @@ jQuery('#btnSave').die('click').live('click', function() {
                 data: data_string,
                 success: function() {
                     //message to indicate that the request went through
-                    alert(data_string);
+//                    alert();
                 }
             })
         } else {
@@ -81,18 +82,22 @@ jQuery(function() {
         jQuery(this).hide('slow');
 //                alert(comments);
         if(comments.length <=0){
-            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected';
+//            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected';
+            window.location.replace($(this));
         }else{
-            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected&comments=' + comments;
+//            var data_string = 'id=' + req_Id + '&x_data=' + x_data + '&status=rejected&comments=' + comments;
+            window.location.replace($(this)+'&comments='+comments)
         }
-        jQuery.ajax({
-            url: 'index.php?module=internals&action=updateRequest',
-            type: 'post',
-            data: data_string,
-            success: function() {
-                alert('Request updated, please reload the page to see changes')
-            }
-        });
+//        alert($(this)+'&comments=it works');
+//        alert(window.location)
+//        jQuery.ajax({
+//            url: 'index.php?module=internals&action=updateRequest',
+//            type: 'post',
+//            data: data_string,
+//            success: function() {
+//                alert(data_string)
+//            }
+//        });
     });
 });
 jQuery('input.transparentbgnb').die('click').live('click', function() {
