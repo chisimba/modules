@@ -136,24 +136,20 @@ class internals extends controller {
         //get the leave ID
         $leaveID = $this->getParam('leaveid', NULL);
         $leaveID = str_replace('input_', '', $leaveID);
-        if (count($objDB->getArray("SELECT * FROM tbl_leaverecords WHERE id='{$leaveID}' AND userid={$userId}")) > 0) {
-            continue;
-        } else {
-            $objDB->_tableName = "tbl_leaverecords";
-            //put the default number of days as days left
-            foreach ($leaveList as $leaveItem) {
-                if ($leaveItem['id'] == $leaveID) {
-                    $leaveDefaultDays = $leaveItem['numberofdays'];
-                }
+        $objDB->_tableName = "tbl_leaverecords";
+        //put the default number of days as days left
+        foreach ($leaveList as $leaveItem) {
+            if ($leaveItem['id'] == $leaveID) {
+                $leaveDefaultDays = $leaveItem['numberofdays'];
             }
-            $leaveRecordsDefaultValues = array(
-                "id" => $leaveID,
-                "userid" => $userId,
-                "daysleft" => $leaveDefaultDays
-            );
-            //insert the values to the database
-            $objDB->insert($leaveRecordsDefaultValues);
         }
+        $leaveRecordsDefaultValues = array(
+            "id" => $leaveID,
+            "userid" => $userId,
+            "daysleft" => $leaveDefaultDays
+        );
+        //insert the values to the database
+        $objDB->insert($leaveRecordsDefaultValues);
         //get the remaining number of days and then subtract the requested ones
         //change the table name
         $objDB->_tableName = "tbl_leaverecords";
@@ -179,7 +175,7 @@ class internals extends controller {
                 $objDB->_execute($queryString);
                 //insert the values into the database
                 $dateOfRequest = date('Y-m-d');
-                $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays,$dateOfRequest);
+                $objDB->postRequest($userId, $leaveID, $startDate, $endDate, $numberOfDays, $dateOfRequest);
             } else {
                 //indicate that the number of days have ran out
             }
@@ -212,7 +208,8 @@ class internals extends controller {
         $objDB = $this->getObject('dbinternals', 'internals');
         //comments
         $comments = $this->getParam('comments', NULL);
-        if ($requestStatus == 'reject') {
+        $statement = "";
+        if (strtolower($requestStatus == 'rejected')) {
             if (!empty($comments)) {
                 $statement = 'Reason being ' . $comments;
             } else {
@@ -233,20 +230,6 @@ class internals extends controller {
         $userEmail = $objUser->email($userID);
         //get the user's full name
         $userFullName = $objUser->fullname($userID);
-        /**
-         * get the request information from the databese
-         */
-        $daysLeft = 0;
-        $totalDaysTaken = 0;
-        //change the table name
-        $objDB->_tableName = "tbl_leaverecords";
-        $requestInformation = $objDB->getAll();
-        foreach ($requestInformation as $requestItem) {
-            if ($requestItem['id'] == $leaveID && $requestItem['userid'] == $userID) {
-                $daysLeft = $requestItem['daysleft'];
-                $totalDaysTaken = $requestItem['totaldaystaken'];
-            }
-        }
         //get the number of requested fays
         $objDB->_tableName = "tbl_requests";
         $sqlStatement = "SELECT * FROM tbl_requests WHERE leaveid='{$leaveID}' AND userid={$userID}";
@@ -257,6 +240,7 @@ class internals extends controller {
         $startDate = $requestInformation[0]['startdate'];
         //get the end date
         $endDate = $requestInformation[0]['enddate'];
+        $requestDate = $requestInformation[0]['requestdate'];
         //get the default leave days
         $objDB->_tableName = "tbl_leaves";
         $sqlStatement = "SELECT * FROM tbl_leaves WHERE id='{$leaveID}'";
@@ -289,12 +273,38 @@ class internals extends controller {
                 $htmlTable .= "</tr><tr>";
                 $ndx = 0;
             }
+            /**
+             * @note  spaces are for layout purposes please do not remove them unless relpacing them with a more proffesional alternative
+             */
             $htmlTable .= "<td>             " . $leaveItem['name'] . "<br/></td>";
             $ndx++;
         }
+
+        /**
+         * get the request information from the databese
+         */
+        $daysLeft = 0;
+        $totalDaysTaken = 0;
+        //change the table name
+        $objDB->_tableName = "tbl_leaverecords";
+        $requestInformation = $objDB->getAll();
+        foreach ($requestInformation as $requestItem) {
+            if ($requestItem['id'] == $leaveID && $requestItem['userid'] == $userID) {
+                $daysLeft = $requestItem['daysleft'];
+                $totalDaysTaken = $requestItem['totaldaystaken'];
+                if ($requestStatus == 'rejected') {
+                    $rejectedDays = $requestItem['daysleft'] + $days;
+                    $daysLeft = $rejectedDays;
+                    if ($rejectedDays <= $defaultDays) {
+                        $queryStatement = "UPDATE tbl_leaverecords SET daysleft={$rejectedDays} WHERE id='{$requestItem['id']}'";
+                        $objDB->_execute($queryStatement);
+                    }
+                }
+            }
+        }
         $htmlTable .= "</tr></tbody></table>";
         $html = "
-<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <h1 align='center' ><font size='30'  ><u>Leave Application Form</u></font></h1><br/><br/><br/>
 <table width='100%'>
 <thead>
@@ -305,7 +315,7 @@ class internals extends controller {
 <b>Name:</b> <u>{$userFullName}</u>
 </td>
 <td>
-<b>Date:</b> <u></u>
+<b>Date:</b> <u>{$requestDate}</u>
 </td>
 </tr>
 <tr>
@@ -360,20 +370,37 @@ No. of Days leave balance
 </tr>
 </tbody>
 </table>
+<br/><br/><br/><br/><br/><br/><br/><br/>
+<table width='100%' >
+<tbody>
+<tr>
+<td>
+Approved / Rejected By<br/> Operation Department<br/><br/><br/><br/>
+<u>_____________________</u>
+</td>
+<td>
+</td>
+<td>
+Approved / Rejected By<br/> General manager<br/><br/><br/><br/>
+<u>_____________________</u>
+</td>
+</tr>
+</tbody>
+</table>
 </div>";
         $pdf->SetAuthor("Monwai");
         $pdf->SetSubject("TCPDF Tutorial");
         $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
         $pdf->AddPage('');
         $pdf->setImageScale(5);
-            $logoImage = "";
-            if(file_exists($this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.png')){
-                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.png';
-            }elseif(file_exists($this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.jpg')){
-                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.jpg';
-            }else{
-                $logoImage = $this->objAltConfig->getsiteRootPath().$this->objAltConfig->getContentPath().'users/'.$userID.'/logo.gif';
-            }
+        $logoImage = "";
+        if (file_exists($this->objAltConfig->getsiteRootPath() . $this->objAltConfig->getContentPath() . 'users/' . $objUser->getUserId($objUser->userName()) . '/logo.png')) {
+            $logoImage = $this->objAltConfig->getsiteRootPath() . $this->objAltConfig->getContentPath() . 'users/' . $objUser->getUserId($objUser->userName()) . '/logo.png';
+        } elseif (file_exists($this->objAltConfig->getsiteRootPath() . $this->objAltConfig->getContentPath() . 'users/' . $objUser->getUserId($objUser->userName()) . '/logo.jpg')) {
+            $logoImage = $this->objAltConfig->getsiteRootPath() . $this->objAltConfig->getContentPath() . 'users/' . $objUser->getUserId($objUser->userName()) . '/logo.jpg';
+        } else {
+            $logoImage = $this->objAltConfig->getsiteRootPath() . $this->objAltConfig->getContentPath() . 'users/' . $objUser->getUserId($objUser->userName()) . '/logo.gif';
+        }
 //            echo $logoImage;
         $pdf->Image($logoImage, 55, 5, 100, 30, '', 'http://www.tcpdf.org', '', true, 72);
 //            $pdf->Image($this->objAltConfig->getModulePath() . "pdfmaker/resources/images/logo.jpg", 160, 10, 45, 60, '', 'http://www.tcpdf.org', '', true, 72);
@@ -393,7 +420,7 @@ No. of Days leave balance
             }
             $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/unchkd.png", $marginLeft, $marginTop, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
             if ($leaveItem['id'] == $leaveID) {
-                $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/checked.png", $marginLeft, $marginTop, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
+                $pdf->Image($this->objAltConfig->getModulePath() . "internals/resources/images/checked.png", $marginLeft + 1, $marginTop - 0.5, 8, 7, '', 'http://www.tcpdf.org', '', true, 72);
             }
             $marginLeft += 94;
             $ndx++;
@@ -411,13 +438,18 @@ No. of Days leave balance
 //            $pdf->lastPage();
 //            $pdf->writeHTMLCell(0, 0, 0, 0, $html = '<h1>Hey</h1>', 0, 0, 0, true, '');
 //
-//        $objMail = $this->getObject('mailer', 'mail');
-//        $objMail->setValue('to', "wsifumba@gmail.com");
-//        $objMail->setValue('from', 'noreply@hermes');
-//        $objMail->setValue('fromName', 'Monwabisi');
-//        $objMail->setValue('subject', 'Leaves appliction');
+        $objMail->setValue('to', "wsifumba@gmail.com");
+        $objMail->setValue('from', 'noreply@hermes');
+        $objMail->setValue('fromName', 'Monwabisi');
+        $objMail->setValue('subject', 'Leaves appliction');
+        $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
+        $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
+        $objMail->send();
         $pdf->Output();
         $pdf->Output();
+//        echo $this->objAltConfig->getcontentPath();
+//        echo $objUser->getUserId($objUser->userName());
+//        echo $this->objAltConfig->getsiteRoot().$this->objAltConfig->getcontentPath().'users/'.$objUser->getUserId($objUser->userName()).'/logo.jpg';
     }
 
     /**
@@ -503,11 +535,13 @@ No. of Days leave balance
         $objDB = $this->getObject('dbinternals', 'internals');
         //comments
         $comments = $this->getParam('comments', NULL);
-        if ($requestStatus == 'reject') {
-            if (!empty($comments)) {
-                $statement = 'Reason being ' . $comments;
-            } else {
-                $statement = 'No reason was provided';
+        if (!empty($requestStatus)) {
+            if (strtolower($requestStatus) == 'reject') {
+                if (!empty($comments)) {
+                    $statement = 'Reason being ' . $comments;
+                } else {
+                    $statement = 'No reason was provided';
+                }
             }
         }
 //                $objDB->insert($values, 'tbl_requests');
@@ -526,14 +560,16 @@ No. of Days leave balance
         //get the user's full name
         $userFullName = $objUser->fullname($userID);
         //Prepare the message
-        $objMail->setValue('to', "wsifumba@gmail.com");
+        $objMail->setValue('to', $userEmail);
         $objMail->setValue('from', 'noreply@hermes');
-        $objMail->setValue('fromName', 'Monwabisi');
-        $objMail->setValue('subject', 'Leaves appliction');
+        $objMail->setValue('fromName', $userFullName);
+        $objMail->setValue('subject', 'Leave appliction');
         $objMail->setValue('body', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
-        $objMail->setValue('htmlbody', "{$userFullName}your leave request has been " . $requestStatus . '<br/>' . $statement);
+        $objMail->setValue('htmlbody', "{$userFullName} your leave request has been " . $requestStatus . '<br/>' . $statement);
         //send the message
-//        return $objMail->send();
+        if ($objMail->send()) {
+//            header('location:index.php?module=internals');
+        }
     }
 
     /**
