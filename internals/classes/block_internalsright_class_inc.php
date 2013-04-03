@@ -49,10 +49,26 @@ class block_internalsright extends Object {
     }
 
     public function show() {
+        //the user ID
+        $userID = $this->objUser->getUserId($this->objUser->userName());
         $objForm = $this->getObject('form', 'htmlelements');
         $requests = $this->objDBleaves->getLeaveRequests();
+        $pending = 0;
+        $rejected = 0;
+        $approved = 0;
         foreach ($requests as $value) {
-            $objForm->addToForm($value['userid']);
+            if ($userID == $value['userid']) {
+                if($value['status'] == 'pending'){
+                    $pending++;
+                }
+                if($value['status'] == 'approved'){
+                    $approved++;
+                }
+                if($value['status'] == 'rejected'){
+                    $rejected ++;
+                }
+                $objForm->addToForm(str_replace('@rejected',$rejected,$this->objLanguage->languageText('phrase_rejected','system')).'<br/>'.str_replace('@approved',$approved,$this->objLanguage->languageText('phrase_approved','system')).'<br/>'.str_replace('@pending',$pending,$this->objLanguage->languageText('phrase_pending','system')) );
+            }
         }
         return $objForm->show();
     }
