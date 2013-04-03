@@ -1,4 +1,5 @@
 <?php
+
 // security check - must be included in all scripts
 if (!
         /**
@@ -30,6 +31,7 @@ class block_internalsright extends Object {
     var $objAltConfig;
     var $objDBleaves;
     var $objBlockMiddle;
+
     /**
      * 
      */
@@ -39,6 +41,7 @@ class block_internalsright extends Object {
         $this->objUser = $this->getObject('user', 'security');
         $this->objAltConfig = $this->getObject('altconfig', 'config');
         $this->title = $this->objLanguage->languageText('word_internals_title', 'system');
+        $this->objDBleaves = $this->getObject('dbinternals', 'internals');
     }
 
     public function addLeaveForm() {
@@ -46,7 +49,12 @@ class block_internalsright extends Object {
     }
 
     public function show() {
-        
+        $objForm = $this->getObject('form', 'htmlelements');
+        $requests = $this->objDBleaves->getLeaveRequests();
+        foreach ($requests as $value) {
+            $objForm->addToForm($value['status']);
+        }
+        return $objForm->show();
     }
 
 }
