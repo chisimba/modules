@@ -55,7 +55,7 @@ class block_internalsmiddle extends Object {
         $frmLeave = new form('frmLeave');
         $frmLeave->addToForm("<h2>{$this->objLanguage->languageText('phrase_apply', 'system')}</h2>");
         $btnSave = $this->getObject('button', 'htmlelements');
-        $btnSave->setToSubmit();
+//        $btnSave->setToSubmit();
         $tblLeave = $this->getObject('htmltable', 'htmlelements');
         $tblLeave->cssId = "tblLeaves";
         //get all vailable leaves
