@@ -7,6 +7,7 @@
  * a service.
  *
  * Website: http://www.artofsolving.com/opensource
+ * Website: http://code.google.com/p/jodconverter/
  *
  * To run this class, you need:
  * 1) either python or java installed
