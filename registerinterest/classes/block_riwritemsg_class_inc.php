@@ -63,6 +63,14 @@ class block_riwritemsg extends object
      * @access public
      */
     public $title;
+    
+    /**
+     * Language object
+     * 
+     *@access public
+     * @var object
+     */
+    public $objLanguage;
 
     /**
      * Standard init function
@@ -73,8 +81,9 @@ class block_riwritemsg extends object
      */
     public function init() 
     {
+        $this->objLanguage = $this->getObject('language','language');
         $this->wrapStr = FALSE;
-        $this->title = "Write message";
+        $this->title = $this->objLanguage->languageText('phrase_writemsg','system');
     }
     /**
      * Standard block show method.

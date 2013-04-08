@@ -391,7 +391,7 @@ class riops extends object {
     public function sendMessage($subject = NULL, &$message, $userId) {
         $domDoc = new DOMDocument('utf-8');
         if (!empty($message)) {
-            $templateLocation = $this->objAltConfig->getSiteRoot() . '/' . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
+            $templateLocation = $this->objAltConfig->getSiteRoot() . $this->objAltConfig->getContentPath() . 'users/' . $userId . '/';
             $messageParagraph = $domDoc->createElement('p');
             //$messageParagraph->appendChild($domDoc->createTextNode($message));
             $domDoc->loadHTML($message);
@@ -527,15 +527,7 @@ class riops extends object {
                 $objMail->setValue('subject', $subject);
                 $objMail->setValue('body', $plainMessage);
                 $objMail->setValue('htmlbody', $htmlMessage);
-                /**
-                 * @todo Remove me when tesating is finished
-                 */
-                $a= 1;
-                if (/*$objMail->send()*/$a == 1) {
-                    $retValue = TRUE;
-                } else {
-                    $retValue = FALSE;
-                }
+                $objMail->send();
             }
         //} else {
             $retValue = FALSE;
