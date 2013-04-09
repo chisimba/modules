@@ -230,8 +230,8 @@ class block_internalsmiddle extends Object {
         $tblLayout->addCell($btnSave->show());
         $tblLayout->endRow();
         //
-        $frmAddLeave->addToForm($tblLayout->show());
-        return $frmAddLeave->show();
+//        $frmAddLeave->addToForm($tblLayout->show());
+//        return $frmAddLeave->show();
     }
 
     /**
