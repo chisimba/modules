@@ -196,7 +196,7 @@ class riops extends object {
             return $ret;
         }
         if (count($this->objDB->getAll()) == 0 && $this->objUser->isAdmin() != TRUE) {
-            return "<span >{$this->objLanguage->languageText('mod_registerinterest_nointerests','registerinterest')}</span>";
+            return "<span >{$this->objLanguage->languageText('mod_registerinterest_nointerests','registerinterest','No interests are available to register for')}</span>";
         } elseif (count($this->objDB->getAll()) > 0) {
             return $ret;
         }
