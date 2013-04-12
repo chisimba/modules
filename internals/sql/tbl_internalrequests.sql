@@ -1,6 +1,6 @@
 <?php
 // Table Name
-$tablename = 'tbl_requests';
+$tablename = 'tbl_internalrequests';
 
 
 //Options line for comments, encoding and character set

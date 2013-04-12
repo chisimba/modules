@@ -228,7 +228,7 @@ class internals extends controller {
         //html to pdf test
         $objMail = & $this->getObject('mailer', 'mail');
         //pdate the database
-        $objDB->update('id', $id, $values, 'tbl_requests');
+        $objDB->update('id', $id, $values, 'tbl_internalrequests');
         //prepare to send message
         $objUser = $this->getObject('user', 'security');
         //get the user email address
@@ -236,8 +236,8 @@ class internals extends controller {
         //get the user's full name
         $userFullName = $objUser->fullname($userID);
         //get the number of requested fays
-        $objDB->_tableName = "tbl_requests";
-        $sqlStatement = "SELECT * FROM tbl_requests WHERE leaveid='{$leaveID}' AND userid={$userID}";
+        $objDB->_tableName = "tbl_internalrequests";
+        $sqlStatement = "SELECT * FROM tbl_internalrequests WHERE leaveid='{$leaveID}' AND userid={$userID}";
         $requestInformation = $objDB->getArray($sqlStatement);
 //        print_r($requestInformation);
         $days = $requestInformation[0]['days'];
@@ -562,7 +562,7 @@ Approved / Rejected By<br/> General manager<br/><br/><br/><br/>
         //html to pdf test
         $objMail = & $this->getObject('mailer', 'mail');
         //pdate the database
-        $objDB->update('id', $id, $values, 'tbl_requests');
+        $objDB->update('id', $id, $values, 'tbl_internalrequests');
         //prepare to send message
         $objUser = $this->getObject('user', 'security');
         //get the user email address

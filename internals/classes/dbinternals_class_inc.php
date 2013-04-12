@@ -49,7 +49,7 @@ class dbinternals extends dbTable {
      * @return array List of pending requests
      */
     public function getLeaveRequests($userId = NULL) {
-        parent::init('tbl_requests');
+        parent::init('tbl_internalrequests');
         if (!empty($userId)) {
             $requests = $this->getAll(NULL, "WHERE id='{$userId}' AND status='pending'");
         } else {
