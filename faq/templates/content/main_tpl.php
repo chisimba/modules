@@ -101,9 +101,9 @@ if (count($categories) == 0) {
         $categoryLink->link = $item['categoryname'];
         $categoryLink->title = $this->objLanguage->languageText('mod_faq_viewcategory', 'faq');
 
-        $ret .= '<li>'.$categoryLink->show().' ('.$numItems.')';
+        $ret .= '<li>' . $categoryLink->show() . '&nbsp;<span class="indicator" >&nbsp;&nbsp;&nbsp;' . $numItems . '&nbsp;&nbsp;&nbsp;</span>';
 
-        if ($this->userHasModifyAccess()) {
+                if ($this->userHasModifyAccess()) {
             // Create the edit link.
             $editLink = new link($this->uri(array('action'=>'editcategory', 'id'=>$item['id'])));
             $editLink->link = $editIcon;
