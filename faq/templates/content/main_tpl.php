@@ -25,7 +25,8 @@ $tagCloudContent=$form->show().'<br>';
 
 // Show the heading
 $objHeading = new htmlheading();
-$objHeading->type=1;
+$objHeading->type = 5;
+$objHeading->cssClass = 'featureboxheader';
 
 // Show the add link
 $objLink =& $this->getObject('link','htmlelements');
@@ -64,11 +65,12 @@ if ($this->isValid('add'))
 }else {
 	$addLink = "";
 }
+$objHeading->str .='&nbsp;&nbsp;&nbsp;&nbsp;' . $addLink;
 if (count($categories) > 0 && $this->userHasModifyAccess()) {
-    $objHeading->str .= ' '.$addLink.'<br>'.$tagCloudContent;
+    $ret .= $objHeading->show() . '<br/>' . $tagCloudContent;
 }
 
-$ret .= $objHeading->show();
+//$ret .= $objHeading->show();
 
 if (count($categories) == 0) {
     $ret .= '<div class="noRecordsMessage">No FAQ Categories available</div>';
@@ -197,6 +199,5 @@ $ret .= $form->show();
 
 $ret .= '</div>';
 
-echo "<div class='faq_main'>$ret</div>"
-
+echo "<div class='featurebox'><div class='featureboxcontent' >$ret</div></div>"
 ?>
