@@ -178,7 +178,7 @@ class editor extends object
         // Set up empty values so we can use same form for add and edit
         $title = '';
         $content = '';
-        $status = '';
+        $status = 'posted';
         $postTags ='';
         $postType = 'personal';
         $mode = $this->getParam('mode', 'add');

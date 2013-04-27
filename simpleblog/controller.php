@@ -138,6 +138,22 @@ class simpleblog extends controller
         // All the action is in the blocks, so just return the template.
         return "main_tpl.php";
     }
+    
+    private function __ajaxById()
+    {
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        $id = $_REQUEST['id'];
+        die($objPostOps->showById($id));
+    }
+    
+    private function __ajaxByTag()
+    {
+        $objGuesser = $this->getObject('guesser', 'simpleblog');
+        $blogId = $objGuesser->guessBlogId();
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        $tag = $_REQUEST['tag'];
+        die ($objPostOps->showTag($blogId, $tag));
+    }
 
     /**
      *
@@ -377,6 +393,8 @@ class simpleblog extends controller
         switch ($action)
         {
             case 'view':
+            case 'ajaxById':
+            case 'ajaxByTag':
             case NULL:
                 return FALSE;
                 break;

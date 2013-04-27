@@ -109,6 +109,7 @@ class dbsimpleblog extends dbtable
             FROM tbl_simpleblog_posts, tbl_users
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND tbl_simpleblog_posts.post_status != "draft"  
             ORDER BY datecreated DESC ';
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
@@ -140,6 +141,7 @@ class dbsimpleblog extends dbtable
               ) AS comments
             FROM tbl_simpleblog_posts, tbl_users
             WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+            AND tbl_simpleblog_posts.post_status != "draft"  
             AND tbl_simpleblog_posts.blogId = \'' . $blogId . '\' 
             AND tbl_simpleblog_posts.post_tags LIKE \'%' . $tag . '%\'  
             ORDER BY datecreated DESC ';
@@ -184,7 +186,8 @@ class dbsimpleblog extends dbtable
     public function getTagCloudArray($blogId) 
     {
         $sql = 'SELECT post_tags FROM tbl_simpleblog_posts
-            WHERE blogId = \'' . $blogId . '\' AND post_tags IS NOT NULL';
+            WHERE blogId = \'' . $blogId 
+            . '\' AND post_tags IS NOT NULL AND post_status != "draft" ';
         $ar = $this->getArray($sql);
         $res = array();
         foreach ($ar as $postTag) {
@@ -221,6 +224,7 @@ class dbsimpleblog extends dbtable
             FROM tbl_simpleblog_posts, tbl_users
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND tbl_simpleblog_posts.post_status != "draft"  
             AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE ) 
             AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE )
             ORDER BY datecreated DESC ';
@@ -256,6 +260,7 @@ class dbsimpleblog extends dbtable
             FROM tbl_simpleblog_posts, tbl_users
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+            AND tbl_simpleblog_posts.post_status != "draft"  
             AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE  - INTERVAL 1 MONTH) 
             AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE  - INTERVAL 1 MONTH)
             ORDER BY datecreated DESC ';
@@ -306,6 +311,7 @@ class dbsimpleblog extends dbtable
               ) AS comments
             FROM tbl_simpleblog_posts, tbl_users
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.post_status != "draft"  
             AND YEAR( tbl_simpleblog_posts.datecreated )  = \'' . $year . '\' 
             AND MONTHNAME( tbl_simpleblog_posts.datecreated ) = \'' . $month . '\' 
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
@@ -332,6 +338,7 @@ class dbsimpleblog extends dbtable
             FROM tbl_simpleblog_posts, tbl_users 
             WHERE MATCH(post_title, post_content) AGAINST (\'' . $searchTerm . '\' IN BOOLEAN MODE)
             AND tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.post_status != "draft"  
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' " 
             ORDER BY datecreated DESC';
         return $this->getArray($sql);
@@ -372,6 +379,7 @@ class dbsimpleblog extends dbtable
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
             AND tbl_simpleblog_posts.userid = "' . $userId . ' "
+            AND tbl_simpleblog_posts.post_status != "draft"  
             ORDER BY datecreated DESC ';
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
