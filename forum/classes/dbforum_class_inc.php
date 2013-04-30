@@ -208,7 +208,7 @@ class dbForum extends dbTable {
      * @param string $defaultForum:       Is this the default forum
      */
     function insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description, $defaultForum = 'N', $forum_visible='Y', $enablePosts='Y', $ratingsenabled='N', $studentstarttopic='Y', $attachments='Y', $subscriptions='N', $moderation='Y', $forumlocked = 'N') {
-        $this->insert(array(
+                $this->insert(array(
             'forum_context' => $forum_context,
             'forum_workgroup' => $forum_workgroup,
             'forum_name' => $forum_name,

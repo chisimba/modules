@@ -445,7 +445,7 @@ class dbPost extends dbTable
         if ($this->showFullName) {
 
             // Start of the Title Area
-            $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+            $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' <br/><img src="skins/tu/icons/date-time.png" >'.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
 
         } else {
             // Start of the Title Area
