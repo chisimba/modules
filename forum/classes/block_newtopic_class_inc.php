@@ -19,7 +19,8 @@ class block_newtopic extends object {
     var $contextCode;
     var $discussionTypes;
     var $objForumSubscriptions;
-var $objTopicSubscriptions;
+    var $objTopicSubscriptions;
+
     //put your code here
     public function init() {
         $this->loadClass('form', 'htmlelements');
@@ -47,6 +48,7 @@ var $objTopicSubscriptions;
     }
 
     public function biuldEntryForm() {
+        $id =  $this->getParam('id');
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
         $js = '<script type="text/javascript">
       function SubmitForm()

@@ -18,7 +18,8 @@ class block_forumlist extends object {
     var $forumContext;
     var $trimStrObj;
     var $objSysConfig;
-        var $objDateTime;
+    var $objDateTime;
+    var $objForum;
 
     public function init() {
         $this->objLanguage = $this->getObject('language', 'language');
@@ -26,6 +27,10 @@ class block_forumlist extends object {
         $this->objPost = $this->getObject('dbpost', 'forum');
         $this->objUser = $this->getObject('user', 'security');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objForum = $this->getObject('dbforum', 'forum');
+        // Get Context Code Settings
+        $this->contextObject = & $this->getObject('dbcontext', 'context');
+        $this->contextCode = $this->contextObject->getContextCode();
         // Trim String Functions
         $this->trimstrObj = & $this->getObject('trimstr', 'strings');
         $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
@@ -63,13 +68,15 @@ class block_forumlist extends object {
 //user object to be used in determining if user is admin
         $objUser = $this->getObject('user', 'security');
         $objDB = &$this->getObject('dbforum', 'forum');
-        $forums = $objDB->getAll();
+//        $forums = $objDB->getAll();
+        $forums = $this->objForum->showAllForums($this->contextCode);
 
         foreach ($forums as $forum) {
             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
             $dropdown->addOption($forum['id'], $forum['forum_name']);
-            $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['id'])));
+            $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
             $forumLink->link = $forum['forum_name'];
+            echo $forum['forum_id'];
             $forumName = $forumLink->show();
             $this->contextCode = $forum['forum_context'];
             if ($forum['defaultforum'] == 'Y') {
@@ -136,7 +143,7 @@ class block_forumlist extends object {
             $homeForm->addToForm('<br/>' . $administrationLink->show());
         }
         $homeForm->addToForm($objSearch->show());
-        return '<div class="forum_main" >'.$homeForm->show().'</div>';
+        return '<div class="forum_main" >' . $homeForm->show() . '</div>';
     }
 
     public function show() {

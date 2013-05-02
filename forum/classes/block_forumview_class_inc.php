@@ -42,19 +42,20 @@ class block_forumview extends object {
     }
 
     public function biuldForumView() {
+        $forumid = $this->getParam('id');
+        //get the forum ID
+        $forum = $this->objForum->getForum($forumid);
         $newTopicIcon = $this->getObject('geticon', 'htmlelements');
         $newTopicIcon->setIcon('notes');
         $newTopicIcon->alt = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
         $newTopicIcon->title = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
-        $forumid = $this->getParam('id');
-        $forumtype = & $this->getVar('forumtype');
+//        $forumtype = & $this->getVar('forumtype');
         $tblTopic = $this->newObject('htmltable', 'htmlelements');
         $objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
         // Link to start new topic
-        $newTopicLink = new link($this->uri(array('action' => 'newtopic', 'id' => $forumid, 'type' => $forumtype)));
+        $newTopicLink = new link($this->uri(array('action' => 'newtopic', 'id' => $forumid, 'type' => $forum['forum_type'])));
         $newTopicLink->link = $newTopicIcon->show();
 
-        $forum = $this->objForum->getForum($forumid);
 
         $header = new htmlheading();
         $header->type = 1;
@@ -82,7 +83,7 @@ class block_forumview extends object {
          * @todo Return the forum search object
          */
         // Get Order and Sorting Values
-        $order = $this->getParam('order', $this->getSession('sortorder', 'date'));
+        $order = $this->getSession('sortorder', $this->getSession('sortorder', 'date'));
         $this->objTopic = $this->getObject('dbtopic', 'forum');
         $direction = $this->getParam('direction', $this->getSession('sortdirection', 'asc'));
         $page = $this->getParam('page', 1);
@@ -96,7 +97,8 @@ class block_forumview extends object {
         }
         $limit = ' LIMIT ' . ($page - 1) * $limitPerPage . ', ' . $limitPerPage;
         $paging = $this->objTopic->prepareTopicPagingLinks($forumid, $page, $limitPerPage);
-        $allTopics = $this->objTopic->showTopicsInForum($forumid, $this->objUser->userId($this->objUser->userName()), $forum['archivedate'], $order, $direction, NULL);
+        $allTopics = $this->objTopic->showTopicsInForum($forumid, $this->objUser->userId($this->objUser->userName()), $forum['archivedate'], $order, $direction, NULL, NULL);
+//        echo $order;
         $topicsNum = count($allTopics);
         if ($topicsNum > 0) {
             /**
@@ -196,7 +198,7 @@ class block_forumview extends object {
 
                 $tblTopic->addCell($objIcon->show(), Null, 'center');
 
-                $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => $forumtype)));
+                $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => $forum['forum_type'])));
 
                 $link->link = stripslashes($topic['post_title']);
 
@@ -230,7 +232,7 @@ class block_forumview extends object {
                 $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
                 $objIcon->title = $this->objLanguage->languageText('mod_forum_gotopost', 'forum');
 
-                $lastPostLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'post' => $topic['last_post'], 'type' => $forumtype)));
+                $lastPostLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'post' => $topic['last_post'], 'type' => $forum['forum_type'])));
                 $lastPostLink->link = $objIcon->show();
 
                 if ($this->showFullName) {
@@ -251,7 +253,7 @@ class block_forumview extends object {
                         $tblTopic->addCell('&nbsp;', Null, 'center');
                         $tblTopic->addCell('&nbsp;', Null, 'center');
 
-                        $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $tangent['id'], 'type' => $forumtype)));
+                        $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $tangent['id'], 'type' => $forum['forum_type'])));
                         $link->link = $tangent['post_title'];
 
                         $objIcon->setIcon('tangent', NULL, 'icons/forum/');
@@ -280,7 +282,7 @@ class block_forumview extends object {
 
                         //$tblTopic->addCell('<strong>'.$tangent['lastFirstName'].' '.$tangent['lastSurname'].'</strong> <br />'.$objIcon->show().$datefield, Null, 'center', 'center', 'smallText');
 
-                        $lastPostLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $tangent['id'], 'post' => $tangent['last_post'], 'type' => $forumtype)));
+                        $lastPostLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $tangent['id'], 'post' => $tangent['last_post'], 'type' => $forum['forum_type'])));
                         $lastPostLink->link = $objIcon->show();
 
                         $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
