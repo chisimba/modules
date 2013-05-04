@@ -76,7 +76,6 @@ class block_forumlist extends object {
             $dropdown->addOption($forum['id'], $forum['forum_name']);
             $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
             $forumLink->link = $forum['forum_name'];
-            echo $forum['forum_id'];
             $forumName = $forumLink->show();
             $this->contextCode = $forum['forum_context'];
             if ($forum['defaultforum'] == 'Y') {
