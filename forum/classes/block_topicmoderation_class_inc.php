@@ -37,6 +37,10 @@ class block_topicmoderation extends object {
         $this->title = "Moderate topic";
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
+        $id = $this->getParam('id');
+        $topic = $this->objTopic->getTopicDetails($id);
+        $this->title =  $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum', 'Moderate Topic') . ': ' . $topic['post_title'];
+        
         $this->contextCode = $this->contextObject->getContextCode();
         $style = '<style type="text/css">
 .switchmenutext { text-align: left;}
@@ -44,28 +48,32 @@ class block_topicmoderation extends object {
     }
 
     function buildForm() {
+        $html = "";
         $id = $this->getParam('id');
         $topic = $this->objTopic->getTopicDetails($id);
-        $objIcon = $this->getObject('geticon', 'htmlelements');
+        $hiddeninput = new hiddeninput('id', $topic['topic_id']);
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
-        $forum = $this->objForum->getForum($topic['forum_id']);
-        echo $objHighlightLabels->show();
+
         // Get a list of all the topics in forum, excluding thisone
         $additionalSql = ' AND tbl_forum_topic.id != "' . $topic['topic_id'] . '" ';
         $otherTopicsInForum = $this->objTopic->showTopicsInForum($topic['forum_id'], $this->userId, NULL, NULL, NULL, $additionalSql);
 
+        $optionsCount = 1;
+
+
         if ($this->getParam('message') == 'deletecancelled') {
             echo '<p align="center"><span class="confirm">' . stripslashes($this->objLanguage->languageText('mod_forum_topicwasnotdeleted', 'forum', 'This Topic was not Deleted - The Delete confirmation was set to "No".')) . '</span></p>';
         }
-        $html = '<p>' . $this->objLanguage->languageText('mod_forum_whattodowithtopic', 'forum', 'What would you like to do with this topic?') . '</p>';
+
+        $html =  '<p>' . $this->objLanguage->languageText('mod_forum_whattodowithtopic', 'forum', 'What would you like to do with this topic?') . '</p>';
+
         $switchmenu = $this->newObject('switchmenu', 'htmlelements');
         $switchmenu->mainId = 'moderate';
 
-        $hiddeninput = new hiddeninput('id', $topic['topic_id']);
-///**************************************************************************************
-//////////////////////////// FIRST OPTION - DELETING A TOPIC  ///////////////////////////
-//**************************************************************************************/
-//
+        /*         * ************************************************************************************
+          ////////////////////////// FIRST OPTION - DELETING A TOPIC  ///////////////////////////
+         * ************************************************************************************ */
+
         $deleteForm = new form('moderate_deletetopic', $this->uri(array('action' => 'moderate_deletetopic')));
 
         if ($topic['topic_tangent_parent'] == '0') {
@@ -89,6 +97,7 @@ class block_topicmoderation extends object {
 
             //$deleteForm->addToForm('<p>This topic is a tangent to <strong>'.$topicParent['post_title'].'</strong>. This option will only affect this tangent. <br />If you would like to moderate the parent topic, please '.$moderateParent->show().'.</p>');
         }
+
         if (count($tangents) > 0) {
             $str = $this->objLanguage->languageText('mod_forum_topichasfollwoingtangents', 'forum', 'This topic has the following [-COUNTTANGENTS-] tangent(s). Please indicate what you would like to happen to them as well?');
 
@@ -104,10 +113,15 @@ class block_topicmoderation extends object {
 
             $deleteForm->addToForm($tangentList);
         }
+
         $deleteForm->addToForm('<fieldset><legend>' . $this->objLanguage->languageText('mod_forum_deleteoptions', 'forum', 'Delete Options') . '</legend><p><strong>');
+
         if (count($tangents) > 0) {
             $deleteForm->addToForm('a) ');
         }
+
+        $deleteForm->addToForm($this->objLanguage->languageText('mod_forum_confirmdeletetopic', 'forum', 'Are you sure you want to delete this topic?') . '</strong> ');
+
         $deleteConfirm = new radio('delete');
         $deleteConfirm->addOption('0', '<strong><span class="error">' . $this->objLanguage->languageText('word_no', 'system', 'No') . '</span></strong>');
         $deleteConfirm->addOption('1', '<strong><span class="error">' . $this->objLanguage->languageText('word_yes', 'system', 'Yes') . '</span></strong>');
@@ -115,7 +129,6 @@ class block_topicmoderation extends object {
         $deleteConfirm->setSelected('0');
 
         $deleteForm->addToForm($deleteConfirm->show() . '</p>');
-        $optionsCount = 1;
 
         if (count($tangents) > 0) {
             $deleteForm->addToForm('<p>b) ' . $this->objLanguage->languageText('mod_forum_whathappentotangents', 'forum', 'What should happen to the tangents?') . '</p>');
@@ -154,10 +167,12 @@ class block_topicmoderation extends object {
         $button->value = $this->objLanguage->languageText('mod_forum_confirmdelete', 'forum', 'Confirm Delete');
         $button->setToSubmit();
 
+
+
         $deleteForm->addToForm('<p align="center">' . $button->show() . '</p></fieldset>');
 
-        //
-////Add Hidden Id - Common to both
+
+//Add Hidden Id - Common to both
         $deleteForm->addToForm($hiddeninput->show());
 
         $switchmenu->addBlock($optionsCount . ') ' . $this->objLanguage->languageText('mod_forum_deletethetopic', 'forum', 'Delete the Topic'), $deleteForm->show(), 'switchmenutext');
@@ -173,7 +188,6 @@ class block_topicmoderation extends object {
 
 
         $otherForums = $this->objForum->otherForums($topic['forum_id'], $this->contextCode);
-
         if (count($otherForums) > 0) {
 
             // Increase Options Count for next item
@@ -202,9 +216,14 @@ class block_topicmoderation extends object {
 
             $switchmenu->addBlock($optionsCount . ') ' . $this->objLanguage->languageText('mod_forum_movetopictoanotherforum', 'forum', 'Move the Topic to another Forum'), $moveToForumForm->show(), 'switchmenutext');
         }
-        ///**************************************************************************************
-////////////////////// THIRD OPTION - MOVING TO TOPIC TO A TANGENT  ////////////////////
-//**************************************************************************************/
+
+
+
+        /*         * ************************************************************************************
+          //////////////////// THIRD OPTION - MOVING TO TOPIC TO A TANGENT  ////////////////////
+         * ************************************************************************************ */
+
+
 // Only show this option if there are other topics.
 // You cant move a topic as a tangent to another topic if there aren't any other topics
 
@@ -245,6 +264,8 @@ class block_topicmoderation extends object {
         }
 
 
+
+
         /*         * ************************************************************************************
           //////////////////// FOURTH OPTION - MOVING TANGENT TO A NEW TOPIC  ////////////////////
          * ************************************************************************************ */
@@ -278,13 +299,18 @@ class block_topicmoderation extends object {
             $switchmenu->addBlock($optionsCount . ') ' . $this->objLanguage->languageText('mod_forum_confirmmovingnewtopic', 'forum', 'Move it as a New Topic'), $moveToNewTopicForm->show(), 'switchmenutext');
         }
 
-        ///**************************************************************************************
-////////////////////// FIFTH OPTION - LOCKING / UNLOCKING TOPIC  ///////////////////////
-//**************************************************************************************/
-//
-//
+        /*         * ************************************************************************************
+          //////////////////// FIFTH OPTION - LOCKING / UNLOCKING TOPIC  ///////////////////////
+         * ************************************************************************************ */
+
+
 // Increase Options Count for next item
         $optionsCount++;
+
+
+
+
+
         $topicStatusForm = new form('topicStatusForm', $this->uri(array('module' => 'forum', 'action' => 'changetopicstatus')));
 
         $objElement = new radio('topic_status');
@@ -302,11 +328,16 @@ class block_topicmoderation extends object {
         $objElement->setBreakSpace('<br />');
         $topicStatusForm->addToForm('<p>' . $objElement->show() . '</p>');
 
+        $topicStatusForm->addToForm('<div id="closeReason" style="display:' . $displayStyle . '">');
+
         $header = new htmlheading();
         $header->type = 3;
         $header->str = $this->objLanguage->languageText('mod_forum_providereason', 'forum');
         $topicStatusForm->addToForm($header->show());
+
+        $editor = &$this->newObject('htmlarea', 'htmlelements');
         $reasonContent = $topic['lockreason'];
+
         if ($reasonContent == '') {
             $reasonContent = ' <p>Here are some typical reasons why  topics are closed - Please edit this message</p>
  <ul>
@@ -315,7 +346,7 @@ class block_topicmoderation extends object {
    <li>The topic is being used for inappropriate speech.</li>
  </ul>';
         }
-        $editor = &$this->newObject('htmlarea', 'htmlelements');
+
         $editor->setName('reason');
         $editor->setRows(10);
         $editor->setColumns('100%');
@@ -336,7 +367,16 @@ class block_topicmoderation extends object {
         $topicHiddenInput->value = $topic['topic_id'];
         $topicStatusForm->addToForm($topicHiddenInput->show());
 
+
         $switchmenu->addBlock($optionsCount . ') ' . $this->objLanguage->languageText('mod_forum_lockingunlockingtopic', 'forum', 'Locking / Unlocking a Topic'), $topicStatusForm->show(), 'switchmenutext');
+
+        /*         * ************************************************************************************
+          //////////////////// SIXTH OPTION - MAKING THE TOPIC STICKY  //////////////////////////
+         * ************************************************************************************ */
+
+
+// Increase Options Count for next item
+        $optionsCount++;
 
         if ($topic['topic_tangent_parent'] == '0') {
 
@@ -363,23 +403,22 @@ class block_topicmoderation extends object {
             $switchmenu->addBlock($optionsCount . ') ' . $this->objLanguage->languageText('mod_forum_makingtopicsticky', 'forum', 'Making a Topic Sticky or Not'), $stickyTopicForm->show(), 'switchmenutext');
         }
 
-        //// Further Options
-////    - Placing a comment on the topic of the topic
-////    - Making the Topic Invisible
-//
-//
-//echo $switchmenu->show();
-//
-//$returnLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id'])));
-//$returnLink->link = $this->objLanguage->languageText('mod_forum_returntotopic', 'forum', 'Return to Topic').' - '.$topic['post_title'];
-//
-//$returnForumLink = new link ($this->uri(array('action'=>'forum', 'id'=>$topic['forum_id'])));
-//$returnForumLink->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum', 'Return to Forum').' - '.$forum['forum_name'];
-//
-//echo '<p align="center">'.$returnLink->show().' / '.$returnForumLink->show().'</p>';
-//print_r($topic);
+// Further Options
+//    - Placing a comment on the topic of the topic
+//    - Making the Topic Invisible
 
-        return $switchmenu->show().$deleteForm->show();
+
+        $html .=  $switchmenu->show();
+
+        $forum = $this->objForum->getForum($topic['forum_id']);
+        $returnLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'])));
+        $returnLink->link = $this->objLanguage->languageText('mod_forum_returntotopic', 'forum', 'Return to Topic') . ' - ' . $topic['post_title'];
+
+        $returnForumLink = new link($this->uri(array('action' => 'forum', 'id' => $topic['forum_id'])));
+        $returnForumLink->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum', 'Return to Forum') . ' - ' . $forum['forum_name'];
+
+        $html .= '<p align="center">' . $returnLink->show() . ' / ' . $returnForumLink->show() . '</p>';
+        return $objHighlightLabels->show().$html;
     }
 
     function show() {

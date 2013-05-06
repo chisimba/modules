@@ -48,7 +48,8 @@ class block_newtopic extends object {
     }
 
     public function biuldEntryForm() {
-        $id =  $this->getParam('id');
+        $forumId =  $this->getParam('id');
+        $forum = $this->objForum->getForum($forumId);
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
         $js = '<script type="text/javascript">
       function SubmitForm()
@@ -63,15 +64,28 @@ class block_newtopic extends object {
 
 
 </script>';
+        $mode = '';
+        $temporaryId = '';
+        $details ='';
+                // Check if form is a result of server-side validation or not'
+        if ($this->getParam('message') == 'missing') {
+            $details = $this->getSession($this->getParam('tempid'));
+//            $this->setVarByRef('details', $details);
+            $temporaryId = $details['temporaryId'];
+            $this->setVar('mode', 'fix');
+            $mode = 'fix';
+        } else {
+            $temporaryId = $this->objUser->userId() . '_' . mktime();
+            $this->setVar('mode', 'new');
+            $mode = "new";
+        }
         //topic form
-        $forumtype = $this->getVar('forumtype');
+        $forumtype = 'root';
         $newTopicForm = new form('newTopicForm', $this->uri(array('module' => 'forum', 'action' => 'savenewtopic', 'type' => $forumtype)));
         $newTopicForm->displayType = 3;
         $newTopicForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
         //topic table
-        $forumid = $this->getParam('id');
-        $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $forumid)));
-        $forum = $this->objForum->getForum($forumid);
+        $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $forumId)));
         $forumLink->link = $forum['forum_name'];
         $forumLink->title = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');
         //heading
@@ -180,7 +194,7 @@ class block_newtopic extends object {
         } else {
             $languageDropdown->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
         }
-
+        $addTable->addCell($languageDropdown->show());
         $addTable->endRow();
 
         $addTable->startRow();
@@ -213,11 +227,11 @@ class block_newtopic extends object {
             $objSelectFile = $this->newObject('selectfile', 'filemanager');
             $objSelectFile->name = 'attachment';
             $form->addToForm($objSelectFile->show());
-            // Fix undefined variable error for $id
-            if (!isset($id)) {
-                $id = "";
+            // Fix undefined variable error for $forumId
+            if (!isset($forumId)) {
+                $forumId = "";
             }
-            $hiddeninput = new hiddeninput('id', $id);
+            $hiddeninput = new hiddeninput('id', $forumId);
             $form->addToForm($hiddeninput->show());
 
             $button = new button('save_attachment_button', 'Attach File');
@@ -227,13 +241,13 @@ class block_newtopic extends object {
                 if (count($files) > 0) {
 
                     foreach ($files AS $file) {
-                        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action' => 'deleteattachment', 'id' => $file['id'], 'attachmentwindow' => $id), 'forum', 'Are you sure wou want to remove this attachment');
+                        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action' => 'deleteattachment', 'id' => $file['id'], 'attachmentwindow' => $forumId), 'forum', 'Are you sure wou want to remove this attachment');
                         $link = '<li>' . $file['filename'] . ' ' . $icon . '</li>';
                         $form->addToForm($link);
                     }
                 }
             }
-            $hiddenForumInput = new hiddeninput('forum', $forumid);
+            $hiddenForumInput = new hiddeninput('forum', $forumId);
             $form->addToForm($hiddenForumInput->show());
 
             $details = $this->getVar('details');
@@ -253,8 +267,8 @@ class block_newtopic extends object {
             $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
             $subscriptionsRadio->setBreakSpace('<br />');
 
-            $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($id, $this->objUser->userId());
-            $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($id, $this->objUser->userId());
+            $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($forumId, $this->objUser->userId());
+            $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forumId, $this->objUser->userId());
             if ($forumSubscription) {
                 $subscriptionsRadio->setSelected('forumsubscribe');
                 $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
@@ -282,17 +296,17 @@ class block_newtopic extends object {
 
         $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
         $cancelButton->cssClass = 'cancel';
-        $returnUrl = $this->uri(array('action' => 'forum', 'id' => $forumid, 'type' => $forumtype));
+        $returnUrl = $this->uri(array('action' => 'forum', 'id' => $forumId, 'type' => $forumtype));
         $cancelButton->setOnClick("window.location='$returnUrl'");
 
         $addTable->addCell($submitButton->show() . ' / ' . $cancelButton->show());
 
         $addTable->endRow();
 
-        $newTopicForm->addToForm($addTable->show());
+        $newTopicForm->addToForm($js.$addTable->show());
 
 //                $newTopicForm->addToForm($addTable->show());
-        return $js . $newTopicForm->show();
+        return $newTopicForm->show();
     }
 
     public function show() {

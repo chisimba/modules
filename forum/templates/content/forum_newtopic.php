@@ -316,7 +316,7 @@
  */
 ob_start();
 $objFix = $this->getObject('cssfixlength', 'htmlelements');
-$objFix->fixThree();
+$objFix->fixTwo();
 ?>
 
 <div id="threecolumn">

@@ -230,7 +230,7 @@ class dbtopic extends dbTable {
         }
 
         $sql .= $limit;
-
+        
         return $this->getArray($sql);
     }
 
