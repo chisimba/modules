@@ -16,6 +16,7 @@ class block_createedit extends object {
     var $contextTitle;
     var $contextCode;
     var $contextObject;
+    var $objForum;
 
     //put your code here
     public function init() {
@@ -27,32 +28,84 @@ class block_createedit extends object {
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->title = "Create edit";
+        $this->objForum = $this->getObject('dbforum', 'forum');
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->objLanguage = $this->getObject('language', 'language');
         // If not in context, set code to be 'root' called 'Lobby'
         $this->contextTitle = $this->contextObject->getTitle();
+        // Get Context Code Settings
+        $this->contextObject = & $this->getObject('dbcontext', 'context');
+        $this->contextCode = $this->contextObject->getContextCode();
+
+        // If not in context, set code to be 'root' called 'Lobby'
+        $this->contextTitle = $this->contextObject->getTitle();
     }
 
     function biuldForm() {
-        $elements = '';
+        $id = $this->getParam('action');
+        $script = "<script language='JavaScript' type='text/javascript'>
+//<![CDATA[
+if(!document.getElementById && document.all) {
+    document.getElementById = function(id){ return document.all[id]}
+}
+
+
+    function toggleArchiveInput()
+    {
+        // alert(document.forms['myForm']);
+        if (document.forms['myForm'].archivingRadio[1].checked)
+            {
+                showhide('dateSelect', 'visible');
+            } else{
+                showhide('dateSelect', 'hidden');
+            }
+
+    }
+
+    function showhide (id, visible)
+    {
+        var style = document.getElementById(id).style
+        style.visibility = visible;
+    }
+//]]>
+</script>";
+        echo $script;
+        $this->setVar('pageSuppressXML', true);
+
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+
+        $forum = $this->objForum->getForum($id);
+        // Check if Forum exists
+        if (!$forum == false) {
+            $action = 'edit';
+        }
+
         $header = & new htmlheading();
         $header->type = 3;
-        $action = $this->getVar('action');
+
+        $action = $this->getParam('action');
         if ($action == 'edit') {
             $header->str = $this->objLanguage->languageText('mod_forum_editforumsettings', 'forum') . ': ' . $forum['forum_name'];
             $formAction = 'editforumsave';
         } else {
-            $header->str = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create New Forum') . ': ' . $this->contextTitle;
+            $header->str = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create New Forum') . ': ' . $contextTitle;
             $formAction = 'saveforum';
         }
-        $elements = $header->show();
+
+        echo $header->show();
+
         $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction)));
         $form->displayType = 3;
+
         $table = $this->getObject('htmltable', 'htmlelements');
         $table->width = '80%';
         $table->cellpadding = 10;
+
+
+// --------- New Row ---------- //
 
         $table->startRow();
         $nameLabel = new label($this->objLanguage->languageText('mod_forum_nameofforum', 'forum') . ':', 'input_name');
@@ -65,9 +118,12 @@ class block_createedit extends object {
         if ($action == 'edit') {
             $nameInput->value = $forum['forum_name'];
         }
+
         $table->addCell($nameInput->show(), null, null, null, null, ' colspan="3"');
+
         $table->endRow();
-        //// --------- New Row ---------- //
+
+// --------- New Row ---------- //
 
         $table->startRow();
         $nameLabel = & new label($this->objLanguage->languageText('word_description', 'system') . ':', 'input_description');
@@ -83,7 +139,7 @@ class block_createedit extends object {
 
         $table->endRow();
 
-        //// --------- New Row ---------- //
+// --------- New Row ---------- //
 
         if ($action == 'edit') {
 
@@ -107,7 +163,8 @@ class block_createedit extends object {
             $table->endRow();
         }
 
-        //// --------- New Row - Visibility & Rating Forums ---------- //
+
+// --------- New Row - Visibility & Rating Forums ---------- //
 
         $table->startRow();
         $title = '<nobr>' . $this->objLanguage->languageText('mod_forum_visible', 'forum') . ':</nobr>';
@@ -151,7 +208,7 @@ class block_createedit extends object {
         $table->addCell($radioGroup->show());
         $table->endRow();
 
-        //// --------- New Row - Students start Topics & upload attachments ---------- //
+// --------- New Row - Students start Topics & upload attachments ---------- //
 
         $table->startRow();
         $title = '<nobr><strong>' . ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics', 'forum')) . ':</strong></nobr>';
@@ -184,7 +241,7 @@ class block_createedit extends object {
         $table->addCell($radioGroup->show());
         $table->endRow();
 
-        //// --------- New Row - Subscriptions ---------- //
+// --------- New Row - Subscriptions ---------- //
 
         $table->startRow();
         $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_forum_enableemailsubscription', 'forum') . ':</strong></nobr>';
@@ -205,7 +262,10 @@ class block_createedit extends object {
         $table->addCell('&nbsp;');
         $table->addCell('&nbsp;');
         $table->endRow();
-//// --------- New Row ---------- //
+
+
+// --------- End Row ---------- //
+// --------- New Row ---------- //
 
         if ($action == 'edit') {
             $table->startRow();
@@ -237,52 +297,33 @@ class block_createedit extends object {
 
             $table->endRow();
         }
-        //// --------- End Row ---------- //
+
+// --------- End Row ---------- //
         $submitButton = new button('submitbtn', $this->objLanguage->languageText('word_save'));
         $submitButton->cssClass = 'save';
         $submitButton->setToSubmit();
+
         $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
         $returnUrl = $this->uri(array('action' => 'administration'));
         $cancelButton->setOnClick("window.location='$returnUrl'");
+
         $table->addCell($submitButton->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $cancelButton->show(), null, null, null, null, ' colspan="4"');
+
         if ($action == 'edit') {
             $hiddenIdInput = & new textinput('id');
             $hiddenIdInput->fldType = 'hidden';
             $hiddenIdInput->value = $forum['id'];
             $form->addToForm($hiddenIdInput->show());
         }
-        $script = "<script language='JavaScript' type='text/javascript'>
-//<![CDATA[
-if(!document.getElementById && document.all) {
-    document.getElementById = function(id){ return document.all[id]}
-}
 
-
-    function toggleArchiveInput()
-    {
-        // alert(document.forms['myForm']);
-        if (document.forms['myForm'].archivingRadio[1].checked)
-            {
-                showhide('dateSelect', 'visible');
-            } else{
-                showhide('dateSelect', 'hidden');
-            }
-
-    }
-
-    function showhide (id, visible)
-    {
-        var style = document.getElementById(id).style
-        style.visibility = visible;
-    }
-//]]>
-</script>";
         $form->addToForm($table->show());
+
         $form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'forum'), 'required');
         $form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'forum'), 'required');
-        return $script.'<div class="createforum">' . $form->show() . '</div>';
+
+        echo '<div class="createforum">' . $form->show() . '</div>';
+
         $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
-//        return $script.$objHighlightLabels->show();
     }
 
     function show() {
