@@ -51,7 +51,7 @@ function positionSliderImage(e,theIndex)
 
 	if(!theIndex)theIndex = this.getAttribute('sliderIndex');
 	var theValue = sliderObjectArray[theIndex]['formTarget'].value;
-	if(!theValue.match(/^[0-9]*$/g))theValue=sliderObjectArray[theIndex]['min'] +'';
+	if(!theValue.match(/^[0-9.]*$/g))theValue=sliderObjectArray[theIndex]['min'] +'';
 	if(theValue/1>sliderObjectArray[theIndex]['max'])theValue = sliderObjectArray[theIndex]['max'];
 	if(theValue/1<sliderObjectArray[theIndex]['min'])theValue = sliderObjectArray[theIndex]['min'];
 	sliderObjectArray[theIndex]['formTarget'].value = theValue;
@@ -68,7 +68,7 @@ function adjustFormValue(theIndex)
 	var handleImg = document.getElementById('slider_handle' + theIndex);
 	var ratio = sliderObjectArray[theIndex]['width'] / (sliderObjectArray[theIndex]['max']-sliderObjectArray[theIndex]['min']);
 	var currentPos = handleImg.style.left.replace('px','');
-	sliderObjectArray[theIndex]['formTarget'].value = Math.round(currentPos / ratio) + sliderObjectArray[theIndex]['min'];
+	sliderObjectArray[theIndex]['formTarget'].value = (Math.round(2*currentPos / ratio))/2 + sliderObjectArray[theIndex]['min'];
 
 }
 
