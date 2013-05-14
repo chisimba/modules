@@ -389,6 +389,8 @@ class dbPost extends dbTable
     */
     function displayPost ($post, $showMargin = FALSE, $makeContractible = FALSE)
     {
+        //only show the main posts
+//        if($post['post_parent'] == "0"){
         if ($showMargin) {
             $margin = 'style="margin-left: '.($post['level'] * 40 - 40).'px;"';
         } else {
@@ -422,11 +424,17 @@ class dbPost extends dbTable
         // Set up Alt Text
         $moderatePostIcon = $this->objIcon->show();
 
+        //
+        $pointerSpan2 = "<span class='forumPointer2'></span>";
+        $pointerSpan3 = "<span class='forumPointer3'></span>";
+        $contentDiv = "<div class='forumProfileImg' >".$pointerSpan2.$pointerSpan3.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($post['userid']).'"  />';
+        $contentDiv .= "</div>";
         $this->threadDisplayLevel = $post['level'];
+        $return .= $contentDiv;
         //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
         $return .= '<div class="newForumContainer" '.$margin.'>'."\r\n";
         $return .= '<div class="newForumTopic">'."\r\n";
-        $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
+//        $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
 
         if ($this->showModeration) {
             $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$post['post_id'])));
@@ -445,7 +453,7 @@ class dbPost extends dbTable
         if ($this->showFullName) {
 
             // Start of the Title Area
-            $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' <br/><img src="skins/tu/icons/date-time.png" >'.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+            $return .= '<div class="forumTopicTitle"><strong>'.$post['firstname'].' '.$post['surname'].'</strong><br />'.stripslashes($post['post_title']).' <br/><img src="skins/tu/icons/date-time.png" >'.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
 
         } else {
             // Start of the Title Area
@@ -545,11 +553,20 @@ class dbPost extends dbTable
             // End Ratings
         }
 
-        //Check if replies allowed
-        if ($this->repliesAllowed) {
-            $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
-            $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-            $return .= '<br />'.$link->show();
+
+        //get all posts
+        $statement = "SELECT * FROM tbl_forum_post  WHERE post_parent= '{$post['post_id']}'";
+        $innerPosts = $this->getArray($statement);
+        foreach ($innerPosts as $innerPost){
+            $sqlState = "SELECT * FROM tbl_forum_post_text WHERE post_id = '{$innerPost['id']}'";
+            $postInfo = $this->getArray($sqlState);
+            $return .= "<br/>";
+            //get parent info
+            $conteiner = "\r\n".' <img class="forumUserPicture" src="'.$this->objUserPic->userpicture($innerPost['userid']).'"> <div class="innerReplyDiv" >'.$pointerSpan2.$pointerSpan3.'</div><div class="newForumContainer" ><div class="newForumTopic Inner" ><strong>'.$postInfo[0]['post_title'].'</strong></div>
+                '.$postInfo[0]['post_text'].'
+                </div>
+                <br/> <br/> <br/>';
+            $return .= $conteiner;
         }
 
         // Check if user can edit post
@@ -567,7 +584,22 @@ class dbPost extends dbTable
 
             $return .= $editlink->show();
         }
-
+        //Check if replies allowed
+        if ($this->repliesAllowed) {
+            $this->loadClass('textarea','htmlelements');
+            $textArea = new textarea('commentsArea');
+            $link = new link('#'/*$this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype))*/);
+            $textArea->cssClass = "miniReply";
+            $textArea->cssId = $post['id'];
+            $textArea->setRows(1);
+            $textArea->extra = "placeholder='Post a reply'";
+            $link->cssClass ="buttonLink";
+            $link->cssId = "postReplyLink";
+            $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
+//            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
+            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>'.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
+            
+        }
 
         $return .= '<hr />';
 
@@ -592,7 +624,7 @@ class dbPost extends dbTable
             foreach ($languages as $language)
             {
                 $link = new link('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$language['language'].'\');');
-                //$link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
+                $link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
                 $link->link = $this->objLanguageCode->getLanguage($language['language']).' ('.strtoupper($language['language']).')';
 
                 $return .= $comma.$link->show();
@@ -630,7 +662,8 @@ class dbPost extends dbTable
 
         // Load JavaScript Function
         $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
-        return $return;
+        return $return.$this->getjavascriptFile('effects.js','forum');
+        
     }
 
     /**

@@ -43,7 +43,13 @@ class block_createedit extends object {
     }
 
     function biuldForm() {
-        $id = $this->getParam('action');
+        // Get Context Code Settings
+        $contextObject = & $this->getObject('dbcontext', 'context');
+        $contextCode = $contextObject->getContextCode();
+
+        // If not in context, set code to be 'root' called 'Lobby'
+        $contextTitle = $contextObject->getTitle();
+        $id = $this->getParam('id');
         $script = "<script language='JavaScript' type='text/javascript'>
 //<![CDATA[
 if(!document.getElementById && document.all) {
@@ -70,11 +76,11 @@ if(!document.getElementById && document.all) {
     }
 //]]>
 </script>";
-        echo $script;
+        $html =  $script;
         $this->setVar('pageSuppressXML', true);
 
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
-        echo $objHighlightLabels->show();
+        $html .=  $objHighlightLabels->show();
 
 
         $forum = $this->objForum->getForum($id);
@@ -94,8 +100,9 @@ if(!document.getElementById && document.all) {
             $header->str = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create New Forum') . ': ' . $contextTitle;
             $formAction = 'saveforum';
         }
-
-        echo $header->show();
+        if ($action == 'createforum') {
+            $htm .= $header->show();
+        }
 
         $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction)));
         $form->displayType = 3;
@@ -115,7 +122,7 @@ if(!document.getElementById && document.all) {
         $nameInput->size = 57;
         $nameInput->extra = ' maxlength="50"';
 
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $nameInput->value = $forum['forum_name'];
         }
 
@@ -132,7 +139,7 @@ if(!document.getElementById && document.all) {
         $nameInput = new textinput('description');
         $nameInput->size = 100;
         $nameInput->extra = 'maxlength="255"';
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $nameInput->value = $forum['forum_description'];
         }
         $table->addCell($nameInput->show(), null, null, null, null, ' colspan="3"');
@@ -141,7 +148,7 @@ if(!document.getElementById && document.all) {
 
 // --------- New Row ---------- //
 
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
 
             $table->startRow();
 
@@ -321,9 +328,9 @@ if(!document.getElementById && document.all) {
         $form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'forum'), 'required');
         $form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'forum'), 'required');
 
-        echo '<div class="createforum">' . $form->show() . '</div>';
-
+        $html .='<div class="createforum">' . $form->show() . '</div>';
         $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
+        return $html;
     }
 
     function show() {

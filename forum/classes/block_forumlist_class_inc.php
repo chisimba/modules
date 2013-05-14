@@ -22,6 +22,15 @@ class block_forumlist extends object {
     var $objForum;
 
     public function init() {
+        $this->loadClass('link', 'htmlelements');
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
+        $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('label', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass('hiddeninput', 'htmlelements');
+        $this->loadClass('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = str_replace('{Context}', "", $this->objLanguage->languageText('mod_forum_forumsincontext', 'forum'));
         $this->objPost = $this->getObject('dbpost', 'forum');
@@ -34,15 +43,6 @@ class block_forumlist extends object {
         // Trim String Functions
         $this->trimstrObj = & $this->getObject('trimstr', 'strings');
         $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
-        $this->loadClass('link', 'htmlelements');
-        $this->loadClass('form', 'htmlelements');
-        $this->loadClass('dropdown', 'htmlelements');
-        $this->loadClass('textinput', 'htmlelements');
-        $this->loadClass('button', 'htmlelements');
-        $this->loadClass('label', 'htmlelements');
-        $this->loadClass('htmlheading', 'htmlelements');
-        $this->loadClass('hiddeninput', 'htmlelements');
-        $this->loadClass('user', 'security');
     }
 
     public function buildHome() {
@@ -64,7 +64,6 @@ class block_forumlist extends object {
         $dropdown->addOption('all', 'All Forums');
         $homeForm = $this->getObject('form', 'htmlelements');
         $rowcount = 0;
-        $div = "<div>";
 //user object to be used in determining if user is admin
         $objUser = $this->getObject('user', 'security');
         $objDB = &$this->getObject('dbforum', 'forum');
