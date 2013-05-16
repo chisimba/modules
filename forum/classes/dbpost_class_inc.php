@@ -390,7 +390,7 @@ class dbPost extends dbTable
     function displayPost ($post, $showMargin = FALSE, $makeContractible = FALSE)
     {
         //only show the main posts
-//        if($post['post_parent'] == "0"){
+         if($post['post_parent'] == "0"){
         if ($showMargin) {
             $margin = 'style="margin-left: '.($post['level'] * 40 - 40).'px;"';
         } else {
@@ -432,13 +432,30 @@ class dbPost extends dbTable
         $this->threadDisplayLevel = $post['level'];
         $return .= $contentDiv;
         //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
-        $return .= '<div class="newForumContainer" '.$margin.'>'."\r\n";
+        $return .= '<div id="'.$post['post_id'].'" class="newForumContainer" '.$margin.'>'."\r\n";
         $return .= '<div class="newForumTopic">'."\r\n";
 //        $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
 
+        // Check if user can edit post
+        if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost']) ) {
+
+            // Check whether to start a paragraph or pipe
+            if ($this->repliesAllowed) {
+                $return .= '  ';
+            } else {
+                $return .= '<p>';
+            }
+
+            $editlink = new link($this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
+//            $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
+            $this->objIcon->setIcon('edit');
+            $this->objIcon->align = 'right';
+            $editlink->link = $this->objIcon->show();
+            $return .= $editlink->show();
+        }
         if ($this->showModeration) {
             $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$post['post_id'])));
-            $deleteLink->link = $moderatePostIcon;
+            $deleteLink->link .= $moderatePostIcon;
             $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
             $return .= $deleteLink->show();
         }
@@ -554,51 +571,67 @@ class dbPost extends dbTable
         }
 
 
+        //INNER POSTS
         //get all posts
         $statement = "SELECT * FROM tbl_forum_post  WHERE post_parent= '{$post['post_id']}'";
         $innerPosts = $this->getArray($statement);
         foreach ($innerPosts as $innerPost){
+            $dLink = "";
             $sqlState = "SELECT * FROM tbl_forum_post_text WHERE post_id = '{$innerPost['id']}'";
             $postInfo = $this->getArray($sqlState);
             $return .= "<br/>";
+         //wrapper   
+         if ($this->showModeration) {
+            $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$postInfo[0]['post_id'])));
+//            $deleteLink->link = ;
+            $confimLink = new link('#');
+            $confimLink->link = "YES";
+            $confimLink->cssId = $postInfo[0]['post_id'];
+            $confimLink->cssClass = "postDeleteConfirm";
+            
+            $declineLink = new link('#');
+            $declineLink->link = "NO";
+            $declineLink->cssId = $postInfo[0]['post_id'];
+            $declineLink->cssClass = "postDeleteDecline";
+            
+            $deleteLink->link = $moderatePostIcon;
+            $deleteLink->cssId = $postInfo[0]['post_id'];
+            $deleteLink->cssClass = "postDeleteLink";
+            $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>Are you sure you want to delete this post?<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
+            $dLink = $deleteConfirm.$deleteLink->show();
+        }
+            
             //get parent info
-            $conteiner = "\r\n".' <img class="forumUserPicture" src="'.$this->objUserPic->userpicture($innerPost['userid']).'"> <div class="innerReplyDiv" >'.$pointerSpan2.$pointerSpan3.'</div><div class="newForumContainer" ><div class="newForumTopic Inner" ><strong>'.$postInfo[0]['post_title'].'</strong></div>
+            $conteiner = "\r\n".' <img class="forumUserPicture" src="'.$this->objUserPic->userpicture($innerPost['userid']).'"> <div class="innerReplyDiv" >'.$pointerSpan2.$pointerSpan3.'</div><div id="'.$postInfo[0]['post_id'].'" class="newForumContainer" >'.$dLink.'<div class="newForumTopic Inner" ><strong>'.$postInfo[0]['post_title'].'</strong></div>
                 '.$postInfo[0]['post_text'].'
                 </div>
                 <br/> <br/> <br/>';
             $return .= $conteiner;
         }
 
-        // Check if user can edit post
-        if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost']) ) {
-
-            // Check whether to start a paragraph or pipe
-            if ($this->repliesAllowed) {
-                $return .= ' | ';
-            } else {
-                $return .= '<p>';
-            }
-
-            $editlink = new link($this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
-            $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
-
-            $return .= $editlink->show();
-        }
         //Check if replies allowed
         if ($this->repliesAllowed) {
             $this->loadClass('textarea','htmlelements');
             $textArea = new textarea('commentsArea');
-            $link = new link('#'/*$this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype))*/);
+            $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
             $textArea->cssClass = "miniReply";
             $textArea->cssId = $post['id'];
             $textArea->setRows(1);
             $textArea->extra = "placeholder='Post a reply'";
-            $link->cssClass ="buttonLink";
-            $link->cssId = "postReplyLink";
+            $link->cssClass ="buttonLink postReplyLink";
+            $link->cssId = $post['id'];
             $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-//            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
-            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>'.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
             
+            
+            $attachmentObject = $this->getObject('selectfile','filemanager');
+            $attachmentObject->showClearInputJavaScript();
+//            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
+//            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
+            
+            $return .= "\r\n".'<div class="clone" id="'.$post['id'].'" > <img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"> <div class="innerReplyDiv" ></div><div class="newForumContainer" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>
+                '.$textArea->show().'<br/>'.$attachmentObject->show().'<br/><br/>'.$link->show().'<br/><br/>'.'
+                </div>
+                <br/> <br/> <br/></div>';
         }
 
         $return .= '<hr />';
@@ -663,7 +696,7 @@ class dbPost extends dbTable
         // Load JavaScript Function
         $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
         return $return.$this->getjavascriptFile('effects.js','forum');
-        
+         }
     }
 
     /**

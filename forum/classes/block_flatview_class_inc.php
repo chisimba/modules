@@ -45,6 +45,7 @@ class block_flatview extends object {
         $this->objPostRatings = & $this->getObject('dbpost_ratings');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objTopic = $this->getObject('dbtopic', 'forum');
+        $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
         $this->js = '
 <script type="text/javascript">
     //<![CDATA[
@@ -198,7 +199,7 @@ class block_flatview extends object {
             $elements = $moderateTopicLink->show() . '&nbsp;&nbsp;Moderate topic';
         }
 
-        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');
+//        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');
         $elements .= $hardHTML . $ratingsForm->show();
         return $elements;
     }

@@ -165,12 +165,12 @@ class block_forumview extends object {
                 $altRowCSS = NULL;
 
                 //
-                $divClass= "";
+                $divClass = "";
                 $divID = "";
                 $divContent = "";
                 $divHeader = "";
                 $divStatus = "";
-                
+
                 $objIcon = $this->getObject('geticon', 'htmlelements');
 
                 if ($topic['topicstatus'] == 'OPEN') {
@@ -195,76 +195,75 @@ class block_forumview extends object {
 
                 $tblTopic->startRow($rowCSS);
 
-                $tblTopic->addCell($objIcon->show(), Null, 'center');
-
-                if ($topic['readtopic'] == '') {
-                    $objIcon->setIcon('unreadletter');
-                    $objIcon->title = $this->objLanguage->languageText('mod_forum_newunreadtopic', 'forum');
+                if ($this->showFullName) {
+                    $tblTopic->addCell($this->objUser->getUserImage($topic['userid']) . "<br/>" . $topic['firstname'] . ' ' . $topic['surname'], Null, 'center', 'center');
                     //
-                    $divContent .= "unread";
-                } else if ($topic['lastreadpost'] == $topic['last_post']) {
-                    $objIcon->setIcon('readletter');
-                    $objIcon->title = $this->objLanguage->languageText('mod_forum_readtopic', 'forum');
-                    //
-                    $divContent .= "<br/>read";
+                    $divContent .= '<br/>' . $this->objUser->getUserImage($topic['userid']) . '<br/>' . $topic['firstname'] . ' ' . $topic['surname'];
                 } else {
-                    $objIcon->setIcon('readnewposts');
-                    $objIcon->title = $this->objLanguage->languageText('mod_forum_hasnewposts', 'forum');
+                    $tblTopic->addCell($topic['username'], Null, 'center', 'center');
                     //
-                    $divContent .= "<br/>readnewpost";
+                    $divContent .= '<br/>' . $topic['username'];
                 }
 
                 $tblTopic->addCell($objIcon->show(), Null, 'center');
 
+//                if ($topic['readtopic'] == '') {
+//                    $objIcon->setIcon('unreadletter');
+//                    $objIcon->title = $this->objLanguage->languageText('mod_forum_newunreadtopic', 'forum');
+//                    //
+//                    $divContent .= "unread";
+//                } else if ($topic['lastreadpost'] == $topic['last_post']) {
+//                    $objIcon->setIcon('readletter');
+//                    $objIcon->title = $this->objLanguage->languageText('mod_forum_readtopic', 'forum');
+//                    //
+//                    $divContent .= "<br/>read";
+//                } else {
+//                    $objIcon->setIcon('readnewposts');
+//                    $objIcon->title = $this->objLanguage->languageText('mod_forum_hasnewposts', 'forum');
+//                    //
+//                    $divContent .= "<br/>readnewpost";
+//                }
+//                $tblTopic->addCell($objIcon->show(), Null, 'center');
+
                 $objIcon->setIcon($topic['type_icon'], NULL, 'icons/forum/');
                 $objIcon->title = $topic['type_name'];
                 //
-                $divContent .= '<br/>'.$topic['type_icon'];
+//                $divContent .= '<br/>'.$topic['type_icon'];
 
                 $tblTopic->addCell($objIcon->show(), Null, 'center');
 
                 $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => $forum['forum_type'])));
 
-                $link->link = stripslashes($topic['post_title']);
+                $link->link = "<span class='forumname' >" . stripslashes($topic['post_title']) . "</span>";
 
                 if ($topic['sticky'] == '1') {
                     //
                     $objIcon->setIcon('sticky_yes');
-                    $divContent .= '<br/>'.$objIcon->show();
+//                    $divContent .= '<br/>'.$objIcon->show();
                     $objIcon->title = $this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic');
                     $sticky = $objIcon->show() . ' ';
+                    $tblTopic->addCell($link->show(), '30%', 'center', NULL, NULL, 'class=sticky', NULL);
                 } else {
+                    $tblTopic->addCell($link->show(), '30%', 'center', NULL, NULL, NULL, NULL);
                     $sticky = '';
                 }
 
-                $tblTopic->addCell($sticky . $link->show(), '30%', 'center');
-
-                if ($this->showFullName) {
-                    $tblTopic->addCell($this->objUser->getUserImage($topic['userid'])."<br/>".$topic['firstname'] . ' ' . $topic['surname'], Null, 'center', 'center');
-                    //
-                    $divContent .= '<br/>'.$this->objUser->getUserImage($topic['userid']).'<br/>'.$topic['firstname'].' '.$topic['surname'];
-                } else {
-                    $tblTopic->addCell($topic['username'], Null, 'center', 'center');
-                    //
-                    $divContent .= '<br/>'.$topic['username'];
-                }
 
                 //
-                $divContent .= '<br/>'.$topic['replies'];
-                $tblTopic->addCell("<label class='menu' >Replies</label>"."<span class='floatingIndicator' >".$topic['replies']."</span>", Null, 'center', 'center');
-                
+                $divContent .= '<br/>' . $topic['replies'];
+                $tblTopic->addCell("<span class='numberindicator' >{$topic['replies']}</span><br/><label class='menu' >Replies</label>", Null, 'center', 'center');
+
                 //
-                $divContent .= '<br/>'.$topic['views'];
-                $tblTopic->addCell("<label class='menu' >Views</label>"."<span class='floatingIndicator' >".$topic['views'], Null, 'center', 'center');
+                $divContent .= '<br/>' . $topic['views'];
+                $tblTopic->addCell("<span class='numberindicator' >{$topic['views']}</span><br/><label class='menu'>Views</label>", Null, 'center', 'center');
 
                 // if (formatDate($topic['lastdate']) == date('j F Y')) {
                 // $datefield = 'Today at '.formatTime($topic['lastdate']);
                 // } else {
                 // $datefield = formatDate($topic['lastdate']).' - '.formatTime($topic['lastdate']);
                 // }
-
                 //
-                $divContent .= '<br/>'.$topic['lastdate'];
+                $divContent .= '<br/>' . $topic['lastdate'];
                 $datefield = $objTranslatedDate->getDifference($topic['lastdate']);
 
                 $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
@@ -275,11 +274,11 @@ class block_forumview extends object {
 
                 if ($this->showFullName) {
                     //
-                    $divContent .= '<br/>'.$datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show().'<br/><br/>';
+                    $divContent .= '<br/>' . $datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show() . '<br/><br/>';
                     $tblTopic->addCell($datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show(), Null, 'center', 'right', 'smallText');
                 } else {
                     //
-                    $divContent .= '<br/>'.$datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show();
+                    $divContent .= '<br/>' . $datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show();
                     $tblTopic->addCell($datefield . '<br />' . $topic['lastusername'] . $lastPostLink->show(), Null, 'center', 'right', 'smallText');
                 }
 
@@ -302,22 +301,22 @@ class block_forumview extends object {
                         $objIcon->title = $this->objLanguage->languageText('word_tangent');
 
                         //
-                        $divContent .= '<br/>'.$objIcon->sho().' '.$link->show();
+                        $divContent .= '<br/>' . $objIcon->sho() . ' ' . $link->show();
                         $tblTopic->addCell($objIcon->show() . ' ' . $link->show(), Null, 'center');
 
                         if ($this->showFullName) {
                             //
-                            $divContent .= '<br/>'.$tangent['firstname'].' '.$tangent['surname'];
+                            $divContent .= '<br/>' . $tangent['firstname'] . ' ' . $tangent['surname'];
                             $tblTopic->addCell($tangent['firstname'] . ' ' . $tangent['surname'], Null, 'center', 'center');
                         } else {
                             $tblTopic->addCell($tangent['username'], Null, 'center', 'center');
                             //
-                            $divContent .= '<br/>'.$tangent['username'];
+                            $divContent .= '<br/>' . $tangent['username'];
                         }
                         //
 //                        $divContent .= '<br/>'.$tangent['replies'].'<br/>';
 //                        $divContent .= '<br/>'.$tangent['views'].'<br/>';
-                        
+
                         $tblTopic->addCell($tangent['replies'], Null, 'center', 'center');
                         $tblTopic->addCell($tangent['views'], Null, 'center', 'center');
 
@@ -365,7 +364,7 @@ class block_forumview extends object {
             $tblTopic->addCell($noposts, null, null, null, null, ' colspan="8"');
             $tblTopic->endRow();
         }
-        return $tblTopic->show().$wrapperDiv;
+        return $tblTopic->show() . $wrapperDiv;
     }
 
     public function show() {

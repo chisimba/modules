@@ -958,9 +958,9 @@ class forum extends controller {
     /**
      * Method to save a reply to a topic
      */
-    public function saveReply() {
+    public function saveReply($temporaryID = NULL) {
 
-        $tempPostId = $_POST['temporaryId'];
+        $tempPostId = $this->objUser->userId().'_'.mktime()/*$_POST['temporaryId']*/;
         $this->saveTempAttachmentIfAny($tempPostId);
         if ($_POST['replytype'] == 'reply') {
             $post_parent = $_POST['parent'];
