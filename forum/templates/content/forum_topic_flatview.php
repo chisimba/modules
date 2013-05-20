@@ -188,9 +188,6 @@
 //
 //
 //
-//
-//
-//
 //// if ($post['status'] != 'CLOSE' && !$forumlocked) {
 //// echo $replylink->show().' / ';
 //// }

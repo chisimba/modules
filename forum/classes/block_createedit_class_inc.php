@@ -93,7 +93,7 @@ if(!document.getElementById && document.all) {
         $header->type = 3;
 
         $action = $this->getParam('action');
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $header->str = $this->objLanguage->languageText('mod_forum_editforumsettings', 'forum') . ': ' . $forum['forum_name'];
             $formAction = 'editforumsave';
         } else {

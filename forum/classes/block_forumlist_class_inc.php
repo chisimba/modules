@@ -91,8 +91,8 @@ class block_forumlist extends object {
             $tblclass->startRow($oddOrEven);
             $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
             $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
-            $tblclass->addCell($forum['topics'], NULL, NULL, 'center');
-            $tblclass->addCell($forum['post'], 100, NULL, 'center');
+            $tblclass->addCell($forum['topics'].'<br/>Topics', NULL, NULL, 'center');
+            $tblclass->addCell($forum['post'].'<br/>Posts', 100, NULL, 'center');
             $post = $this->objPost->getLastPost($forum['id']);
             if ($post == FALSE) {
                 $postDetails = '<em>' . $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum') . '</em>';
@@ -124,20 +124,17 @@ class block_forumlist extends object {
             }
             $tblclass->addCell($postDetails, '40%', 'center', NULL, $cssClass);
             $tblclass->endRow();
-            //Edit Icon
-            $editLink = new link($this->uri(array('module' => 'forum', 'action' => 'editforum', 'id' => $forum['id'])));
-            $editLink->link = $this->objLanguage->languageText('word_edit', 'system');
-            $editLink->title = $this->objLanguage->languageText('mod_forum_editForumSettings', 'forum');
             // Set rowcount for bitwise determination of odd or even
             $rowcount = ($rowcount == 0) ? 1 : 0;
         }
         $homeForm->addToForm($tblclass->show());
         $objSearch = $this->getObject('forumsearch');
-        $homeForm->addToForm($editLink->show());
+//        $homeForm->addToForm($editLink->show());
 
         if ($this->objUser->isCourseAdmin($this->contextCode) && $this->objUser->isLoggedIn()) {
             $administrationLink = new link($this->uri(array('module' => 'forum', 'action' => 'administration')));
             $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
+            $administrationLink->cssClass = "sexybutton";
             $homeForm->addToForm('<br/>' . $administrationLink->show());
         }
         $homeForm->addToForm($objSearch->show());
