@@ -589,14 +589,14 @@ class dbPost extends dbTable {
                         );
                         $stars = "";
                         for($index=0;$index<5;$index++){
-                                $ratings[$index]->link = "{$index}";
+                                $ratings[$index]->cssClass = "rating".$index;
                                 $stars .= $ratings[$index]->show();
                         }
                         
 
                         //get parent info
                         $conteiner = "\r\n" . ' <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($innerPost['userid']) . '"> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
-                ' . $postInfo[0]['post_text'] .' <span class="ratings" >&nbsp;'. $stars.'</span>
+                <p>' . $postInfo[0]['post_text'] .'</p> <span class="ratings" >&nbsp;'. $stars.'</span>
                 </div>
                 <br/> <br/> <br/>';
                         $return .= $conteiner;
@@ -885,7 +885,7 @@ class dbPost extends dbTable {
                          */
                         $this->loadClass('textarea', 'htmlelements');
                         $textArea = new textarea('commentsArea');
-                        $link = new link($this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype)));
+                        $link = new link('#'/*$this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype))*/);
                         $textArea->cssClass = "miniReply";
                         $textArea->cssId = $post['post_id'];
                         $textArea->setRows(1);
@@ -904,10 +904,9 @@ class dbPost extends dbTable {
 //            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
 //            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
-                        $return .= "\r\n" . '<div class="clone" id="' . $post['post_id'] . '" > <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($this->userId) . '"> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div>
-                ' . $textArea->show() . '<br/>' . $attachmentObject->show() . '<br/><br/>' . $link->show() . '<br/><br/>' . '
-                </div>
-                <br/> <br/> <br/></div>';
+                        $return .= "\r\n" . '<div class="clone" id="' . $post['post_id'] . '" > <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($this->userId) . '"> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
+                ' . $textArea->show() . '<br/>' . $attachmentObject->show() . '</div>' . $link->show() . '<br/><br/>' . '
+                </div> <br/> <br/></div>';
                 }
 
                 $return .= '<hr />';
