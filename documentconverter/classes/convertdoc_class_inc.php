@@ -11,13 +11,21 @@
  *
  * To run this class, you need:
  * 1) either python or java installed
- * 2a) For Linux, OpenOffice started as a service: soffice -headless -nofirststartwizard -accept="socket,port=8100;urp;"&
+ * 2a) For Linux, OpenOffice started as a service:
+ *   soffice -headless -nofirststartwizard -accept="socket,port=8100;urp;"&
+ *   soffice -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"
+ * Check if it is running:
+ *   netstat -an | grep '8100'
+ *   ps aux | grep 'soffice'
  * 2b) For Windows, open a command prompt, and
  * navigate to the OpenOffice.org program
  * folder e.g.
  *   C:\Program Files\OpenOffice.org 2.3\program
+ * or
+ *   C:\Program Files (x86)\OpenOffice.org 3\program
  * then run:
  *   soffice.exe -headless -nologo -norestore -accept=socket,host=localhost,port=8100;urp;StarOffice.ServiceManager
+ *   soffice.exe -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"
  * You can check if the service is running by
  * typing the following command at the command
  * prompt:
