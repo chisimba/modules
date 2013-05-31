@@ -139,7 +139,7 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
+                    $this->buildEmail($id, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
                 }
             }
         } else {
@@ -156,7 +156,7 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
+                    $this->buildEmail($id, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
                 }
             }
         }
@@ -272,6 +272,7 @@ class dbAnnouncements extends dbTable {
             $list[] = $recipient['emailaddress'];
         }
         //$objMailer->setValue('to', $list);
+        $objMailer->setValue('to', $this->objUser->email());
         $objMailer->setValue('bcc', $list);
         $objMailer->setValue('from', $this->objUser->email());
         $objMailer->setValue('fromName', $this->objUser->fullname());
