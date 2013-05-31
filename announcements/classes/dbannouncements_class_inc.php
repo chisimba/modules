@@ -34,6 +34,9 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
+define('CHISIMBA_ANNOUNCEMENTS_ADD', 0);
+define('CHISIMBA_ANNOUNCEMENTS_UPDATE', 1);
+
 class dbAnnouncements extends dbTable {
 
     /**
@@ -52,6 +55,7 @@ class dbAnnouncements extends dbTable {
         $this->emailBody1 = $this->objLanguage->languageText('mod_announcements_emailbody1', 'announcements', 'has posted an important new announcement titled');
         $this->emailBody2 = $this->objLanguage->languageText('mod_announcements_emailbody2', 'announcements', 'has updated  announcement titled');
         $this->emailBody3 = $this->objLanguage->languageText('mod_announcements_emailbody3', 'announcements', 'To view the announcement, click on this link');
+        //$objMailer = $this->getObject('email', 'mail');
     }
 
     /**
@@ -64,7 +68,7 @@ class dbAnnouncements extends dbTable {
      * @return string Insert Id
      */
     public function addAnnouncement($title, $message, $type='site', $contexts=array(), $email=TRUE) {
-        // Do insert
+        // Insert
         $messageId = $this->insert(array(
                     'title' => $title,
                     'message' => $message,
@@ -74,10 +78,10 @@ class dbAnnouncements extends dbTable {
                     'contextid' => $type
                 ));
 
-
-        // If site announcement
         if ($type == 'site') {
+            // Site
             if ($messageId != FALSE) {
+                $emailList = $this->getSiteRecipients();
 
                 // Add to Search
                 $this->addAnnouncementToSearchIndex($messageId, $title, $message, 'root');
@@ -85,20 +89,12 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
-                    $atitle = $this->emailTitle . ": '$title'";
-                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-                        $message1 .= /*$this->emailBody4.*/$message ." ";
-                    }
-                    $message1 .= $this->emailBody3 . ": " . $link->href;
-                    $emailList = $this->getSiteRecipients();
-                    $this->sendEmail($atitle, $message, $emailList);
+                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_ADD, $title, $message, $emailList);
                 }
             }
 
         } else {
-
+            // Context(s)
             if ($messageId != FALSE) {
                 $emailList = array();
                 $contextcodeList = "";
@@ -113,14 +109,7 @@ class dbAnnouncements extends dbTable {
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
-                    $atitle = $this->emailTitle . ": '$title'";
-                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-                        $message1 .= ": ".$message ." ";
-                    }
-                    $message1 .= $this->emailBody3 . ": " . $link->href;
-                    $this->sendEmail($atitle, $message1, $emailList); //JO'C $this->getSiteRecipients()
+                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_ADD, $title, $message, $emailList);
                 }
             }
         }
@@ -139,26 +128,22 @@ class dbAnnouncements extends dbTable {
                     'createdby' => $this->objUser->userId(),
                     'contextid' => $type,
                 ));
-        // If site announcement
         if ($type == 'site') {
+            // Site
             if ($result != FALSE) {
+                $emailList = $this->getSiteRecipients();
+
                 // Add to Search
                 $this->addAnnouncementToSearchIndex($id, $title, $message, 'root');
                 // Optimize Search
                 $this->objIndexData->optimize();
 
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $id)));
-                    $atitle = $this->emailTitle . ": '$title'";
-                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-                        $message1 .= ": ".$message ." ";
-                    }
-                    $message1 .= $this->emailBody3 . ": " . $link->href;
-                    $this->sendEmail($atitle, $message1, $this->getSiteRecipients());
+                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
                 }
-            }        } else {
-
+            }
+        } else {
+            // Context(s)
             if ($result != FALSE) {
                 $emailList = array();
                 foreach ($contexts as $context) {
@@ -169,15 +154,9 @@ class dbAnnouncements extends dbTable {
 
                 // Optimize Search
                 $this->objIndexData->optimize();
+
                 if ($email) {
-                    $link = new link($this->uri(array("action" => "view", "id" => $id)));
-                    $atitle = $this->emailTitle . " : $title";
-                    $message1 = $this->objUser->fullname() . " " . $this->emailBody1 . " '$title' ";
-                    if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
-                        $message1 .= ": ".$message ." ";
-                    }
-                    $message1 .= $this->emailBody3 . ": " . $link->href;
-        		    $this->sendEmail($atitle, $message1, $emailList);
+                    $this->buildEmail($messageId, CHISIMBA_ANNOUNCEMENTS_UPDATE, $title, $message, $emailList);
                 }
             }
         }
@@ -251,6 +230,27 @@ class dbAnnouncements extends dbTable {
         return $result;
     }
 
+    private function buildEmail($messageId, $emailType, $title, $message, $emailList)
+    {
+        switch ($emailType) {
+            case CHISIMBA_ANNOUNCEMENTS_ADD:
+                $emailBody = $this->emailBody1;
+                break;
+            case CHISIMBA_ANNOUNCEMENTS_UPDATE:
+                $emailBody = $this->emailBody2;
+                break;
+            default:
+                $emailBody = '';
+        } // switch
+        $link = new link($this->uri(array("action" => "view", "id" => $messageId)));
+        $title_ = $this->emailTitle . ": '$title'";
+        $message_ = $this->objUser->fullname() . " " . $emailBody . " '$title' ";
+        if($this->dbSysConfig->getValue('SEND_ANN_BODY', 'announcements') == "TRUE"){
+            $message_ .= ": " . $message . " ";
+        }
+        $message_ .= $this->emailBody3 . ": " . $link->href;
+        $this->sendEmail($title_, $message_, $emailList);
+    }
     /**
      * Method to email an announcement to users
      *
@@ -260,7 +260,8 @@ class dbAnnouncements extends dbTable {
      */
     private function sendEmail($title, $message, $recipients) {
         //$recipients = array_unique($recipients);
-        $objMailer = $this->getObject('mailer', 'mail');
+        $objMailer = $this->getObject('email', 'mail');
+        //$objMailer = $this->getObject('mailer', 'mail');
         //$message = trim($message, "\x00..\x1F");
         $message = preg_replace('/[\x00-\x1F]/', '', $message);
         $message = html_entity_decode($message);
@@ -270,7 +271,8 @@ class dbAnnouncements extends dbTable {
         foreach ($recipients as $recipient) {
             $list[] = $recipient['emailaddress'];
         }
-        $objMailer->setValue('to', $list);
+        //$objMailer->setValue('to', $list);
+        $objMailer->setValue('bcc', $list);
         $objMailer->setValue('from', $this->objUser->email());
         $objMailer->setValue('fromName', $this->objUser->fullname());
         $objMailer->setValue('subject', $title);
