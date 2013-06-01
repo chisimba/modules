@@ -141,6 +141,16 @@ class simpleblog extends controller
     
     /**
      * 
+     */
+    private function __getfeed()
+    {
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        $blogId = $this->getParam('blogid', 'site');
+        die($objPostOps->renderFeed($blogId));
+        
+    }
+    /**
+     * 
      * Render output of a particular post for display using an Ajax call.
      * 
      * @return NULL
@@ -416,6 +426,7 @@ class simpleblog extends controller
             case 'view':
             case 'ajaxById':
             case 'ajaxByTag':
+            case 'getfeed':
             case NULL:
                 return FALSE;
                 break;

@@ -911,5 +911,148 @@ class simpleblogops extends object
         $objForm->addToForm($objButton->show());
         return $objForm->show();
     }
+    
+    /**
+     * 
+     * Render the XML feed for the blog according to supplied parameters.
+     * 
+     * @param string $blogId The id of the blog to return the XML for
+     * @return string The formatted XML
+     * 
+     */
+    public function renderFeed($blogId)
+    {
+        // The format of the feed (RSS2, Atom, etc), default to rss2.
+        $format = $this->getParam('format', 'rss2');
+        // Get the blog type, defaulting to site blog.
+        $blogType = $this->getParam('blogtype', 'site');
+        
+        // Get an instance of the feed creator.
+        $objFeedCreator = $this->getObject('feeder', 'feed');
+        switch ($blogType) {
+            case 'site':
+                $blogId = 'site';
+                $objDb = $this->getObject('dbblogs', 'simpleblog');
+                $ar = $objDb->getBlogInfo('site');
+                $feedtitle = $ar['blog_name'];
+                $feedDescription = $ar['blog_description'];
+                $feedLink = $this->uri(array(
+                    'blogtype' => 'site'
+                ), 'simpleblog');
+                $feedURL = $feedLink;
+                $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                break;
+            case 'context':
+                $blogId = $this->getParam('blogid', FALSE);
+                if (!$blogId) {
+                    $blogId = $this->getParam('context', NULL);
+                }
+                // We need to check if it is a private or open context. 
+                // If so, we cannot display anonymous feed.
+                $objDBContext = $this->getObject('dbcontext', 'context');
+                $access = $objDBContext->getField('access', $blogId);
+                if ($access == 'Public') {
+                    // We can render public RSS
+                    $feedtitle = $objDBContext->getField('title', $blogId);
+                    $feedDescription = $objDBContext->getField('about', $blogId);
+                    $feedLink = $this->uri(array(
+                        'blogtype' => 'context',
+                        'blogid' => $blogId
+                    ), 'simpleblog');
+                    $feedURL = $feedLink;
+                    $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                } else {
+                    // We cannot render public RSS
+                    $feedtitle = ucfirst($this->objLanguage->code2Txt("mod_simpleblog_nfprivatecontext", "simpleblog"));
+                    $feedDescription = $this->objLanguage->code2Txt("mod_simpleblog_nfprivatecontextdes", "simpleblog");
+                    $feedLink = $this->uri(array(), 'simpleblog');
+                    $feedURL = $feedLink;
+                }
+                $objContext = $this->getObject('dbcontext', 'context');
+                if($objContext->isInContext()){
+                    $blogId = $objContext->getcontextcode();
+                }
+                break;
+            case 'personal':
+                $blogId = $this->getParam('blogid', NULL);
+                $objDb = $this->getObject('dbblogs', 'simpleblog');
+                $ar = $objDb->getBlogInfo($blogId);
+                $feedtitle = $ar['blog_name'];
+                $feedDescription = $ar['blog_description'];
+                $feedLink = $this->uri(array(
+                    'blogtype' => 'personal',
+                    'blogid' => $blogId
+                ), 'simpleblog');
+                $feedURL = $feedLink;
+                $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                break;
+            default:
+                break;
+        }
+
+        // Set up the feed
+        $objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
+        if (isset($posts)) {
+            foreach ($posts as $post) {
+                //$ret .= $this->formatForFeed($post);
+                $itemTitle = $post['post_title'];
+                $itemDescription = stripslashes($post['post_content']);
+                $itemSource = $this->uri(array(
+                    'by' => 'id',
+                    'id' => $post['id']
+                ), 'simpleblog');
+                $userid = $post['userid'];
+                $itemAuthor = htmlentities($this->objUser->fullName($userid));
+                $itemDate = strtotime($post['datecreated']);
+                // Add it to the feed.
+                $objFeedCreator->addItem($itemTitle, $itemSource, $itemDescription, $itemSource, $itemAuthor, $itemDate);
+            }
+        }
+
+        // Check which format was chosen and output according to that.
+        switch ($format) {
+            case 'rss2':
+                $feed = $objFeedCreator->output('RSS2.0'); //defaults to RSS2.0
+                break;
+
+            case 'rss091':
+                $feed = $objFeedCreator->output('RSS0.91');
+                break;
+
+            case 'rss1':
+                $feed = $objFeedCreator->output('RSS1.0');
+                break;
+
+            case 'pie':
+                $feed = $objFeedCreator->output('PIE0.1');
+                break;
+
+            case 'mbox':
+                $feed = $objFeedCreator->output('MBOX');
+                break;
+
+            case 'opml':
+                $feed = $objFeedCreator->output('OPML');
+                break;
+
+            case 'atom':
+                $feed = $objFeedCreator->output('ATOM0.3');
+                break;
+
+            case 'html':
+                $feed = $objFeedCreator->output('HTML');
+                break;
+
+            case 'js':
+                $feed = $objFeedCreator->output('JS');
+                break;
+
+            default:
+                $feed = $objFeedCreator->output(); //defaults to RSS2.0
+                break;
+        }
+            
+        return $feed;
+    }
 }
 ?>
