@@ -139,19 +139,33 @@ class simpleblog extends controller
         return "main_tpl.php";
     }
     
+    /**
+     * 
+     * Render output of a particular post for display using an Ajax call.
+     * 
+     * @return NULL
+     * 
+     */
     private function __ajaxById()
     {
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        $id = $_REQUEST['id'];
+        $id = $this->getParam('id', NULL);
         die($objPostOps->showById($id));
     }
     
+    /**
+     * 
+     * Render output by tag for display using an Ajax call.
+     * 
+     * @return NULL
+     * 
+     */
     private function __ajaxByTag()
     {
         $objGuesser = $this->getObject('guesser', 'simpleblog');
         $blogId = $objGuesser->guessBlogId();
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        $tag = $_REQUEST['tag'];
+        $tag = $this->getParam('tag', NULL);
         die ($objPostOps->showTag($blogId, $tag));
     }
 
@@ -231,6 +245,13 @@ class simpleblog extends controller
         die('unknownerror');
     }
     
+    /**
+     * 
+     * Edit the blog description
+     * 
+     * @return string The edit template
+     * 
+     */
     public function __editdescription()
     {
         $this->getObject('editdescription', 'simpleblog');

@@ -436,14 +436,21 @@ class dbsimpleblog extends dbtable
         $blogId = $this->getParam('blogid', NULL);
         $blogType = $this->getParam('post_type', NULL);
         $postTags = $this->getParam('post_tags', NULL);
-        if ($blogType == 'site') {
-            $blogId = 'site';
-        }
-        if ($blogType == 'context') {
-            $objContext = $this->getObject('dbcontext', 'context');
-            if($objContext->isInContext()){
-                $blogId = $objContext->getcontextcode();
-            }
+        switch ($blogType) {
+            case 'site':
+                $blogId = 'site';
+                break;
+            case 'context':
+                $objContext = $this->getObject('dbcontext', 'context');
+                if($objContext->isInContext()){
+                    $blogId = $objContext->getcontextcode();
+                }
+                break;
+            case 'personal':
+                $blogId = $userId;
+                break;
+            default:
+                break;
         }
         $id = TRIM($this->getParam('id', NULL));
         // if edit use update
