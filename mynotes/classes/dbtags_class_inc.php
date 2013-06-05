@@ -102,7 +102,45 @@ class dbtags extends dbtable {
 
         return $id;
     }
-
+    
+    /**
+     * 
+     * Remove existing tags in preparation for an update
+     * DWK: This is a shitty design, but it was what I inherited
+     * 
+     * @param type $existingTags
+     * 
+     */
+    public function removeTags($existingTags)
+    {
+        return NULL;
+        $tags = explode(",", $existingTags);
+        if (!is_array($tags) || count($tags) == 0) {
+            $tags=array($existingTags);
+        }
+        foreach($tags as $tag) {
+            $tag = trim($tag);
+            $sql = 'SELECT id,name,count FROM ' . $this->table . " WHERE name='" . $tag . '"';
+            $res= $this->getArray($sql);
+            $id = $res[0]['id'];
+            if (count($res) > 0) {
+                $num = $res[0]['count'];
+                if($num>1) {
+                    // decrement its occurrence
+                    $num=$num-1;
+                    $this->update('id', $id, array(
+                        'count' => $num
+                    ));
+                } else {
+                    // just delete it
+                    $this->delete('id', $id);
+                }
+                unset($num);
+                unset($id);
+            }
+        }
+    }
+    
     /**
      * Method to get all tags.
      *

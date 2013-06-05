@@ -123,7 +123,6 @@ class block_mynotesmiddle extends object {
     public function show() {
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/modal.popup.js'));
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('js/mynotes.js'));
-            
         return $this->objNoteOps->showNotes($this->mode, $this->nextPage, $this->prevPage);
     }
 }

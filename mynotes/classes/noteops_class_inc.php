@@ -441,7 +441,7 @@ class noteops extends object {
 
         if (!empty($notesArray)) {
             if ($isViewAll) {
-                $list = "<div><ul>";
+                $list = "<div class='notes_view'><ul>";
                 foreach ($notesArray as $value) {
                     $noteLink = new Link($this->uri(array('action' => 'shownote', 'id' => $value['id']), $this->module));
                     $noteLink->link = $value['title'];
@@ -449,7 +449,7 @@ class noteops extends object {
                 }
                 $list .= "</ul></div>";
             } else {
-                $list = "<div><ul>";
+                $list = "<div class='notes_view'><ul>";
                 foreach ($notesArray as $value) {
                     $noteLink = new Link($this->uri(array('action' => 'shownote', 'id' => $value['id']), $this->module));
                     $noteLink->link = "&nbsp;&nbsp;<span id='readmore'>" . $readMoreLabel . " ...</span>";

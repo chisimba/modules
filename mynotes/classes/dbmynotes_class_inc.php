@@ -104,6 +104,28 @@ class dbmynotes extends dbtable {
     public function updateNote($data, $id) {
         return $this->update('id', $id, $data);
     }
+    
+    /** 
+     * 
+     * Get the existing tags so they can be deleted
+     * and the modified ones added. Important to tag
+     * management.
+     * 
+     * @param string $id The unique id of the record
+     * @return string The returned tags, or null if none found
+     * 
+     */
+    public function getExistingTags($id) 
+    {
+        $sql = 'SELECT tags FROM ' . $this->table
+          . ' WHERE id="' . $id . '"';
+        $res = $this->getArray($sql);
+        if (count($res) > 0) {
+            return $res[0]['tags'];
+        } else {
+            return NULL;
+        }
+    }
 
     /**
      * Method to delete a note.

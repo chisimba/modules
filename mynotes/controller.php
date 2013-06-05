@@ -223,16 +223,20 @@ class mynotes extends controller {
             echo $id;
         } else {
             $data['datemodified'] = date('Y-m-d H:i:s');
+            $existingTags = $this->objDbmynotes->getExistingTags($id);
+            // Remove existing tags if any tags have changed
+            if ($data['tags'] !== $existingTags) {
+                $this->objDbtags->removeTags($existingTags);
+                $this->objDbtags->addTag($data);
+            } 
             $status = $this->objDbmynotes->updateNote($data, $id);
-            $this->objDbtags->addTag($data);
-            if($status){// TRUE|FALSE
+            if($status){
                 echo "TRUE";
             } else {
                 echo "FALSE";
             }
         }
         die();
-        //return $this->nextAction("showNote", array("id"=>$id));
     }
 
     /**

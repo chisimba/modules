@@ -18,7 +18,6 @@ function checkFormSubmit() {
     // update ckeditor elements
     for ( instance in CKEDITOR.instances )
         CKEDITOR.instances[instance].updateElement();
-
     validateForm();
 }
 
@@ -87,6 +86,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
             if(data == "FALSE") {
                 jQuery("#responsearea").fadeIn("There was a problem saving your note");
             } else {
+                alert(data);
                 jQuery("#responsearea").text("Your note was saved Successfully");
                 jQuery("#responsearea").show();
                 jQuery('#responsearea').fadeOut(5000);
