@@ -46,7 +46,7 @@ jQuery(document).ready(function() {
                                 data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message + '&posttitle=' + post_title + '&lang=' + lang+'&attachment='+attachment_id,
                                 success: function() {
                                         //add element to another class
-                                        window.location.reload();
+//                                        window.location.reload();
                                         jQuery('.content').html('<br/>' + message);
                                         jQuery('.newForumContent').append(replyDiv);
                                 }
