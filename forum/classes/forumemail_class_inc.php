@@ -7,19 +7,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 //require_once('attachmentreader_class_inc.php');
 
-define('EMAIL_HOST', 'imap.gmail.com');
-define('EMAIL_POST', '993');
-
-// See: http://www.php.net/manual/en/function.imap-open.php -> Optional flags for names
-define('EMAIL_OPTIONS', 'imap/ssl');
-
-
-define('EMAIL_LOGIN', 'forum@thumbzup.com');
-define('EMAIL_PASSWORD', '4RuMfOr7hUm8zUp');
-
-//This will be the [domain] part of the @ in [catchall]@[domain]
-// forum_topic_2@chisimba.tohir.co.za
-define('CATCH_ALL_BASE', 'chisimba.tohir.co.za');
 
 /**
  * Forum Email Class
