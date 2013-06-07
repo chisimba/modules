@@ -101,7 +101,7 @@ if(!document.getElementById && document.all) {
             $formAction = 'saveforum';
         }
         if ($action == 'createforum') {
-            $htm .= $header->show();
+            $html .= $header->show();
         }
 
         $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction)));

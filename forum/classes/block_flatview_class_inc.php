@@ -32,6 +32,7 @@ class block_flatview extends object {
                 $this->loadClass('dropdown', 'htmlelements');
                 $this->loadClass('textinput', 'htmlelements');
                 $this->loadClass('button', 'htmlelements');
+                $this->loadClass('checkbox','htmlelements');
                 // Get Context Code Settings
                 $this->contextObject = & $this->getObject('dbcontext', 'context');
                 $this->contextCode = $this->contextObject->getContextCode();
@@ -99,36 +100,49 @@ class block_flatview extends object {
                         $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
                         $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
 
-                        $moderateTopicLink = new link('#' /*$this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype))*/);
+                        $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype)));
                         $moderateTopicLink->link = $this->objIcon->show();
                         $moderateTopicLink->cssId = "moderatetopic";
-                        //option
-                        $optionLink = new link('#');
-                        $optionLink->link = "Lock topic";
+                        //form
+                        $frmModerate = new form('topicModeration');
                         //moderation options
-                        $moderationDiv = "<div class='hiddenOptions' >";
-                        $list = "<ul >
-                                <li ><input type='checkbox' /> {$optionLink->show()}</li>";
-                                $optionLink->link = "Make topic sticky";
-                                $list .= "
-                                <li ><input type='checkbox' /> {$optionLink->show()}</li>
-                                </ul>";
-                                /**
-                                 * @SAVE_BUTTON
-                                 */
-                                $saveButton = new button();
-                                $saveButton->cssId = "";
-                                $saveButton->value = "Save";
-                                $moderationDiv .= $list;
-                                $moderationDiv .= $saveButton->show();
-                                /**
-                                 * @CANCEL_BUTTON
-                                 */
-                                $cancelButton = new button();
-                                $cancelButton->value = "Cancel";
-                                $moderationDiv .= $cancelButton->show();
-                                $moderationDiv .= "</div >";
-                                $moderateTopicLink->link .= $moderationDiv;
+//                        $this->loadClass('checkbox', 'htmlelements');
+                        $checkBoxOne = new checkbox('sticky', '&nbsp; <b>Lock topic</b>');
+                        $checkBoxOne->setValue('true');
+//                        $checkBoxOne->extra = "display:none;";
+                        $moderationDiv = "<div class='' >";
+//                        $moderationDiv .= $checkBoxOne->show();
+                        //
+                        $checkBoxTwo = new checkbox('lock', '&nbsp; <b>Sticky topic</b>');
+                        $checkBoxTwo->setValue('true');
+//                        $moderationDiv .= '<br/>'.$checkBoxTwo->show();
+                        /**
+                         * @TOPIC_OBJECT
+                         */
+                        $topicDetails = $this->objTopic->getTopicDetails($topic_id);
+                        if ($topicDetails['status'] == "CLOSE") {
+                                $checkBoxOne->setChecked(TRUE);
+                        }
+//                        $frmModerate->addToForm($checkBoxOne->show() . '<br/>');
+//                        $frmModerate->addToForm($checkBoxTwo->show() . '<br/>');
+
+                        /**
+                         * @SAVE_BUTTON
+                         */
+                        $saveButton = new button();
+                        $saveButton->cssId = "moderationSave";
+                        $saveButton->value = "Save";
+//                        $frmModerate->addToForm($saveButton->show() . '&nbsp;&nbsp;');
+                        /**
+                         * @CANCEL_BUTTON
+                         */
+                        $cancelButton = new button();
+                        $cancelButton->cssId = "moderationCancel";
+                        $cancelButton->value = "Cancel";
+//                        $frmModerate->addToForm($cancelButton->show() . '&nbsp;&nbsp;&nbsp;');
+//                        $moderationDiv .= $frmModerate->show();
+                        $moderationDiv .= "</div >";
+//                        $moderateTopicLink->link .= $moderationDiv;
 //                                $moderateTopicLink->link .= $optionLink->show();
                 }
                 ////Confirmation messages
@@ -175,24 +189,24 @@ class block_flatview extends object {
                 $hiddenTypeInput = new textinput('discussionType');
                 $hiddenTypeInput->fldType = 'hidden';
                 $hiddenTypeInput->value = $post['type_id'];
-                $ratingsForm->addToForm($hiddenTypeInput->show());
+//                $ratingsForm->addToForm($hiddenTypeInput->show());
 
 
                 $hiddenTangentInput = new textinput('parent');
                 $hiddenTangentInput->fldType = 'hidden';
                 $hiddenTangentInput->value = $post['post_id'];
-                $ratingsForm->addToForm($hiddenTangentInput->show());
+//                $ratingsForm->addToForm($hiddenTangentInput->show());
 
                 $topicHiddenInput = new textinput('topic');
                 $topicHiddenInput->fldType = 'hidden';
                 $topicHiddenInput->value = $post['topic_id'];
-                $ratingsForm->addToForm($topicHiddenInput->show());
+//                $ratingsForm->addToForm($topicHiddenInput->show());
                 $hiddenForumInput = new textinput('forum');
                 $hiddenForumInput->fldType = 'hidden';
                 if (isset($forum)) {
                         $hiddenForumInput->value = $forum['id'];
                 }
-                $ratingsForm->addToForm($hiddenForumInput->show());
+//                $ratingsForm->addToForm($hiddenForumInput->show());
                 //show ratings variable, set to false by default
                 $showRatingsForm = FALSE;
                 // Check if ratings allowed in Forum
@@ -212,7 +226,7 @@ class block_flatview extends object {
                         $objButton->setToSubmit();
 
                         if ($post['status'] != 'CLOSE' && !$forumlocked) {
-                                $ratingsForm->addToForm('<p align="right">' . $objButton->show() . '</p>');
+//                                $ratingsForm->addToForm('<p align="right">' . $objButton->show() . '</p>');
                         }
                 }
 
@@ -233,9 +247,37 @@ class block_flatview extends object {
                 }
                 $htmlTable->startRow();
                 if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
-                        $htmlTable->addCell($moderateTopicLink->show());
-                        $htmlTable->addCell($newtopiclink->show());
+                        $htmlTable->addCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
+                        $htmlTable->addCell($newtopiclink->show(), NULL, NULL, "center");
                 }
+                //subscribsion
+                $subscribeLink = new link("#");
+                $this->objIcon->setIcon('alerts');
+                $subscribeLink->cssClass = "moderatetopic";
+                $subscribeLink->link = $this->objIcon->show();
+                //floating div
+                $subscribeDiv = "<div class='hiddenOptions' >";
+                $noAlerts = new checkbox('subscription','<b>&nbsp;Do not notify me</b>');
+                $noAlerts->setvalue('nosubscription');
+                $notifyThead = new checkbox('subscription','<b>&nbsp;Notify me of this topic</b> ');
+                $notifyThead->setValue("subscribetopic");
+                $notifyAll = new checkbox('subscription','<b>&nbsp; Notify me of all topics and replies in this forum</b>');
+                $notifyAll->setvalue("subscribetoall");
+                //hidden form object to carry the topic ID and the forum ID
+                $forumHiddenInput = new hiddeninput('forum_id',$topicDetails['forum_id']);
+                $topicHiddenInput = new hiddeninput('topic_id',$topic_id);
+                //add objects to the form
+                $frmModerate->addToForm($forumHiddenInput->show());
+                $frmModerate->addToForm($topicHiddenInput->show());
+                $frmModerate->addToForm($noAlerts->show().'<br/>');
+                $frmModerate->addToForm($notifyThead->show().'<br/>');
+                $frmModerate->addToForm($notifyAll->show().'<br/>');
+                $frmModerate->addToForm($saveButton->show());
+                $frmModerate->addToForm($cancelButton->show());
+                $subscribeDiv .= $frmModerate->show();
+//                $subscribeDiv .= $noAlerts->show().'<br/>'.$notifyThead->show().'<br>'.$notifyAll->show().'</div>';
+                $htmlTable->addCell($subscribeLink->show().$subscribeDiv, NULL, NULL, "center");
+                $htmlTable->endRow();
 
 //        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');
                 $elements = $htmlTable->show() . $ratingsForm->show();

@@ -65,6 +65,7 @@ class dbtempattachments extends dbTable
     */
     function insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated)
     {
+            return 
         $this->insert(array(
                 'temp_id' => $temp_id,
                 'attachment_id' => $attachment_id,

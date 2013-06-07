@@ -259,11 +259,11 @@ class forum extends controller {
                                 return $this->showTopicReplyForm($this->getParam('id'));
 
                         case 'savepostreply':
-                                if ($_POST['replytype'] == 'tangent') {
-                                        return $this->saveNewTopic();
-                                } else {
-                                        return $this->saveReply();
-                                }
+//                                if ($_POST['replytype'] == 'tangent') {
+//                                        return $this->saveNewTopic();
+//                                } else {
+                                return $this->saveReply();
+//                                }
 
                         case 'administration':
                                 return $this->forumAdministration();
@@ -386,6 +386,9 @@ class forum extends controller {
 
                         case 'loadtranslation':
                                 return $this->loadTranslation($this->getParam('id'), $this->getParam('lang'));
+
+                        case 'usersubscription':
+                                return $this->usersubscription();
 
                         default:
                                 return $this->forumHome();
@@ -555,7 +558,7 @@ class forum extends controller {
         public function saveNewTopic() {
 
                 $tempPostId = $_POST['temporaryId'];
-                $this->saveTempAttachmentIfAny($tempPostId);
+//                $this->saveTempAttachmentIfAny($tempPostId);
                 $forum_id = $_POST['forum'];
                 $type_id = $_POST['discussionType'];
                 $post_parent = 0;
@@ -618,7 +621,7 @@ class forum extends controller {
                         $this->objTopic->makeTopicSticky($topic_id);
                 }
                 // Attachment Handling
-                $this->handleAttachments($post_id, $_POST['temporaryId']);
+//                $this->handleAttachments($post_id, $_POST['temporaryId']);
                 // Email Post
                 $forumDetails = $this->objForum->getForum($forum_id);
                 $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $this->objUser->userId());
@@ -961,7 +964,10 @@ class forum extends controller {
         public function saveReply() {
 
                 $tempPostId = $this->objUser->userId() . '_' . mktime()/* $_POST['temporaryId'] */;
-                $this->saveTempAttachmentIfAny($tempPostId);
+                //set the temporary ID so it can be used by other functions
+                $this->setVarByref('attachment_tempid', $tempPostId);
+                //get the attachment id
+                $attachment_id = $this->getParam('attachment');
                 //reply type
                 $replyType = "reply";
                 //parentID
@@ -969,7 +975,6 @@ class forum extends controller {
                 $post_parent = $postParent;
                 $post_tangent_parent = 0;
                 //
-
 
                 $parentPostDetails = $this->objPost->getRow('id', $postParent);
                 //get the forum ID
@@ -984,7 +989,7 @@ class forum extends controller {
                 $post_text = $this->getParam('message');
                 $language = $this->getParam('lang');
 //                $language = 'en';
-                if (strlen($postParent) ==  0) {
+                if (strlen($postParent) == 0) {
                         $original_post = 1;
                 } else {
                         $original_post = 0;
@@ -1009,12 +1014,20 @@ class forum extends controller {
                 $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
                 $this->objTopic->updateLastPost($topic_id, $post_id);
                 $this->objForum->updateLastPost($forum_id, $post_id);
-                // Email Post
+//                // Email Post
                 $forumDetails = $this->objForum->getForum($forum_id);
                 $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($topic_id, $this->objUser->userId());
                 $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $this->objUser->userId());
-                //get the forum
+////                echo print_r($forumSubscription).'<br/>'.print_r($topicSubscription).'<br/>'.print_r($forumDetails);
+//                //get the forum
                 $forum = $this->objForum->getForum($forum_id);
+//                
+                if (!empty($attachment_id)) {
+                        //set the attachment ID to be used by other functions
+                        $this->setVarByRef('attachment_id', $attachment_id);
+                        $this->saveTempAttachmentIfAny($post_id, $attachment_id);
+                        $this->handleAttachments($post_id, $attachment_id);
+                }
                 // Manage Subscriptions
                 if (isset($forum['subscriptions'])) {
                         if ($forum['subscriptions'] == 'forumsubscribe') { // First check subscriptions to forum
@@ -1033,16 +1046,19 @@ class forum extends controller {
                                 $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
                         }
                 }
+                $forumDetails['subscriptions'] = "Y";
                 if ($forumDetails['subscriptions'] == 'Y') {
-                        $replyUrl = $this->uri(array('action' => 'postreply', 'id' => $post_id));
-                        $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+                        $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id), 'forum');
+//                        $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                         $emailSuccess = NULL;
                 } else {
                         $emailSuccess = NULL;
                 }
+//                $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);
 //                return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
+//                return $this->uri(array('action' => 'viewtopic', 'id' => $parentPostDetails['topic_id']));
         }
 
         /**
@@ -1273,30 +1289,34 @@ class forum extends controller {
         /**
          * Method to save temp attahc
          */
-        public function saveTempAttachmentIfAny($temp_id) {
+        public function saveTempAttachmentIfAny($temp_id, $attachment_id) {
                 $userId = $this->objUser->userId();
                 $dateLastUpdated = mktime();
-                $attachment_id = $this->getParam('attachment');
+//                $attachment_id = $this->getVar('attachment_id');
                 if ($attachment_id != '') {
                         $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
+                } else {
+                        echo "<h4>failed to insert values into database<h4>";
                 }
                 $this->unsetSession('temporaryId');
-                return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
+//                return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
         }
 
         /**
          * Method to add an attachment to a file
          */
-        public function saveAttachment() {
+        public function saveAttachment($temp_id, $attachment_id) {
 
-                $temp_id = $this->getParam('id');
+//                $temp_id = $this->getVar('attachment_tempid');
                 $userId = $this->objUser->userId();
                 $dateLastUpdated = mktime();
-                $attachment_id = $this->getParam('attachment');
-                if ($attachment_id != '') {
-                        $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
-                }
-                return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
+//                $attachment_id = $this->getVar('attachment_id');
+//                if ($attachment_id != '') {
+                echo $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
+//                }  else {
+//                        echo "<h1>Failed to insert values into database</h1>";
+//                }
+//                return $this->nextAction('attachments', array('id' => $temp_id, 'attachment' => $attachment_id));
         }
 
         /**
@@ -1319,12 +1339,13 @@ class forum extends controller {
          * @param $temporaryId The Record's Temporary Post Id
          */
         private function handleAttachments($postId, $temporaryId) {
-                $files = $this->objTempAttachments->getQuickList($temporaryId);
+                $files = $this->objTempAttachments->getQuickList($postId);
+//                print_r($this->objTempAttachments->getQuickList($temporaryId));
                 foreach ($files AS $file) {
                         $this->objPostAttachments->insertSingle($postId, $file['attachment_id'], $this->userId, mktime());
                 }
                 $this->objTempAttachments->deleteTemps($temporaryId);
-                return;
+//                return;
         }
 
         /**
@@ -1706,9 +1727,9 @@ class forum extends controller {
         /**
          * Method to Update the Sticky Status of a Topic
          */
-        public function moderateStickyTopic() {
-                $id = $_POST['id'];
-                $sticky = $_POST['stickytopic'];
+        public function moderateStickyTopic($topic_id, $status) {
+                $id = $topic_id;
+                $sticky = $status;
                 if ($sticky == '1') {
                         $this->objTopic->makeTopicSticky($id);
                 } else {
@@ -2097,6 +2118,69 @@ class forum extends controller {
                 }
         }
 
+        /**
+         * subscribe a user to the forum
+         */
+        function subscribeUserToForum() {
+                $forum_id = $this->getParam('forum_id');
+                $this->objForumSubscriptions->subscribeUserToForum($forum_id, $this->objUser->userId());
+                echo "<h1>forumed</h1>";
+//                die();
+        }
+
+        /**
+         * subscribe user to the topic
+         */
+        function subscribeUserToTopic() {
+                $topic_id = $this->getParam('topic_id');
+                $objTopic = &$this->getObject('dbtopicsubscriptions', 'forum');
+                if ($objTopic->subscribeUserToTopic($topic_id, $this->objUser->userId())) {
+                        echo "<h1>topiced</h1>";
+                }
+//                die();
+        }
+
+        /**
+         * subscribe a user to the forum
+         */
+        function unsubscribeUser() {
+                $forum_id = $this->getParam('forum_id');
+                $topic_id = $this->getParam('topic_id');
+                $objTopic = &$this->getObject('dbtopicsubscriptions', 'forum');
+                $objTopic->unsubscribeUserFromTopic($this->objUser->userId(), $topic_id);
+                $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
+                echo "<h1>unsubscribed</h1>";
+        }
+
+        /**
+         * Remove the user from the subscription list
+         */
+        function usersubscription() {
+//                if ($this->objUser->isLoggedIn()) {
+                //get the the user's choice
+                $userChoice = $this->getParam('subscription');
+                switch ($userChoice) {
+                        case 'nosubscription':
+                                return $this->unsubscribeUser();
+                                break;
+                        case 'subscribetopic':
+//                                $topic_id = $this->getParam('topic_id');
+                                return $this->subscribeUserToTopic();
+                                break;
+                        case 'subscribetoall':
+                                return $this->subscribeUserToForum();
+                                break;
+                }
+//                }
+        }
+
+        /**
+         * Method to send an eMail alert to users who are subscribed
+         * 
+         * @param type $subject
+         * @param type $message
+         * @param type $linkUrl
+         */
         function sendEmailAlert($subject, $message, $linkUrl) {
                 $recipients = $this->objManageGroups->contextUsers('Students', $this->contextCode, array('tbl_users.userId', 'email', 'firstName', 'surname'));
                 $objMailer = $this->getObject('mailer', 'mail');
@@ -2131,6 +2215,99 @@ class forum extends controller {
 
                         $objMailer->send();
                 }
+
+                /*
+                 * 
+                 */
+                function randerLink() {
+                        
+                        $url = urldecode($_REQUEST['url']);
+                        $url = checkValues($url);
+                        $return_array = array();
+
+                        $base_url = substr($url, 0, strpos($url, "/", 8));
+                        $relative_url = substr($url, 0, strrpos($url, "/") + 1);
+
+// Get Data
+                        $cc = new cURL();
+                        $string = $cc->get($url);
+                        $string = str_replace(array("\n", "\r", "\t", '</span>', '</div>'), '', $string);
+
+                        $string = preg_replace('/(<(div|span)\s[^>]+\s?>)/', '', $string);
+                        if (mb_detect_encoding($string, "UTF-8") != "UTF-8")
+                                $string = utf8_encode($string);
+
+
+// Parse Title
+                        $nodes = extract_tags($string, 'title');
+                        $return_array['title'] = trim($nodes[0]['contents']);
+
+// Parse Base
+                        $base_override = false;
+                        $base_regex = '/<base[^>]*' . 'href=[\"|\'](.*)[\"|\']/Ui';
+                        preg_match_all($base_regex, $string, $base_match, PREG_PATTERN_ORDER);
+                        if (strlen($base_match[1][0]) > 0) {
+                                $base_url = $base_match[1][0];
+                                $base_override = true;
+                        }
+
+// Parse Description
+                        $return_array['description'] = '';
+                        $nodes = extract_tags($string, 'meta');
+                        foreach ($nodes as $node) {
+                                if (strtolower($node['attributes']['name']) == 'description')
+                                        $return_array['description'] = trim($node['attributes']['content']);
+                        }
+
+// Parse Images
+                        $images_array = extract_tags($string, 'img');
+                        $images = array();
+                        for ($i = 0; $i <= sizeof($images_array); $i++) {
+                                $img = trim(@$images_array[$i]['attributes']['src']);
+                                $width = preg_replace("/[^0-9.]/", '', $images_array[$i]['attributes']['width']);
+                                $height = preg_replace("/[^0-9.]/", '', $images_array[$i]['attributes']['height']);
+
+                                $ext = trim(pathinfo($img, PATHINFO_EXTENSION));
+
+                                if ($img && $ext != 'gif') {
+                                        if (substr($img, 0, 7) == 'http://')
+                                                ;
+                                        else if (substr($img, 0, 1) == '/' || $base_override)
+                                                $img = $base_url . $img;
+                                        else
+                                                $img = $relative_url . $img;
+
+                                        if ($width == '' && $height == '') {
+                                                $details = @getimagesize($img);
+
+                                                if (is_array($details)) {
+                                                        list($width, $height, $type, $attr) = $details;
+                                                }
+                                        }
+                                        $width = intval($width);
+                                        $height = intval($height);
+
+
+                                        if ($width > 199 || $height > 199) {
+                                                if (
+                                                        (($width > 0 && $height > 0 && (($width / $height) < 3) && (($width / $height) > .2)) || ($width > 0 && $height == 0 && $width < 700) || ($width == 0 && $height > 0 && $height < 700)
+                                                        ) && strpos($img, 'logo') === false) {
+                                                        $images[] = array("img" => $img, "width" => $width, "height" => $height, 'area' => ($width * $height), 'offset' => $images_array[$i]['offset']);
+                                                }
+                                        }
+                                }
+                        }
+                        $return_array['images'] = array_values(($images));
+                        $return_array['total_images'] = count($return_array['images']);
+
+                        header('Cache-Control: no-cache, must-revalidate');
+                        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+                        header('Content-type: application/json');
+
+                        echo json_encode($return_array);
+                        exit;
+                }
+
         }
 
 }

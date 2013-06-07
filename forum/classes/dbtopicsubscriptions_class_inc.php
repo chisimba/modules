@@ -84,5 +84,10 @@ class dbtopicsubscriptions extends dbtable
         return $this->getArray($sql);
     }
     
+    function unsubscribeUserFromTopic($userId,$topic_id){
+            $sql = "DELETE FROM tbl_forum_subscribe_topic WHERE userid='{$userId}' AND topic_id='{$topic_id}'";
+            return $this->query($sql);
+    }
+    
 }
 ?>
