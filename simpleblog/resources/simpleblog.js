@@ -25,6 +25,20 @@ jQuery(function() {
     var showWall;
     var wallpoint;
     
+    jQuery(document).ready(function() {
+        jQuery('a').each( function(){
+            var doPreview = jQuery(this).hasClass('snipsite');
+            if (doPreview) {
+                var link = jQuery(this).attr('href');
+                var id = jQuery(this).attr('id');
+                var uri = 'index.php?module=strings&action=parseurl&url=' + link;
+                jQuery.get(uri, function (data) {
+                    jQuery('#'+id).after(data);
+                });
+            }
+        });
+    });
+    
     // Add borders to the active Title input
     jQuery("#input_post_title").live("click", function(){
         jQuery("#input_post_title").css("border","2px dotted red");
