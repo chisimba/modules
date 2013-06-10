@@ -77,6 +77,12 @@ class dbPost extends dbTable {
          * @var object To preview post attachments
          */
         var $objFilePreview;
+        
+        /**
+         *
+         * @var object object to be used to retrive post ratings
+         */
+        var $dbjPostratings;
 
         /**
          * Constructor method to define the table(default)
@@ -88,6 +94,7 @@ class dbPost extends dbTable {
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
+                $this->dbPostratings = $this->getObject('dbpost_ratings','forum');
 
                 $this->objForum = $this->getObject('dbforum');
                 $this->objPostAttachments = $this->getObject('dbpostattachments');
@@ -560,7 +567,7 @@ class dbPost extends dbTable {
                                 $dropdown->setSelected($post['rating']);
                         }
 
-                        $return .= '<div align="right">' . $dropdown->show() . '</div>';
+//                        $return .= '<div align="right">' . $dropdown->show() . '</div>';
                         // End Ratings
                 }
 
@@ -598,13 +605,15 @@ class dbPost extends dbTable {
                         //new ratings object
                         $ratingsDiv = "<div class='' ><hr/>";
                         $upperLink = new link('#');
-                        $upperLink->cssClass = "ratings";
-                        $upperLink->link = "<br/> >";
+                        $upperLink->cssClass = "ratings up";
+                        $upperLink->cssId = $innerPost['id'];
+                        $upperLink->link = "&nbsp;&nbsp;&nbsp; <br/>";
                         $lowerLink = new link('#');
-                        $lowerLink->cssClass = "ratings";
-                        $lowerLink->link = "< <br/>";
-                        $numberOfVotes = $innerPost['average_ratings'];
-                        $displaySpan = "<span class='numberindicator' >{$lowerLink->show()} 0 {$upperLink->show()}</span>";
+                        $lowerLink->cssClass = "ratings down";
+                        $lowerLink->cssId = $innerPost['id'];
+                        $lowerLink->link = "<br/> &nbsp;&nbsp;&nbsp;";
+                        $numberOfVotes = $this->dbPostratings->getPostRatings($innerPost['id']);
+                        $displaySpan = "<span class='numberindicator' >{$upperLink->show()} {$numberOfVotes} {$lowerLink->show()}</span>";
                         $ratingsDiv .= $displaySpan."</div>";
 
                         //get parent info
@@ -630,10 +639,12 @@ class dbPost extends dbTable {
                                         //--header('Location:'.$location); // Todo - Force Download
                                 }
                         }
-                        $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>
+                        if($this->showRatings){
+                        $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>';
+                        }
+                        $return .='
                 </div>
-                <br/> <br/> <br/>';
-                        $return .= $conteiner;
+                <br/> <br/> <br/>'. $conteiner;
                 }
 
                 //Check if replies allowed

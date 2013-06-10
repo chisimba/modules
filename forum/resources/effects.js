@@ -9,7 +9,9 @@ jQuery(document).ready(function() {
         jQuery('.replyForumUserPicture').hide();
         jQuery('.deleteconfirm').hide();
         jQuery('div.hiddenOptions, div.attachmentwrapper').hide();
-        jQuery('a.ratings').click(function(e){e.preventDefault()});
+        jQuery('a.ratings').click(function(e) {
+                e.preventDefault()
+        });
 
         //increase the number of rows when the textare is clicked
         jQuery('.miniReply').click(function() {
@@ -43,10 +45,10 @@ jQuery(document).ready(function() {
                         jQuery.ajax({
                                 url: 'index.php?module=forum&action=savepostreply',
                                 type: 'post',
-                                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message + '&posttitle=' + post_title + '&lang=' + lang+'&attachment='+attachment_id,
+                                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
                                 success: function() {
                                         //add element to another class
-//                                        window.location.reload();
+                                        window.location.reload();
                                         jQuery('.content').html('<br/>' + message);
                                         jQuery('.newForumContent').append(replyDiv);
                                 }
@@ -73,22 +75,22 @@ jQuery(document).ready(function() {
                 e.preventDefault();
                 jQuery('div.hiddenOptions').toggle('fade');
         });
-        
-        jQuery('a.postDeleteConfirm').click(function(e){
+
+        jQuery('a.postDeleteConfirm').click(function(e) {
                 e.preventDefault();
                 jQuery('div.hiddenOptions').toggle('fade');
         });
 
 //
-jQuery('a.attachmentLink').click(function(e){
-        e.preventDefault();
-        jQuery('div.attachmentwrapper').toggle('fade');
-});
+        jQuery('a.attachmentLink').click(function(e) {
+                e.preventDefault();
+                jQuery('div.attachmentwrapper').toggle('fade');
+        });
 
         //update topic status
         jQuery('#moderationSave').click(function() {
                 var data_string = jQuery('#form_topicModeration').serialize();
-                var forum_id = "forum="+ jQuery('.forumid').attr('id');
+                var forum_id = "forum=" + jQuery('.forumid').attr('id');
                 jQuery(data_string).append(forum_id);
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=usersubscription',
@@ -96,13 +98,39 @@ jQuery('a.attachmentLink').click(function(e){
                         data: data_string,
                         success: function() {
                                 jQuery('div.hiddenOptions').hide();
-//                                alert(this.data)
+                                alert(this.data)
                         }
                 });
         });
         //moderation cancel button
         jQuery('#moderationCancel').click(function() {
                 jQuery('.hiddenOptions').toggle('fade');
+        });
+        /**
+         * @RATINGS
+         */
+        jQuery('a.ratings.up').click(function() {
+                var post_id = jQuery(this).attr('id');
+                jQuery.ajax({
+                        url: 'index.php?module=forum&action=savepostratingup',
+                        type: 'post',
+                        data: 'post_id='+post_id,
+                        success: function(){
+                                window.location.reload()
+                        }
+                })
+        });
+
+        jQuery('a.ratings.down ').click(function() {
+                var post_id = jQuery(this).attr('id');
+                jQuery.ajax({
+                        url: 'index.php?module=forum&action=savepostratingdown',
+                        type: 'post',
+                        data: 'post_id='+post_id,
+                        success: function(){
+                                window.location.reload()
+                        }
+                })
         });
 });
 

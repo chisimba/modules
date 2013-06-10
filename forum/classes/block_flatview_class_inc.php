@@ -23,6 +23,8 @@ class block_flatview extends object {
         var $objTopic;
         var $objPostRatings;
         var $objForumRatings;
+        var $dbForumSubscriptions;
+        var $dbForumPost;
 
         //put your code here
         function init() {
@@ -41,8 +43,11 @@ class block_flatview extends object {
                 $this->objUser = $this->getObject('user', 'security');
                 $this->objPost = $this->getObject('dbpost', 'forum');
                 $this->objForum = $this->getObject('dbforum', 'forum');
+                $this->dbForumPost = $this->getObject('dbtopicsubscriptions','forum');
                 // Forum Ratings
                 $this->objForumRatings = & $this->getObject('dbforum_ratings');
+                //forum subscriptions
+                $this->dbForumSubscriptions = $this->getObject('dbforumsubscriptions','forum');
                 $this->objPostRatings = & $this->getObject('dbpost_ratings');
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
                 $this->objTopic = $this->getObject('dbtopic', 'forum');
@@ -257,12 +262,38 @@ class block_flatview extends object {
                 $subscribeLink->link = $this->objIcon->show();
                 //floating div
                 $subscribeDiv = "<div class='hiddenOptions' >";
-                $noAlerts = new checkbox('subscription','<b>&nbsp;Do not notify me</b>');
-                $noAlerts->setvalue('nosubscription');
-                $notifyThead = new checkbox('subscription','<b>&nbsp;Notify me of this topic</b> ');
-                $notifyThead->setValue("subscribetopic");
-                $notifyAll = new checkbox('subscription','<b>&nbsp; Notify me of all topics and replies in this forum</b>');
-                $notifyAll->setvalue("subscribetoall");
+                $noAlerts = new radio('subscription');
+                $noAlerts->addOption('nosubscription', 'Do not notify me');
+//                $noAlerts->setvalue('nosubscription');
+                /**
+                 * @test
+                 */
+                /**
+                 * @testEnd
+                 */
+                $notifyThread = new radio('subscription');
+                $notifyThread->addOption('subscribetopic', '&nbsp; Notify me of this topic');
+//                $notifyThead->setValue("subscribetopic");
+                $notifyAll = new radio('subscription');
+                $notifyAll->addOption('subscribetoall', '&nbsp; Notify me of all topics and replies in this forum');
+                /**
+                 * if user is subscribed to forum, indicate
+                 */
+                if($this->dbForumSubscriptions->isSubscribedToForum($forum['id'],  $this->objUser->userId($this->objUser->email()) ) ){
+                        $notifyAll->selected = TRUE;
+                }
+                /**
+                 *if user is subscribed to topic, indicate by selecting the topic radio by default
+                 */
+                if($this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email()))){
+                        $notifyThread->selected = TRUE;
+                }
+                if( ! $this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email())) ){
+                        if( ! $this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email()))){
+                                $noAlerts->selected = TRUE;
+                        }
+                }
+//                $notifyAll->setvalue("subscribetoall");
                 //hidden form object to carry the topic ID and the forum ID
                 $forumHiddenInput = new hiddeninput('forum_id',$topicDetails['forum_id']);
                 $topicHiddenInput = new hiddeninput('topic_id',$topic_id);
@@ -270,7 +301,7 @@ class block_flatview extends object {
                 $frmModerate->addToForm($forumHiddenInput->show());
                 $frmModerate->addToForm($topicHiddenInput->show());
                 $frmModerate->addToForm($noAlerts->show().'<br/>');
-                $frmModerate->addToForm($notifyThead->show().'<br/>');
+                $frmModerate->addToForm($notifyThread->show().'<br/>');
                 $frmModerate->addToForm($notifyAll->show().'<br/>');
                 $frmModerate->addToForm($saveButton->show());
                 $frmModerate->addToForm($cancelButton->show());

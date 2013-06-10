@@ -231,6 +231,12 @@ class forum extends controller {
                 //$this->setVar('pageSuppressXML', TRUE);
 
                 switch ($action) {
+                        case 'savepostratingup' :
+                                return $this->savePostRatingUp();
+                                
+                        case 'savepostratingdown':
+                                return $this->savePostRatingDown();
+                                
                         case 'test':
                                 return 'test.php';
                         case 'forum':
@@ -1549,28 +1555,54 @@ class forum extends controller {
         /**
          * Method to save the ratings of a post
          */
-        public function savePostRatings() {
+        public function savePostRatingDown() {
                 // Collect All Posted Values and put them in an array
-                $postedArray = $_POST;
+//                $postedArray = $_POST;
                 // Remove the submit button from the list
-                unset($postedArray['submitForm']);
+//                unset($postedArray['submitForm']);
                 // Store the Topic Id - for redirecting
-                $topic = $_POST['topic'];
+//                $topic = $this->getParam('') /* $_POST['topic'] */;
                 // Remove the Topic Id from the list
-                unset($postedArray['topic']);
-                if (isset($_POST['currentPost'])) {
-                        $currentPost = $_POST['currentPost'];
-                        unset($postedArray['currentPost']);
-                } else {
-                        $currentPost = NULL;
-                }
+//                unset($postedArray['topic']);
+//                if (isset($_POST['currentPost'])) {
+//                        $currentPost = $_POST['currentPost'];
+//                        unset($postedArray['currentPost']);
+//                } else {
+//                        $currentPost = NULL;
+//                }
                 // Start Inserting Values
-                foreach ($postedArray AS $post => $value) {
-                        if ($value != 'n/a') {
-                                $this->objPostRatings->insertRecord($post, $value, $this->userId);
+//                foreach ($postedArray AS $post => $value) {
+//                        if ($value != 'n/a') {
+                $post_id = $this->getParam('post_id');
+                $currentRating = $this->objPostRatings->getPostRatings($post_id);
+//                var_dump($currentRating);
+                if ($currentRating >= 1) {
+                        $currentRating -= 1;
+                        return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
+                }  else {
+                        echo "<h1>OK</h1>";
+                }
+//                        }
+//                }
+//                return $this->nextAction('viewtopic', array('message' => 'ratingsaved', 'id' => $topic, 'post' => $currentPost, 'type' => $this->forumtype));
+        }
+
+        /**
+         * increase the post rating by one
+         */
+        function savePostRatingUp() {
+                $post_id = $this->getParam('post_id');
+                if (isset($post_id)) {
+                        $currentRating = $this->objPostRatings->getPostRatings($post_id);
+                        print_r($currentRating);
+                        if (empty($currentRating)) {
+                                $currentRating = 1;
+                                return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
+                        } else {
+                                $currentRating += 1;
+                                return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
                         }
                 }
-                return $this->nextAction('viewtopic', array('message' => 'ratingsaved', 'id' => $topic, 'post' => $currentPost, 'type' => $this->forumtype));
         }
 
         /**
@@ -2133,7 +2165,9 @@ class forum extends controller {
          */
         function subscribeUserToTopic() {
                 $topic_id = $this->getParam('topic_id');
+                $forum_id = $this->getParam('forum_id');
                 $objTopic = &$this->getObject('dbtopicsubscriptions', 'forum');
+                $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
                 if ($objTopic->subscribeUserToTopic($topic_id, $this->objUser->userId())) {
                         echo "<h1>topiced</h1>";
                 }
@@ -2159,19 +2193,21 @@ class forum extends controller {
 //                if ($this->objUser->isLoggedIn()) {
                 //get the the user's choice
                 $userChoice = $this->getParam('subscription');
-                switch ($userChoice) {
-                        case 'nosubscription':
-                                return $this->unsubscribeUser();
-                                break;
-                        case 'subscribetopic':
+                if (!empty($userChoice)) {
+                        switch ($userChoice) {
+                                case 'nosubscription':
+                                        return $this->unsubscribeUser();
+                                        break;
+                                case 'subscribetopic':
 //                                $topic_id = $this->getParam('topic_id');
-                                return $this->subscribeUserToTopic();
-                                break;
-                        case 'subscribetoall':
-                                return $this->subscribeUserToForum();
-                                break;
-                }
+                                        return $this->subscribeUserToTopic();
+                                        break;
+                                case 'subscribetoall':
+                                        return $this->subscribeUserToForum();
+                                        break;
+                        }
 //                }
+                }
         }
 
         /**
@@ -2219,8 +2255,9 @@ class forum extends controller {
                 /*
                  * 
                  */
+
                 function randerLink() {
-                        
+
                         $url = urldecode($_REQUEST['url']);
                         $url = checkValues($url);
                         $return_array = array();

@@ -67,6 +67,19 @@ class dbpost_ratings extends dbTable
         return $this->query($sql);
     
     }
+    
+    /**
+     * get post rating using a post ID
+     */
+    function getPostRatings($post_id){
+            $sql = "SELECT rating FROM tbl_forum_post_ratings WHERE post_id='{$post_id}'";
+            $rating = $this->getRow('post_id',$post_id);
+            if($rating['rating'] == '' || $rating['rating'] == NULL){
+                    return 0;
+            }  else {
+                    return $rating['rating'];
+            }
+    }
 
 
 

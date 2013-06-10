@@ -104,7 +104,7 @@ if(!document.getElementById && document.all) {
             $html .= $header->show();
         }
 
-        $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction)));
+        $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction,'id'=>$id)));
         $form->displayType = 3;
 
         $table = $this->getObject('htmltable', 'htmlelements');

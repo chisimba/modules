@@ -53,6 +53,7 @@ class forumemail extends object {
                 $this->dbForum = & $this->getObject('dbforum');
                 $this->objUserContext = $this->getObject('usercontext','context');
                 $this->contextGroups = & $this->getObject('managegroups', 'contextgroups');
+                $this->loadClass('attachmentreader', 'mail');
 
                 /*
                  * TESTING
