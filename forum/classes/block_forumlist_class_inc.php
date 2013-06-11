@@ -21,6 +21,7 @@ class block_forumlist extends object {
         var $objDateTime;
         var $objForum;
         var $objUserContext;
+        var $contextObject;
 
         public function init() {
                 $this->loadClass('link', 'htmlelements');
@@ -67,70 +68,82 @@ class block_forumlist extends object {
                 $homeForm = $this->getObject('form', 'htmlelements');
                 $rowcount = 0;
 //user object to be used in determining if user is admin
-                $objUser = $this->getObject('user', 'security');
-                $objDB = &$this->getObject('dbforum', 'forum');
+//                $objUser = $this->getObject('user', 'security');
+//                $objDB = &$this->getObject('dbforum', 'forum');
 //        $forums = $objDB->getAll();
                 $forums = $this->objForum->showAllForums($this->contextCode);
 
                 foreach ($forums as $forum) {
-                        if ($this->objUserContext->isContextMember($this->objUser->userId(), $forum['forum_context']) || $forum['forumlocked'] == 'N') {
-                                $oddOrEven = ($rowcount == 0) ? "odd" : "even";
-                                $dropdown->addOption($forum['id'], $forum['forum_name']);
-                                $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
-                                $forumLink->link = $forum['forum_name'];
-                                $forumName = $forumLink->show();
-                                $this->contextCode = $forum['forum_context'];
-                                if ($forum['defaultforum'] == 'Y') {
-                                        $forumName .= '<em> - ' . $this->objLanguage->languageText('mod_forum_defaultForum', 'forum', 'Default Forum') . '</em>';
-                                }
-                                $objIcon = $this->getObject('geticon', 'htmlelements');
-                                if ($forum['forumlocked'] == 'Y') {
-                                        $objIcon->setIcon('lock', NULL, 'icons/forum/');
-                                        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumislocked', 'forum');
-                                } else {
-                                        $objIcon->setIcon('unlock', NULL, 'icons/forum/');
-                                        $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
-                                }
-                                $tblclass->startRow($oddOrEven);
-                                $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
-                                $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
-                                $tblclass->addCell($forum['topics'] . '<br/>Topics', NULL, NULL, 'center');
-                                $tblclass->addCell($forum['post'] . '<br/>Posts', 100, NULL, 'center');
-                                $post = $this->objPost->getLastPost($forum['id']);
-                                if ($post == FALSE) {
-                                        $postDetails = '<em>' . $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum') . '</em>';
-                                        $cssClass = NULL;
-                                } else {
-                                        $cssClass = 'smallText';
-                                        $postLink = new link($this->uri(array('module' => 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post' => $post['post_id'])));
-                                        $postLink->link = stripslashes($post['post_title']);
-                                        $postDetails = '<strong>' . $postLink->show() . '</strong>';
-                                        $postDetails .= '<br />' . $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
+                        if ($this->objUserContext->isContextMember($this->objUser->userId(), $forum['forum_context']) || $forum['forum_context'] == 'root') {
+//                                
+//                        }
+                        if ($this->contextObject->isInContext() || $forum['forum_context'] == 'root') {
+//                                echo $forum['forum_context'].'<br/>';
+//                                echo "<br/>In context mode {$this->contextObject->getContextCode()}<br/>";
+//                                if ($this->objUserContext->isContextMember($this->objUser->userId($this->objUser->email()), $this->contextObject->getContextCode()) || $forum['forum_context'] == 'root') {
+//                                        echo "<br/>member of context<br/>";
+//                                } else {
+//                                        continue;
+//                                }
+//                        }
+                        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                        $dropdown->addOption($forum['id'], $forum['forum_name']);
+                        $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
+                        $forumLink->link = $forum['forum_name'];
+                        $forumName = $forumLink->show();
+                        $this->contextCode = $forum['forum_context'];
+                        if ($forum['defaultforum'] == 'Y') {
+                                $forumName .= '<em> - ' . $this->objLanguage->languageText('mod_forum_defaultForum', 'forum', 'Default Forum') . '</em>';
+                        }
+                        $objIcon = $this->getObject('geticon', 'htmlelements');
+                        if ($forum['forumlocked'] == 'Y') {
+                                $objIcon->setIcon('lock', NULL, 'icons/forum/');
+                                $objIcon->title = $this->objLanguage->languageText('mod_forum_forumislocked', 'forum');
+                        } else {
+                                $objIcon->setIcon('unlock', NULL, 'icons/forum/');
+                                $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
+                        }
+                        $tblclass->startRow($oddOrEven);
+                        $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
+                        $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
+                        $tblclass->addCell($forum['topics'] . '<br/>Topics', NULL, NULL, 'center');
+                        $tblclass->addCell($forum['post'] . '<br/>Posts', 100, NULL, 'center');
+                        $post = $this->objPost->getLastPost($forum['id']);
+                        if ($post == FALSE) {
+                                $postDetails = '<em>' . $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum') . '</em>';
+                                $cssClass = NULL;
+                        } else {
+                                $cssClass = 'smallText';
+                                $postLink = new link($this->uri(array('module' => 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post' => $post['post_id'])));
+                                $postLink->link = stripslashes($post['post_title']);
+                                $postDetails = '<strong>' . $postLink->show() . '</strong>';
+                                $postDetails .= '<br />' . $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
 
-                                        $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
-                                        if ($post['firstname'] != '') {
-                                                if ($this->showFullName) {
-                                                        $user = 'By: ' . $post['firstname'] . ' ' . $post['surname'] . ' - ';
-                                                } else {
-                                                        $user = 'By: ' . $post['username'] . ' - ';
-                                                }
+                                $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
+                                if ($post['firstname'] != '') {
+                                        if ($this->showFullName) {
+                                                $user = 'By: ' . $post['firstname'] . ' ' . $post['surname'] . ' - ';
                                         } else {
-                                                $user = '';
+                                                $user = 'By: ' . $post['username'] . ' - ';
                                         }
-                                        if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
-                                                $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum') . ' ' . $this->objDateTime->formatTime($post['datelastupdated']);
-                                        } else {
-                                                $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' - ' . $this->objDateTime->formatTime($post['datelastupdated']);
-                                        }
-
-                                        $postDetails .= '<br /><strong>' . $user . $datefield . '</strong>';
+                                } else {
+                                        $user = '';
                                 }
-                                $tblclass->addCell($postDetails, '40%', 'center', NULL, $cssClass);
-                                $tblclass->endRow();
-                                // Set rowcount for bitwise determination of odd or even
-                                $rowcount = ($rowcount == 0) ? 1 : 0;
+                                if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
+                                        $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum') . ' ' . $this->objDateTime->formatTime($post['datelastupdated']);
+                                } else {
+                                        $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' - ' . $this->objDateTime->formatTime($post['datelastupdated']);
+                                }
+
+                                $postDetails .= '<br /><strong>' . $user . $datefield . '</strong>';
+                        }
+                        $tblclass->addCell($postDetails, '40%', 'center', NULL, $cssClass);
+                        $tblclass->endRow();
+                        // Set rowcount for bitwise determination of odd or even
+                        $rowcount = ($rowcount == 0) ? 1 : 0;
                         }
                 }
+        }
                 $homeForm->addToForm($tblclass->show());
                 $objSearch = $this->getObject('forumsearch');
 //        $homeForm->addToForm($editLink->show());

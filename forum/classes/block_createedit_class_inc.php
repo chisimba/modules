@@ -45,7 +45,7 @@ class block_createedit extends object {
     function biuldForm() {
         // Get Context Code Settings
         $contextObject = & $this->getObject('dbcontext', 'context');
-        $contextCode = $contextObject->getContextCode();
+//        $contextCode = $contextObject->getContextCode();
 
         // If not in context, set code to be 'root' called 'Lobby'
         $contextTitle = $contextObject->getTitle();
@@ -86,7 +86,7 @@ if(!document.getElementById && document.all) {
         $forum = $this->objForum->getForum($id);
         // Check if Forum exists
         if (!$forum == false) {
-            $action = 'edit';
+            $action = 'editforum';
         }
 
         $header = & new htmlheading();
@@ -177,7 +177,7 @@ if(!document.getElementById && document.all) {
         $title = '<nobr>' . $this->objLanguage->languageText('mod_forum_visible', 'forum') . ':</nobr>';
         $table->addCell('<strong>' . $title . '</strong>', 100);
 
-        if ($action == 'edit' && $forum['defaultforum'] == 'Y') {
+        if ($action == 'editforum' && $forum['defaultforum'] == 'Y') {
             $hiddenIdInput = new textinput('visible');
             $hiddenIdInput->fldType = 'hidden';
             $hiddenIdInput->value = 'default';
@@ -189,7 +189,7 @@ if(!document.getElementById && document.all) {
             $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes'));
             $radioGroup->addOption('N', $this->objLanguage->languageText('word_no'));
 
-            if ($action == 'edit') {
+            if ($action == 'editforum') {
                 $radioGroup->setSelected($forum['forum_visible']);
             } else {
                 $radioGroup->setSelected('Y');
@@ -206,7 +206,7 @@ if(!document.getElementById && document.all) {
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $radioGroup->setSelected($forum['ratingsenabled']);
         } else {
             $radioGroup->setSelected('Y');
@@ -225,7 +225,7 @@ if(!document.getElementById && document.all) {
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $radioGroup->setSelected($forum['studentstarttopic']);
         } else {
             $radioGroup->setSelected('Y');
@@ -239,7 +239,7 @@ if(!document.getElementById && document.all) {
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $radioGroup->setSelected($forum['attachments']);
         } else {
             $radioGroup->setSelected('Y');
@@ -258,7 +258,7 @@ if(!document.getElementById && document.all) {
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $radioGroup->setSelected($forum['subscriptions']);
         } else {
             $radioGroup->setSelected('Y');
@@ -274,7 +274,7 @@ if(!document.getElementById && document.all) {
 // --------- End Row ---------- //
 // --------- New Row ---------- //
 
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $table->startRow();
 
             $table->addCell('<strong><nobr>' . $this->objLanguage->languageText('mod_forum_archivelabel', 'forum') . ':</nobr></strong>', 100);
@@ -316,7 +316,7 @@ if(!document.getElementById && document.all) {
 
         $table->addCell($submitButton->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $cancelButton->show(), null, null, null, null, ' colspan="4"');
 
-        if ($action == 'edit') {
+        if ($action == 'editforum') {
             $hiddenIdInput = & new textinput('id');
             $hiddenIdInput->fldType = 'hidden';
             $hiddenIdInput->value = $forum['id'];
