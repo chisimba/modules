@@ -92,9 +92,9 @@ class block_sitefeed extends object
     public function show() 
     {
         $feedsAvailable = array('rss2',  'atom');
-        $rssIcon = $this->getObject('geticon', 'htmlelements');
-        //$rssIcon->align = "top";
-        $rssIcon->setIcon('rss', 'gif', 'icons/filetypes');
+        $rssIcon = $this->newObject('geticon', 'htmlelements');
+        $rssIcon->align = "absmiddle";
+        
         $result = '';
         $this->loadClass('href', 'htmlelements');
         foreach ($feedsAvailable as $feed) {
@@ -104,7 +104,10 @@ class block_sitefeed extends object
                 'blogtype' => 'site',
                 'blogid' => 'site'
             ), 'simpleblog');
-            $link = new href($url, $feed);
+            //$link = new href($url, $feed);
+            $rssIcon->setIcon('rss', 'png', 'icons/filetypes32');
+            $rssIcon->alt = $feed;
+            $link = new href($url, $rssIcon->show() . " " . $feed);
             $result .= $link->show() . "<br />";
         }
         return $result;
