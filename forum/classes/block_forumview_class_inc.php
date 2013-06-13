@@ -368,7 +368,7 @@ class block_forumview extends object {
                         $tblTopic->addCell($noposts, null, null, null, null, ' colspan="8"');
                         $tblTopic->endRow();
                 }
-                return $tblTopic->show();
+                return $tblAdmin->show().$tblTopic->show();
         }
 
         public function show() {
