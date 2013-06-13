@@ -971,14 +971,14 @@ class dbPost extends dbTable {
 //            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
 //            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
-                        $return .= "\r\n" . '<div class="clone" id="' . $post['post_id'] . '" > <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($this->userId) . '"> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
+                        $return .= "\r\n" . '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($this->userId) . '"> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
                 ' . $textArea->show() . '<hr/>' ;
                         //add the attachment link if attachments are enabled in the forum
                         if ($forum['attachments'] == 'Y') {
                                 $return .= $divAttachmentWrapper. $attachmentLink->show();
                         }
                         $return .= '<br/><hr/></div>' . $link->show() . '<br/><br/>' . '
-                </div> <br/> <br/></div>';
+                </div> <br/> <br/></div></div>';
                 }
 
                 $return .= '<hr />';

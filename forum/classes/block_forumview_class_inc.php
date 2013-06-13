@@ -59,23 +59,67 @@ class block_forumview extends object {
                 $newTopicLink = new link($this->uri(array('action' => 'newtopic', 'id' => $forumid, 'type' => $forum['forum_type'])));
                 $newTopicLink->link = $newTopicIcon->show();
 
+// Start of First Row
+
+                $tblTopic->startHeaderRow();
+
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'status', $this->objLanguage->languageText('word_status', 'forum', 'Status')), '30', 'center');
+
+                // --------------
+
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'read', $this->objLanguage->languageText('word_noun_read', 'forum')), '30', 'center');
+
+                // --------------
+
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'type', $this->objLanguage->languageText('word_type', 'forum', 'Type')), '30', 'center');
+
+                // --------------
+
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'topic', $this->objLanguage->languageText('mod_forum_topicconversation', 'forum')), '30%', 'center');
+
+                // --------------
+
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'author', $this->objLanguage->languageText('word_author')), Null, 'center', 'center');
+
+                // --------------
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'replies', $this->objLanguage->languageText('word_replies', 'system', 'Replies')), Null, 'center', 'center');
+
+                // --------------
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'views', $this->objLanguage->languageText('word_views', 'system', 'Views')), Null, 'center', 'center');
+
+                // --------------
+
+                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'lastpost', $this->objLanguage->languageText('mod_forum_lastpost', 'forum')), Null, 'center', 'center');
+
+                $tblTopic->endHeaderRow();
 
                 $header = new htmlheading();
                 $header->type = 1;
                 $header->str = $forum['forum_name'];
+                //admimn functions table
+                $tblAdmin = new htmlTable();
+                $tblAdmin->startRow();
+//                $tblTopic->startRow();
 //// Start checking whether to show the link
                 if ($forum['forumlocked'] != 'Y') {
                         // Check if students can start topic
                         if ($forum['studentstarttopic'] == 'Y') {
-                                $header->str .= ' ' . $newTopicLink->show();
-                                $tblTopic->startRow();
-                                $tblTopic->addCell($newTopicLink->show());
-                                $tblTopic->endRow();
+//                                $header->str .= ' ' . $newTopicLink->show();
+                                $tblAdmin->addCell($newTopicLink->show(), NULL, NULL, 'center');
                                 // Else check if user is lecturer or admin
                         } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
-                                $header->str .= ' ' . $newTopicLink->show();
+//                                $header->str .= ' ' . $newTopicLink->show();
+                                $tblAdmin->addCell($newTopicLink->show());
                         }
                 }
+                $tblTopic->endRow();
                 /**
                  * @todo Return object containing the start new topic icon/string
                  */
@@ -118,46 +162,6 @@ class block_forumview extends object {
                 if ($topicsNum > 0) {
                         $tblTopic->css_class = 'forumtopics';
                 }
-// Start of First Row
-
-                $tblTopic->startHeaderRow();
-
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'status', $this->objLanguage->languageText('word_status', 'forum', 'Status')), '30', 'center');
-
-                // --------------
-
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'read', $this->objLanguage->languageText('word_noun_read', 'forum')), '30', 'center');
-
-                // --------------
-
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'type', $this->objLanguage->languageText('word_type', 'forum', 'Type')), '30', 'center');
-
-                // --------------
-
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'topic', $this->objLanguage->languageText('mod_forum_topicconversation', 'forum')), '30%', 'center');
-
-                // --------------
-
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'author', $this->objLanguage->languageText('word_author')), Null, 'center', 'center');
-
-                // --------------
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'replies', $this->objLanguage->languageText('word_replies', 'system', 'Replies')), Null, 'center', 'center');
-
-                // --------------
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'views', $this->objLanguage->languageText('word_views', 'system', 'Views')), Null, 'center', 'center');
-
-                // --------------
-
-                $tblTopic->addHeaderCell($this->objForum->forumSortLink($forumid, 'lastpost', $this->objLanguage->languageText('mod_forum_lastpost', 'forum')), Null, 'center', 'center');
-
-                $tblTopic->endHeaderRow();
 
                 $wrapperDiv = "";
                 if ($topicsNum > 0) {
@@ -178,7 +182,7 @@ class block_forumview extends object {
                                         $objIcon->title = $this->objLanguage->languageText('mod_forum_topicisopen', 'forum');
                                         $rowCSS = $altRowCSS;
                                         //
-                                        $divContent = "locked";
+//                                        $divContent = "locked";
                                 } else {
                                         $objIcon->setIcon('lock', NULL, 'icons/forum/');
                                         $objIcon->title = $this->objLanguage->languageText('mod_forum_topicislocked', 'forum');
@@ -190,7 +194,7 @@ class block_forumview extends object {
                                 if ($topic['sticky'] == '1') {
                                         $rowCSS = 'stickyTopic';
                                         //
-                                        $divContent .= "<br/>Sticky";
+//                                        $divContent .= "<br/>Sticky";
                                 }
 
                                 $tblTopic->startRow($rowCSS);
@@ -198,11 +202,11 @@ class block_forumview extends object {
                                 if ($this->showFullName) {
                                         $tblTopic->addCell($this->objUser->getUserImage($topic['userid']) . "<br/>" . $topic['firstname'] . ' ' . $topic['surname'], Null, 'center', 'center');
                                         //
-                                        $divContent .= '<br/>' . $this->objUser->getUserImage($topic['userid']) . '<br/>' . $topic['firstname'] . ' ' . $topic['surname'];
+//                                        $divContent .= '<br/>' . $this->objUser->getUserImage($topic['userid']) . '<br/>' . $topic['firstname'] . ' ' . $topic['surname'];
                                 } else {
                                         $tblTopic->addCell($topic['username'], Null, 'center', 'center');
                                         //
-                                        $divContent .= '<br/>' . $topic['username'];
+//                                        $divContent .= '<br/>' . $topic['username'];
                                 }
 
                                 $tblTopic->addCell($objIcon->show(), Null, 'center');
@@ -250,11 +254,11 @@ class block_forumview extends object {
 
 
                                 //
-                                $divContent .= '<br/>' . $topic['replies'];
+//                                $divContent .= '<br/>' . $topic['replies'];
                                 $tblTopic->addCell("<span class='numberindicator' >{$topic['replies']}</span><br/><label class='menu' >Replies</label>", Null, 'center', 'center');
 
                                 //
-                                $divContent .= '<br/>' . $topic['views'];
+//                                $divContent .= '<br/>' . $topic['views'];
                                 $tblTopic->addCell("<span class='numberindicator' >{$topic['views']}</span><br/><label class='menu'>Views</label>", Null, 'center', 'center');
 
                                 // if (formatDate($topic['lastdate']) == date('j F Y')) {
@@ -263,7 +267,7 @@ class block_forumview extends object {
                                 // $datefield = formatDate($topic['lastdate']).' - '.formatTime($topic['lastdate']);
                                 // }
                                 //
-                $divContent .= '<br/>' . $topic['lastdate'];
+//                $divContent .= '<br/>' . $topic['lastdate'];
                                 $datefield = $objTranslatedDate->getDifference($topic['lastdate']);
 
                                 $objIcon->setIcon('gotopost', NULL, 'icons/forum/');

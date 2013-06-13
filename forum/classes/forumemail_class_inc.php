@@ -7,6 +7,19 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 //require_once('attachmentreader_class_inc.php');
 
+define('EMAIL_HOST', 'imap.gmail.com');
+define('EMAIL_POST', '993');
+
+// See: http://www.php.net/manual/en/function.imap-open.php -> Optional flags for names
+define('EMAIL_OPTIONS', 'imap/ssl');
+
+
+define('EMAIL_LOGIN', 'forum@thumbzup.com');
+define('EMAIL_PASSWORD', '4RuMfOr7hUm8zUp');
+
+//This will be the [domain] part of the @ in [catchall]@[domain]
+// forum_topic_2@chisimba.tohir.co.za
+define('CATCH_ALL_BASE', 'chisimba.tohir.co.za');
 
 /**
  * Forum Email Class
@@ -53,10 +66,10 @@ class forumemail extends object {
                 $this->dbForum = & $this->getObject('dbforum');
                 $this->objUserContext = $this->getObject('usercontext','context');
                 $this->contextGroups = & $this->getObject('managegroups', 'contextgroups');
-                $this->loadClass('attachmentreader', 'mail');
+                $this->objLanguage = & $this->getObject('language', 'language');
 
-                /*
-                 * TESTING
+                /**
+                 * @TESTING
                  */
 
 //                $this->loadClass('attachmentreader', 'mail');
@@ -71,8 +84,11 @@ class forumemail extends object {
 //                                $emailDetails = $this->emailBox->getEmailDetails($emailNum);
 //
 //                                $split = explode('-', $emailDetails['subject']);
+//                                //get the topic ID
 //                                $topic_id = 'gen' . $split[1];
+//                                //get the topic details
 //                                $topicDetails = $this->dbTopic->getTopicDetails($topic_id);
+//                                //get the post details
 //                                $postDetails = $this->dbPost->getPostWithText($topicDetails['first_post']);
 //                                if ($topicDetails == TRUE) {
 //                                        $post_parent = $topicDetails['first_post'];
@@ -82,8 +98,12 @@ class forumemail extends object {
 //                                        $forumDetails = $objForum->getForum($forum_id);
 //                                        $post_title = $topicDetails['post_title'];
 //                                        //
-//                                        $partialMessage = explode('>', $emailDetails['messageBody']);
-//                                        print_r($partialMessage);
+//                                        $partialMessage = explode('\n', $emailDetails['messageBody']);
+//                                        echo "<pre>";
+//                                        var_dump($partialMessage);
+//                                        echo "<pre/>";
+//                                        echo "<br/>";
+//                                        $theOtherOne = $partialMessage[0];
 //                                        $post_text = $emailDetails['messageBody'];
 //                                        $language = $postDetails['language'];
 //                                        $userDetails = $this->objUser->getRow('emailaddress', $emailDetails['sender']);
@@ -103,7 +123,7 @@ class forumemail extends object {
 ////                                                }
 //                                        }
 //                                } else {
-//                                        echo "<h1>The topic does not exists</h1>";
+//                                        echo "<h1>{$this->objLanguage->languageText('mod_forum_topicdoesnotexist','forum')}</h1>";
 //                                }
 //
 //                                // Mark Email for deletion
@@ -112,13 +132,12 @@ class forumemail extends object {
 //                        // Expunge Deleted Mail
 //                        unset($this->emailBox);
 //                } else {
-//                        echo "<h1>Inbox is empty</h1>";
+//                        echo "<h1>{$this->objLanguage->languageText('mod_forum_inboxempty','forum')}</h1>";
 //                }
                 /*
                  * END
                  */
 //                $this->objUser = & $this->getObject('user', 'security');
-                $this->objLanguage = & $this->getObject('language', 'language');
 //                $this->objTopic = $this->getObject('dbtopic', 'forum');
         }
 

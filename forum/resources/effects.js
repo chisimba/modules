@@ -114,8 +114,8 @@ jQuery(document).ready(function() {
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=savepostratingup',
                         type: 'post',
-                        data: 'post_id='+post_id,
-                        success: function(){
+                        data: 'post_id=' + post_id,
+                        success: function() {
                                 window.location.reload()
                         }
                 })
@@ -126,16 +126,16 @@ jQuery(document).ready(function() {
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=savepostratingdown',
                         type: 'post',
-                        data: 'post_id='+post_id,
-                        success: function(){
+                        data: 'post_id=' + post_id,
+                        success: function() {
                                 window.location.reload()
                         }
                 })
         });
-});
-
-jQuery('a.indicatorparent').click(function(event) {
-        event.preventDefault();
-        var element_ID = jQuery(this).attr('id');
-        jQuery('ul#' + element_ID).slideToggle();
+        jQuery('a.indicatorparent').click(function(event) {
+                event.preventDefault();
+                var element_ID = jQuery(this).attr('id');
+//                alert(element_ID);
+                jQuery('ul#' + element_ID).slideToggle();
+        });
 });

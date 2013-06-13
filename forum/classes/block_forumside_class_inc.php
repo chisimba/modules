@@ -53,7 +53,7 @@ class block_forumside extends object {
                 foreach ($topics as $topic) {
                     $topicLink = new link($this->uri(array('module' => 'forum', 'action' => 'viewtopic', 'id' => $topic['topic_id'])));
                     $topicLink->link = $topic['post_title'];
-                    $html .= "<li id='{$topic['forum_id']}'  class='indicator'> {$topicLink->show()}<span class='indicator'> {$topic['replies']}</span></li><br/>";
+                    $html .= "<br/><li id='{$topic['forum_id']}'  class='indicator'> {$topicLink->show()}<span class='indicator'> {$topic['replies']}</span></li>";
                 }
                  $html .= '</ul><br/>';
                  $div .= $html;
