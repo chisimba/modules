@@ -1054,7 +1054,7 @@ class forum extends controller {
                 }
                 $forumDetails['subscriptions'] = "Y";
                 if ($forumDetails['subscriptions'] == 'Y') {
-                        $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id), 'forum');
+                        $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id,'context'=>  $this->contextCode), 'forum');
 //                        $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                         $emailSuccess = NULL;
                 } else {

@@ -221,7 +221,7 @@ $objFix->fixTwo();
                 {
                 "display" : "block",
                 "module" : "forum",
-                "block" : ""
+                "block" : "forumside"
                 }
         </div>
         <div id="Canvas_Content_Body_Region2">

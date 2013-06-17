@@ -104,7 +104,7 @@ class block_forumlist extends object {
                                 $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
                         }
                         $tblclass->startRow($oddOrEven);
-                        $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
+                        $tblclass->addCell($objIcon->show(), 20, NULL, 'center');
                         $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
                         $tblclass->addCell($forum['topics'] . '<br/>Topics', NULL, NULL, 'center');
                         $tblclass->addCell($forum['post'] . '<br/>Posts', 100, NULL, 'center');

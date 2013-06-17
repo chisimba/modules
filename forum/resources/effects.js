@@ -98,7 +98,7 @@ jQuery(document).ready(function() {
                         data: data_string,
                         success: function() {
                                 jQuery('div.hiddenOptions').hide();
-                                alert(this.data)
+//                                alert(this.data)
                         }
                 });
         });
