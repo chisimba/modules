@@ -761,9 +761,18 @@ class simpleblogops extends object
         $numPosts = $post['comments'];
 
         if ($numPosts == 0) {
-            $numPosts = "<span class='simpleblog_wall_comments'>No comments yet<span>";
+            $lngTxt = $this->objLanguage->languageText("mod_simpleblog_nocommentsyet",
+                "simpleblog", "No comments yet");
+            $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}<span>";
         } else {
-            $numPosts = "<span class='simpleblog_wall_comments'>This post has {$numPosts} comments.<span>";
+            if ($numPosts == 1) {
+                $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtssn", 
+                  'simpleblog', array('NUMPOSTS' => $numPosts));
+            } else {
+                $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtspl", 
+                  'simpleblog', array('NUMPOSTS' => $numPosts));
+            }
+            $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}.<span>";
         }
 
         $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"

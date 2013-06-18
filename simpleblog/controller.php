@@ -207,7 +207,12 @@ class simpleblog extends controller
     {
         $objDb = $this->getObject('dbsimpleblog', 'simpleblog');
         $objDb->savePost();
-        return $this->nextAction();
+        $blogType = $this->getParam('post_type', NULL);
+        if ($blogType == "context") {
+            return $this->nextAction('home', array(), 'context');
+        } else {
+            return $this->nextAction();
+        }
     }
 
     /**
