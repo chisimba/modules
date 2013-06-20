@@ -86,7 +86,7 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
             if(data == "FALSE") {
                 jQuery("#responsearea").fadeIn("There was a problem saving your note");
             } else {
-                alert(data);
+                //alert(data);
                 jQuery("#responsearea").text("Your note was saved Successfully");
                 jQuery("#responsearea").show();
                 jQuery('#responsearea').fadeOut(5000);
@@ -96,6 +96,12 @@ function ajaxSubmitForm(myTitle, myTags, myPublic, myContent) {
                 var mode = jQuery.getUrlVar('mode', tmpUrl);
                 
                 if(mode == "add") {
+                    
+                    // Put in the link to view the current page.
+                    var baseUri = 'index.php?module=mynotes&action=showNote&id=' + data;
+                    baseUri = '<a href="' + baseUri + '">View this note</a>';
+                    jQuery("#mynotes_dyn").append(baseUri);
+                    
                     // change mode so that we now editing data, not adding new 
                     // data
                     tmpUrl = tmpUrl.replace("add", "edit");

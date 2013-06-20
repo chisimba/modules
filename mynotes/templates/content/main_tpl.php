@@ -16,8 +16,14 @@ $objFix->fixThree();
             {
             "display" : "block",
             "module" : "mynotes",
+            "block" : "mynotesnav"
+            }
+            {
+            "display" : "block",
+            "module" : "mynotes",
             "block" : "mynotesleft"
             }
+
             <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
             <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
         </div>
