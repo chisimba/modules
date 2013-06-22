@@ -10,6 +10,12 @@
  *
  * @author monwabisi
  */
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']) {
+        die("You cannot view this page directly");
+}
+
+// end security check
 class block_flatview extends object {
 
         var $objUser;
@@ -34,7 +40,8 @@ class block_flatview extends object {
                 $this->loadClass('dropdown', 'htmlelements');
                 $this->loadClass('textinput', 'htmlelements');
                 $this->loadClass('button', 'htmlelements');
-                $this->loadClass('checkbox','htmlelements');
+                $this->loadClass('checkbox', 'htmlelements');
+                $this->loadClass('radio', 'htmlelements');
                 // Get Context Code Settings
                 $this->contextObject = & $this->getObject('dbcontext', 'context');
                 $this->contextCode = $this->contextObject->getContextCode();
@@ -43,11 +50,11 @@ class block_flatview extends object {
                 $this->objUser = $this->getObject('user', 'security');
                 $this->objPost = $this->getObject('dbpost', 'forum');
                 $this->objForum = $this->getObject('dbforum', 'forum');
-                $this->dbForumPost = $this->getObject('dbtopicsubscriptions','forum');
+                $this->dbForumPost = $this->getObject('dbtopicsubscriptions', 'forum');
                 // Forum Ratings
                 $this->objForumRatings = & $this->getObject('dbforum_ratings');
                 //forum subscriptions
-                $this->dbForumSubscriptions = $this->getObject('dbforumsubscriptions','forum');
+                $this->dbForumSubscriptions = $this->getObject('dbforumsubscriptions', 'forum');
                 $this->objPostRatings = & $this->getObject('dbpost_ratings');
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
                 $this->objTopic = $this->getObject('dbtopic', 'forum');
@@ -85,6 +92,7 @@ class block_flatview extends object {
                 //table
                 $htmlTable = $this->getObject('htmltable', 'htmlelements');
                 $htmlTable->cssId = "flatview";
+                $topicDetails = $this->objTopic->getTopicDetails($topic_id);
                 // Check if forum is locked - if true - disable / editing replies
                 if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                         $this->objPost->repliesAllowed = FALSE;
@@ -108,8 +116,6 @@ class block_flatview extends object {
                         $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype)));
                         $moderateTopicLink->link = $this->objIcon->show();
                         $moderateTopicLink->cssId = "moderatetopic";
-                        //form
-                        $frmModerate = new form('topicModeration');
                         //moderation options
 //                        $this->loadClass('checkbox', 'htmlelements');
                         $checkBoxOne = new checkbox('sticky', '&nbsp; <b>Lock topic</b>');
@@ -124,7 +130,6 @@ class block_flatview extends object {
                         /**
                          * @TOPIC_OBJECT
                          */
-                        $topicDetails = $this->objTopic->getTopicDetails($topic_id);
                         if ($topicDetails['status'] == "CLOSE") {
                                 $checkBoxOne->setChecked(TRUE);
                         }
@@ -279,35 +284,39 @@ class block_flatview extends object {
                 /**
                  * if user is subscribed to forum, indicate
                  */
-                if($this->dbForumSubscriptions->isSubscribedToForum($forum['id'],  $this->objUser->userId($this->objUser->email()) ) ){
+                if ($this->dbForumSubscriptions->isSubscribedToForum($forum['id'], $this->objUser->userId($this->objUser->email()))) {
                         $notifyAll->selected = TRUE;
                 }
                 /**
-                 *if user is subscribed to topic, indicate by selecting the topic radio by default
+                 * if user is subscribed to topic, indicate by selecting the topic radio by default
                  */
-                if($this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email()))){
+                if ($this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         $notifyThread->selected = TRUE;
                 }
-                if( ! $this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email())) ){
-                        if( ! $this->dbForumPost->isSubscribedToTopic($topic_id,  $this->objUser->userId($this->objUser->email()))){
+                if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
+                        if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                                 $noAlerts->selected = TRUE;
                         }
                 }
 //                $notifyAll->setvalue("subscribetoall");
                 //hidden form object to carry the topic ID and the forum ID
-                $forumHiddenInput = new hiddeninput('forum_id',$topicDetails['forum_id']);
-                $topicHiddenInput = new hiddeninput('topic_id',$topic_id);
-                //add objects to the form
-                $frmModerate->addToForm($forumHiddenInput->show());
-                $frmModerate->addToForm($topicHiddenInput->show());
-                $frmModerate->addToForm($noAlerts->show().'<br/>');
-                $frmModerate->addToForm($notifyThread->show().'<br/>');
-                $frmModerate->addToForm($notifyAll->show().'<br/>');
-                $frmModerate->addToForm($saveButton->show());
-                $frmModerate->addToForm($cancelButton->show());
-                $subscribeDiv .= $frmModerate->show();
+                $forumHiddenInput = new hiddeninput('forum_id', $topicDetails['forum_id']);
+                $topicHiddenInput = new hiddeninput('topic_id', $topic_id);
+                //form
+                if ($this->objPost->showModeration) {
+                        $frmModerate = new form('topicModeration');
+                        //add objects to the form
+                        $frmModerate->addToForm($forumHiddenInput->show());
+                        $frmModerate->addToForm($topicHiddenInput->show());
+                        $frmModerate->addToForm($noAlerts->show() . '<br/>');
+                        $frmModerate->addToForm($notifyThread->show() . '<br/>');
+                        $frmModerate->addToForm($notifyAll->show() . '<br/>');
+                        $frmModerate->addToForm($saveButton->show());
+                        $frmModerate->addToForm($cancelButton->show());
+                        $subscribeDiv .= $frmModerate->show();
+                }
 //                $subscribeDiv .= $noAlerts->show().'<br/>'.$notifyThead->show().'<br>'.$notifyAll->show().'</div>';
-                $htmlTable->addCell($subscribeLink->show().$subscribeDiv, NULL, NULL, "center");
+                $htmlTable->addCell($subscribeLink->show() . $subscribeDiv, NULL, NULL, "center");
                 $htmlTable->endRow();
 
 //        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');

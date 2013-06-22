@@ -9,13 +9,14 @@ jQuery(document).ready(function() {
         jQuery('.replyForumUserPicture').hide();
         jQuery('.deleteconfirm').hide();
         jQuery('div.hiddenOptions, div.attachmentwrapper').hide();
+        jQuery('div.filePreview').hide();
         jQuery('a.ratings').click(function(e) {
                 e.preventDefault()
         });
 
         //increase the number of rows when the textare is clicked
         jQuery('.miniReply').click(function() {
-                jQuery(this).attr('rows', 5);
+                jQuery(this).attr('rows', 6);
                 jQuery('.replyForumUserPicture').show('slow');
         });
         //make the post
@@ -66,7 +67,7 @@ jQuery(document).ready(function() {
         //on focus out
         jQuery('.miniReply').focusout(function() {
                 if (jQuery('.miniReply').val() == 0) {
-                        jQuery(this).attr('rows', 1);
+                        jQuery(this).attr('rows', 2);
                 }
         });
 

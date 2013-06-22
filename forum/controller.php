@@ -233,10 +233,13 @@ class forum extends controller {
                 switch ($action) {
                         case 'savepostratingup' :
                                 return $this->savePostRatingUp();
-                                
+
                         case 'savepostratingdown':
                                 return $this->savePostRatingDown();
                                 
+                        case 'changeforumvisibility':
+                                return $this->changeForumVisibility();
+
                         case 'test':
                                 return 'test.php';
                         case 'forum':
@@ -649,7 +652,7 @@ class forum extends controller {
                 }
                 if ($forumDetails['subscriptions'] == 'Y') {
                         //http://localhost/nextgen/index.php?module=forum&action=postreply&id=gen8Srv57Nme40_1&type=context
-                        $replyUrl = $this->uri(array('action' => 'postreply', 'id' => $post_id));
+                        $replyUrl = $this->uri(array('action' => 'flatview', 'id' => $topic_id));
                         $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                         $emailSuccess = NULL;
                 } else {
@@ -1054,7 +1057,7 @@ class forum extends controller {
                 }
                 $forumDetails['subscriptions'] = "Y";
                 if ($forumDetails['subscriptions'] == 'Y') {
-                        $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id,'context'=>  $this->contextCode), 'forum');
+                        $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id, 'context' => $this->contextCode), 'forum');
 //                        $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                         $emailSuccess = NULL;
                 } else {
@@ -1204,6 +1207,20 @@ class forum extends controller {
                 }
                 $this->objForum->updateSingle($forum_id, $forum_name, $forum_description, $forum_visible, $forumLocked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate);
                 return $this->nextAction('administration', array('message' => 'forumupdated', 'id' => $forum_id));
+        }
+
+        /**
+         * Dynamically change the forum visibility
+         */
+        function changeForumVisibility() {
+                $forum_id = $this->getParam('forum_id');
+                $forum_visible = $this->getParam('forum_visible');
+//                if ($this->objUser->isLoggedIn()) {
+                        $this->objForum->updateForumVisibility($forum_id, $forum_visible);
+//                } else {
+//                        die();
+//                }
+                die();
         }
 
         /**
@@ -1579,7 +1596,7 @@ class forum extends controller {
                 if ($currentRating >= 1) {
                         $currentRating -= 1;
                         return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
-                }  else {
+                } else {
                         echo "<h1>OK</h1>";
                 }
 //                        }
