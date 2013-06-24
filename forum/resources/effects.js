@@ -79,7 +79,17 @@ jQuery(document).ready(function() {
 
         jQuery('a.postDeleteConfirm').click(function(e) {
                 e.preventDefault();
-                jQuery('div.hiddenOptions').toggle('fade');
+                jQuery('div.deleteconfirm').toggle('fade');
+                var post_id = jQuery(this).attr('id');
+                jQuery.ajax({
+                        url: 'index.php?module=forum&action=removepost',
+                        type: 'post',
+                        data: 'postid='+post_id,
+                        success: function(){
+//                                alert(post_id);
+                                window.location.reload();
+                        }
+                });
         });
 
 //

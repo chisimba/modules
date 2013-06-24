@@ -236,7 +236,7 @@ class forum extends controller {
 
                         case 'savepostratingdown':
                                 return $this->savePostRatingDown();
-                                
+
                         case 'updateforumsetting':
                                 return $this->updateforumsetting();
 
@@ -273,6 +273,9 @@ class forum extends controller {
 //                                } else {
                                 return $this->saveReply();
 //                                }
+
+                        case 'removepost':
+                                return $this->removepost();
 
                         case 'administration':
                                 return $this->forumAdministration();
@@ -846,6 +849,20 @@ class forum extends controller {
         }
 
         /**
+         * Dynamically remove a post
+         */
+        function removePost() {
+                $post_id = $this->getParam('postid');
+                if (!empty($post_id)) {
+                        if ($this->objUser->isLoggedIn()) {
+                                $this->objPost->delete('id', $post_id);
+                                die();
+                        }
+                }
+                die();
+        }
+
+        /**
          * This shows a topic with all posts in a flat view based on date posted, without indentations
          * @param $topic_id Record Id of the Topic
          */
@@ -1216,12 +1233,12 @@ class forum extends controller {
                 $forum_id = $this->getParam('forum_id');
                 $forum_status = $this->getParam('forum_status');
                 $forum_setting = $this->getParam('forum_setting');
-//                if ($this->objUser->isLoggedIn()) {
-                        echo $this->objForum->updateForum($forum_id,$forum_setting, $forum_status);
-//                } else {
-//                        die();
-//                }
-//                die();
+                if ($this->objUser->isLoggedIn()) {
+                        echo $this->objForum->updateForum($forum_id, $forum_setting, $forum_status);
+                } else {
+                        die();
+                }
+                die();
         }
 
         /**

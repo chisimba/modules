@@ -66,6 +66,7 @@ class dbPost extends dbTable {
          */
         var $objPostAttachments;
 
+        var $showModeration;
         /**
          *
          * @var object
@@ -462,8 +463,8 @@ class dbPost extends dbTable {
 //                        $return .= $editlink->show();
                 }
                 if ($this->showModeration) {
-                        $deleteLink = new link("#"/* $this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])) */);
-//                        $deleteLink->link .= $moderatePostIcon;
+                        $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
+                        $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
                         $return .= $deleteLink->show();
                 }
@@ -583,15 +584,15 @@ class dbPost extends dbTable {
                         $return .= "<br/>";
                         //wrapper   
                         if ($this->showModeration) {
-                                $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id'])));
+                                $deleteLink = new link('#'/*$this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id']))*/);
 //            $deleteLink->link = ;
                                 $confimLink = new link('#');
-                                $confimLink->link = "YES";
+                                $confimLink->link = "Yes";
                                 $confimLink->cssId = $postInfo[0]['post_id'];
                                 $confimLink->cssClass = "postDeleteConfirm";
 
                                 $declineLink = new link('#');
-                                $declineLink->link = "NO";
+                                $declineLink->link = "No";
                                 $declineLink->cssId = $postInfo[0]['post_id'];
                                 $declineLink->cssClass = "postDeleteDecline";
 
