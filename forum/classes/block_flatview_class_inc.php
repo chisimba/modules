@@ -135,26 +135,25 @@ class block_flatview extends object {
                         }
 //                        $frmModerate->addToForm($checkBoxOne->show() . '<br/>');
 //                        $frmModerate->addToForm($checkBoxTwo->show() . '<br/>');
-
-                        /**
-                         * @SAVE_BUTTON
-                         */
-                        $saveButton = new button();
-                        $saveButton->cssId = "moderationSave";
-                        $saveButton->value = "Save";
-//                        $frmModerate->addToForm($saveButton->show() . '&nbsp;&nbsp;');
-                        /**
-                         * @CANCEL_BUTTON
-                         */
-                        $cancelButton = new button();
-                        $cancelButton->cssId = "moderationCancel";
-                        $cancelButton->value = "Cancel";
 //                        $frmModerate->addToForm($cancelButton->show() . '&nbsp;&nbsp;&nbsp;');
 //                        $moderationDiv .= $frmModerate->show();
                         $moderationDiv .= "</div >";
 //                        $moderateTopicLink->link .= $moderationDiv;
 //                                $moderateTopicLink->link .= $optionLink->show();
                 }
+                /**
+                 * @SAVE_BUTTON
+                 */
+                $saveButton = new button();
+                $saveButton->cssId = "moderationSave";
+                $saveButton->value = "Save";
+//                        $frmModerate->addToForm($saveButton->show() . '&nbsp;&nbsp;');
+                /**
+                 * @CANCEL_BUTTON
+                 */
+                $cancelButton = new button();
+                $cancelButton->cssId = "moderationCancel";
+                $cancelButton->value = "Cancel";
                 ////Confirmation messages
                 if ($this->getParam('message') == 'save') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
@@ -260,13 +259,6 @@ class block_flatview extends object {
                         $htmlTable->addCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
                         $htmlTable->addCell($newtopiclink->show(), NULL, NULL, "center");
                 }
-                //subscribsion
-                $subscribeLink = new link("#");
-                $this->objIcon->setIcon('alerts');
-                $subscribeLink->cssClass = "moderatetopic";
-                $subscribeLink->link = $this->objIcon->show();
-                //floating div
-                $subscribeDiv = "<div class='hiddenOptions' >";
                 $noAlerts = new radio('subscription');
                 $noAlerts->addOption('nosubscription', 'Do not notify me');
 //                $noAlerts->setvalue('nosubscription');
@@ -286,24 +278,34 @@ class block_flatview extends object {
                  */
                 if ($this->dbForumSubscriptions->isSubscribedToForum($forum['id'], $this->objUser->userId($this->objUser->email()))) {
                         $notifyAll->selected = TRUE;
+                        $this->objIcon->setIcon('alerts_sub');
                 }
                 /**
                  * if user is subscribed to topic, indicate by selecting the topic radio by default
                  */
                 if ($this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         $notifyThread->selected = TRUE;
+                        $this->objIcon->setIcon('alert_sub');
                 }
                 if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                                 $noAlerts->selected = TRUE;
+                                $this->objIcon->setIcon('alert_sub');
                         }
                 }
+                //subscribsion
+                $subscribeLink = new link("#");
+//                $this->objIcon->setIcon('alerts');
+                $subscribeLink->cssClass = "moderatetopic";
+                $subscribeLink->link = $this->objIcon->show();
+                //floating div
+                $subscribeDiv = "<div class='hiddenOptions' >";
 //                $notifyAll->setvalue("subscribetoall");
                 //hidden form object to carry the topic ID and the forum ID
                 $forumHiddenInput = new hiddeninput('forum_id', $topicDetails['forum_id']);
                 $topicHiddenInput = new hiddeninput('topic_id', $topic_id);
                 //form
-                if ($this->objPost->showModeration) {
+                if ($forum['subscriptions'] == 'Y') {
                         $frmModerate = new form('topicModeration');
                         //add objects to the form
                         $frmModerate->addToForm($forumHiddenInput->show());
@@ -314,9 +316,9 @@ class block_flatview extends object {
                         $frmModerate->addToForm($saveButton->show());
                         $frmModerate->addToForm($cancelButton->show());
                         $subscribeDiv .= $frmModerate->show();
+                        $htmlTable->addCell($subscribeLink->show() . $subscribeDiv, NULL, NULL, "center");
                 }
 //                $subscribeDiv .= $noAlerts->show().'<br/>'.$notifyThead->show().'<br>'.$notifyAll->show().'</div>';
-                $htmlTable->addCell($subscribeLink->show() . $subscribeDiv, NULL, NULL, "center");
                 $htmlTable->endRow();
 
 //        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');

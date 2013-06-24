@@ -1037,42 +1037,42 @@ class dbPost extends dbTable {
 
                 // Show Forum Subscriptions if enabled
 
-                if ($forum['subscriptions'] == 'Y') {
-                        // Get the number of topics a user is subscribed to
-                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
-
-                        // Check whether the user is subscribed to the current topic
-                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
-
-                        // Check whether the user is subscribed to the current forum
-                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
-
-                        $addTable->startRow();
-                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
-                        $subscriptionsRadio = new radio('subscriptions');
-                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
-                        $subscriptionsRadio->setBreakSpace('<br />');
-
-                        if ($forumSubscription) {
-                                $subscriptionsRadio->setSelected('forumsubscribe');
-                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
-                        } else if ($topicSubscription) {
-                                $subscriptionsRadio->setSelected('topicsubscribe');
-                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
-                        } else {
-                                $subscriptionsRadio->setSelected('nosubscriptions');
-                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
-                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
-                        }
-
-                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
-
-                        $addTable->addCell($subscriptionsRadio->show() . $div);
-                        $addTable->endRow();
-//                        $return .= $subscribeMessage . '<br/>';
-                }
+//                if ($forum['subscriptions'] == 'Y') {
+//                        // Get the number of topics a user is subscribed to
+//                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
+//
+//                        // Check whether the user is subscribed to the current topic
+//                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
+//
+//                        // Check whether the user is subscribed to the current forum
+//                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
+//
+//                        $addTable->startRow();
+//                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
+//                        $subscriptionsRadio = new radio('subscriptions');
+//                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
+//                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
+//                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+//                        $subscriptionsRadio->setBreakSpace('<br />');
+//
+//                        if ($forumSubscription) {
+//                                $subscriptionsRadio->setSelected('forumsubscribe');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+//                        } else if ($topicSubscription) {
+//                                $subscriptionsRadio->setSelected('topicsubscribe');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
+//                        } else {
+//                                $subscriptionsRadio->setSelected('nosubscriptions');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+//                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
+//                        }
+//
+//                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
+//
+//                        $addTable->addCell($subscriptionsRadio->show() . $div);
+//                        $addTable->endRow();
+////                        $return .= $subscribeMessage . '<br/>';
+//                }
 
                 // Load JavaScript Function
                 $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());

@@ -237,8 +237,8 @@ class forum extends controller {
                         case 'savepostratingdown':
                                 return $this->savePostRatingDown();
                                 
-                        case 'changeforumvisibility':
-                                return $this->changeForumVisibility();
+                        case 'updateforumsetting':
+                                return $this->updateforumsetting();
 
                         case 'test':
                                 return 'test.php';
@@ -1212,15 +1212,16 @@ class forum extends controller {
         /**
          * Dynamically change the forum visibility
          */
-        function changeForumVisibility() {
+        function updateForumSetting() {
                 $forum_id = $this->getParam('forum_id');
-                $forum_visible = $this->getParam('forum_visible');
+                $forum_status = $this->getParam('forum_status');
+                $forum_setting = $this->getParam('forum_setting');
 //                if ($this->objUser->isLoggedIn()) {
-                        $this->objForum->updateForumVisibility($forum_id, $forum_visible);
+                        echo $this->objForum->updateForum($forum_id,$forum_setting, $forum_status);
 //                } else {
 //                        die();
 //                }
-                die();
+//                die();
         }
 
         /**

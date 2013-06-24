@@ -163,11 +163,11 @@ class block_forumadmin extends object {
                         $locked->addOnChange("
                                 var visibility_value = jQuery(this).val();
                                 jQuery.ajax({
-                                        url: 'index.php?module=forum&action=changeforumvisibility',
+                                        url: 'index.php?module=forum&action=updateforumsetting',
                                         type: 'post',
-                                        data: 'forum_id='+'{$forum['id']}&forum_visible='+visibility_value+'',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=forumlocked&forum_status='+visibility_value+'',
                                         success: function(){
-                                                return NULL;
+                                                alert('forum_id='+'{$forum['id']}&forum_setting=forumlocked&forum_status='+visibility_value+'');
                                         }
                                 });
                                 ");
@@ -179,6 +179,17 @@ class block_forumadmin extends object {
                         $ratings->addOption('N', 'N');
                         $ratings->cssClass = $forum['id'];
                         $ratings->setSelected($forum['ratingsenabled']);
+                        $ratings->addOnChange("
+                                var ratings_value = jQuery(this).val();
+                                jQuery.ajax({
+                                        url: 'index.php?module=forum&action=updateforumsetting',
+                                        type: 'post',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=ratingsenabled&forum_status='+ratings_value+'',
+                                        success: function(){
+                                                alert('forum_id='+'{$forum['id']}&forum_setting=ratingsenabled&forum_status='+ratings_value+'');
+                                        }
+                                });
+                                ");
                         $table->addCell($ratings->show(), NULL, NULL, 'center');
 
                         //dropdown menu for adjusting the forum lock status
@@ -186,7 +197,18 @@ class block_forumadmin extends object {
                         $studentStartsTopic->addOption('Y', 'Y');
                         $studentStartsTopic->addOption('N', 'N');
                         $studentStartsTopic->cssClass = $forum['id'];
-                        $studentStartsTopic->setSelected($forum['ratingsenabled']);
+                        $studentStartsTopic->setSelected($forum['studentstarttopic']);
+                        $studentStartsTopic->addOnChange("
+                                var students_value = jQuery(this).val();
+                                jQuery.ajax({
+                                        url: 'index.php?module=forum&action=updateforumsetting',
+                                        type: 'post',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'',
+                                        success: function(){
+                                                alert('forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'');
+                                        }
+                                });
+                                ");
                         $table->addCell($studentStartsTopic->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['studentstarttopic'], NULL, NULL, 'center');
 
@@ -196,6 +218,17 @@ class block_forumadmin extends object {
                         $attachments->addOption('N', 'N');
                         $attachments->cssClass = $forum['id'];
                         $attachments->setSelected($forum['attachments']);
+                        $attachments->addOnChange("
+                                var attachments_value = jQuery(this).val();
+                                jQuery.ajax({
+                                        url: 'index.php?module=forum&action=updateforumsetting',
+                                        type: 'post',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=attachments&forum_status='+attachments_value+'',
+                                        success: function(){
+                                                alert('forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'');
+                                        }
+                                });
+                                ");
                         $table->addCell($attachments->show(), NULL, NULL, 'center');
 
                          //dropdown menu for adjusting the forum lock status
@@ -204,6 +237,20 @@ class block_forumadmin extends object {
                         $subscriptions->addOption('N', 'N');
                         $subscriptions->cssClass = $forum['id'];
                         $subscriptions->setSelected($forum['subscriptions']);
+                        $subscriptions->addOnChange("
+                                var subscription_value = jQuery(this).val();
+                                jQuery.ajax({
+                                        url: 'index.php?module=forum&action=updateforumsetting',
+                                        type: 'post',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=subscriptions&forum_status='+subscription_value+'',
+                                        success: function(){
+                                                jQuery(setTimeout(function(){
+                                                alert('ok');
+                                                }), 45000);
+                                                jQuery('div#Canvas_Content_Body_Region2').append('<span id=\'confirm\' >it works</span>');
+                                        }
+                                });
+                                ");
                         $table->addCell($subscriptions->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['subscriptions'], NULL, NULL, 'center');
 
