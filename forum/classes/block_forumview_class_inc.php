@@ -113,7 +113,6 @@ class block_forumview extends object {
 //                // --------------
 //
 //                $tblTopic->addHeaderCell($this->objForum->forumSortLink($this->forumid, 'lastpost', $this->objLanguage->languageText('mod_forum_lastpost', 'forum')), Null, 'center', 'center');
-
 //                $tblTopic->endHeaderRow();
 
                 $header = new htmlheading();
@@ -124,20 +123,23 @@ class block_forumview extends object {
                 $tblAdmin->startHeaderRow();
 //                $tblTopic->startRow();
 //// Start checking whether to show the link
-                if ($this->forumDetails['forumlocked'] != 'Y') {
+                if ($this->forumDetails['forumlocked'] != 'Y' || $this->forumDetails['studentstarttopic'] == 'Y') {
                         // Check if students can start topic
-                        if ($this->forumDetails['studentstarttopic'] == 'Y') {
-//                                $header->str .= ' ' . $newTopicLink->show();
-                                $tblTopic->addHeaderCell($newTopicLink->show() . "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}");
-//                                $tblAdmin->addCell($newTopicLink->show() . "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}", NULL, NULL, 'center');
-                                // Else check if user is lecturer or admin
-                        }
-                } else if ($this->objUser->isCourseAdmin($this->contextCode)) {
+//                        if () {
+////                                $header->str .= ' ' . $newTopicLink->show();
+//                                $tblTopic->addHeaderCell($newTopicLink->show() . "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}");
+////                                $tblAdmin->addCell($newTopicLink->show() . "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}", NULL, NULL, 'center');
+//                                // Else check if user is lecturer or admin
+//                        }
+                }
+                if ($this->objUser->isCourseAdmin($this->contextCode) || $this->forumDetails['studentstarttopic'] == 'Y') {
 //                                $header->str .= ' ' . $newTopicLink->show();
 //                                $tblAdmin->addCell($newTopicLink->show(),NULL,NULL,'center');
-                                $tblTopic->addHeaderCell($newTopicLink->show() . "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}", NULL,NULL,'center',NULL);
-                        }
-                        $tblTopic->endHeaderRow();
+                        $newTopicLink->cssClass = "sexybutton";
+                        $newTopicLink->link .= "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}";
+                        $tblTopic->addHeaderCell($newTopicLink->show(), NULL, NULL, 'center', NULL);
+                }
+                $tblTopic->endHeaderRow();
 //                $tblAdmin->endHeaderRow();
                 $tblTopic->endRow();
                 /**

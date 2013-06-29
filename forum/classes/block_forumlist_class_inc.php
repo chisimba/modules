@@ -83,8 +83,8 @@ class block_forumlist extends object {
 //                        $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
                         $administrationLink->cssClass = "sexybutton";
                         $this->objIcon->setIcon('settings');
-                        $administrationLink->link = $this->objIcon->show();
-                        $admintable->addCell($administrationLink->show()."<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_forumadministration','forum')} </label>",  NULL,NULL,'center',NULL);
+                        $administrationLink->link = $this->objIcon->show()."<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_forumadministration','forum')} </label>";
+                        $admintable->addCell($administrationLink->show(),  NULL,NULL,'center',NULL);
                         $admintable->endHeaderRow();
 //                        $homeForm->addToForm('<br/>' . $administrationLink->show());
                 }

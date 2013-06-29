@@ -144,9 +144,9 @@ class block_forumadmin extends object {
                         $visibility->addOnChange("
                                 var visibility_value = jQuery(this).val();
                                 jQuery.ajax({
-                                        url: 'index.php?module=forum&action=changeforumvisibility',
+                                        url: 'index.php?module=forum&action=updateforumsetting',
                                         type: 'post',
-                                        data: 'forum_id='+'{$forum['id']}&forum_visible='+visibility_value+'',
+                                        data: 'forum_id='+'{$forum['id']}&forum_setting=forum_visible&forum_status='+visibility_value+'',
                                         success: function(){
                                                 return NULL;
                                         }
@@ -289,13 +289,14 @@ class block_forumadmin extends object {
                 
                 $createLink = new link($this->uri(array('module' => 'forum', 'action' => 'createforum')));
                 $objIcon->setIcon('notes');
-                $createLink->link = $objIcon->show();
+                $createLink->cssClass = "sexybutton";
+                $createLink->link = $objIcon->show().'<br/><label class="menu" >'.$this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create new forum').'</label>';
                 
 //                $backToForumListLink = new link($this->uri(NULL));
 //                $backToForumListLink->link = $this->objLanguage->languageText('mod_forum_backtoforumindex', 'forum');
                 $adminTable = new htmlTable();
                 $adminTable->startHeaderRow();
-                $adminTable->addCell($createLink->show().'<br/><label class="menu" >'.$this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create new forum').'</label>',NULL,NULL,'center');
+                $adminTable->addCell($createLink->show(),NULL,NULL,'center');
                 $adminTable->endHeaderRow();
                 $form->addToForm($adminTable->show());
 

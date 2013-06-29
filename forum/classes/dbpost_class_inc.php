@@ -437,7 +437,7 @@ class dbPost extends dbTable {
                 //
                 $pointerSpan2 = "<span class='forumPointer2'></span>";
                 $pointerSpan3 = "<span class='forumPointer3'></span>";
-                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" ><img class="forumUserPicture" src="' . $this->objUserPic->userpicture($post['userid']) . '"  />';
+                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" >'. $this->objUser->getUserImage($post['userid']);
                 $contentDiv .= "</div>";
                 $this->threadDisplayLevel = $post['level'];
                 $return .= $contentDiv;
@@ -618,7 +618,7 @@ class dbPost extends dbTable {
                         $ratingsDiv .= $displaySpan."</div>";
 
                         //get parent info
-                        $conteiner = "\r\n" . ' <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($innerPost['userid']) . '"> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
+                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
                 <p>' . $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
 //                                $return .= $conteiner;
                         //get inner post details
@@ -972,7 +972,7 @@ class dbPost extends dbTable {
 //            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
 //            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
-                        $return .= "\r\n" . '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <img class="forumUserPicture" src="' . $this->objUserPic->userpicture($this->userId) . '"> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer reply" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
+                        $return .= "\r\n" . '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($this->userId) . '</div> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer reply" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
                 ' . $textArea->show() . '<hr/>' ;
                         //add the attachment link if attachments are enabled in the forum
                         if ($forum['attachments'] == 'Y') {
