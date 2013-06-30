@@ -169,12 +169,12 @@ class block_forumview extends object {
                 $allTopics = $this->objTopic->showTopicsInForum($this->forumid, $this->objUser->userId($this->objUser->userName()), NULL, $order, $direction, NULL, NULL);
 //        echo $order;
                 $topicsNum = count($allTopics);
-                if ($topicsNum > 0) {
-                        /**
-                         * @todo Append the number of topics to object
-                         */
-//                        echo $paging;
-                }
+//                if ($topicsNum > 0) {
+//                        /**
+//                         * @todo Append the number of topics to object
+//                         */
+////                        echo $paging;
+//                }
                 $tblTopic->attributes = ' align="center" border="0"';
                 $tblTopic->cellspacing = '1';
                 $tblTopic->cellpadding = '4';

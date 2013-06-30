@@ -155,6 +155,12 @@ class block_flatview extends object {
                 $cancelButton->cssId = "moderationCancel";
                 $cancelButton->value = "Cancel";
                 ////Confirmation messages
+                if ($this->getParam('message') == 'deletesuccess') {
+                        $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
+                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postremoved', 'forum'));
+                        $timeoutMessage->setTimeout(20000);
+                        echo ('<p>' . $timeoutMessage->show() . '</p>');
+                }
                 if ($this->getParam('message') == 'save') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
                         $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));

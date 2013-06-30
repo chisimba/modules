@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
                 var element_Id = jQuery(this).attr('id');
                 //html elements
                 var text_area = jQuery('textarea#' + element_Id);
-                if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why you no type he?') {
+                if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why you no type here?') {
                         var replyDiv = jQuery('.clone').clone();
 //                        jQuery('textarea#' + element_Id).fadeOut('slow');
                         jQuery(this).fadeOut('slow');
@@ -51,7 +51,7 @@ jQuery(document).ready(function() {
                                         //add element to another class
                                         window.location.reload();
                                         jQuery('.content').html('<br/>' + message);
-                                        jQuery('.newForumContent').append(replyDiv);
+//                                        jQuery('.newForumContent').append(replyDiv);
                                 }
                         });
                 } else {
@@ -79,17 +79,27 @@ jQuery(document).ready(function() {
 
         jQuery('a.postDeleteConfirm').click(function(e) {
                 e.preventDefault();
-                jQuery('div.deleteconfirm').toggle('fade');
+                var link_id = jQuery(this).attr('id');
+                jQuery('div.deleteconfirm#' + link_id).toggle('fade');
                 var post_id = jQuery(this).attr('id');
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=removepost',
                         type: 'post',
-                        data: 'postid='+post_id,
-                        success: function(){
+                        data: 'postid=' + post_id,
+                        success: function() {
 //                                alert(post_id);
-                                window.location.reload();
+                                var current_location = window.location;
+                                var new_location = current_location + '&message=deletesuccess';
+                                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
+//                                window.location.replace(new_location);
+//                                alert(window.location);
                         }
                 });
+        });
+        //when clicking OK on the confirmation message
+        jQuery('.ok').live('click',function(e) {
+                e.preventDefault();
+                window.location.reload();
         });
 
 //
@@ -114,8 +124,10 @@ jQuery(document).ready(function() {
                 });
         });
         //moderation cancel button
-        jQuery('#moderationCancel').click(function() {
-                jQuery('.hiddenOptions').toggle('fade');
+        jQuery('.postDeleteCancel').click(function(e) {
+                e.preventDefault();
+                var link_id = jQuery(this).attr('id');
+                jQuery('div.deleteconfirm#' + link_id).toggle('fade');
         });
         /**
          * @RATINGS

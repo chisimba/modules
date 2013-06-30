@@ -594,7 +594,7 @@ class dbPost extends dbTable {
                                 $declineLink = new link('#');
                                 $declineLink->link = "No";
                                 $declineLink->cssId = $postInfo[0]['post_id'];
-                                $declineLink->cssClass = "postDeleteDecline";
+                                $declineLink->cssClass = "postDeleteCancel";
 
                                 $deleteLink->link = $moderatePostIcon;
                                 $deleteLink->cssId = $postInfo[0]['post_id'];
