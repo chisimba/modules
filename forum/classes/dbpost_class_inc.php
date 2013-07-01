@@ -78,7 +78,7 @@ class dbPost extends dbTable {
          * @var object To preview post attachments
          */
         var $objFilePreview;
-        
+
         /**
          *
          * @var object object to be used to retrive post ratings
@@ -641,7 +641,7 @@ class dbPost extends dbTable {
                                 }
                         }
                         if($this->showRatings){
-                        $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>';
+                                $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>';
                         }
                         $return .='
                 </div>
@@ -954,10 +954,8 @@ class dbPost extends dbTable {
                         //Testing filter
                         // The Regular Expression filter
 //                        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-
 // The Text you want to filter for urls
 //                        $text = "http://www.google.com";
-
 // Check if there is a url in the text
 //                        if (preg_match($reg_exUrl, $text, $url)) {
 //

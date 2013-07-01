@@ -148,7 +148,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=forum_visible&forum_status='+visibility_value+'',
                                         success: function(){
-                                                return NULL;
+                                                jQuery().displayConfirmationMessage();
                                         }
                                 });
                                 ");
@@ -167,7 +167,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=forumlocked&forum_status='+visibility_value+'',
                                         success: function(){
-                                                alert('forum_id='+'{$forum['id']}&forum_setting=forumlocked&forum_status='+visibility_value+'');
+                                                jQuery.fn.displayConfirmationMessage();
                                         }
                                 });
                                 ");
@@ -186,7 +186,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=ratingsenabled&forum_status='+ratings_value+'',
                                         success: function(){
-                                                alert('forum_id='+'{$forum['id']}&forum_setting=ratingsenabled&forum_status='+ratings_value+'');
+                                                jQuery.displayConfirmationMessage.call();
                                         }
                                 });
                                 ");
@@ -205,7 +205,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'',
                                         success: function(){
-                                                alert('forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'');
+                                                jQuery().displayConfirmationMessage();
                                         }
                                 });
                                 ");
@@ -225,7 +225,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=attachments&forum_status='+attachments_value+'',
                                         success: function(){
-                                                alert('forum_id='+'{$forum['id']}&forum_setting=studentstarttopic&forum_status='+students_value+'');
+                                                jQuery().displayConfirmationMessage();
                                         }
                                 });
                                 ");
@@ -244,10 +244,7 @@ class block_forumadmin extends object {
                                         type: 'post',
                                         data: 'forum_id='+'{$forum['id']}&forum_setting=subscriptions&forum_status='+subscription_value+'',
                                         success: function(){
-                                                jQuery(setTimeout(function(){
-                                                alert('ok');
-                                                }), 45000);
-                                                jQuery('div#Canvas_Content_Body_Region2').append('<span id=\'confirm\' >it works</span>');
+                                                jQuery().displayConfirmationMessage();
                                         }
                                 });
                                 ");

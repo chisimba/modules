@@ -284,14 +284,14 @@ class block_flatview extends object {
                  */
                 if ($this->dbForumSubscriptions->isSubscribedToForum($forum['id'], $this->objUser->userId($this->objUser->email()))) {
                         $notifyAll->selected = TRUE;
-                        $this->objIcon->setIcon('alerts');
+                        $this->objIcon->setIcon('alerts-on');
                 }
                 /**
                  * if user is subscribed to topic, indicate by selecting the topic radio by default
                  */
                 if ($this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         $notifyThread->selected = TRUE;
-                        $this->objIcon->setIcon('alerts');
+                        $this->objIcon->setIcon('alerts-on');
                 }
                 if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {

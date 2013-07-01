@@ -14,6 +14,13 @@ jQuery(document).ready(function() {
                 e.preventDefault()
         });
 
+//Saved changes message alert
+        jQuery.fn.displayConfirmationMessage = function() {
+                jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >it works</span>');
+                setTimeout(function() {
+                        jQuery('.jqGenerated').remove();
+                }, 15000);
+        }
         //increase the number of rows when the textare is clicked
         jQuery('.miniReply').click(function() {
                 jQuery(this).attr('rows', 6);
@@ -97,7 +104,7 @@ jQuery(document).ready(function() {
                 });
         });
         //when clicking OK on the confirmation message
-        jQuery('.ok').live('click',function(e) {
+        jQuery('.ok').live('click', function(e) {
                 e.preventDefault();
                 window.location.reload();
         });
