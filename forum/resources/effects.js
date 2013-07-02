@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
         jQuery('ul.indicator').hide();
         jQuery('.replyForumUserPicture').hide();
         jQuery('.deleteconfirm').hide();
-        jQuery('div.hiddenOptions, div.attachmentwrapper').hide();
+        jQuery('div.hiddenOptions, div.attachmentwrapper, div.file-preview').hide();
         jQuery('div.filePreview').hide();
         jQuery('a.ratings').click(function(e) {
                 e.preventDefault()
@@ -167,5 +167,53 @@ jQuery(document).ready(function() {
                 var element_ID = jQuery(this).attr('id');
 //                alert(element_ID);
                 jQuery('ul#' + element_ID).slideToggle();
+        });
+        jQuery('.forumViewAttachment').live('click', function(e) {
+                e.preventDefault();
+                var parentElement_id = jQuery(this).attr('id');
+                jQuery('div.file-preview#' + parentElement_id).toggle('fade');
+        });
+
+        jQuery('.postEditClass').live('click', function() {
+                var post_id = jQuery(this).attr('id');
+                var post_text = jQuery('.postText#' + post_id).html();
+                //wrapper div
+                var popUpWrapper = jQuery('<div>', {
+                        class: 'popUpWrapper'
+                });
+                //textarea
+                var edit_post_area = jQuery('<textarea>', {
+                        val: post_text
+                });
+                //save button
+                var save_button = jQuery('<button>', {
+                        text: 'Save',
+                        class: 'sexybutton',
+                        click: function() {
+                                jQuery.ajax({
+                                        url: 'index.php?module=forum&action=savepostedit',
+                                        type: 'post',
+                                        data: 'id=' + parentElement_id,
+                                        success: function() {
+                                                jQuery.fn.displayConfirmationMessage();
+                                        }
+                                });
+                        }
+                });
+                //cancel button
+                var cancel_button = jQuery('<button>', {
+                        text: 'Canel',
+                        class: 'sexybutton',
+                        click: function() {
+                                jQuery(edit_post_area).val('');
+                                jQuery('body').remove(popUpWrapper);
+                        }
+                });
+//                jQuery(new_div).css('background', 'red');
+//            add all elements to wrapper div
+                jQuery(popUpWrapper).append(save_button);
+                jQuery(popUpWrapper).append(cancel_button);
+                jQuery(popUpWrapper).append(edit_post_area);
+                jQuery('body').append(popUpWrapper);
         });
 });

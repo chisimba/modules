@@ -336,8 +336,8 @@ class forum extends controller {
                           return $this->downloadAttachment($this->getParam('id'), $this->getParam('topic'));
                          */
 
-                        case 'savepostratings':
-                                return $this->savePostRatings();
+//                        case 'savepostratings':
+//                                return $this->savePostRatings();
 
                         case 'workgroup':
                                 return $this->checkWorkgroupForum();
@@ -1092,26 +1092,27 @@ class forum extends controller {
          * @param string $id Record Id of the Post
          */
         public function editPost($id) {
+                $id = $this->getParam('id');
                 $post = $this->objPost->getPostWithText($id);
 
-                if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
+//                if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
                         $this->setVarByRef('post', $post);
                         $forum = $this->objForum->getForum($post['forum_id']);
                         // Check if user has access to workgroup forum else redirect
                         $this->checkWorkgroupAccessOrRedirect($forum);
                         $this->setVarByRef('forum', $forum);
-                        $temporaryId = $this->objUser->userId() . '_' . mktime();
-                        $this->setVarByRef('temporaryId', $temporaryId);
+//                        $temporaryId = $this->objUser->userId() . '_' . mktime();
+//                        $this->setVarByRef('temporaryId', $temporaryId);
                         // Move posts from tbl_forum_attachments to tbl_forum_temp_attachments
-                        $attachments = $this->objPostAttachments->getAttachments($id);
-                        foreach ($attachments AS $attachment) {
-                                $this->objTempAttachments->insertSingle($temporaryId, $attachment['attachment_id'], $post['forum_id'], $this->userId, mktime());
-                        }
-                        $acch = $this->objTempAttachments->getQuickList($temporaryId);
-                        return 'forum_editpost.php';
-                } else {
-                        return $this->nextAction('viewtopic', array('message' => 'unabletoeditpost', 'id' => $post['topic_id'], 'post' => $post['post_id'], 'type' => $this->forumtype));
-                }
+//                        $attachments = $this->objPostAttachments->getAttachments($id);
+//                        foreach ($attachments AS $attachment) {
+//                                $this->objTempAttachments->insertSingle($temporaryId, $attachment['attachment_id'], $post['forum_id'], $this->userId, mktime());
+//                        }
+//                        $acch = $this->objTempAttachments->getQuickList($temporaryId);
+//                        return 'forum_editpost.php';
+//                } else {
+//                        return $this->nextAction('viewtopic', array('message' => 'unabletoeditpost', 'id' => $post['topic_id'], 'post' => $post['post_id'], 'type' => $this->forumtype));
+//                }
         }
 
         /**
@@ -1615,7 +1616,7 @@ class forum extends controller {
                         $currentRating -= 1;
                         return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
                 } else {
-                        echo "<h1>OK</h1>";
+                        return FALSE;
                 }
 //                        }
 //                }

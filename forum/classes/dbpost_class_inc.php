@@ -65,8 +65,8 @@ class dbPost extends dbTable {
          * @var object To handle all post attachments
          */
         var $objPostAttachments;
-
         var $showModeration;
+
         /**
          *
          * @var object
@@ -95,7 +95,7 @@ class dbPost extends dbTable {
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
-                $this->dbPostratings = $this->getObject('dbpost_ratings','forum');
+                $this->dbPostratings = $this->getObject('dbpost_ratings', 'forum');
 
                 $this->objForum = $this->getObject('dbforum');
                 $this->objPostAttachments = $this->getObject('dbpostattachments');
@@ -437,7 +437,7 @@ class dbPost extends dbTable {
                 //
                 $pointerSpan2 = "<span class='forumPointer2'></span>";
                 $pointerSpan3 = "<span class='forumPointer3'></span>";
-                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" >'. $this->objUser->getUserImage($post['userid']);
+                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" >' . $this->objUser->getUserImage($post['userid']);
                 $contentDiv .= "</div>";
                 $this->threadDisplayLevel = $post['level'];
                 $return .= $contentDiv;
@@ -463,10 +463,14 @@ class dbPost extends dbTable {
 //                        $return .= $editlink->show();
                 }
                 if ($this->showModeration) {
+                        $tposteditLink = new link($this->uri(array('action'=>'editpost','id'=>$post['post_id'])));
+                        $this->objIcon->setIcon('edit');
+                        $tposteditLink->link = $this->objIcon->show();
+                        $tposteditLink->title = "adsfadsfas";
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                        $return .= $deleteLink->show();
+                        $return .= $tposteditLink->show(). $deleteLink->show();
                 }
 
                 // Check if the contractible layers should be implemented
@@ -478,7 +482,7 @@ class dbPost extends dbTable {
                 if ($this->showFullName) {
 
                         // Start of the Title Area
-                        $return .= '<div class="forumTopicTitle"><strong>' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br />' . stripslashes($post['post_title']) . ' <br/><img src="skins/tu/icons/date-time.png" >' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
+                        $return .= '<div class=""><strong>' . $post['firstname'] . ' ' . $post['surname'] . '</strong>' . stripslashes($post['post_title']) . ' <img src="skins/tu/icons/date-time.png" >' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
                 } else {
                         // Start of the Title Area
                         $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
@@ -584,26 +588,31 @@ class dbPost extends dbTable {
                         $return .= "<br/>";
                         //wrapper   
                         if ($this->showModeration) {
-                                $deleteLink = new link('#'/*$this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id']))*/);
+                                $deleteLink = new link('#'/* $this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id'])) */);
 //            $deleteLink->link = ;
                                 $confimLink = new link('#');
-                                $confimLink->link = "Yes";
+                                $confimLink->link = $this->objLanguage->languageText('word_yes','system');
                                 $confimLink->cssId = $postInfo[0]['post_id'];
                                 $confimLink->cssClass = "postDeleteConfirm";
 
                                 $declineLink = new link('#');
-                                $declineLink->link = "No";
+                                $declineLink->link = $this->objLanguage->languageText('word_no','system');
                                 $declineLink->cssId = $postInfo[0]['post_id'];
                                 $declineLink->cssClass = "postDeleteCancel";
 
+                                $postEditLink = new link('javascript:void(0)');
+                                $this->objIcon->setIcon('edit');
+                                $postEditLink->link = $this->objIcon->show();
+                                $postEditLink->cssClass = "postEditClass";
+                                $postEditLink->cssId = $postInfo[0]['post_id'];
                                 $deleteLink->link = $moderatePostIcon;
                                 $deleteLink->cssId = $postInfo[0]['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
                                 $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>Are you sure you want to delete this post?<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
-                                $dLink = $deleteConfirm . $deleteLink->show();
+                                $dLink = $postEditLink->show().$deleteConfirm . $deleteLink->show();
                         }
 
-                        //new ratings object
+                        //new ratings object 
                         $ratingsDiv = "<div class='' ><hr/>";
                         $upperLink = new link('#');
                         $upperLink->cssClass = "ratings up";
@@ -615,11 +624,11 @@ class dbPost extends dbTable {
                         $lowerLink->link = "<br/> &nbsp;&nbsp;&nbsp;";
                         $numberOfVotes = $this->dbPostratings->getPostRatings($innerPost['id']);
                         $displaySpan = "<span class='numberindicator' >{$upperLink->show()} {$numberOfVotes} {$lowerLink->show()}</span>";
-                        $ratingsDiv .= $displaySpan."</div>";
+                        $ratingsDiv .= $displaySpan . "</div>";
 
                         //get parent info
                         $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
-                <p>' . $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
+                <p class="postText"  id="'.$postInfo[0]['post_id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
 //                                $return .= $conteiner;
                         //get inner post details
                         $innerAttachments = $this->objPostAttachments->getAttachments($postInfo[0]['post_id']);
@@ -631,21 +640,30 @@ class dbPost extends dbTable {
                                         $this->objFiles = $this->getObject('dbfile', 'filemanager');
                                         //$this->objFiles->getFullFilePath($files[0]['id']);
                                         $attachment_path = $this->objFiles->getFilePath($files[0]['id']);
+//                                        $objIcon->setIcon('download');
                                         $downloadlink = new link($attachment_path);
-                                        $downloadlink->link = $attachment['filename'];
-                                        //$downloadlink->target = '_blank';
-                                        $conteiner .= $this->objFileIcons->getFileIcon($attachment['filename']) . '<br/> ' . $this->objFilePreview->previewFile($attachment['attachment_id']) . $downloadlink->show() . '<br /><br/>';
+                                        $downloadlink->cssClass = "forumDownload";
+                                        $downloadlink->target = '_blank';
+                                        $this->objIcon->setIcon('download');
+                                        $downloadlink->link = $this->objLanguage->languageText('phrase_downloadattatchment', 'system');
+                                        $this->objIcon->setIcon('view');
+                                        $viewLink = new link('javascript:void(0);');
+                                        $viewLink->title = "view attachment";
+                                        $viewLink->cssClass = "forumViewAttachment";
+                                        $viewLink->cssId = $attachment['id'];
+                                        $viewLink->link = $this->objLanguage->languageText('phrase_viewattachment', 'system');
+                                        $conteiner .= $this->objFileIcons->getFileIcon($attachment['filename']) . "&nbsp;&nbsp; <label >{$attachment['filename']}</label> &nbsp;" . $downloadlink->show() . '&nbsp; &nbsp;' . $viewLink->show() . '<br/> ' . "<div class='file-preview' id='{$attachment['id']}' >" . $this->objFilePreview->previewFile($attachment['attachment_id']) . '</div><br />';
                                         //header('Content-Disposition: attachment; filename="' . $files[0]['filename'] . '"');
                                         //readfile($location);
                                         //--header('Location:'.$location); // Todo - Force Download
                                 }
                         }
-                        if($this->showRatings){
+                        if ($this->showRatings) {
                                 $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>';
                         }
                         $return .='
                 </div>
-                <br/> <br/> <br/>'. $conteiner;
+                <br/> <br/> <br/>' . $conteiner;
                 }
 
                 //Check if replies allowed
@@ -950,7 +968,7 @@ class dbPost extends dbTable {
                         $attachmentObject->showClearInputJavaScript();
                         $attachmentObject->cssClass = "popUp";
                         //wrap the atachment object in a div
-                        $divAttachmentWrapper = "<div class='attachmentwrapper' > <br/> &nbsp;&nbsp;&nbsp;".$attachmentObject->show()."</div>"; 
+                        $divAttachmentWrapper = "<div class='attachmentwrapper' > <br/> &nbsp;&nbsp;&nbsp;" . $attachmentObject->show() . "</div>";
                         //Testing filter
                         // The Regular Expression filter
 //                        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
@@ -971,19 +989,16 @@ class dbPost extends dbTable {
 //            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
                         $return .= "\r\n" . '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($this->userId) . '</div> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer reply" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
-                ' . $textArea->show() . '<hr/>' ;
+                ' . $textArea->show() . '<hr/>';
                         //add the attachment link if attachments are enabled in the forum
                         if ($forum['attachments'] == 'Y') {
-                                $return .= $divAttachmentWrapper. $attachmentLink->show();
+                                $return .= $divAttachmentWrapper . $attachmentLink->show();
                         }
                         $return .= '<br/><hr/></div>' . $link->show() . '<br/><br/>' . '
                 </div> <br/> <br/></div></div>';
                 }
 
 //                $return .= '<hr />';
-
-
-
                 // Check if other languages exist
                 if (isset($post['anotherlanguage']) && $post['anotherlanguage'] != '') {
                         $link = new link('javascript:loadTranslation(\'' . $post['post_id'] . '\', \'' . $post['language'] . '\');');
@@ -1035,7 +1050,6 @@ class dbPost extends dbTable {
                 $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
                 // Show Forum Subscriptions if enabled
-
 //                if ($forum['subscriptions'] == 'Y') {
 //                        // Get the number of topics a user is subscribed to
 //                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
@@ -1072,7 +1086,6 @@ class dbPost extends dbTable {
 //                        $addTable->endRow();
 ////                        $return .= $subscribeMessage . '<br/>';
 //                }
-
                 // Load JavaScript Function
                 $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
                 return $return . $this->getjavascriptFile('effects.js', 'forum');
@@ -1628,8 +1641,6 @@ class dbPost extends dbTable {
 //                        $submitButton->cssClass = 'save';
 //                        $submitButton->extra = ' onclick="SubmitForm()"';
                         //$submitButton->setToSubmit();
-
-
 //                        if ($showCancel) {
 //                                $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 //                                $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->forumtype));
@@ -1641,15 +1652,11 @@ class dbPost extends dbTable {
 //
 //                                $addTable->addCell($submitButton->show());
 //                        }
-
 //                        $addTable->endRow();
 //
 //                        $postReplyForm->addToForm($addTable);
-
-
                         // IE is not getting values from hidden textinputs...hence we pass them via session vars
 //                        $this->setSession('temporaryId', $temporaryId);
-
 //                        return $this->showTangentJavaScript($defaultTitle) . $postReplyForm->show();
                 }
         }
