@@ -328,7 +328,7 @@ class block_flatview extends object {
                 $htmlTable->endRow();
 
 //        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');
-                $elements = $htmlTable->show() . $ratingsForm->show();
+                $elements = $htmlTable->show().'<br/>' . $ratingsForm->show();
                 return $elements;
         }
 

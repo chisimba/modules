@@ -463,14 +463,16 @@ class dbPost extends dbTable {
 //                        $return .= $editlink->show();
                 }
                 if ($this->showModeration) {
-                        $tposteditLink = new link($this->uri(array('action'=>'editpost','id'=>$post['post_id'])));
+                        $tposteditLink = new link('javascript:void(0)');
                         $this->objIcon->setIcon('edit');
                         $tposteditLink->link = $this->objIcon->show();
+                        $tposteditLink->cssClass = "postEditClass";
+                        $tposteditLink->cssId = $post['post_id'];
                         $tposteditLink->title = "adsfadsfas";
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                        $return .= $tposteditLink->show(). $deleteLink->show();
+                        $return .= $tposteditLink->show();
                 }
 
                 // Check if the contractible layers should be implemented
@@ -488,7 +490,7 @@ class dbPost extends dbTable {
                         $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
                 }
                 // Ebd Title Area
-                $return .= '</div>' . "\r\n";
+                $return .= '</div>';
 
 
                 // Start of the content area
@@ -508,11 +510,21 @@ class dbPost extends dbTable {
                         $return .= '</div>';
                 }
                 $return .= '<div id="loading_' . $post['post_id'] . '"></div>';
-                $return .= '<div id="text_' . $post['post_id'] . '">' . $this->objWashoutFilters->parseText(
+                $tmpText =  $this->objWashoutFilters->parseText(
                                 $this->objScriptClear->removeScript(// Apply Script Removal Filters
                                         stripslashes(// Remove Slashes
                                                 $post['post_text']
-                        ))) . '</div><br clear="both" />';
+                        )));
+                $search = array(
+                    '<p>',
+                    '</p>'
+                );
+                $replacers = array(
+                    '',
+                    ''
+                );
+                $tmpText = str_replace($search,$replacers, $tmpText);
+                $return .= "<p id='{$post['post_id']}' class='postText' > {$tmpText}</p>";
 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
@@ -941,7 +953,7 @@ class dbPost extends dbTable {
                          */
 //                        $this->loadClass('textarea', 'htmlelements');
                         $textArea = new textarea('commentsArea');
-                        $link = new link('#'/* $this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype)) */);
+                        $link = new link('javascript:void(0)'/* $this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype)) */);
                         $textArea->cssClass = "miniReply";
                         $textArea->cssId = $post['post_id'];
                         $textArea->setRows(1);

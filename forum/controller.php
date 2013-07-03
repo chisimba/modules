@@ -274,6 +274,9 @@ class forum extends controller {
                                 return $this->saveReply();
 //                                }
 
+                        case 'savepostedit':
+                                return $this->savepostedit();
+
                         case 'removepost':
                                 return $this->removepost();
 
@@ -1096,14 +1099,14 @@ class forum extends controller {
                 $post = $this->objPost->getPostWithText($id);
 
 //                if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
-                        $this->setVarByRef('post', $post);
-                        $forum = $this->objForum->getForum($post['forum_id']);
-                        // Check if user has access to workgroup forum else redirect
-                        $this->checkWorkgroupAccessOrRedirect($forum);
-                        $this->setVarByRef('forum', $forum);
+                $this->setVarByRef('post', $post);
+                $forum = $this->objForum->getForum($post['forum_id']);
+                // Check if user has access to workgroup forum else redirect
+                $this->checkWorkgroupAccessOrRedirect($forum);
+                $this->setVarByRef('forum', $forum);
 //                        $temporaryId = $this->objUser->userId() . '_' . mktime();
 //                        $this->setVarByRef('temporaryId', $temporaryId);
-                        // Move posts from tbl_forum_attachments to tbl_forum_temp_attachments
+                // Move posts from tbl_forum_attachments to tbl_forum_temp_attachments
 //                        $attachments = $this->objPostAttachments->getAttachments($id);
 //                        foreach ($attachments AS $attachment) {
 //                                $this->objTempAttachments->insertSingle($temporaryId, $attachment['attachment_id'], $post['forum_id'], $this->userId, mktime());
@@ -2381,6 +2384,24 @@ class forum extends controller {
                         exit;
                 }
 
+        }
+
+        /**
+         * 
+         */
+        function savepostedit() {
+                $id = $this->getParam('id');
+                $domDoc = new DOMDocument('utf-8');
+                if (isset($id)) {
+                        $newText = $this->getParam('new_text');
+                        $objPost = $this->objPost->getPostWithText($id);
+                        if ($objPost) {
+                                if (isset($newText)) {
+                                        $new_message = "<p>" . $newText . "</p>";
+                                        $this->objPostText->updatePostText($id, $objPost['post_title'], $new_message);
+                                }
+                        }
+                }
         }
 
 }

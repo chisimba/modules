@@ -19,7 +19,7 @@ jQuery(document).ready(function() {
                 jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >it works</span>');
                 setTimeout(function() {
                         jQuery('.jqGenerated').remove();
-                }, 15000);
+                }, 5000);
         }
         //increase the number of rows when the textare is clicked
         jQuery('.miniReply').click(function() {
@@ -32,12 +32,12 @@ jQuery(document).ready(function() {
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
                 //get aattributes
-                var href = jQuery(this).attr('href');
+//                var href = jQuery(this).attr('href');
                 var element_Id = jQuery(this).attr('id');
                 //html elements
                 var text_area = jQuery('textarea#' + element_Id);
-                if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why you no type here?') {
-                        var replyDiv = jQuery('.clone').clone();
+                if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why u no type here?') {
+//                        var replyDiv = jQuery('.clone').clone();
 //                        jQuery('textarea#' + element_Id).fadeOut('slow');
                         jQuery(this).fadeOut('slow');
                         var attachment_id = jQuery('#hidden_fileselect').val();
@@ -112,7 +112,16 @@ jQuery(document).ready(function() {
 //
         jQuery('a.attachmentLink').click(function(e) {
                 e.preventDefault();
+                var attachCancelButton = jQuery('<button>', {
+                        text: 'Cancel',
+                        class: 'sexybutton',
+                        click: function() {
+                                jQuery('div.attachmentwrapper').val('');
+                                jQuery('div.attachmentwrapper').toggle('fade');
+                        }
+                });
                 jQuery('div.attachmentwrapper').toggle('fade');
+                jQuery('div.attachmentwrapper').append(attachCancelButton);
         });
 
         //update topic status
@@ -193,8 +202,10 @@ jQuery(document).ready(function() {
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=savepostedit',
                                         type: 'post',
-                                        data: 'id=' + parentElement_id,
+                                        data: 'id=' + post_id + 'new_text=' + jQuery(edit_post_area).val(),
                                         success: function() {
+                                                jQuery('.postText#' + post_id).html(jQuery(edit_post_area).val());
+                                                jQuery('.popUpWrapper').remove();
                                                 jQuery.fn.displayConfirmationMessage();
                                         }
                                 });
@@ -206,7 +217,7 @@ jQuery(document).ready(function() {
                         class: 'sexybutton',
                         click: function() {
                                 jQuery(edit_post_area).val('');
-                                jQuery('body').remove(popUpWrapper);
+                                jQuery('.popUpWrapper').remove();
                         }
                 });
 //                jQuery(new_div).css('background', 'red');
@@ -215,5 +226,8 @@ jQuery(document).ready(function() {
                 jQuery(popUpWrapper).append(cancel_button);
                 jQuery(popUpWrapper).append(edit_post_area);
                 jQuery('body').append(popUpWrapper);
+        });
+        jQuery('#input_selectfile_fileselect').live('change', function() {
+                alert(this).val();
         });
 });
