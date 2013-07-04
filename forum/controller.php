@@ -2390,18 +2390,13 @@ class forum extends controller {
          * 
          */
         function savepostedit() {
-                $id = $this->getParam('id');
-                $domDoc = new DOMDocument('utf-8');
-                if (isset($id)) {
-                        $newText = $this->getParam('new_text');
-                        $objPost = $this->objPost->getPostWithText($id);
-                        if ($objPost) {
-                                if (isset($newText)) {
-                                        $new_message = "<p>" . $newText . "</p>";
-                                        $this->objPostText->updatePostText($id, $objPost['post_title'], $new_message);
-                                }
-                        }
-                }
+                $_id = $this->getParam('_id');
+                $objElement = $this->newObject('htmlarea', 'htmlelements');
+                $objElement->name = 'blocktext';
+                $objElement->width = '450px';
+                $objElement->height = '250px';
+                $objElement->toolbarSet = 'simple';
+                echo $objElement->show();
         }
 
 }

@@ -429,8 +429,8 @@ class dbPost extends dbTable {
 
                 $this->objIcon->setIcon('delete');
                 $this->objIcon->align = 'right';
-                $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+//                $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+//                $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
                 // Set up Alt Text
                 $moderatePostIcon = $this->objIcon->show();
 
@@ -466,9 +466,9 @@ class dbPost extends dbTable {
                         $tposteditLink = new link('javascript:void(0)');
                         $this->objIcon->setIcon('edit');
                         $tposteditLink->link = $this->objIcon->show();
-                        $tposteditLink->cssClass = "postEditClass";
-                        $tposteditLink->cssId = $post['post_id'];
-                        $tposteditLink->title = "adsfadsfas";
+                        $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
+                        $tposteditLink->cssId = $post['id'];
+                        $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost','forum');
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
@@ -505,7 +505,7 @@ class dbPost extends dbTable {
                         $link->link = stripslashes($tangentParent['post_title']);
                         $link->anchor = $tangentParent['post_id'];
 
-                        $return .= '<strong>' . $this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum') . ' ' . $link->show() . ' by ' . $tangentParent['firstname'] . ' ' . $tangentParent['surname'] . '</strong><br /><br />';
+                        $return .= '<strong>' . $this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum') . ' ' . $link->show() . $this->objLanguage->languageText('word_by','system') . $tangentParent['firstname'] . ' ' . $tangentParent['surname'] . '</strong><br /><br />';
                         $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                         $return .= '</div>';
                 }
@@ -515,16 +515,22 @@ class dbPost extends dbTable {
                                         stripslashes(// Remove Slashes
                                                 $post['post_text']
                         )));
+                /**
+                 * removing database paragraph tags
+                 * @todo Find a cleaner wy of doing this
+                 */
+                //value to be replaced
                 $search = array(
                     '<p>',
                     '</p>'
                 );
+                //replacement values
                 $replacers = array(
                     '',
                     ''
                 );
                 $tmpText = str_replace($search,$replacers, $tmpText);
-                $return .= "<p id='{$post['post_id']}' class='postText' > {$tmpText}</p>";
+                $return .= "<p id='{$post['id']}' class='postText' > {$tmpText}</p>";
 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
@@ -615,12 +621,12 @@ class dbPost extends dbTable {
                                 $postEditLink = new link('javascript:void(0)');
                                 $this->objIcon->setIcon('edit');
                                 $postEditLink->link = $this->objIcon->show();
-                                $postEditLink->cssClass = "postEditClass";
-                                $postEditLink->cssId = $postInfo[0]['post_id'];
+                                $postEditLink->cssClass = "postEditClass {$postInfo[0]['post_id']}";
+                                $postEditLink->cssId = $postInfo[0]['id'];
                                 $deleteLink->link = $moderatePostIcon;
                                 $deleteLink->cssId = $postInfo[0]['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
-                                $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>Are you sure you want to delete this post?<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
+                                $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost','forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
                                 $dLink = $postEditLink->show().$deleteConfirm . $deleteLink->show();
                         }
 
@@ -640,7 +646,7 @@ class dbPost extends dbTable {
 
                         //get parent info
                         $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
-                <p class="postText"  id="'.$postInfo[0]['post_id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
+                <p class="postText"  id="'.$postInfo[0]['id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
 //                                $return .= $conteiner;
                         //get inner post details
                         $innerAttachments = $this->objPostAttachments->getAttachments($postInfo[0]['post_id']);
@@ -660,7 +666,7 @@ class dbPost extends dbTable {
                                         $downloadlink->link = $this->objLanguage->languageText('phrase_downloadattatchment', 'system');
                                         $this->objIcon->setIcon('view');
                                         $viewLink = new link('javascript:void(0);');
-                                        $viewLink->title = "view attachment";
+                                        $viewLink->title = $this->objLanguage->languageText('phrase_viewattachment','forum');
                                         $viewLink->cssClass = "forumViewAttachment";
                                         $viewLink->cssId = $attachment['id'];
                                         $viewLink->link = $this->objLanguage->languageText('phrase_viewattachment', 'system');
@@ -957,7 +963,7 @@ class dbPost extends dbTable {
                         $textArea->cssClass = "miniReply";
                         $textArea->cssId = $post['post_id'];
                         $textArea->setRows(1);
-                        $textArea->extra = "placeholder='Post a reply'";
+                        $textArea->extra = "placeholder='{$this->objLanguage->languageText('mod_forum_postreply','forum')}'";
                         $link->cssClass = "buttonLink postReplyLink";
                         $link->cssId = $post['post_id'];
                         $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');

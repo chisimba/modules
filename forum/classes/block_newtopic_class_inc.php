@@ -215,6 +215,7 @@ class block_newtopic extends object {
         $addTable->addCell($htmlareaLabel->show(), 120, 'top', NULL, $messageCSS);
 
         $editor = &$this->newObject('htmlarea', 'htmlelements');
+        $editor->toolbarSet = 'simple';
         $editor->setName('message');
 
         $objContextCondition = &$this->getObject('contextcondition', 'contextpermissions');
@@ -306,7 +307,7 @@ class block_newtopic extends object {
         $returnUrl = $this->uri(array('action' => 'forum', 'id' => $forumId, 'type' => $forumtype));
         $cancelButton->setOnClick("window.location='$returnUrl'");
 
-        $addTable->addCell($submitButton->show() . ' / ' . $cancelButton->show());
+        $addTable->addCell($submitButton->show() . ' ' . $cancelButton->show());
 
         $addTable->endRow();
 

@@ -16,13 +16,13 @@ jQuery(document).ready(function() {
 
 //Saved changes message alert
         jQuery.fn.displayConfirmationMessage = function() {
-                jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >it works</span>');
+                jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >Saved successfuly</span>');
                 setTimeout(function() {
                         jQuery('.jqGenerated').remove();
                 }, 5000);
         }
         //increase the number of rows when the textare is clicked
-        jQuery('.miniReply').click(function() {
+        jQuery('.miniReply').focus(function() {
                 jQuery(this).attr('rows', 6);
                 jQuery('.replyForumUserPicture').show('slow');
         });
@@ -115,9 +115,11 @@ jQuery(document).ready(function() {
                 var attachCancelButton = jQuery('<button>', {
                         text: 'Cancel',
                         class: 'sexybutton',
-                        click: function() {
+                        click: function(e) {
+                                e.preventDefault();
                                 jQuery('div.attachmentwrapper').val('');
                                 jQuery('div.attachmentwrapper').toggle('fade');
+                                jQuery(this).remove();
                         }
                 });
                 jQuery('div.attachmentwrapper').toggle('fade');
@@ -183,15 +185,19 @@ jQuery(document).ready(function() {
                 jQuery('div.file-preview#' + parentElement_id).toggle('fade');
         });
 
+        /**
+         * =======When editin post==========
+         */
         jQuery('.postEditClass').live('click', function() {
                 var post_id = jQuery(this).attr('id');
+                var _id = jQuery(this).attr('class');
                 var post_text = jQuery('.postText#' + post_id).html();
                 //wrapper div
                 var popUpWrapper = jQuery('<div>', {
                         class: 'popUpWrapper'
                 });
                 //textarea
-                var edit_post_area = jQuery('<textarea>', {
+                var edit_post_area = jQuery('<span>', {
                         val: post_text
                 });
                 //save button
@@ -199,16 +205,6 @@ jQuery(document).ready(function() {
                         text: 'Save',
                         class: 'sexybutton',
                         click: function() {
-                                jQuery.ajax({
-                                        url: 'index.php?module=forum&action=savepostedit',
-                                        type: 'post',
-                                        data: 'id=' + post_id + 'new_text=' + jQuery(edit_post_area).val(),
-                                        success: function() {
-                                                jQuery('.postText#' + post_id).html(jQuery(edit_post_area).val());
-                                                jQuery('.popUpWrapper').remove();
-                                                jQuery.fn.displayConfirmationMessage();
-                                        }
-                                });
                         }
                 });
                 //cancel button
@@ -226,6 +222,18 @@ jQuery(document).ready(function() {
                 jQuery(popUpWrapper).append(cancel_button);
                 jQuery(popUpWrapper).append(edit_post_area);
                 jQuery('body').append(popUpWrapper);
+                //Get and return the editor
+                jQuery.ajax({
+                        url: 'index.php?module=forum&action=savepostedit&_id=' + _id + '&post_id=' + post_id + '&new_text=' + jQuery(edit_post_area).val(),
+                        type: 'post',
+                        data: 'id=' + post_id + '&new_text=' + jQuery(edit_post_area).val(),
+                        success: function(data) {
+//                                jQuery('.postText#' + post_id).html(jQuery(edit_post_area).val());
+//                                jQuery('.popUpWrapper').remove();
+//                                                jQuery.fn.displayConfirmationMessage();
+                                jQuery(popUpWrapper).append(data);
+                        }
+                });
         });
         jQuery('#input_selectfile_fileselect').live('change', function() {
                 alert(this).val();
