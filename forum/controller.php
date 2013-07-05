@@ -277,6 +277,9 @@ class forum extends controller {
                         case 'savepostedit':
                                 return $this->savepostedit();
 
+                        case 'showeditpostpopup':
+                                return $this->showeditpostpopup();
+
                         case 'removepost':
                                 return $this->removepost();
 
@@ -2387,15 +2390,40 @@ class forum extends controller {
         }
 
         /**
-         * 
+         * save post edit
          */
         function savepostedit() {
                 $_id = $this->getParam('_id');
+                $post_id = $this->getParam('post_id');
+                $new_text = $this->getParam('new_text');
+//                $postDetails = $this->objPost->getPostWithText($post_id);
+                $stmnt = "WHERE post_id='{$_id}'";
+                $this->objPost->_tableName = 'tbl_forum_post_text';
+//                $postDetails = $this->objPost->getAll($stmnt);
+//                if($this->objPostText->updatePostText($postDetails[0]['post_id'],$postDetails[0]['post_title'],$new_text))
+                echo $new_text;
+        }
+
+        /**
+         * Show form for editing post text
+         */
+        function showeditpostpopup() {
+                $_id = $this->getParam('_id');
+//                $this->setVarByRef('_id',$_id);
+                $post_id = $this->getParam('post_id');
+//                $this->setvarByref('post_id',$post_id);
+                $post_id = $this->getParam('post_id');
+                
+                $new_text = $this->getPAram('new_text');
                 $objElement = $this->newObject('htmlarea', 'htmlelements');
                 $objElement->name = 'blocktext';
                 $objElement->width = '450px';
                 $objElement->height = '250px';
+                $objElement->cssClass = $_id;
+                $objElement->cssId = $post_id;
                 $objElement->toolbarSet = 'simple';
+                $objElement->value = $new_text;
+//                echo $this->getParam('new_text');
                 echo $objElement->show();
         }
 
