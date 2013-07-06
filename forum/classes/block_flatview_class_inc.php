@@ -108,7 +108,7 @@ class block_flatview extends object {
                         $this->objIcon->setIcon('notes');
                         $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['forum_id'], 'type' => $forumtype)));
                         $newtopiclink->link = $this->objIcon->show() /* $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum') */;
-                        $newtopiclink->title = "Start new topic";
+                        $newtopiclink->title = $this->objLanguage->languageText('phrase_starttopic','system');
                         $this->objIcon->setIcon('moderate');
                         $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
                         $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
@@ -118,8 +118,8 @@ class block_flatview extends object {
                         $moderateTopicLink->cssId = "moderatetopic";
                         //moderation options
 //                        $this->loadClass('checkbox', 'htmlelements');
-                        $checkBoxOne = new checkbox('sticky', '&nbsp; <b>Lock topic</b>');
-                        $checkBoxOne->setValue('true');
+//                        $checkBoxOne = new checkbox('sticky', '&nbsp; <b></b>');
+//                        $checkBoxOne->setValue('true');
 //                        $checkBoxOne->extra = "display:none;";
                         $moderationDiv = "<div class='' >";
 //                        $moderationDiv .= $checkBoxOne->show();
@@ -130,9 +130,9 @@ class block_flatview extends object {
                         /**
                          * @TOPIC_OBJECT
                          */
-                        if ($topicDetails['status'] == "CLOSE") {
-                                $checkBoxOne->setChecked(TRUE);
-                        }
+//                        if ($topicDetails['status'] == "CLOSE") {
+//                                $checkBoxOne->setChecked(TRUE);
+//                        }
 //                        $frmModerate->addToForm($checkBoxOne->show() . '<br/>');
 //                        $frmModerate->addToForm($checkBoxTwo->show() . '<br/>');
 //                        $frmModerate->addToForm($cancelButton->show() . '&nbsp;&nbsp;&nbsp;');
@@ -190,7 +190,7 @@ class block_flatview extends object {
 
                 if ($post['status'] == 'CLOSE') {
                         $hardHTML = '<div class="forumTangentIndent">';
-                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) . ' on ' . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
+                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) .$this->objLnaguage->languageText('word_on','system') . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
                         $hardHTML .= '<p>' . $post['lockreason'] . '</p>';
                         $hardHTML .= '</div>';
                 }

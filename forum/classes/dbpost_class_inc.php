@@ -480,14 +480,19 @@ class dbPost extends dbTable {
                         $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\'' . $post['post_id'] . '\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
                 }
 
-
+//echo $post['datelastupdated'];
+$Date = date('Y M d',  mktime(0,0,0,  substr($post['datelastupdated'], 5,2), substr($post['datelastupdated'], 8, 2) ,substr($post['datelastupdated'],0,4)));
+$year =  substr($Date, 0,4);
+$month = substr($Date,5,2);
+$day = substr($Date,8,2);
+//$Date = trim($Date);
+//echo $Date;
                 if ($this->showFullName) {
-
                         // Start of the Title Area
-                        $return .= '<div class=""><strong>' . $post['firstname'] . ' ' . $post['surname'] . '</strong>' . stripslashes($post['post_title']) . ' <img src="skins/tu/icons/date-time.png" >' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
+                        $return .= '<div class=""><strong>' . $post['firstname'] . ' ' . $post['surname'] . '</strong>' . stripslashes($post['post_title']) . ' <img src="skins/tu/icons/date-time.png" > <strong>' . $this->objDateTime->formatDateOnly($post['datelastupdated']) .'</strong> '. strtolower($this->objLanguage->languageText('word_at','system')).' '. $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
                 } else {
                         // Start of the Title Area
-                        $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' at ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
+                        $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at','system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
                 }
                 // Ebd Title Area
                 $return .= '</div>';
@@ -497,9 +502,7 @@ class dbPost extends dbTable {
                 $return .= '<div class="newForumContent" id="' . $post['post_id'] . '" style="display:block">' . "\r\n";
                 if ($post['post_tangent_parent'] != '0' && $post['level'] == 1) {
                         $tangentParent = $this->getPostWithText($post['post_tangent_parent']);
-
                         $return .= '<div class="forumTangentIndent">';
-
                         $link = & $this->getObject('link', 'htmlelements');
                         $link->href = $this->uri(array('action' => 'thread', 'id' => $tangentParent['topic_id'], 'type' => $this->forumtype));
                         $link->link = stripslashes($tangentParent['post_title']);
@@ -530,19 +533,14 @@ class dbPost extends dbTable {
                     ''
                 );
                 $tmpText = str_replace($search,$replacers, $tmpText);
-                $return .= "<p id='{$post['id']}' class='postText' > {$tmpText}</p>";
+                $return .= "<div id='{$post['id']}' class='postText' > {$tmpText}</div>";
 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
-
                         $attachments = $this->objPostAttachments->getAttachments($post['post_id']);
-
                         // By Pass if attachment has been deleted.
                         if (count($attachments) != 0) {
                                 $return .= '<br /><br /><br /><p><strong>' . $this->objLanguage->languageText('word_attachments') . ':</strong></p>';
-
-                                //$return .= '<ul>';
-
                                 foreach ($attachments AS $attachment) {
                                         $files = $this->objPostAttachments->downloadAttachment($attachment['id']);
                                         if (count($files) > 0) {
@@ -646,7 +644,7 @@ class dbPost extends dbTable {
 
                         //get parent info
                         $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
-                <p class="postText"  id="'.$postInfo[0]['id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</p>';
+                <div class="postText"  id="'.$postInfo[0]['id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</div>';
 //                                $return .= $conteiner;
                         //get inner post details
                         $innerAttachments = $this->objPostAttachments->getAttachments($postInfo[0]['post_id']);

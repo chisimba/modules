@@ -74,7 +74,7 @@ class dbPostText extends dbTable
     */
     function updatePostText($post_id, $post_title, $post_text)
     {
-        $filter = ' WHERE post_id = "'.$post_id.'" AND original_post="1" LIMIT 1';
+        $filter = ' WHERE post_id = "'.$post_id.'" LIMIT 1';
         $results = $this->getAll($filter);
 
         if (count($results) > 0) {

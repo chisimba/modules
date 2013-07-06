@@ -207,7 +207,7 @@ jQuery(document).ready(function() {
         jQuery('.postEditClass').live('click', function() {
                 var post_id = jQuery(this).attr('id');
                 var _id = jQuery(this).attr('class');
-                var post_text = jQuery('.postText#' + post_id).html();
+                var post_text = jQuery('div.postText#' + post_id).html();
                 //wrapper div
                 var popUpWrapper = jQuery('<div>', {
                         class: 'popUpWrapper'
@@ -222,19 +222,23 @@ jQuery(document).ready(function() {
                         class: 'sexybutton',
                         id: post_id,
                         click: function() {
-                                _id = _id.replace('postEditClass ',''); 
-                                var new_value = jQuery('[name="blocktext"]').html();
-                                var new_text = jQuery('[name="blocktext"]').val();
+                                _id = _id.replace('postEditClass ', '');
+                                var new_value = jQuery('iframe').contents().find("body.cke_show_borders").html();
+//                                var new_value = jQuery('td.cke_contents iframe').conents().find('html').html();
+//                                var new_text = jQuery('[name="blocktext"]').val();
                                 jQuery.ajax({
-                                        url: 'index.php?module=forum&action=saveostedit',
+                                        url: 'index.php?module=forum&action=savepostedit',
                                         type: 'post',
                                         data: {
                                                 _id: _id,
                                                 post_id: post_id,
-                                                new_text: new_text
+                                                new_text: new_value
                                         },
-                                        success: function(/*data*/) {
-                                                alert(new_value)
+                                        success: function() {
+                                                jQuery('div.postText#' + post_id).html(new_value)
+                                                jQuery(popUpWrapper).empty();
+                                                jQuery('.popUpWrapper').remove();
+                                                jQuery.fn.displayConfirmationMessage();
                                         }
                                 });
                         }
@@ -266,7 +270,8 @@ jQuery(document).ready(function() {
 //                                jQuery('.postText#' + post_id).html(jQuery(edit_post_area).val());
 //                                jQuery('.popUpWrapper').remove();
 //                                                jQuery.fn.displayConfirmationMessage();
-                                jQuery(popUpWrapper).append(data);
+                                var editor = data;
+                                jQuery(popUpWrapper).append(editor);
                                 jQuery(popUpWrapper).append(save_button);
                                 jQuery(popUpWrapper).append(cancel_button);
                         }
