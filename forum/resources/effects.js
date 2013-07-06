@@ -250,7 +250,8 @@ jQuery(document).ready(function() {
                         click: function(e) {
                                 e.preventDefault();
                                 jQuery(edit_post_area).val('');
-                                jQuery('.popUpWrapper').hide();
+                                jQuery('.popUpWrapper').empty();
+                                jQuery('body').remove('.popUpWrapper');
                         }
                 });
 //            add all elements to wrapper div
