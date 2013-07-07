@@ -7,6 +7,7 @@ class rttutil extends object {
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objDBRttJnlp = $this->getObject("dbrttjnlp");
         $this->objDbRttUser = $this->getObject('dbrttusers', 'rtt');
+        $this->objDbUserparamsadmin = & $this->getObject("dbuserparamsadmin", "userparamsadmin");
     }
 
     function genRandomString() {
@@ -44,7 +45,15 @@ class rttutil extends object {
         $isDemo = $objSysConfig->getValue('IS_DEMO', 'rtt');
         $roomName = $objSysConfig->getValue('DEFAULT_ROOM', 'rtt');
         $defaultSIPPwd = $objSysConfig->getValue('DEFAULT_SIP_PWD', 'rtt');
-        $userpart = $this->objUser->getStaffNumber();
+        $userparams = $this->objDbUserparamsadmin->readConfig();
+
+
+        $userpart = "0000";
+        foreach ($userparams as $key => $value) {
+            if ($key == 'rtt_username') {
+                $userpart = $value;
+            }
+        }
 
         $this->objContext = $this->getObject('dbcontext', 'context');
         if ($this->objContext->isInContext()) {
@@ -83,25 +92,24 @@ class rttutil extends object {
             array("jnlp_key" => "-plugins", "jnlp_value" => "null", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-username", "jnlp_value" => $this->objUser->username(), "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-names", "jnlp_value" => $this->objUser->fullname(), "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-rtpPort", "jnlp_value" => $rtpPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-sipPort", "jnlp_value" => $sipPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-isdemo", "jnlp_value" => $isDemo, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-outboundProxy", "jnlp_value" => $outboundProxy, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-password", "jnlp_value" => $defaultSIPPwd, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-domain", "jnlp_value" => $sipDomain, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-userpart", "jnlp_value" => $userpart, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-conferencenumber", "jnlp_value" => $conferenceNumber, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-roomname", "jnlp_value" => $roomName, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-chatwelcomemessage", "jnlp_value" => $chatWelcomeMessage, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-startupcomponent", "jnlp_value" => "startup", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-processid", "jnlp_value" => "-1", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()))
+            array("jnlp_key" => "-sipOutboundProxy", "jnlp_value" => $outboundProxy, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-sipPassword", "jnlp_value" => $defaultSIPPwd, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-sipDomain", "jnlp_value" => $sipDomain, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-sipUsername", "jnlp_value" => $userpart, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-sipConferenceNumber", "jnlp_value" => $conferenceNumber, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
         );
 
-        foreach ($properties as $property) {
-            $this->objDBRttJnlp->saveParams($property);
-        }
         $iconPath = $codebase . 'images/splash_rtt.png';
         $jnlpPath = $objAltConfig->getModulePath() . '/rtt/resources';
+
+        $args = "";
+        foreach ($properties as $property) {
+            //    $this->objDBRttJnlp->saveParams($property);
+            $args .= $property['jnlp_key'] . "=" . $property['jnlp_value'] . "!";
+        }
 
         $content =
                 "<jnlp spec=\"1.0+\" codebase=\"" . $codebase . "\">\n"
@@ -117,16 +125,17 @@ class rttutil extends object {
                 . "    </information>\n";
 
 
-        $content .= "<resources os=\"Windows\" arch=\"x86\">\n"
-                . "     <jar href=\"swt-win.jar\" />\n"
-                . "</resources>\n"
-                . " <resources os=\"Linux\">\n"
-                . "   <jar href=\"swt-linux.jar\" />\n"
-                . "  </resources>\n"
-                . " <resources os=\"Mac OS X\">\n"
-                . "   <j2se version=\"1.6*\" java-vm-args=\"-XstartOnFirstThread\"/>\n"
-                . "   <jar href=\"swt-mac.jar\"/>\n"
-                . " </resources>";
+        /*
+          $content .= "<resources os=\"Windows\" arch=\"x86\">\n"
+          . "     <jar href=\"swt-win.jar\" />\n"
+          . "</resources>\n"
+          . " <resources os=\"Linux\">\n"
+          . "   <jar href=\"swt-linux.jar\" />\n"
+          . "  </resources>\n"
+          . " <resources os=\"Mac OS X\">\n"
+          . "   <j2se version=\"1.6*\" java-vm-args=\"-XstartOnFirstThread\"/>\n"
+          . "   <jar href=\"swt-mac.jar\"/>\n"
+          . " </resources>"; */
 
         $content .= "<resources>\n";
 
@@ -135,7 +144,7 @@ class rttutil extends object {
             if ($dh = opendir($jnlpPath)) {
                 while (($file = readdir($dh)) !== false) {
                     $path_info = pathinfo($jnlpPath . '/' . $file);
-                   if (array_key_exists('extension', $path_info)) {
+                    if (array_key_exists('extension', $path_info)) {
                         $ext = $path_info['extension'];
                         $startsWith = substr($file, 0, 3);
                         if ($ext == 'jar' && $startsWith != 'swt') {
@@ -151,10 +160,10 @@ class rttutil extends object {
         $rawbasecode = $siteRoot . 'index.php?module=rtt&action=restservice&args=';
         $content .= "</resources>\n"
                 . "   <application-desc    main-class=\"org.avoir.rtt.core.Main\">\n"
-                . "    <argument>" . $userId . "</argument>\n"
-                . "    <argument>" . $password . "</argument>\n"
-                . "    <argument>" . $rawbasecode . "</argument>\n"
-                . "    <argument>" . $paramsBaseUrl . "</argument>\n"
+                . "    <argument>" . $args . "</argument>\n"
+                /* . "    <argument>" . $password . "</argument>\n"
+                  . "    <argument>" . $rawbasecode . "</argument>\n"
+                  . "    <argument>" . $paramsBaseUrl . "</argument>\n" */
                 . "    </application-desc>\n"
                 . "    <security>\n"
                 . "        <all-permissions/>\n"

@@ -17,11 +17,11 @@ $title = $this->objLanguage->languageText('mod_realtime_filtertitle', 'realtime'
 
 $str = '<h1 class="rtt-heading">Realtime Tools Launch Center</h1>';
 
-$callLink = new link($this->uri(array("action" => "voiceapp")));
+/*$callLink = new link($this->uri(array("action" => "voiceapp")));
 $callLink->link = $callImg . '&nbsp;Call Conference';
 
 $str.='<br/>' . $callLink->show();
-
+*/
 $appLink = new link($this->uri(array("action" => "runjnlp")));
 $appLink->link = $appImg . '&nbsp;Collaboration Environment';
 
