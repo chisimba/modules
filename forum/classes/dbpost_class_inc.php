@@ -345,12 +345,12 @@ class dbPost extends dbTable {
         function getPostWithText($post) {
                 $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
         FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\' )
+        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id )
         INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id)
         LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
         LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
         LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id  AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
         WHERE tbl_forum_post_text.post_id = \'' . $post . '\' GROUP BY tbl_forum_post.id LIMIT 1';
 
