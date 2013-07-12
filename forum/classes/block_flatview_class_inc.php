@@ -46,7 +46,6 @@ class block_flatview extends object {
                 $this->contextObject = & $this->getObject('dbcontext', 'context');
                 $this->contextCode = $this->contextObject->getContextCode();
                 $this->objLanguage = $this->getObject('language', 'language');
-                $this->title = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum');
                 $this->objUser = $this->getObject('user', 'security');
                 $this->objPost = $this->getObject('dbpost', 'forum');
                 $this->objForum = $this->getObject('dbforum', 'forum');
@@ -93,6 +92,7 @@ class block_flatview extends object {
                 $htmlTable = $this->getObject('htmltable', 'htmlelements');
                 $htmlTable->cssId = "flatview";
                 $topicDetails = $this->objTopic->getTopicDetails($topic_id);
+                $this->title = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum').$post['post_title'];
                 // Check if forum is locked - if true - disable / editing replies
                 if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                         $this->objPost->repliesAllowed = FALSE;

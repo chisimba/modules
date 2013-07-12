@@ -622,9 +622,9 @@ $day = substr($Date,8,2);
                                 $postEditLink->cssClass = "postEditClass {$postInfo[0]['post_id']}";
                                 $postEditLink->cssId = $postInfo[0]['id'];
                                 $deleteLink->link = $moderatePostIcon;
-                                $deleteLink->cssId = $postInfo[0]['post_id'];
+                                $deleteLink->cssId = $postInfo[0]['id'];
                                 $deleteLink->cssClass = "postDeleteLink";
-                                $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost','forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
+                                $deleteConfirm = "<div id='{$postInfo[0]['id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost','forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
                                 $dLink = $postEditLink->show().$deleteConfirm . $deleteLink->show();
                         }
 
@@ -661,10 +661,10 @@ $day = substr($Date,8,2);
                                         $downloadlink->cssClass = "forumDownload";
                                         $downloadlink->target = '_blank';
                                         $this->objIcon->setIcon('download');
-                                        $downloadlink->link = $this->objLanguage->languageText('phrase_downloadattatchment', 'system');
+                                        $downloadlink->link = $this->objLanguage->languageText('phrase_downloadattachment', 'system');
                                         $this->objIcon->setIcon('view');
                                         $viewLink = new link('javascript:void(0);');
-                                        $viewLink->title = $this->objLanguage->languageText('phrase_viewattachment','forum');
+                                        $viewLink->title = $this->objLanguage->languageText('phrase_viewattachment','system');
                                         $viewLink->cssClass = "forumViewAttachment";
                                         $viewLink->cssId = $attachment['id'];
                                         $viewLink->link = $this->objLanguage->languageText('phrase_viewattachment', 'system');

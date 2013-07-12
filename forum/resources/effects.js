@@ -42,9 +42,12 @@ jQuery(document).ready(function() {
         var text_area = jQuery('textarea#' + element_Id);
         if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why u no type here?') {
             var image = jQuery('<img>', {
-                src: 'skins/_common/icons/301.gif'
+                src: 'skins/_common/icons/301.gif',
+                align: 'center'
             });
-            jQuery('.content').append(image);
+            jQuery(this).fadeOut('slow');
+            jQuery('.newForumContainer.reply').append(image);
+            jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
             //get attachment value
             var attachment_id = jQuery('#hidden_fileselect').val();
             //get post text
@@ -62,7 +65,7 @@ jQuery(document).ready(function() {
                 success: function() {
                     //add element to another class
                     window.location.reload();
-                    jQuery('.content').html('<br/>' + message);
+//                    jQuery('.content').html('<br/>' + message);
                 }
             });
         } else {
@@ -103,9 +106,10 @@ jQuery(document).ready(function() {
         jQuery.ajax({
             url: 'index.php?module=forum&action=removepost',
             type: 'post',
-            data: 'postid=' + post_id,
-            success: function() {
-                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
+            data: {postid: link_id},
+            success: function(data) {
+                alert(data);
+//                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
             }
         });
     });

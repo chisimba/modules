@@ -55,7 +55,7 @@ class dbPostText extends dbTable
     		'id'                    => $id,
     		'post_id'               => $post_id,
     		'post_title'            => stripslashes($post_title),
-    		'post_text'             => stripslashes($post_text),
+    		'post_text'             => stripslashes('<p>'.$post_text.'</p>'),
     		'language'              => $language,
             'original_post'         => $original_post,
             'userId'                => $userId,

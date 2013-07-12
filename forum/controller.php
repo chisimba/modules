@@ -869,11 +869,16 @@ class forum extends controller {
         $post_id = $this->getParam('postid');
         if (!empty($post_id)) {
             if ($this->objUser->isLoggedIn()) {
-                $this->objPost->delete('id', $post_id);
-                die();
+                echo $post_id;
+//                var_dump($this->objPost->getPostForumDetails($post_id));
+//                if ($this->objPost->delete('id', $post_id)) {
+//                    $this->objForum->updateForumAfterDelete($postDetails['id']);
+//                    var_dump($postDetails);
+//                }
+//                die();
             }
         }
-        die();
+//        die();
     }
 
     /**
