@@ -866,15 +866,37 @@ class forum extends controller {
      * Dynamically remove a post
      */
     function removePost() {
+        //get the post id
         $post_id = $this->getParam('postid');
+        //get the topic id
+        $topic_id = $this->getParam('topic_id');
         if (!empty($post_id)) {
+            //if poost id is not empty, gt the post details
+            $postDetails = $this->objPost->getPostWithText($post_id);
+            //if user is logged in, get the topic details
             if ($this->objUser->isLoggedIn()) {
-                echo $post_id;
+                $topicDetails = $this->objTopic->getTopicDetails($topic_id);
+                //get the topic replies
+                $replies = $topicDetails['replies'];
+                //if the topic exits, get the number of replies and subtract one
+                if (isset($topicDetails)) {
+                    $values = array(
+                        'replies' => $replies - 1
+                    );
+                    //if the post is successfuly removed, update the forum
+                    if ($this->objPost->delete('id', $post_id)) {
+                        $this->objForum->updateForumAfterDelete($postDetails['id']);
+                        //if the number of replies is successfuly updated, end function
+                        if ($this->objTopic->update('id', $topic_id, $values, 'tbl_forum_topic')) {
+                            die();
+                        }
+                    }
+                }
+//                    $values = array(
+//                        
+//                    );
+//                        $this->objTopic->update('topic_id',$topic_id);
 //                var_dump($this->objPost->getPostForumDetails($post_id));
-//                if ($this->objPost->delete('id', $post_id)) {
-//                    $this->objForum->updateForumAfterDelete($postDetails['id']);
-//                    var_dump($postDetails);
-//                }
 //                die();
             }
         }

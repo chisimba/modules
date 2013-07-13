@@ -103,13 +103,16 @@ jQuery(document).ready(function() {
         var link_id = jQuery(this).attr('id');
         jQuery('div.deleteconfirm#' + link_id).toggle('fade');
         var post_id = jQuery(this).attr('id');
+        var topic_id = jQuery('span.topicid').attr('id');
         jQuery.ajax({
             url: 'index.php?module=forum&action=removepost',
             type: 'post',
-            data: {postid: link_id},
+            data: {
+                postid: link_id,
+                topic_id: topic_id
+            },
             success: function(data) {
-                alert(data);
-//                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
+                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
             }
         });
     });
@@ -261,8 +264,8 @@ jQuery(document).ready(function() {
                 e.preventDefault();
 //                jQuery(edit_post_area).val('');
 //                jQuery(popUpWrapper).empty();
-                jQuery('textarea#'+_id).remove();
-                jQuery('body').remove('textarea#'+_id);
+                jQuery('textarea#' + _id).remove();
+                jQuery('body').remove('textarea#' + _id);
                 jQuery(document).remove('.popUpWrapper');
                 jQuery('.popUpWrapper').remove();
             }
