@@ -92,7 +92,7 @@ class rtt extends controller {
      * @return <type>
      */
     function __home() {
-
+        $this->objRttUtil->checkSipParams();
         return "home_tpl.php";
     }
 
@@ -134,7 +134,7 @@ class rtt extends controller {
                 $result = "";
                 foreach ($params as $param) {
                     //if ($param['jnlp_key'] = ! '' || $param['jnlp_value'] != '') {
-                        $result.=$param['jnlp_key'] . '=' . $param['jnlp_value'] . '!';
+                    $result.=$param['jnlp_key'] . '=' . $param['jnlp_value'] . '!';
                     //}
                 }
                 echo $result;
@@ -151,10 +151,10 @@ class rtt extends controller {
         return $this->objRttUtil->runJNLP();
     }
 
-    
     function __voiceapp() {
         return $this->objRttUtil->generateVoiceAppJNLP();
     }
+
     /**
      * Method to turn off login requirement for certain actions
      */

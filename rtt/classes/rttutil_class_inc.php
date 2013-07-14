@@ -20,6 +20,21 @@ class rttutil extends object {
         return $string;
     }
 
+    function checkSipParams() {
+        $userparamsObj = $this->objDbUserparamsadmin->readConfig();
+
+        $userparams = $userparamsObj->toArray();
+        $userparams = $userparams['root']['Settings'];
+        $userpart = "-1";
+        $userpartArray = $userparams[0];
+        if (!key_exists("rtt_username", $userpartArray)) {
+
+            $pname = "rtt_username";
+            $ptag = "0000";
+            $this->objDbUserparamsadmin->writeProperties("add", $this->objUser->userId(), $pname, $ptag);
+        }
+    }
+
     function runJNLP() {
 
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -45,20 +60,24 @@ class rttutil extends object {
         $isDemo = $objSysConfig->getValue('IS_DEMO', 'rtt');
         $roomName = $objSysConfig->getValue('DEFAULT_ROOM', 'rtt');
         $defaultSIPPwd = $objSysConfig->getValue('DEFAULT_SIP_PWD', 'rtt');
-        $userparams = $this->objDbUserparamsadmin->readConfig();
+        $userparamsObj = $this->objDbUserparamsadmin->readConfig();
 
+        $userparams = $userparamsObj->toArray();
+        $userparams = $userparams['root']['Settings'];
+        $userpartArray = $userparams[0];
 
-        $userpart = "0000";
-        foreach ($userparams as $key => $value) {
-            if ($key == 'rtt_username') {
-                $userpart = $value;
-            }
+        $userpart = "-1";
+        if (key_exists("rtt_username", $userpartArray)) {
+            $userpart = $userpartArray['rtt_username'];
         }
 
+       
         $this->objContext = $this->getObject('dbcontext', 'context');
         if ($this->objContext->isInContext()) {
+
             $roomName = $this->objContext->getContextCode();
         }
+
         $paramsBaseUrl = $objSysConfig->getValue('PARAMS_BASE_URL', 'rtt');
 
         $videoBroadcastUrl = $objSysConfig->getValue('VIDEO_BROADCAST_URL', 'rtt');
@@ -69,7 +88,7 @@ class rttutil extends object {
         $moduleUri = $objAltConfig->getModuleURI();
         $siteRoot = $objAltConfig->getSiteRoot();
         $codebase = $siteRoot . "/" . $moduleUri . '/rtt/resources/';
-        $admin = $this->objUser->isAdmin() ? 'true' : 'false';
+        $admin = $this->objUser->isLecturer() ? 'true' : 'false';
         $userId = $this->genRandomString();
         $password = $this->genRandomString();
         $user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
@@ -90,7 +109,7 @@ class rttutil extends object {
             array("jnlp_key" => "-serverport", "jnlp_value" => $openfireXMPPPort, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-serverhost", "jnlp_value" => $openfireXMPPHost, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-plugins", "jnlp_value" => "null", "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
-            array("jnlp_key" => "-username", "jnlp_value" => $this->objUser->username(), "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-username", "jnlp_value" => $userId, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-names", "jnlp_value" => $this->objUser->fullname(), "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-isdemo", "jnlp_value" => $isDemo, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-roomname", "jnlp_value" => $roomName, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
