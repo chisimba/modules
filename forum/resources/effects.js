@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
                 topic_id: topic_id
             },
             success: function(data) {
-                jQuery('body').append('<span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span> ');
+                jQuery('body').append('<div class="blurPopUp"><span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span></div>');
             }
         });
     });
