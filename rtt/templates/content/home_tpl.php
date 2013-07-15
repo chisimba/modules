@@ -22,8 +22,9 @@ $callLink->link = $callImg . '&nbsp;Call Conference';
 
 $str.='<br/>' . $callLink->show();
 */
+
 $appLink = new link($this->uri(array("action" => "runjnlp")));
-$appLink->link = $appImg . '&nbsp;Collaboration Environment';
+$appLink->link = '<fieldset>Launch Collaboration Environment</fieldset>';
 
 $str.='<br/><br/>' . $appLink->show();
 /*

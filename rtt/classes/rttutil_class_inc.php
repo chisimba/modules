@@ -88,7 +88,7 @@ class rttutil extends object {
         $moduleUri = $objAltConfig->getModuleURI();
         $siteRoot = $objAltConfig->getSiteRoot();
         $codebase = $siteRoot . "/" . $moduleUri . '/rtt/resources/';
-        $admin = $this->objUser->isLecturer() ? 'true' : 'false';
+        $admin ="true";//// $this->objUser->isLecturer() ? 'true' : 'false';
         $userId = $this->genRandomString();
         $password = $this->genRandomString();
         $user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
