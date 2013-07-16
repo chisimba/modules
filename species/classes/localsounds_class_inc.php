@@ -182,9 +182,11 @@ class localsounds extends object
                             if ($licenseCode !== NULL) {
                                 $objCc = $this->getObject('displaylicense', 'creativecommons');
                                 $lic = $objCc->show($licenseCode);
-                                $frag = $doc->createDocumentFragment(); 
-                                $frag->appendXML($lic);
-                                $div->appendChild($frag);
+                                if ($lic !=="") {
+                                    $frag = $doc->createDocumentFragment(); 
+                                    $frag->appendXML($lic);
+                                    $div->appendChild($frag);
+                                }
                             }
                             $doc->appendChild($div);
                             $ret .= $doc->saveHTML();
