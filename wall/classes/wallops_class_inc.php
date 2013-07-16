@@ -154,6 +154,8 @@ class wallops extends object {
      * @param integer $page The page number
      * @param integer $num The number of items per page
      * @return string The rendered wall
+     * 
+     * @WORKINGHERE
      *
      */
     public function showObjectWall($keyName, $keyValue, $page=0, $num=10) {
@@ -353,7 +355,8 @@ class wallops extends object {
      * @return string The formatted wall posts and their comments
      *
      */
-    public function showPosts($posts, $numPosts, $wallType, $wallid, $num=10, $hideMorePosts=FALSE, $testIfLoggedIn=TRUE, $makePosterNameALink=TRUE) {
+    public function showPosts($posts, $numPosts, $wallType, $wallid, $num=10, 
+      $hideMorePosts=FALSE, $testIfLoggedIn=TRUE, $makePosterNameALink=TRUE) {
         // Initialize the comments string.
         $comments = NULL;
         $ret = NULL;
