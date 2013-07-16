@@ -139,7 +139,7 @@ class dbwall extends dbtable
     public function getMorePosts($wallType, $page, $keyName, $keyValue, $num=10)
     {
         // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_wall_posts.*,
+        $baseSql = 'SELECT DISTINCT tbl_wall_posts.*,
               tbl_users.userid,
               tbl_users.firstname,
               tbl_users.surname,
@@ -157,6 +157,7 @@ class dbwall extends dbtable
         $startPoint = $page * $num;
         $tail =  " ORDER BY datecreated DESC LIMIT {$startPoint}, {$num} ";
         $sql = $baseSql . $filter . $tail;
+       // die($sql);
         $posts = $this->getArray($sql);
         return $posts;
     }
