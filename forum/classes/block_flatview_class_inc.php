@@ -58,6 +58,7 @@ class block_flatview extends object {
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
                 $this->objTopic = $this->getObject('dbtopic', 'forum');
                 $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
+                $this->title=NULL;
                 $this->js = '
 <script type="text/javascript">
     //<![CDATA[
