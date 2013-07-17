@@ -18,8 +18,12 @@ jQuery(document).ready(function() {
      * 
      * @returns {undefined}
      */
-    jQuery.fn.displayConfirmationMessage = function() {
-        jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >Saved successfuly</span>');
+    jQuery.fn.displayConfirmationMessage = function(message) {
+        if (message != '') {
+            jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >' + message + '</span>');
+        } else {
+            message = "Success";
+        }
         setTimeout(function() {
             jQuery('.jqGenerated').remove();
         }, 5000);
@@ -39,38 +43,50 @@ jQuery(document).ready(function() {
         //get aattributes
         var element_Id = jQuery(this).attr('id');
         //html elements
-        var text_area = jQuery('textarea#' + element_Id);
-        if (jQuery(text_area).val() != '' && jQuery(text_area).val() != 'why u no type here?') {
-            var image = jQuery('<img>', {
-                src: 'skins/_common/icons/301.gif',
-                align: 'center'
-            });
-            jQuery(this).fadeOut('slow');
-            jQuery('.newForumContainer.reply').append(image);
-            jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
-            //get attachment value
-            var attachment_id = jQuery('#hidden_fileselect').val();
-            //get post text
-            var message = jQuery(text_area).val();
-            var parent_id = jQuery(text_area).attr('id');
-            var topic_id = jQuery('.topicid').attr('id');
-            var lang = jQuery('.lang').attr('id');
-            var forum_id = jQuery('.forumid').attr('id');
-            var post_title = jQuery('.posttitle').attr('id');
-            //Send the data
-            jQuery.ajax({
-                url: 'index.php?module=forum&action=savepostreply',
-                type: 'post',
-                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
-                success: function() {
-                    //add element to another class
-                    window.location.reload();
+        var message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
+        var text_area = jQuery('textarea.miniReply');
+//        if (jQuery(message_text).val() != '') {
+        var image = jQuery('<img>', {
+            src: 'skins/_common/icons/301.gif',
+            align: 'center'
+        });
+        jQuery(this).fadeOut('slow');
+        jQuery('div.content').hide();
+        jQuery('.newForumContainer.reply').append(image);
+        jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
+        //get attachment value
+        var attachment_id = jQuery('#hidden_fileselect').val();
+        //get post text
+        var message = jQuery(text_area).val();
+        var parent_id = element_Id;
+        var topic_id = jQuery('.topicid').attr('id');
+        var lang = jQuery('.lang').attr('id');
+        var forum_id = jQuery('.forumid').attr('id');
+        var post_title = jQuery('.posttitle').attr('id');
+        //Send the data
+        jQuery.ajax({
+            url: 'index.php?module=forum&action=savepostreply',
+            type: 'post',
+            data: {
+                forumid: forum_id,
+                topicid: topic_id,
+                parent: parent_id,
+                message: message,
+                posttitle: post_title,
+                lang: lang,
+                attachment: attachment_id
+            },
+//                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
+            success: function() {
+                alert("Success");
+                //add element to another class
+                window.location.reload();
 //                    jQuery('.content').html('<br/>' + message);
-                }
-            });
-        } else {
-            jQuery(text_area).val('why you no type here?');
-        }
+            }
+        });
+//        } else {
+////            jQuery(text_area).val('why you no type here?');
+//        }
     });
     /**
      * ===Deleting the post===
@@ -112,7 +128,7 @@ jQuery(document).ready(function() {
                 topic_id: topic_id
             },
             success: function(data) {
-                jQuery('body').append('<div class="blurPopUp"><span id="confirm">Post deleted successfuly<br/><a href="#" class="ok" >OK</a></span></div>');
+                jQuery('body').append('<div class="blurPopUp"><span id="confirm">Post deleted successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
             }
         });
     });
@@ -161,7 +177,7 @@ jQuery(document).ready(function() {
     /**
      * ===Canceling post delete===
      */
-    jQuery('.postDeleteCancel').click(function(e) {
+    jQuery('a.postDeleteCancel').click(function(e) {
         e.preventDefault();
         var link_id = jQuery(this).attr('id');
         jQuery('div.deleteconfirm#' + link_id).toggle('fade');
@@ -205,12 +221,19 @@ jQuery(document).ready(function() {
         jQuery('ul#' + element_ID).slideToggle();
     });
     /**
-     * ==View the pokst attachment===
+     * ==View the post attachment===
      */
     jQuery('.forumViewAttachment').live('click', function(e) {
+        var current_text = jQuery(this).html();
+        if (current_text == 'View') {
+            current_text = 'Hide'
+        } else {
+            current_text = 'View';
+        }
         e.preventDefault();
         var parentElement_id = jQuery(this).attr('id');
-        jQuery('div.file-preview#' + parentElement_id).toggle('fade');
+        jQuery('div.file-preview#' + parentElement_id).toggle('blind');
+        jQuery(this).html(current_text);
     });
 
     /**

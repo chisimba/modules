@@ -1036,7 +1036,7 @@ class forum extends controller {
         //get the attachment id
         $attachment_id = $this->getParam('attachment');
         //reply type
-        $replyType = "reply";
+        $replyType = $this->objLanguage->languageText('word_reply','system');
         //parentID
         $postParent = $this->getParam('parent');
         $post_parent = $postParent;

@@ -613,7 +613,7 @@ $day = substr($Date,8,2);
 
                                 $declineLink = new link('#');
                                 $declineLink->link = $this->objLanguage->languageText('word_no','system');
-                                $declineLink->cssId = $postInfo[0]['post_id'];
+                                $declineLink->cssId = $postInfo[0]['id'];
                                 $declineLink->cssClass = "postDeleteCancel";
 
                                 $postEditLink = new link('javascript:void(0)');
