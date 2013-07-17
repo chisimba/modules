@@ -252,6 +252,7 @@ jQuery(document).ready(function() {
         var edit_post_area = jQuery('<span>', {
             val: post_text
         });
+        var blocktext=jQuery('textarea[blocktext]');
         //save button
         var save_button = jQuery('<button>', {
             text: 'Save',
@@ -272,9 +273,10 @@ jQuery(document).ready(function() {
                     },
                     success: function() {
                         jQuery('div.postText#' + post_id).html(new_value);
-                        jQuery(popUpWrapper).empty();
-                        jQuery(popUpWrapper).remove();
-                        jQuery('body').remove(popUpWrapper);
+                        //jQuery(popUpWrapper).empty();
+                        //jQuery('.popUpWrapper').remove();
+                        //jQuery('body').remove(popUpWrapper);
+                        CKEDITOR.instances.blocktext.destroy();
                         jQuery.fn.displayConfirmationMessage();
                     }
                 });
