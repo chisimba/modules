@@ -613,18 +613,18 @@ $day = substr($Date,8,2);
 
                                 $declineLink = new link('#');
                                 $declineLink->link = $this->objLanguage->languageText('word_no','system');
-                                $declineLink->cssId = $postInfo[0]['id'];
+                                $declineLink->cssId = $postInfo[0]['post_id'];
                                 $declineLink->cssClass = "postDeleteCancel";
 
                                 $postEditLink = new link('javascript:void(0)');
                                 $this->objIcon->setIcon('edit');
                                 $postEditLink->link = $this->objIcon->show();
                                 $postEditLink->cssClass = "postEditClass {$postInfo[0]['post_id']}";
-                                $postEditLink->cssId = $postInfo[0]['id'];
+                                $postEditLink->cssId = $postInfo[0]['post_id'];
                                 $deleteLink->link = $moderatePostIcon;
-                                $deleteLink->cssId = $postInfo[0]['id'];
+                                $deleteLink->cssId = $postInfo[0]['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
-                                $deleteConfirm = "<div id='{$postInfo[0]['id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost','forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
+                                $deleteConfirm = "<div id='{$postInfo[0]['post_id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost','forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
                                 $dLink = $postEditLink->show().$deleteConfirm . $deleteLink->show();
                         }
 
@@ -644,7 +644,7 @@ $day = substr($Date,8,2);
 
                         //get parent info
                         $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . $pointerSpan2 . $pointerSpan3 . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" ><strong> Re: ' . $postInfo[0]['post_title'] . '</strong></div>
-                <div class="postText"  id="'.$postInfo[0]['id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</div>';
+                <div class="postText"  id="'.$postInfo[0]['post_id'].'" >'. $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</div>';
 //                                $return .= $conteiner;
                         //get inner post details
                         $innerAttachments = $this->objPostAttachments->getAttachments($postInfo[0]['post_id']);

@@ -78,6 +78,7 @@ jQuery(document).ready(function() {
             },
 //                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
             success: function() {
+                jQuery('.newForumContainer.reply').empty();
                 alert("Success");
                 //add element to another class
                 window.location.reload();
