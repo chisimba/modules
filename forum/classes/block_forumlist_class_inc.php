@@ -119,8 +119,8 @@ class block_forumlist extends object {
                                                 $this->objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
                                         }
                                         $tblclass->startRow($oddOrEven);
-                                        $tblclass->addCell($this->objIcon->show(), 20, NULL, 'center');
-                                        $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
+                                        $tblclass->addCell($this->objIcon->show(), NULL, NULL, 'center');
+                                        $tblclass->addCell($forumName . '<br />' . $this->objLanguage->abstractText($forum['forum_description']), NULL, 'center');
                                         //Check the number in order to display the correct value
                                         $tpcs = "";
                                         if ($forum['topics'] > 1 || $forum['topics'] == 0) {
