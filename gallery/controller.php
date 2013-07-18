@@ -278,11 +278,11 @@ class gallery extends controller
         $action=$this->getParam('action','NULL');
         switch ($action)
         {
-            case 'view':
-                return FALSE;
+            case 'admin':
+                return TRUE;
                 break;
             default:
-                return TRUE;
+                return FALSE;
                 break;
         }
      }
