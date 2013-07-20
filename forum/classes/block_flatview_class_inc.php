@@ -23,7 +23,7 @@ class block_flatview extends object {
         var $objPost;
         var $objForum;
         var $js;
-        var $icon;
+        var $Icon;
         var $contextObject;
         var $contextCode;
         var $objTopic;

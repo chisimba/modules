@@ -19,7 +19,7 @@ $fields = array(
 		),
     'post_title' => array(
 		'type' => 'text',
-		'length' => 60,
+		'length' => 160,
         'notnull' => 1
 		),
     'post_text' => array(
