@@ -261,10 +261,10 @@ class block_flatview extends object {
                 if (isset($tangentsTable)) {
                         echo $tangentsTable;
                 }
-                $htmlTable->startRow();
+                $htmlTable->startHeaderRow();
                 if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
-                        $htmlTable->addCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
-                        $htmlTable->addCell($newtopiclink->show(), NULL, NULL, "center");
+                        $htmlTable->addHeaderCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
+                        $htmlTable->addHeaderCell($newtopiclink->show(), NULL, NULL, "center");
                 }
                 $noAlerts = new radio('subscription');
                 $noAlerts->addOption('nosubscription', 'Do not notify me');
@@ -323,13 +323,13 @@ class block_flatview extends object {
                         $frmModerate->addToForm($saveButton->show());
                         $frmModerate->addToForm($cancelButton->show());
                         $subscribeDiv .= $frmModerate->show();
-                        $htmlTable->addCell($subscribeLink->show() . $subscribeDiv, NULL, NULL, "center");
+                        $htmlTable->addHeaderCell($subscribeLink->show() . $subscribeDiv, NULL, NULL, "center");
                 }
 //                $subscribeDiv .= $noAlerts->show().'<br/>'.$notifyThead->show().'<br>'.$notifyAll->show().'</div>';
-                $htmlTable->endRow();
+                $htmlTable->endHeaderRow();
 
 //        $elements .= $this->objTopic->showChangeDisplayTypeForm($topic_id, 'flatview');
-                $elements = $htmlTable->show().'<br/>' . $ratingsForm->show();
+                $elements = $htmlTable->show().'<br/><br/>' . $ratingsForm->show();
                 return $elements;
         }
 

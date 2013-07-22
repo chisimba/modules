@@ -960,7 +960,6 @@ class dbPost extends dbTable {
             $link = new link('javascript:void(0)'/* $this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype)) */);
             $textArea->cssClass = "miniReply";
             $textArea->cssId = $post['post_id'];
-            $textArea->setRows(1);
             $textArea->extra = "placeholder='{$this->objLanguage->languageText('mod_forum_postreply', 'forum')}'";
             $link->cssClass = "buttonLink postReplyLink";
             $link->cssId = $post['post_id'];
