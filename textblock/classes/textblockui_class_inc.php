@@ -465,9 +465,11 @@ class textblockui extends object
           "input_title");  
         
         // Checkbox to toggle title display.
-        if (isset($this->showTitle)) {
-             if ($this->showTitle == '') {
+        if (isset($this->show_title)) {
+             if ($this->show_title == '' || $this->show_title == NULL) {
                  $showTitle = TRUE;
+             } else {
+                 $showTitle = $this->show_title;
              }
         } else {
             $showTitle = TRUE;
@@ -488,8 +490,8 @@ class textblockui extends object
         // Create input for an alternative cssClass to use.
         $objElement = new textinput ("css_class");
         // Set the value of the element to the chosen cssClass.
-        if (isset($this->cssClass)) {
-            $objElement->setValue($this->cssClass);
+        if (isset($this->css_class)) {
+            $objElement->setValue($this->css_class);
         }
         $wsiLabel = new label(
           $this->objLanguage->languageText(
@@ -502,8 +504,8 @@ class textblockui extends object
         
         // Create input for an alternative cssId to use.
         $objElement = new textinput ("css_id");
-        if (isset($this->cssId)) {
-            $objElement->setValue($this->cssId);
+        if (isset($this->css_id)) {
+            $objElement->setValue($this->css_id);
         }
         $wsiLabel = new label(
           $this->objLanguage->languageText(
@@ -520,6 +522,7 @@ class textblockui extends object
         if (isset($this->blocktext)) {
             $objElement->setContent(htmlspecialchars($this->blocktext));
         }
+        
         //Create label for the input of quote
         $quoteLabel = new label(
           $this->objLanguage->languageText(
