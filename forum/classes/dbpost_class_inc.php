@@ -635,6 +635,9 @@ class dbPost extends dbTable {
             $numberOfVotes = $this->dbPostratings->getPostRatings($innerPost['id']);
             $displaySpan = "<span class='numberindicator' >{$upperLink->show()} {$numberOfVotes} {$lowerLink->show()}</span>";
             $ratingsDiv .= $displaySpan . "</div>";
+            //values to be used in query string
+            $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
+            $forumID = "<span class='forumid' id='{$topicInfo['forum_id']}' ></span>";
 
 //=========Decorating the date============
             $Date = date('Y M d', mktime(0, 0, 0, substr($post['datelastupdated'], 5, 2), substr($post['datelastupdated'], 8, 2), substr($post['datelastupdated'], 0, 4)));
@@ -644,7 +647,7 @@ class dbPost extends dbTable {
             $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
             //get parent info
             $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo[0]['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >'.$dateSpan.' <br/> <strong> Re: ' . $postInfo[0]['post_title'] . '</strong> <br /><br/> </div>
-                <div class="postText"  id="' . $postInfo[0]['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '</div>';
+                <div class="postText"  id="' . $postInfo[0]['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo[0]['post_text']) . '<span class="'.$forumID.'" ></span></div>';
 //                                $return .= $conteiner;
             //get inner post details
             $innerAttachments = $this->objPostAttachments->getAttachments($postInfo[0]['post_id']);
@@ -965,9 +968,6 @@ class dbPost extends dbTable {
             $link->cssId = $post['post_id'];
             $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
 
-            //values to be used in query string
-            $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
-            $forumID = "<span class='forumid' id='{$topicInfo['forum_id']}' ></span>";
             /**
              * @var object The attachment link
              */
@@ -1003,13 +1003,12 @@ class dbPost extends dbTable {
 //            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
 //            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
-            $return .= "\r\n" . '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($this->userId) . '</div> <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer reply" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" >
-                ' . $textArea->show() . '<hr/>';
+            $return .= '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div class="newForumContainer reply" ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong>Re: ' . $post['post_title'] . '</strong>' . '<span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
             //add the attachment link if attachments are enabled in the forum
             if ($forum['attachments'] == 'Y') {
                 $return .= $divAttachmentWrapper . $attachmentLink->show();
             }
-            $return .= '<br/><hr/></div>' . $link->show() . '<br/><br/>' . '
+            $return .= '<br/></div>' . $link->show() . '<br/><br/>' . '
                 </div> <br/> <br/></div></div>';
         }
 

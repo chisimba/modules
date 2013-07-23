@@ -29,67 +29,103 @@ jQuery(document).ready(function() {
                 }, 5000);
         }
         /**
-         * ===Increase the number of rows when the textare is clicked===
-         */
-        jQuery('.miniReply').focus(function() {
-                jQuery(this).attr('rows', 6);
-                jQuery('.replyForumUserPicture').show('slow');
-        });
-        /**
          * ===Send the message===
          */
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
+                var current_link = jQuery(this);
+                jQuery(current_link).toggle('fade');
                 //get aattributes
                 var element_Id = jQuery(this).attr('id');
                 //html elements
-                var message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
-                var text_area = jQuery('textarea.miniReply');
-//        if (jQuery(message_text).val() != '') {
-                var image = jQuery('<img>', {
-                        src: 'skins/_common/icons/301.gif',
-                        align: 'center'
-                });
-                if (jQuery(text_area).val() != '') {
-                        jQuery(this).fadeOut('slow');
-                        jQuery('div.content').hide();
-                        jQuery('.newForumContainer.reply').append(image);
-                        jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
-                        //get attachment value
-                        var attachment_id = jQuery('#hidden_fileselect').val();
+                var message_text = '';
+//                var text_area = jQuery('textarea.miniReply');
+//                        jQuery(this).fadeOut('slow');
+//                        jQuery('div.content').hide();
+//                        jQuery('.newForumContainer.reply').append(image);
+//                        jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
+//                        //get attachment value
+                var attachment_id = jQuery('#hidden_fileselect').val();
                         //get post text
-                        var message = jQuery(text_area).val();
-                        var parent_id = element_Id;
-                        var topic_id = jQuery('.topicid').attr('id');
-                        var lang = jQuery('.lang').attr('id');
-                        var forum_id = jQuery('.forumid').attr('id');
-                        var post_title = jQuery('.posttitle').attr('id');
-                        //Send the data
-                        jQuery.ajax({
-                                url: 'index.php?module=forum&action=savepostreply',
-                                type: 'post',
-                                data: {
-                                        forumid: forum_id,
-                                        topicid: topic_id,
-                                        parent: parent_id,
-                                        message: message,
-                                        posttitle: post_title,
-                                        lang: lang,
-                                        attachment: attachment_id
-                                },
+                var message = 'mini' /*jQuery(text_area).val()*/;
+                var parent_id = element_Id;
+                var topic_id = jQuery('.topicid').attr('id');
+                var lang = jQuery('.lang').attr('id');
+                var forum_id = jQuery('span.forumid').attr('id');
+                var post_title = jQuery('.posttitle').attr('id');
+//        if (jQuery(message_text).val() != '') {
+//                var image = jQuery('<img>', {
+//                        src: 'skins/_common/icons/301.gif',
+//                        align: 'center'
+//                });
+                //instantiate the save button
+                var save_button = jQuery('<button>', {
+                        class: 'sexybutton',
+                        text: 'Save',
+                        click: function(e) {
+                                e.preventDefault();
+                                message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
+                                jQuery.ajax({
+                                        type: 'post',
+                                        url: 'index.php?module=forum&action=savepostreply',
+                                        data: {
+                                                message: message_text,
+                                                forum_id: forum_id,
+                                                topicid: topic_id,
+                                                parent: parent_id,
+                                                posttitle: post_title,
+                                                lang: lang,
+                                                attachment: attachment_id
+                                        },
+                                        success:function(data){
+                                                
+                                        }
+                                })
+                        }
+                });
+                //cancel button
+                var cancel_button = jQuery('<button>',{
+                        class: 'sexybutton',
+                        text: 'Cancel',
+                        click: function(e){
+                                e.preventDefault();
+                                jQuery(current_link).toggle('fade');
+                        }
+                });
+//                if (jQuery(text_area).val() != '') {
+                //Send the data
+                jQuery.ajax({
+                        url: 'index.php?module=forum&action=showeditpostpopup',
+                        type: 'post',
+                        data: {
+                                forumid: forum_id,
+                                topicid: topic_id,
+                                post_id: parent_id,
+                                message: message,
+                                posttitle: post_title,
+                                lang: lang,
+                                attachment: attachment_id
+                        },
 //                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
-                                success: function() {
-                                        jQuery('.newForumContainer.reply').empty();
-                                        alert("Success");
-                                        //add element to another class
-                                        window.location.reload();
+                        success: function(data) {
+                                var wrapper_div = jQuery('<div>',{
+                                        class: 'postMakerWrapper'
+                                });
+                                jQuery(wrapper_div).append(data);
+                                jQuery(wrapper_div).append(save_button);
+                                jQuery(wrapper_div).append(cancel_button);
+                                jQuery('div.clone').append(wrapper_div);
+                                jQuery('.newForumContainer.reply').empty();
+//                                        alert("Success");
+                                //add element to another class
+//                                        window.location.reload();
 //                    jQuery('.content').html('<br/>' + message);
-                                }
-                        });
+                        }
+                });
 //        } else {
 ////            jQuery(text_area).val('why you no type here?');
 //        }
-                }
+//                }
         });
         /**
          * ===Deleting the post===
