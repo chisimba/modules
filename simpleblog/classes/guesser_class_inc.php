@@ -113,9 +113,14 @@ class guesser extends object
         if (!$this->objUser->isLoggedIn()) {
             return $defaultBlog;
         } else {
-            // It must be their blog. ( @TODO need to add check if they have blog)
-            $userId = $this->objUser->userId();
-            return $userId;
+            //@TODO this will break under some circumstances
+            if ($defaultBlog == 'site') {
+                return $defaultBlog;
+            } else {
+                // It must be their blog. ( @TODO need to add check if they have blog)
+                $userId = $this->objUser->userId();
+                return $userId;
+            }
         }
     }
 }

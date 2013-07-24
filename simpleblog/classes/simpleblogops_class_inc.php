@@ -97,6 +97,13 @@ class simpleblogops extends object
      *
      */
     private $hasEditAddDelRights=FALSE;
+    /**
+     *
+     * @var BOOLEAN $usesWall Are we going to use the wall
+     * @access private
+     *
+     */
+    private $usesWall;
 
     /**
     *
@@ -119,11 +126,15 @@ class simpleblogops extends object
         
         $me = $this->objUser->fullName();
 
-        //$me =  "\n\n<span class='wallposter'>" . $me . "</span>";
-        $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
-        $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
-        $nothingApppendTo = $this->objLanguage->languageText("mod_wall_nothingappendto", "wall",
-          "There is nothing to append to. Reload the page and try again.");
+        // Check if the module wall is installed
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        if($this->objModules->checkIfRegistered('wall')) {
+            $this->usesWall = TRUE;
+        } else {
+            $this->usesWall = FALSE;
+        }
+                
+
 
         // Get the page number
         $page = $this->getParam('page', 0);
@@ -135,23 +146,28 @@ class simpleblogops extends object
         $this->objTweetButton = $this->getObject('tweetbttn', 'socialweb');
         // Get the google plus button
         $this->objPlusButton = $this->getObject('gplusbttn', 'socialweb');
-
-        // Set some parameters required by the wall
-        $ar = array(
-            'wallType' => '4',
-            'me' => $me,
-            'page' => $page,
-            'youSaid' => $youSaid,
-            'secsAgo' => $secsAgo,
-            'nothingApppendTo' => $nothingApppendTo
-            );
-        $this->phpToJs($ar);
+        
         // Load the functions specific to this module.
         $this->appendArrayVar('headerParams', $this->getJavaScriptFile('simpleblog.js', 'simpleblog'));
-        // Load the OEMBED parser
-        //$this->appendArrayVar('headerParams', $this->getJavaScriptFile('oembed.js', 'simpleblog'));
-        // Load the WALL Javascript which we need
-        $this->appendArrayVar('headerParams', $this->getJavaScriptFile('wall.js', 'wall'));
+
+        if ($this->usesWall) {
+            $youSaid = $this->objLanguage->languageText("mod_wall_yousaid", "wall", "You said");
+            $secsAgo = $this->objLanguage->languageText("mod_wall_secsago", "wall", "a few seconds ago");
+            $nothingApppendTo = $this->objLanguage->languageText("mod_wall_nothingappendto", "wall",
+              "There is nothing to append to. Reload the page and try again.");
+            // Set some parameters required by the wall
+            $ar = array(
+                'wallType' => '4',
+                'me' => $me,
+                'page' => $page,
+                'youSaid' => $youSaid,
+                'secsAgo' => $secsAgo,
+                'nothingApppendTo' => $nothingApppendTo
+                );
+            $this->phpToJs($ar);
+            // Load the WALL Javascript which we need
+            $this->appendArrayVar('headerParams', $this->getJavaScriptFile('wall.js', 'wall'));
+        }
     }
 
 
@@ -232,7 +248,7 @@ class simpleblogops extends object
         $page = $this->getParam('page', 1);
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
-        $posts = $this->objDbPosts->getPostsByUser($blogId, $userId, $page, $pageSize);
+        $posts = $this->objDbPosts->getPostsByUser($blogId, $userId, $page, $pageSize, $this->usesWall);
         $recs = $this->objDbPosts->getRecordCount(" WHERE blogid='$blogId' AND userid='$userId'");
         $totalPages = ceil($recs/$pageSize);
         $nextLink = NULL;
@@ -310,8 +326,14 @@ class simpleblogops extends object
         $page = $this->getParam('page', 1);
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
-        $posts = $this->objDbPosts->getPosts($blogId, $page, FALSE);
-        $recs = $this->objDbPosts->getRecordCount(" WHERE blogid='$blogId' ");
+        if ($blogId == 'allpublic') {
+            $posts = $this->objDbPosts->getAllPublicPosts($page, FALSE, $this->usesWall);
+            $recs = $this->objDbPosts->getRecordCount();
+        } else {
+            $posts = $this->objDbPosts->getPosts($blogId, $page, FALSE, $this->usesWall);
+            $recs = $this->objDbPosts->getRecordCount(" WHERE blogid='$blogId' ");
+        }
+
         $totalPages = ceil($recs/$pageSize);
         $nextLink = NULL;
         $prevLink = NULL;
@@ -376,7 +398,7 @@ class simpleblogops extends object
      */
     public function showThisMonth($blogId) 
     {
-        $posts = $this->objDbPosts->getCurrentMonth($blogId);
+        $posts = $this->objDbPosts->getCurrentMonth($blogId, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {
@@ -401,7 +423,7 @@ class simpleblogops extends object
      */
     public function showLastMonth($blogId) 
     {
-        $posts = $this->objDbPosts->getLastMonth($blogId);
+        $posts = $this->objDbPosts->getLastMonth($blogId, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {
@@ -471,7 +493,7 @@ class simpleblogops extends object
      */
     public function showArchive($blogId, $year, $month) 
     {
-        $posts = $this->objDbPosts->getPostsByYearMonth($blogId, $year, $month);
+        $posts = $this->objDbPosts->getPostsByYearMonth($blogId, $year, $month, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {
@@ -496,7 +518,8 @@ class simpleblogops extends object
      */
     public function showTag($blogId, $tag) 
     {
-        $posts = $this->objDbPosts->getPostsByTag($blogId, $tag);
+        //die("---->".$blogId);
+        $posts = $this->objDbPosts->getPostsByTag($blogId, $tag, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {
@@ -521,7 +544,7 @@ class simpleblogops extends object
      */
     public function showById($id) 
     {
-        $posts = $this->objDbPosts->getPostsById($id);
+        $posts = $this->objDbPosts->getPostsById($id, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
             foreach ($posts as $post) {
@@ -532,7 +555,6 @@ class simpleblogops extends object
         } else {
             $ret = NULL;
         }
-        
         return $ret;
     }
     
@@ -714,9 +736,29 @@ class simpleblogops extends object
             $this->setVar('og_content', $post['post_content']);
         }
         $clear = ' <br style="clear:both;" />';
+        
+        // Convert the post date into human time.
+        $postDate = $objDd->getDifference($post['datecreated']);
+        $createDate = $post['datecreated'];
+        $editDate = $post['datemodified'];
+        $topDay = date("d",strtotime($createDate));
+        $topMonth = date("F",strtotime($createDate));
+        $topYear = date("Y",strtotime($createDate));
+        if ($editDate !==NULL) {
+            $editDate = $objDd->getDifference($editDate);
+        }
+        
+        
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
           . $postTitle . "</div><div class='social_buttons'>" . $edel 
           . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
+        $title = '<div class="sbpost_title_wrapper">' 
+          . '<div class="date-wrapper">'
+          . '<div class="date-day">' . $topDay . '</div>'
+          . '<div class="date-month">' . $topMonth . '</div>'
+          . '<div class="date-year">' . $topYear . '</div>'
+          . '</div>'
+          . $title . '</div>';
         
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
@@ -739,12 +781,7 @@ class simpleblogops extends object
         $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
                 "simpleblog", "Posted by")
                 . " " . $poster;
-        // Convert the post date into human time.
-        $postDate = $objDd->getDifference($post['datecreated']);
-        $editDate = $post['datemodified'];
-        if ($editDate !==NULL) {
-            $editDate = $objDd->getDifference($editDate);
-        }
+
         
         $postTags = $post['post_tags'];
         if (!$postTags == "") {
@@ -753,31 +790,37 @@ class simpleblogops extends object
         $tags = "\n<div class='simpleblog_post_tags'>" . $postTags . "</div>\n";
         $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
         
-        $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
-                "simpleblog", "Blog wall");
-        $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
+        // The wall stuff, use only if we should use the wall module here.
+        if ($this->usesWall) {
+            $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
+                    "simpleblog", "Blog wall");
+            $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
 
-        //$numPosts = $this->objDbwall->countPosts(4, FALSE, 'identifier', $id);
-        $numPosts = $post['comments'];
+            //$numPosts = $this->objDbwall->countPosts(4, FALSE, 'identifier', $id);
+            $numPosts = $post['comments'];
 
-        if ($numPosts == 0) {
-            $lngTxt = $this->objLanguage->languageText("mod_simpleblog_nocommentsyet",
-                "simpleblog", "No comments yet");
-            $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}<span>";
-        } else {
-            if ($numPosts == 1) {
-                $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtssn", 
-                  'simpleblog', array('NUMPOSTS' => $numPosts));
+            if ($numPosts == 0) {
+                $lngTxt = $this->objLanguage->languageText("mod_simpleblog_nocommentsyet",
+                    "simpleblog", "No comments yet");
+                $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}<span>";
             } else {
-                $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtspl", 
-                  'simpleblog', array('NUMPOSTS' => $numPosts));
+                if ($numPosts == 1) {
+                    $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtssn", 
+                      'simpleblog', array('NUMPOSTS' => $numPosts));
+                } else {
+                    $lngTxt = $this->objLanguage->code2Txt("mod_simpleblog_numcmtspl", 
+                      'simpleblog', array('NUMPOSTS' => $numPosts));
+                }
+                $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}.<span>";
             }
-            $numPosts = "<span class='simpleblog_wall_comments'>{$lngTxt}.<span>";
-        }
 
-        $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"
-        . "<a class='wall_link' id='wall_link_{$id }' href='javascript:void(0);'>"
-        . $wallText . $numPosts . "</a></div><div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
+            $wall = "\n<div class='simpleblog_wall_nav' id='simpleblog_wall_nav_{$id }'>"
+            . "<a class='wall_link' id='wall_link_{$id }' href='javascript:void(0);'>"
+            . $wallText . $numPosts . "</a></div>" 
+            . "<div class='simpleblog_wall' id='simpleblog_wall_{$id }'></div>\n";
+        } else {
+            $wall = NULL;
+        }
 
         return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
           . $before . $title . $content . $tags . $foot . $wall
@@ -1002,10 +1045,13 @@ class simpleblogops extends object
         // Set up the feed
         $objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
         if (isset($posts)) {
+            $objWashout = $this->getObject('washout', 'utilities');
             foreach ($posts as $post) {
                 //$ret .= $this->formatForFeed($post);
                 $itemTitle = $post['post_title'];
                 $itemDescription = stripslashes($post['post_content']);
+                
+                $itemDescription = $objWashout->parseText($itemDescriptionlist);
                 $itemSource = $this->uri(array(
                     'by' => 'id',
                     'id' => $post['id']

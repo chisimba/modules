@@ -82,7 +82,7 @@ class block_simpleblogmiddle extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
                 "mod_simpleblog_posts", "simpleblog",
-                "Simpleblog posts");
+                "Simpleblog general posts");
     }
 
     /**
@@ -94,8 +94,7 @@ class block_simpleblogmiddle extends object
      */
     public function show() 
     {
-        $objGuesser = $this->getObject('guesser', 'simpleblog');
-        $blogId = $objGuesser->guessBlogId();
+        $blogId = 'allpublic';
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         $by = $this->getParam('by', FALSE);
         if ($by) {
@@ -135,9 +134,16 @@ class block_simpleblogmiddle extends object
             if($by == 'search') {
                 return $objPostOps->getPostsFromSearch($blogId);
             }
-            
+            if($by == 'user') {
+                $userId = $this->getParam('userid', FALSE);
+                if ($userId) {
+                    return $objPostOps->showCurrentPosts($userId);
+                } else {
+                    return NULL;
+                }
+            }
         } else {
-            return $objPostOps->showCurrentPosts($blogId);
+            return $objPostOps->showCurrentPosts('allpublic');
         }
 /*
         

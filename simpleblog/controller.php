@@ -211,7 +211,7 @@ class simpleblog extends controller
         if ($blogType == "context") {
             return $this->nextAction('home', array(), 'context');
         } else {
-            return $this->nextAction();
+            return $this->nextAction(NULL);
         }
     }
 
@@ -384,7 +384,7 @@ class simpleblog extends controller
     * @return boolean TRUE|FALSE
     *
     */
-    function __validAction(& $action)
+    function __validAction($action)
     {
         if (method_exists($this, "__".$action)) {
             return TRUE;
@@ -403,7 +403,7 @@ class simpleblog extends controller
     * @return stromg the name of the method
     *
     */
-    function __getMethod(& $action)
+    function __getMethod($action)
     {
         if ($this->__validAction($action)) {
             return "__" . $action;

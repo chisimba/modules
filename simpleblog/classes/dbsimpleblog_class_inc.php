@@ -88,7 +88,7 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getPosts($blogId, $page, $pageSize=FALSE)
+    public function getPosts($blogId, $page, $pageSize=FALSE, $usesWall=True)
     {
         if (!$pageSize) {
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -96,21 +96,88 @@ class dbsimpleblog extends dbtable
         }
         // Subtract 1 from page since the first page is 0
         $page=$page-1;
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_simpleblog_posts.*,
+        
+        // If the wall is installed or used then include it in the SQL
+        if ($usesWall) {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT DISTINCT tbl_simpleblog_posts.*,
+                tbl_users.userid,
+                tbl_users.firstname,
+                tbl_users.surname,
+                tbl_users.username,
+                (SELECT COUNT(tbl_wall_posts.id)
+                     FROM tbl_wall_posts
+                     WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                ) AS comments
+              FROM tbl_simpleblog_posts, tbl_users
+              WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+              AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+              AND tbl_simpleblog_posts.post_status != "draft"  
+              ORDER BY datecreated DESC ';
+        } else {
+            $baseSql = 'SELECT DISTINCT tbl_simpleblog_posts.*,
               tbl_users.userid,
               tbl_users.firstname,
               tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
+              tbl_users.username
             FROM tbl_simpleblog_posts, tbl_users
             WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
             AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
             AND tbl_simpleblog_posts.post_status != "draft"  
             ORDER BY datecreated DESC ';
+        }
+        $startPoint = $page * $pageSize;
+        $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
+        return $posts;
+    }
+    
+    /**
+     *
+     * Get more posts according to page and page size
+     *
+     * @param integer $blogId The blog id
+     * @param integer $page The starting page
+     * @param string $pageSize Number of records per page
+     * @return string array An array of posts if any
+     * @access public
+     *
+     */
+    public function getAllPublicPosts($page, $pageSize=FALSE, $usesWall=True)
+    {
+        if (!$pageSize) {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $pageSize = $objSysConfig->getValue('simpleblog_numpostdisplay', 'simpleblog');
+        }
+        // Subtract 1 from page since the first page is 0
+        $page=$page-1;
+        
+        // If the wall is installed or used then include it in the SQL
+        if ($usesWall) {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT DISTINCT tbl_simpleblog_posts.*,
+                tbl_users.userid,
+                tbl_users.firstname,
+                tbl_users.surname,
+                tbl_users.username,
+                (SELECT COUNT(tbl_wall_posts.id)
+                     FROM tbl_wall_posts
+                     WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                ) AS comments
+              FROM tbl_simpleblog_posts, tbl_users
+              WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+              AND tbl_simpleblog_posts.post_status != "draft"  
+              ORDER BY datecreated DESC ';
+        } else {
+            $baseSql = 'SELECT DISTINCT tbl_simpleblog_posts.*,
+              tbl_users.userid,
+              tbl_users.firstname,
+              tbl_users.surname,
+              tbl_users.username
+            FROM tbl_simpleblog_posts, tbl_users
+            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+            AND tbl_simpleblog_posts.post_status != "draft"  
+            ORDER BY datecreated DESC ';
+        }
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
         return $posts;
@@ -126,25 +193,40 @@ class dbsimpleblog extends dbtable
      * @access public
      * 
      */
-    public function getPostsByTag($blogId, $tag) 
+    public function getPostsByTag($blogId, $tag, $usesWall=True) 
     {
         $blogId=trim($blogId);
         $tag = trim($tag);
-        $sql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
-            AND tbl_simpleblog_posts.post_status != "draft"  
-            AND tbl_simpleblog_posts.blogId = \'' . $blogId . '\' 
-            AND tbl_simpleblog_posts.post_tags LIKE \'%' . $tag . '%\'  
-            ORDER BY datecreated DESC ';
+        // If the wall is installed or used then include it in the SQL
+        if ($usesWall) {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND tbl_simpleblog_posts.blogId = \'' . $blogId . '\' 
+                AND tbl_simpleblog_posts.post_tags LIKE \'%' . $tag . '%\'  
+                ORDER BY datecreated DESC ';
+        } else {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND tbl_simpleblog_posts.blogId = \'' . $blogId . '\' 
+                AND tbl_simpleblog_posts.post_tags LIKE \'%' . $tag . '%\'  
+                ORDER BY datecreated DESC ';
+        }
         return $this->getArray($sql);
     }
     
@@ -157,20 +239,32 @@ class dbsimpleblog extends dbtable
      * @access public
      * 
      */
-    public function getPostsById($id) 
+    public function getPostsById($id, $usesWall=True) 
     {
-        $sql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
-            AND tbl_simpleblog_posts.id = \'' . $id . '\' ';
+        if ($usesWall) {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+                AND tbl_simpleblog_posts.id = \'' . $id . '\' ';
+        } else {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.userid = tbl_users.userid   
+                AND tbl_simpleblog_posts.id = \'' . $id . '\' ';
+        }
+
         return $this->getArray($sql);
     }
     
@@ -185,9 +279,13 @@ class dbsimpleblog extends dbtable
      */
     public function getTagCloudArray($blogId) 
     {
-        $sql = 'SELECT post_tags FROM tbl_simpleblog_posts
-            WHERE blogId = \'' . $blogId 
-            . '\' AND post_tags IS NOT NULL AND post_status != "draft" ';
+        if ($blogId == 'allpublic') {
+            $selectItem = ' WHERE post_tags IS NOT NULL AND post_status != "draft" ';;
+        } else {
+            $selectItem = ' WHERE blogId = \'' . $blogId 
+              . '\' AND post_tags IS NOT NULL AND post_status != "draft" ';
+        }
+        $sql = 'SELECT post_tags FROM tbl_simpleblog_posts ' . $selectItem;
         $ar = $this->getArray($sql);
         $res = array();
         foreach ($ar as $postTag) {
@@ -209,25 +307,45 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getCurrentMonth($blogId)
+    public function getCurrentMonth($blogId, $usesWall=True)
     {
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
-            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
-            AND tbl_simpleblog_posts.post_status != "draft"  
-            AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE ) 
-            AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE )
-            ORDER BY datecreated DESC ';
+        if ($blogId == 'allpublic') {
+            $selectItem = NULL;
+        } else {
+            $selectItem = 'AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "';
+        }
+        if ($usesWall) {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                ' . $selectItem . '
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE ) 
+                AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE )
+                ORDER BY datecreated DESC ';
+        } else {
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                ' . $selectItem . '
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE ) 
+                AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE )
+                ORDER BY datecreated DESC ';
+        }
         $posts = $this->getArray($baseSql);
         return $posts;
     }
@@ -245,25 +363,45 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getLastMonth($blogId)
+    public function getLastMonth($blogId, $usesWall=True)
     {
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
-            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
-            AND tbl_simpleblog_posts.post_status != "draft"  
-            AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE  - INTERVAL 1 MONTH) 
-            AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE  - INTERVAL 1 MONTH)
-            ORDER BY datecreated DESC ';
+        if ($blogId == 'allpublic') {
+            $selectItem = NULL;
+        } else {
+            $selectItem = 'AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "';
+        }
+        if ($usesWall) {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                ' . $selectItem . '
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE  - INTERVAL 1 MONTH) 
+                AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE  - INTERVAL 1 MONTH)
+                ORDER BY datecreated DESC ';
+        } else {
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                ' . $selectItem . '
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated ) = YEAR( CURRENT_DATE  - INTERVAL 1 MONTH) 
+                AND  MONTH( tbl_simpleblog_posts.datecreated ) = MONTH( CURRENT_DATE  - INTERVAL 1 MONTH)
+                ORDER BY datecreated DESC ';
+        }
         $posts = $this->getArray($baseSql);
         return $posts;
     }
@@ -279,12 +417,17 @@ class dbsimpleblog extends dbtable
      */
     public function getArchivePosts($blogId)
     {
-        $sql = 'SELECT 
-          DISTINCT CONCAT( YEAR( datecreated ) , \' \', MONTHNAME( datecreated ) ) 
+        //die($blogId);
+        if ($blogId == 'allpublic') {
+            $selectItem = NULL;
+        } else {
+            $selectItem = ' WHERE blogId = "' . $blogId . ' " ';
+        }
+        $sql = 'SELECT DISTINCT CONCAT( YEAR( datecreated ) , \' \', MONTHNAME( datecreated ) ) 
           AS \'YearMonth\', YEAR( datecreated ) as \'year\', 
           MONTHNAME( datecreated ) as \'month\', blogid 
           FROM `tbl_simpleblog_posts`
-          WHERE blogId = "' . $blogId . ' "
+          ' . $selectItem . '
           ORDER BY datecreated DESC';
         return $this->getArray($sql);
     }
@@ -298,24 +441,44 @@ class dbsimpleblog extends dbtable
      * @param string $month The month within the given year
      * @return string array An array of the posts for the given blog, year and month
      */
-    public function getPostsByYearMonth($blogId, $year, $month) 
+    public function getPostsByYearMonth($blogId, $year, $month, $usesWall=True) 
     {
-        $sql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
-            AND tbl_simpleblog_posts.post_status != "draft"  
-            AND YEAR( tbl_simpleblog_posts.datecreated )  = \'' . $year . '\' 
-            AND MONTHNAME( tbl_simpleblog_posts.datecreated ) = \'' . $month . '\' 
-            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
-            ORDER BY datecreated DESC';
+        if ($blogId == 'allpublic') {
+            $selectItem = NULL;
+        } else {
+            $selectItem = ' AND tbl_simpleblog_posts.blogId = "' . $blogId . '" ';
+        }
+        if ($usesWall) {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated )  = \'' . $year . '\' 
+                AND MONTHNAME( tbl_simpleblog_posts.datecreated ) = \'' . $month . '\' 
+                ' . $selectItem . '
+                ORDER BY datecreated DESC';
+        } else {
+            $sql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                AND YEAR( tbl_simpleblog_posts.datecreated )  = \'' . $year . '\' 
+                AND MONTHNAME( tbl_simpleblog_posts.datecreated ) = \'' . $month . '\' 
+                ' . $selectItem . '
+                ORDER BY datecreated DESC';
+        }
         return $this->getArray($sql);
     }
     
@@ -357,7 +520,7 @@ class dbsimpleblog extends dbtable
      * @access public
      *
      */
-    public function getPostsByUser($blogId, $userId, $page=1, $pageSize=FALSE)
+    public function getPostsByUser($blogId, $userId, $page=1, $pageSize=FALSE, $usesWall=True)
     {
         if (!$pageSize) {
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -365,22 +528,38 @@ class dbsimpleblog extends dbtable
         }
         // Subtract 1 from page since the first page is 0
         $page=$page-1;
-        // The base SQL, uses joins to avoid going back and forth to the db
-        $baseSql = 'SELECT tbl_simpleblog_posts.*,
-              tbl_users.userid,
-              tbl_users.firstname,
-              tbl_users.surname,
-              tbl_users.username,
-              (SELECT COUNT(tbl_wall_posts.id)
-                   FROM tbl_wall_posts
-                   WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
-              ) AS comments
-            FROM tbl_simpleblog_posts, tbl_users
-            WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
-            AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
-            AND tbl_simpleblog_posts.userid = "' . $userId . ' "
-            AND tbl_simpleblog_posts.post_status != "draft"  
-            ORDER BY datecreated DESC ';
+        if ($usesWall) {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username,
+                  (SELECT COUNT(tbl_wall_posts.id)
+                       FROM tbl_wall_posts
+                       WHERE tbl_wall_posts.identifier = tbl_simpleblog_posts.id
+                  ) AS comments
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+                AND tbl_simpleblog_posts.userid = "' . $userId . ' "
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                ORDER BY datecreated DESC ';
+        } else {
+            // The base SQL, uses joins to avoid going back and forth to the db
+            $baseSql = 'SELECT tbl_simpleblog_posts.*,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE  tbl_simpleblog_posts.userid = tbl_users.userid
+                AND tbl_simpleblog_posts.blogId = "' . $blogId . ' "
+                AND tbl_simpleblog_posts.userid = "' . $userId . ' "
+                AND tbl_simpleblog_posts.post_status != "draft"  
+                ORDER BY datecreated DESC ';
+        }
+
         $startPoint = $page * $pageSize;
         $posts = $this->getArrayWithLimit($baseSql, $startPoint, $pageSize);
         return $posts;
