@@ -98,7 +98,6 @@ class block_siteblog extends object
         $blogId = 'site';
         //$this->setSession('blogid', 'site', 'simpleblog');
         $by = $this->getParam('by', FALSE);
-        die($by);
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
         if ($by) {
             if($by == 'thismonth') {
