@@ -6,10 +6,10 @@ $tablename = 'tbl_simpleblog_posts';
 
 //Options line for comments, encoding and character set
 $options = array(
+   'type' => 'myisam',
    'comment' => 'This table holds content data for the simpleblog module', 
    'collate' => 'utf8_general_ci', 
-   'character_set' => 'utf8',
-   'engine' => 'myisam'
+   'character_set' => 'utf8'
 );
 
 // Fields
@@ -68,6 +68,7 @@ $indexes = array(
         'post_type' => array(),
         'post_content' => array(),
         'post_title' => array(),
+        'post_tags' => array,
      )
 );
 ?>
