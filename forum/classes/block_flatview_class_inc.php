@@ -108,14 +108,16 @@ class block_flatview extends object {
                 if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
                         $this->objIcon->setIcon('notes');
                         $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['forum_id'], 'type' => $forumtype)));
-                        $newtopiclink->link = $this->objIcon->show() /* $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum') */;
+                        $newtopiclink->link = $this->objIcon->show()."<br/>".$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
+                        $newtopiclink->cssClass .= 'sexybutton';
                         $newtopiclink->title = $this->objLanguage->languageText('phrase_starttopic','system');
                         $this->objIcon->setIcon('moderate');
                         $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-                        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+//                        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
 
                         $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype)));
-                        $moderateTopicLink->link = $this->objIcon->show();
+                        $moderateTopicLink->cssClass .= 'sexybutton';
+                        $moderateTopicLink->link = $this->objIcon->show()."<br/>{$this->objLanguage->languageText('mod_forum_moderatetopic','forum')}";
                         $moderateTopicLink->cssId = "moderatetopic";
                         //moderation options
 //                        $this->loadClass('checkbox', 'htmlelements');
@@ -147,14 +149,14 @@ class block_flatview extends object {
                  */
                 $saveButton = new button();
                 $saveButton->cssId = "moderationSave";
-                $saveButton->value = "Save";
+                $saveButton->value = $this->objLanguage->languageText('phrase_save','system');
 //                        $frmModerate->addToForm($saveButton->show() . '&nbsp;&nbsp;');
                 /**
                  * @CANCEL_BUTTON
                  */
                 $cancelButton = new button();
                 $cancelButton->cssId = "moderationCancel";
-                $cancelButton->value = "Cancel";
+                $cancelButton->value = $this->objLanguage->languageText('word_cancel','system');
                 ////Confirmation messages
                 if ($this->getParam('message') == 'deletesuccess') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
@@ -280,6 +282,7 @@ class block_flatview extends object {
 //                $notifyThead->setValue("subscribetopic");
                 $notifyAll = new radio('subscription');
                 $notifyAll->addOption('subscribetoall', '&nbsp; Notify me of all topics and replies in this forum');
+                $this->objIcon->title = $this->objLanguage->languageText('phrase_nitification','system');
                 /**
                  * if user is subscribed to forum, indicate
                  */
@@ -303,8 +306,8 @@ class block_flatview extends object {
                 //subscribsion
                 $subscribeLink = new link("#");
 //                $this->objIcon->setIcon('alerts');
-                $subscribeLink->cssClass = "moderatetopic";
-                $subscribeLink->link = $this->objIcon->show();
+                $subscribeLink->cssClass = "moderatetopic sexybutton";
+                $subscribeLink->link = $this->objIcon->show()."<br/>{$this->objLanguage->languageText('phrase_nitification','system')}";
                 //floating div
                 $subscribeDiv = "<div class='hiddenOptions' >";
 //                $notifyAll->setvalue("subscribetoall");

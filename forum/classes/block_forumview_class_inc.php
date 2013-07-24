@@ -224,16 +224,14 @@ class block_forumview extends object {
                 $tblTopic->startRow($rowCSS);
 
                 if ($this->showFullName) {
-                    $tblTopic->addCell($this->objUser->getUserImage($topic['userid']) . "<br/>" . $topic['firstname'] . ' ' . $topic['surname'], Null, 'center', 'center');
-                    //
-//                                        $divContent .= '<br/>' . $this->objUser->getUserImage($topic['userid']) . '<br/>' . $topic['firstname'] . ' ' . $topic['surname'];
+                    $tblTopic->addCell($this->objUser->getUserImage($topic['userid']) . "<br/>" . $topic['firstname'] . ' ' . $topic['surname'], 100, NULL, 'center');
                 } else {
-                    $tblTopic->addCell($topic['username'], Null, 'center', 'center');
+                    $tblTopic->addCell($topic['username'], 100, NULL, 'center');
                     //
 //                                        $divContent .= '<br/>' . $topic['username'];
                 }
 
-                $tblTopic->addCell($objIcon->show(), Null, 'center');
+                $tblTopic->addCell($objIcon->show(), 50,NULL, 'center');
 
 //                if ($topic['readtopic'] == '') {
 //                    $objIcon->setIcon('unreadletter');
@@ -258,7 +256,7 @@ class block_forumview extends object {
                 //
 //                $divContent .= '<br/>'.$topic['type_icon'];
 
-                $tblTopic->addCell($objIcon->show(), Null, 'center');
+                $tblTopic->addCell($objIcon->show(),50, Null, 'center');
 
                 $link = new link($this->uri(array('action' => 'viewtopic', 'id' => $topic['topic_id'], 'type' => $this->forumDetails['forum_type'])));
 
@@ -270,9 +268,9 @@ class block_forumview extends object {
 //                    $divContent .= '<br/>'.$objIcon->show();
                     $objIcon->title = $this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic');
                     $sticky = $objIcon->show() . ' ';
-                    $tblTopic->addCell($link->show(), '30%', 'center', NULL, NULL, 'class=sticky', NULL);
+                    $tblTopic->addCell($link->show(), 30, 'center', "center", NULL, 'class=sticky', NULL);
                 } else {
-                    $tblTopic->addCell($link->show(), '30%', 'center', NULL, NULL, NULL, NULL);
+                    $tblTopic->addCell($link->show(), 200, 'center', 'left', NULL, NULL, NULL);
                     $sticky = '';
                 }
 
@@ -285,7 +283,7 @@ class block_forumview extends object {
                 } else {
                     $rpls = $this->objLanguage->languagetext('word_reply', 'system');
                 }
-                $tblTopic->addCell("<span class='numberindicator' >{$topic['replies']}</span><br/><label class='menu' >{$rpls}</label>", Null, 'center', 'center');
+                $tblTopic->addCell("<span class='numberindicator' >{$topic['replies']}</span><br/><label class='menu' >{$rpls}</label>", 90, 'center', 'center');
 
                 //
 //                                $divContent .= '<br/>' . $topic['views'];
@@ -295,7 +293,7 @@ class block_forumview extends object {
                 } else {
                     $vws = substr($this->objLanguage->languageText('word_views', 'system'), 0, 4);
                 }
-                $tblTopic->addCell("<span class='numberindicator' >{$topic['views']}</span><br/><label class='menu'>{$vws}</label>", Null, 'center', 'center');
+                $tblTopic->addCell("<span class='numberindicator' >{$topic['views']}</span><br/><label class='menu'>{$vws}</label>", 90, 'center', 'center');
 
                 // if (formatDate($topic['lastdate']) == date('j F Y')) {
                 // $datefield = 'Today at '.formatTime($topic['lastdate']);
@@ -318,7 +316,7 @@ class block_forumview extends object {
                     if (strpos($datefield, 'minutes') != FALSE) {
                         $this->objIcon->setIcon('clock');
                     }
-                    $tblTopic->addCell($this->objIcon->show().' '. $datefield . '<br />' . $this->objLanguage->languageText('word_by','system').' '.$topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show(), Null, 'center', 'center', 'smallText');
+                    $tblTopic->addCell($this->objIcon->show().' '. $datefield . '<br />' . $this->objLanguage->languageText('word_by','system').' '.$topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show(), 90, 'center', 'left', 'smallText');
                 } else {
                     //
                     $divContent .= '<br/>' . $datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show();

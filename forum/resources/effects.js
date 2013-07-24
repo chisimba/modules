@@ -48,8 +48,8 @@ jQuery(document).ready(function() {
 //                        jQuery('.newForumContainer.reply').append('<br/><h4>Please wait..</h1>')
 //                        //get attachment value
                 var attachment_id = jQuery('#hidden_fileselect').val();
-                        //get post text
-                var message = 'mini' /*jQuery(text_area).val()*/;
+                //get post text
+                var message = '' /*jQuery(text_area).val()*/;
                 var parent_id = element_Id;
                 var topic_id = jQuery('.topicid').attr('id');
                 var lang = jQuery('.lang').attr('id');
@@ -66,11 +66,12 @@ jQuery(document).ready(function() {
                         text: 'Save',
                         click: function(e) {
                                 e.preventDefault();
+                                jQuery(this, 'button.postReplyCancelButton').hide();
                                 attachment_id = jQuery('#hidden_fileselect').val();
                                 message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
                                 jQuery.ajax({
                                         type: 'post',
-                                        url: 'index.php?module=forum&action=savepostreply',
+                                        url: 'index.php?module=forum&action=savepstreply',
                                         data: {
                                                 message: message_text,
                                                 forum_id: forum_id,
@@ -80,7 +81,7 @@ jQuery(document).ready(function() {
                                                 lang: lang,
                                                 attachment: attachment_id
                                         },
-                                        success:function(data){
+                                        success: function(data) {
                                                 alert('Post saved!');
                                                 window.location.reload();
 //                                                jQuery.fn.displayConfirmationMessage('Post saved successfuly')
@@ -89,15 +90,21 @@ jQuery(document).ready(function() {
                         }
                 });
                 //cancel button
-                var cancel_button = jQuery('<button>',{
-                        class: 'sexybutton',
+                var cancel_button = jQuery('<button>', {
+                        class: 'sexybutton postReplyCancelButton',
                         text: 'Cancel',
-                        click: function(e){
+                        click: function(e) {
                                 e.preventDefault();
                                 jQuery(current_link).toggle('fade');
+                                jQuery('div.postMakerWrapper').hide();
+                                jQuery(save_button).remove();
+//                                jQuery(this).remove();
                         }
                 });
 //                if (jQuery(text_area).val() != '') {
+                var wrapper_div = jQuery('<div>', {
+                        class: 'postMakerWrapper'
+                });
                 //Send the data
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=showeditpostpopup',
@@ -113,12 +120,11 @@ jQuery(document).ready(function() {
                         },
 //                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
                         success: function(data) {
-                                var wrapper_div = jQuery('<div>',{
-                                        class: 'postMakerWrapper'
-                                });
-                                jQuery('div.clone').append(data);
+                                var editor = data;
+                                jQuery('div.clone').append("<div class='postMakerWrapper' >"+data+"</div>");
+//                                jQuery('div.clone').append(data);
                                 jQuery('div.clone').append(save_button);
-                                jQuery('div.clone').append(cancel_button);
+//                                jQuery('div.clone').append(cancel_button);
 //                                jQuery('div.clone').append(wrapper_div);
 //                                jQuery('.newForumContainer.reply').empty();
 //                                        alert("Success");
@@ -211,6 +217,13 @@ jQuery(document).ready(function() {
                         }
                 });
         });
+        /**
+         * ===Moderaton Cancel===
+         */
+        jQuery('button#moderationCancel').click(function(e) {
+                e.preventDefault();
+                jQuery('.hiddenOptions').toggle('fade');
+        });
 
         /**
          * ===Canceling post delete===
@@ -283,13 +296,19 @@ jQuery(document).ready(function() {
                 var post_text = jQuery('div.postText#' + post_id).html();
                 //wrapper div
                 var popUpWrapper = jQuery('<div>', {
-                        class: 'popUpWrapper'
+                        class: 'popUpWrapper',
+                        css: {
+                                padding: '10px 20px 10px 10px',
+                                margin: '195px',
+                                'border-radius': '5px',
+                                background: 'rgba(51,60,99,1)'
+                        }
                 });
                 //textarea
                 var edit_post_area = jQuery('<span>', {
                         val: post_text
                 });
-                var blocktext = jQuery('textarea[blocktext]');
+//                var blocktext = jQuery('textarea[blocktext]');
                 //save button
                 var save_button = jQuery('<button>', {
                         text: 'Save',

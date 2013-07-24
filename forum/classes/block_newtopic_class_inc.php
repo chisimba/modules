@@ -51,7 +51,7 @@ class block_newtopic extends object {
         $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions');
         // Load Forum Subscription classes
         $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions');
-        $this->title = "<h1>New topic</h1>";
+        $this->title = "<h1>{$this->objLanguage->languageText('mod_forum_startnewtopic','forum')}</h1>";
     }
 
     public function biuldEntryForm() {
@@ -298,6 +298,7 @@ class block_newtopic extends object {
         $addTable->addCell(' ');
 
         $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
+        $submitButton->value = $this->objLanguage->languageText('phrase_save','system');
         $submitButton->cssClass = 'save';
 //$submitButton->setToSubmit();
         $submitButton->extra = ' onclick="SubmitForm()"';
