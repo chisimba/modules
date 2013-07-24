@@ -992,7 +992,7 @@ class simpleblogops extends object
                     'blogtype' => 'site'
                 ), 'simpleblog');
                 $feedURL = $feedLink;
-                $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                $posts = $this->objDbPosts->getPosts($blogId, 1, 10, $this->usesWall);
                 break;
             case 'context':
                 $blogId = $this->getParam('blogid', FALSE);
@@ -1012,7 +1012,7 @@ class simpleblogops extends object
                         'blogid' => $blogId
                     ), 'simpleblog');
                     $feedURL = $feedLink;
-                    $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                    $posts = $this->objDbPosts->getPosts($blogId, 1, 10, $this->usesWall);
                 } else {
                     // We cannot render public RSS
                     $feedtitle = ucfirst($this->objLanguage->code2Txt("mod_simpleblog_nfprivatecontext", "simpleblog"));
@@ -1036,7 +1036,7 @@ class simpleblogops extends object
                     'blogid' => $blogId
                 ), 'simpleblog');
                 $feedURL = $feedLink;
-                $posts = $this->objDbPosts->getPosts($blogId, 1, 10);
+                $posts = $this->objDbPosts->getPosts($blogId, 1, 10, $this->usesWall);
                 break;
             default:
                 break;
@@ -1046,12 +1046,14 @@ class simpleblogops extends object
         $objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
         if (isset($posts)) {
             $objWashout = $this->getObject('washout', 'utilities');
+            // Initialize it just in case as warning will break feed.
+            $itemDescription = NULL;
             foreach ($posts as $post) {
                 //$ret .= $this->formatForFeed($post);
                 $itemTitle = $post['post_title'];
                 $itemDescription = stripslashes($post['post_content']);
                 
-                $itemDescription = $objWashout->parseText($itemDescriptionlist);
+                $itemDescription = $objWashout->parseText($itemDescription);
                 $itemSource = $this->uri(array(
                     'by' => 'id',
                     'id' => $post['id']

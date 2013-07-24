@@ -194,6 +194,9 @@ class editor extends object
         } else {
             $objGuesser = $this->getObject('guesser', 'simpleblog');
             $blogId =  $objGuesser->guessBlogId();
+            if ($blogId == 'site') {
+                $postType = 'site';
+            }
         }
         
         // Load the form elements.
