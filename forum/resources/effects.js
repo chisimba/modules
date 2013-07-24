@@ -10,6 +10,7 @@ jQuery(document).ready(function() {
         jQuery('.deleteconfirm').hide();
         jQuery('div.hiddenOptions, div.attachmentwrapper, div.file-preview').hide();
         jQuery('div.filePreview').hide();
+        jQuery('a.attachmentLink').hide();
         jQuery('a.ratings').click(function(e) {
                 e.preventDefault()
         });
@@ -33,6 +34,7 @@ jQuery(document).ready(function() {
          */
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
+                jQuery('a.attachmentLink').show('slow');
                 var current_link = jQuery(this);
                 jQuery(current_link).toggle('fade');
                 //get aattributes
@@ -64,6 +66,7 @@ jQuery(document).ready(function() {
                         text: 'Save',
                         click: function(e) {
                                 e.preventDefault();
+                                attachment_id = jQuery('#hidden_fileselect').val();
                                 message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
                                 jQuery.ajax({
                                         type: 'post',
@@ -78,7 +81,9 @@ jQuery(document).ready(function() {
                                                 attachment: attachment_id
                                         },
                                         success:function(data){
-                                                
+                                                alert('Post saved!');
+                                                window.location.reload();
+//                                                jQuery.fn.displayConfirmationMessage('Post saved successfuly')
                                         }
                                 })
                         }
@@ -111,11 +116,11 @@ jQuery(document).ready(function() {
                                 var wrapper_div = jQuery('<div>',{
                                         class: 'postMakerWrapper'
                                 });
-                                jQuery(wrapper_div).append(data);
-                                jQuery(wrapper_div).append(save_button);
-                                jQuery(wrapper_div).append(cancel_button);
-                                jQuery('div.clone').append(wrapper_div);
-                                jQuery('.newForumContainer.reply').empty();
+                                jQuery('div.clone').append(data);
+                                jQuery('div.clone').append(save_button);
+                                jQuery('div.clone').append(cancel_button);
+//                                jQuery('div.clone').append(wrapper_div);
+//                                jQuery('.newForumContainer.reply').empty();
 //                                        alert("Success");
                                 //add element to another class
 //                                        window.location.reload();
