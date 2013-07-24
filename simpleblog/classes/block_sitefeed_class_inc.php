@@ -82,6 +82,7 @@ class block_sitefeed extends object
         $this->title = $this->objLanguage->languageText(
             "mod_simpleblog_sitefeed", "simpleblog",
             "Site feed");
+        $this->wrapStr = FALSE;
 
     }
     /**

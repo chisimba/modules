@@ -83,6 +83,7 @@ class block_simpleblogmiddle extends object
         $this->title = $this->objLanguage->languageText(
                 "mod_simpleblog_posts", "simpleblog",
                 "Simpleblog general posts");
+        $this->wrapStr = FALSE;
     }
 
     /**

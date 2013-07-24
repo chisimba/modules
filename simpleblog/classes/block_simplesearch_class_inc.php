@@ -81,6 +81,7 @@ class block_simplesearch extends object
         $this->title = $this->objLanguage->languageText(
                 "mod_simpleblog_search", "simpleblog",
                 "Search blogs");
+        $this->wrapStr = FALSE;
     }
     /**
      * 

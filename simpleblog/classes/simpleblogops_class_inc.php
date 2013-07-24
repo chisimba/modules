@@ -966,6 +966,39 @@ class simpleblogops extends object
     
     /**
      * 
+     * Get the most recent post in a particular blog
+     * 
+     * @param string $blogId The id of the blog (e.g. site, userid)
+     * @return string The results formatted for a side block
+     * @access public
+     * 
+     */
+    public function showLatestSitePost($blogId) {
+        $ar = $this->objDbPosts->getLatestSitePost();
+        $postTitle = $ar[0]['post_title'];
+        $id = $ar[0]['id'];
+        // The URI for this post
+        $titleUri = $this->uri(array(
+            'by' => 'id',
+            'id' => $id
+        ), 'simpleblog');
+        $poster = $ar[0]['firstname'] . " " . $ar[0]['surname'];
+        $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
+                "simpleblog", "Posted by")
+                . " " . $poster . ' ';
+        $objDd = $this->getObject('translatedatedifference', 'utilities');
+        $postDate = $objDd->getDifference($ar[0]['datecreated']);
+       
+        $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
+        
+        $postTitle = '<a href="' . $titleUri . '" alt="' . $postTitle 
+            . '">' . $postTitle . '</a> ' 
+            . $foot;
+        return $postTitle;
+    }
+    
+    /**
+     * 
      * Render the XML feed for the blog according to supplied parameters.
      * 
      * @param string $blogId The id of the blog to return the XML for

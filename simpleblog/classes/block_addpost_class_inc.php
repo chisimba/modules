@@ -101,6 +101,7 @@ class block_addpost extends object
         if (!$this->objSec->checkBloggingRights()) {
             $this->blockType="invisible";
         }
+        $this->wrapStr = FALSE;
     }
     
     /**

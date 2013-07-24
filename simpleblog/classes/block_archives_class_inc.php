@@ -76,6 +76,7 @@ class block_archives extends object
         $this->title = $this->objLanguage->languageText(
             "mod_simpleblog_archive", "simpleblog",
             "Archive");
+        $this->wrapStr = FALSE;
     }
     /**
      * Standard block show method.

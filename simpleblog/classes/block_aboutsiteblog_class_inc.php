@@ -90,6 +90,7 @@ class block_aboutsiteblog extends object
                 "Site blog");
         }
         $this->description = $ar['blog_description'];
+        $this->wrapStr = FALSE;
     }
     /**
      * Standard block show method.

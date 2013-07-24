@@ -268,6 +268,25 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    public function getLatestSitePost()
+    {
+            $sql = 'SELECT 
+                  tbl_simpleblog_posts.id,
+                  tbl_simpleblog_posts.userid,
+                  MAX(tbl_simpleblog_posts.datecreated) as datecreated,
+                  tbl_simpleblog_posts.post_title,
+                  tbl_simpleblog_posts.post_status,
+                  tbl_users.userid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.post_type = "site"
+                AND tbl_simpleblog_posts.post_status = \'posted\' ';
+            return $this->getArray($sql);
+        
+    }
+    
     /**
      * 
      * Get an associative array of tags and their count

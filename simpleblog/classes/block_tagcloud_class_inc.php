@@ -81,6 +81,7 @@ class block_tagcloud extends object
         $this->title = $this->objLanguage->languageText(
                 "mod_simpleblog_tagcloud", "simpleblog",
                 "Tag cloud");
+        $this->wrapStr = FALSE;
     }
 
     /**

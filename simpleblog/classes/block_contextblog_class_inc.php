@@ -82,6 +82,7 @@ class block_contextblog extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = strtoupper($this->objLanguage->code2Txt(
                 "mod_simpleblog_context", "simpleblog"));
+        $this->wrapStr = FALSE;
     }
 
     /**

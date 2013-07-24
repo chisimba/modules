@@ -82,6 +82,7 @@ class block_userfeed extends object
         $this->title = $this->objLanguage->languageText(
             "mod_simpleblog_userfeed", "simpleblog",
             "User blog feed");
+        $this->wrapStr = FALSE;
 
     }
     /**

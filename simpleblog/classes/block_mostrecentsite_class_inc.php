@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Simple blog site blog block
+ * Simple blog most recent site post
  *
  * Simple blog site blog block which can be used by other modules to render
  * a site blog, for example by the SLATE module.
@@ -52,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_siteblog extends object
+class block_mostrecentsite extends object
 {
     /**
      * The title of the block
@@ -81,8 +81,8 @@ class block_siteblog extends object
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-                "mod_simpleblog_siteposts", "simpleblog",
-                "Site posts");
+                "mod_simpleblog_mrecentsite", "simpleblog",
+                "Latest site blog post");
         $this->wrapStr = FALSE;
     }
 
@@ -96,65 +96,8 @@ class block_siteblog extends object
      */
     public function show() 
     {
-        $blogId = 'site';
-        //$this->setSession('blogid', 'site', 'simpleblog');
-        $by = $this->getParam('by', FALSE);
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
-        if ($by) {
-            if($by == 'thismonth') {
-                return $objPostOps->showThisMonth($blogId);
-            }
-            if($by == 'lastmonth') {
-                return $objPostOps->showLastMonth($blogId);
-            }
-            if($by == 'archive') {
-                $year = $this->getParam('year', FALSE);
-                $month = $this->getParam('month', FALSE);
-                if ($year && $month) {
-                    return $objPostOps->showArchive($blogId, $year, $month);
-                } else {
-                    return NULL;
-                }
-            }
-            if($by == 'tag') {
-                $tag = $this->getParam('tag', FALSE);
-                if ($tag) {
-                    return $objPostOps->showTag($blogId, $tag);
-                } else {
-                    return NULL;
-                }
-                
-            }
-            if($by == 'id') {
-                $id = $this->getParam('id', FALSE);
-                if ($id) {
-                    return $objPostOps->showById($id);
-                } else {
-                    return NULL;
-                }
-                
-            }
-            if($by == 'search') {
-                return $objPostOps->getPostsFromSearch($blogId);
-            }
-            if($by == 'user') {
-                $userId = $this->getParam('userid', FALSE);
-                if ($userId) {
-                    if ($userId == $blogId) {
-                        die("THIS ONE");
-                        return $objPostOps->showCurrentPosts($blogId);
-                        
-                    } else {
-                        die("THAT ONE");
-                        return $objPostOps->getPostsByUser($blogId, $userId);
-                    }
-                } else {
-                    return NULL;
-                }
-            }
-        } else {
-            return $objPostOps->showCurrentPosts($blogId);
-        }
+        return $objPostOps->showLatestSitePost('site');
     }
 }
 ?>
