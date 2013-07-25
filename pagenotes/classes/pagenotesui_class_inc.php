@@ -116,20 +116,21 @@ class pagenotesui extends object
                 $this->pagenotes_mode = 'add';
             }
         }
+        $this->loadClass('link','htmlelements');
     }
 
     /**
      *
-     * Wrapper to render the main block
+     * Wrapper to render the edit block
      * 
-     * @return string The rendered block
+     * @return string The rendered edit block
      * @access public
      * 
      */
-    public function showBlock()
+    public function showBlock($typeOfBlock=FALSE)
     {
         if ($this->objUser->isLoggedIn()) {
-            return $this->makeEditForm();
+            return $this->makeEditForm($typeOfBlock);
         } else {
             return $this->getNotLoggedInMessage();
         }
@@ -137,13 +138,69 @@ class pagenotesui extends object
     
     /**
      *
-     * Create a small for for adding to a side block
+     * Return an edit icon linked to the id of the record
+     * to be edited
+     * 
+     * @param string $id The record id (primary key)
+     * @return string The rendered icon
+     * @access private
+     *  
+     */
+    private function getEditIcon($id)
+    {
+        
+        $edIcon = $this->newObject('geticon', 'htmlelements');
+        $edIcon->setIcon('edit');
+        $edIcon->extra = " id='$id' class='pagenote_editicon' ";
+        $edUrl = 'javascript:void(0)';
+        $edLink = new link($edUrl);
+        $edLink->link = $edIcon->show();
+        return $edLink->show();
+    }
+    
+    /**
+     *
+     * Return an delete icon linked to the id of the record
+     * to be deleted
+     * 
+     * @param string $id The record id (primary key)
+     * @return string The rendered icon
+     * @access private
+     *  
+     */
+    private function getDelIcon($id)
+    {
+        
+        $delIcon = $this->newObject('geticon', 'htmlelements');
+        $delIcon->setIcon('delete');
+        $delIcon->extra = " id='$id' class='pagenote_delicon' ";
+        $delUrl = 'javascript:void(0)';
+        $delLink = new link($delUrl);
+        $delLink->link = $delIcon->show();
+        return $delLink->show();
+    }
+    
+    private function getRadioIsShared($selected=0)
+    {
+        //Radio for whether it is public or private
+        $pRadio = new radio('isshared');
+        $pRadio->addOption(0, $this->objLanguage->languageText('mod_pagenotes_justme', 'pagenotes', 'only me'));
+        $pRadio->addOption(1, $this->objLanguage->languageText('mod_pagenotes_evryone', 'pagenotes', 'everyone'));
+        $pRadio->setBreakSpace(' &nbsp; ');
+        $pRadio->setSelected($selected);
+        $label = new label($this->objLanguage->languageText('mod_pagenotes_sharethis', 'pagenotes', 'Who can see this note'));
+        return '<br />' . $label->show() . " " . $pRadio->show();
+    }
+    
+    /**
+     *
+     * Create an edit form
      * 
      * @return string The rendered form
      * @access private
      * 
      */
-    private function makeEditForm()
+    private function makeEditForm($typeOfBlock)
     {
         $note = NULL;
         $this->loadClass('form','htmlelements');
@@ -151,10 +208,9 @@ class pagenotesui extends object
         $this->loadClass('textarea','htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
-        
+        $this->loadClass('radio', 'htmlelements');
         // The form
         $formNote = new form('noteEditor', NULL);
-        
         // Hidden input for the page.
         $objUrl = $this->getObject('urlutils', 'utilities');
         $page = $objUrl->curPageURL();
@@ -166,39 +222,58 @@ class pagenotesui extends object
         $hidHash->cssId = "hash";
         $hidHash->value = $hash;
         $formNote->addToForm($hidHash->show());
-        
         // The id field comes back from save.
         $hidId = new hiddeninput('id');
         $hidId->cssId = "id";
         $hidId->value = $this->id;
         $formNote->addToForm($hidId->show());
-
+        
         // The edit/add mode.
-        $mode = $this->getParam('pagenotes_mode', NULL);
-        $hidMode = new hiddeninput('pagenotes_mode');
+        $mode = $this->getParam('mode', 'add');
+        $hidMode = new hiddeninput('mode');
         $hidMode->cssId = "pagenotes_mode";
         $hidMode->value = $mode;
         $formNote->addToForm($hidMode->show());
-        
         // The note editor box.
         $noteText = new textarea('note');
-        $noteText->cols=23;
+        if ($typeOfBlock='wide') {
+            $noteText->width=80;
+        } else {
+            $noteText->cols=23;
+        }
         $noteText->setValue($note);
         $noteText->cssClass = 'required';
+        $noteText->cssId = 'pagenote_notearea';
         $formNote->addToForm($noteText->show());
+        
+        //Radio for whether it is public or private
+        $pRadio = new radio('ispublic');
+        $pRadio->addOption(0, $this->objLanguage->languageText('mod_pagenotes_justme', 'pagenotes', 'only me'));
+        $pRadio->addOption(1, $this->objLanguage->languageText('mod_pagenotes_evryone', 'pagenotes', 'everyone'));
+        $pRadio->setBreakSpace(' &nbsp; ');
+        $pRadio->setSelected(0);
+        $label = new label($this->objLanguage->languageText('mod_pagenotes_sharethis', 'pagenotes', 'Who can see this note'));
+        $formNote->addToForm($this->getRadioIsShared());
         
         // Save button.
         $buttonTitle = $this->objLanguage->languageText('word_save');
         $button = new button('submitNote', $buttonTitle);
         $button->setToSubmit();
-        $formNote->addToForm($button->show());
-        
+        $formNote->addToForm('<br />' . $button->show());
         // The results area.
         $formNote->addToForm("<div id='save_results_note' class='noticearea'></div>");
-        
         return $formNote->show();
     }
     
+    /**
+     *
+     * Show wide block for rendering page notes within a page. The wideblock
+     * is added to a page for viewing notes taken on that page.
+     * 
+     * @return string The rendered block contents
+     * @access public
+     *  
+     */
     public function showWideBlock()
     {
         $annotDb = $this->getObject('dbpagenotes', 'pagenotes');
@@ -206,19 +281,67 @@ class pagenotesui extends object
         $ret = "";
         if (!empty($ar)) {
             $washer = $this->getObject('washout', 'utilities');
+            $objDd = $this->getObject('translatedatedifference', 'utilities');
             foreach ($ar as $note) {
                 $dispNote = $washer->parseText($note['note']);
-                $ret .= "\n<div class='pagenote_note'>" 
-                  . $dispNote . "</div>\n";
+                $createDate = $note['datecreated'];            
+                $createDate = $objDd->getDifference($createDate);
+                $createDate = "<div class='smalldate'>$createDate</div>";
+                $ret .= "\n<div class='pagenote_note' id='" 
+                  . $note['id'] . "'>" 
+                  . $dispNote . "<br />" . $createDate . "<br />"
+                  . $this->getEditIcon($note['id']) 
+                  . " " . $this->getDelIcon($note['id'])  
+                  . "</div>\n";
             }
         }
-        return $ret;
+        return "<div id='pagenotes_all'>" . $ret . "</div>";
+    }
+    
+    /**
+     *
+     * Renders a note for use by an ajax call, used to insert the note 
+     * into the page if adding, or replace the note in the page if editing.
+     * 
+     * @param boolean $raw Whether to return just the note text for editing, 
+     *         or a full formatted note for display
+     * @return string The formatted note
+     * @access public
+     *  
+     */
+    public function showNoteAjax($raw=FALSE) {
+        $id = $this->getParam('id', FALSE);
+        if ($id) {
+            $objDb = & $this->getObject('dbpagenotes', 'pagenotes');
+            if ($raw) {
+                $res = $objDb->getNoteById($id);
+                return $res;
+            } else {
+                $noteArray = $objDb->getNoteArrayById($id);
+                $note = $noteArray['note'];
+                $washer = $this->getObject('washout', 'utilities');
+                $note = $washer->parseText($note);
+                $dateCreated = $noteArray['datecreated'];
+                $objDd = $this->getObject('translatedatedifference', 'utilities');
+                $dateCreated = $objDd->getDifference($dateCreated);
+                $res = $note . "<div class='smalldate'>$dateCreated</div>";
+                $res .= $this->getEditIcon($id) . " " . $this->getDelIcon($id);
+                $res = "<div id='$id' class='pagenote_note'>" 
+                . $res . "</div>";
+            }
+
+        } else {
+            $res = NULL;
+        }
+        return $res;
     }
 
      /**
-     * 
-     * Return a not logged in message
-     * 
+      * 
+      * Return a not logged in message
+      * @return string Formatted message that you are not logged in
+      * @access private
+      * 
      */
     private function getNotLoggedInMessage()
     {

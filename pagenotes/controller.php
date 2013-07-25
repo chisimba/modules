@@ -197,6 +197,37 @@ class pagenotes extends controller
         }
     }
     
+    private function __ajaxgetnotebyid()
+    {
+        $objUi = $this->getObject('pagenotesui', 'pagenotes');
+        $res = $objUi->showNoteAjax();
+        die($res);
+    }
+    
+    private function __ajaxgetrawnote()
+    {
+        $id = $this->getParam('id', FALSE);
+        if ($id) {
+            $objDb = & $this->getObject('dbpagenotes', 'pagenotes');
+            $res = $objDb->getNoteById($id);
+        } else {
+            $res = NULL;
+        }
+        die($res);
+    }
+    
+    private function __ajaxdeletenote()
+    {
+        $objDb = & $this->getObject('dbpagenotes', 'pagenotes');
+        $id = $this->getParam('id', FALSE);
+        if ($id) {
+            $res = $objDb->deleteNoteById($id);
+        } else {
+            $res = "ERROR_MISSING_ID";
+        }
+        die($res);
+    }
+    
     /**
     * 
     * Method corresponding to the save action. It gets the mode from 

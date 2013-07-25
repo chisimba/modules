@@ -15,25 +15,29 @@ $fields = array(
     'id' => array(
         'type' => 'text',
         'length' => 32
-        ),
+    ),
     'datecreated' => array(
         'type' => 'timestamp'
-        ),
+    ),
     'datemodified' => array(
         'type' => 'timestamp'
-        ),
+    ),
     'hash' => array(
         'type' => 'text',
         'length' => 250,
-        ),
+    ),
     'userid' => array(
         'type' => 'text',
         'length' => 25,
         'notnull' => TRUE,
-        ),
+    ),
+    'isshared' => array(
+	   'type' => 'boolean',
+	   'default' => 'false'
+    ),
     'note' => array(
         'type' => 'clob',
-        ),
-    );
+    ),
+);
 
 ?>

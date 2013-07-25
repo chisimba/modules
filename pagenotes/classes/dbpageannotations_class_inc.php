@@ -130,6 +130,30 @@ class dbpageannotations extends dbtable
         }
     }
     
+    public function getById($id)
+    {
+        $filter = "WHERE id = '$id'";
+        return $this->getAll($filter);
+    }
+    
+    private function deleteItem($id) {
+        if ($this->objUser->isLoggedIn()) {
+            $userId = $this->objUser->userId();
+            $arItem = $this->getById($id);
+            $ownerId = $arItem[0]['userid'];
+            if ($userId == $ownerId) {
+                $ret = $this->delete('id', $id);
+                if ($ret) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return FALSE;
+            }
+        }
+    }
+    
     /**
      *
      * Check if the user attempting to save is the owner of the record

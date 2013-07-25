@@ -1,9 +1,10 @@
 <?php
 /**
  *
- * A middle block for Page notes.
+ * Page note control.
  *
- * A middle block for Page notes. Take notes on any page within a Chisimba installation..
+ * Provides an input box for adding page notes in the non-annotation style, where
+ * the block is for the page and not linked to particular pieces of text.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A middle block for Page notes.
+ * Page note control.
  *
- * A middle block for Page notes. Take notes on any page within a Chisimba installation..
+ * Provides an input box for adding page notes in the non-annotation style, where
+ * the block is for the page and not linked to particular pieces of text.
  *
  * @category  Chisimba
  * @author    Derek Keats <derek@dkeats.com>
@@ -50,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_pagenoteswidebl extends object
+class block_widepagenotecontrol extends object
 {
     /**
      * The title of the block
@@ -68,7 +70,7 @@ class block_pagenoteswidebl extends object
     * 
     */
     public $objLanguage;
-
+    
     /**
      * Standard init function
      *
@@ -79,16 +81,7 @@ class block_pagenoteswidebl extends object
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText("mod_pagenotes_show", 'pagenotes');
-        $objBl = $this->getObject('pagenotesui', 'pagenotes');
-        $this->ret = $objBl->showWideBlock();
-        if ($this->ret == "" || $this->ret == NULL) {
-            //$this->blockType="invisible";
-            $this->ret='<div id="pagenotes_all">' 
-              . $this->objLanguage->languageText("mod_pagenotes_nonotes", 'pagenotes') 
-              . '</div>';
-        }
-            
+        $this->title = $this->objLanguage->languageText("mod_pagenotes_add", 'pagenotes');
     }
     /**
      * Standard block show method.
@@ -97,7 +90,8 @@ class block_pagenoteswidebl extends object
      */
     public function show() 
     {
-        return $this->ret;
+        $objUi = $this->getObject('pagenotesui', 'pagenotes');
+        return $objUi->showBlock('wide');
     }
 }
 ?>

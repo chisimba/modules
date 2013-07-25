@@ -109,9 +109,10 @@ class dbpagenotes extends dbtable
                     // Update the note
                     $data = array(
                         'datemodified' => $this->now(),
-                        'note' => $this->note
+                        'note' => $this->note,
+                        'isshared' => $this->isshared
                     );
-                    $res = $this->update('id', $this->id, $data);
+                    $this->update('id', $this->id, $data);
                     return $this->id;
                 } else {
                     return FALSE;
@@ -120,6 +121,7 @@ class dbpagenotes extends dbtable
                 // Add the data notes data.
                 $data = array(
                     'hash' => $this->hash, 
+                    'isshared' => $this->isshared,
                     'note' => $this->note, 
                     'datecreated' => $this->now(),
                     'userid' => $userId
@@ -144,11 +146,43 @@ class dbpagenotes extends dbtable
     */
     private function validUser($userId)
     {
-        $res = $this->getRow('hash', $this->hash);
+        $res = $this->getRow('id', $this->id);
         if ($res['userid'] == $userId) {
             return TRUE;
         } else {
             return FALSE;
+        }
+    }
+    
+    public function getNoteArrayById($id) {
+        $res = $this->getRow('id', $id);
+        $userId = $this->objUser->userId();
+        if ($res['userid'] == $userId) {
+            return $res;
+        } else {
+            return NULL;
+        }
+    }
+    
+    public function getNoteById($id) {
+        $res = $this->getRow('id', $id);
+        $userId = $this->objUser->userId();
+        if ($res['userid'] == $userId) {
+            return $res['note'];
+        } else {
+            return NULL;
+        }
+    }
+    
+    public function deleteNoteById($id)
+    {
+        $res = $this->getRow('id', $id);
+        $userId = $this->objUser->userId();
+        if ($res['userid'] == $userId) {
+            $this->delete('id', $id, 'tbl_pagenotes_notes');
+            return "RECORD_DELETED";
+        } else {
+            return "ERROR_NOTOWNER";
         }
     }
     
@@ -185,7 +219,8 @@ class dbpagenotes extends dbtable
     {
         $hash = $this->getHash();
         $userId = $this->objUser->userId();
-        $filter = " WHERE hash = '" . $hash . "' AND userid = '" . $userId . "'";
+        $filter = " WHERE hash = '" . $hash . "' AND userid = '" 
+          . $userId . "' ORDER BY datecreated DESC";
         $ar = $this->getAll($filter);
         return $ar;
     }
@@ -211,5 +246,6 @@ class dbpagenotes extends dbtable
         $page = str_replace('&passthroughlogin=true', NULL, $page);
         return md5($page);
     }
+    
 }
 ?>
