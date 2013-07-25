@@ -27,7 +27,7 @@ jQuery(function() {
         jQuery("#middledynamic_area").load(packages+'makemodule/resources/forms/startform.html');
     });
 
-    jQuery('#templatetype').live("change", function(){
+    jQuery(document).on("change", '#templatetype', function(){
         if (jQuery("#templatetype").val() == 'dynamiccanvas') {
             //alert("Dynamic canvas is not ready yet");
             jQuery("#canvastyes").load(packages+'makemodule/resources/forms/dynamictype.html')
@@ -35,7 +35,7 @@ jQuery(function() {
     });
 
     // When the createmodule button is clicked
-    jQuery("#createmodule").live("click", function(){
+    jQuery(document).on("click", "#createmodule", function(){
         // Submit the form
         var modulecode=jQuery("#modulecode").val();
         var modulename=jQuery("#modulename").val();
