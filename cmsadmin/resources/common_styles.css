@@ -4,28 +4,28 @@
 
 /* Set Margin and Padding of Everything to Zero to overwrite browser default styles  */
 * {
-    margin:0;
-    padding:0;
+        margin:0;
+        padding:0;
 }
 
 /* Body and HTML */
 html, body {
-	width: 100%;
-	height: 100%;
+        width: 100%;
+        height: 100%;
 }
 
 /* Default Size of all Items on a Page */
 body {
-	font-size: 14px;
+        font-size: 14px;
 }
 
 a:link, a:visited {
-	color: #000099;
-	font-weight: normal;
+        color: #000099;
+        font-weight: normal;
 }
 
 a:hover {
-	color: #CC0000;
+        color: #CC0000;
 }
 
 
@@ -35,74 +35,74 @@ a:hover {
 ***********************************************************************************************/
 
 #menu {
-    display: block;
-    padding-left: 10px;
-    z-index: 100;
+        display: block;
+        padding-left: 10px;
+        z-index: 100;
 }
 
 #menu ul {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        list-style-type: none;
 }
 
 #menu li {
-    margin: 0;
-    
-    border: 0;
-    display: block;
-    float: left;
-    position: relative;
+        margin: 0;
+
+        border: 0;
+        display: block;
+        float: left;
+        position: relative;
 }
 
 #menu li a {
-    padding-right: 30px;
+        padding-right: 30px;
 }
 
 #menu a {
-    display: block;
+        display: block;
 }
 
 #menu li li {
-    padding: 0;
-    width: 100%;
+        padding: 0;
+        width: 100%;
 }
 
 /* fix the position for 2nd level submenus. first make sure no horizontal scrollbars are visible on initial page load... */
 #menu li li ul {
-    top: 0;
-    left: 0;
+        top: 0;
+        left: 0;
 }
 
 /* ...and then place it where it should be when shown */
 #menu li li:hover ul {
-    left: 100%;
-    z-index: 100;
+        left: 100%;
+        z-index: 100;
 }
 
 /* initialy hide all sub menus */
 #menu li ul {
-    display: none;
-    position: absolute;
-    z-index: 101;
-	width: 130px; /* Customizable*/
+        display: none;
+        position: absolute;
+        z-index: 101;
+        width: 130px; /* Customizable*/
 }
 
 /* display them on hover */
 #menu li:hover>ul {
-    display: block;
-    z-index: 101;
+        display: block;
+        z-index: 101;
 }
 
 /* this is needed if you want to style #menu div - force containment of floated LIs inside of main UL */
 #menuList:after {
-    content: ".";
-    height: 0;
-    display: block;
-    visibility: hidden;
-    overflow: hidden;
-    clear: both;
+        content: ".";
+        height: 0;
+        display: block;
+        visibility: hidden;
+        overflow: hidden;
+        clear: both;
 }
 
 /* Fix for IE5/Mac \*//*/
@@ -134,10 +134,10 @@ a:hover {
 #rightcolumn div#right{float:left;width:250px;margin-left:-250px}
 
 #footer {
-    clear:both;
-    border-top: 1px solid #E3E8EE;
-    padding: 10px 0 30px;
-    font-size:86%;
+        clear:both;
+        border-top: 1px solid #E3E8EE;
+        padding: 10px 0 30px;
+        font-size:86%;
 }
 
 
@@ -147,40 +147,40 @@ a:hover {
 
 /* Use this styles for tables instead of <td nowrap> */
 .nowrap {
-    white-space: nowrap;
+        white-space: nowrap;
 }
 
 
 /* Confirm message that action has occurred successfully */
 .confirm, #confirm
 {
-    color: #000000;
-    background-color: #FFDE39; /* A dark yellow */
+        color: #000000;
+        background-color: #FFDE39; /* A dark yellow */
 }
 
 /* Use for text that is greyed out or dimmed for some reason */
 .dim {
-    color: #666666;
+        color: #666666;
 }
 
 /* Specify certain text that for error messages */
 .error
 {
-    color: red;
+        color: red;
 }
 
 .HighLightText
 {
-    background-color: #669900;
-    color: #ffffff;
+        background-color: #669900;
+        color: #ffffff;
 }
 
 .warning /* Specify certain text that you want people to notice or beware of for example: "Please note that the suggestion box
          is for suggestions about KEWL". */
 {
-    color: #FFA500;
-    font-weight: bold;
-    padding: 2px;
+        color: #FFA500;
+        font-weight: bold;
+        padding: 2px;
 }
 
 /*  This specify the color of the notes or short little descriptive wording, shown on the login page and
@@ -188,48 +188,48 @@ a:hover {
         no translation for most things". */
 .minute
 {
-    font-size: 85%;
-    color: #660033;
+        font-size: 85%;
+        color: #660033;
 }
 
 /* Large Font for Indicating no Records*/
 .noRecordsMessage {
-    font-style: oblique;
-    text-align: center;
-    font-weight: normal;
-    padding-top: 2em;
-    padding-bottom: 2em;
-    font-size: large;
+        font-style: oblique;
+        text-align: center;
+        font-weight: normal;
+        padding-top: 2em;
+        padding-bottom: 2em;
+        font-size: large;
 }
 
 /* Dark Wrapper - for the header*/
 .wrapperDarkBkg {
-    background-color: #336600;
-    padding: 3px;
-    color: #FFFFFF;
+        background-color: #336600;
+        padding: 3px;
+        color: #FFFFFF;
 }
 
 /* Light Wrapper - for the Content*/
 .wrapperLightBkg {
-    background-color: #FFFFFF;
-    padding: 3px;
+        background-color: #FFFFFF;
+        padding: 3px;
 }
 
 /* Odd table rows - for the Content*/
 .sudokuOdd {
-    background-color: #a8a8a8;
-    padding: 3px;
+        background-color: #a8a8a8;
+        padding: 3px;
 }
 
 /* Even table rows - for the Content*/
 .sudokuEven {
-    background-color: #d0d0d0;
-    padding: 3px;
+        background-color: #d0d0d0;
+        padding: 3px;
 }
 
 /* Color of Content in Wrapper*/
 .wrapperLightBkg p {
-    color: black;
+        color: black;
 }
 
 /* CSS From Mollio */
@@ -270,77 +270,77 @@ small {font-size:11px}
 
 /* Tab boxes */
 fieldset.tabbox {
-    border: 1px solid #006600;
-    margin:0;
-    margin-bottom: 10px;
+        border: 1px solid #006600;
+        margin:0;
+        margin-bottom: 10px;
 }
 /* Legend in Tab boxes */
 legend.tabbox {
-    background-color:white;
-    border: 1px solid #006600;
-    color:#000000;
-    font-family:Times, serif;
-    font-weight:bold;
-    padding-left: 5px;
-    padding-right: 5px;
+        background-color:white;
+        border: 1px solid #006600;
+        color:#000000;
+        font-family:Times, serif;
+        font-weight:bold;
+        padding-left: 5px;
+        padding-right: 5px;
 }
 /* Increase padding of lists in tab boxes*/
 fieldset.tabbox ul, fieldset.tabbox ol {
-    margin-left: 0px;
-    padding-left: 15px;
+        margin-left: 0px;
+        padding-left: 15px;
 }
 
 /* Switch menu styles */
 .menutitle{
-    cursor:pointer;
-    margin-bottom: 5px;
+        cursor:pointer;
+        margin-bottom: 5px;
     background-color:#ECECFF;
-    color:#000000;
-    width:98%;
-    padding:2px;
-    text-align:center;
-    font-weight:bold;
-    /*/*/border:1px solid #000000;/* */
+        color:#000000;
+        width:98%;
+        padding:2px;
+        text-align:center;
+        font-weight:bold;
+        /*/*/border:1px solid #000000;/* */
 }
 
 .submenu{
-    margin-bottom: 0.5em;
-    background-color:#FFFFFF;
+        margin-bottom: 0.5em;
+        background-color:#FFFFFF;
 }
 /* End - Switch menu styles */
 
 
 /* This CSS prevents content from flowing into the next line*/
 table.overflowtable {
-	table-layout:fixed;
+        table-layout:fixed;
 }
 table.overflowtable td.overflowcolumn {
-	overflow:hidden;
-	white-space:nowrap;
- } 
- 
- /***********************************************************************************************
+        overflow:hidden;
+        white-space:nowrap;
+} 
+
+/***********************************************************************************************
 *  BEGIN: Styles to use for creating tabbed boxes such as the login one                        *
 ***********************************************************************************************/
 
 fieldset.tabbox {
-	border: 1px solid #626262;
-	margin:0;
-    margin-bottom: 10px;
+        border: 1px solid #626262;
+        margin:0;
+        margin-bottom: 10px;
 }
 legend.tabbox {
-	background-color:white;
-	border: 1px solid #626262;
-	color:#000000;
-	font-family:Times, serif;
-    font-weight:bold;
-    padding-left: 5px;
-    padding-right: 5px;
+        background-color:white;
+        border: 1px solid #626262;
+        color:#000000;
+        font-family:Times, serif;
+        font-weight:bold;
+        padding-left: 5px;
+        padding-right: 5px;
 }
 
 fieldset.tabbox ul {
-    margin-left: 0px;
-    padding-left: 15px;
+        margin-left: 0px;
+        padding-left: 15px;
 }
 
 /******************************************************************************************
@@ -348,38 +348,38 @@ fieldset.tabbox ul {
 ******************************************************************************************/
 
 .newForumContainer {
-    margin: 10px;
-    border: 1px solid black;
+        margin: 10px;
+        border: 1px solid black;
 }
 
 .newForumTopic {
-    background-color: #F2F2F2;
-    padding: 5px;
+        background-color: #F2F2F2;
+        padding: 5px;
 }
 .newForumContent {
-    clear: both;
-    background-color: white;
-    border-top: 1px solid black;
-    padding: 5px;
+        clear: both;
+        background-color: white;
+        border-top: 1px solid black;
+        padding: 5px;
 }
 
 .forumUserPicture {
-    float:left;
+        float:left;
 }
 
 .forumTopicTitle {
-    margin-left: 50px;
+        margin-left: 50px;
 }
 
 .smallText {
-    font-size: 90%;
+        font-size: 90%;
 }
 
 .forumTangentIndent {
-    margin: 10px;
-    padding: 5px;
-    background-color: #ffffcc;
-    border: 1px dotted #800080
+        margin: 10px;
+        padding: 5px;
+        background-color: #ffffcc;
+        border: 1px dotted #800080
 }
 
 
@@ -389,61 +389,61 @@ fieldset.tabbox ul {
 
 
 /* SECONDARY NAVIGATION - vertical navigation */
-	#nav-secondary, #nav-secondary ul {position:static}
-	#nav-secondary, #nav-secondary li {list-style: none;margin:0;padding:0;background:#fff}
-	#nav-secondary {padding-top:0;border-top: 1px solid #ccc;margin-top: 1px}
-	#nav-secondary a {line-height:1.8;padding: 5px 0 5px 23px;background: #fff;font: bold 86% arial;display:block}
-	#nav-secondary a, #nav-secondary a:link, #nav-secondary a:visited, #nav-secondary a:hover, #nav-secondary a:active {text-decoration:none;cursor:pointer;} 
-	#nav-secondary a:link {color:#000} 
-	#nav-secondary a:visited {color:#000} 
-	#nav-secondary a:hover {color:#c00;background: #fee} 
-	#nav-secondary li.active a:link, #nav-secondary li.active a:visited, #nav-secondary li.active a:hover, #nav-secondary li.active a:active {color:#c00} 
-	#nav-secondary li {border-top: 1px solid #fff;border-bottom: 1px solid #ccc}
+#nav-secondary, #nav-secondary ul {position:static}
+#nav-secondary, #nav-secondary li {list-style: none;margin:0;padding:0;background:#fff}
+#nav-secondary {padding-top:0;border-top: 1px solid #ccc;margin-top: 1px}
+#nav-secondary a {line-height:1.8;padding: 5px 0 5px 23px;background: #fff;font: bold 86% arial;display:block}
+#nav-secondary a, #nav-secondary a:link, #nav-secondary a:visited, #nav-secondary a:hover, #nav-secondary a:active {text-decoration:none;cursor:pointer;} 
+#nav-secondary a:link {color:#000} 
+#nav-secondary a:visited {color:#000} 
+#nav-secondary a:hover {color:#c00;background: #fee} 
+#nav-secondary li.active a:link, #nav-secondary li.active a:visited, #nav-secondary li.active a:hover, #nav-secondary li.active a:active {color:#c00} 
+#nav-secondary li {border-top: 1px solid #fff;border-bottom: 1px solid #ccc}
 
 /* SECONDARY NAVIGATION - 2nd TIER */
-	#nav-secondary ul {margin: 0 0 1em 23px;padding:0}
-	#nav-secondary li.active li a, #nav-secondary li.active li a:link, #nav-secondary li.active li a:visited {line-height:1.5;background-color: #fff ;padding:0 0 0 12px;font-weight:normal;width:auto;color:#000;width:130px;display:block}
-	#nav-secondary li.active li a:hover, #nav-secondary li.active li a:active {color: #c00}
-	#nav-secondary li.active li {border: none;margin:0}
-	
-	#nav-secondary li.active li.active a:link, 
-	#nav-secondary li.active li.active a:visited, 
-	#nav-secondary li.active li.active a:hover, 
-	#nav-secondary li.active li.active a:active {font-weight:bold}
+#nav-secondary ul {margin: 0 0 1em 23px;padding:0}
+#nav-secondary li.active li a, #nav-secondary li.active li a:link, #nav-secondary li.active li a:visited {line-height:1.5;background-color: #fff ;padding:0 0 0 12px;font-weight:normal;width:auto;color:#000;width:130px;display:block}
+#nav-secondary li.active li a:hover, #nav-secondary li.active li a:active {color: #c00}
+#nav-secondary li.active li {border: none;margin:0}
+
+#nav-secondary li.active li.active a:link, 
+#nav-secondary li.active li.active a:visited, 
+#nav-secondary li.active li.active a:hover, 
+#nav-secondary li.active li.active a:active {font-weight:bold}
 
 /* SECONDARY NAVIGATION - 3rd TIER */
-	#nav-secondary ul ul {margin: 0 0 1em 13px;padding:0}
-	#nav-secondary li.active li.active li a, #nav-secondary li.active li.active li a:link, #nav-secondary li.active li.active li a:visited {width:117px}
-	#nav-secondary li.active li.active li a:link, 
-	#nav-secondary li.active li.active li a:visited, 
-	#nav-secondary li.active li.active li a:hover, 
-	#nav-secondary li.active li.active li a:active {font-weight:normal}
-	#nav-secondary li.active li.active li.active a:link, 
-	#nav-secondary li.active li.active li.active a:visited, 
-	#nav-secondary li.active li.active li.active a:hover, 
-	#nav-secondary li.active li.active li.active a:active {font-weight:bold}
+#nav-secondary ul ul {margin: 0 0 1em 13px;padding:0}
+#nav-secondary li.active li.active li a, #nav-secondary li.active li.active li a:link, #nav-secondary li.active li.active li a:visited {width:117px}
+#nav-secondary li.active li.active li a:link, 
+#nav-secondary li.active li.active li a:visited, 
+#nav-secondary li.active li.active li a:hover, 
+#nav-secondary li.active li.active li a:active {font-weight:normal}
+#nav-secondary li.active li.active li.active a:link, 
+#nav-secondary li.active li.active li.active a:visited, 
+#nav-secondary li.active li.active li.active a:hover, 
+#nav-secondary li.active li.active li.active a:active {font-weight:bold}
 
 /* SECONDARY NAVIGATION - 4th TIER */
-	#nav-secondary ul ul ul {margin: 0 0 1em 13px;padding:0}
-	#nav-secondary li.active li.active li.active li a, #nav-secondary li.active li.active li.active li a:link, #nav-secondary li.active li.active li.active li a:visited {width:104px}
-	#nav-secondary li.active li.active li.active li a:link, 
-	#nav-secondary li.active li.active li.active li a:visited, 
-	#nav-secondary li.active li.active li.active li a:hover, 
-	#nav-secondary li.active li.active li.active li a:active {font-weight:normal}
-	#nav-secondary li.active li.active li.active li.active a:link, 
-	#nav-secondary li.active li.active li.active li.active a:visited, 
-	#nav-secondary li.active li.active li.active li.active a:hover, 
-	#nav-secondary li.active li.active li.active li.active a:active {font-weight:bold}
+#nav-secondary ul ul ul {margin: 0 0 1em 13px;padding:0}
+#nav-secondary li.active li.active li.active li a, #nav-secondary li.active li.active li.active li a:link, #nav-secondary li.active li.active li.active li a:visited {width:104px}
+#nav-secondary li.active li.active li.active li a:link, 
+#nav-secondary li.active li.active li.active li a:visited, 
+#nav-secondary li.active li.active li.active li a:hover, 
+#nav-secondary li.active li.active li.active li a:active {font-weight:normal}
+#nav-secondary li.active li.active li.active li.active a:link, 
+#nav-secondary li.active li.active li.active li.active a:visited, 
+#nav-secondary li.active li.active li.active li.active a:hover, 
+#nav-secondary li.active li.active li.active li.active a:active {font-weight:bold}
 
 
 #left h3, #left h1 {
-    width: 100%;
-    overflow:hidden;
+        width: 100%;
+        overflow:hidden;
 }
 
 /* Hide the Instant Messenger Iframe */
 #IM {
-    display: none;
+        display: none;
 }
 
 
@@ -454,30 +454,30 @@ fieldset.tabbox ul {
 
 /* Default DOM Tooltip Style */
 div.domTT {
-    border: none;
-    margin: 0em 0em 2em 0em;
-    padding: 0;
+        border: none;
+        margin: 0em 0em 2em 0em;
+        padding: 0;
 }
 div.domTTCaption {
-    background: #000;
-    border: 1px solid #000;
-    border-style: solid solid none solid;
-    color: #FFF;
-    padding: 0em 1em 0em 1em;
-    text-transform: none;
-    text-decoration: none;
-    
-    font-size: 1em;
-    height: 1em;
-    cursor: hand;
+        background: #000;
+        border: 1px solid #000;
+        border-style: solid solid none solid;
+        color: #FFF;
+        padding: 0em 1em 0em 1em;
+        text-transform: none;
+        text-decoration: none;
+
+        font-size: 1em;
+        height: 1em;
+        cursor: hand;
 }
 div.domTTContent {
-     background: transparent;
-    border-collapse: collapse;
-    border: 1px solid #000;
-    padding: 3px;
-    overflow: auto;
-    background: #FFF;
+        background: transparent;
+        border-collapse: collapse;
+        border: 1px solid #000;
+        padding: 3px;
+        overflow: auto;
+        background: #FFF;
 }
 
 
@@ -488,11 +488,11 @@ div.domTTContent {
 
 
 li.sectionfolder {
-    background: transparent url('icons/folder2.gif') no-repeat 0px 1px; 
-    padding-left: 20px;
-    margin-left: 0px;
+        background: transparent url('icons/folder2.gif') no-repeat 0px 1px; 
+        padding-left: 20px;
+        margin-left: 0px;
 }
 
 ul.treefolder ul {
-    margin-bottom: 5px;
+        margin-bottom: 5px;
 }
