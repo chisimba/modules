@@ -40,19 +40,19 @@ jQuery(function() {
     });
     
     // Add borders to the active Title input
-    jQuery("#input_post_title").live("click", function(){
+    jQuery(document).on("click", "#input_post_title", function(){
         jQuery("#input_post_title").css("border","2px dotted red");
     });
-    jQuery("#input_post_title").live("blur", function(){
+    jQuery(document).on("blur", "#input_post_title", function(){
         jQuery("#input_post_title").css("border","none");
     });
-    /*jQuery(".simpleblog_editicon").live("click", function(){
+    /*jQuery(document).on("click", ".simpleblog_editicon", function(){
         id = jQuery(this).attr("id");
         elocation = '#wrapper_'+id;
         jQuery(elocation).load('index.php?module=simpleblog&action=geteditorajax&mode=edit&postid='+id);
         //alert(elocation);
     });*/
-    jQuery(".simpleblog_delicon").live("click", function(){
+    jQuery(document).on("click", ".simpleblog_delicon", function(){
         id = jQuery(this).attr("id");
         var target='index.php?module=simpleblog';
         //alert(id);
@@ -70,7 +70,7 @@ jQuery(function() {
     });
 
     // Show the wall the first time
-    jQuery(".wall_link").live("click", function(){
+    jQuery(document).on("click", ".wall_link", function(){
         id = jQuery(this).attr("id");
         id = id.replace("wall_link_", "");
         wallpoint = '#simpleblog_wall_'+id;
@@ -82,7 +82,7 @@ jQuery(function() {
     });
 
     // Toggle the wall
-    jQuery(".togglewall").live("click", function(){
+    jQuery(document).on("click", ".togglewall", function(){
         id = jQuery(this).attr("id");
         fixedid = id.replace("togglewall_", "");
         wallpoint = '#simpleblog_wall_'+fixedid;

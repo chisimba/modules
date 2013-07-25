@@ -141,11 +141,8 @@ class block_siteblog extends object
                 $userId = $this->getParam('userid', FALSE);
                 if ($userId) {
                     if ($userId == $blogId) {
-                        die("THIS ONE");
                         return $objPostOps->showCurrentPosts($blogId);
-                        
                     } else {
-                        die("THAT ONE");
                         return $objPostOps->getPostsByUser($blogId, $userId);
                     }
                 } else {

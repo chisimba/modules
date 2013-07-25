@@ -68,7 +68,7 @@ $indexes = array(
         'post_type' => array(),
         'post_content' => array(),
         'post_title' => array(),
-        'post_tags' => array,
+        'post_tags' => array(),
      )
 );
 ?>

@@ -313,7 +313,6 @@ class dbsimpleblog extends dbtable
                 $res[] = trim($tag);
             }
         }
-        //var_dump(array_count_values ($res)); die();
         return array_count_values ($res);
     }
     
@@ -436,7 +435,6 @@ class dbsimpleblog extends dbtable
      */
     public function getArchivePosts($blogId)
     {
-        //die($blogId);
         if ($blogId == 'allpublic') {
             $selectItem = NULL;
         } else {

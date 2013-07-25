@@ -289,7 +289,11 @@ class simpleblogops extends object
         if ($page > 1) {
             // There is a previous page
             $prevPage = $page - 1;
-            $nUri = $this->uri(array('page' => $prevPage), 'simpleblog');
+            $nUri = $this->uri(array(
+                'page' => $prevPage,
+                'by' => 'user',
+                'userid' => $userId
+            ), 'simpleblog');
             $prevLink = "<a href='$nUri'>$wordPage $prevPage</a>";
         } else {
             $prevLink = $wordStart;
@@ -518,7 +522,6 @@ class simpleblogops extends object
      */
     public function showTag($blogId, $tag) 
     {
-        //die("---->".$blogId);
         $posts = $this->objDbPosts->getPostsByTag($blogId, $tag, $this->usesWall);
         if (count($posts) > 0) {
             $ret ="";
@@ -695,12 +698,14 @@ class simpleblogops extends object
      */
     public function formatItem($post)
     {
-        // Get an instance of the humanize date class.
+        // Get the humanize date object.
         $objDd = $this->getObject('translatedatedifference', 'utilities');
+        // A div that can be written to by Javascript if required.
         $before = "<div class='simpleblog_post_before'></div>\n";
         $id = $post['id'];
         $blogId = $post['blogid'];
         $bloggerId = $post['userid'];
+        $userImg =  $this->objUser->getSmallUserImage($bloggerId);
         $blogType = $post['post_type'];
         if ($this->checkEditAddDelRights($bloggerId, $blogType)) {
             $edit = $this->builtEditLink($id);
@@ -747,8 +752,6 @@ class simpleblogops extends object
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
         }
-        
-        
         $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
           . $postTitle . "</div><div class='social_buttons'>" . $edel 
           . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
@@ -780,7 +783,7 @@ class simpleblogops extends object
         $poster = $link->show();
         $poster = $this->objLanguage->languageText("mod_simpleblog_postedby",
                 "simpleblog", "Posted by")
-                . " " . $poster;
+                . " " . $userImg . $poster;
 
         
         $postTags = $post['post_tags'];
