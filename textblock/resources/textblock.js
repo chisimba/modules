@@ -24,7 +24,7 @@ jQuery(function() {
     });
     
     // Show the blocks as a drop down, roll up
-    jQuery(document).live("click", '.BLOCK_TITLE', function(){
+    jQuery(document).on("click", '.BLOCK_TITLE', function(){
         id=jQuery(this).attr("id");
         fixedid = id.replace("BLOCK_", "");
         cntid = '#BLCONT_'+fixedid;
