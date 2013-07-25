@@ -42,7 +42,7 @@ jQuery(function() {
         }
     });
 
-    jQuery('#input_plugins').live('change', function() {
+    jQuery(document).on('change', '#input_plugins', function() {
         jQuery('#contextcontent').html('');
         jQuery('#viewcontent').html('');
         var plugin = jQuery('#input_plugins').val();
@@ -58,7 +58,7 @@ jQuery(function() {
         }
     });
 
-    jQuery('#input_option').live('change', function() {
+    jQuery(document).on('change', '#input_option', function() {
         jQuery('#viewcontent').html('');
         var option = jQuery('#input_option').val();
         if (option == 'view')
