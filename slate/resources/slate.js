@@ -26,7 +26,7 @@ jQuery(function() {
     });
     
     // The function for deleting a post
-    jQuery(document).live("click", ".dellink", function(e) {
+    jQuery(document).on("click", ".dellink", function(e) {
         var dId = jQuery(this).attr("id");
         //alert('clicked ' + dId);
         jQuery.ajax({
