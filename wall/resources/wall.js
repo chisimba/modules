@@ -32,7 +32,7 @@ jQuery(function() {
 
     // Function for getting additional wall posts.
     var dataStrBase = "walltype="+wallType+"&page=";
-    jQuery(".wall_posts_more").live("click", function(){
+    jQuery(document).on("click", ".wall_posts_more", function(){
         id=jQuery(this).attr("id");
         fixedid = id.replace("more_posts_", "");
         jQuery("#"+id).html('<img src="skins/_common/icons/loading_bar.gif" alt=""Loading..." />');
@@ -50,7 +50,7 @@ jQuery(function() {
     });
 
     // Function for posting a wall post
-    jQuery(".shareBtn").live("click", function(){
+    jQuery(document).on("click", ".shareBtn", function(){
         id=jQuery(this).attr("id");
         status_text = jQuery("#wallpost_"+id).val();
         if(status_text.length == 0) {
@@ -85,7 +85,7 @@ jQuery(function() {
     });
 
     // The function for deleting a post
-    jQuery(".delpost").live("click", function(){
+    jQuery(document).on("click", ".delpost", function(){
         var commentContainer = jQuery(this).parent();
         id = jQuery(this).attr("id");
         var string = 'id='+ id;
@@ -108,7 +108,7 @@ jQuery(function() {
     //  The javascript for running the comments.
     //
     // Show the post box and submit button
-    jQuery(".wall_comment_button").live("click", function(){
+    jQuery(document).on("click", ".wall_comment_button", function(){
         var element = jQuery(this);
         id = element.attr("id");
         jQuery("#c__"+id).slideToggle(300);
@@ -117,7 +117,7 @@ jQuery(function() {
     });
 
     // Get additional comments via ajax
-    jQuery(".wall_comments_more").live("click", function(){
+    jQuery(document).on("click", ".wall_comments_more", function(){
         id = jQuery(this).attr("id");
         fixedid = id.replace("mrep__", "");
         jQuery.ajax({
@@ -132,7 +132,7 @@ jQuery(function() {
     });
 
     // Delete a comment
-    jQuery(".wall_delcomment").live("click", function(){
+    jQuery(document).on("click", ".wall_delcomment", function(){
         id = jQuery(this).attr("id");
         jQuery.ajax({
             type: "POST",
@@ -149,7 +149,7 @@ jQuery(function() {
     });
 
     // Post the comment
-    jQuery(".comment_submit").live("click", function(){
+    jQuery(document).on("click", ".comment_submit", function(){
         id = jQuery(this).attr("id");
         fixedid = id.replace("cb_", "");
         var comment_text = jQuery("#ct_"+id).val();
