@@ -1,7 +1,7 @@
 /* 
  * Javascript to support registerinterest
  *
- * Written by Derek Keats derek@dkeats.com
+ * Written by Monwabisi Sifumba Monwabisi@thumbzup.com
  * STarted on: November 28, 2012, 8:24 am
  *
  * The following parameters need to be set in the
@@ -53,7 +53,7 @@ jQuery(function() {
         
     
     // Save the interest
-    jQuery("#ri_save_button").live("click", function(e){
+    jQuery(document).on("click", "#ri_save_button", function(e){
         e.preventDefault();
         interests_values = jQuery("#form_frmRegisterList").serialize();
         contact_values = jQuery("#form_edituser").serialize();
@@ -133,7 +133,7 @@ jQuery(function() {
     });
     
     // Send the message
-    jQuery("#ri_savemsg_button").live("click", function(e){
+    jQuery(document).on("click", "#ri_savemsg_button", function(e){
         var noSubject = false;
         //alert("Not ready yet");
         if(jQuery("#input_subject").val().length == 0){
@@ -166,7 +166,7 @@ jQuery(function() {
     
     
     //save intest "TOPICS"
-    jQuery('#btnSaveInterest').live('click',function(e){
+    jQuery(document).on('click', '#btnSaveInterest', function(e){
         e.preventDefault();
         value = jQuery('#form_frmRegisterList').serialize();
         //value = jQuery('#input_txtValue').val();
