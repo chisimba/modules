@@ -58,7 +58,7 @@ class block_forumview extends object {
         $this->forumid = $this->getParam('id');
         //get the forum ID
         $this->forumDetails = $this->objForum->getForum($this->forumid);
-        $this->title = $this->forumDetails['forum_name'];
+        $this->title = '';
     }
 
     /**

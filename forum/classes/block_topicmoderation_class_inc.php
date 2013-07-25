@@ -120,17 +120,17 @@ class block_topicmoderation extends object {
             $deleteForm->addToForm($tangentList);
         }
 
-        $deleteForm->addToForm('<fieldset><legend>' . $this->objLanguage->languageText('mod_forum_deleteoptions', 'forum', 'Delete Options') . '</legend><p><strong>');
+        $deleteForm->addToForm('<fieldset><legend>' . $this->objLanguage->languageText('mod_forum_deleteoptions', 'forum', 'Delete Options') . '</legend><p>');
 
         if (count($tangents) > 0) {
             $deleteForm->addToForm('a) ');
         }
 
-        $deleteForm->addToForm($this->objLanguage->languageText('mod_forum_confirmdeletetopic', 'forum', 'Are you sure you want to delete this topic?') . '</strong> ');
+        $deleteForm->addToForm($this->objLanguage->languageText('mod_forum_confirmdeletetopic', 'forum', 'Are you sure you want to delete this topic?').'<br/>');
 
         $deleteConfirm = new radio('delete');
-        $deleteConfirm->addOption('0', '<strong><span class="error">' . $this->objLanguage->languageText('word_no', 'system', 'No') . '</span></strong>');
-        $deleteConfirm->addOption('1', '<strong><span class="error">' . $this->objLanguage->languageText('word_yes', 'system', 'Yes') . '</span></strong>');
+        $deleteConfirm->addOption('0', $this->objLanguage->languageText('word_no', 'system', 'No'));
+        $deleteConfirm->addOption('1', ''. $this->objLanguage->languageText('word_yes', 'system', 'Yes') . '');
         $deleteConfirm->setBreakSpace(' &nbsp; ');
         $deleteConfirm->setSelected('0');
 

@@ -34,6 +34,18 @@ jQuery(document).ready(function() {
          */
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
+                var body_over_div = jQuery('div>',{
+                        class: 'body-hider',
+                        css:{
+                                position: 'absolute',
+                                top:0,
+                                right:0,
+                                bottom:0,
+                                left:0,
+                                background: '#000'
+                        }
+                });
+                jQuery('body').append(body_over_div);
                 jQuery('a.attachmentLink').show('slow');
                 var current_link = jQuery(this);
                 jQuery(current_link).toggle('fade');
@@ -66,12 +78,13 @@ jQuery(document).ready(function() {
                         text: 'Save',
                         click: function(e) {
                                 e.preventDefault();
+                                jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered" >Please wait..<br/><br/></span></div>');
                                 jQuery(this, 'button.postReplyCancelButton').hide();
                                 attachment_id = jQuery('#hidden_fileselect').val();
                                 message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
                                 jQuery.ajax({
                                         type: 'post',
-                                        url: 'index.php?module=forum&action=savepstreply',
+                                        url: 'index.php?module=forum&action=savepostrepy',
                                         data: {
                                                 message: message_text,
                                                 forum_id: forum_id,
@@ -82,9 +95,8 @@ jQuery(document).ready(function() {
                                                 attachment: attachment_id
                                         },
                                         success: function(data) {
-                                                alert('Post saved!');
-                                                window.location.reload();
-//                                                jQuery.fn.displayConfirmationMessage('Post saved successfuly')
+                                jQuery('span#confirm').hide();
+                                jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
                                         }
                                 })
                         }
@@ -187,9 +199,16 @@ jQuery(document).ready(function() {
          */
         jQuery('a.attachmentLink').click(function(e) {
                 e.preventDefault();
+                jQuery(this).css('class','buttonLink');
                 var attachCancelButton = jQuery('<button>', {
                         text: 'Cancel',
                         class: 'sexybutton',
+                        css:{
+                                'border-bottom': '4px solid #C0C0C0',
+                                background: '#FCFCFC',
+                                padding: '3px',
+                                'box-shadow': '0 0 1px #000'
+                        },
                         click: function(e) {
                                 e.preventDefault();
                                 jQuery('div.attachmentwrapper').val('');

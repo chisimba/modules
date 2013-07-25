@@ -193,7 +193,7 @@ class block_flatview extends object {
 
                 if ($post['status'] == 'CLOSE') {
                         $hardHTML = '<div class="forumTangentIndent">';
-                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) .$this->objLnaguage->languageText('word_on','system') . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
+                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) .$this->objLanguage->languageText('word_on','system') . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
                         $hardHTML .= '<p>' . $post['lockreason'] . '</p>';
                         $hardHTML .= '</div>';
                 }

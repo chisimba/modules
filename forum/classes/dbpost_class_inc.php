@@ -619,7 +619,7 @@ class dbPost extends dbTable {
                                 $deleteLink->link = $moderatePostIcon;
                                 $deleteLink->cssId = $postInfo['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
-                                $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div>";
+                                $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
                                 $dLink = $postEditLink->show() . $deleteConfirm . $deleteLink->show();
                         }
 
@@ -976,8 +976,8 @@ class dbPost extends dbTable {
                          */
                         $attachmentLink = new link("javascript:void(0);");
                         $this->objIcon->setIcon('attachment');
-                        $attachmentLink->cssClass = "attachmentLink";
-                        $attachmentLink->link = $this->objIcon->show();
+                        $attachmentLink->cssClass = "attachmentLink buttonLink";
+                        $attachmentLink->link = 'Add attachment';
 
 //                        $this->loadClass('linkparser', 'htmlelements');
 //                        $randerObject = $this->getObject('linkparser', 'htmlelements');
