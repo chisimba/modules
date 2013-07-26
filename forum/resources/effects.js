@@ -84,7 +84,7 @@ jQuery(document).ready(function() {
                                 message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
                                 jQuery.ajax({
                                         type: 'post',
-                                        url: 'index.php?module=forum&action=savepostrepy',
+                                        url: 'index.php?module=forum&action=savepostreply',
                                         data: {
                                                 message: message_text,
                                                 forum_id: forum_id,
