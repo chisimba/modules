@@ -679,7 +679,7 @@ class dbPost extends dbTable {
                                 }
                         }
                         if ($this->showRatings) {
-                                if ($postInfo['userid'] != $this->objUser->userId()) {
+                                if ($innerPost['userid'] != $this->objUser->userId()) {
                                         $conteiner .= '<span class="ratings" >&nbsp;' . $ratingsDiv . '</span>';
                                 }
                         }

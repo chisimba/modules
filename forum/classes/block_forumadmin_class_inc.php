@@ -293,7 +293,7 @@ class block_forumadmin extends object {
 //                $backToForumListLink->link = $this->objLanguage->languageText('mod_forum_backtoforumindex', 'forum');
                 $adminTable = new htmlTable();
                 $adminTable->startHeaderRow();
-                $adminTable->addCell($createLink->show(),NULL,NULL,'center');
+                $adminTable->addHeaderCell($createLink->show(),NULL,NULL,'center');
                 $adminTable->endHeaderRow();
                 $form->addToForm($adminTable->show());
 
