@@ -110,7 +110,7 @@ jQuery(function() {
     }
 
     // jQuery ajax function to return the add district form.
-    jQuery('#adddistrict').live("click", function() {
+    jQuery(document).on("click", '#adddistrict', function() {
         var pid = jQuery("#input_province").val();
         var mydata = "pid=" + pid;
         jQuery.ajax({
@@ -125,14 +125,14 @@ jQuery(function() {
     });
     
     // jQuery function to cancel the district form.
-    jQuery('#cancel_district').live("click", function() {
+    jQuery(document).on("click", '#cancel_district', function() {
         jQuery("#adddistrictdiv").html(''); 
         jQuery('#districtdiv').toggle();
         return false;
     });
 
     // jQuery function to submit the district form.
-    jQuery('#form_district').live("submit", function() {
+    jQuery(document).on("submit", '#form_district', function() {
         if (!jQuery.trim(jQuery('#input_name').val()))
         {
             alert(no_district);
@@ -147,7 +147,7 @@ jQuery(function() {
     });
 
     // jQuery ajax function to return the edit district form.
-    jQuery('#editdistrict').live("click", function() {
+    jQuery(document).on("click", '#editdistrict', function() {
         var id = jQuery(this).attr('class');
         var mydata = 'id=' + id;
         jQuery.ajax({
@@ -162,7 +162,7 @@ jQuery(function() {
     });
 
     // jQuery ajax function to return the add province form.
-    jQuery('#addprovince').live("click", function() {
+    jQuery(document).on("click", '#addprovince', function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=schools&action=ajaxAddEditProvince",
@@ -174,14 +174,14 @@ jQuery(function() {
     });
 
     // jQuery function to cancel the province form.
-    jQuery('#cancel_province').live("click", function() {
+    jQuery(document).on("click", '#cancel_province', function() {
         jQuery("#addprovincediv").html(''); 
         jQuery('#provincediv').toggle();
         return false;
     });
 
     // jQuery function to submit the province form.
-    jQuery('#form_province').live("submit", function() {
+    jQuery(document).on("submit", '#form_province', function() {
         if (!jQuery.trim(jQuery("#input_name").val()))
         {
             alert(no_province);
@@ -196,7 +196,7 @@ jQuery(function() {
     });
 
     // jQuery ajax function to return the edit district form.
-    jQuery('#editprovince').live("click", function() {
+    jQuery(document).on("click", '#editprovince', function() {
         var id = jQuery(this).attr('class');
         var mydata = 'id=' + id;
         jQuery.ajax({
