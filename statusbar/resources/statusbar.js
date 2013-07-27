@@ -41,7 +41,7 @@ jQuery(function() {
         }, period);
     });
     
-    jQuery('#statusbar_settings').live('click', function() {
+    jQuery(document).on('click', '#statusbar_settings', function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowSettings",
@@ -71,12 +71,12 @@ jQuery(function() {
         });
     });
 
-    jQuery('#statusbar_settings_cancel').live('click', function() {
+    jQuery(document).on('click', '#statusbar_settings_cancel', function() {
         jQuery('#dialog_statusbar_settings').dialog('close');
         return false;
     });
     
-    jQuery('#input_statusbar_orientation').live('change', function() {
+    jQuery(document).on('change', '#input_statusbar_orientation', function() {
         var orientation = jQuery('#input_statusbar_orientation').val();
         jQuery.ajax({
             type: "POST",
@@ -88,7 +88,7 @@ jQuery(function() {
         });
     });
     
-    jQuery('#statusbar_settings_save').live('click', function() {
+    jQuery(document).on('click', '#statusbar_settings_save', function() {
         var orientation = jQuery("#input_statusbar_orientation").val();
         var position = jQuery("#input_statusbar_position").val();
         var alerts = jQuery("#input_statusbar_alert").val();
@@ -118,7 +118,7 @@ jQuery(function() {
         });
     });
     
-    jQuery("#statusbar_display_hide").live('click', function() {
+    jQuery(document).on('click', "#statusbar_display_hide", function() {
         var position = jQuery("#input_statusbar_position").val();
         jQuery.ajax({
             type: "POST",
@@ -140,7 +140,7 @@ jQuery(function() {
         });
     });
 
-    jQuery("#statusbar_display_show").live('click', function() {
+    jQuery(document).on('click', "#statusbar_display_show", function() {
         var orientation = jQuery("#input_statusbar_orientation").val();
         var position = jQuery("#input_statusbar_position").val();
         jQuery.ajax({
@@ -170,15 +170,15 @@ jQuery(function() {
         });
     });
     
-    jQuery(".statusbar_buddies_on").live("click", function() {
+    jQuery(document).on("click", ".statusbar_buddies_on", function() {
         jQuery("#dialog_statusbar_message").dialog("open");
     });
 
-    jQuery("#statusbar_message_cancel").live("click", function() {
+    jQuery(document).on("click", "#statusbar_message_cancel", function() {
         jQuery("#dialog_statusbar_message").dialog("close");
     });
     
-    jQuery("#statusbar_message_send").live("click", function() {
+    jQuery(document).on("click", "#statusbar_message_send", function() {
         var recipient = jQuery("#input_statusbar_to").val();
         var message = jQuery("#input_statusbar_message").val();
         if (recipient == '')
@@ -202,7 +202,7 @@ jQuery(function() {
         });
     });
     
-    jQuery(".statusbar_messaging_on").live("click", function() {
+    jQuery(document).on("click", ".statusbar_messaging_on", function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowMessage",
@@ -216,7 +216,7 @@ jQuery(function() {
         });
     });
 
-    jQuery(".statusbar_alert_on").live("click", function() {
+    jQuery(document).on("click", ".statusbar_alert_on", function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowCalendarAlerts",
@@ -231,12 +231,12 @@ jQuery(function() {
         });
     });
     
-    jQuery(".statusbar_email_on").live("click", function() {
+    jQuery(document).on("click", ".statusbar_email_on", function() {
         var path = jQuery(location).attr('pathname');
         window.location.assign(path + '?module=internalmail');
     });
 
-    jQuery(".statusbar_document_on").live("click", function() {
+    jQuery(document).on("click", ".statusbar_document_on", function() {
         jQuery.ajax({
             type: "POST",
             url: "index.php?module=statusbar&action=ajaxShowContentAlerts",
@@ -251,7 +251,7 @@ jQuery(function() {
         });
     });
     
-    jQuery('[class^="contextcode_"]').live('click', function() {
+    jQuery(document).on('click', '[class^="contextcode_"]', function() {
         var contextcode = jQuery(this).attr('class').replace('contextcode_', '');
         var uri = jQuery(this).html();
         jQuery.ajax({
