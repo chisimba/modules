@@ -18,7 +18,7 @@ jQuery(function() {
     jQuery(document).ready(function() {
         
     });
-    jQuery(".an_vw_msg").live("click", function(e) {
+    jQuery(document).on("click", ".an_vw_msg", function(e) {
         var dId = jQuery(this).attr("id");
         jQuery("#msg_"+dId).slideToggle(700);
         return false;
