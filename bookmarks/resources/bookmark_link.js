@@ -30,22 +30,22 @@ jQuery(function() {
 
     });
     
-    jQuery('#add_bookmark').live('click', function() {
+    jQuery(document).on('click', '#add_bookmark', function() {
         jQuery('#dialog_add_bookmark').dialog('open');
     });
     
-    jQuery('#dialog_add_bookmark').live('dialogopen', function(event, ui) {
+    jQuery(document).on('dialogopen', '#dialog_add_bookmark', function(event, ui) {
         jQuery('#input_bookmark_name').val('');
         jQuery('#input_location').val(bookmark);
         jQuery('#input_visible_location').val(bookmark);
     });
     
-    jQuery('#modal_cancel').live('click', function() {
+    jQuery(document).on('click', '#modal_cancel', function() {
         jQuery('#dialog_add_bookmark').dialog('close');
         return false;
     });
     
-    jQuery('#modal_save').live('click', function() {
+    jQuery(document).on('click', '#modal_save', function() {
         var nameValue = jQuery('#input_bookmark_name').val();
         if (nameValue == '')
         {

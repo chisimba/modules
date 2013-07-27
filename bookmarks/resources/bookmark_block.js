@@ -34,7 +34,7 @@ jQuery(function() {
         });
     });
     
-    jQuery('[class^="block_contextcode_"]').live('click', function() {
+    jQuery(document).on('click', '[class^="block_contextcode_"]', function() {
         var domain = jQuery(location).attr('hostname');
         var path = jQuery(location).attr('pathname');
 

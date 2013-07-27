@@ -104,7 +104,7 @@ jQuery(function() {
         jQuery(this).hide();
     });
 
-    jQuery('[class^="contextcode_"]').live('click', function() {
+    jQuery(document).on('click', '[class^="contextcode_"]', function() {
         var contextcode = jQuery(this).attr('class').replace('contextcode_', '');
         var uri = jQuery(this).html();
         jQuery.ajax({
