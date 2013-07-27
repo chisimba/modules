@@ -4,7 +4,7 @@ jQuery(document).ready(function(){
 	
 	// Listening of a click on a UP or DOWN arrow:
 	
-	jQuery('div.vote span').live('click',function(){
+	jQuery(document).on('click','div.vote span', function(){
 		
 		var elem		= jQuery(this),
 			parent		= elem.parent(),
