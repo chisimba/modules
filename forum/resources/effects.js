@@ -34,14 +34,14 @@ jQuery(document).ready(function() {
          */
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
-                var body_over_div = jQuery('div>',{
+                var body_over_div = jQuery('div>', {
                         class: 'body-hider',
-                        css:{
+                        css: {
                                 position: 'absolute',
-                                top:0,
-                                right:0,
-                                bottom:0,
-                                left:0,
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                left: 0,
                                 background: '#000'
                         }
                 });
@@ -74,7 +74,7 @@ jQuery(document).ready(function() {
 //                });
                 //instantiate the save button
                 var save_button = jQuery('<button>', {
-                        class: 'sexybutton',
+                        class: 'buttonLink sexybutton',
                         text: 'Save',
                         click: function(e) {
                                 e.preventDefault();
@@ -95,8 +95,8 @@ jQuery(document).ready(function() {
                                                 attachment: attachment_id
                                         },
                                         success: function(data) {
-                                jQuery('span#confirm').hide();
-                                jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
+                                                jQuery('span#confirm').hide();
+                                                jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
                                         }
                                 })
                         }
@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
 //                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
                         success: function(data) {
                                 var editor = data;
-                                jQuery('div.clone').append("<div class='postMakerWrapper' >"+data+"</div>");
+                                jQuery('div.clone').append("<div class='postMakerWrapper' >" + data + "</div>");
 //                                jQuery('div.clone').append(data);
                                 jQuery('div.clone').append(save_button);
 //                                jQuery('div.clone').append(cancel_button);
@@ -158,7 +158,6 @@ jQuery(document).ready(function() {
                 var link_id = jQuery(this).attr('id');
                 jQuery('div.deleteconfirm#' + link_id).toggle('fade');
         });
-
         /**
          * ===Display moderation options===
          */
@@ -166,7 +165,6 @@ jQuery(document).ready(function() {
                 e.preventDefault();
                 jQuery('div.hiddenOptions').toggle('fade');
         });
-
         /**
          * ==Confirming post delete===
          */
@@ -193,17 +191,16 @@ jQuery(document).ready(function() {
                 e.preventDefault();
                 window.location.reload();
         });
-
         /**
          * ===Showing the attachment popUp===
          */
         jQuery('a.attachmentLink').click(function(e) {
                 e.preventDefault();
-                jQuery(this).css('class','buttonLink');
+                jQuery(this).css('class', 'buttonLink');
                 var attachCancelButton = jQuery('<button>', {
                         text: 'Cancel',
                         class: 'sexybutton',
-                        css:{
+                        css: {
                                 'border-bottom': '4px solid #C0C0C0',
                                 background: '#FCFCFC',
                                 padding: '3px',
@@ -219,7 +216,6 @@ jQuery(document).ready(function() {
                 jQuery('div.attachmentwrapper').toggle('fade');
                 jQuery('div.attachmentwrapper').append(attachCancelButton);
         });
-
         /**
          * ===Moderating a post===
          */
@@ -243,7 +239,6 @@ jQuery(document).ready(function() {
                 e.preventDefault();
                 jQuery('.hiddenOptions').toggle('fade');
         });
-
         /**
          * ===Canceling post delete===
          */
@@ -252,7 +247,6 @@ jQuery(document).ready(function() {
                 var link_id = jQuery(this).attr('id');
                 jQuery('div.deleteconfirm#' + link_id).toggle('fade');
         });
-
         /**
          * @RATINGS
          */
@@ -281,7 +275,6 @@ jQuery(document).ready(function() {
                         }
                 })
         });
-
         /**
          * Side block
          */
@@ -305,7 +298,6 @@ jQuery(document).ready(function() {
                 jQuery('div.file-preview#' + parentElement_id).toggle('blind');
                 jQuery(this).html(current_text);
         });
-
         /**
          * =======Editing post==========
          */
@@ -317,21 +309,21 @@ jQuery(document).ready(function() {
                 var popUpWrapper = jQuery('<div>', {
                         class: 'popUpWrapper',
                         css: {
-                                padding: '10px 20px 10px 10px',
-                                margin: '195px',
-                                'border-radius': '5px',
-                                background: 'rgba(51,60,99,1)'
+                                'padding': '10px 20px 10px 10px',
+                                'margin': '10% 30%',
+                                'border-radius': '5px'
                         }
                 });
                 //textarea
                 var edit_post_area = jQuery('<span>', {
                         val: post_text
                 });
+                jQuery(this).hide('slow');
 //                var blocktext = jQuery('textarea[blocktext]');
                 //save button
                 var save_button = jQuery('<button>', {
                         text: 'Save',
-                        class: 'sexybutton',
+                        class: 'buttonLink sexybutton',
                         id: post_id,
                         click: function() {
                                 _id = _id.replace('postEditClass ', '');
@@ -360,7 +352,7 @@ jQuery(document).ready(function() {
                 //cancel button
                 var cancel_button = jQuery('<button>', {
                         text: 'Canel',
-                        class: 'sexybutton',
+                        class: 'buttonLink sexybutton',
                         click: function(e) {
                                 e.preventDefault();
 //                jQuery(edit_post_area).val('');

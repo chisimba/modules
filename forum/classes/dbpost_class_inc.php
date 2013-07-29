@@ -449,15 +449,10 @@ class dbPost extends dbTable {
                         } else {
                                 $return .= '<p>';
                         }
-
-                        $editlink = new link($this->uri(array('action' => 'editpost', 'id' => $post['post_id'], 'type' => $this->forumtype)));
-//            $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
-//                        $this->objIcon->setIcon('edit');
-//                        $this->objIcon->align = 'right';
-//                        $editlink->link = $this->objIcon->show();
-//                        $return .= $editlink->show();
                 }
                 if ($this->showModeration) {
+                        $dateDiff = $this->objTranslatedDate->getDifference($post['datelastupdated']);
+//                        if($post['datelastupdated']){
                         $tposteditLink = new link('javascript:void(0)');
                         $this->objIcon->setIcon('edit');
                         $tposteditLink->link = $this->objIcon->show();
@@ -468,6 +463,7 @@ class dbPost extends dbTable {
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
                         $return .= $tposteditLink->show();
+//                        }
                 }
 
                 // Check if the contractible layers should be implemented
@@ -539,26 +535,12 @@ class dbPost extends dbTable {
                                         $files = $this->objPostAttachments->downloadAttachment($attachment['id']);
                                         if (count($files) > 0) {
                                                 $this->objFiles = $this->getObject('dbfile', 'filemanager');
-                                                //$this->objFiles->getFullFilePath($files[0]['id']);
                                                 $attachment_path = $this->objFiles->getFilePath($files[0]['id']);
                                                 $downloadlink = new link($attachment_path);
                                                 $downloadlink->link = $attachment['filename'];
-                                                //$downloadlink->target = '_blank';
                                                 $return .= $this->objFileIcons->getFileIcon($attachment['filename']) . ' ' . $downloadlink->show() . '<br />';
-                                                //header('Content-Disposition: attachment; filename="' . $files[0]['filename'] . '"');
-                                                //readfile($location);
-                                                //--header('Location:'.$location); // Todo - Force Download
                                         }
-
-                                        /*
-                                          $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
-                                          $downloadlink->link = $attachment['filename'];
-                                          //$downloadlink->target = '_blank';
-                                          $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
-                                         */
                                 }
-
-                                //$return .= '</ul>';
                         }
                 }
 
@@ -593,7 +575,7 @@ class dbPost extends dbTable {
                 $innerPosts = $this->getArray($statement);
                 foreach ($innerPosts as $innerPost) {
                         $dLink = "";
-                        $sqlState = "SELECT * FROM tbl_forum_post_text WHERE post_id = '{$innerPost['id']}'";
+//                        $sqlState = "SELECT * FROM tbl_forum_post_text WHERE post_id = '{$innerPost['id']}'";
 //            $postInfo = $this->getArray($sqlState);
                         $postInfo = $this->getPostWithText($innerPost['id']);
                         $return .= "<br/>";
@@ -834,98 +816,6 @@ class dbPost extends dbTable {
 
                                 $addTable->endRow();
 
-                                // ------------------
-//                                if ($forum['attachments'] == 'Y') {
-//                                        $addTable->startRow();
-//
-//                                        /*                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
-//                                          $addTable->addCell($attachmentsLabel->show(), 100);
-//
-//                                          $attachmentIframe = new iframe();
-//                                          $attachmentIframe->width='100%';
-//                                          $attachmentIframe->height='100';
-//                                          $attachmentIframe->frameborder='0';
-//                                          $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id'], 'type'=>$this->forumtype));
-//
-//                                          $addTable->addCell($attachmentIframe->show());
-//                                         */
-//
-//                                        $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum') . ':', 'attachments');
-//                                        $addTable->addCell($attachmentsLabel->show(), 120);
-//
-//                                        $form = new form('saveattachment', $this->uri(array('action' => 'saveattachment')));
-//
-//                                        $objSelectFile = $this->newObject('selectfile', 'filemanager');
-//                                        $objSelectFile->name = 'attachment';
-//                                        $form->addToForm($objSelectFile->show());
-//
-//
-//                                        $hiddenTypeInput = new textinput('discussionType');
-//                                        $hiddenTypeInput->fldType = 'hidden';
-//                                        $hiddenTypeInput->value = $post['type_id'];
-//                                        $form->addToForm($hiddenTypeInput->show());
-//
-//
-//                                        $hiddenTangentInput = new textinput('parent');
-//                                        $hiddenTangentInput->fldType = 'hidden';
-//                                        $hiddenTangentInput->value = $post['post_id'];
-//                                        $form->addToForm($hiddenTangentInput->show());
-//
-//                                        $topicHiddenInput = new textinput('topic');
-//                                        $topicHiddenInput->fldType = 'hidden';
-//                                        $topicHiddenInput->value = $post['topic_id'];
-//                                        $form->addToForm($topicHiddenInput->show());
-//
-//                                        $hiddenForumInput = new textinput('forum');
-//                                        $hiddenForumInput->fldType = 'hidden';
-//                                        $hiddenForumInput->value = $forum['id'];
-//                                        $form->addToForm($hiddenForumInput->show());
-//
-//                                        $hiddenTemporaryId = new textinput('temporaryId');
-//                                        $hiddenTemporaryId->fldType = 'hidden';
-//                                        $hiddenTemporaryId->value = $temporaryId;
-//                                        $form->addToForm($hiddenTemporaryId->show());
-//
-//                                        $addTable->addCell($form->show());
-//                                        $addTable->endRow();
-//                                }
-                                // ------------------------------
-                                // Show Forum Subscriptions if enabled
-//                                if ($forum['subscriptions'] == 'Y') {
-//                                        // Get the number of topics a user is subscribed to
-//                                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
-//
-//                                        // Check whether the user is subscribed to the current topic
-//                                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
-//
-//                                        // Check whether the user is subscribed to the current forum
-//                                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
-//
-//                                        $addTable->startRow();
-//                                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
-//                                        $subscriptionsRadio = new radio('subscriptions');
-//                                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-//                                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-//                                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
-//                                        $subscriptionsRadio->setBreakSpace('<br />');
-//
-//                                        if ($forumSubscription) {
-//                                                $subscriptionsRadio->setSelected('forumsubscribe');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
-//                                        } else if ($topicSubscription) {
-//                                                $subscriptionsRadio->setSelected('topicsubscribe');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
-//                                        } else {
-//                                                $subscriptionsRadio->setSelected('nosubscriptions');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
-//                                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
-//                                        }
-//
-//                                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
-//
-//                                        $addTable->addCell($subscriptionsRadio->show() . $div);
-//                                        $addTable->endRow();
-//                                }
                                 // ------------------------------
 
                                 $addTable->startRow();
@@ -935,23 +825,9 @@ class dbPost extends dbTable {
                                 $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit'));
                                 $submitButton->cssClass = 'save';
                                 $submitButton->extra = ' onclick="SubmitForm()"';
-                                //$submitButton->setToSubmit();
-//                                $showCancel = TRUE;
-//                                if ($showCancel) {
-//                                        $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-//                                        $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->forumtype));
-//                                        $cancelButton->setOnClick("window.location='$returnUrl'");
-//
-//                                        $addTable->addCell($submitButton->show() . ' / ' . $cancelButton->show());
-//                                } else {
-//
-//
-//                                        $addTable->addCell($submitButton->show());
 //                                }
                         }
 
-//                        $addTable->endRow();
-//
 //                        $postReplyForm->addToForm($addTable);
                         // IE is not getting values from hidden textinputs...hence we pass them via session vars
                         $this->setSession('temporaryId', $temporaryId);
@@ -987,25 +863,6 @@ class dbPost extends dbTable {
                         $attachmentObject->cssClass = "popUp";
                         //wrap the atachment object in a div
                         $divAttachmentWrapper = "<div class='attachmentwrapper' > <br/> &nbsp;&nbsp;&nbsp;" . $attachmentObject->show() . "</div>";
-                        //Testing filter
-                        // The Regular Expression filter
-//                        $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-// The Text you want to filter for urls
-//                        $text = "http://www.google.com";
-// Check if there is a url in the text
-//                        if (preg_match($reg_exUrl, $text, $url)) {
-//
-//                                // make the urls hyper links
-////                                echo preg_replace($reg_exUrl, "<a href=".$url[0]." target='blank' >{$url[0]}</a> ", $text);
-//                        } else {
-//
-//                                // if no urls in the text just return the text
-//                                echo $text;
-//                        }
-                        //End of filter
-//            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
-//            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
-
                         $return .= '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div  ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong><span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
                         //add the attachment link if attachments are enabled in the forum
                         if ($forum['attachments'] == 'Y') {
@@ -1045,7 +902,6 @@ class dbPost extends dbTable {
                         // Add a full stop for courtesy
                         $return .= '. ';
                 } else {
-//                        $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum') . ' <strong>' . $this->objLanguageCode->getLanguage($post['language']) . ' (' . strtoupper($post['language']) . ')</strong>. ';
                 }
 
                 if ($this->forumLocked == FALSE) {
@@ -1066,44 +922,6 @@ class dbPost extends dbTable {
                 // Load scriptaclous since we can no longer guarantee it is there
                 $scriptaculous = $this->getObject('scriptaculous', 'prototype');
                 $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
-
-                // Show Forum Subscriptions if enabled
-//                if ($forum['subscriptions'] == 'Y') {
-//                        // Get the number of topics a user is subscribed to
-//                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
-//
-//                        // Check whether the user is subscribed to the current topic
-//                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
-//
-//                        // Check whether the user is subscribed to the current forum
-//                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
-//
-//                        $addTable->startRow();
-//                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
-//                        $subscriptionsRadio = new radio('subscriptions');
-//                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-//                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-//                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
-//                        $subscriptionsRadio->setBreakSpace('<br />');
-//
-//                        if ($forumSubscription) {
-//                                $subscriptionsRadio->setSelected('forumsubscribe');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
-//                        } else if ($topicSubscription) {
-//                                $subscriptionsRadio->setSelected('topicsubscribe');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
-//                        } else {
-//                                $subscriptionsRadio->setSelected('nosubscriptions');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
-//                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
-//                        }
-//
-//                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
-//
-//                        $addTable->addCell($subscriptionsRadio->show() . $div);
-//                        $addTable->endRow();
-////                        $return .= $subscribeMessage . '<br/>';
-//                }
                 // Load JavaScript Function
                 $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
                 return $return . $this->getjavascriptFile('effects.js', 'forum');

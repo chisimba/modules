@@ -274,9 +274,6 @@ class block_forumview extends object {
                     $sticky = '';
                 }
 
-
-                //
-//                                $divContent .= '<br/>' . $topic['replies'];\
                 $rpls = "";
                 if ($topic['replies'] > 1 || $topic['replies'] == 0) {
                     $rpls = $this->objLanguage->languageText('word_replies', 'system');
@@ -285,8 +282,6 @@ class block_forumview extends object {
                 }
                 $tblTopic->addCell("<span class='numberindicator' >{$topic['replies']}</span><br/><label class='menu' >{$rpls}</label>", 90, 'center', 'center');
 
-                //
-//                                $divContent .= '<br/>' . $topic['views'];
                 $vws = "";
                 if ($topic['views'] > 1 || $topic['views'] == 0) {
                     $vws = $this->objLanguage->languageText('word_views', 'system');
@@ -316,7 +311,7 @@ class block_forumview extends object {
                     if (strpos($datefield, 'minutes') != FALSE) {
                         $this->objIcon->setIcon('clock');
                     }
-                    $tblTopic->addCell($this->objIcon->show().' '. $datefield . '<br />' . $this->objLanguage->languageText('word_by','system').' '.$topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show(), 90, 'center', 'left', 'smallText');
+                    $tblTopic->addCell($this->objIcon->show().' '. $datefield . '<br />' . $this->objLanguage->languageText('word_by','system').' '.$topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show(), 120, 'center', 'left', 'smallText');
                 } else {
                     //
                     $divContent .= '<br/>' . $datefield . '<br />' . $topic['lastfirstname'] . ' ' . $topic['lastsurname'] . $lastPostLink->show();
@@ -354,18 +349,8 @@ class block_forumview extends object {
                             //
                             $divContent .= '<br/>' . $tangent['username'];
                         }
-                        //
-//                        $divContent .= '<br/>'.$tangent['replies'].'<br/>';
-//                        $divContent .= '<br/>'.$tangent['views'].'<br/>';
-
                         $tblTopic->addCell($tangent['replies'], Null, 'center', 'center');
                         $tblTopic->addCell($tangent['views'], Null, 'center', 'center');
-
-                        // if (formatDate($tangent['lastdate']) == date('j F Y')) {
-                        // $datefield = $this->objLanguage->languageText('mod_forum_todayat').' '.formatTime($tangent['lastdate']);
-                        // } else {
-                        // $datefield = formatDate($tangent['lastdate']).' - '.formatTime($tangent['lastdate']);
-                        // }
 
                         $datefield = $objTranslatedDate->getDifference($tangent['lastdate']);
 
