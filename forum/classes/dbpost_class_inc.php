@@ -92,46 +92,33 @@ class dbPost extends dbTable {
                 parent::init('tbl_forum_post');
                 $this->objUserPic = $this->getObject('imageupload', 'useradmin');
                 $this->objSkin = $this->getObject('skin', 'skin');
+                $this->objTrimStrings = $this->getObject('trimstr','strings');
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
                 $this->dbPostratings = $this->getObject('dbpost_ratings', 'forum');
-
                 $this->objForum = $this->getObject('dbforum');
                 $this->objPostAttachments = $this->getObject('dbpostattachments');
                 $this->objPostText = $this->getObject('dbposttext');
-
                 $this->objUser = $this->getObject('user', 'security');
-
                 $this->userId = $this->objUser->userId();
-
                 $this->objDateFunctions = $this->getObject('dateandtime', 'utilities');
                 $this->objLanguageCode = $this->getObject('languagecode', 'language');
                 $this->objLanguage = $this->getObject('language', 'language');
-
                 // Load Forum Subscription classes
                 $this->objForumSubscriptions = $this->getObject('dbforumsubscriptions');
                 $this->objTopicSubscriptions = $this->getObject('dbtopicsubscriptions');
-
                 $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
                 $this->objDateTime = $this->getObject('dateandtime', 'utilities');
-
                 // Get Context Code Settings
                 $this->contextObject = $this->getObject('dbcontext', 'context');
                 $this->contextCode = $this->contextObject->getContextCode();
-
                 $this->objWashoutFilters = $this->getObject('washout', 'utilities');
-
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
-
                 $this->loadClass('link', 'htmlelements');
-
                 $this->objScriptClear = $this->getObject('script', 'utilities');
-
                 $this->showModeration = FALSE;
-
                 $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-
                 $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
 
                 if ($this->showFullName == '') {
@@ -479,7 +466,7 @@ class dbPost extends dbTable {
 
                 if ($this->showFullName) {
                         // Start of the Title Area
-                        $return .= '<div>' . $dateSpan . '<span class="strong">' . stripslashes($post['post_title']) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
+                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'],65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
                 } else {
                         // Start of the Title Area
                         $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
@@ -629,7 +616,7 @@ class dbPost extends dbTable {
                         $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
                         $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                         //get parent info
-                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $postInfo['post_title'] . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
+                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'],65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
                 <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
 //                                $return .= $conteiner;
                         //get inner post details

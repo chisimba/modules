@@ -2434,6 +2434,10 @@ class forum extends controller {
                         $new_text = $this->getParam('new_text');
                         $postDetails = $this->objPost->getPostWithText($_id);
                         $this->objPostText->updatePostText($postDetails['post_id'], $postDetails['post_title'], $new_text);
+                        $objMessage = $this->getObject('timeoutmessage','htmlelements');
+                        $objMessage->setMessage(substr($this->objLanguage->languageText('mod_forum_postsaved','forum'),0,25));
+                        $objMessage->setTimeOut(250);
+                        echo $objMessage->show();
                         die();
                 } else {
                         die();

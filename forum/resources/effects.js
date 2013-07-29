@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
          */
         jQuery.fn.displayConfirmationMessage = function(message) {
                 if (message != '') {
-                        jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >' + message + '</span>');
+                        jQuery('div#Canvas_Content_Body_Region2').append('<span class=\'jqGenerated\'  id=\'confirm\' >' + message + '<a class="floatingClose" ></a></span>');
                 } else {
                         message = "Success";
                 }
@@ -34,6 +34,7 @@ jQuery(document).ready(function() {
          */
         jQuery('.postReplyLink').click(function(e) {
                 e.preventDefault();
+                jQuery('.postEditClass').hide();
                 var body_over_div = jQuery('div>', {
                         class: 'body-hider',
                         css: {
@@ -97,6 +98,7 @@ jQuery(document).ready(function() {
                                         success: function(data) {
                                                 jQuery('span#confirm').hide();
                                                 jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
+                                                jQuery('.postEditClass').show();
                                         }
                                 })
                         }
@@ -301,16 +303,17 @@ jQuery(document).ready(function() {
         /**
          * =======Editing post==========
          */
-        jQuery('.postEditClass').live('click', function() {
+        jQuery('.postEditClass').on('click', function() {
                 var post_id = jQuery(this).attr('id');
                 var _id = jQuery(this).attr('class');
                 var post_text = jQuery('div.postText#' + post_id).html();
+                jQuery('.postReplyLink').hide();
                 //wrapper div
                 var popUpWrapper = jQuery('<div>', {
                         class: 'popUpWrapper',
                         css: {
                                 'padding': '10px 20px 10px 10px',
-                                'margin': '10% 30%',
+                                'margin': '8% 30%',
                                 'border-radius': '5px'
                         }
                 });
@@ -338,13 +341,16 @@ jQuery(document).ready(function() {
                                                 post_id: post_id,
                                                 new_text: new_value
                                         },
-                                        success: function() {
+                                        success: function(data) {
+                                                jQuery('.postReplyLink').show();
+//                                                jQuery.fn.displayConfirmationMessage(data);
                                                 jQuery('div.postText#' + post_id).html(new_value);
                                                 jQuery(popUpWrapper).empty();
                                                 jQuery('.popUpWrapper').remove();
+                                                jQuery('#Canvas_Content_Body_Region2').append(data);
                                                 jQuery('body').remove(popUpWrapper);
 //                                                CKEDITOR.instances.blocktext.destroy();
-                                                jQuery.fn.displayConfirmationMessage();
+//                                                jQuery.fn.displayConfirmationMessage();
                                         }
                                 });
                         }
@@ -369,7 +375,7 @@ jQuery(document).ready(function() {
                 new_text = jQuery(edit_post_area).val();
                 //Get and return the editor
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=showeditpostpopup'/*&_id=' + _id + '&post_id=' + post_id + '&new_text=' + jQuery(edit_post_area).val()*/,
+                        url: 'index.php?module=forum&action=showeditpostpopup',
                         type: 'post',
                         data: {
                                 _id: _id,
@@ -379,7 +385,6 @@ jQuery(document).ready(function() {
                         success: function(data) {
 //                                jQuery('.postText#' + post_id).html(jQuery(edit_post_area).val());
 //                                jQuery('.popUpWrapper').remove();
-//                                                jQuery.fn.displayConfirmationMessage();
                                 var editor = data;
                                 jQuery(popUpWrapper).append(editor);
                                 jQuery(popUpWrapper).append(save_button);
