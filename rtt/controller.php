@@ -148,6 +148,7 @@ class rtt extends controller {
     }
 
     function __runjnlp() {
+        $this->objRttUtil->writeVideoAppJNLP();
         return $this->objRttUtil->runJNLP();
     }
 

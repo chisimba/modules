@@ -71,7 +71,7 @@ class rttutil extends object {
             $userpart = $userpartArray['rtt_username'];
         }
 
-       
+
         $this->objContext = $this->getObject('dbcontext', 'context');
         if ($this->objContext->isInContext()) {
 
@@ -88,11 +88,11 @@ class rttutil extends object {
         $moduleUri = $objAltConfig->getModuleURI();
         $siteRoot = $objAltConfig->getSiteRoot();
         $codebase = $siteRoot . "/" . $moduleUri . '/rtt/resources/';
-        $admin ="true";//// $this->objUser->isLecturer() ? 'true' : 'false';
-        $userId = $this->genRandomString();
+        $admin = "true"; //// $this->objUser->isLecturer() ? 'true' : 'false';
+        $userId = $this->objUser->userid();
         $password = $this->genRandomString();
-        $user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
-        $this->objDbRttUser->saveRttUser($user);
+        //$user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
+        //$this->objDbRttUser->saveRttUser($user);
 
         $properties = array(
             //array("jnlp_key" => "-params_baseurl", "jnlp_value" => $paramsBaseUrl,"userid"=>$userId,"createdon"=>strftime('%Y-%m-%d %H:%M:%S', mktime())),
@@ -285,6 +285,118 @@ class rttutil extends object {
         $fp = fopen('php://output', 'w');
         fwrite($fp, $content);
         fclose($fp);
+    }
+
+    function generateVideoAppJnlp(
+    $codebase, $title, $vendor, $description, $homePageRef, $iconPath, $jnlpPath, $osName, $osArch) {
+
+
+        $content =
+                "<jnlp spec=\"1.0+\" codebase=\"" . $codebase . "\">\n"
+                . "    <information>\n"
+                . "        <title>" . $title . "</title>\n"
+                . "        <vendor>" . $vendor . "</vendor>\n"
+                . "        <description>" . $description . "</description>\n"
+                . "        <homepage href=\"" . $homePageRef . "\"/>\n"
+                . "        <description kind=\"short\">rtt</description>\n"
+                . "        <icon href=\"" . $iconPath . "\"/>\n"
+                . "        <icon kind=\"splash\" href=\"" . $iconPath . "\"/>\n"
+                . "        <offline-allowed/>\n"
+                . "    </information>\n";
+
+
+
+
+
+        $content .= "<resources>\n";
+         $objAltConfig = $this->getObject('altconfig', 'config');
+
+        $jnlpPath = $objAltConfig->getModulePath() . '/rtt/resources/video';
+
+        if (is_dir($jnlpPath)) {
+            if ($dh = opendir($jnlpPath)) {
+                while (($file = readdir($dh)) !== false) {
+                    $path_info = pathinfo($jnlpPath . '/' . $file);
+                    if (array_key_exists('extension', $path_info)) {
+                        $ext = $path_info['extension'];
+                        $startsWith = substr($file, 0, 19);
+                        if ($ext == 'jar' && $startsWith != 'xuggle-xuggler-arch') {
+                            $content .= "<jar href=\"" . $file . "\" />\n";
+                        }
+                    }
+                }
+                closedir($dh);
+            }
+        }
+
+        if ("Windows" == $osName && "x86" == $osArch) {
+            $content .= " <jar href=\"xuggle-xuggler-arch-i686-w64-mingw32.jar\"/>\n";
+        }
+        if ("Windows" == $osName && "amd64" == $osArch) {
+            $content .= "  <jar href=\"xuggle-xuggler-arch-x86_64-w64-mingw32.jar\"/>\n";
+        }
+        if ("Linux" == $osName && "i386" == $osArch) {
+            $content .= "  <jar href=\"xuggle-xuggler-arch-i686-pc-linux-gnu.jar\"/>\n";
+        }
+
+        if ("Linux" == $osName && "amd64" == $osArch) {
+            $content .= "  <jar href=\"xuggle-xuggler-arch-x86_64-pc-linux-gnu.jar\"/>\n";
+        }
+        if ("Mac OS X" == $osName && "x86_64" == $osArch) {
+            $content .= "  <jar href=\"xuggle-xuggler-arch-x86_64-xuggle-darwin11.jar\"/>\n";
+        }
+        if ("Mac OS X" == $osName && "i386 x86" == $osArch) {
+            $content .= "  <jar href=\"xuggle-xuggler-arch-i386-xuggle-darwin11.jar\"/>\n";
+        }
+
+        $userId = $this->objUser->userid();
+        $loggedInPassword="pwd";
+        $content .= "</resources>\n";
+        $content .= "   <application-desc    main-class=\"org.rtt.video.core.RttVideo\">\n" .
+                "<argument>" . $userId . "</argument>\n" .
+                "<argument>" . $loggedInPassword . "</argument>\n" .
+                "    </application-desc>\n" .
+                "    <security>\n" .
+                "        <all-permissions/>\n" .
+                "    </security>\n" .
+                "</jnlp>\n";
+       
+
+        return $content;
+    }
+
+    function writeVideoAppJNLP() {
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $title = $objSysConfig->getValue('TITLE', 'rtt');
+        $vendor = $objSysConfig->getValue('VENDOR', 'rtt');
+        $description = $objSysConfig->getValue('DESCRIPTION', 'rtt');
+        $homePageRef = $objSysConfig->getValue('HOMEPAGE', 'rtt');
+        $jnlpPath = $objSysConfig->getValue('JNLP_PATH', 'rtt');
+        $objAltConfig = $this->getObject('altconfig', 'config');
+        $modPath = $objAltConfig->getModulePath();
+        $moduleUri = $objAltConfig->getModuleURI();
+        $siteRoot = $objAltConfig->getSiteRoot();
+        $codebase = $siteRoot . "/" . $moduleUri . '/rtt/resources/video';
+        $path = $modPath . '/rtt/resources/jnlp';
+
+        $iconPath = $codebase . 'images/splash_rtt.png';
+        $oses = array(
+            array("name" => "Windows", "arch" => "x86", "id" => "win32"),
+            array("name" => "Windows", "arch" => "amd64", "id" => "win64"),
+            array("name" => "Linux", "arch" => "i386", "id" => "linux32"),
+            array("name" => "Linux", "arch" => "amd64", "id" => "linux64"),
+            array("name" => "Mac OS X", "arch" => "i386 x86", "id" => "mac32"),
+            array("name" => "Mac OS X", "arch" => "x86_64", "id" => "mac64")
+        );
+        foreach ($oses as $os) {
+
+            $jnlpContent = $this->generateVideoAppJnlp(
+                    $codebase, $title, $vendor, $description, $homePageRef, $iconPath, $jnlpPath, $os['name'], $os['arch']);
+
+            $userId = $this->objUser->userid();
+            $file = $path . '/' . $userId . '_' . $os['id'] . '_video.jnlp';
+            file_put_contents($file, $jnlpContent);
+        }
     }
 
 }
