@@ -269,7 +269,7 @@ class block_flatview extends object {
                         $htmlTable->addHeaderCell($newtopiclink->show(), NULL, NULL, "center");
                 }
                 $noAlerts = new radio('subscription');
-                $noAlerts->addOption('nosubscription', 'Do not notify me');
+                $noAlerts->addOption('nosubscription', $this->objLanguage->languageText('phrase_nosubscription','forum'));
 //                $noAlerts->setvalue('nosubscription');
                 /**
                  * @test
@@ -278,10 +278,10 @@ class block_flatview extends object {
                  * @testEnd
                  */
                 $notifyThread = new radio('subscription');
-                $notifyThread->addOption('subscribetopic', '&nbsp; Notify me of this topic');
+                $notifyThread->addOption('subscribetopic', '&nbsp;'.$this->objLanguage->languageText('phrase_notifyme','forum'));
 //                $notifyThead->setValue("subscribetopic");
                 $notifyAll = new radio('subscription');
-                $notifyAll->addOption('subscribetoall', '&nbsp; Notify me of all topics and replies in this forum');
+                $notifyAll->addOption('subscribetoall', '&nbsp;'.$this->objLanguage->languageText('phrase_notifyall','forum'));
                 $this->objIcon->title = $this->objLanguage->languageText('phrase_nitification','system');
                 /**
                  * if user is subscribed to forum, indicate

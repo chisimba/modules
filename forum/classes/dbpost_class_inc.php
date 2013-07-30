@@ -92,7 +92,7 @@ class dbPost extends dbTable {
                 parent::init('tbl_forum_post');
                 $this->objUserPic = $this->getObject('imageupload', 'useradmin');
                 $this->objSkin = $this->getObject('skin', 'skin');
-                $this->objTrimStrings = $this->getObject('trimstr','strings');
+                $this->objTrimStrings = $this->getObject('trimstr', 'strings');
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
@@ -449,8 +449,9 @@ class dbPost extends dbTable {
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                        $return .= $tposteditLink->show();
-//                        }
+                        if ($this->objUser->userId() == $post['userid']) {
+                                $return .= $tposteditLink->show();
+                        }
                 }
 
                 // Check if the contractible layers should be implemented
@@ -466,7 +467,7 @@ class dbPost extends dbTable {
 
                 if ($this->showFullName) {
                         // Start of the Title Area
-                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'],65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
+                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
                 } else {
                         // Start of the Title Area
                         $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
@@ -567,9 +568,9 @@ class dbPost extends dbTable {
                         $postInfo = $this->getPostWithText($innerPost['id']);
                         $return .= "<br/>";
                         //wrapper   
-                        if ($this->showModeration) {
-                                $deleteLink = new link('#'/* $this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id'])) */);
+                        if ($this->showModeration || $this->objUser->userId() == $innerPost['userid'] || $this->objUser->isCourseAdmin()) {
 //            $deleteLink->link = ;
+//                                if($this->objUser->isCourseAdmin()){echo "is";}
                                 $confimLink = new link('#');
                                 $confimLink->link = $this->objLanguage->languageText('word_yes', 'system');
                                 $confimLink->cssId = $postInfo['post_id'];
@@ -583,13 +584,21 @@ class dbPost extends dbTable {
                                 $postEditLink = new link('javascript:void(0)');
                                 $this->objIcon->setIcon('edit');
                                 $postEditLink->link = $this->objIcon->show();
+                                $postEditLink->title = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
                                 $postEditLink->cssClass = "postEditClass {$postInfo['post_id']}";
                                 $postEditLink->cssId = $postInfo['post_id'];
+                                $deleteLink = new link('#'/* $this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id'])) */);
                                 $deleteLink->link = $moderatePostIcon;
+                                $deleteLink->title = $this->objLanguage->languageText('phrase_delete_post', 'forum');
                                 $deleteLink->cssId = $postInfo['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
+                                if ($this->objUser->userId() == $innerPost['userid'] || $this->objUser->isContextAuthor()) {
+                                        $dLink .= $postEditLink->show();
+                                }
                                 $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
-                                $dLink = $postEditLink->show() . $deleteConfirm . $deleteLink->show();
+                                if ($this->objUser->isCourseAdmin($this->contextCode)  || $this->objUser->isContextAuthor()) {
+                                        $dLink .= $deleteConfirm . $deleteLink->show();
+                                }
                         }
 
                         //new ratings object 
@@ -616,7 +625,7 @@ class dbPost extends dbTable {
                         $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
                         $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                         //get parent info
-                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'],65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
+                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
                 <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
 //                                $return .= $conteiner;
                         //get inner post details
@@ -889,6 +898,7 @@ class dbPost extends dbTable {
                         // Add a full stop for courtesy
                         $return .= '. ';
                 } else {
+                        
                 }
 
                 if ($this->forumLocked == FALSE) {
