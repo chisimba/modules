@@ -395,7 +395,7 @@ jQuery(document).ready(function() {
         /**
          * ===Trying to inform the user as to which file is selecteded===
          */
-        jQuery('#input_selectfile_fileselect').live('change', function() {
-                alert(this).val();
+        jQuery('input#hidden_fileselect').on('change', function() {
+                
         });
 });

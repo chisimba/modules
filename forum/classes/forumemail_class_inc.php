@@ -7,20 +7,15 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 //require_once('attachmentreader_class_inc.php');
 
-define('EMAIL_HOST', 'imap.gmail.com');
-define('EMAIL_POST', '993');
+define('EMAIL_HOST', '');
+define('EMAIL_PORT', '');
 
 // See: http://www.php.net/manual/en/function.imap-open.php -> Optional flags for names
-define('EMAIL_OPTIONS', 'imap/ssl');
+define('EMAIL_OPTIONS', '');
 
-
-define('EMAIL_LOGIN', 'forum@thumbzup.com');
-define('EMAIL_PASSWORD', '4RuMfOr7hUm8zUp');
-
-//This will be the [domain] part of the @ in [catchall]@[domain]
-// forum_topic_2@chisimba.tohir.co.za
-define('CATCH_ALL_BASE', 'chisimba.tohir.co.za');
-
+define('EMAIL_LOGIN', '');
+define('EMAIL_PASSWORD', '');
+define(CATCH_ALL_BASE, 'chisimba.tohir.co.za');
 /**
  * Forum Email Class
  *
@@ -54,91 +49,98 @@ class forumemail extends object {
         var $objPostText;
         var $dbForum;
         var $objUserContext;
+        var $DbConfig;
 
         /**
          * Constructor
          */
         function init() {
+                $this->loadClass('attachmentreader', 'mail');
+                $this->objDbConfig = $this->getObject('dbsysconfig', 'sysconfig');
                 $this->dbPost = $this->getObject('dbpost', 'forum');
                 $this->dbTopic = $this->getObject('dbtopic', 'forum');
                 $this->objUser = $this->getObject('user', 'security');
                 $this->objPostText = & $this->getObject('dbposttext');
                 $this->dbForum = & $this->getObject('dbforum');
-                $this->objUserContext = $this->getObject('usercontext','context');
+                $this->objUserContext = $this->getObject('usercontext', 'context');
                 $this->contextGroups = & $this->getObject('managegroups', 'contextgroups');
                 $this->objLanguage = & $this->getObject('language', 'language');
+                //get the config parameters
+                $emailHost = $this->objDbConfig->getValue('forum_mail_host','forum');
+                $emailPort = $this->objDbConfig->getValue('forum_email_port','forum');
+                $emailOptions = $this->objDbConfig->getValue('forum_email_options','forum');
+                $emailUserName = $this->objDbConfig->getValue('forum_inbox_username','forum');
+                $emailPassword = $this->objDbConfig->getValue('forum_inbox_password','forum');
 
                 /**
                  * @TESTING
                  */
+                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, CATCH_ALL_BASE);
+//
+                $numMessages = $this->emailBox->getNumMessages();
 
-//                $this->loadClass('attachmentreader', 'mail');
-//                $this->emailBox = new AttachmentReader(EMAIL_HOST, EMAIL_POST, EMAIL_OPTIONS, EMAIL_LOGIN, EMAIL_PASSWORD, CATCH_ALL_BASE);
-////
-//                $numMessages = $this->emailBox->getNumMessages();
-//
-//                if ($numMessages > 0) {
-//                        for ($emailNum = 1; $emailNum <= $numMessages; $emailNum++) {
-//
-//                                // Retrieve Basic Details of Email From the Headers
-//                                $emailDetails = $this->emailBox->getEmailDetails($emailNum);
-//
-//                                $split = explode('-', $emailDetails['subject']);
-//                                //get the topic ID
-//                                $topic_id = 'gen' . $split[1];
-//                                //get the topic details
-//                                $topicDetails = $this->dbTopic->getTopicDetails($topic_id);
-//                                //get the post details
-//                                $postDetails = $this->dbPost->getPostWithText($topicDetails['first_post']);
-//                                if ($topicDetails == TRUE) {
-//                                        $post_parent = $topicDetails['first_post'];
-//                                        $forum_id = $topicDetails['forum_id'];
-//                                        //get the forum object
-//                                        $objForum = $this->getObject('dbforum','forum');
-//                                        $forumDetails = $objForum->getForum($forum_id);
-//                                        $post_title = $topicDetails['post_title'];
-//                                        //
-//                                        $partialMessage = explode('\n', $emailDetails['messageBody']);
-//                                        echo "<pre>";
-//                                        var_dump($partialMessage);
-//                                        echo "<pre/>";
-//                                        echo "<br/>";
-//                                        $theOtherOne = $partialMessage[0];
-//                                        $post_text = $emailDetails['messageBody'];
-//                                        $language = $postDetails['language'];
-//                                        $userDetails = $this->objUser->getRow('emailaddress', $emailDetails['sender']);
-//                                        //check if the user is a member of the site
-//                                        if ($userDetails) {
-//                                                $userID = $userDetails['userid'];
-//                                                $level = $postDetails['level'];
-//                                                echo "<pre>";
-////                                                print_r($emailDetails);
-//                                                echo "</pre>";
-////                                                if ($this->objUserContext->isContextMember($this->objUser->userId(), $forumDetails['contextcode'])) {
-////                                                        $post_id = $this->dbPost->insertSingle($post_parent, 0, $forum_id, $topic_id, $userID, $level);
-////                                                        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $post_parent, $userID);
-////                                                        $this->dbTopic->updateLastPost($topic_id, $post_id);
-////                                                        $this->dbForum->updateLastPost($forum_id, $post_id);
-////                                                        $this->emailBox->deleteEmail($emailNum);
-////                                                }
-//                                        }
-//                                } else {
-//                                        echo "<h1>{$this->objLanguage->languageText('mod_forum_topicdoesnotexist','forum')}</h1>";
-//                                }
+                if ($numMessages > 0) {
+                        for ($emailNum = 1; $emailNum <= $numMessages; $emailNum++) {
+
+                                // Retrieve Basic Details of Email From the Headers
+                                $emailDetails = $this->emailBox->getEmailDetails($emailNum);
+
+                                $split = explode('-', $emailDetails['subject']);
+                                //get the topic ID
+                                $topic_id = 'gen' . $split[1];
+                                //get the topic details
+                                $topicDetails = $this->dbTopic->getTopicDetails($topic_id);
+                                //get the post details
+                                $postDetails = $this->dbPost->getPostWithText($topicDetails['first_post']);
+                                if ($topicDetails == TRUE) {
+                                        $post_parent = $topicDetails['first_post'];
+                                        $forum_id = $topicDetails['forum_id'];
+                                        //get the forum object
+                                        $objForum = $this->getObject('dbforum', 'forum');
+                                        $forumDetails = $objForum->getForum($forum_id);
+                                        $post_title = $topicDetails['post_title'];
+                                        //
+                                        $partialMessage = explode('\n', $emailDetails['messageBody']);
+                                        echo "<pre>";
+                                        var_dump($partialMessage);
+                                        echo "<pre/>";
+                                        echo "<br/>";
+                                        $theOtherOne = $partialMessage[0];
+                                        $post_text = $emailDetails['messageBody'];
+                                        $language = $postDetails['language'];
+                                        $userDetails = $this->objUser->getRow('emailaddress', $emailDetails['sender']);
+                                        //check if the user is a member of the site
+                                        if ($userDetails) {
+                                                $userID = $userDetails['userid'];
+                                                $level = $postDetails['level'];
+                                                echo "<pre>";
+//                                                print_r($emailDetails);
+                                                echo "</pre>";
+//                                                if ($this->objUserContext->isContextMember($this->objUser->userId(), $forumDetails['contextcode'])) {
+//                                                        $post_id = $this->dbPost->insertSingle($post_parent, 0, $forum_id, $topic_id, $userID, $level);
+//                                                        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $post_parent, $userID);
+//                                                        $this->dbTopic->updateLastPost($topic_id, $post_id);
+//                                                        $this->dbForum->updateLastPost($forum_id, $post_id);
+//                                                        $this->emailBox->deleteEmail($emailNum);
+//                                                }
+                                        }
+                                } else {
+                                        echo "<h1>{$this->objLanguage->languageText('mod_forum_topicdoesnotexist', 'forum')}</h1>";
+                                }
 //
 //                                // Mark Email for deletion
-////                                $this->emailBox->deleteEmail($emailNum);
-//                        }
+//                                $this->emailBox->deleteEmail($emailNum);
+                        }
 //                        // Expunge Deleted Mail
-//                        unset($this->emailBox);
-//                } else {
-//                        echo "<h1>{$this->objLanguage->languageText('mod_forum_inboxempty','forum')}</h1>";
-//                }
+                        unset($this->emailBox);
+                } else {
+                        echo "<h1>{$this->objLanguage->languageText('mod_forum_inboxempty', 'forum')}</h1>";
+                }
                 /*
                  * END
                  */
-//                $this->objUser = & $this->getObject('user', 'security');
-//                $this->objTopic = $this->getObject('dbtopic', 'forum');
+                $this->objUser = & $this->getObject('user', 'security');
+                $this->objTopic = $this->getObject('dbtopic', 'forum');
         }
 
         /**
