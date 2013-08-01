@@ -752,17 +752,21 @@ class simpleblogops extends object
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
         }
-        $title = "<div class='simpleblog_post_title'><div class='titletxt'>"
+        $titleO = "<div class='simpleblog_post_title'><div class='titletxt'>"
           . $postTitle . "</div><div class='social_buttons'>" . $edel 
           . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
-        $title = '<div class="sbpost_title_wrapper">' 
+        $titleO = '<div class="sbpost_title_wrapper">' 
           . '<div class="date-wrapper">'
           . '<div class="date-day">' . $topDay . '</div>'
           . '<div class="date-month">' . $topMonth . '</div>'
           . '<div class="date-year">' . $topYear . '</div>'
           . '</div>'
-          . $title . '</div>';
-        
+          . $titleO . '</div></div></div>';
+        $title = "<div id='blog_title_wrapper' >
+                                <div id='blog_post_title' >
+                                        {$postTitle}
+                                </div>
+                        </div>";
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
         // If we are coming from a search
@@ -825,8 +829,14 @@ class simpleblogops extends object
             $wall = NULL;
         }
 
-        return "<div class='simpleblog_post_wrapper' id='wrapper_{$id}'>\n"
-          . $before . $title . $content . $tags . $foot . $wall
+        return "
+                                <div id='blog_date_wrapper' >
+                                        <div id='blog-date-day' >{$topDay}</div>
+                                        <div id='blog-date-month' >{$topMonth}</div>
+                                        <div id='blog-date-year' >{$topYear}</div>
+                                </div>
+                <div class='simpleblog_post_wrapper' id='wrapper_{$id}'>"
+          . $title . $content . $tags . $foot . $wall
           . "</div>\n\n";
     }
     

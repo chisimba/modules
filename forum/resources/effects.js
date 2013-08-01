@@ -307,7 +307,7 @@ jQuery(document).ready(function() {
                 var post_id = jQuery(this).attr('id');
                 var _id = jQuery(this).attr('class');
                 var post_text = jQuery('div.postText#' + post_id).html();
-                jQuery('.postReplyLink').hide();
+                jQuery(this).remove();
                 //wrapper div
                 var popUpWrapper = jQuery('<div>', {
                         class: 'popUpWrapper',
@@ -349,8 +349,9 @@ jQuery(document).ready(function() {
                                                 jQuery('.popUpWrapper').remove();
                                                 jQuery('#Canvas_Content_Body_Region2').append(data);
                                                 jQuery('body').remove(popUpWrapper);
-//                                                CKEDITOR.instances.blocktext.destroy();
-//                                                jQuery.fn.displayConfirmationMessage();
+                                                jQuery().setTimeOut(function() {
+                                                        jQuery('body').remove('span#confirm');
+                                                });
                                         }
                                 });
                         }
@@ -396,6 +397,6 @@ jQuery(document).ready(function() {
          * ===Trying to inform the user as to which file is selecteded===
          */
         jQuery('input#hidden_fileselect').on('change', function() {
-                
+
         });
 });
