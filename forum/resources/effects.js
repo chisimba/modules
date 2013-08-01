@@ -11,6 +11,7 @@ jQuery(document).ready(function() {
         jQuery('div.hiddenOptions, div.attachmentwrapper, div.file-preview').hide();
         jQuery('div.filePreview').hide();
         jQuery('a.attachmentLink').hide();
+        jQuery('a.postDeleteLink, a.postEditClass').find('img').css('margin','10px 5px');
         jQuery('a.ratings').click(function(e) {
                 e.preventDefault()
         });

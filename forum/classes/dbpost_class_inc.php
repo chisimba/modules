@@ -302,7 +302,7 @@ class dbPost extends dbTable {
          * @return array Details of the post
          */
         function getRootPost($topic) {
-            $sql = '
+                $sql = '
                 SELECT 
                     tbl_forum_post.id as postid,
                     tbl_forum_post.post_parent,
@@ -388,14 +388,14 @@ class dbPost extends dbTable {
                         return $results[0];
                 }
         }
-        
+
         /**
          * Method to get the title, text, date, etc of any post, by providing the record id of the post.
          * @param string $post Record Id of the post
          * @return array Details of the post
          */
         function getPostWithText($post) {
-            $sql = '
+                $sql = '
                 SELECT 
                     tbl_forum_post.id as postid,
                     tbl_forum_post.post_parent,
@@ -466,7 +466,7 @@ class dbPost extends dbTable {
                         LEFT JOIN
                     tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
                 WHERE
-                    tbl_forum_post_text.post_id = \''. $post . '\'
+                    tbl_forum_post_text.post_id = \'' . $post . '\'
                 GROUP BY tbl_forum_post.id
                 LIMIT 1; 
             ';
@@ -533,6 +533,8 @@ class dbPost extends dbTable {
          * @return string The post in a formatted version.
          */
         function displayPost($post, $showMargin = FALSE, $makeContractible = FALSE) {
+                //values to be used in query string
+                $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
                 if ($showMargin) {
                         $margin = 'style="margin-left: ' . ($post['level'] * 40 - 40) . 'px;"';
                 } else {
@@ -584,19 +586,21 @@ class dbPost extends dbTable {
                         }
                 }
                 if ($this->showModeration) {
-                        $dateDiff = $this->objTranslatedDate->getDifference($post['datelastupdated']);
+                        if ($topicInfo['status'] == 'OPEN') {
+                                $dateDiff = $this->objTranslatedDate->getDifference($post['datelastupdated']);
 //                        if($post['datelastupdated']){
-                        $tposteditLink = new link('javascript:void(0)');
-                        $this->objIcon->setIcon('edit');
-                        $tposteditLink->link = $this->objIcon->show();
-                        $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
-                        $tposteditLink->cssId = $post['id'];
-                        $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                        $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
-                        $deleteLink->link .= $moderatePostIcon;
-                        $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                        if ($this->objUser->userId() == $post['userid']) {
-                                $return .= $tposteditLink->show();
+                                $tposteditLink = new link('javascript:void(0)');
+                                $this->objIcon->setIcon('edit');
+                                $tposteditLink->link = $this->objIcon->show();
+                                $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
+                                $tposteditLink->cssId = $post['id'];
+                                $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                                $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
+                                $deleteLink->link .= $moderatePostIcon;
+                                $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                                if ($this->objUser->userId() == $post['userid']) {
+                                        $return .= $tposteditLink->show();
+                                }
                         }
                 }
 
@@ -605,15 +609,15 @@ class dbPost extends dbTable {
                         $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\'' . $post['post_id'] . '\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
                 }
 //=========Decorating the date============
-                                echo '<pre>'; var_dump($post); echo '</pre>';die();
+//                                echo '<pre>'; var_dump($post); echo '</pre>';die();
                 $Date = date('Y M d', mktime(0, 0, 0, substr($post['datecreated'], 5, 2), substr($post['datecreated'], 8, 2), substr($post['datecreated'], 0, 4)));
                 $year = '<div class="date-year">' . date("Y", strtotime($post['datecreated'])) . '</div>';
-                
+
                 $month = '<div class="date-month" >' . date("M", strtotime($post['datecreated'])) . '</div>';
                 $day = '<div class="date-day" >' . date("d", strtotime($post['datecreated'])) . '</div>';
                 $dateSpan = '<div class="date-wrapper" >' . $day . '' . $month . '' . $year . '</div>';
-                
-                
+
+
                 if ($this->showFullName) {
                         // Start of the Title Area
                         $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
@@ -709,8 +713,6 @@ class dbPost extends dbTable {
                 //INNER POSTS
                 //get all posts
                 $statement = "SELECT * FROM tbl_forum_post WHERE post_parent = '{$post['post_id']}'";
-                //values to be used in query string
-                $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
                 $forumID = "<span class='forumid' id='{$topicInfo['forum_id']}' ></span>";
                 $innerPosts = $this->getArray($statement);
                 if (count($innerPosts) >= 1) {
