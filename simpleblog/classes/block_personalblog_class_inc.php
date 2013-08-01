@@ -1,10 +1,10 @@
 <?php
 /**
  *
- * Simple blog site blog block
+ * Simple blog personal blog block
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * Simple blog personal blog block which can be used by other modules to render
+ * a personal blog, for example by the SLATE module.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,10 +41,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * Simple blog site blog block
+ * Simple blog personal blog block
  *
- * Simple blog site blog block which can be used by other modules to render
- * a site blog, for example by the SLATE module.
+ * Simple blog personal blog block which can be used by other modules to render
+ * a personal blog, for example by the SLATE module.
  *
  * @category  Chisimba
  * @author    Administrative User admin@localhost.local
@@ -52,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2011 AVOIR
  *
  */
-class block_simpleblogmiddle extends object
+class block_personalblog extends object
 {
     /**
      * The title of the block
@@ -81,9 +81,83 @@ class block_simpleblogmiddle extends object
         // Get an instance of the languate object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->title = $this->objLanguage->languageText(
-                "mod_simpleblog_posts", "simpleblog",
-                "Simpleblog general posts");
+                "mod_simpleblog_allpersonal", "simpleblog",
+                "Personal blog posts");
         $this->wrapStr = FALSE;
+        
+        
+        
+                // Get the blog posts db.
+        $this->objDbPosts = $this->getObject('dbsimpleblog', 'simpleblog');
+    }
+    
+    /**
+     * 
+     * List all personal blogs
+     * 
+     * @return A paginated list of personal blogs
+     * @access public
+     * 
+     */
+    public function listAll()
+    {
+        $bloggers = $this->objDbPosts->getAllPersonalBloggers();//turn off when you move to ops class
+        $ret = NULL;
+        $doc = new DOMDocument('UTF-8');
+        $retDiv = $doc->createElement('div');
+        $tbl = $doc->createElement('table');
+        $retDiv->setAttribute('class', 'simpleblog_bloggers');
+        
+        if (count($bloggers) > 0) {
+            foreach ($bloggers as $blogger) {
+                $tr = $doc->createElement('tr');
+                $td = $doc->createElement('td');
+                $url = $this->uri(array(
+                  'blogid' => $blogger['userid']
+                ), 'simpleblog');
+                $url=  str_replace("&amp;", "&", $url);
+                $a = $doc->createElement('a');
+                $a->setAttribute('href', $url);
+                $a->appendChild($doc->createTextNode(
+                  $blogger['firstname'] . " " . $blogger['surname']
+                ));
+                $td->appendChild($a);
+                $tr->appendChild($td);
+                // For the title
+                $td = $doc->createElement('td');
+                $td->appendChild($doc->createTextNode($blogger['post_title']));
+                $tr->appendChild($td);
+                $tbl->appendChild($tr);
+            }
+            
+            $retDiv->appendChild($tbl);
+        }
+        $doc->appendChild($retDiv);
+        return $doc->saveHTML();
+    }
+    
+    /**
+     * 
+     * Show the blogs for a particular user identified by $blogId
+     * 
+     * @param type $blogId
+     * @return string Paginated posts by the user
+     * @access public
+     * 
+     */
+    public function showBlog($blogId)
+    {
+        return "SHOW BLOG: Working here";
+    }
+    
+    public function show()
+    {
+        $blogId = $this->getParam('blogid', FALSE);
+        if ($blogId) {
+            return $this->showBlog($blogId);
+        } else {
+            return $this->listAll();
+        }
     }
 
     /**
@@ -93,7 +167,7 @@ class block_simpleblogmiddle extends object
      * @access public
      * 
      */
-    public function show() 
+    public function old________________show() 
     {
         $blogId = 'allpublic';
         $objPostOps = $this->getObject('simpleblogops', 'simpleblog');

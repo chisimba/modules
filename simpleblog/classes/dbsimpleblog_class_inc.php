@@ -230,6 +230,26 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    public function getAllPersonalBloggers()
+    {
+        
+        $sql = '
+            SELECT 
+                  tbl_simpleblog_posts.*,
+                  MAX(tbl_simpleblog_posts.datecreated) as datecreated,
+                  tbl_users.userid as usersid,
+                  tbl_users.firstname,
+                  tbl_users.surname,
+                  tbl_users.username
+                FROM tbl_simpleblog_posts, tbl_users
+                WHERE tbl_simpleblog_posts.userid = tbl_users.userid 
+                AND tbl_simpleblog_posts.post_type = \'personal\'
+                AND tbl_simpleblog_posts.post_status = \'posted\'
+                GROUP BY userid 
+            ';
+            return $this->getArray($sql);
+    }
+    
     /**
      * 
      * Get a post by its id
@@ -268,6 +288,14 @@ class dbsimpleblog extends dbtable
         return $this->getArray($sql);
     }
     
+    /**
+     * 
+     * Look up the latest site post for use in the side block
+     * 
+     * @return string Array with the most recent post
+     * @access public
+     * 
+     */
     public function getLatestSitePost()
     {
             $sql = 'SELECT 
@@ -284,7 +312,6 @@ class dbsimpleblog extends dbtable
                 WHERE tbl_simpleblog_posts.post_type = "site"
                 AND tbl_simpleblog_posts.post_status = \'posted\' ';
             return $this->getArray($sql);
-        
     }
     
     /**
