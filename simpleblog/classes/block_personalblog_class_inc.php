@@ -113,7 +113,8 @@ class block_personalblog extends object
                 $tr = $doc->createElement('tr');
                 $td = $doc->createElement('td');
                 $url = $this->uri(array(
-                  'blogid' => $blogger['userid']
+                  'blogid' => $blogger['userid'],
+                  'type' => 'personal'
                 ), 'simpleblog');
                 $url=  str_replace("&amp;", "&", $url);
                 $a = $doc->createElement('a');
@@ -129,7 +130,6 @@ class block_personalblog extends object
                 $tr->appendChild($td);
                 $tbl->appendChild($tr);
             }
-            
             $retDiv->appendChild($tbl);
         }
         $doc->appendChild($retDiv);
