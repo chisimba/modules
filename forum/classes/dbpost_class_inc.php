@@ -172,6 +172,7 @@ class dbPost extends dbTable {
                     'topic_id' => $topic_id,
                     'post_order' => $this->getLastPostOrder($topic_id),
                     'userId' => $userId,
+                    'datecreated' => $this->now(),
                     'lft' => $leftPointer,
                     'rght' => $rightPointer,
                     'level' => $level,
@@ -330,19 +331,11 @@ class dbPost extends dbTable {
          * @return array Details of the post
          */
         function getPostWithText($post) {
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
-        FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id )
-        INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id)
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id  AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post_text.post_id = \'' . $post . '\' GROUP BY tbl_forum_post.id LIMIT 1';
-
+                $sql = 'SELECT tbl_forum_post.*,
+ tbl_forum_post_text.post_id, tbl_forum_post_text.post_title, tbl_forum_post_text.post_text, tbl_forum_post_text.language, tbl_forum_post_text.original_post, tbl_forum_post_text.readability, tbl_forum_post_text.wordcount, tbl_forum_post_text.userid, tbl_forum_post_text.modifierid,
+ tbl_forum_topic.*,
+ tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id ) INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) LEFT JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id) LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent) LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND tbl_forum_post_text.language != languagecheck.language) LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) WHERE tbl_forum_post_text.post_id = "' . $post . '" GROUP BY tbl_forum_post.id LIMIT 1';
                 $results = $this->getArray($sql);
-
                 if (count($results) == 0) {
                         return NULL;
                 } else {
@@ -449,6 +442,7 @@ class dbPost extends dbTable {
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
                         $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+//                        var_dump($post);
                         if ($this->objUser->userId() == $post['userid']) {
                                 $return .= $tposteditLink->show();
                         }
@@ -459,18 +453,18 @@ class dbPost extends dbTable {
                         $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\'' . $post['post_id'] . '\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
                 }
 //=========Decorating the date============
-                $Date = date('Y M d', mktime(0, 0, 0, substr($post['datelastupdated'], 5, 2), substr($post['datelastupdated'], 8, 2), substr($post['datelastupdated'], 0, 4)));
-                $year = '<div class="date-year">' . substr($Date, 0, 4) . '</div>';
-                $month = '<div class="date-month" >' . substr($Date, 5, 3) . '</div>';
-                $day = '<div class="date-day" >' . substr($Date, 9, 2) . '</div>';
+                $Date = date('Y M d', mktime(0, 0, 0, substr($post['datecreated'], 5, 2), substr($post['datecreated'], 8, 2), substr($post['datecreated'], 0, 4)));
+                $year = '<div class="date-year">' . date("Y", strtotime($post['datecreated'])) . '</div>';
+                
+                $month = '<div class="date-month" >' . date("M", strtotime($post['datecreated'])) . '</div>';
+                $day = '<div class="date-day" >' . date("d", strtotime($post['datecreated'])) . '</div>';
                 $dateSpan = '<div class="date-wrapper" >' . $day . '' . $month . '' . $year . '</div>';
-
                 if ($this->showFullName) {
                         // Start of the Title Area
-                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
+                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
                 } else {
                         // Start of the Title Area
-                        $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
+                        $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datecreated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ') </div>';
                 }
                 // Ebd Title Area
                 $return .= '</div>';
@@ -1888,6 +1882,7 @@ function loadTranslation(post, lang) {
                     'topic_id' => $topic_id,
                     'post_order' => $this->getLastPostOrder($topic_id),
                     'userId' => $userId,
+                    'datecreated' => $this->now(),
                     'lft' => null,
                     'rght' => null,
                     'level' => $level,
