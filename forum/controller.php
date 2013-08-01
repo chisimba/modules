@@ -269,7 +269,6 @@ class forum extends controller {
                                 return $this->showSingleThread($this->getParam('id'));
 
                         case 'flatview';
-
                                 return $this->showFlatView($this->getParam('id'));
 
                         case 'postreply':
@@ -914,6 +913,7 @@ class forum extends controller {
                 $this->objTopic->updateTopicViews($topic_id);
                 // Get details on the topic
                 $post = $this->objPost->getRootPost($topic_id);
+//DEREK EDITED HERE                echo '<pre>'; var_dump($post); echo '</pre>';
                 // Check if the topic exists, else call an error message
                 if ($post == NULL) {
                         // error message, post doesn't exist
