@@ -282,18 +282,59 @@ class dbPost extends dbTable {
          * @return array List of Posts
          */
         function getFlatThread($topic) {
-                $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
-        tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating
-        FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = \'1\')
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post.topic_id = \'' . $topic . '\' GROUP BY tbl_forum_post.id ORDER BY post_order';
+            $sql = '
+                    
+                SELECT 
+                    tbl_forum_post.id as postid,
+                    tbl_forum_post.post_parent,
+                    tbl_forum_post.post_tangent_parent,
+                    tbl_forum_post.topic_id,
+                    tbl_forum_post.post_order,
+                    tbl_forum_post.lft,
+                    tbl_forum_post.rght,
+                    tbl_forum_post.average_ratings,
+                    tbl_forum_post.level,
+                    tbl_forum_post.userid,
+                    tbl_forum_post.datecreated,
+                    tbl_forum_post.modifierid,
+                    tbl_forum_post.datelastupdated as postlastupdated,
+                    tbl_forum_post.post_emailed,
+                    tbl_forum_post.puid,
 
-                return $this->getArray($sql);
+                    tbl_forum_post_text.post_id,
+                    tbl_forum_post_text.post_title,
+                    tbl_forum_post_text.post_text,
+                    tbl_forum_post_text.language,
+                    tbl_forum_post_text.original_post,
+                    tbl_forum_post_text.readability,
+                    tbl_forum_post_text.wordcount,
+                    tbl_forum_post_text.userid,
+                    tbl_forum_post_text.modifierid,
+
+
+                    tbl_users.firstname,
+                    tbl_users.surname,
+                    tbl_users.username,
+                    tbl_forum_post_attachment.attachment_id,
+                    replypost.id AS replypost,
+                    languagecheck.id AS anotherlanguage,
+                    tbl_forum_post_ratings.rating
+                FROM
+                    tbl_forum_post
+                        INNER JOIN
+                    tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = \'1\')
+                        LEFT JOIN
+                    tbl_users ON (tbl_forum_post.userId = tbl_users.userId)
+                        LEFT JOIN
+                    tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
+                        LEFT JOIN
+                    tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
+                        LEFT JOIN
+                    tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post = \'0\' AND tbl_forum_post_text.language != languagecheck.language)
+                        LEFT JOIN
+                    tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
+                WHERE tbl_forum_post.topic_id = \'' . $topic . '\' GROUP BY tbl_forum_post.id ORDER BY post_order';
+            return $this->getArray($sql);
         }
 
         /**
@@ -316,9 +357,10 @@ class dbPost extends dbTable {
                     tbl_forum_post.userid,
                     tbl_forum_post.datecreated,
                     tbl_forum_post.modifierid,
-                    tbl_forum_post.datelastupdated as postlastupdated,
+                    tbl_forum_post.datelastupdated,
                     tbl_forum_post.post_emailed,
                     tbl_forum_post.puid,
+                    
                     tbl_forum_topic.id as topicid,
                     tbl_forum_topic.forum_id,
                     tbl_forum_topic.type_id,
@@ -337,6 +379,7 @@ class dbPost extends dbTable {
                     tbl_forum_topic.userid,
                     tbl_forum_topic.sticky,
                     tbl_forum_topic.datelastupdated as topicdatelastupdated,
+                    
                     tbl_forum_topic.puid,
                     tbl_forum_post_text.post_id,
                     tbl_forum_post_text.post_title,
@@ -409,7 +452,7 @@ class dbPost extends dbTable {
                     tbl_forum_post.userid,
                     tbl_forum_post.datecreated,
                     tbl_forum_post.modifierid,
-                    tbl_forum_post.datelastupdated as postlastupdated,
+                    tbl_forum_post.datelastupdated,
                     tbl_forum_post.post_emailed,
                     tbl_forum_post.puid,
                     tbl_forum_post_text.post_id,
@@ -478,23 +521,6 @@ class dbPost extends dbTable {
                 }
         }
 
-        /**
-         * Method to get the title, text, date, etc of any post, by providing the record id of the post.
-         * @param string $post Record Id of the post
-         * @return array Details of the post
-         */
-        function OLD______________________________________________________________getPostWithText($post) {
-                $sql = 'SELECT tbl_forum_post.*,
- tbl_forum_post_text.post_id, tbl_forum_post_text.post_title, tbl_forum_post_text.post_text, tbl_forum_post_text.language, tbl_forum_post_text.original_post, tbl_forum_post_text.readability, tbl_forum_post_text.wordcount, tbl_forum_post_text.userid, tbl_forum_post_text.modifierid,
- tbl_forum_topic.*,
- tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id ) INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id) LEFT JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId ) LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id) LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent) LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND tbl_forum_post_text.language != languagecheck.language) LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id) WHERE tbl_forum_post_text.post_id = "' . $post . '" GROUP BY tbl_forum_post.id LIMIT 1';
-                $results = $this->getArray($sql);
-                if (count($results) == 0) {
-                        return NULL;
-                } else {
-                        return $results[0];
-                }
-        }
 
         /**
          * Method to get a post in a language
@@ -512,7 +538,6 @@ class dbPost extends dbTable {
         LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
         LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND tbl_forum_post_text.language != languagecheck.language)
         WHERE tbl_forum_post_text.id = \'' . $postTextId . '\' GROUP BY tbl_forum_post.id LIMIT 1';
-
 
                 //return array('post_text'=>$sql);
                 $results = $this->getArray($sql);
