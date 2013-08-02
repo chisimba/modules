@@ -12,6 +12,33 @@
             with some reasonable data that can be used.
         </infobytes>
     </tbl_demodata_info>
+    
+  <!-- MODULE: SIMPLEBLOG, Table tbl_simpleblog_posts -->
+    <tbl_simpleblog_posts>
+        <id>init_1</id>
+        <blogid>site</blogid>
+        <userid>1</userid>
+        <datecreated></datecreated>
+        <modifierid></modifierid>
+        <datemodified></datemodified>
+        <post_title></post_title>
+        <post_content></post_content>
+        <post_status></post_status>
+        <post_type></post_type>
+        <post_tags></post_tags>
+        
+        <id></id>
+        <blogid></blogid>
+        <userid></userid>
+        <datecreated></datecreated>
+        <modifierid></modifierid>
+        <datemodified></datemodified>
+        <post_title></post_title>
+        <post_content></post_content>
+        <post_status></post_status>
+        <post_type></post_type>
+        <post_tags></post_tags>
+    </tbl_simpleblog_posts>
 
   <!-- MODULE: WALL, Table tbl_wall_posts -->
    <tbl_wall_posts>
