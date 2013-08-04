@@ -91,6 +91,7 @@ class rttutil extends object {
         $admin = "true"; //// $this->objUser->isLecturer() ? 'true' : 'false';
         $userId = $this->objUser->userid();
         $password = $this->genRandomString();
+        $videoJnlpUrl=$siteRoot.'/'.$objAltConfig->getcontentRoot().'/rtt/';
         //$user = array("userid" => $userId, "password" => $password, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime()));
         //$this->objDbRttUser->saveRttUser($user);
 
@@ -119,6 +120,7 @@ class rttutil extends object {
             array("jnlp_key" => "-sipDomain", "jnlp_value" => $sipDomain, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-sipUsername", "jnlp_value" => $userpart, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
             array("jnlp_key" => "-sipConferenceNumber", "jnlp_value" => $conferenceNumber, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
+            array("jnlp_key" => "-videojnlpurl", "jnlp_value" => $videoJnlpUrl, "userid" => $userId, "createdon" => strftime('%Y-%m-%d %H:%M:%S', mktime())),
         );
 
         $iconPath = $codebase . 'images/splash_rtt.png';
@@ -189,6 +191,7 @@ class rttutil extends object {
                 . "    </security>\n"
                 . "</jnlp>\n";
 
+       // die($content);
 
         header("Pragma: public"); // required 
         header("Expires: 0");
@@ -309,7 +312,7 @@ class rttutil extends object {
 
 
         $content .= "<resources>\n";
-         $objAltConfig = $this->getObject('altconfig', 'config');
+        $objAltConfig = $this->getObject('altconfig', 'config');
 
         $jnlpPath = $objAltConfig->getModulePath() . '/rtt/resources/video';
 
@@ -350,7 +353,7 @@ class rttutil extends object {
         }
 
         $userId = $this->objUser->userid();
-        $loggedInPassword="pwd";
+        $loggedInPassword = "pwd";
         $content .= "</resources>\n";
         $content .= "   <application-desc    main-class=\"org.rtt.video.core.RttVideo\">\n" .
                 "<argument>" . $userId . "</argument>\n" .
@@ -360,7 +363,7 @@ class rttutil extends object {
                 "        <all-permissions/>\n" .
                 "    </security>\n" .
                 "</jnlp>\n";
-       
+
 
         return $content;
     }
@@ -377,8 +380,17 @@ class rttutil extends object {
         $moduleUri = $objAltConfig->getModuleURI();
         $siteRoot = $objAltConfig->getSiteRoot();
         $codebase = $siteRoot . "/" . $moduleUri . '/rtt/resources/video';
-        $path = $modPath . '/rtt/resources/jnlp';
 
+
+        $objMkDir = $this->getObject('mkdir', 'files');
+
+        $destinationDir =$objAltConfig->getcontentBasePath() . '/rtt/jnlp';
+        $objMkDir->mkdirs($destinationDir);
+        @chmod($destinationDir, 0777);
+        $path = $destinationDir;
+
+        // $path = $modPath . '/rtt/resources/jnlp';
+        // @chmod($path, 0777);
         $iconPath = $codebase . 'images/splash_rtt.png';
         $oses = array(
             array("name" => "Windows", "arch" => "x86", "id" => "win32"),
