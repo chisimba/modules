@@ -613,13 +613,13 @@ class dbPost extends dbTable {
                                 $return .= '<p>';
                         }
                 }
-                if ($this->showModeration) {
+                $dateDiff = $this->objTranslatedDate->getDifference_no_html($post['datecreated'], $this->now(), 'd');
+                if ($this->showModeration || $this->objUser->userId() == $post['userid']) {
                         if ($topicInfo['status'] == 'OPEN') {
-                                $dateDiff = $this->objTranslatedDate->getDifference($post['datecreated'], $this->now(), 'd');
                                 $objDateTime = $this->getObject('dateandtime', 'utilities');
-                                $dateDiff = $objDateTime->secondsInDay($dateDiff);
+                                $date = $objDateTime->secondsInDay($dateDiff);
                                 if (count($innerPosts) < 1) {
-                                        if ($dateDiff <= 1800) {
+                                        if ($date <= 1800) {
 //                        if($post['datelastupdated']){
                                                 $tposteditLink = new link('javascript:void(0)');
                                                 $this->objIcon->setIcon('edit');
@@ -630,12 +630,13 @@ class dbPost extends dbTable {
                                                 $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                                                 $deleteLink->link .= $moderatePostIcon;
                                                 $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                                                if ($this->objUser->userId() == $post['userid']) {
-                                                        $return .= $tposteditLink->show();
-                                                }
+                                                echo $date;
+                                                $return .= $tposteditLink->show();
                                         }
                                 }
                         }
+//                        if ($this->objUser->userId() == $post['userid']) {
+//                        }
                 }
 
                 // Check if the contractible layers should be implemented
@@ -798,10 +799,10 @@ class dbPost extends dbTable {
                                 $lowerLink->link = "";
                                 $numberOfVotes = $this->dbPostratings->getPostRatings($innerPost['id']);
                                 $displaySpan = "<span class='numberindicator' >{$upperLink->show()}";
-                                if($numberOfVotes >0){
-                                        $displaySpan .= "<br/>".$numberOfVotes.'<br/>'.$lowerLink->show();
-                                }  else {
-                                        $displaySpan .= "<br/><span class='number' >".$numberOfVotes."</span><br/>";
+                                if ($numberOfVotes > 0) {
+                                        $displaySpan .= "<br/>" . $numberOfVotes . '<br/>' . $lowerLink->show();
+                                } else {
+                                        $displaySpan .= "<br/><span class='number' >" . $numberOfVotes . "</span><br/>";
                                 }
                                 $displaySpan .= '</span>';
                                 $ratingsDiv .= $displaySpan . "</div>";
