@@ -282,7 +282,7 @@ class dbPost extends dbTable {
          * @return array List of Posts
          */
         function getFlatThread($topic) {
-            $sql = '
+                $sql = '
                     
                 SELECT 
                     tbl_forum_post.id as postid,
@@ -334,7 +334,7 @@ class dbPost extends dbTable {
                         LEFT JOIN
                     tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
                 WHERE tbl_forum_post.topic_id = \'' . $topic . '\' GROUP BY tbl_forum_post.id ORDER BY post_order';
-            return $this->getArray($sql);
+                return $this->getArray($sql);
         }
 
         /**
@@ -521,7 +521,6 @@ class dbPost extends dbTable {
                 }
         }
 
-
         /**
          * Method to get a post in a language
          * At the moment, it works with the record_id not language!
@@ -558,6 +557,10 @@ class dbPost extends dbTable {
          * @return string The post in a formatted version.
          */
         function displayPost($post, $showMargin = FALSE, $makeContractible = FALSE) {
+                //INNER POSTS
+                //get all posts
+                $statement = "SELECT * FROM tbl_forum_post WHERE post_parent = '{$post['post_id']}'";
+                $innerPosts = $this->getArray($statement);
                 //values to be used in query string
                 $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
                 if ($showMargin) {
@@ -601,7 +604,7 @@ class dbPost extends dbTable {
                 $return .= '<div id="' . $post['post_id'] . '" class="newForumContainer" ' . $margin . '>' . "\r\n";
                 $return .= '<div class="newForumTopic">' . "\r\n";
                 // Check if user can edit post
-                if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost'])) {
+                if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datecreated'], $post['userid'], $post['replypost'])) {
 
                         // Check whether to start a paragraph or pipe
                         if ($this->repliesAllowed) {
@@ -612,19 +615,25 @@ class dbPost extends dbTable {
                 }
                 if ($this->showModeration) {
                         if ($topicInfo['status'] == 'OPEN') {
-                                $dateDiff = $this->objTranslatedDate->getDifference($post['datelastupdated']);
+                                $dateDiff = $this->objTranslatedDate->getDifference($post['datecreated'], $this->now(), 'd');
+                                $objDateTime = $this->getObject('dateandtime', 'utilities');
+                                $dateDiff = $objDateTime->secondsInDay($dateDiff);
+                                if (count($innerPosts) < 1) {
+                                        if ($dateDiff <= 1800) {
 //                        if($post['datelastupdated']){
-                                $tposteditLink = new link('javascript:void(0)');
-                                $this->objIcon->setIcon('edit');
-                                $tposteditLink->link = $this->objIcon->show();
-                                $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
-                                $tposteditLink->cssId = $post['id'];
-                                $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                                $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
-                                $deleteLink->link .= $moderatePostIcon;
-                                $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                                if ($this->objUser->userId() == $post['userid']) {
-                                        $return .= $tposteditLink->show();
+                                                $tposteditLink = new link('javascript:void(0)');
+                                                $this->objIcon->setIcon('edit');
+                                                $tposteditLink->link = $this->objIcon->show();
+                                                $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
+                                                $tposteditLink->cssId = $post['postid'];
+                                                $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                                                $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
+                                                $deleteLink->link .= $moderatePostIcon;
+                                                $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                                                if ($this->objUser->userId() == $post['userid']) {
+                                                        $return .= $tposteditLink->show();
+                                                }
+                                        }
                                 }
                         }
                 }
@@ -689,7 +698,7 @@ class dbPost extends dbTable {
                     ''
                 );
                 $tmpText = str_replace($search, $replacers, $tmpText);
-                $return .= "<div id='{$post['id']}' class='postText' > {$tmpText}</div>";
+                $return .= "<div id='{$post['postid']}' class='postText' > {$tmpText}</div>";
 
                 // Check if the post has attachments
                 if ($post['attachment_id'] != NULL) {
@@ -735,11 +744,7 @@ class dbPost extends dbTable {
                 }
 
 
-                //INNER POSTS
-                //get all posts
-                $statement = "SELECT * FROM tbl_forum_post WHERE post_parent = '{$post['post_id']}'";
                 $forumID = "<span class='forumid' id='{$topicInfo['forum_id']}' ></span>";
-                $innerPosts = $this->getArray($statement);
                 if (count($innerPosts) >= 1) {
                         foreach ($innerPosts as $innerPost) {
                                 $dLink = "";
@@ -782,28 +787,33 @@ class dbPost extends dbTable {
                                 }
 
                                 //new ratings object 
-                                $ratingsDiv = "<div class='' ><hr/>";
+                                $ratingsDiv = "<div class='ratingsWrapper' ><hr/>";
                                 $upperLink = new link('#');
                                 $upperLink->cssClass = "ratings up";
                                 $upperLink->cssId = $innerPost['id'];
-                                $upperLink->link = "&nbsp;&nbsp;&nbsp; <br/>";
+                                $upperLink->link = "";
                                 $lowerLink = new link('#');
                                 $lowerLink->cssClass = "ratings down";
                                 $lowerLink->cssId = $innerPost['id'];
-                                $lowerLink->link = "<br/> &nbsp;&nbsp;&nbsp;";
+                                $lowerLink->link = "";
                                 $numberOfVotes = $this->dbPostratings->getPostRatings($innerPost['id']);
-                                $displaySpan = "<span class='numberindicator' >{$upperLink->show()} {$numberOfVotes} {$lowerLink->show()}</span>";
+                                $displaySpan = "<span class='numberindicator' >{$upperLink->show()}";
+                                if($numberOfVotes >0){
+                                        $displaySpan .= "<br/>".$numberOfVotes.'<br/>'.$lowerLink->show();
+                                }  else {
+                                        $displaySpan .= "<br/><span class='number' >".$numberOfVotes."</span><br/>";
+                                }
+                                $displaySpan .= '</span>';
                                 $ratingsDiv .= $displaySpan . "</div>";
 
 //=========Decorating the date============
-
-                                $Date = date('Y M d', mktime(0, 0, 0, substr($postInfo['datelastupdated'], 5, 2), substr($postInfo['datelastupdated'], 8, 2), substr($postInfo['datelastupdated'], 0, 4)));
-                                $year = '<div class="date-year-inner">' . substr($Date, 0, 4) . '</div>';
-                                $month = '<div class="date-month-inner" >' . substr($Date, 5, 3) . '</div>';
-                                $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
-                                $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
+//                                $Date = date('Y M d', mktime(0, 0, 0, substr($postInfo['datelastupdated'], 5, 2), substr($postInfo['datelastupdated'], 8, 2), substr($postInfo['datelastupdated'], 0, 4)));
+//                                $year = '<div class="date-year-inner">' . substr($Date, 0, 4) . '</div>';
+//                                $month = '<div class="date-month-inner" >' . substr($Date, 5, 3) . '</div>';
+//                                $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
+//                                $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                                 //get parent info
-                                $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
+                                $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datecreated']) . ' </div>
                 <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
 //                                $return .= $conteiner;
                                 //get inner post details
@@ -1036,7 +1046,7 @@ class dbPost extends dbTable {
                         $attachmentObject->cssClass = "popUp";
                         //wrap the atachment object in a div
                         $divAttachmentWrapper = "<div class='attachmentwrapper' > <br/> &nbsp;&nbsp;&nbsp;" . $attachmentObject->show() . "</div>";
-                        $return .= '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div  ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class=" Inner" ><strong><span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
+                        $return .= '</div><br/><div class="clone" id="' . $post['postid'] . '" > <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div  ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class=" Inner" ><strong><span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
                         //add the attachment link if attachments are enabled in the forum
                         if ($forum['attachments'] == 'Y') {
                                 $return .= $divAttachmentWrapper . $attachmentLink->show();

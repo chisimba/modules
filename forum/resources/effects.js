@@ -97,6 +97,7 @@ jQuery(document).ready(function() {
                                                 attachment: attachment_id
                                         },
                                         success: function(data) {
+                                                alert(data);
                                                 jQuery('span#confirm').hide();
                                                 jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
                                                 jQuery('.postEditClass').show();
@@ -254,6 +255,7 @@ jQuery(document).ready(function() {
          * @RATINGS
          */
         jQuery('a.ratings.up').click(function() {
+                jQuery(this).hide();
                 var post_id = jQuery(this).attr('id');
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=savepostratingup',
@@ -268,6 +270,7 @@ jQuery(document).ready(function() {
          * ===Lowering ratings===
          */
         jQuery('a.ratings.down ').click(function() {
+                jQuery(this).hide();
                 var post_id = jQuery(this).attr('id');
                 jQuery.ajax({
                         url: 'index.php?module=forum&action=savepostratingdown',

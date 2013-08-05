@@ -344,10 +344,9 @@ class forum extends controller {
                         case 'changetopicstatus':
                                 return $this->changeTopicStatus();
 
-                        /*
-                          case 'downloadattachment':
-                          return $this->downloadAttachment($this->getParam('id'), $this->getParam('topic'));
-                         */
+
+                        case 'pullmail':
+                                return $this->pullMail($this->getParam('id'), $this->getParam('topic'));
 
 //                        case 'savepostratings':
 //                                return $this->savePostRatings();
@@ -443,6 +442,92 @@ class forum extends controller {
                         $this->setVarByRef('forums', $allForums);
                         return 'forum_list.php';
                 }
+        }
+
+        function pullMail() {
+                $this->loadClass('attachmentreader', 'mail');
+                $this->objDbConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                $timeOutMessage = $this->getObject('timeoutmessage', 'htmlelements');
+                //get the config parameters
+                $emailHost = $this->objDbConfig->getValue('forum_mail_host', 'forum');
+                $emailPort = $this->objDbConfig->getValue('forum_email_port', 'forum');
+                $emailOptions = $this->objDbConfig->getValue('forum_email_options', 'forum');
+                $emailUserName = $this->objDbConfig->getValue('forum_inbox_username', 'forum');
+                $emailPassword = $this->objDbConfig->getValue('forum_inbox_password', 'forum');
+                $emailCatchAll = $this->objConfig->getValue('forum_inbox_catchall', 'forum');
+
+
+                /**
+                 * @TESTING
+                 */
+                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, 'chisimba.tohir.co.za');
+//
+                $numMessages = $this->emailBox->getNumMessages();
+                $emailDetails = $this->emailBox->getEmailDetails(1);
+                echo $numMessages;
+
+
+                /**
+                 * @TESTING
+                 */
+                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, CATCH_ALL_BASE);
+
+                $numMessages = $this->emailBox->getNumMessages();
+
+                if ($numMessages > 0) {
+                        for ($emailNum = 1; $emailNum <= $numMessages; $emailNum++) {
+//
+//                                // Retrieve Basic Details of Email From the Headers
+                                $emailDetails = $this->emailBox->getEmailDetails($emailNum);
+//                                var_dump($emailDetails);
+//
+                                $split = explode('-', $emailDetails['subject']);
+                                //get the topic ID
+                                $topic_id = 'gen' . $split[1];
+                                //get the topic details
+                                $topicDetails = $this->dbTopic->getTopicDetails($topic_id);
+                                //get the post details
+                                $postDetails = $this->dbPost->getPostWithText($topicDetails['first_post']);
+                                if ($topicDetails == TRUE) {
+                                        $post_parent = $topicDetails['first_post'];
+                                        $forum_id = $topicDetails['forum_id'];
+                                        //get the forum object
+                                        $objForum = $this->getObject('dbforum', 'forum');
+                                        $forumDetails = $objForum->getForum($forum_id);
+                                        $post_title = $topicDetails['post_title'];
+                                        //
+                                        $partialMessage = explode('\n', $emailDetails['messageBody']);
+                                        $theOtherOne = $partialMessage[0];
+                                        $post_text = $emailDetails['messageBody'];
+                                        $language = $postDetails['language'];
+                                        $userDetails = $this->objUser->getRow('emailaddress', $emailDetails['sender']);
+                                        //check if the user is a member of the site
+                                        if ($userDetails) {
+                                                $userID = $userDetails['userid'];
+                                                $level = $postDetails['level'];
+                                                if ($this->objUserContext->isContextMember($this->objUser->userId(), $forumDetails['contextcode'])) {
+//                                                        $post_id = $this->dbPost->insertSingle($post_parent, 0, $forum_id, $topic_id, $userID, $level);
+//                                                        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $post_parent, $userID);
+//                                                        $this->dbTopic->updateLastPost($topic_id, $post_id);
+//                                                        $this->dbForum->updateLastPost($forum_id, $post_id);
+//                                                        $this->emailBox->deleteEmail($emailNum);
+                                                }
+                                        }
+                                } else {
+                                        echo "<h1>{$this->objLanguage->languageText('mod_forum_topicdoesnotexist', 'forum')}</h1>";
+                                }
+//
+//                                // Mark Email for deletion
+//                                $this->emailBox->deleteEmail($emailNum);
+                        }
+//                        // Expunge Deleted Mail
+                        unset($this->emailBox);
+                } else {
+                        echo "<h1>{$this->objLanguage->languageText('mod_forum_inboxempty', 'forum')}</h1>";
+                }
+                /*
+                 * END
+                 */
         }
 
         /**
@@ -1045,7 +1130,7 @@ class forum extends controller {
 
                 $parentPostDetails = $this->objPost->getRow('id', $postParent);
                 //get the forum ID
-                $forum_id = $this->getParam('forumid');
+                $forum_id = $this->getParam('forum_id');
                 //get topic ID
                 $topic_id = $this->getParam('topicid');
                 //we need this because IE is failing to pass it over
@@ -1121,7 +1206,7 @@ class forum extends controller {
                 } else {
                         $emailSuccess = NULL;
                 }
-                $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+                $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);
 //                return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
@@ -2434,8 +2519,8 @@ class forum extends controller {
                         $new_text = $this->getParam('new_text');
                         $postDetails = $this->objPost->getPostWithText($_id);
                         $this->objPostText->updatePostText($postDetails['post_id'], $postDetails['post_title'], $new_text);
-                        $objMessage = $this->getObject('timeoutmessage','htmlelements');
-                        $objMessage->setMessage(substr($this->objLanguage->languageText('mod_forum_postsaved','forum'),0,25));
+                        $objMessage = $this->getObject('timeoutmessage', 'htmlelements');
+                        $objMessage->setMessage(substr($this->objLanguage->languageText('mod_forum_postsaved', 'forum'), 0, 25));
                         $objMessage->setTimeOut(10000);
                         echo $objMessage->show();
                         die();

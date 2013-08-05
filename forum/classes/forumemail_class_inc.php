@@ -60,7 +60,7 @@ class forumemail extends object {
                 $this->dbPost = $this->getObject('dbpost', 'forum');
                 $this->dbTopic = $this->getObject('dbtopic', 'forum');
                 $this->objUser = $this->getObject('user', 'security');
-                $this->objPostText = & $this->getObject('dbposttext');
+                $this->objPost = & $this->getObject('dbpost');
                 $this->dbForum = & $this->getObject('dbforum');
                 $this->objUserContext = $this->getObject('usercontext', 'context');
                 $this->contextGroups = & $this->getObject('managegroups', 'contextgroups');
@@ -188,8 +188,10 @@ class forumemail extends object {
          * @param String $senderId Record Id of the Sender
          * @param String $replyUrl Url for the User to Reply to
          */
-        function sendEmail($topic_id, $title, $text, $forum, $senderId, $replyUrl) {
-                $this->prepareListEmail($topic_id);
+        function sendEmail($parent_id, $title, $text, $forum, $senderId, $replyUrl) {
+                $postDetails = $this->objPost->getPostWithText($parent_id);
+                $topicDetails = $postDetails['topic_id'];
+                $this->prepareListEmail($topicDetails['id']);
 //                $this->emailList = array(
 //                    0 => 'wsifumba@gmail.com'
 //                );
@@ -199,7 +201,6 @@ class forumemail extends object {
 
                         //set eMail subject to topic ID/ without (gen)
                         $subject = '[' . $forum . ']-' . str_replace('gen', '', $topic_id);
-                        $name = 'Not Needed';
 
                         $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', 'forum', '{NAME} has posted the following message to the {FORUM} discussion forum') . ':';
                         $line1 = str_replace('{NAME}', $this->objUser->fullname($senderId), $line1);
@@ -226,7 +227,7 @@ class forumemail extends object {
 
                         $body = '<html><head></head><body>' . $message . '</body></html>';
 
-                        $from = $topic_id . '@' . CATCH_ALL_BASE;
+                        $from = $topic_id . '@' . 'chisimba.tohir.co.za';
                         $fromName = $this->objUser->fullname($senderId);
 
                         // Setup Alternate Message - Convert '&amp;' back to '&'
