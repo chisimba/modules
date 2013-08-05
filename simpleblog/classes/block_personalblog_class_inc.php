@@ -68,6 +68,14 @@ class block_personalblog extends object
      *
      */
     public $objLanguage;
+    
+    /**
+     *
+     * @var string Object $objUser String for the user object
+     * @access public
+     *
+     */
+    public $objUser;
 
     /**
      * Standard init function
@@ -84,7 +92,8 @@ class block_personalblog extends object
                 "mod_simpleblog_allpersonal", "simpleblog",
                 "Personal blog posts");
         $this->wrapStr = FALSE;
-        
+        // Get an instance of the user object
+        $this->objUser = $this->getObject('user', 'security');
         
         
                 // Get the blog posts db.
@@ -111,6 +120,12 @@ class block_personalblog extends object
         if (count($bloggers) > 0) {
             foreach ($bloggers as $blogger) {
                 $tr = $doc->createElement('tr');
+                $userImg =  $this->objUser->getSmallUserImage($blogger['userid']);
+                $frag = $doc->createDocumentFragment();
+                $frag->appendXML($userImg);
+                $td = $doc->createElement('td');
+                $td->appendChild($frag);
+                $tr->appendChild($td);
                 $td = $doc->createElement('td');
                 $url = $this->uri(array(
                   'blogid' => $blogger['userid'],
@@ -147,7 +162,8 @@ class block_personalblog extends object
      */
     public function showBlog($blogId)
     {
-        return "SHOW BLOG: Working here";
+        $objPostOps = $this->getObject('simpleblogops', 'simpleblog');
+        return $objPostOps->showCurrentPosts($blogId);
     }
     
     public function show()
