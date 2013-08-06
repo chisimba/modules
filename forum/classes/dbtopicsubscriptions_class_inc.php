@@ -22,7 +22,7 @@ class dbtopicsubscriptions extends dbtable
     /**
     * Constructor
     */
-    function init()
+    public function init()
     {
         parent::init('tbl_forum_subscribe_topic');
     }
@@ -35,19 +35,27 @@ class dbtopicsubscriptions extends dbtable
     *
     * @return integer Number of topics user is subscribed to
     */
-    function getNumTopicsSubscribed($forum_id, $userId)
+    public function getNumTopicsSubscribed($forum_id, $userId)
 	{
-        $sql = ' SELECT count( tbl_forum_subscribe_topic.id ) AS subscribecount
-        FROM tbl_forum_subscribe_topic
-        INNER JOIN tbl_forum_topic ON ( tbl_forum_subscribe_topic.topic_id = tbl_forum_topic.id ) 
-        WHERE tbl_forum_topic.forum_id = "'.$forum_id.'" AND tbl_forum_subscribe_topic.userid = "'.$userId.'"';
-        
+        $sql = ' SELECT count( tbl_forum_subscribe_topic.id ) 
+            AS subscribecount
+            FROM tbl_forum_subscribe_topic
+            INNER JOIN tbl_forum_topic 
+            ON ( tbl_forum_subscribe_topic.topic_id = tbl_forum_topic.id ) 
+            WHERE tbl_forum_topic.forum_id = "'.$forum_id.'" 
+            AND tbl_forum_subscribe_topic.userid = "'.$userId.'"';
         $number = $this->getArray($sql);
-        
         return  $number[0]['subscribecount'];
     }
     
-    function subscribeUserToTopic($topic_id, $userId)
+    /**
+     * Insert user into the table as a subscriber.
+     * 
+     * @param string $topic_id The id field of the topic
+     * @param string $userId The user id of the subscribed user
+     * @return string The id of the created field
+     */
+    public function subscribeUserToTopic($topic_id, $userId)
     {
         return $this->insert(array(
             'topic_id'=>$topic_id, 
@@ -65,7 +73,7 @@ class dbtopicsubscriptions extends dbtable
     *
     * @return integer Number of topics user is subscribed to
     */
-    function isSubscribedToTopic($topic_id, $userId)
+    public function isSubscribedToTopic($topic_id, $userId)
     {
         $sql = 'WHERE topic_id = "'.$topic_id.'" AND userid = "'.$userId.'"'; 
         
@@ -78,13 +86,25 @@ class dbtopicsubscriptions extends dbtable
         }
     }
     
-    function getUsersSubscribedTopic($topic_id)
+    /**
+     * Get the users who have subscribed to a topic by topic id
+     * 
+     * @param string $topic_id The id field of the topic
+     * @return string Array of email addressesusers subscribed
+     * @access public
+     * 
+     */
+    public function getUsersSubscribedTopic($topic_id)
     {
-        $sql = 'SELECT DISTINCT emailAddress FROM tbl_forum_subscribe_topic INNER JOIN tbl_users ON ( tbl_forum_subscribe_topic.userid = tbl_users.userid ) WHERE topic_id = "'.$topic_id.'"';
+        $sql = 'SELECT DISTINCT emailAddress 
+            FROM tbl_forum_subscribe_topic 
+            INNER JOIN tbl_users 
+            ON ( tbl_forum_subscribe_topic.userid = tbl_users.userid ) 
+            WHERE topic_id = "'.$topic_id.'"';
         return $this->getArray($sql);
     }
     
-    function unsubscribeUserFromTopic($userId,$topic_id){
+    public function unsubscribeUserFromTopic($userId,$topic_id){
             $sql = "DELETE FROM tbl_forum_subscribe_topic WHERE userid='{$userId}' AND topic_id='{$topic_id}'";
             return $this->query($sql);
     }
