@@ -94,6 +94,7 @@ class block_flatview extends object {
                 $htmlTable->cssId = "flatview";
                 $topicDetails = $this->objTopic->getTopicDetails($topic_id);
                 $this->title = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum') . $post['post_title'];
+                $htmlTable->startHeaderRow();
                 // Check if forum is locked - if true - disable / editing replies
                 if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
                         $this->objPost->repliesAllowed = FALSE;
@@ -105,16 +106,18 @@ class block_flatview extends object {
                                 $this->objPost->showModeration = TRUE;
                         }
                 }
-                if ($this->objUser->isCourseAdmin($this->contextCode) || $topicDetails['userid'] == $this->objUser->userId() && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
+                if ($this->objUser->isCourseAdmin($this->contextCode) || $forum['studentstarttopic'] == 'Y' && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
                         $this->objIcon->setIcon('notes');
                         $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['forum_id'], 'type' => $forumtype)));
                         $newtopiclink->link = $this->objIcon->show() . "<br/>" . $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
                         $newtopiclink->cssClass .= 'sexybutton';
                         $newtopiclink->title = $this->objLanguage->languageText('phrase_starttopic', 'system');
-                        $this->objIcon->setIcon('moderate');
                         $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+                        $htmlTable->addHeaderCell($newtopiclink->show(), NULL, NULL, "center");
+                }
+                $this->objIcon->setIcon('moderate');
 //                        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-
+                if ($topicDetails['userid'] == $this->objUser->userId() || $this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
                         $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype)));
                         $moderateTopicLink->cssClass .= 'sexybutton';
                         $moderateTopicLink->link = $this->objIcon->show() . "<br/>{$this->objLanguage->languageText('mod_forum_moderatetopic', 'forum')}";
@@ -141,9 +144,18 @@ class block_flatview extends object {
 //                        $frmModerate->addToForm($cancelButton->show() . '&nbsp;&nbsp;&nbsp;');
 //                        $moderationDiv .= $frmModerate->show();
                         $moderationDiv .= "</div >";
+                        $htmlTable->addHeaderCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
 //                        $moderateTopicLink->link .= $moderationDiv;
 //                                $moderateTopicLink->link .= $optionLink->show();
                 }
+//                if ($forumtype != 'workgroup') {
+//                        if (!$forumlocked) {
+//                                if ($this->objUser->isLoggedIn()) {
+//                                        if ($this->objUser->isCourseAdmin($this->contextCode) || $this->objUser->userId() == $topicDetails['userid']) {
+//                                        }
+//                                }
+//                        }
+//                }
                 /**
                  * @SAVE_BUTTON
                  */
@@ -262,17 +274,6 @@ class block_flatview extends object {
 
                 if (isset($tangentsTable)) {
                         echo $tangentsTable;
-                }
-                $htmlTable->startHeaderRow();
-                if ($forumtype != 'workgroup') {
-                        if (!$forumlocked) {
-                                if ($this->objUser->isLoggedIn()) {
-                                        if ($this->objUser->isCourseAdmin($this->contextCode) || $this->objUser->userId() == $topicDetails['userid']) {
-                                                $htmlTable->addHeaderCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
-                                                $htmlTable->addHeaderCell($newtopiclink->show(), NULL, NULL, "center");
-                                        }
-                                }
-                        }
                 }
                 $noAlerts = new radio('subscription');
                 $noAlerts->addOption('nosubscription', $this->objLanguage->languageText('phrase_nosubscription', 'system'));

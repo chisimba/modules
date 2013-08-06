@@ -613,13 +613,19 @@ class dbPost extends dbTable {
                                 $return .= '<p>';
                         }
                 }
+                //get the date and time difference
                 $dateDiff = $this->objTranslatedDate->getDifference_no_html($post['datecreated'], $this->now(), 'd');
+                //testing date and time
+                $dateFrom = strtotime($post['datecreated']);
+                $dateDiff = strtotime($this->now()) - $dateFrom;
+//                echo '<br/>'.$formetedDate.'<br/>'.  strtotime($this->now()) ;
                 if ($this->showModeration || $this->objUser->userId() == $post['userid']) {
                         if ($topicInfo['status'] == 'OPEN') {
                                 $objDateTime = $this->getObject('dateandtime', 'utilities');
                                 $date = $objDateTime->secondsInDay($dateDiff);
-                                if (count($innerPosts) < 1) {
-                                        if ($date <= 1800) {
+//                                echo $date/60;
+                                if (count($innerPosts) == 0) {
+                                        if ($dateDiff < 1800) {
 //                        if($post['datelastupdated']){
                                                 $tposteditLink = new link('javascript:void(0)');
                                                 $this->objIcon->setIcon('edit');
@@ -630,7 +636,6 @@ class dbPost extends dbTable {
                                                 $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                                                 $deleteLink->link .= $moderatePostIcon;
                                                 $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                                                echo $date;
                                                 $return .= $tposteditLink->show();
                                         }
                                 }
@@ -782,7 +787,7 @@ class dbPost extends dbTable {
                                                 $dLink .= $postEditLink->show();
                                         }
                                         $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
-                                        if ($this->objUser->isCourseAdmin($this->contextCode) || $this->objUser->isContextAuthor()) {
+                                        if ($this->objUser->isCourseAdmin($this->contextCode) || $this->objUser->userId() == $innerPost['userid']) {
                                                 $dLink .= $deleteConfirm . $deleteLink->show();
                                         }
                                 }
