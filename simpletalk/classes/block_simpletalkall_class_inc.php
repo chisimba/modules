@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * A right block for Submit a conference talk.
+ * A show all abstracts block
  *
- * A right block for Submit a conference talk. A simplified version of an interface to submit a conference talk and have it accepted or rejected for a conference..
+ * A show all abstracts block simpletalk.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * 
- * A right block for Submit a conference talk.
+ * A show all abstracts block
  *
- * A right block for Submit a conference talk. A simplified version of an interface to submit a conference talk and have it accepted or rejected for a conference..
+ * A show all abstracts block simpletalk
  *
  * @category  Chisimba
  * @package    simpletalk
@@ -51,7 +51,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright 2010 AVOIR
  *
  */
-class block_simpletalkright extends object
+class block_simpletalkall extends object
 {
     /**
      * The title of the block
@@ -61,6 +61,13 @@ class block_simpletalkright extends object
      */
     public $title;
     /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
+    /**
      * Standard init function
      *
      * Create title
@@ -69,7 +76,11 @@ class block_simpletalkright extends object
      */
     public function init() 
     {
-        $this->title = "Right block sample";
+        // Get an instance of the languate object
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText("mod_simpletalk_showall",
+            "simpletalk", "All submitted abstracts");
+        $this->wrapStr = FALSE;
     }
     /**
      * Standard block show method.
@@ -78,7 +89,8 @@ class block_simpletalkright extends object
      */
     public function show() 
     {
-        return "This is a demonstration right block.";
+        $objOps = $this->getObject('simpletalkops', 'simpletalk');
+        return $objOps->showAllAbstracts();
     }
 }
 ?>

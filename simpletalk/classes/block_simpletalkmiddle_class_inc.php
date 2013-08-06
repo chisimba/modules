@@ -59,6 +59,13 @@ class block_simpletalkmiddle extends object
      * @access public
      */
     public $title;
+    /**
+     *
+     * @var string Object $objLanguage String for the language object
+     * @access public
+     *
+     */
+    public $objLanguage;
 
     /**
      * Standard init function
@@ -69,7 +76,11 @@ class block_simpletalkmiddle extends object
      */
     public function init() 
     {
-        $this->title = "Submit abstract";
+        // Get an instance of the languate object
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText("mod_simpletalk_submit",
+            "simpletalk", "Submit an abstract");
+        $this->wrapStr = FALSE;
     }
     /**
      * Standard block show method.

@@ -86,7 +86,7 @@ class simpletalkops extends object
     */
     public function init()
     {
-        // Get an instance of the languate object
+        // Get an instance of the languate object.
         $this->objLanguage = $this->getObject('language', 'language');
         // Instantiate the user object.
         $this->objUser = $this->getObject('user', 'security');
@@ -96,40 +96,36 @@ class simpletalkops extends object
      *
      * Get the text of the init_overview that we have in the sample database.
      *
+     * @param string $mode The mode, either edit or add
      * @return string The text of the init_overview
      * @access public
      *
      */
-    public function showForm($edit=FALSE)
+    public function showForm($mode=FALSE)
     {
+        // Set edit or add as the mode.
+        if (!$mode) {
+            $mode = $this->getParam('mode', 'add');
+        }
         
         // Load required classes from htmlelements.
         $this->loadClass('form','htmlelements');
         $this->loadClass('textinput','htmlelements');
         $this->loadClass('textarea','htmlelements');
         $this->loadClass('dropdown','htmlelements');
-        $this->loadClass ('hiddeninput', 'htmlelements');
-        
-        // Initialise the return string.
-        $ret = "";
-        
-        // Use DOM to build the wrapper
-        $doc = new DOMDocument('UTF-8');
-        $wrapper = $doc->createElement('div');
-        $wrapper->setAttribute('class', 'simpletalk_form');
         
         // Create the form for the talk submission.
         $paramArray=array(
             'action'=>'save');
         $formAction = $this->uri($paramArray, 'simpletalk');
         $formAction =  str_replace("&amp;", "&", $formAction);
-        $objForm = new form('simplefeedback');
+        $objForm = new form('simpletalk');
         $objForm->setAction($formAction);
         $objForm->displayType=3;
         
         // Check for edit and load values
-        if ($edit) { 
-            die("EDIT not ready yet");
+        if ($mode == 'edit') { 
+            die("EDIT not ready yet. Awaiting a round tuit.");
         } else {
             $title = NULL;
             $authors = NULL;
@@ -151,7 +147,7 @@ class simpletalkops extends object
         $objAuth = new textinput('authors', $authors);
         $objAuth->id='simpletalk_authors';
         $authLabel = $this->objLanguage->languageText("mod_simpletalk_authors",
-            "simpletalk", "List of authors, as SURNAME, INITIAL; SURNAME, INITIAL");
+            "simpletalk", "List of authors, in the format SURNAME, INITIAL; SURNAME, INITIAL");
         $authShow = $authLabel . ":<br />" . $objAuth->show() . "<br />";
         $objForm->addToForm($authShow);
         
@@ -197,18 +193,137 @@ class simpletalkops extends object
         $reqShow = $reqLabel . ":<br />" . $req->show() . "<br />";
         $objForm->addToForm($reqShow);
         
-        //Add a save button
+        // Add a save button.
         $objButton = $this->newObject('button', 'htmlelements');
-        $objButton->button('go',$this->objLanguage->languageText('word_go'));
-        $objButton->setCSS('sb_searchbutton');
-        $objButton->sexyButtons=FALSE;
+        $objButton->button('saveo',$this->objLanguage->languageText('word_save'));
+        $objButton->sexyButtons=TRUE;
         $objButton->setToSubmit();
         $objForm->addToForm($objButton->show());
         
-        // Sent back the form
-        return $objForm->show();
-        
+        // Sent back the form in a wrapper div.
+        return '<div class="simpletalk_wrap">' . $objForm->show() . '</div>';
     }
-
+    
+    public function showAllAbstracts()
+    {
+        if ($this->checkManagementRights()) {
+            return $this->listAllAbstracts();
+        } else {
+            return $this->objLanguage->languageText("mod_simpletalk_noright",
+            "simpletalk", "Only abstract administrators can view these data");
+        }
+    }
+    
+    /**
+     * 
+     * List all the abstracts
+     * 
+     * @return string Formatted table output
+     * @access private
+     * 
+     */
+    private function listAllAbstracts()
+    {
+        $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
+        $abstractAr = $objDb->getAbstracts();
+        $doc = new DOMDocument('UTF-8');
+        $tbl = $doc->createElement('table');
+        //Initialize the odd/even counter.
+        $rowcount = 0;
+        foreach ($abstractAr as $abstract) {
+            $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+            
+            // The title.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $h3 = $doc->createElement('h3');
+            $title = $abstract['title'];
+            $h3->appendChild($doc->createTextNode($title));
+            $td->appendChild($h3);
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+             
+            // The authors.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $authors = $abstract['authors'];
+            $td->appendChild($doc->createTextNode($authors));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The talk duration.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $duration = $abstract['duration'];
+            $td->appendChild($doc->createTextNode($duration));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The talk track.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $track = $abstract['track'];
+            $td->appendChild($doc->createTextNode($track));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The abstract.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $abstractTxt = $abstract['abstract'];
+            $td->appendChild($doc->createTextNode($abstractTxt));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The requirements.
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $requirements = $abstract['requirements'];
+            $td->appendChild($doc->createTextNode($requirements));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // Set rowcount for bitwise determination of odd or even
+            $rowcount = ($rowcount == 0) ? 1 : 0;
+        }
+        $wrapper = $doc->createElement('div');
+        $wrapper->setAttribute('class', 'simpletalk_wrap');
+        $wrapper->appendChild($tbl);
+        $doc->appendChild($wrapper);
+        
+        return $doc->saveHTML();
+    }
+    
+    
+    /**
+     *
+     * Check if a user should be able to manage abstracts based on
+     * is admin or membership of the SimpleTalkReviewers group
+     * 
+     * @return boolean If they have rights or not 
+     * @access public
+     */
+    public function checkManagementRights()
+    {
+        $ret=FALSE;
+        $userId = $this->objUser->userId();
+        // Admins can make blogs
+        $objGa = $this->getObject('gamodel','groupadmin');
+        $groupId = $objGa->getId("SimpleTalkReviewers");
+        $objGroupOps = $this->getObject("groupops", "groupadmin");
+        $edGroup = $objGroupOps->isGroupMember($groupId, $userId);     
+        if ($this->objUser->isLoggedIn()) {
+            if ($this->objUser->isAdmin() || $edGroup ) {
+                $ret = TRUE;
+            }
+        }
+        return $ret;
+    }
 }
 ?>

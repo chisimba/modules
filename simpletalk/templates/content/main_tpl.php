@@ -31,6 +31,11 @@ $objFix->fixThree();
             "module" : "simpletalk",
             "block" : "simpletalkmiddle"
         }
+        {
+            "display" : "block",
+            "module" : "simpletalk",
+            "block" : "simpletalkall"
+        }
         <div id="middledynamic_area" class="middledynamic_area_layer">&nbsp;</div>
         <div id="middlefeedback_area" class="middlefeedback_area_layer">&nbsp;</div>
     </div>
