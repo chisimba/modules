@@ -721,13 +721,13 @@ class simpleblogops extends object
             'id' => $id
         ), 'simpleblog');
         // The retweet button style
-        $style = 'vertical';
+        $style = 'small';
         $via = NULL;
         $related = NULL;
         // The retweet button
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
         // Google plus button
-        $plsBtn = $this->objPlusButton->getButton('tall', htmlspecialchars_decode($titleUri));
+        $plsBtn = $this->objPlusButton->getButton('small', htmlspecialchars_decode($titleUri));
         // Add the Facebook like button.
         $fbL = $this->getObject('fblikebttn', 'socialweb');
         $fbLikeButton = $fbL->getButton($titleUri);
@@ -747,7 +747,7 @@ class simpleblogops extends object
         $createDate = $post['datecreated'];
         $editDate = $post['datemodified'];
         $topDay = date("d",strtotime($createDate));
-        $topMonth = date("F",strtotime($createDate));
+        $topMonth = date("M",strtotime($createDate));
         $topYear = date("Y",strtotime($createDate));
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
@@ -763,6 +763,9 @@ class simpleblogops extends object
           . '</div>'
           . $titleO . '</div></div></div>';
         $title = "<div id='blog_title_wrapper' >
+                                <div class='social_buttons'>{$plsBtn}<br/>
+                                {$rt}{$fbLikeButton}
+                                </div>
                                 <div id='blog_post_title' >
                                         {$postTitle}
                                 </div>
@@ -795,7 +798,7 @@ class simpleblogops extends object
             $postTags = $this->formatTags($postTags, $blogId);
         }
         $tags = "\n<div class='simpleblog_post_tags'>" . $postTags . "</div>\n";
-        $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}</div>\n";
+        $foot = "\n<div class='simpleblog_post_footer'>{$poster} {$postDate}{$edel}</div>\n";
         
         // The wall stuff, use only if we should use the wall module here.
         if ($this->usesWall) {
