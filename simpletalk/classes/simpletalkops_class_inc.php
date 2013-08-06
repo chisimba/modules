@@ -127,12 +127,19 @@ class simpletalkops extends object
         $objForm->setAction($formAction);
         $objForm->displayType=3;
         
-        // Add the title to the form.
+        // Check for edit and load values
         if ($edit) { 
-            $title = "EDIT not ready yet";
+            die("EDIT not ready yet");
         } else {
             $title = NULL;
+            $authors = NULL;
+            $duration = NULL;
+            $track = NULL;
+            $abstract = NULL;
+            $requirements = NULL;
         }
+        
+        // Add the title to the form.
         $objTitle = new textinput('title', $title);
         $objTitle->id='simpletalk_title';
         $titleLabel = $this->objLanguage->languageText("mod_simpletalk_title",
@@ -140,30 +147,37 @@ class simpletalkops extends object
         $titleShow = $titleLabel . ":<br />" . $objTitle->show() . "<br />";
         $objForm->addToForm($titleShow);
         
+        // Add the authors to the form.
+        $objAuth = new textinput('authors', $authors);
+        $objAuth->id='simpletalk_authors';
+        $authLabel = $this->objLanguage->languageText("mod_simpletalk_authors",
+            "simpletalk", "List of authors, as SURNAME, INITIAL; SURNAME, INITIAL");
+        $authShow = $authLabel . ":<br />" . $objAuth->show() . "<br />";
+        $objForm->addToForm($authShow);
+        
         // Add the talk type dropdown to the form.
         $shortTalk = $this->objLanguage->languageText("mod_simpletalk_short",
             "simpletalk", "Short talk (10-25 minutes)");
         $longTalk = $this->objLanguage->languageText("mod_simpletalk_long",
             "simpletalk", "Full talk (45 minutes)");
         $objDd = new dropdown('duration');
-        $objDd->addOption('short', $shortTalk);
-        $objDd->addOption('long', $longTalk);
+        $dbDd = $this->getObject('dbdurations', 'simpletalk');
+        $rsDd = $dbDd->getDurations();
+        foreach ($rsDd as $item) {
+            $objDd->addOption($item['duration'], $item['duration_label']);
+        }
         $ddLabel = $this->objLanguage->languageText("mod_simpletalk_duration",
             "simpletalk", "Talk duration");
         $ddShow = $ddLabel . ":<br />" . $objDd->show() . "<br />";
         $objForm->addToForm($ddShow);
         
         // Add the talk track dropdown to the form.
-        $trackOne = $this->objLanguage->languageText("mod_simpletalk_track1",
-            "simpletalk", "Free software in business (particularly SMES)");
-        $trackTwo = $this->objLanguage->languageText("mod_simpletalk_track2",
-            "simpletalk", "Free software in government and education");
-        $trackThree = $this->objLanguage->languageText("mod_simpletalk_track3",
-            "simpletalk", "Free software for geeks");
         $objDd = new dropdown('track');
-        $objDd->addOption('1', $trackOne);
-        $objDd->addOption('2', $trackTwo);
-        $objDd->addOption('3', $trackThree);
+        $dbDd = $this->getObject('dbtracks', 'simpletalk');
+        $rsDd = $dbDd->getTracks();
+        foreach ($rsDd as $item) {
+            $objDd->addOption($item['track'], $item['track_label']);
+        }
         $ddLabel = $this->objLanguage->languageText("mod_simpletalk_track",
             "simpletalk", "Talk track");
         $ddShow = $ddLabel . ":<br />" . $objDd->show() . "<br />";

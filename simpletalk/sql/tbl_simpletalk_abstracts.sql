@@ -36,6 +36,10 @@ $fields = array(
         'type' => 'text',
         'length' => 250,
     ),
+    'authors' => array(
+        'type' => 'text',
+        'length' => 250,
+    ),
     'duration' => array(
         'type' => 'text',
         'length' => 10,
