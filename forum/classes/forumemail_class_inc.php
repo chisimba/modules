@@ -191,7 +191,12 @@ class forumemail extends object {
         function sendEmail($parent_id, $title, $text, $forum, $senderId, $replyUrl) {
                 $postDetails = $this->objPost->getPostWithText($parent_id);
                 $topicDetails = $postDetails['topic_id'];
-                $this->prepareListEmail($topicDetails['id']);
+//                echo $postDetails['topic_id'];
+                // Get Users Subscribed to Topic
+                $objTopicSubscribers = & $this->getObject('dbtopicsubscriptions');
+                var_dump($objTopicSubscribers->getUsersSubscribedTopic($postDetails['topic_id']));
+//                $this->prepareListEmail($postDetails['topic_id']);
+//                $this->emailList = array(0=>'wsifumba@gmail.com');
 //                $this->emailList = array(
 //                    0 => 'wsifumba@gmail.com'
 //                );
@@ -200,7 +205,7 @@ class forumemail extends object {
                         $this->loadClass('link', 'htmlelements');
 
                         //set eMail subject to topic ID/ without (gen)
-                        $subject = '[' . $forum . ']-' . str_replace('gen', '', $topic_id);
+                        $subject = '[' . $forum . ']-' . str_replace('gen', '', $postDetails['topic_id']);
 
                         $line1 = $this->objLanguage->languageText('mod_forum_emailtextline1', 'forum', '{NAME} has posted the following message to the {FORUM} discussion forum') . ':';
                         $line1 = str_replace('{NAME}', $this->objUser->fullname($senderId), $line1);
@@ -227,7 +232,8 @@ class forumemail extends object {
 
                         $body = '<html><head></head><body>' . $message . '</body></html>';
 
-                        $from = $topic_id . '@' . 'chisimba.tohir.co.za';
+                        $from = $this->objDbConfig->getValue('forum_inbox_username');
+//                        $from = $postDetails['topic_id'] . '@' . 'chisimba.tohir.co.za';
                         $fromName = $this->objUser->fullname($senderId);
 
                         // Setup Alternate Message - Convert '&amp;' back to '&'
@@ -245,7 +251,7 @@ class forumemail extends object {
                         $this->objMailer->setValue('htmlbody', $message);
                         return $this->objMailer->send();
                 } else {
-                        return NULL;
+                        var_dump($this->emailList);
                 }
         }
 

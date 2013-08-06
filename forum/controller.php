@@ -1206,6 +1206,7 @@ class forum extends controller {
                 } else {
                         $emailSuccess = NULL;
                 }
+//                echo $postParent.'<br/>'.$postParent;
                 $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);

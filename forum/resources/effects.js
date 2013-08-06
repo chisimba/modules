@@ -97,7 +97,7 @@ jQuery(document).ready(function() {
                                                 attachment: attachment_id
                                         },
                                         success: function(data) {
-//                                                alert(data);
+                                                alert(data);
                                                 jQuery('span#confirm').hide();
                                                 jQuery('body').append('<div class="blurPopUp"><span id="confirm" class="centered">Post saved successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
                                                 jQuery('.postEditClass').show();
