@@ -752,7 +752,8 @@ class simpleblogops extends object
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
         }
-        $titleO = "<div class='simpleblog_post_title'><div class='titletxt'>"
+        /* CRUFT LEFT BY MONWABISI
+         * $titleO = "<div class='simpleblog_post_title'><div class='titletxt'>"
           . $postTitle . "</div><div class='social_buttons'>" . $edel 
           . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
         $titleO = '<div class="sbpost_title_wrapper">' 
@@ -761,12 +762,14 @@ class simpleblogops extends object
           . '<div class="date-month">' . $topMonth . '</div>'
           . '<div class="date-year">' . $topYear . '</div>'
           . '</div>'
-          . $titleO . '</div></div></div>';
-        $title = "<div id='blog_title_wrapper' >
+          . $titleO . '</div></div></div>';*/
+        
+        // I did not leave my code looking like this 
+        $title = "<div id='sb_title_wrapper' >
                                 <div class='social_buttons'>{$plsBtn}<br/>
                                 {$rt}{$fbLikeButton}
                                 </div>
-                                <div id='blog_post_title' >
+                                <div id='sb_post_title' >
                                         {$postTitle}
                                 </div>
                         </div>";
@@ -805,8 +808,6 @@ class simpleblogops extends object
             $viewWall = $this->objLanguage->languageText("mod_simpleblog_viewwall",
                     "simpleblog", "Blog wall");
             $wallText = "<span class='simpleblog_view_wall'>$viewWall</span>";
-
-            //$numPosts = $this->objDbwall->countPosts(4, FALSE, 'identifier', $id);
             $numPosts = $post['comments'];
 
             if ($numPosts == 0) {
@@ -831,12 +832,12 @@ class simpleblogops extends object
         } else {
             $wall = NULL;
         }
-
+// I did not leave my code looking like this shit.
         return "
-                                <div id='blog_date_wrapper' >
-                                        <div id='blog-date-day' >{$topDay}</div>
-                                        <div id='blog-date-month' >{$topMonth}</div>
-                                        <div id='blog-date-year' >{$topYear}</div>
+                                <div id='sb_date_wrapper' >
+                                        <div id='sb-date-day' >{$topDay}</div>
+                                        <div id='sb-date-month' >{$topMonth}</div>
+                                        <div id='sb-date-year' >{$topYear}</div>
                                 </div>
                 <div class='simpleblog_post_wrapper' id='wrapper_{$id}'>"
           . $title . $content . $tags . $foot . $wall

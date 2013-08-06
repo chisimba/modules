@@ -94,9 +94,7 @@ class block_personalblog extends object
         $this->wrapStr = FALSE;
         // Get an instance of the user object
         $this->objUser = $this->getObject('user', 'security');
-        
-        
-                // Get the blog posts db.
+        // Get the blog posts db.
         $this->objDbPosts = $this->getObject('dbsimpleblog', 'simpleblog');
     }
     
