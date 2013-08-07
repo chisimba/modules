@@ -721,7 +721,7 @@ class simpleblogops extends object
             'id' => $id
         ), 'simpleblog');
         // The retweet button style
-        $style = 'small';
+        $style = 'vertical';
         $via = NULL;
         $related = NULL;
         
@@ -729,7 +729,7 @@ class simpleblogops extends object
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
         
         // Google plus button
-        $plsBtn = $this->objPlusButton->getButton('small', htmlspecialchars_decode($titleUri));
+        $plsBtn = $this->objPlusButton->getButton('tall', htmlspecialchars_decode($titleUri));
         
         // Add the Facebook like button.
         $fbL = $this->getObject('fblikebttn', 'socialweb');
