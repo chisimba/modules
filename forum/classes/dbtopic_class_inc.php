@@ -142,12 +142,14 @@ class dbtopic extends dbTable {
         // Get topic to get number of replies thus far
         $record = $this->listSingle($topic_id);
 
-        $this->update('id', $topic_id, array(
+        if($this->update('id', $topic_id, array(
                 'last_post'     => $post_id,
                 'replies'       => $record['replies'] + 1
-        ));
-
-        return;
+        ))){
+        return  TRUE;
+        }else{
+                return FALSE;
+        }
     }
 
 

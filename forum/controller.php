@@ -462,34 +462,48 @@ class forum extends controller {
                 $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, 'chisimba.tohir.co.za');
 //
                 $numMessages = $this->emailBox->getNumMessages();
-                $emailDetails = $this->emailBox->getEmailDetails(6);
+                $emailDetails = $this->emailBox->getEmailDetails(3);
                 //get the eMail address of the user
                 $userEmail = $emailDetails['sender'];
-                //get the message subject to be used for retrieving the topic
-                $eMailSubject = $emailDetails['subject'];
-                $end = strpos($eMailSubject, '-');
-                //extract the topic ID from the message subject
-                $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
-                $topicDetails = $this->objTopic->getTopicDetails($topic_id);
-                if (count($topicDetails) > 0) {
-                        //get the topic's forum ID
-                        $forum_id = $topicDetails['forum_id'];
-                        /**
-                         * Create the post.
-                         */
-                        //get the message body to be used as post text
-                        $post_text = $emailDetails['messageBody'];
-                        //get the first post of the topic to be used as the post parent
-                        $postParent = $topicDetails['first_post'];
-                        $firstPostDetails = $this->objPost->getPostWithText($postParent);
-                        //get the first topic's title and assing it to the reply
-                        $post_title = $firstPostDetails['post_title'];
-                        //language
-                        $language = $firstPostDetails['language'];
-                        $this->saveReply(NULL, $firstPostDetails['postid'], $forum_id, $topic_id, $post_title, $post_text, $language);
-                } else {
-                        //Generate an error indicating that the topic does not exist
-                }
+                //get user information using the eMail address
+//                if ($this->objUser->valueExists('emailaddress', $userEmail)) {
+                        //get the users information
+                        $userDetails = $this->objUser->getRow('emailaddress',$userEmail);
+                        //get the user ID
+                        $userId = $userDetails['userid'];
+//                        echo "<pre>";
+//                        var_dump($userDetails);
+//                        echo "<pre>";
+                        //get the message subject to be used for retrieving the topic
+                        $eMailSubject = $emailDetails['subject'];
+                        $end = strpos($eMailSubject, '-');
+                        //extract the topic ID from the message subject
+                        $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
+                        $topicDetails = $this->objTopic->getTopicDetails($topic_id);
+                        if (count($topicDetails) > 0) {
+                                //get the topic's forum ID
+                                $forum_id = $topicDetails['forum_id'];
+                                /**
+                                 * Create the post.
+                                 */
+                                //get the message body to be used as post text
+                                $post_text = $emailDetails['messageBody'];
+                                //get the first post of the topic to be used as the post parent
+                                $postParent = $topicDetails['first_post'];
+                                $firstPostDetails = $this->objPost->getPostWithText($postParent);
+                                //get the first topic's title and assing it to the reply
+                                $post_title = $firstPostDetails['post_title'];
+                                //language
+                                $language = $firstPostDetails['language'];
+                                $this->saveReply(NULL, $postParent, $forum_id, $topic_id, $post_title,$post_text, $language,$userId);
+                        } else {
+                                echo "<h1>Topic does not exists</h1>";
+                                //Generate an error indicating that the topic does not exist
+                        }
+//                }else{
+////                        echo "<h1>User does not exists</h1>";
+////                        //Generate an error indicating that the user does not exist;
+//                }
                 /*
                  * END
                  */
@@ -1078,8 +1092,8 @@ class forum extends controller {
         /**
          * Method to save a reply to a topic
          */
-        public function saveReply($attachment_id = NULL, $postParent = NULL, $forum_id = NULL, $topic_id = NULL, $post_title = NULL, $post_text, $language = NULL) {
-
+        public function saveReply($attachment_id = NULL, $postParent = NULL, $forum_id = NULL, $topic_id = NULL, $post_title = NULL, $post_text=NULL, $language = NULL,$user_id=NULL) {
+                
                 $tempPostId = $this->objUser->userId() . '_' . mktime()/* $_POST['temporaryId'] */;
                 //set the temporary ID so it can be used by other functions
                 $this->setVarByref('attachment_tempid', $tempPostId);
@@ -1092,7 +1106,6 @@ class forum extends controller {
                 //parentID
                 if ($postParent == NULL) {
                         $postParent = $this->getParam('parent');
-                        $post_parent = $postParent;
                 }
                 $post_tangent_parent = 0;
                 //
@@ -1114,11 +1127,11 @@ class forum extends controller {
                         $post_title = $this->getParam('posttitle');
                 }
                 //get the message if message is not supplied in as parameter
-                if ($post_text) {
+                if ($post_text == NULL) {
                         $post_text = $this->getParam('message');
                 }
                 //get the lanugage.
-                if ($language = NULL) {
+                if ($language == NULL) {
                         $language = $this->getParam('lang');
                 }
 //                $language = 'en';
@@ -1127,30 +1140,34 @@ class forum extends controller {
                 } else {
                         $original_post = 0;
                 }
+                //user ID
+                if($user_id == NULL){
+                        $user_id = $this->userId;
+                }
                 $level = $parentPostDetails['level'];
                 // Some Server side validation - Redirect Form - Check details of the post
                 // Validation
                 //     - Remove Tags
                 //     - &nbsp; becomes [nothing]
                 //     - trim whitespace
-                if (trim(strip_tags(str_replace('&nbsp;', '', $post_text))) == '') {
-                        // Capture details to put in array - Preserve User's work
-                        $details = array('replytype' => $replyType, 'title' => $post_title, 'language' => $language, 'temporaryId' => $tempPostId);
-                        // set array as a session
-                        $this->setSession($tempPostId, $details);
-                        // Redirect back to for
-//                        return $this->nextAction('postreply', array('id' => $postParent, 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $tempPostId));
-                } else {
-                        $this->unsetSession($tempPostId);
-                }
-                $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $this->userId, $level);
-                $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
+//                if (trim(strip_tags(str_replace('&nbsp;', '', $post_text))) == '') {
+//                        // Capture details to put in array - Preserve User's work
+//                        $details = array('replytype' => $replyType, 'title' => $post_title, 'language' => $language, 'temporaryId' => $tempPostId);
+//                        // set array as a session
+//                        $this->setSession($tempPostId, $details);
+//                        // Redirect back to for
+////                        return $this->nextAction('postreply', array('id' => $postParent, 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $tempPostId));
+//                } else {
+//                        $this->unsetSession($tempPostId);
+//                }
+                $post_id = $this->objPost->insertSingle($postParent, $post_tangent_parent, $forum_id, $topic_id, $user_id, $level);
+                $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $user_id);
                 $this->objTopic->updateLastPost($topic_id, $post_id);
                 $this->objForum->updateLastPost($forum_id, $post_id);
 //                // Email Post
                 $forumDetails = $this->objForum->getForum($forum_id);
-                $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($topic_id, $this->objUser->userId());
-                $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $this->objUser->userId());
+                $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($topic_id, $user_id);
+                $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $user_id);
 ////                echo print_r($forumSubscription).'<br/>'.print_r($topicSubscription).'<br/>'.print_r($forumDetails);
 //                //get the forum
                 $forum = $this->objForum->getForum($forum_id);
@@ -1165,18 +1182,18 @@ class forum extends controller {
                 if (isset($forum['subscriptions'])) {
                         if ($forum['subscriptions'] == 'forumsubscribe') { // First check subscriptions to forum
                                 if (!$forumSubscription) { // If not subscribed to forum, subscribe user now.
-                                        $this->objForumSubscriptions->subscribeUserToForum($forum_id, $this->objUser->userId());
+                                        $this->objForumSubscriptions->subscribeUserToForum($forum_id, $user_id);
                                 }
                         } else if ($forum['subscriptions'] == 'topicsubscribe') { // Now check if the user wants to subscribe to the topic
                                 if ($forumSubscription) { // If user was subscribed to forum, remove subscription
-                                        $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
+                                        $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $user_id);
                                 }
                                 // Now subscribe user to topic, if the user was not subscribed to the topic
                                 if (!$topicSubscription) {
-                                        $this->objTopicSubscriptions->subscribeUserToTopic($topic_id, $this->objUser->userId());
+                                        $this->objTopicSubscriptions->subscribeUserToTopic($topic_id, $user_id);
                                 }
                         } else if ($forum['subscriptions'] == 'nosubscriptions') { // Else remove subscription from topic
-                                $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $this->objUser->userId());
+                                $this->objForumSubscriptions->unsubscribeUserFromForum($forum_id, $user_id);
                         }
                 }
                 $forumDetails['subscriptions'] = "Y";
@@ -1187,7 +1204,7 @@ class forum extends controller {
                 } else {
                         $emailSuccess = NULL;
                 }
-                $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+                $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $user_id, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);
 //                return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
