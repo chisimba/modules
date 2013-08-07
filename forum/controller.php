@@ -479,7 +479,6 @@ class forum extends controller {
                          */
                         //get the message body to be used as post text
                         $post_text = $emailDetails['messageBody'];
-                        echo $post_text;
                         //get the first post of the topic to be used as the post parent
                         $postParent = $topicDetails['first_post'];
                         $firstPostDetails = $this->objPost->getPostWithText($postParent);
@@ -487,7 +486,7 @@ class forum extends controller {
                         $post_title = $firstPostDetails['post_title'];
                         //language
                         $language = $firstPostDetails['language'];
-//                        $this->saveReply(NULL, $firstPostDetails['postid'], $forum_id, $topic_id, $post_title, $post_text, $language);
+                        $this->saveReply(NULL, $firstPostDetails['postid'], $forum_id, $topic_id, $post_title, $post_text, $language);
                 } else {
                         //Generate an error indicating that the topic does not exist
                 }
