@@ -76,6 +76,7 @@ class forum extends controller {
                 $this->userId = $this->objUser->userId();
                 $this->isLoggedIn = $this->objUser->isLoggedIn();
                 $this->objLanguage = & $this->getObject('language', 'language');
+                $this->objTopic = $this->getObject('dbtopic', 'forum');
 
                 // Forum Classes
                 $this->objForum = & $this->getObject('dbforum');
@@ -455,75 +456,40 @@ class forum extends controller {
                 $emailUserName = $this->objDbConfig->getValue('forum_inbox_username', 'forum');
                 $emailPassword = $this->objDbConfig->getValue('forum_inbox_password', 'forum');
                 $emailCatchAll = $this->objConfig->getValue('forum_inbox_catchall', 'forum');
-
-
                 /**
                  * @TESTING
                  */
                 $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, 'chisimba.tohir.co.za');
 //
                 $numMessages = $this->emailBox->getNumMessages();
-                $emailDetails = $this->emailBox->getEmailDetails(1);
-                echo $numMessages;
-
-
-                /**
-                 * @TESTING
-                 */
-                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, CATCH_ALL_BASE);
-
-                $numMessages = $this->emailBox->getNumMessages();
-
-                if ($numMessages > 0) {
-                        for ($emailNum = 1; $emailNum <= $numMessages; $emailNum++) {
-//
-//                                // Retrieve Basic Details of Email From the Headers
-                                $emailDetails = $this->emailBox->getEmailDetails($emailNum);
-//                                var_dump($emailDetails);
-//
-                                $split = explode('-', $emailDetails['subject']);
-                                //get the topic ID
-                                $topic_id = 'gen' . $split[1];
-                                //get the topic details
-                                $topicDetails = $this->dbTopic->getTopicDetails($topic_id);
-                                //get the post details
-                                $postDetails = $this->dbPost->getPostWithText($topicDetails['first_post']);
-                                if ($topicDetails == TRUE) {
-                                        $post_parent = $topicDetails['first_post'];
-                                        $forum_id = $topicDetails['forum_id'];
-                                        //get the forum object
-                                        $objForum = $this->getObject('dbforum', 'forum');
-                                        $forumDetails = $objForum->getForum($forum_id);
-                                        $post_title = $topicDetails['post_title'];
-                                        //
-                                        $partialMessage = explode('\n', $emailDetails['messageBody']);
-                                        $theOtherOne = $partialMessage[0];
-                                        $post_text = $emailDetails['messageBody'];
-                                        $language = $postDetails['language'];
-                                        $userDetails = $this->objUser->getRow('emailaddress', $emailDetails['sender']);
-                                        //check if the user is a member of the site
-                                        if ($userDetails) {
-                                                $userID = $userDetails['userid'];
-                                                $level = $postDetails['level'];
-                                                if ($this->objUserContext->isContextMember($this->objUser->userId(), $forumDetails['contextcode'])) {
-//                                                        $post_id = $this->dbPost->insertSingle($post_parent, 0, $forum_id, $topic_id, $userID, $level);
-//                                                        $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $post_parent, $userID);
-//                                                        $this->dbTopic->updateLastPost($topic_id, $post_id);
-//                                                        $this->dbForum->updateLastPost($forum_id, $post_id);
-//                                                        $this->emailBox->deleteEmail($emailNum);
-                                                }
-                                        }
-                                } else {
-                                        echo "<h1>{$this->objLanguage->languageText('mod_forum_topicdoesnotexist', 'forum')}</h1>";
-                                }
-//
-//                                // Mark Email for deletion
-//                                $this->emailBox->deleteEmail($emailNum);
-                        }
-//                        // Expunge Deleted Mail
-                        unset($this->emailBox);
+                $emailDetails = $this->emailBox->getEmailDetails(6);
+                //get the eMail address of the user
+                $userEmail = $emailDetails['sender'];
+                //get the message subject to be used for retrieving the topic
+                $eMailSubject = $emailDetails['subject'];
+                $end = strpos($eMailSubject, '-');
+                //extract the topic ID from the message subject
+                $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
+                $topicDetails = $this->objTopic->getTopicDetails($topic_id);
+                if (count($topicDetails) > 0) {
+                        //get the topic's forum ID
+                        $forum_id = $topicDetails['forum_id'];
+                        /**
+                         * Create the post.
+                         */
+                        //get the message body to be used as post text
+                        $post_text = $emailDetails['messageBody'];
+                        echo $post_text;
+                        //get the first post of the topic to be used as the post parent
+                        $postParent = $topicDetails['first_post'];
+                        $firstPostDetails = $this->objPost->getPostWithText($postParent);
+                        //get the first topic's title and assing it to the reply
+                        $post_title = $firstPostDetails['post_title'];
+                        //language
+                        $language = $firstPostDetails['language'];
+//                        $this->saveReply(NULL, $firstPostDetails['postid'], $forum_id, $topic_id, $post_title, $post_text, $language);
                 } else {
-                        echo "<h1>{$this->objLanguage->languageText('mod_forum_inboxempty', 'forum')}</h1>";
+                        //Generate an error indicating that the topic does not exist
                 }
                 /*
                  * END
@@ -1113,33 +1079,49 @@ class forum extends controller {
         /**
          * Method to save a reply to a topic
          */
-        public function saveReply() {
+        public function saveReply($attachment_id = NULL, $postParent = NULL, $forum_id = NULL, $topic_id = NULL, $post_title = NULL, $post_text, $language = NULL) {
 
                 $tempPostId = $this->objUser->userId() . '_' . mktime()/* $_POST['temporaryId'] */;
                 //set the temporary ID so it can be used by other functions
                 $this->setVarByref('attachment_tempid', $tempPostId);
                 //get the attachment id
-                $attachment_id = $this->getParam('attachment');
+                if ($attachment_id == NULL) {
+                        $attachment_id = $this->getParam('attachment');
+                }
                 //reply type
                 $replyType = $this->objLanguage->languageText('word_reply', 'system');
                 //parentID
-                $postParent = $this->getParam('parent');
-                $post_parent = $postParent;
+                if ($postParent == NULL) {
+                        $postParent = $this->getParam('parent');
+                        $post_parent = $postParent;
+                }
                 $post_tangent_parent = 0;
                 //
 
                 $parentPostDetails = $this->objPost->getRow('id', $postParent);
                 //get the forum ID
-                $forum_id = $this->getParam('forum_id');
+                if ($forum_id == NULL) {
+                        $forum_id = $this->getParam('forum_id');
+                }
                 //get topic ID
-                $topic_id = $this->getParam('topicid');
+                if ($topic_id == NULL) {
+                        $topic_id = $this->getParam('topicid');
+                }
                 //we need this because IE is failing to pass it over
                 $this->setSession('current_topic_id', $topic_id);
                 $type_id = $this->getSession('discussionType'); //$_POST['discussionType'];
                 //get the post title
-                $post_title = $this->getParam('posttitle');
-                $post_text = $this->getParam('message');
-                $language = $this->getParam('lang');
+                if ($post_title == NULL) {
+                        $post_title = $this->getParam('posttitle');
+                }
+                //get the message if message is not supplied in as parameter
+                if ($post_text) {
+                        $post_text = $this->getParam('message');
+                }
+                //get the lanugage.
+                if ($language = NULL) {
+                        $language = $this->getParam('lang');
+                }
 //                $language = 'en';
                 if (strlen($postParent) == 0) {
                         $original_post = 1;
@@ -1174,7 +1156,7 @@ class forum extends controller {
 //                //get the forum
                 $forum = $this->objForum->getForum($forum_id);
 //                
-                if (!empty($attachment_id)) {
+                if (!empty($attachment_id) || $attachment_id != NULL) {
                         //set the attachment ID to be used by other functions
                         $this->setVarByRef('attachment_id', $attachment_id);
                         $this->saveTempAttachmentIfAny($post_id, $attachment_id);
@@ -1206,7 +1188,6 @@ class forum extends controller {
                 } else {
                         $emailSuccess = NULL;
                 }
-//                echo $postParent.'<br/>'.$postParent;
                 $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);

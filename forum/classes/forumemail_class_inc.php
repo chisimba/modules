@@ -192,10 +192,7 @@ class forumemail extends object {
                 $postDetails = $this->objPost->getPostWithText($parent_id);
                 $topicDetails = $postDetails['topic_id'];
 //                echo $postDetails['topic_id'];
-                // Get Users Subscribed to Topic
-                $objTopicSubscribers = & $this->getObject('dbtopicsubscriptions');
-                var_dump($objTopicSubscribers->getUsersSubscribedTopic($postDetails['topic_id']));
-//                $this->prepareListEmail($postDetails['topic_id']);
+                $this->prepareListEmail($postDetails['topic_id']);
 //                $this->emailList = array(0=>'wsifumba@gmail.com');
 //                $this->emailList = array(
 //                    0 => 'wsifumba@gmail.com'
