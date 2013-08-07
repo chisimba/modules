@@ -763,11 +763,13 @@ class simpleblogops extends object
         </div>
         ";
         $socialmediaBtns ="
-        <div class='social_buttons_wrapper'>
-            <div class='social_buttons'>
-                {$plsBtn}{$rt}{$fbLikeButton}
-            </div>
-        </div>
+        <table class='social_buttons_wrapper'>
+            <tr>
+                <td class='gplusbutton'>{$plsBtn}</td>
+                <td class='gplusbutton'>{$rt}</td>
+                <td class='gplusbutton'>{$fbLikeButton}</td>
+            </tr>
+        </table>
         ";
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
