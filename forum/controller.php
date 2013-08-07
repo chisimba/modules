@@ -481,6 +481,9 @@ class forum extends controller {
                         $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
                         $topicDetails = $this->objTopic->getTopicDetails($topic_id);
                         if (count($topicDetails) > 0) {
+                                echo "<pre>";
+                                var_dump($topicDetails);
+                                echo "</pre>";
                                 //get the topic's forum ID
                                 $forum_id = $topicDetails['forum_id'];
                                 /**
@@ -501,7 +504,7 @@ class forum extends controller {
                                 //Generate an error indicating that the topic does not exist
                         }
 //                }else{
-////                        echo "<h1>User does not exists</h1>";
+                        echo "<h1>User does not exists</h1>";
 ////                        //Generate an error indicating that the user does not exist;
 //                }
                 /*
@@ -1145,21 +1148,6 @@ class forum extends controller {
                         $user_id = $this->userId;
                 }
                 $level = $parentPostDetails['level'];
-                // Some Server side validation - Redirect Form - Check details of the post
-                // Validation
-                //     - Remove Tags
-                //     - &nbsp; becomes [nothing]
-                //     - trim whitespace
-//                if (trim(strip_tags(str_replace('&nbsp;', '', $post_text))) == '') {
-//                        // Capture details to put in array - Preserve User's work
-//                        $details = array('replytype' => $replyType, 'title' => $post_title, 'language' => $language, 'temporaryId' => $tempPostId);
-//                        // set array as a session
-//                        $this->setSession($tempPostId, $details);
-//                        // Redirect back to for
-////                        return $this->nextAction('postreply', array('id' => $postParent, 'type' => $this->forumtype, 'message' => 'missing', 'tempid' => $tempPostId));
-//                } else {
-//                        $this->unsetSession($tempPostId);
-//                }
                 $post_id = $this->objPost->insertSingle($postParent, $post_tangent_parent, $forum_id, $topic_id, $user_id, $level);
                 $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $user_id);
                 $this->objTopic->updateLastPost($topic_id, $post_id);
