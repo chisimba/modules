@@ -75,7 +75,7 @@ class gplusbttn extends object
      *
      * @access public
      * @param  string $text    The link text.
-     * @param  string $style   The style of the button (vertical, horizontal or none).
+     * @param  string $style   The style of the button (tall, horizontal or none).
      * @param  string $via     A Twitter account that will be mentioned in the suggested tweet.
      * @param  string $related A related Twitter account.
      * @param  string $uri     The URI to post. Defaults to the current page.
