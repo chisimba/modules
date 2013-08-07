@@ -724,10 +724,13 @@ class simpleblogops extends object
         $style = 'small';
         $via = NULL;
         $related = NULL;
+        
         // The retweet button
         $rt = $this->objTweetButton->getButton($postTitle, $style, $via, $related, htmlspecialchars_decode($titleUri));
+        
         // Google plus button
         $plsBtn = $this->objPlusButton->getButton('small', htmlspecialchars_decode($titleUri));
+        
         // Add the Facebook like button.
         $fbL = $this->getObject('fblikebttn', 'socialweb');
         $fbLikeButton = $fbL->getButton($titleUri);
@@ -752,27 +755,14 @@ class simpleblogops extends object
         if ($editDate !==NULL) {
             $editDate = $objDd->getDifference($editDate);
         }
-        /* CRUFT LEFT BY MONWABISI
-         * $titleO = "<div class='simpleblog_post_title'><div class='titletxt'>"
-          . $postTitle . "</div><div class='social_buttons'>" . $edel 
-          . $plsBtn . '</div>' . $rt . $fbLikeButton . "</div>\n";
-        $titleO = '<div class="sbpost_title_wrapper">' 
-          . '<div class="date-wrapper">'
-          . '<div class="date-day">' . $topDay . '</div>'
-          . '<div class="date-month">' . $topMonth . '</div>'
-          . '<div class="date-year">' . $topYear . '</div>'
-          . '</div>'
-          . $titleO . '</div></div></div>';*/
-        
-        // I did not leave my code looking like this 
-        $title = "<div id='sb_title_wrapper' >
-                                <div class='social_buttons'>{$plsBtn}<br/>
-                                {$rt}{$fbLikeButton}
-                                </div>
-                                <div id='sb_post_title' >
-                                        {$postTitle}
-                                </div>
-                        </div>";
+        $title = "
+        <div id='sb_title_wrapper' >
+            <div id='sb_post_title' >
+                    {$postTitle}
+            </div>
+        </div>
+        ";
+        $socialmediaBtns ="<div class='social_buttons'>{$plsBtn}<br/>{$rt}{$fbLikeButton}</div>";
         $objWashout = $this->getObject('washout', 'utilities');
         $content = $objWashout->parseText($post['post_content']);
         // If we are coming from a search
@@ -832,16 +822,15 @@ class simpleblogops extends object
         } else {
             $wall = NULL;
         }
-// I did not leave my code looking like this shit.
         return "
-                                <div id='sb_date_wrapper' >
-                                        <div id='sb-date-day' >{$topDay}</div>
-                                        <div id='sb-date-month' >{$topMonth}</div>
-                                        <div id='sb-date-year' >{$topYear}</div>
-                                </div>
-                <div class='simpleblog_post_wrapper' id='wrapper_{$id}'>"
-          . $title . $content . $tags . $foot . $wall
-          . "</div>\n\n";
+        <div id='sb_date_wrapper' >
+                <div id='sb-date-day' >{$topDay}</div>
+                <div id='sb-date-month' >{$topMonth}</div>
+                <div id='sb-date-year' >{$topYear}</div>
+        </div>
+        <div class='simpleblog_post_wrapper' id='wrapper_{$id}'>"
+        . $title . $content . $tags . $foot . $socialmediaBtns . $wall
+        . "</div>\n\n";
     }
     
     /**
