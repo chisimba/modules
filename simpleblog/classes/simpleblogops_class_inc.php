@@ -765,9 +765,9 @@ class simpleblogops extends object
         $socialmediaBtns ="
         <table class='social_buttons_wrapper'>
             <tr>
-                <td class='gplusbutton'>{$fbLikeButton}</td>
+                <td class='fbbutton'>{$fbLikeButton}</td>
                 <td class='gplusbutton'>{$plsBtn}</td>
-                <td class='gplusbutton'>{$rt}</td>
+                <td class='tweetbutton'>{$rt}</td>
             </tr>
         </table>
         ";
