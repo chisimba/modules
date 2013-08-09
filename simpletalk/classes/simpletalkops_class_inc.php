@@ -257,7 +257,7 @@ class simpletalkops extends object
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
             $td = $doc->createElement('td');
-            $duration = $abstract['duration'];
+            $duration = $abstract['duration_label'];
             $td->appendChild($doc->createTextNode($duration));
             $tr->appendChild($td);
             $tbl->appendChild($tr);
@@ -266,7 +266,7 @@ class simpletalkops extends object
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
             $td = $doc->createElement('td');
-            $track = $abstract['track'];
+            $track = $abstract['track_label'];
             $td->appendChild($doc->createTextNode($track));
             $tr->appendChild($td);
             $tbl->appendChild($tr);

@@ -135,7 +135,14 @@ class dbsimpletalk extends dbtable
      */
     public function getAbstracts()
     {
-        return $this->getAll();
+        $sql = '
+            SELECT * FROM tbl_simpletalk_abstracts
+            INNER JOIN tbl_simpletalk_tracks 
+            ON tbl_simpletalk_abstracts.track = tbl_simpletalk_tracks.track
+            INNER JOIN tbl_simpletalk_durations 
+            ON tbl_simpletalk_abstracts.duration = tbl_simpletalk_durations.duration;            
+            ';
+        return $this->getArray($sql);
     }
 
 }
