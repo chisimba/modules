@@ -116,23 +116,43 @@ class simpletalkops extends object
         
         // Create the form for the talk submission.
         $paramArray=array(
-            'action'=>'save');
+            'action'=>'save',
+            'mode' => $mode);
         $formAction = $this->uri($paramArray, 'simpletalk');
         $formAction =  str_replace("&amp;", "&", $formAction);
         $objForm = new form('simpletalk');
         $objForm->setAction($formAction);
         $objForm->displayType=3;
         
+        // Set default values.
+        $title = NULL;
+        $authors = NULL;
+        $duration = NULL;
+        $track = NULL;
+        $abstract = NULL;
+        $requirements = NULL;
+        
         // Check for edit and load values
         if ($mode == 'edit') { 
-            die("EDIT not ready yet. Awaiting a round tuit.");
-        } else {
-            $title = NULL;
-            $authors = NULL;
-            $duration = NULL;
-            $track = NULL;
-            $abstract = NULL;
-            $requirements = NULL;
+            $userId = $this->objUser->userId();
+            $id = $this->getParam('id', FALSE);
+            if ($id) {
+                $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
+                $abstractItem = $objDb->getAbstractForEdit($id);
+                if ($abstractItem) {
+                    $title = $abstractItem['title'];
+                    $authors = $abstractItem['authors'];
+                    $duration = $abstractItem['duration'];
+                    $track = $abstractItem['track'];
+                    $abstract = $abstractItem['abstract'];
+                    $requirements = $abstractItem['requirements'];
+                    
+                    // Add the hidden id to the form for save
+                    $this->loadClass ('hiddeninput', 'htmlelements');
+                    $objHidden =  new hiddeninput ( 'id', $id);
+                    $objForm->addToForm($objHidden->show());
+                }
+            }
         }
         
         // Add the title to the form.
@@ -162,6 +182,9 @@ class simpletalkops extends object
         foreach ($rsDd as $item) {
             $objDd->addOption($item['duration'], $item['duration_label']);
         }
+        if ($mode == 'edit') {
+            $objDd->setSelected($duration);
+        }
         $ddLabel = $this->objLanguage->languageText("mod_simpletalk_duration",
             "simpletalk", "Talk duration");
         $ddShow = $ddLabel . ":<br />" . $objDd->show() . "<br />";
@@ -174,20 +197,25 @@ class simpletalkops extends object
         foreach ($rsDd as $item) {
             $objDd->addOption($item['track'], $item['track_label']);
         }
+        if ($mode == 'edit') {
+            $objDd->setSelected($track);
+        }
         $ddLabel = $this->objLanguage->languageText("mod_simpletalk_track",
             "simpletalk", "Talk track");
         $ddShow = $ddLabel . ":<br />" . $objDd->show() . "<br />";
         $objForm->addToForm($ddShow);
         
         // Add the abstract to the form.
-        $abstract = new textarea('abstract');
+        $abstractBx = new textarea('abstract');
         $abstractLabel = $this->objLanguage->languageText("mod_simpletalk_abstract",
             "simpletalk", "Talk abstract");
-        $absShow = $abstractLabel . ":<br />" . $abstract->show() . "<br />";
+        $abstractBx->value=$abstract;
+        $absShow = $abstractLabel . ":<br />" . $abstractBx->show() . "<br />";
         $objForm->addToForm($absShow);
         
         // Add the special requirements to the form.
         $req = new textarea('requirements');
+        $req->value = $requirements;
         $reqLabel = $this->objLanguage->languageText("mod_simpletalk_requirements",
             "simpletalk", "Indicate any special requirements you may have for your presentation");
         $reqShow = $reqLabel . ":<br />" . $req->show() . "<br />";
@@ -204,6 +232,16 @@ class simpletalkops extends object
         return '<div class="simpletalk_wrap">' . $objForm->show() . '</div>';
     }
     
+    /**
+     * 
+     * Show all submitted abstracts. This is for a small conference or event,
+     * so there is no pagination.
+     * 
+     * @return string List of abstracts or permission message.
+     * @access public
+     * 
+     * 
+     */
     public function showAllAbstracts()
     {
         if ($this->checkManagementRights()) {
@@ -230,12 +268,23 @@ class simpletalkops extends object
         $tbl = $doc->createElement('table');
         //Initialize the odd/even counter.
         $rowcount = 0;
+        // The edit icon
+        $objIcon = $this->getObject('geticon', 'htmlelements');
+        $objIcon->setIcon('edit', 'png');
+        $edIcon = $objIcon->show();
+        // Human date functions
+        $objDd = $this->getObject('translatedatedifference', 'utilities');
         foreach ($abstractAr as $abstract) {
             $oddOrEven = ($rowcount == 0) ? "odd" : "even";
             
             // The title.
+            $label = $this->objLanguage->languageText("mod_simpletalk_tl_sh",
+            "simpletalk", "Title");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $h3 = $doc->createElement('h3');
             $title = $abstract['title'];
@@ -245,17 +294,59 @@ class simpletalkops extends object
             $tbl->appendChild($tr);
              
             // The authors.
+            $label = $this->objLanguage->languageText("mod_simpletalk_au_sh",
+            "simpletalk", "Author(s)");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $authors = $abstract['authors'];
             $td->appendChild($doc->createTextNode($authors));
             $tr->appendChild($td);
             $tbl->appendChild($tr);
             
-            // The talk duration.
+            // The submitter.
+            $label = $this->objLanguage->languageText("mod_simpletalk_sb_sh",
+            "simpletalk", "Submitted by");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
+            $td = $doc->createElement('td');
+            $subber = $abstract['userid'];
+            $subBy = $this->objUser->fullName($subber);
+            $subEm = $this->objUser->email($subber);
+            $subBy = $subBy . "(" . $subEm . ")";
+            $td->appendChild($doc->createTextNode($subBy));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The submit date.
+            $label = $this->objLanguage->languageText("mod_simpletalk_dt_sh",
+            "simpletalk", "Date submitted");
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
+            $td = $doc->createElement('td');
+            $dt = $abstract['datecreated'];
+            $hDate = $objDd->getDifference($dt);
+            $td->appendChild($doc->createTextNode($dt . " (" . $hDate . ")"));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The talk duration.
+            $label = $this->objLanguage->languageText("mod_simpletalk_du_sh",
+            "simpletalk", "Duration");
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $duration = $abstract['duration_label'];
             $td->appendChild($doc->createTextNode($duration));
@@ -263,8 +354,13 @@ class simpletalkops extends object
             $tbl->appendChild($tr);
             
             // The talk track.
+            $label = $this->objLanguage->languageText("mod_simpletalk_tr_sh",
+            "simpletalk", "Track");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $track = $abstract['track_label'];
             $td->appendChild($doc->createTextNode($track));
@@ -272,8 +368,13 @@ class simpletalkops extends object
             $tbl->appendChild($tr);
             
             // The abstract.
+            $label = $this->objLanguage->languageText("mod_simpletalk_ab_sh",
+            "simpletalk", "Abstract");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $abstractTxt = $abstract['abstract'];
             $td->appendChild($doc->createTextNode($abstractTxt));
@@ -281,14 +382,45 @@ class simpletalkops extends object
             $tbl->appendChild($tr);
             
             // The requirements.
+            $label = $this->objLanguage->languageText("mod_simpletalk_rq_sh",
+            "simpletalk", "Requirements");
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
             $td = $doc->createElement('td');
             $requirements = $abstract['requirements'];
             $td->appendChild($doc->createTextNode($requirements));
             $tr->appendChild($td);
             $tbl->appendChild($tr);
             
+            // Optional edit / delete link
+            $ownerId = $abstract['userid'];
+            if ($this->checkManagementRights() ||
+                $this->objUser->userId == $ownerId) {
+                $tr = $doc->createElement('tr');
+                $tr->setAttribute('class', $oddOrEven);
+                $td = $doc->createElement('td');
+                $td->setAttribute('colspan', '2');
+                $id = $abstract['id'];
+                $editUrl = $this->uri(
+                        array(
+                            'mode' => 'edit',
+                            'id' => $id
+                        ), 'simpletalk');
+                $editUrl = str_replace("&amp;", "&", $editUrl);
+                $a = $doc->createElement('a');
+                $a->setAttribute('href', $editUrl);
+                $frag = $doc->createDocumentFragment();
+                $frag->appendXML($edIcon);
+                $a->appendChild($frag);
+
+                $td->appendChild($a);
+                $tr->appendChild($td);
+                $tbl->appendChild($tr);
+            }
+
             // Set rowcount for bitwise determination of odd or even
             $rowcount = ($rowcount == 0) ? 1 : 0;
         }

@@ -124,6 +124,17 @@ class dbsimpletalk extends dbtable
            return $this->insert($rsArray);
         }
     }
+    
+    /**
+     * 
+     * Get an abstract for edit by id
+     * 
+     */
+    public function getAbstractForEdit($id)
+    {
+        // Get the data for edit
+        return $this->getRow('id', $id);
+    }
 
     /**
      *
@@ -136,7 +147,12 @@ class dbsimpletalk extends dbtable
     public function getAbstracts()
     {
         $sql = '
-            SELECT * FROM tbl_simpletalk_abstracts
+            SELECT tbl_simpletalk_abstracts.*,
+            tbl_simpletalk_tracks.track,
+            tbl_simpletalk_tracks.track_label,
+            tbl_simpletalk_durations.duration,
+            tbl_simpletalk_durations.duration_label
+            FROM tbl_simpletalk_abstracts
             INNER JOIN tbl_simpletalk_tracks 
             ON tbl_simpletalk_abstracts.track = tbl_simpletalk_tracks.track
             INNER JOIN tbl_simpletalk_durations 
