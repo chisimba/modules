@@ -305,7 +305,7 @@ class simpletalk extends controller
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
+        $action=$this->getParam('action','view');
         switch ($action)
         {
             case 'view':

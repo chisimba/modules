@@ -134,23 +134,25 @@ class simpletalkops extends object
         
         // Check for edit and load values
         if ($mode == 'edit') { 
+            if ($this->objUser->isLoggedIn()) {
             $userId = $this->objUser->userId();
-            $id = $this->getParam('id', FALSE);
-            if ($id) {
-                $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
-                $abstractItem = $objDb->getAbstractForEdit($id);
-                if ($abstractItem) {
-                    $title = $abstractItem['title'];
-                    $authors = $abstractItem['authors'];
-                    $duration = $abstractItem['duration'];
-                    $track = $abstractItem['track'];
-                    $abstract = $abstractItem['abstract'];
-                    $requirements = $abstractItem['requirements'];
-                    
-                    // Add the hidden id to the form for save
-                    $this->loadClass ('hiddeninput', 'htmlelements');
-                    $objHidden =  new hiddeninput ( 'id', $id);
-                    $objForm->addToForm($objHidden->show());
+                $id = $this->getParam('id', FALSE);
+                if ($id) {
+                    $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
+                    $abstractItem = $objDb->getAbstractForEdit($id);
+                    if ($abstractItem) {
+                        $title = $abstractItem['title'];
+                        $authors = $abstractItem['authors'];
+                        $duration = $abstractItem['duration'];
+                        $track = $abstractItem['track'];
+                        $abstract = $abstractItem['abstract'];
+                        $requirements = $abstractItem['requirements'];
+
+                        // Add the hidden id to the form for save
+                        $this->loadClass ('hiddeninput', 'htmlelements');
+                        $objHidden =  new hiddeninput ( 'id', $id);
+                        $objForm->addToForm($objHidden->show());
+                    }
                 }
             }
         }
