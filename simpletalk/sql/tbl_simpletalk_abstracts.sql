@@ -32,6 +32,10 @@ $fields = array(
     'datemodified' => array(
         'type' => 'timestamp',
     ),
+    'emailadr' => array(
+        'type' => 'text',
+        'length' => 100,
+    ),
     'title' => array(
         'type' => 'text',
         'length' => 250,

@@ -101,6 +101,7 @@ class dbsimpletalk extends dbtable
             $rsArray = array(
                 'datemodified' => $this->now(),
                 'userid' => $this->objUser->userId(),
+                'emailadr' => $this->getParam('emailadr', NULL),
                 'title' => $this->getParam('title', NULL),
                 'authors' => $this->getParam('authors', NULL),
                 'duration' => $this->getParam('duration', NULL),
@@ -111,9 +112,14 @@ class dbsimpletalk extends dbtable
             $this->update("id", $id, $rsArray);
             return $id;
         } else {
+            $userId = $this->objUser->userId();
+            if ($userId == NULL) {
+                $userId = "NOTLOGGEDIN";
+            }
             $rsArray = array(
                 'datecreated' => $this->now(),
-                'userid' => $this->objUser->userId(),
+                'userid' => $userId,
+                'emailadr' => $this->getParam('emailadr', NULL),
                 'title' => $this->getParam('title', NULL),
                 'authors' => $this->getParam('authors', NULL),
                 'duration' => $this->getParam('duration', NULL),
@@ -144,7 +150,7 @@ class dbsimpletalk extends dbtable
      * @access public
      *
      */
-    public function getAbstracts()
+    public function getAbstracts($whereClause=NULL)
     {
         $sql = '
             SELECT tbl_simpletalk_abstracts.*,
@@ -156,8 +162,8 @@ class dbsimpletalk extends dbtable
             INNER JOIN tbl_simpletalk_tracks 
             ON tbl_simpletalk_abstracts.track = tbl_simpletalk_tracks.track
             INNER JOIN tbl_simpletalk_durations 
-            ON tbl_simpletalk_abstracts.duration = tbl_simpletalk_durations.duration;            
-            ';
+            ON tbl_simpletalk_abstracts.duration = tbl_simpletalk_durations.duration            
+            ' . $whereClause;
         return $this->getArray($sql);
     }
 

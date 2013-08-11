@@ -309,6 +309,8 @@ class simpletalk extends controller
         switch ($action)
         {
             case 'view':
+            case 'save':
+            case 'thanks':
                 return FALSE;
                 break;
             default:

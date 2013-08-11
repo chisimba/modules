@@ -17,6 +17,11 @@ $objFix->fixThree();
             "module" : "simpletalk",
             "block" : "simpletalkleft"
         }
+        {
+            "display" : "block",
+            "module" : "security",
+            "block" : "login"
+        }
         <div id="leftdynamic_area" class="leftdynamic_area_layer"></div>
         <div id="leftfeedback_area" class="leftfeedback_area_layer"></div>
     </div>

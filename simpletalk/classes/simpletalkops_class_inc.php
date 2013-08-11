@@ -131,6 +131,12 @@ class simpletalkops extends object
         $track = NULL;
         $abstract = NULL;
         $requirements = NULL;
+        if ($this->objUser->isLoggedIn()) {
+            $emailAdr = $this->objUser->email();
+        } else {
+            $emailAdr = NULL;
+        }
+        
         
         // Check for edit and load values
         if ($mode == 'edit') { 
@@ -147,6 +153,7 @@ class simpletalkops extends object
                         $track = $abstractItem['track'];
                         $abstract = $abstractItem['abstract'];
                         $requirements = $abstractItem['requirements'];
+                        $emailAdr = $abstractItem['emailadr'];
 
                         // Add the hidden id to the form for save
                         $this->loadClass ('hiddeninput', 'htmlelements');
@@ -172,6 +179,14 @@ class simpletalkops extends object
             "simpletalk", "List of authors, in the format SURNAME, INITIAL; SURNAME, INITIAL");
         $authShow = $authLabel . ":<br />" . $objAuth->show() . "<br />";
         $objForm->addToForm($authShow);
+        
+        // Add the email address to the form.
+        $objEm = new textinput('emailadr', $emailAdr);
+        $objEm->id='simpletalk_emailadr';
+        $emLabel = $this->objLanguage->languageText("mod_simpletalk_em_sm",
+            "simpletalk", "Email address");
+        $emShow = $emLabel . ":<br />" . $objEm->show() . "<br />";
+        $objForm->addToForm($emShow);
         
         // Add the talk type dropdown to the form.
         $shortTalk = $this->objLanguage->languageText("mod_simpletalk_short",
@@ -249,8 +264,15 @@ class simpletalkops extends object
         if ($this->checkManagementRights()) {
             return $this->listAllAbstracts();
         } else {
-            return $this->objLanguage->languageText("mod_simpletalk_noright",
-            "simpletalk", "Only abstract administrators can view these data");
+            if ($this->objUser->isLoggedIn()) {
+                // Return abstracts submitted by the user if any.
+                return $this->listMyAbstracts($this->objUser->userId());
+            } else {
+                // Tell them they are not logged in
+                return $this->objLanguage->languageText("mod_simpletalk_noright",
+                    "simpletalk", "You are not logged in.");
+            }
+
         }
     }
     
@@ -266,6 +288,36 @@ class simpletalkops extends object
     {
         $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
         $abstractAr = $objDb->getAbstracts();
+        return $this->renderAbstracts($abstractAr);
+    }
+    
+    /**
+     * 
+     * List abstracts by a given user
+     * 
+     * @return string Formatted table output
+     * @access private
+     * 
+     */
+    private function listMyAbstracts($userId)
+    {
+        $objDb = $this->getObject('dbsimpletalk', 'simpletalk');
+        $whereClause = " WHERE tbl_simpletalk_abstracts.userId = '{$userId}' ";
+        $abstractAr = $objDb->getAbstracts($whereClause);
+        return $this->renderAbstracts($abstractAr);
+    }
+    
+    /**
+     * 
+     * Render the array of abstracts for display
+     * 
+     * @param string Array $abstractAr an array of abstracts from the data
+     * 
+     * @return type string Formatted abstracts
+     * @Access private
+     */
+    private function renderAbstracts($abstractAr)
+    {
         $doc = new DOMDocument('UTF-8');
         $tbl = $doc->createElement('table');
         //Initialize the odd/even counter.
@@ -305,6 +357,20 @@ class simpletalkops extends object
             $tr->appendChild($td);
             $td = $doc->createElement('td');
             $authors = $abstract['authors'];
+            $td->appendChild($doc->createTextNode($authors));
+            $tr->appendChild($td);
+            $tbl->appendChild($tr);
+            
+            // The email address.
+            $label = $this->objLanguage->languageText("mod_simpletalk_em_sh",
+            "simpletalk", "Email address");
+            $tr = $doc->createElement('tr');
+            $tr->setAttribute('class', $oddOrEven);
+            $td = $doc->createElement('td');
+            $td->appendChild($doc->createTextNode($label));
+            $tr->appendChild($td);
+            $td = $doc->createElement('td');
+            $authors = $abstract['emailadr'];
             $td->appendChild($doc->createTextNode($authors));
             $tr->appendChild($td);
             $tbl->appendChild($tr);
@@ -375,6 +441,7 @@ class simpletalkops extends object
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
             $td = $doc->createElement('td');
+            $td->setAttribute('valign', 'top');
             $td->appendChild($doc->createTextNode($label));
             $tr->appendChild($td);
             $td = $doc->createElement('td');
@@ -389,6 +456,7 @@ class simpletalkops extends object
             $tr = $doc->createElement('tr');
             $tr->setAttribute('class', $oddOrEven);
             $td = $doc->createElement('td');
+            $td->setAttribute('valign', 'top');
             $td->appendChild($doc->createTextNode($label));
             $tr->appendChild($td);
             $td = $doc->createElement('td');
@@ -400,17 +468,17 @@ class simpletalkops extends object
             // Optional edit / delete link
             $ownerId = $abstract['userid'];
             if ($this->checkManagementRights() ||
-                $this->objUser->userId == $ownerId) {
+                $this->objUser->userId() == $ownerId) {
                 $tr = $doc->createElement('tr');
                 $tr->setAttribute('class', $oddOrEven);
                 $td = $doc->createElement('td');
                 $td->setAttribute('colspan', '2');
                 $id = $abstract['id'];
                 $editUrl = $this->uri(
-                        array(
-                            'mode' => 'edit',
-                            'id' => $id
-                        ), 'simpletalk');
+                    array(
+                        'mode' => 'edit',
+                        'id' => $id
+                    ), 'simpletalk');
                 $editUrl = str_replace("&amp;", "&", $editUrl);
                 $a = $doc->createElement('a');
                 $a->setAttribute('href', $editUrl);
@@ -430,8 +498,8 @@ class simpletalkops extends object
         $wrapper->setAttribute('class', 'simpletalk_wrap');
         $wrapper->appendChild($tbl);
         $doc->appendChild($wrapper);
-        
         return $doc->saveHTML();
+        
     }
     
     
