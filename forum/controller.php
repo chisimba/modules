@@ -79,8 +79,8 @@ class forum extends controller {
                 $this->objLanguage = & $this->getObject('language', 'language');
                 $this->objTopic = $this->getObject('dbtopic', 'forum');
 
-                //User context ovbject
-                $this->objUserContext;
+                //User context object
+                $this->objUserContext = $this->getObject('usercontext', 'context');
 
                 // Forum Classes
                 $this->objForum = & $this->getObject('dbforum');
@@ -449,9 +449,13 @@ class forum extends controller {
                 }
         }
 
+        /**
+         * Get email messages from mail server and create posts from the retrieved messages.
+         * 
+         * @access public
+         */
         function pullMail() {
                 $this->objDbConfig = $this->getObject('dbsysconfig', 'sysconfig');
-                $timeOutMessage = $this->getObject('timeoutmessage', 'htmlelements');
                 $objTopicSubScription = $this->getObject('dbtopicsubscriptions', 'forum');
                 //get the config parameters
                 $emailHost = $this->objDbConfig->getValue('forum_mail_host', 'forum');
@@ -461,12 +465,13 @@ class forum extends controller {
                 $emailPassword = $this->objDbConfig->getValue('forum_inbox_password', 'forum');
                 $emailCatchAll = $this->objConfig->getValue('forum_inbox_catchall', 'forum');
                 /**
-                 * @TESTING
+                 * Create the email getter object
                  */
                 $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, 'chisimba.tohir.co.za');
+                //get the number of messages
                 $numMessages = $this->emailBox->getNumMessages();
                 if ($numMessages > 0) {
-                        for ($index = 0; $index < $numMessages; $index++) {
+                        for ($index = 1; $index <= $numMessages; $index++) {
                                 $emailDetails = $this->emailBox->getEmailDetails($index);
                                 //get the eMail address of the user
                                 $userEmail = $emailDetails['sender'];
@@ -482,13 +487,14 @@ class forum extends controller {
                                         //extract the topic ID from the message subject
                                         $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
                                         $topicDetails = $this->objTopic->getTopicDetails($topic_id);
-//                                if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid'])) {
                                         if (count($topicDetails) > 0) {
-//                                                var_dump($userDetails);
-                                                if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid'])) {
-//                                                echo "<h1>user is subscribed</h1>";
-                                                        //get the topic's forum ID
-                                                        $forum_id = $topicDetails['forum_id'];
+                                                echo "<br/>".$userId;
+                                                //get the topic's forum ID
+                                                $forum_id = $topicDetails['forum_id'];
+                                                if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userId) || $this->objForumSubscriptions->isSubscribedToForum($forum_id, $userId)) {
+                                                        echo "<pre>";
+                                                        var_dump($emailDetails);
+                                                        echo "</pre>";
                                                         //get the forum details
                                                         $forumDetails = $this->objForum->getForum($forum_id);
                                                         // Get the message body to be used as post text.
@@ -503,29 +509,27 @@ class forum extends controller {
                                                         $post_title = $firstPostDetails['post_title'];
                                                         //language
                                                         $language = $firstPostDetails['language'];
-//                                                        echo '<br/>1'.$postParent.'<br/>2'.$forum_id.'<br/>3'.$topic_id.'<br/>4'.$post_title.'<br/>5'.$cleanMessage.'<br/>6'.$language.'<br/>7'.$userId;
+                                                        //check if message is not empty after cleaning it up
                                                         if (!empty($cleanMessage)) {
-                                                                if ($this->objUserContext->isContextMember($userId, $this->contextCode && $forumDetails['forum_visible'] == 'Y')) {
+                                                                if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid']) || $this->objUserContext->isContextMember($userId, $this->contextCode && $forumDetails['forum_visible'] == 'Y')) {
+                                                                        //save thte message as a post
                                                                         $this->saveReply(NULL, $postParent, $forum_id, $topic_id, $post_title, $cleanMessage, $language, $userId);
+                                                                        $this->emailBox->deleteEmail($index);
                                                                 }
                                                         }
-                                                        // Mark Email for deletion
-                                                        $this->emailBox->deleteEmail($index);
-//                                                $index++;
+                                                } else {
+//                                                        echo "<h1>Not subscribed</h1>";
+//                                                        $this->emailBox->deleteEmail($index);
                                                 }
+                                        } else {
+//                                        Generate an error indicating that the topic does not exist
                                         }
-//                                } else {
-                                        //Generate an error indicating that the topic does not exist
-//                                }
                                 } else {
+                                        $this->emailBox->deleteEmail($index);
                                         //Generate an error indicating that the user does not exist;
                                 }
-//                        }
                         }
                 }
-                /*
-                 * END
-                 */
         }
 
         /**

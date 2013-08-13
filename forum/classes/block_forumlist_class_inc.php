@@ -104,7 +104,7 @@ class block_forumlist extends object {
 //                                        continue;
 //                                }
 //                        }
-                                        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                                        $oddOrEven = ($rowcount == 0) ? "odd" : "odd";
                                         $dropdown->addOption($forum['id'], $forum['forum_name']);
                                         $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
                                         $forumLink->link = $forum['forum_name'];

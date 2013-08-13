@@ -221,7 +221,7 @@ class block_forumview extends object {
 //                                        $divContent .= "<br/>Sticky";
                 }
 
-                $tblTopic->startRow($rowCSS);
+                $tblTopic->startRow('odd');
 
                 if ($this->showFullName) {
                     $tblTopic->addCell($this->objUser->getUserImage($topic['userid']) . "<br/>" . $topic['firstname'] . ' ' . $topic['surname'], 100, NULL, 'center');
@@ -325,7 +325,7 @@ class block_forumview extends object {
                 if ($topic['tangentcheck'] != '') {
                     $tangents = $this->objTopic->getTangents($topic['topic_id']);
                     foreach ($tangents as $tangent) {
-                        $tblTopic->startRow();
+                        $tblTopic->startRow('odd');
                         $tblTopic->addCell('&nbsp;', Null, 'center');
                         $tblTopic->addCell('&nbsp;', Null, 'center');
                         $tblTopic->addCell('&nbsp;', Null, 'center');
@@ -377,7 +377,7 @@ class block_forumview extends object {
             $noposts .= $this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum') . '.<br /><br />' . $this->objLanguage->languageText('mod_forum_clicklinkstarttopic', 'forum') . '.';
             $noposts .= '</div>';
 
-            $tblTopic->startRow();
+            $tblTopic->startRow('odd');
 
             $tblTopic->addCell($noposts, null, null, null, null, ' colspan="8"');
             $tblTopic->endRow();
