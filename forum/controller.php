@@ -480,7 +480,7 @@ class forum extends controller {
                                         //get the users information
                                         $userDetails = $this->objUser->getRow('emailaddress', $userEmail);
                                         //get the user ID
-                                        $userId = $userDetails['userid'];
+                                        $userId = $this->objUser->userId($userEmail);
                                         //get the message subject to be used for retrieving the topic
                                         $eMailSubject = $emailDetails['subject'];
                                         $end = strpos($eMailSubject, '-');
@@ -488,13 +488,9 @@ class forum extends controller {
                                         $topic_id = 'gen' . substr($eMailSubject, $end + 1, strlen($eMailSubject));
                                         $topicDetails = $this->objTopic->getTopicDetails($topic_id);
                                         if (count($topicDetails) > 0) {
-                                                echo "<br/>".$userId;
                                                 //get the topic's forum ID
                                                 $forum_id = $topicDetails['forum_id'];
                                                 if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userId) || $this->objForumSubscriptions->isSubscribedToForum($forum_id, $userId)) {
-                                                        echo "<pre>";
-                                                        var_dump($emailDetails);
-                                                        echo "</pre>";
                                                         //get the forum details
                                                         $forumDetails = $this->objForum->getForum($forum_id);
                                                         // Get the message body to be used as post text.
@@ -518,11 +514,12 @@ class forum extends controller {
                                                                 }
                                                         }
                                                 } else {
-//                                                        echo "<h1>Not subscribed</h1>";
-//                                                        $this->emailBox->deleteEmail($index);
+                                                        //if the user is not subscribed, delete the message
+                                                        $this->emailBox->deleteEmail($index);
                                                 }
                                         } else {
-//                                        Generate an error indicating that the topic does not exist
+                                                //Delete the message if it is from a non existant topic
+                                                $this->emailBox->deleteEmail($index);
                                         }
                                 } else {
                                         $this->emailBox->deleteEmail($index);
