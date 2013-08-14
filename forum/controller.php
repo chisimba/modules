@@ -223,6 +223,7 @@ class forum extends controller {
                         case 'viewmindmap':
                         case 'generatemindmap':
                         case 'loadtranslation':
+                        case 'pullmail':
                                 return FALSE;
                                 break;
                         default:
