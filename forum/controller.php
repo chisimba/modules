@@ -200,7 +200,7 @@ class forum extends controller {
                 // Check if User is allowed to view forum without being logged in
                 $allowPrelogin = $objSysConfig->getValue('ALLOW_PRELOGIN', 'forum');
                 if($this->getParam('action',NULL) == 'pullmail'){
-                        return TRUE;
+                        return FALSE;
                 }
                 // If turned off, user requires login for ALL actions
                 if ($allowPrelogin != '1') {
