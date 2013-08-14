@@ -819,7 +819,7 @@ class dbPost extends dbTable {
 //                                $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
 //                                $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                                 //get parent info
-                                $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datecreated']) . ' </div>
+                                $conteiner = "\r\n" . '<div class="all-wrapper" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datecreated']) . ' </div>
                 <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
 //                                $return .= $conteiner;
                                 //get inner post details
@@ -855,7 +855,7 @@ class dbPost extends dbTable {
                                         }
                                 }
                                 $return .='
-                </div>
+                </div></div>
                 <br/> <br/> <br/>' . $conteiner;
                         }
                 }
