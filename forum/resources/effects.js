@@ -233,6 +233,7 @@ jQuery(document).ready(function() {
                         data: data_string,
                         success: function() {
                                 jQuery('div.hiddenOptions').hide();
+                                jQuery.fn.displayConfirmationMessage('Settings saved successfuly ');
                         }
                 });
         });

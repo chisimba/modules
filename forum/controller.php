@@ -470,7 +470,7 @@ class forum extends controller {
                 /**
                  * Create the email getter object
                  */
-                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, 'chisimba.tohir.co.za');
+                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, '');
                 //get the number of messages
                 $numMessages = $this->emailBox->getNumMessages();
                 if ($numMessages > 0) {
