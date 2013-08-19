@@ -2089,6 +2089,31 @@ function loadTranslation(post, lang) {
 
                 return $this->getLastInsertId();
         }
+        
+        /**
+         * Save eMail to be sent at later stage
+         * 
+         * @param type $postParent
+         * @param type $post_title
+         * @param type $post_text
+         * @param type $forum_name
+         * @param type $user_id
+         * @param type $replyUrl
+         * @return boolean TRUE/FALSE
+         */
+        function saveMailJob($postParent, $post_title, $post_text, $forum_name, $user_id, $replyUrl){
+                $fields = array(
+                    'id'=>NULL,
+                    'post_parent'=>$postParent,
+                    'post_title'=>$post_title,
+                    'post_title'=>$post_text,
+                    'forum_name'=>$forum_name,
+                    'user_id'=>$user_id,
+                    'reply_url'=>$replyUrl,
+                    'sent'=>FALSE
+                );
+                return $this->insert($fields,'tbl_forum_email');
+        }
 
 }
 

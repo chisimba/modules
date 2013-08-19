@@ -15,6 +15,7 @@ define('EMAIL_OPTIONS', '');
 
 define('EMAIL_LOGIN', '');
 define('EMAIL_PASSWORD', '');
+
 //define(CATCH_ALL_BASE, 'chisimba.tohir.co.za');
 /**
  * Forum Email Class
@@ -66,11 +67,11 @@ class forumemail extends object {
                 $this->contextGroups = & $this->getObject('managegroups', 'contextgroups');
                 $this->objLanguage = & $this->getObject('language', 'language');
                 //get the config parameters
-                $emailHost = $this->objDbConfig->getValue('forum_mail_host','forum');
-                $emailPort = $this->objDbConfig->getValue('forum_email_port','forum');
-                $emailOptions = $this->objDbConfig->getValue('forum_email_options','forum');
-                $emailUserName = $this->objDbConfig->getValue('forum_inbox_username','forum');
-                $emailPassword = $this->objDbConfig->getValue('forum_inbox_password','forum');
+                $emailHost = $this->objDbConfig->getValue('forum_mail_host', 'forum');
+                $emailPort = $this->objDbConfig->getValue('forum_email_port', 'forum');
+                $emailOptions = $this->objDbConfig->getValue('forum_email_options', 'forum');
+                $emailUserName = $this->objDbConfig->getValue('forum_inbox_username', 'forum');
+                $emailPassword = $this->objDbConfig->getValue('forum_inbox_password', 'forum');
 
                 /**
                  * @TESTING
@@ -78,7 +79,6 @@ class forumemail extends object {
 //                $this->emailBox = new AttachmentReader($emailHost, $emailPort, $emailOptions, $emailUserName, $emailPassword, CATCH_ALL_BASE);
 //
 //                $numMessages = $this->emailBox->getNumMessages();
-
 //                if ($numMessages > 0) {
 //                        for ($emailNum = 1; $emailNum <= $numMessages; $emailNum++) {
 //

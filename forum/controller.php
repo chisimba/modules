@@ -1212,7 +1212,7 @@ class forum extends controller {
                 } else {
                         $emailSuccess = NULL;
                 }
-                $this->objForumEmail->sendEmail($postParent, $post_title, $post_text, $forumDetails['forum_name'], $user_id, $replyUrl);
+                $this->objTopic->saveMailJob($postParent, $post_title, $post_text, $forumDetails['forum_name'], $user_id, $replyUrl);
                 // Attachment Handling
 //                $this->handleAttachments($post_id, $tempPostId);
 //                return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
