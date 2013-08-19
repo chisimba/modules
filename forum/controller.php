@@ -199,7 +199,7 @@ class forum extends controller {
 
                 // Check if User is allowed to view forum without being logged in
                 $allowPrelogin = $objSysConfig->getValue('ALLOW_PRELOGIN', 'forum');
-                if($this->getParam('action',NULL) == 'pullmail'){
+                if ($this->getParam('action', NULL) == 'pullmail') {
                         return FALSE;
                 }
                 // If turned off, user requires login for ALL actions
@@ -226,6 +226,7 @@ class forum extends controller {
                         case 'generatemindmap':
                         case 'loadtranslation':
                         case 'pullmail':
+                        case 'runmailjobs':
                                 return FALSE;
                                 break;
                         default:
@@ -352,6 +353,8 @@ class forum extends controller {
                         case 'changetopicstatus':
                                 return $this->changeTopicStatus();
 
+                        case 'runmailjobs':
+                                return $this->runMailJobs();
 
                         case 'pullmail':
                                 return $this->pullMail($this->getParam('id'), $this->getParam('topic'));
@@ -499,7 +502,7 @@ class forum extends controller {
                                                         // Get the message body to be used as post text.
                                                         $post_text = $emailDetails['messageBody'];
                                                         //Cleaning up the messge by removing all characters from the eMail reply
-                                                        $lastOcc = strpos($post_text, '<@end>', 0);
+                                                        $lastOcc = strpos($post_text, strtolower('<@end>'), 0);
                                                         $cleanMessage = substr($emailDetails['messageBody'], 0, $lastOcc);
                                                         //get the first post of the topic to be used as the post parent
                                                         $postParent = $topicDetails['first_post'];
@@ -510,6 +513,8 @@ class forum extends controller {
                                                         $language = $firstPostDetails['language'];
                                                         //check if message is not empty after cleaning it up
                                                         if (!empty($cleanMessage)) {
+                                                                if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid'])) {
+                                                                }
                                                                 if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid']) || $this->objUserContext->isContextMember($userId, $this->contextCode && $forumDetails['forum_visible'] == 'Y')) {
                                                                         //save thte message as a post
                                                                         $this->saveReply(NULL, $postParent, $forum_id, $topic_id, $post_title, $cleanMessage, $language, $userId);
@@ -1176,7 +1181,6 @@ class forum extends controller {
                 $forumDetails = $this->objForum->getForum($forum_id);
                 $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($topic_id, $user_id);
                 $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forum_id, $user_id);
-////                echo print_r($forumSubscription).'<br/>'.print_r($topicSubscription).'<br/>'.print_r($forumDetails);
 //                //get the forum
                 $forum = $this->objForum->getForum($forum_id);
 //                
@@ -1207,16 +1211,28 @@ class forum extends controller {
                 $forumDetails['subscriptions'] = "Y";
                 if ($forumDetails['subscriptions'] == 'Y') {
                         $replyUrl = $this->uri(array('action' => 'viewtopic', 'id' => $topic_id, 'post' => $post_id, 'context' => $this->contextCode), 'forum');
-//                        $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
                         $emailSuccess = NULL;
                 } else {
                         $emailSuccess = NULL;
                 }
-                $this->objTopic->saveMailJob($postParent, $post_title, $post_text, $forumDetails['forum_name'], $user_id, $replyUrl);
-                // Attachment Handling
-//                $this->handleAttachments($post_id, $tempPostId);
-//                return $this->nextAction('viewtopic', array('message' => 'replysaved', 'id' => $topic_id, 'post' => $post_id, 'type' => $this->forumtype, 'email' => $emailSuccess));
-//                return $this->uri(array('action' => 'viewtopic', 'id' => $parentPostDetails['topic_id']));
+                echo $this->objPost->saveMailJob($postParent, $post_title, $post_text, $forumDetails['forum_name'], $user_id, $replyUrl);
+        }
+
+        /**
+         * Send eMails that have not been sent yet
+         */
+        function runMailJobs() {
+                $objPuller = $this->getObject('dbforum_emailpuller', 'forum');
+                $eMails = $objPuller->getAll();
+                foreach ($eMails as $eMail) {
+                        if (!$eMail['sent']) {
+                                $fields = array(
+                                    'sent'=>TRUE
+                                );
+                                $this->objForumEmail->sendEmail($eMail['post_parent'], $eMail['post_title'], $eMail['post_text'], $eMail['forum_name'], $eMail['user_id'], $eMail['reply_url']);
+                                $objPuller->update('id',$eMail['id'],$fields);
+                        }
+                }
         }
 
         /**
@@ -1226,25 +1242,11 @@ class forum extends controller {
         public function editPost($id) {
                 $id = $this->getParam('id');
                 $post = $this->objPost->getPostWithText($id);
-
-//                if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
                 $this->setVarByRef('post', $post);
                 $forum = $this->objForum->getForum($post['forum_id']);
                 // Check if user has access to workgroup forum else redirect
                 $this->checkWorkgroupAccessOrRedirect($forum);
                 $this->setVarByRef('forum', $forum);
-//                        $temporaryId = $this->objUser->userId() . '_' . mktime();
-//                        $this->setVarByRef('temporaryId', $temporaryId);
-                // Move posts from tbl_forum_attachments to tbl_forum_temp_attachments
-//                        $attachments = $this->objPostAttachments->getAttachments($id);
-//                        foreach ($attachments AS $attachment) {
-//                                $this->objTempAttachments->insertSingle($temporaryId, $attachment['attachment_id'], $post['forum_id'], $this->userId, mktime());
-//                        }
-//                        $acch = $this->objTempAttachments->getQuickList($temporaryId);
-//                        return 'forum_editpost.php';
-//                } else {
-//                        return $this->nextAction('viewtopic', array('message' => 'unabletoeditpost', 'id' => $post['topic_id'], 'post' => $post['post_id'], 'type' => $this->forumtype));
-//                }
         }
 
         /**

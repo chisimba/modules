@@ -181,7 +181,7 @@ class forumemail extends object {
 
         /**
          * Method to send an email to the users
-         * @param String $topic_id Record Id of the Topic
+         * @param String $topic_id Record Id of the first post
          * @param String $title Title of the Post
          * @param String $text Text of the Post
          * @param String $forum Name of the Forum

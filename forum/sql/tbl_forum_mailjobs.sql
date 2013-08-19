@@ -1,5 +1,6 @@
 <?php
-$tablename = 'tb l_forum_email';
+//5ive definition
+$tablename = 'tbl_forum_mailjobs';
 
 //Options line for comments, encoding and character set
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -15,7 +16,7 @@ $fields = array(
 ),
         'post_title'=>array(
                 'type'=>'text',
-                'length'=>'100'
+                'length'=>'80'
 ),
         'post_text'=>array(
                 'type'=>'text',
@@ -29,7 +30,7 @@ $fields = array(
                 'type'=>'text',
                 'length'=>'32'
 ),
-        'reply_uri'=>array(
+        'reply_url'=>array(
                 'type'=>'text',
                 'length'=>'32'
 ),
@@ -37,4 +38,5 @@ $fields = array(
                 'type'=>'boolean'
 )
 );
+
 ?>
