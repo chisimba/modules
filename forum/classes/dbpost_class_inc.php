@@ -602,7 +602,7 @@ class dbPost extends dbTable {
                 $return .= $contentDiv;
                 //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
                 $return .= '<div id="' . $post['post_id'] . '" class="newForumContainer" ' . $margin . '>' . "\r\n";
-                $return .= '<div class="newForumTopic">' . "\r\n";
+                $return .= '<div class="newForumTopic parent">' . "\r\n";
                 // Check if user can edit post
                 if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datecreated'], $post['userid'], $post['replypost'])) {
 
