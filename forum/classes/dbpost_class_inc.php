@@ -1013,7 +1013,7 @@ class dbPost extends dbTable {
 
                                 $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit'));
                                 $submitButton->cssClass = 'save';
-                                $submitButton->extra = ' onclick="SubmitForm()"';
+//                                $submitButton->extra = ' onclick="SubmitForm()"';
 //                                }
                         }
 

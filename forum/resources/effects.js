@@ -193,6 +193,7 @@ jQuery(document).ready(function() {
         //when clicking OK on the confirmation message
         jQuery('.ok').live('click', function(e) {
                 e.preventDefault();
+                jQuery(this).hide();
                 window.location.reload();
         });
         /**

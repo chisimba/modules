@@ -32,7 +32,7 @@ $fields = array(
 ),
         'reply_url'=>array(
                 'type'=>'text',
-                'length'=>'32'
+                'length'=>'100'
 ),
         'sent'=>array(
                 'type'=>'boolean'
