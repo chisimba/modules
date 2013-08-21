@@ -502,7 +502,7 @@ class forum extends controller {
                                                         // Get the message body to be used as post text.
                                                         $post_text = $emailDetails['messageBody'];
                                                         //Cleaning up the messge by removing all characters from the eMail reply
-                                                        $lastOcc = strpos($post_text, strtolower('<@end>'), 0);
+                                                        $lastOcc = strpos($post_text, strtolower('@end'), 0);
                                                         $cleanMessage = substr($emailDetails['messageBody'], 0, $lastOcc);
                                                         //get the first post of the topic to be used as the post parent
                                                         $postParent = $topicDetails['first_post'];
