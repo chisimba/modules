@@ -201,6 +201,19 @@ class species extends controller
         return $this->nextAction(NULL);
     }
     
+    
+    private function __wpsplist()
+    {
+        $url = $this->getParam('url', FALSE);
+        if (!$url) {
+            die("nourl");
+        } else {
+            $objWk = $this->getObject('wikipediasplist', 'species');
+            $page = $objWk->show($url);
+            die($page);
+        }
+    }
+    
     /**
     * 
     * Method corresponding to the edit action. It sets the mode to 

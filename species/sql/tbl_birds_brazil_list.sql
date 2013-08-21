@@ -1,11 +1,11 @@
 <?php
 /**
 *
-* A sample SQL file for species. Please adapt this to your requirements.
+* Table for birds of brazil
 *
 */
 // Table Name
-$tablename = 'tbl_gardenbirds_list';
+$tablename = 'tbl_birds_brazil_list';
 
 //Options line for comments, encoding and character set
 $options = array('comment' => 'Storage of species primary data for birds in the species module', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
@@ -32,7 +32,7 @@ $fields = array(
 
 //create other indexes here...
 
-$name = 'tbl_gardenbirds_list_idx';
+$name = 'tbl_birds_brazil_list_idx';
 
 $indexes = array(
     'fields' => array(

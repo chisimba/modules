@@ -391,7 +391,7 @@ class speciesops extends object
     public function renderChangeBlock()
     {
         // Add valid groups to this array to auto generate links.
-        $groups = array('birds', 'mammals', 'plants_proteaceae');
+        $groups = array('birds', 'gardenbirds', 'birds_brazil', 'mammals', 'plants_proteaceae');
         $doc = new DOMDocument('UTF-8');
         foreach ($groups as $group) {
             $url = $this->uri(array(
