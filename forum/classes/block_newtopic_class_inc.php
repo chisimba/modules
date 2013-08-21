@@ -201,7 +201,7 @@ class block_newtopic extends object {
         } else {
             $languageDropdown->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
         }
-        $addTable->addCell($languageDropdown->show());
+//        $addTable->addCell($languageDropdown->show());
         $addTable->endRow();
 
         $addTable->startRow();
