@@ -6,11 +6,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Forum Topics Read Table
-* This class controls all functionality relating to the tbl_forum_topic_read table which records topics the user has views
+* Discussion Topics Read Table
+* This class controls all functionality relating to the tbl_discussion_topic_read table which records topics the user has views
 * @author Tohir Solomons
 * @copyright (c) 2004 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 /**
@@ -26,7 +26,7 @@ class dbtopicread extends dbTable
 	*/
 	function init()
 	{
-		parent::init('tbl_forum_topic_read');
+		parent::init('tbl_discussion_topic_read');
         $this->objTopic = $this->getObject('dbtopic');
     }
     

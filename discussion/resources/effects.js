@@ -65,7 +65,7 @@ jQuery(document).ready(function() {
                 var parent_id = element_Id;
                 var topic_id = jQuery('.topicid').attr('id');
                 var lang = jQuery('.lang').attr('id');
-                var forum_id = jQuery('span.forumid').attr('id');
+                var discussion_id = jQuery('span.discussionid').attr('id');
                 var post_title = jQuery('.posttitle').attr('id');
 //        if (jQuery(message_text).val() != '') {
 //                var image = jQuery('<img>', {
@@ -84,10 +84,10 @@ jQuery(document).ready(function() {
                                 message_text = jQuery('iframe').contents().find("body.cke_show_borders").html();
                                 jQuery.ajax({
                                         type: 'post',
-                                        url: 'index.php?module=forum&action=savepostreply',
+                                        url: 'index.php?module=discussion&action=savepostreply',
                                         data: {
                                                 message: message_text,
-                                                forum_id: forum_id,
+                                                discussion_id: discussion_id,
                                                 topicid: topic_id,
                                                 parent: parent_id,
                                                 posttitle: post_title,
@@ -119,10 +119,10 @@ jQuery(document).ready(function() {
                 });
                 //Send the data
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=showeditpostpopup',
+                        url: 'index.php?module=discussion&action=showeditpostpopup',
                         type: 'post',
                         data: {
-                                forumid: forum_id,
+                                discussionid: discussion_id,
                                 topicid: topic_id,
                                 post_id: parent_id,
                                 message: message,
@@ -130,7 +130,7 @@ jQuery(document).ready(function() {
                                 lang: lang,
                                 attachment: attachment_id
                         },
-//                data: ' forumid=' + forum_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
+//                data: ' discussionid=' + discussion_id + '&topicid=' + topic_id + '&parent=' + parent_id + '&message=' + message_text + '&posttitle=' + post_title + '&lang=' + lang + '&attachment=' + attachment_id,
                         success: function(data) {
                                 var editor = data;
                                 jQuery('div.clone').append("<div class='postMakerWrapper' >"+data+"</div>");
@@ -177,7 +177,7 @@ jQuery(document).ready(function() {
                 var post_id = jQuery(this).attr('id');
                 var topic_id = jQuery('span.topicid').attr('id');
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=removepost',
+                        url: 'index.php?module=discussion&action=removepost',
                         type: 'post',
                         data: {
                                 postid: link_id,
@@ -225,10 +225,10 @@ jQuery(document).ready(function() {
          */
         jQuery('#moderationSave').click(function() {
                 var data_string = jQuery('#form_topicModeration').serialize();
-                var forum_id = "forum=" + jQuery('.forumid').attr('id');
-                jQuery(data_string).append(forum_id);
+                var discussion_id = "discussion=" + jQuery('.discussionid').attr('id');
+                jQuery(data_string).append(discussion_id);
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=usersubscription',
+                        url: 'index.php?module=discussion&action=usersubscription',
                         type: 'post',
                         data: data_string,
                         success: function() {
@@ -259,7 +259,7 @@ jQuery(document).ready(function() {
         jQuery('a.ratings.up').click(function() {
                 var post_id = jQuery(this).attr('id');
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=savepostratingup',
+                        url: 'index.php?module=discussion&action=savepostratingup',
                         type: 'post',
                         data: 'post_id=' + post_id,
                         success: function() {
@@ -273,7 +273,7 @@ jQuery(document).ready(function() {
         jQuery('a.ratings.down ').click(function() {
                 var post_id = jQuery(this).attr('id');
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=savepostratingdown',
+                        url: 'index.php?module=discussion&action=savepostratingdown',
                         type: 'post',
                         data: 'post_id=' + post_id,
                         success: function() {
@@ -293,7 +293,7 @@ jQuery(document).ready(function() {
         /**
          * ==View the post attachment===
          */
-        jQuery('.forumViewAttachment').live('click', function(e) {
+        jQuery('.discussionViewAttachment').live('click', function(e) {
                 var current_text = jQuery(this).html();
                 if (current_text == 'View') {
                         current_text = 'Hide'
@@ -339,7 +339,7 @@ jQuery(document).ready(function() {
 //                                var new_value = jQuery('td.cke_contents iframe').conents().find('html').html();
 //                                var new_text = jQuery('[name="blocktext"]').val();
                                 jQuery.ajax({
-                                        url: 'index.php?module=forum&action=savepostedit',
+                                        url: 'index.php?module=discussion&action=savepostedit',
                                         type: 'post',
                                         data: {
                                                 _id: _id,
@@ -377,7 +377,7 @@ jQuery(document).ready(function() {
                 new_text = jQuery(edit_post_area).val();
                 //Get and return the editor
                 jQuery.ajax({
-                        url: 'index.php?module=forum&action=showeditpostpopup'/*&_id=' + _id + '&post_id=' + post_id + '&new_text=' + jQuery(edit_post_area).val()*/,
+                        url: 'index.php?module=discussion&action=showeditpostpopup'/*&_id=' + _id + '&post_id=' + post_id + '&new_text=' + jQuery(edit_post_area).val()*/,
                         type: 'post',
                         data: {
                                 _id: _id,

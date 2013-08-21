@@ -21,11 +21,11 @@ class block_thread extends object {
     var $objUser;
     var $objPost;
     var $objTopic;
-    var $objForum;
+    var $objDiscussion;
     var $contextObject;
     var $contextCode;
     var $objLanguage;
-    var $objForumRatings;
+    var $objDiscussionRatings;
     var $objPostRatings;
     var $domDoc;
 
@@ -37,7 +37,7 @@ class block_thread extends object {
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
-        $this->loadClass('dbpost', 'forum');
+        $this->loadClass('dbpost', 'discussion');
         $this->domDoc = new DOMDocument('utf-8');
         $js = '
 <script type="text/javascript">
@@ -54,56 +54,56 @@ class block_thread extends object {
         echo $js;
         $this->title = "Thread view";
         $this->objUser = $this->getObject('user', 'security');
-        $this->objPost = $this->getObject('dbpost', 'forum');
-        $this->objTopic = $this->getObject('dbtopic', 'forum');
-        $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objPost = $this->getObject('dbpost', 'discussion');
+        $this->objTopic = $this->getObject('dbtopic', 'discussion');
+        $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->objLanguage = $this->getObject('language', 'language');
-        // Forum Ratings
-        $this->objForumRatings = & $this->getObject('dbforum_ratings');
+        // Discussion Ratings
+        $this->objDiscussionRatings = & $this->getObject('dbdiscussion_ratings');
         $this->objPostRatings = & $this->getObject('dbpost_ratings');
     }
 
     function buildForm() {
         $topic_id = $this->getParam('id');
         $this->setVar('pageSuppressXML', true);
-        $js = $this->getJavascriptFile('contracthead.js', 'forum');
+        $js = $this->getJavascriptFile('contracthead.js', 'discussion');
         $this->appendArrayVar('headerParams', $js);
         $objIcon = $this->getObject('geticon', 'htmlelements');
         $html = "";
 
         if ($this->getParam('message') == 'invalidattachment') {
-            $this->setErrorMessage($this->objLanguage->languageText('mod_forum_attachment_not_found', 'forum', 'Could not find requested attachment.'));
+            $this->setErrorMessage($this->objLanguage->languageText('mod_discussion_attachment_not_found', 'discussion', 'Could not find requested attachment.'));
         }
         $header = new htmlheading();
         $header->type = 1;
         $post = $this->objPost->getRootPost($topic_id);
-        $forum = $this->objForum->getForum($post['forum_id']);
-        $link = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'], 'type' => $forum['forum_type'])));
-        $link->link = $post['forum_name'];
+        $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
+        $link = new link($this->uri(array('action' => 'discussion', 'id' => $post['discussion_id'], 'type' => $discussion['discussion_type'])));
+        $link->link = $post['discussion_name'];
         $headerString = $link->show() . ' &gt; ' . stripslashes($post['post_title']);
         $header->str = $headerString;
-        // Check if forum is locked - if true - disable / editing replies
-        if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
+        // Check if discussion is locked - if true - disable / editing replies
+        if ($this->objDiscussion->checkIfDiscussionLocked($post['discussion_id'])) {
             $this->objPost->repliesAllowed = FALSE;
             $this->objPost->editingPostsAllowed = FALSE;
-            $this->objPost->forumLocked = TRUE;
-            $forumlocked = TRUE;
+            $this->objPost->discussionLocked = TRUE;
+            $discussionlocked = TRUE;
         } else {
-            $forumlocked = FALSE;
+            $discussionlocked = FALSE;
             if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 $this->objPost->showModeration = TRUE;
             }
         }
 
-        if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forum['forum_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
+        if ($this->objUser->isCourseAdmin($this->contextCode) && !$discussionlocked && $discussion['discussion_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
             $objIcon->setIcon('moderate');
-            $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-            $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+            $objIcon->title = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
+            $objIcon->alt = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
 
-            $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forum['forum_type'])));
+            $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $discussion['discussion_type'])));
             $moderateTopicLink->link = $objIcon->show();
             $elements = $moderateTopicLink->show();
             $header->str .= ' ' . $moderateTopicLink->show();
@@ -112,26 +112,26 @@ class block_thread extends object {
         ////Confirmation messages
         if ($this->getParam('message') == 'save') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postsaved', 'discussion'));
             $timeoutMessage->setTimeout(20000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
         if ($this->getParam('message') == 'postupdated') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postupdated', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postupdated', 'discussion'));
             $timeoutMessage->setTimeout(10000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
         if ($this->getParam('message') == 'replysaved') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_replysaved', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_replysaved', 'discussion'));
             $timeoutMessage->setTimeout(10000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
 
 //// Error Messages
-        if ($this->getParam('message') == 'cantreplyforumlocked') {
-            $this->setErrorMessage('This Forum has been Locked. You cannot post a reply to this Topic'); // LTE
+        if ($this->getParam('message') == 'cantreplydiscussionlocked') {
+            $this->setErrorMessage('This Discussion has been Locked. You cannot post a reply to this Topic'); // LTE
         }
         if ($this->getParam('message') == 'cantreplytopiclocked') {
             $this->setErrorMessage('This Topic has been Locked. You cannot post a reply to this Topic'); // LTE
@@ -139,8 +139,8 @@ class block_thread extends object {
         $changeDisplayForm = $this->objTopic->showChangeDisplayTypeForm($topic_id, 'thread');
         $html = $changeDisplayForm;
         if ($post['status'] == 'CLOSE') {
-            $html = '<div class="forumTangentIndent">';
-            $html .= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) . ' on ' . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
+            $html = '<div class="discussionTangentIndent">';
+            $html .= '<strong>' . $this->objLanguage->languageText('mod_discussion_topiclockedby', 'discussion') . ' ' . $this->objUser->fullname($post['lockuser']) . ' on ' . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
             $html .= '<p>' . $post['lockreason'] . '</p>';
             $html .= '</div>';
         }
@@ -148,9 +148,9 @@ class block_thread extends object {
         // Create the indented thread
         $thread = $this->objPost->displayThread($topic_id);
         $ratingsForm->addToForm($thread);
-        // Check if ratings allowed in Forum
-        if ($forum['ratingsenabled'] == 'Y') {
-            $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
+        // Check if ratings allowed in Discussion
+        if ($discussion['ratingsenabled'] == 'Y') {
+            $this->objPost->discussionRatingsArray = $this->objDiscussionRatings->getDiscussionRatings($post['discussion_id']);
             $this->objPost->showRatings = TRUE;
             $showRatingsForm = TRUE;
         } else {
@@ -163,10 +163,10 @@ class block_thread extends object {
         if ($showRatingsForm) {
             $objButton = &new button('submitForm');
             $objButton->cssClass = 'save';
-            $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings', 'forum'));
+            $objButton->setValue($this->objLanguage->languageText('mod_discussion_sendratings', 'discussion'));
             $objButton->setToSubmit();
 
-            if ($post['status'] != 'CLOSE' && !$forumlocked) {
+            if ($post['status'] != 'CLOSE' && !$discussionlocked) {
                 $ratingsForm->addToForm('<p align="right">' . $objButton->show() . '</p>');
             }
             // These elements are need for the redirect
@@ -175,16 +175,16 @@ class block_thread extends object {
             $ratingsForm->addToForm($hiddenTopicId->show());
 //            $html .= $ratingsForm->show();
         }
-        $replylink = new link($this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $forum['forum_type'])));
-        $replylink->link = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum');
-        $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['forum_id'], 'type' => $forum['forum_type'])));
-        $newtopiclink->link = $this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
+        $replylink = new link($this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $discussion['discussion_type'])));
+        $replylink->link = $this->objLanguage->languageText('mod_discussion_replytotopic', 'discussion');
+        $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['discussion_id'], 'type' => $discussion['discussion_type'])));
+        $newtopiclink->link = $this->objLanguage->languageText('mod_discussion_startnewtopic', 'discussion');
 
-        $returntoforum = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'], 'type' => $forum['forum_type'])));
-        $returntoforum->link = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');
+        $returntodiscussion = new link($this->uri(array('action' => 'discussion', 'id' => $post['discussion_id'], 'type' => $discussion['discussion_type'])));
+        $returntodiscussion->link = $this->objLanguage->languageText('mod_discussion_returntodiscussion', 'discussion');
 
-        $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forum['forum_type'])));
-        $moderateTopicLink->link = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+        $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $discussion['discussion_type'])));
+        $moderateTopicLink->link = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
 
         $html .= $ratingsForm->show();
         $tangentsTable = $this->objTopic->showTangentsTable($post['topic_id']);

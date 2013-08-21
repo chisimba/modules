@@ -1,5 +1,5 @@
 <?php
-/* ----------- data class extends dbTable for tbl_forum_post_ratings------------*/
+/* ----------- data class extends dbTable for tbl_discussion_post_ratings------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
     {
@@ -9,10 +9,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Post Ratings Table
-* This class controls all functionality relating to the tbl_forum_post_ratings table and gets the ratings for posts
+* This class controls all functionality relating to the tbl_discussion_post_ratings table and gets the ratings for posts
 * @author Tohir Solomons
 * @copyright (c) 2004 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 class dbpost_ratings extends dbTable
@@ -22,7 +22,7 @@ class dbpost_ratings extends dbTable
     * Constructor method to define the table
     */
     function init() {
-        parent::init('tbl_forum_post_ratings');
+        parent::init('tbl_discussion_post_ratings');
     }
 
     /**
@@ -61,8 +61,8 @@ class dbpost_ratings extends dbTable
     */
     function deletePostRatings($post, $userId)
     {
-        $sql =  'DELETE tbl_forum_post_ratings FROM tbl_forum_post_ratings 
-                    WHERE tbl_forum_post_ratings.post_id = "'.$post.'" AND tbl_forum_post_ratings.userId = "'.$userId.'"';
+        $sql =  'DELETE tbl_discussion_post_ratings FROM tbl_discussion_post_ratings 
+                    WHERE tbl_discussion_post_ratings.post_id = "'.$post.'" AND tbl_discussion_post_ratings.userId = "'.$userId.'"';
                     
         return $this->query($sql);
     
@@ -72,7 +72,7 @@ class dbpost_ratings extends dbTable
      * get post rating using a post ID
      */
     function getPostRatings($post_id){
-            $sql = "SELECT rating FROM tbl_forum_post_ratings WHERE post_id='{$post_id}'";
+            $sql = "SELECT rating FROM tbl_discussion_post_ratings WHERE post_id='{$post_id}'";
             $rating = $this->getRow('post_id',$post_id);
             if($rating['rating'] == '' || $rating['rating'] == NULL){
                     return 0;

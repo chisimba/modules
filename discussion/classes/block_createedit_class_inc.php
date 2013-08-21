@@ -22,7 +22,7 @@ class block_createedit extends object {
     var $contextTitle;
     var $contextCode;
     var $contextObject;
-    var $objForum;
+    var $objDiscussion;
 
     //put your code here
     public function init() {
@@ -34,7 +34,7 @@ class block_createedit extends object {
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->title = "Create edit";
-        $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->objLanguage = $this->getObject('language', 'language');
@@ -89,28 +89,28 @@ if(!document.getElementById && document.all) {
         $html .=  $objHighlightLabels->show();
 
 
-        $forum = $this->objForum->getForum($id);
-        // Check if Forum exists
-        if (!$forum == false) {
-            $action = 'editforum';
+        $discussion = $this->objDiscussion->getDiscussion($id);
+        // Check if Discussion exists
+        if (!$discussion == false) {
+            $action = 'editdiscussion';
         }
 
         $header = & new htmlheading();
         $header->type = 3;
 
         $action = $this->getParam('action');
-        if ($action == 'editforum') {
-            $header->str = $this->objLanguage->languageText('mod_forum_editforumsettings', 'forum') . ': ' . $forum['forum_name'];
-            $formAction = 'editforumsave';
+        if ($action == 'editdiscussion') {
+            $header->str = $this->objLanguage->languageText('mod_discussion_editdiscussionsettings', 'discussion') . ': ' . $discussion['discussion_name'];
+            $formAction = 'editdiscussionsave';
         } else {
-            $header->str = $this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create New Forum') . ': ' . $contextTitle;
-            $formAction = 'saveforum';
+            $header->str = $this->objLanguage->languageText('mod_discussion_createNewDiscussion', 'discussion', 'Create New Discussion') . ': ' . $contextTitle;
+            $formAction = 'savediscussion';
         }
-        if ($action == 'createforum') {
+        if ($action == 'creatediscussion') {
             $html .= $header->show();
         }
 
-        $form = new form('myForm', $this->uri(array('module' => 'forum', 'action' => $formAction,'id'=>$id)));
+        $form = new form('myForm', $this->uri(array('module' => 'discussion', 'action' => $formAction,'id'=>$id)));
         $form->displayType = 3;
 
         $table = $this->getObject('htmltable', 'htmlelements');
@@ -121,15 +121,15 @@ if(!document.getElementById && document.all) {
 // --------- New Row ---------- //
 
         $table->startRow();
-        $nameLabel = new label($this->objLanguage->languageText('mod_forum_nameofforum', 'forum') . ':', 'input_name');
+        $nameLabel = new label($this->objLanguage->languageText('mod_discussion_nameofdiscussion', 'discussion') . ':', 'input_name');
         $table->addCell('<strong>' . $nameLabel->show() . '</strong>', 120);
 
         $nameInput = new textinput('name');
         $nameInput->size = 57;
         $nameInput->extra = ' maxlength="50"';
 
-        if ($action == 'editforum') {
-            $nameInput->value = $forum['forum_name'];
+        if ($action == 'editdiscussion') {
+            $nameInput->value = $discussion['discussion_name'];
         }
 
         $table->addCell($nameInput->show(), null, null, null, null, ' colspan="3"');
@@ -145,8 +145,8 @@ if(!document.getElementById && document.all) {
         $nameInput = new textinput('description');
         $nameInput->size = 100;
         $nameInput->extra = 'maxlength="255"';
-        if ($action == 'editforum') {
-            $nameInput->value = $forum['forum_description'];
+        if ($action == 'editdiscussion') {
+            $nameInput->value = $discussion['discussion_description'];
         }
         $table->addCell($nameInput->show(), null, null, null, null, ' colspan="3"');
 
@@ -154,22 +154,22 @@ if(!document.getElementById && document.all) {
 
 // --------- New Row ---------- //
 
-        if ($action == 'editforum') {
+        if ($action == 'editdiscussion') {
 
             $table->startRow();
 
-            $table->addCell('<strong>' . $this->objLanguage->languageText('mod_forum_lockforum', 'forum') . '</strong>');
+            $table->addCell('<strong>' . $this->objLanguage->languageText('mod_discussion_lockdiscussion', 'discussion') . '</strong>');
 
-            $radioGroup = & new radio('lockforum');
+            $radioGroup = & new radio('lockdiscussion');
             $radioGroup->setBreakSpace(' / ');
 
             // The option NO comes before YES - as no is this preferred
             $radioGroup->addOption('N', 'No');
             $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
 
-            $radioGroup->setSelected($forum['forumlocked']);
+            $radioGroup->setSelected($discussion['discussionlocked']);
 
-            $message = ' - ' . $this->objLanguage->languageText('mod_forum_explainlocking', 'forum') . '.';
+            $message = ' - ' . $this->objLanguage->languageText('mod_discussion_explainlocking', 'discussion') . '.';
 
             $table->addCell($radioGroup->show() . $message, null, null, null, null, ' colspan="3"');
 
@@ -177,26 +177,26 @@ if(!document.getElementById && document.all) {
         }
 
 
-// --------- New Row - Visibility & Rating Forums ---------- //
+// --------- New Row - Visibility & Rating Discussions ---------- //
 
         $table->startRow();
-        $title = '<nobr>' . $this->objLanguage->languageText('mod_forum_visible', 'forum') . ':</nobr>';
+        $title = '<nobr>' . $this->objLanguage->languageText('mod_discussion_visible', 'discussion') . ':</nobr>';
         $table->addCell('<strong>' . $title . '</strong>', 100);
 
-        if ($action == 'editforum' && $forum['defaultforum'] == 'Y') {
+        if ($action == 'editdiscussion' && $discussion['defaultdiscussion'] == 'Y') {
             $hiddenIdInput = new textinput('visible');
             $hiddenIdInput->fldType = 'hidden';
             $hiddenIdInput->value = 'default';
 
-            $table->addCell($this->objLanguage->languageText('mod_forum_defaultforum', 'forum') . $hiddenIdInput->show());
+            $table->addCell($this->objLanguage->languageText('mod_discussion_defaultdiscussion', 'discussion') . $hiddenIdInput->show());
         } else {
             $radioGroup = new radio('visible');
             $radioGroup->setBreakSpace('&nbsp;&nbsp;');
             $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes'));
             $radioGroup->addOption('N', $this->objLanguage->languageText('word_no'));
 
-            if ($action == 'editforum') {
-                $radioGroup->setSelected($forum['forum_visible']);
+            if ($action == 'editdiscussion') {
+                $radioGroup->setSelected($discussion['discussion_visible']);
             } else {
                 $radioGroup->setSelected('Y');
             }
@@ -205,15 +205,15 @@ if(!document.getElementById && document.all) {
         }
 
 
-        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_forum_usersrateposts', 'forum') . ':</strong></nobr>';
+        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_discussion_usersrateposts', 'discussion') . ':</strong></nobr>';
         $table->addCell($title, 100);
 
         $radioGroup = new radio('ratings');
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
-        if ($action == 'editforum') {
-            $radioGroup->setSelected($forum['ratingsenabled']);
+        if ($action == 'editdiscussion') {
+            $radioGroup->setSelected($discussion['ratingsenabled']);
         } else {
             $radioGroup->setSelected('Y');
         }
@@ -224,29 +224,29 @@ if(!document.getElementById && document.all) {
 // --------- New Row - Students start Topics & upload attachments ---------- //
 
         $table->startRow();
-        $title = '<nobr><strong>' . ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics', 'forum')) . ':</strong></nobr>';
+        $title = '<nobr><strong>' . ucwords($this->objLanguage->code2Txt('mod_discussion_studentsstartTopics', 'discussion')) . ':</strong></nobr>';
         $table->addCell($title, 100);
 
         $radioGroup = new radio('student');
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
-        if ($action == 'editforum') {
-            $radioGroup->setSelected($forum['studentstarttopic']);
+        if ($action == 'editdiscussion') {
+            $radioGroup->setSelected($discussion['studentstarttopic']);
         } else {
             $radioGroup->setSelected('Y');
         }
 
         $table->addCell($radioGroup->show());
-        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_forum_usersuploadattachments', 'forum') . ':</strong></nobr>';
+        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_discussion_usersuploadattachments', 'discussion') . ':</strong></nobr>';
         $table->addCell($title, 100);
 
         $radioGroup = new radio('attachments');
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system', 'No'));
-        if ($action == 'editforum') {
-            $radioGroup->setSelected($forum['attachments']);
+        if ($action == 'editdiscussion') {
+            $radioGroup->setSelected($discussion['attachments']);
         } else {
             $radioGroup->setSelected('Y');
         }
@@ -257,15 +257,15 @@ if(!document.getElementById && document.all) {
 // --------- New Row - Subscriptions ---------- //
 
         $table->startRow();
-        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_forum_enableemailsubscription', 'forum') . ':</strong></nobr>';
+        $title = '<nobr><strong>' . $this->objLanguage->languageText('mod_discussion_enableemailsubscription', 'discussion') . ':</strong></nobr>';
         $table->addCell($title, 100);
 
         $radioGroup = new radio('subscriptions');
         $radioGroup->setBreakSpace('&nbsp;&nbsp;');
         $radioGroup->addOption('Y', $this->objLanguage->languageText('word_yes', 'system', 'Yes'));
         $radioGroup->addOption('N', $this->objLanguage->languageText('word_no', 'system'));
-        if ($action == 'editforum') {
-            $radioGroup->setSelected($forum['subscriptions']);
+        if ($action == 'editdiscussion') {
+            $radioGroup->setSelected($discussion['subscriptions']);
         } else {
             $radioGroup->setSelected('Y');
         }
@@ -280,10 +280,10 @@ if(!document.getElementById && document.all) {
 // --------- End Row ---------- //
 // --------- New Row ---------- //
 
-        if ($action == 'editforum') {
+        if ($action == 'editdiscussion') {
             $table->startRow();
 
-            $table->addCell('<strong><nobr>' . $this->objLanguage->languageText('mod_forum_archivelabel', 'forum') . ':</nobr></strong>', 100);
+            $table->addCell('<strong><nobr>' . $this->objLanguage->languageText('mod_discussion_archivelabel', 'discussion') . ':</nobr></strong>', 100);
 
             $radioGroup = new radio('archivingRadio');
             $radioGroup->setBreakSpace(' / ');
@@ -296,16 +296,16 @@ if(!document.getElementById && document.all) {
             $selectDateLink = $this->newObject('datepicker', 'htmlelements');
             $selectDateLink->setName('archivedate');
 
-            if ($forum['archivedate'] == '' || $forum['archivedate'] == '0000-00-00') {
+            if ($discussion['archivedate'] == '' || $discussion['archivedate'] == '0000-00-00') {
                 $radioGroup->setSelected('N');
                 $selectDateLink->setDefaultDate(date('Y-m-d'));
             } else {
                 $radioGroup->setSelected('Y');
-                $selectDateLink->setDefaultDate($forum['archivedate']);
+                $selectDateLink->setDefaultDate($discussion['archivedate']);
             }
 
 
-            $cell = $radioGroup->show() . ' <span id="dateSelect"> - ' . $selectDateLink->show() . ' <br /><span class="warning">' . $this->objLanguage->languageText('mod_forum_archivewarning', 'forum') . '</span></span>';
+            $cell = $radioGroup->show() . ' <span id="dateSelect"> - ' . $selectDateLink->show() . ' <br /><span class="warning">' . $this->objLanguage->languageText('mod_discussion_archivewarning', 'discussion') . '</span></span>';
             $table->addCell($cell, null, null, null, null, ' colspan="3"');
 
             $table->endRow();
@@ -322,19 +322,19 @@ if(!document.getElementById && document.all) {
 
         $table->addCell($submitButton->show() . '&nbsp;&nbsp;&nbsp;&nbsp;' . $cancelButton->show(), null, null, null, null, ' colspan="4"');
 
-        if ($action == 'editforum') {
+        if ($action == 'editdiscussion') {
             $hiddenIdInput = & new textinput('id');
             $hiddenIdInput->fldType = 'hidden';
-            $hiddenIdInput->value = $forum['id'];
+            $hiddenIdInput->value = $discussion['id'];
             $form->addToForm($hiddenIdInput->show());
         }
 
         $form->addToForm($table->show());
 
-        $form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'forum'), 'required');
-        $form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'forum'), 'required');
+        $form->addRule('name', $this->objLanguage->languageText('mod_discussion_discussionnameneeded', 'discussion'), 'required');
+        $form->addRule('description', $this->objLanguage->languageText('mod_discussion_discussiondescriptionneeded', 'discussion'), 'required');
 
-        $html .='<div class="createforum">' . $form->show() . '</div>';
+        $html .='<div class="creatediscussion">' . $form->show() . '</div>';
         $this->appendArrayVar('bodyOnLoad', 'toggleArchiveInput();');
         return $html;
     }

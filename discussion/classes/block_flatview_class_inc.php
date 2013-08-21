@@ -21,16 +21,16 @@ class block_flatview extends object {
         var $objUser;
         var $objLanguage;
         var $objPost;
-        var $objForum;
+        var $objDiscussion;
         var $js;
         var $Icon;
         var $contextObject;
         var $contextCode;
         var $objTopic;
         var $objPostRatings;
-        var $objForumRatings;
-        var $dbForumSubscriptions;
-        var $dbForumPost;
+        var $objDiscussionRatings;
+        var $dbDiscussionSubscriptions;
+        var $dbDiscussionPost;
 
         //put your code here
         function init() {
@@ -47,16 +47,16 @@ class block_flatview extends object {
                 $this->contextCode = $this->contextObject->getContextCode();
                 $this->objLanguage = $this->getObject('language', 'language');
                 $this->objUser = $this->getObject('user', 'security');
-                $this->objPost = $this->getObject('dbpost', 'forum');
-                $this->objForum = $this->getObject('dbforum', 'forum');
-                $this->dbForumPost = $this->getObject('dbtopicsubscriptions', 'forum');
-                // Forum Ratings
-                $this->objForumRatings = & $this->getObject('dbforum_ratings');
-                //forum subscriptions
-                $this->dbForumSubscriptions = $this->getObject('dbforumsubscriptions', 'forum');
+                $this->objPost = $this->getObject('dbpost', 'discussion');
+                $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
+                $this->dbDiscussionPost = $this->getObject('dbtopicsubscriptions', 'discussion');
+                // Discussion Ratings
+                $this->objDiscussionRatings = & $this->getObject('dbdiscussion_ratings');
+                //discussion subscriptions
+                $this->dbDiscussionSubscriptions = $this->getObject('dbdiscussionsubscriptions', 'discussion');
                 $this->objPostRatings = & $this->getObject('dbpost_ratings');
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
-                $this->objTopic = $this->getObject('dbtopic', 'forum');
+                $this->objTopic = $this->getObject('dbtopic', 'discussion');
                 $this->objDateTime = & $this->getObject('dateandtime', 'utilities');
                 $this->title=NULL;
                 $this->js = '
@@ -77,14 +77,14 @@ class block_flatview extends object {
                 // Get details on the topic
                 $topic_id = $this->getParam('id');
                 $post = $this->objPost->getRootPost($topic_id);
-                $forumlocked = FALSE;
-                $forumtype = $this->getParam('type');
-                // Get details of the Forum
-                $forum = $this->objForum->getForum($post['forum_id']);
+                $discussionlocked = FALSE;
+                $discussiontype = $this->getParam('type');
+                // Get details of the Discussion
+                $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
                 $header = new htmlheading();
                 $header->type = 1;
-                $link = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'], 'type' => $forumtype)));
-                $link->link = $post['forum_name'];
+                $link = new link($this->uri(array('action' => 'discussion', 'id' => $post['discussion_id'], 'type' => $discussiontype)));
+                $link->link = $post['discussion_name'];
                 //the heading
                 $headerString = $link->show() . ' &gt; ' . stripslashes($post['post_title']);
                 $header->str = $headerString;
@@ -93,31 +93,31 @@ class block_flatview extends object {
                 $htmlTable = $this->getObject('htmltable', 'htmlelements');
                 $htmlTable->cssId = "flatview";
                 $topicDetails = $this->objTopic->getTopicDetails($topic_id);
-                $this->title = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum').$post['post_title'];
-                // Check if forum is locked - if true - disable / editing replies
-                if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
+                $this->title = $this->objLanguage->languageText('mod_discussion_replytotopic', 'discussion').$post['post_title'];
+                // Check if discussion is locked - if true - disable / editing replies
+                if ($this->objDiscussion->checkIfDiscussionLocked($post['discussion_id'])) {
                         $this->objPost->repliesAllowed = FALSE;
                         $this->objPost->editingPostsAllowed = FALSE;
-                        $this->objPost->forumLocked = TRUE;
-                        $forumlocked = TRUE;
+                        $this->objPost->discussionLocked = TRUE;
+                        $discussionlocked = TRUE;
                 } else {
                         if ($this->objUser->isCourseAdmin($this->contextCode)) {
                                 $this->objPost->showModeration = TRUE;
                         }
                 }
-                if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
+                if ($this->objUser->isCourseAdmin($this->contextCode) && !$discussionlocked && $discussiontype != 'workgroup' && $this->objUser->isLoggedIn()) {
                         $this->objIcon->setIcon('notes');
-                        $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['forum_id'], 'type' => $forumtype)));
-                        $newtopiclink->link = $this->objIcon->show()."<br/>".$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum');
+                        $newtopiclink = new link($this->uri(array('action' => 'newtopic', 'id' => $post['discussion_id'], 'type' => $discussiontype)));
+                        $newtopiclink->link = $this->objIcon->show()."<br/>".$this->objLanguage->languageText('mod_discussion_startnewtopic', 'discussion');
                         $newtopiclink->cssClass .= 'sexybutton';
                         $newtopiclink->title = $this->objLanguage->languageText('phrase_starttopic','system');
                         $this->objIcon->setIcon('moderate');
-                        $this->objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-//                        $this->objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+                        $this->objIcon->title = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
+//                        $this->objIcon->alt = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
 
-                        $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forumtype)));
+                        $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $discussiontype)));
                         $moderateTopicLink->cssClass .= 'sexybutton';
-                        $moderateTopicLink->link = $this->objIcon->show()."<br/>{$this->objLanguage->languageText('mod_forum_moderatetopic','forum')}";
+                        $moderateTopicLink->link = $this->objIcon->show()."<br/>{$this->objLanguage->languageText('mod_discussion_moderatetopic','discussion')}";
                         $moderateTopicLink->cssId = "moderatetopic";
                         //moderation options
 //                        $this->loadClass('checkbox', 'htmlelements');
@@ -160,40 +160,40 @@ class block_flatview extends object {
                 ////Confirmation messages
                 if ($this->getParam('message') == 'deletesuccess') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postremoved', 'forum'));
+                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postremoved', 'discussion'));
                         $timeoutMessage->setTimeout(20000);
                         echo ('<p>' . $timeoutMessage->show() . '</p>');
                 }
                 if ($this->getParam('message') == 'save') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));
+                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postsaved', 'discussion'));
                         $timeoutMessage->setTimeout(20000);
                         echo ('<p>' . $timeoutMessage->show() . '</p>');
                 }
                 if ($this->getParam('message') == 'postupdated') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postupdated', 'forum'));
+                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postupdated', 'discussion'));
                         $timeoutMessage->setTimeout(10000);
                         echo ('<p>' . $timeoutMessage->show() . '</p>');
                 }
                 if ($this->getParam('message') == 'replysaved') {
                         $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_replysaved', 'forum'));
+                        $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_replysaved', 'discussion'));
                         $timeoutMessage->setTimeout(10000);
                         echo ('<p>' . $timeoutMessage->show() . '</p>');
                 }
 
 // Error Messages
-                if ($this->getParam('message') == 'cantreplyforumlocked') {
-                        $this->setErrorMessage('This Forum has been Locked. You cannot post a reply to this Topic'); // LTE
+                if ($this->getParam('message') == 'cantreplydiscussionlocked') {
+                        $this->setErrorMessage('This Discussion has been Locked. You cannot post a reply to this Topic'); // LTE
                 }
                 if ($this->getParam('message') == 'cantreplytopiclocked') {
                         $this->setErrorMessage('This Topic has been Locked. You cannot post a reply to this Topic'); // LTE
                 }
 
                 if ($post['status'] == 'CLOSE') {
-                        $hardHTML = '<div class="forumTangentIndent">';
-                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) .$this->objLanguage->languageText('word_on','system') . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
+                        $hardHTML = '<div class="discussionTangentIndent">';
+                        $hardHTML.= '<strong>' . $this->objLanguage->languageText('mod_discussion_topiclockedby', 'discussion') . ' ' . $this->objUser->fullname($post['lockuser']) .$this->objLanguage->languageText('word_on','system') . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
                         $hardHTML .= '<p>' . $post['lockreason'] . '</p>';
                         $hardHTML .= '</div>';
                 }
@@ -219,17 +219,17 @@ class block_flatview extends object {
                 $topicHiddenInput->fldType = 'hidden';
                 $topicHiddenInput->value = $post['topic_id'];
 //                $ratingsForm->addToForm($topicHiddenInput->show());
-                $hiddenForumInput = new textinput('forum');
-                $hiddenForumInput->fldType = 'hidden';
-                if (isset($forum)) {
-                        $hiddenForumInput->value = $forum['id'];
+                $hiddenDiscussionInput = new textinput('discussion');
+                $hiddenDiscussionInput->fldType = 'hidden';
+                if (isset($discussion)) {
+                        $hiddenDiscussionInput->value = $discussion['id'];
                 }
-//                $ratingsForm->addToForm($hiddenForumInput->show());
+//                $ratingsForm->addToForm($hiddenDiscussionInput->show());
                 //show ratings variable, set to false by default
                 $showRatingsForm = FALSE;
-                // Check if ratings allowed in Forum
-                if ($forum['ratingsenabled'] == 'Y') {
-                        $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
+                // Check if ratings allowed in Discussion
+                if ($discussion['ratingsenabled'] == 'Y') {
+                        $this->objPost->discussionRatingsArray = $this->objDiscussionRatings->getDiscussionRatings($post['discussion_id']);
                         $this->objPost->showRatings = TRUE;
                         $showRatingsForm = TRUE;
                 } else {
@@ -240,10 +240,10 @@ class block_flatview extends object {
                 if ($showRatingsForm) {
                         $objButton = new button('submitForm');
                         $objButton->cssClass = 'save';
-                        $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings', 'forum'));
+                        $objButton->setValue($this->objLanguage->languageText('mod_discussion_sendratings', 'discussion'));
                         $objButton->setToSubmit();
 
-                        if ($post['status'] != 'CLOSE' && !$forumlocked) {
+                        if ($post['status'] != 'CLOSE' && !$discussionlocked) {
 //                                $ratingsForm->addToForm('<p align="right">' . $objButton->show() . '</p>');
                         }
                 }
@@ -264,7 +264,7 @@ class block_flatview extends object {
                         echo $tangentsTable;
                 }
                 $htmlTable->startHeaderRow();
-                if ($this->objUser->isCourseAdmin($this->contextCode) && !$forumlocked && $forumtype != 'workgroup' && $this->objUser->isLoggedIn()) {
+                if ($this->objUser->isCourseAdmin($this->contextCode) && !$discussionlocked && $discussiontype != 'workgroup' && $this->objUser->isLoggedIn()) {
                         $htmlTable->addHeaderCell($moderateTopicLink->show() . $moderationDiv, NULL, NULL, "center");
                         $htmlTable->addHeaderCell($newtopiclink->show(), NULL, NULL, "center");
                 }
@@ -281,24 +281,24 @@ class block_flatview extends object {
                 $notifyThread->addOption('subscribetopic', '&nbsp; Notify me of this topic');
 //                $notifyThead->setValue("subscribetopic");
                 $notifyAll = new radio('subscription');
-                $notifyAll->addOption('subscribetoall', '&nbsp; Notify me of all topics and replies in this forum');
+                $notifyAll->addOption('subscribetoall', '&nbsp; Notify me of all topics and replies in this discussion');
                 $this->objIcon->title = $this->objLanguage->languageText('phrase_nitification','system');
                 /**
-                 * if user is subscribed to forum, indicate
+                 * if user is subscribed to discussion, indicate
                  */
-                if ($this->dbForumSubscriptions->isSubscribedToForum($forum['id'], $this->objUser->userId($this->objUser->email()))) {
+                if ($this->dbDiscussionSubscriptions->isSubscribedToDiscussion($discussion['id'], $this->objUser->userId($this->objUser->email()))) {
                         $notifyAll->selected = TRUE;
                         $this->objIcon->setIcon('alerts-on');
                 }
                 /**
                  * if user is subscribed to topic, indicate by selecting the topic radio by default
                  */
-                if ($this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
+                if ($this->dbDiscussionPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                         $notifyThread->selected = TRUE;
                         $this->objIcon->setIcon('alerts-on');
                 }
-                if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
-                        if (!$this->dbForumPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
+                if (!$this->dbDiscussionPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
+                        if (!$this->dbDiscussionPost->isSubscribedToTopic($topic_id, $this->objUser->userId($this->objUser->email()))) {
                                 $noAlerts->selected = TRUE;
                                 $this->objIcon->setIcon('alerts');
                         }
@@ -311,14 +311,14 @@ class block_flatview extends object {
                 //floating div
                 $subscribeDiv = "<div class='hiddenOptions' >";
 //                $notifyAll->setvalue("subscribetoall");
-                //hidden form object to carry the topic ID and the forum ID
-                $forumHiddenInput = new hiddeninput('forum_id', $topicDetails['forum_id']);
+                //hidden form object to carry the topic ID and the discussion ID
+                $discussionHiddenInput = new hiddeninput('discussion_id', $topicDetails['discussion_id']);
                 $topicHiddenInput = new hiddeninput('topic_id', $topic_id);
                 //form
-                if ($forum['subscriptions'] == 'Y') {
+                if ($discussion['subscriptions'] == 'Y') {
                         $frmModerate = new form('topicModeration');
                         //add objects to the form
-                        $frmModerate->addToForm($forumHiddenInput->show());
+                        $frmModerate->addToForm($discussionHiddenInput->show());
                         $frmModerate->addToForm($topicHiddenInput->show());
                         $frmModerate->addToForm($noAlerts->show() . '<br/>');
                         $frmModerate->addToForm($notifyThread->show() . '<br/>');

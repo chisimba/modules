@@ -22,11 +22,11 @@ class block_postreply extends object {
     var $objUser;
     var $objPost;
     var $objTopic;
-    var $objForum;
+    var $objDiscussion;
     var $objContextObject;
     var $contextCode;
     var $objLanguage;
-    var $objForumRatings;
+    var $objDiscussionRatings;
     var $objPostRatings;
 
     //put your code here
@@ -34,15 +34,15 @@ class block_postreply extends object {
         $this->title = "Post Reply";
 
         $this->objUser = $this->getObject('user', 'security');
-        $this->objPost = $this->getObject('dbpost', 'forum');
-        $this->objTopic = $this->getObject('dbtopic', 'forum');
-        $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objPost = $this->getObject('dbpost', 'discussion');
+        $this->objTopic = $this->getObject('dbtopic', 'discussion');
+        $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->objLanguage = $this->getObject('language', 'language');
-        // Forum Ratings
-        $this->objForumRatings = & $this->getObject('dbforum_ratings');
+        // Discussion Ratings
+        $this->objDiscussionRatings = & $this->getObject('dbdiscussion_ratings');
         $this->objPostRatings = & $this->getObject('dbpost_ratings');
     }
 
@@ -50,9 +50,9 @@ class block_postreply extends object {
         //get the recordid
 //        $post_id = $this->getParam('id');
 //        $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
-//        $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $forumtype)));
+//        $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $discussiontype)));
 //        $postReplyForm->displayType = 3;
-//        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
+//        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_discussion_addtitle', 'discussion'), 'required');
 //
 //        $addTable = $this->getObject('htmltable', 'htmlelements');
 //        $addTable->width = '99%';
@@ -65,8 +65,8 @@ class block_postreply extends object {
 //        echo $objHighlightLabels->show();
 //        // Get the Post
 //        $post = $this->objPost->getPostWithText($post_id);
-//        // Get details of the Forum
-//        $forum = $this->objForum->getForum($post['forum_id']);
+//        // Get details of the Discussion
+//        $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
 //        // Check if Title has Re: attached to it   
 //        if (substr($post['post_title'], 0, 3) == 'Re:') {
 //            // If it does, simply strip slashes

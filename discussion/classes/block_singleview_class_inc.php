@@ -22,11 +22,11 @@ class block_singleview extends object {
     var $objUser;
     var $objPost;
     var $objTopic;
-    var $objForum;
+    var $objDiscussion;
     var $objContextObject;
     var $contextCode;
     var $objLanguage;
-    var $objForumRatings;
+    var $objDiscussionRatings;
     var $objPostRatings;
 
     //put your code here
@@ -40,15 +40,15 @@ class block_singleview extends object {
         $this->loadClass('button', 'htmlelements');
         $this->title = "Post single view";
         $this->objUser = $this->getObject('user', 'security');
-        $this->objPost = $this->getObject('dbpost', 'forum');
-        $this->objTopic = $this->getObject('dbtopic', 'forum');
-        $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objPost = $this->getObject('dbpost', 'discussion');
+        $this->objTopic = $this->getObject('dbtopic', 'discussion');
+        $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
         // Get Context Code Settings
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->objLanguage = $this->getObject('language', 'language');
-        // Forum Ratings
-        $this->objForumRatings = & $this->getObject('dbforum_ratings');
+        // Discussion Ratings
+        $this->objDiscussionRatings = & $this->getObject('dbdiscussion_ratings');
         $this->objPostRatings = & $this->getObject('dbpost_ratings');
     }
 
@@ -57,27 +57,27 @@ class block_singleview extends object {
         $objIcon = $this->getObject('geticon', 'htmlelements');
         $header = $this->getObject('htmlheading', 'htmlelements');
         $post = $this->objPost->getRootPost($topic_id);
-        $forum = $this->objForum->getForum($post['forum_id']);
-        $link = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'], 'type' => $forum['forum_type'])));
-        $link->link = $post['forum_name'];
-        // Check if forum is locked - if true - disable / editing replies
-        if ($this->objForum->checkIfForumLocked($post['forum_id'])) {
+        $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
+        $link = new link($this->uri(array('action' => 'discussion', 'id' => $post['discussion_id'], 'type' => $discussion['discussion_type'])));
+        $link->link = $post['discussion_name'];
+        // Check if discussion is locked - if true - disable / editing replies
+        if ($this->objDiscussion->checkIfDiscussionLocked($post['discussion_id'])) {
             $this->objPost->repliesAllowed = FALSE;
             $this->objPost->editingPostsAllowed = FALSE;
-            $this->objPost->forumLocked = TRUE;
-            $forumlocked = TRUE;
+            $this->objPost->discussionLocked = TRUE;
+            $discussionlocked = TRUE;
         } else {
-            $forumlocked = FALSE;
+            $discussionlocked = FALSE;
             if ($this->objUser->isCourseAdmin($this->contextCode)) {
                 $this->objPost->showModeration = TRUE;
             }
         }
-        if ($this->objUser->isCourseAdmin() && !$forumlocked && $forum['forum_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
+        if ($this->objUser->isCourseAdmin() && !$discussionlocked && $discussion['discussion_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
             $objIcon->setIcon('moderate');
-            $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-            $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
+            $objIcon->title = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
+            $objIcon->alt = $this->objLanguage->languageText('mod_discussion_moderatetopic', 'discussion');
 
-            $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $forum['forum_type'])));
+            $moderateTopicLink = new link($this->uri(array('action' => 'moderatetopic', 'id' => $post['topic_id'], 'type' => $discussion['discussion_type'])));
             $moderateTopicLink->link = $objIcon->show();
 
             $header->str .= ' ' . $moderateTopicLink->show() . "Moderate Topic";
@@ -87,25 +87,25 @@ class block_singleview extends object {
         ////Confirmation messages
         if ($this->getParam('message') == 'save') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postsaved', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postsaved', 'discussion'));
             $timeoutMessage->setTimeout(20000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
         if ($this->getParam('message') == 'postupdated') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_postupdated', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_postupdated', 'discussion'));
             $timeoutMessage->setTimeout(10000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
         if ($this->getParam('message') == 'replysaved') {
             $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
-            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_forum_replysaved', 'forum'));
+            $timeoutMessage->setMessage($this->objLanguage->languageText('mod_discussion_replysaved', 'discussion'));
             $timeoutMessage->setTimeout(10000);
             echo ('<p>' . $timeoutMessage->show() . '</p>');
         }
         //// Error Messages
-        if ($this->getParam('message') == 'cantreplyforumlocked') {
-            $this->setErrorMessage('This Forum has been Locked. You cannot post a reply to this Topic'); // LTE
+        if ($this->getParam('message') == 'cantreplydiscussionlocked') {
+            $this->setErrorMessage('This Discussion has been Locked. You cannot post a reply to this Topic'); // LTE
         }
         if ($this->getParam('message') == 'cantreplytopiclocked') {
             $this->setErrorMessage('This Topic has been Locked. You cannot post a reply to this Topic'); // LTE
@@ -123,15 +123,15 @@ class block_singleview extends object {
     //]]>
 </script>
 ';
-        if ($this->objUser->isCourseAdmin() && !$forumlocked && $forum['forum_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
+        if ($this->objUser->isCourseAdmin() && !$discussionlocked && $discussion['discussion_type'] != 'workgroup' && $this->objUser->isLoggedIn()) {
             $js .= $moderateTopicLink->show() . ' / ';
         }
         $js .= $changeDisplayForm;
         $htmlElements = $js;
 
         if ($post['status'] == 'CLOSE') {
-            echo '<div class="forumTangentIndent">';
-            echo '<strong>' . $this->objLanguage->languageText('mod_forum_topiclockedby', 'forum') . ' ' . $this->objUser->fullname($post['lockuser']) . ' on ' . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
+            echo '<div class="discussionTangentIndent">';
+            echo '<strong>' . $this->objLanguage->languageText('mod_discussion_topiclockedby', 'discussion') . ' ' . $this->objUser->fullname($post['lockuser']) . ' on ' . $this->objDateTime->formatdate($post['lockdate']) . '</strong>';
             echo '<p>' . $post['lockreason'] . '</p>';
             echo '</div>';
         }
@@ -147,9 +147,9 @@ class block_singleview extends object {
         }
         $ratingsForm->addToForm($postDisplay);
 
-        // Check if ratings allowed in Forum
-        if ($forum['ratingsenabled'] == 'Y') {
-            $this->objPost->forumRatingsArray = $this->objForumRatings->getForumRatings($post['forum_id']);
+        // Check if ratings allowed in Discussion
+        if ($discussion['ratingsenabled'] == 'Y') {
+            $this->objPost->discussionRatingsArray = $this->objDiscussionRatings->getDiscussionRatings($post['discussion_id']);
             $this->objPost->showRatings = TRUE;
             $showRatingsForm = TRUE;
         } else {
@@ -162,10 +162,10 @@ class block_singleview extends object {
         if ($showRatingsForm) {
             $objButton = &new button('submitForm');
             $objButton->cssClass = 'save';
-            $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings', 'forum'));
+            $objButton->setValue($this->objLanguage->languageText('mod_discussion_sendratings', 'discussion'));
             $objButton->setToSubmit();
 
-            if ($post['status'] != 'CLOSE' && !$forumlocked) {
+            if ($post['status'] != 'CLOSE' && !$discussionlocked) {
                 $ratingsForm->addToForm('<p align="right">' . $objButton->show() . '</p>');
             }
 

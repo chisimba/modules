@@ -6,15 +6,15 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Forum dynamic blocks to view topic table
-* This class renders forum view dynamic block
+* Discussion dynamic blocks to view topic table
+* This class renders discussion view dynamic block
 * @author Brent van Rensburg
 * @copyright (c) 2004 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 /**
-* This class renders forum view dynamic block
+* This class renders discussion view dynamic block
 */
 class dynamicblocks_latestpost extends object
  {
@@ -37,14 +37,14 @@ class dynamicblocks_latestpost extends object
     
     
      /**
-     * Method to render a forum
-     * @param string $id Record Id of the forum
+     * Method to render a discussion
+     * @param string $id Record Id of the discussion
      * @return string Results
      */
     function renderLatestPost($id)
     {	
-		$noPost = $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum');
-        $todayAt = $this->objLanguage->languageText('mod_forum_todayat', 'forum');
+		$noPost = $this->objLanguage->languageText('mod_discussion_nopostsyet', 'discussion');
+        $todayAt = $this->objLanguage->languageText('mod_discussion_todayat', 'discussion');
 
         $post = $this->objPost->getLastPost($id);
 
@@ -53,7 +53,7 @@ class dynamicblocks_latestpost extends object
             $cssClass= NULL;
         } else {
             $cssClass = 'smallText';
-            $postLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post'=>$post['post_id'])));
+            $postLink = new link($this->uri(array( 'module'=> 'discussion', 'action' => 'viewtopic', 'id' => $post['topic_id'], 'post'=>$post['post_id'])));
             $postLink->link = stripslashes($post['post_title']);
             $postDetails = '<strong>'.$postLink->show().'</strong>';
             $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
@@ -105,18 +105,18 @@ class dynamicblocks_latestpost extends object
     }
 
     /**
-    * Method to display a link to the forum
+    * Method to display a link to the discussion
     */
     function getLink()
     {
-        $lnForum = $this->objLanguage->languageText('mod_forum_name', 'forum');
-        $url = $this->uri('', 'forum');
-        $this->objIcon->setModuleIcon('forum');
+        $lnDiscussion = $this->objLanguage->languageText('mod_discussion_name', 'discussion');
+        $url = $this->uri('', 'discussion');
+        $this->objIcon->setModuleIcon('discussion');
         $objLink = new link($url);
         $objLink->link = $this->objIcon->show();
         $lnStr = '<p>'.$objLink->show();
         $objLink = new link($url);
-        $objLink->link = $lnForum;
+        $objLink->link = $lnDiscussion;
         $lnStr .= '&nbsp;'.$objLink->show().'</p>';
         return $lnStr;
     }

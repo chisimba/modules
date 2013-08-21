@@ -19,13 +19,13 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 class block_newtopic extends object {
 
-    var $objForum;
+    var $objDiscussion;
     var $objLanguage;
     var $objUser;
     var $contextObject;
     var $contextCode;
     var $discussionTypes;
-    var $objForumSubscriptions;
+    var $objDiscussionSubscriptions;
     var $objTopicSubscriptions;
 
     //put your code here
@@ -41,7 +41,7 @@ class block_newtopic extends object {
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
-        $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objDiscussion = $this->getObject('dbdiscussion', 'discussion');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
         // Get Context Code Settings
@@ -49,14 +49,14 @@ class block_newtopic extends object {
         $this->objDiscussionType = & $this->getObject('dbdiscussiontypes');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->objTopicSubscriptions = & $this->getObject('dbtopicsubscriptions');
-        // Load Forum Subscription classes
-        $this->objForumSubscriptions = & $this->getObject('dbforumsubscriptions');
-        $this->title = "<h1>{$this->objLanguage->languageText('mod_forum_startnewtopic','forum')}</h1>";
+        // Load Discussion Subscription classes
+        $this->objDiscussionSubscriptions = & $this->getObject('dbdiscussionsubscriptions');
+        $this->title = "<h1>{$this->objLanguage->languageText('mod_discussion_startnewtopic','discussion')}</h1>";
     }
 
     public function biuldEntryForm() {
-        $forumId =  $this->getParam('id');
-        $forum = $this->objForum->getForum($forumId);
+        $discussionId =  $this->getParam('id');
+        $discussion = $this->objDiscussion->getDiscussion($discussionId);
         $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
         $js = '<script type="text/javascript">
       function SubmitForm()
@@ -87,21 +87,21 @@ class block_newtopic extends object {
             $mode = "new";
         }
         //topic form
-        $forumtype = 'root';
-        $newTopicForm = new form('newTopicForm', $this->uri(array('module' => 'forum', 'action' => 'savenewtopic', 'type' => $forumtype)));
+        $discussiontype = 'root';
+        $newTopicForm = new form('newTopicForm', $this->uri(array('module' => 'discussion', 'action' => 'savenewtopic', 'type' => $discussiontype)));
         $newTopicForm->displayType = 3;
-        $newTopicForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
+        $newTopicForm->addRule('title', $this->objLanguage->languageText('mod_discussion_addtitle', 'discussion'), 'required');
         //topic table
-        $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $forumId)));
-        $forumLink->link = $forum['forum_name'];
-        $forumLink->title = $this->objLanguage->languageText('mod_forum_returntoforum', 'forum');
+        $discussionLink = new link($this->uri(array('action' => 'discussion', 'id' => $discussionId)));
+        $discussionLink->link = $discussion['discussion_name'];
+        $discussionLink->title = $this->objLanguage->languageText('mod_discussion_returntodiscussion', 'discussion');
         //heading
         $header = $this->getObject('htmlheading', 'htmlelements');
         $header->type = 1;
-        $header->str = $forumLink->show() . ' - ' . $this->objLanguage->languageText('mod_forum_postnewmessage', 'forum');
+        $header->str = $discussionLink->show() . ' - ' . $this->objLanguage->languageText('mod_discussion_postnewmessage', 'discussion');
         $mode = $this->getVar('mode');
         if ($mode == 'fix') {
-            echo '<span class="noRecordsMessage error"><strong>' . $this->objLanguage->languageText('mod_forum_messageisblank', 'forum') . '</strong><br />&nbsp;</span>';
+            echo '<span class="noRecordsMessage error"><strong>' . $this->objLanguage->languageText('mod_discussion_messageisblank', 'discussion') . '</strong><br />&nbsp;</span>';
         }
         //table
         $addTable = $this->getObject('htmltable', 'htmlelements');
@@ -126,7 +126,7 @@ class block_newtopic extends object {
 
         $addTable->startRow();
 
-        $discussionTypeLabel = new label('<nobr>' . $this->objLanguage->languageText('mod_forum_typeoftopic', 'forum') . ':</nobr>', 'input_discussionType');
+        $discussionTypeLabel = new label('<nobr>' . $this->objLanguage->languageText('mod_discussion_typeoftopic', 'discussion') . ':</nobr>', 'input_discussionType');
         $addTable->addCell($discussionTypeLabel->show(), 120);
         $discussionTypes = $this->objDiscussionType->getDiscussionTypes();
         $discussionType = new dropdown('discussionType');
@@ -140,7 +140,7 @@ class block_newtopic extends object {
         $objRadioButton->setTableColumns(3);
         $objRadioButton->setBreakSpace('table');
         foreach ($discussionTypes as $element) {
-            $objIcon->setIcon($element['type_icon'], NULL, 'icons/forum/');
+            $objIcon->setIcon($element['type_icon'], NULL, 'icons/discussion/');
 
             $objRadioButton->addOption($element['id'], $objIcon->show() . ' ' . htmlentities($element['type_name']));
 
@@ -165,7 +165,7 @@ class block_newtopic extends object {
         // Show Sticky Topic
         if ($this->objUser->isCourseAdmin($this->contextCode)) {
             $addTable->startRow();
-            $addTable->addCell($this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic') . ':');
+            $addTable->addCell($this->objLanguage->languageText('mod_discussion_stickytopic', 'discussion', 'Sticky Topic') . ':');
 
             $sticky = new radio('stickytopic');
 
@@ -223,11 +223,11 @@ class block_newtopic extends object {
         $addTable->addCell($editor->show());
 
         $addTable->endRow();
-        if ($forum['attachments'] == 'Y') {
+        if ($discussion['attachments'] == 'Y') {
             $addTable->startRow();
 
 
-            $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum') . ':', 'attachments');
+            $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion') . ':', 'attachments');
             $addTable->addCell($attachmentsLabel->show(), 120);
 
             $form = new form('saveattachment', $this->uri(array('action' => 'saveattachment')));
@@ -235,11 +235,11 @@ class block_newtopic extends object {
             $objSelectFile = $this->newObject('selectfile', 'filemanager');
             $objSelectFile->name = 'attachment';
             $form->addToForm($objSelectFile->show());
-            // Fix undefined variable error for $forumId
-            if (!isset($forumId)) {
-                $forumId = "";
+            // Fix undefined variable error for $discussionId
+            if (!isset($discussionId)) {
+                $discussionId = "";
             }
-            $hiddeninput = new hiddeninput('id', $forumId);
+            $hiddeninput = new hiddeninput('id', $discussionId);
             $form->addToForm($hiddeninput->show());
 
             $button = new button('save_attachment_button', 'Attach File');
@@ -249,14 +249,14 @@ class block_newtopic extends object {
                 if (count($files) > 0) {
 
                     foreach ($files AS $file) {
-                        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action' => 'deleteattachment', 'id' => $file['id'], 'attachmentwindow' => $forumId), 'forum', 'Are you sure wou want to remove this attachment');
+                        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action' => 'deleteattachment', 'id' => $file['id'], 'attachmentwindow' => $discussionId), 'discussion', 'Are you sure wou want to remove this attachment');
                         $link = '<li>' . $file['filename'] . ' ' . $icon . '</li>';
                         $form->addToForm($link);
                     }
                 }
             }
-            $hiddenForumInput = new hiddeninput('forum', $forumId);
-            $form->addToForm($hiddenForumInput->show());
+            $hiddenDiscussionInput = new hiddeninput('discussion', $discussionId);
+            $form->addToForm($hiddenDiscussionInput->show());
 
             $details = $this->getVar('details');
             $temporaryId = $details['temporaryId'];
@@ -266,28 +266,28 @@ class block_newtopic extends object {
             $addTable->endRow();
         }
 
-        if ($forum['subscriptions'] == 'Y') {
+        if ($discussion['subscriptions'] == 'Y') {
             $addTable->startRow();
-            $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
+            $addTable->addCell($this->objLanguage->languageText('mod_discussion_emailnotification', 'discussion', 'Email Notification') . ':');
             $subscriptionsRadio = new radio('subscriptions');
-            $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-            $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-            $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+            $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_discussion_donotsubscribetothread', 'discussion', 'Do not subscribe to this thread'));
+            $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_discussion_notifytopic', 'discussion', 'Notify me via email when someone replies to this thread'));
+            $subscriptionsRadio->addOption('discussionsubscribe', $this->objLanguage->languageText('mod_discussion_notifydiscussion', 'discussion', 'Notify me of ALL new topics and replies in this discussion.'));
             $subscriptionsRadio->setBreakSpace('<br />');
 
-            $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($forumId, $this->objUser->userId());
-            $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($forumId, $this->objUser->userId());
-            if ($forumSubscription) {
-                $subscriptionsRadio->setSelected('forumsubscribe');
-                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+            $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($discussionId, $this->objUser->userId());
+            $discussionSubscription = $this->objDiscussionSubscriptions->isSubscribedToDiscussion($discussionId, $this->objUser->userId());
+            if ($discussionSubscription) {
+                $subscriptionsRadio->setSelected('discussionsubscribe');
+                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtodiscussion', 'discussion', 'You are currently subscribed to the discussion, receiving notification of all new posts and replies.');
             } else {
                 $subscriptionsRadio->setSelected('nosubscriptions');
-                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtonumbertopic', 'discussion', 'You are currently subscribed to [NUM] topics.');
                 $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
             }
 
             $div = '
-    <div class="forumTangentIndent">' . $subscribeMessage . '</div>';
+    <div class="discussionTangentIndent">' . $subscribeMessage . '</div>';
 
             $addTable->addCell($subscriptionsRadio->show() . $div);
             $addTable->endRow();
@@ -305,7 +305,7 @@ class block_newtopic extends object {
 
         $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
         $cancelButton->cssClass = 'cancel';
-        $returnUrl = $this->uri(array('action' => 'forum', 'id' => $forumId, 'type' => $forumtype));
+        $returnUrl = $this->uri(array('action' => 'discussion', 'id' => $discussionId, 'type' => $discussiontype));
         $cancelButton->setOnClick("window.location='$returnUrl'");
 
         $addTable->addCell($submitButton->show() . ' ' . $cancelButton->show());

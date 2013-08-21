@@ -5,15 +5,15 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 
 /**
- * Forum Topics Table
- * This class controls all functionality relating to the tbl_forum_topic table
+ * Discussion Topics Table
+ * This class controls all functionality relating to the tbl_discussion_topic table
  * @author Tohir Solomons
  * @copyright (c) 2004 University of the Western Cape
- * @package forum
+ * @package discussion
  * @version 1
  */
 /**
- * This class controls the functionality for topics and tangents in a discussion forum
+ * This class controls the functionality for topics and tangents in a discussion discussion
  */
 class dbtopic extends dbTable {
 
@@ -21,14 +21,14 @@ class dbtopic extends dbTable {
      * Constructor method to define the table(default)
      */
     function init() {
-        parent::init('tbl_forum_topic');
+        parent::init('tbl_discussion_topic');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->objPost =& $this->getObject('dbpost');
-        $this->objForum = & $this->getObject('dbForum');
+        $this->objDiscussion = & $this->getObject('dbDiscussion');
 
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
@@ -51,7 +51,7 @@ class dbtopic extends dbTable {
     /**
      * Insert a topic into the database
      *
-     * @param string $forum_id: Record ID of the Forum post is being made into
+     * @param string $discussion_id: Record ID of the Discussion post is being made into
      * @param string $type_id: Type of topic
      * @param string $first_post: Record Id of the first post
      * @param string $topic_tangent_parent: Record Id of tangent parent
@@ -59,9 +59,9 @@ class dbtopic extends dbTable {
      * @param string $dateLastUpdated: Date topic was started
      * @param string $id Id - Optional, used by API
      */
-    function insertSingle($forum_id, $type_id, $topic_tangent_parent, $userID, $postTitle=NULL, $id=NULL) {
+    function insertSingle($discussion_id, $type_id, $topic_tangent_parent, $userID, $postTitle=NULL, $id=NULL) {
         if ($topic_tangent_parent == 0) {
-            $lastRightPointer = $this->getLastRightPointer($forum_id);
+            $lastRightPointer = $this->getLastRightPointer($discussion_id);
             $leftPointer = $lastRightPointer+1;
             $rightPointer = $lastRightPointer+2;
             $level = 1;
@@ -70,7 +70,7 @@ class dbtopic extends dbTable {
 
         $this->insert(array(
                 'id'              => $id,
-                'forum_id'        => $forum_id,
+                'discussion_id'        => $discussion_id,
                 'type_id'         => $type_id,
                 'views'           => 0,
                 'replies'         => 0,
@@ -91,23 +91,23 @@ class dbtopic extends dbTable {
      * @param string $postTitle: Title of the topic
      * @param string $postContent: Content of the topic post
      * @param string $userId: User ID of person starting the topic
-     * @param string $forumId: The id of the forum which the topic is posted in
+     * @param string $discussionId: The id of the discussion which the topic is posted in
      */
-    function insertTopicSearch($topicId, $postTitle, $postContent, $userId, $forumId) {
-        $forum = $this->objForum->getRow('id', $forumId);
+    function insertTopicSearch($topicId, $postTitle, $postContent, $userId, $discussionId) {
+        $discussion = $this->objDiscussion->getRow('id', $discussionId);
         // Add to Search
         $objIndexData = $this->getObject('indexdata', 'search');
 
         // Prep Data
-        $docId = 'forum_topic_'.$topicId;
+        $docId = 'discussion_topic_'.$topicId;
         $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
-        $url = $this->uri(array('action'=>'viewtopic', 'id'=>$topicId), 'forum');
+        $url = $this->uri(array('action'=>'viewtopic', 'id'=>$topicId), 'discussion');
         $title = $postTitle;
-        $contents = $forum['forum_name'].': '.$postTitle;
+        $contents = $discussion['discussion_name'].': '.$postTitle;
         $teaser = $postContent;
-        $module = 'forum';
+        $module = 'discussion';
         $userId = $userId;
-        $context = $forum['forum_context'];
+        $context = $discussion['discussion_context'];
 
         // Add to Index
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
@@ -153,10 +153,10 @@ class dbtopic extends dbTable {
 
     // can't be used by tangents
     /**
-     * Show topics in forum, type of topic, first post, last post, by providing the forum_id
+     * Show topics in discussion, type of topic, first post, last post, by providing the discussion_id
      *
-     * @param string $forum_id: Record ID of the Forum
-     * @param string $userId: User Id to check whether the forum has been read
+     * @param string $discussion_id: Record ID of the Discussion
+     * @param string $userId: User Id to check whether the discussion has been read
      * @param date $archiveDate: Date to get posts from
      * @param string $order: Column to Order by
      * @param string $direction: Direction to order by - either asc or desc
@@ -165,38 +165,38 @@ class dbtopic extends dbTable {
      *
      * @return array Details of the topics
      */
-    function showTopicsInForum($forum_id, $userId, $archiveDate = NULL, $order=NULL, $direction=NULL, $additionalWhere = NULL, $limit = NULL) {
-        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, lastPostUser.username AS lastusername, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
+    function showTopicsInDiscussion($discussion_id, $userId, $archiveDate = NULL, $order=NULL, $direction=NULL, $additionalWhere = NULL, $limit = NULL) {
+        $sql = 'SELECT tbl_discussion_topic.id AS topic_id,tbl_discussion_topic.*, tbl_discussion_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_discussion_discussiontype.*, tbl_discussion_post_text.post_title, tbl_discussion_topic_read.id AS readtopic, tbl_discussion_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, lastPostUser.username AS lastusername, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
 
-                .' FROM tbl_forum_topic'
+                .' FROM tbl_discussion_topic'
 
                 // Inner Joing Post to get the details
-                .' INNER JOIN tbl_forum_post ON (tbl_forum_topic.first_post = tbl_forum_post.id AND tbl_forum_post.post_parent=0)'
+                .' INNER JOIN tbl_discussion_post ON (tbl_discussion_topic.first_post = tbl_discussion_post.id AND tbl_discussion_post.post_parent=0)'
                 // Get User who started the topic
-                .' LEFT  JOIN tbl_users ON ( tbl_forum_topic.userId = tbl_users.userId ) '
+                .' LEFT  JOIN tbl_users ON ( tbl_discussion_topic.userId = tbl_users.userId ) '
                 // Get the type of topic
-                .' INNER JOIN tbl_forum_discussiontype ON (tbl_forum_topic.type_id = tbl_forum_discussiontype.id)'
+                .' INNER JOIN tbl_discussion_discussiontype ON (tbl_discussion_topic.type_id = tbl_discussion_discussiontype.id)'
                 // Get the title of the topic
-                .' INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = \'1\')'
+                .' INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id AND tbl_discussion_post_text.original_post = \'1\')'
                 // Check if the user has read this topic alreadt
-                .' LEFT JOIN tbl_forum_topic_read ON (tbl_forum_topic.id = tbl_forum_topic_read.topic_id AND tbl_forum_topic_read.userId = \''.$userId.'\') '
+                .' LEFT JOIN tbl_discussion_topic_read ON (tbl_discussion_topic.id = tbl_discussion_topic_read.topic_id AND tbl_discussion_topic_read.userId = \''.$userId.'\') '
                 // Check if this topic has a tangent
-                .' LEFT  JOIN tbl_forum_topic as tangentCheck ON ( tangentCheck.topic_tangent_parent = tbl_forum_topic.id ) '
+                .' LEFT  JOIN tbl_discussion_topic as tangentCheck ON ( tangentCheck.topic_tangent_parent = tbl_discussion_topic.id ) '
                 // Get details of the last post
-                .' INNER JOIN tbl_forum_post AS post2 ON (tbl_forum_topic.last_post = post2.id)'
+                .' INNER JOIN tbl_discussion_post AS post2 ON (tbl_discussion_topic.last_post = post2.id)'
                 // Get user who did the last post
                 .' LEFT  JOIN tbl_users as lastPostUser ON ( post2.userId = lastPostUser.userId ) '
-                // Restrict to current forum and topics that aren't tangents
-                .' WHERE tbl_forum_topic.forum_id=\''.$forum_id.'\' AND tbl_forum_topic.topic_tangent_parent = \'0\'  ';
-        //OR tbl_forum_topic.topic_tangent_parent = 0)
+                // Restrict to current discussion and topics that aren't tangents
+                .' WHERE tbl_discussion_topic.discussion_id=\''.$discussion_id.'\' AND tbl_discussion_topic.topic_tangent_parent = \'0\'  ';
+        //OR tbl_discussion_topic.topic_tangent_parent = 0)
         if ($archiveDate != NULL) {
-            $sql .= ' AND tbl_forum_topic.dateLastUpdated > \''.$archiveDate.' 00:00:00\'';
+            $sql .= ' AND tbl_discussion_topic.dateLastUpdated > \''.$archiveDate.' 00:00:00\'';
         }
 
         $sql .= $additionalWhere;
 
         // Return single rows
-        $sql .= ' GROUP  BY tbl_forum_topic.id';
+        $sql .= ' GROUP  BY tbl_discussion_topic.id';
 
         if (strtolower($direction) == 'asc') {
             $direction = NULL;
@@ -223,9 +223,9 @@ class dbtopic extends dbTable {
                 break;
             case 'type': $sql .= ' type_name '.$direction;
                 break;
-            case 'views': $sql .= ' tbl_forum_topic.views '.$direction;
+            case 'views': $sql .= ' tbl_discussion_topic.views '.$direction;
                 break;
-            default :  $sql .= ' tbl_forum_topic.dateLastUpdated DESC';
+            default :  $sql .= ' tbl_discussion_topic.dateLastUpdated DESC';
                 break;
         }
 
@@ -235,12 +235,12 @@ class dbtopic extends dbTable {
     }
 
     /**
-     * Method to get the last right pointer for a topic in forum. Usually called when inserting a new topic
-     * @param string $forum Record Id of the Forum
+     * Method to get the last right pointer for a topic in discussion. Usually called when inserting a new topic
+     * @param string $discussion Record Id of the Discussion
      * @return int Right Pointer Value
      */
-    function getLastRightPointer($forum) {
-        $sql = 'SELECT tbl_forum_topic.rght FROM tbl_forum_topic WHERE tbl_forum_topic.forum_id = \''.$forum.'\'  ORDER BY rght DESC LIMIT 1';
+    function getLastRightPointer($discussion) {
+        $sql = 'SELECT tbl_discussion_topic.rght FROM tbl_discussion_topic WHERE tbl_discussion_topic.discussion_id = \''.$discussion.'\'  ORDER BY rght DESC LIMIT 1';
 
         $list =$this->getArray($sql);
 
@@ -257,15 +257,15 @@ class dbtopic extends dbTable {
      * @return array List of tangents
      */
     function getTangents($topic) {
-        $sql = 'SELECT tbl_forum_topic. * , tbl_forum_post_text.post_title, tbl_users.firstname, tbl_users.surname,tbl_users.username,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, lastPostUser.username AS lastusername, post2.dateLastUpdated AS lastdate
-                FROM tbl_forum_topic
-                INNER JOIN tbl_forum_post ON ( tbl_forum_post.topic_id = tbl_forum_topic.id AND tbl_forum_post.post_parent="0")
-                INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id )
-                INNER JOIN tbl_forum_post AS post2 ON (tbl_forum_topic.last_post = post2.id)
-                LEFT JOIN tbl_users ON ( tbl_forum_topic.userId = tbl_users.userId )
+        $sql = 'SELECT tbl_discussion_topic. * , tbl_discussion_post_text.post_title, tbl_users.firstname, tbl_users.surname,tbl_users.username,lastPostUser.firstName AS lastFirstName, lastPostUser.surname AS lastSurname, lastPostUser.username AS lastusername, post2.dateLastUpdated AS lastdate
+                FROM tbl_discussion_topic
+                INNER JOIN tbl_discussion_post ON ( tbl_discussion_post.topic_id = tbl_discussion_topic.id AND tbl_discussion_post.post_parent="0")
+                INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_post_text.post_id = tbl_discussion_post.id )
+                INNER JOIN tbl_discussion_post AS post2 ON (tbl_discussion_topic.last_post = post2.id)
+                LEFT JOIN tbl_users ON ( tbl_discussion_topic.userId = tbl_users.userId )
                 LEFT  JOIN tbl_users as lastPostUser ON ( post2.userId = lastPostUser.userId )
-                WHERE tbl_forum_topic.topic_tangent_parent = \''.$topic.'\'
-GROUP BY tbl_forum_topic.id                ';
+                WHERE tbl_discussion_topic.topic_tangent_parent = \''.$topic.'\'
+GROUP BY tbl_discussion_topic.id                ';
         return $this->getArray($sql);
     }
 
@@ -292,11 +292,11 @@ GROUP BY tbl_forum_topic.id                ';
             $table->cellpadding = 5;
             $table->cellspacing = 1;
             $table->startHeaderRow();
-            $table->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
+            $table->addHeaderCell($this->objLanguage->languageText('mod_discussion_topicconversation', 'discussion'));
             $table->addHeaderCell($this->objLanguage->languageText('word_author'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('word_replies', 'system'), NULL, NULL, 'center');
             $table->addHeaderCell($this->objLanguage->languageText('word_views', 'system'), NULL, NULL, 'center');
-            $table->addHeaderCell($this->objLanguage->languageText('mod_forum_lastpost', 'forum'), NULL, NULL, 'center');
+            $table->addHeaderCell($this->objLanguage->languageText('mod_discussion_lastpost', 'discussion'), NULL, NULL, 'center');
             $table->endHeaderRow();
 
             $row = 'odd';
@@ -312,13 +312,13 @@ GROUP BY tbl_forum_topic.id                ';
                 $table->addCell($tangent['views'], NULL, NULL, 'center', $row);
 
                 $objIcon = $this->getObject('geticon', 'htmlelements');
-                $objIcon->setIcon('gotopost', NULL, 'icons/forum/');
+                $objIcon->setIcon('gotopost', NULL, 'icons/discussion/');
 
                 $lastPostLink = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$tangent['id'], 'post'=>$tangent['last_post'])));
                 $lastPostLink->link = $objIcon->show();
 
                 if ($this->objDateTime->formatDateOnly($tangent['lastdate']) == date('j F Y')) {
-                    $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($tangent['lastdate']);
+                    $datefield = $this->objLanguage->languageText('mod_discussion_todayat', 'discussion').' '.$this->objDateTime->formatTime($tangent['lastdate']);
                 } else {
                     $datefield = $this->objDateTime->formatDateOnly($tangent['lastdate']).' - '.$this->objDateTime->formatTime($tangent['lastdate']);
                 }
@@ -346,10 +346,10 @@ GROUP BY tbl_forum_topic.id                ';
 
         // Flat View
         if ($defaultSelected == 'flatview') {
-            $this->objIcon->setIcon('flat_view', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('flat_view', NULL, 'icons/discussion/');
             $string .= $this->objIcon->show().' '.'Flat View';
         } else {
-            $this->objIcon->setIcon('flat_view_disabled', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('flat_view_disabled', NULL, 'icons/discussion/');
             $link = new link ($this->uri(array('action'=>'flatview', 'id'=>$topic_id)));
             $link->link = 'Flat View';
             $string .= $this->objIcon->show().' '.$link->show();
@@ -360,10 +360,10 @@ GROUP BY tbl_forum_topic.id                ';
 
         // Single View
         if ($defaultSelected == 'singlethreadview') {
-            $this->objIcon->setIcon('single_view', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('single_view', NULL, 'icons/discussion/');
             $string .= $this->objIcon->show().' '.'Single View';
         } else {
-            $this->objIcon->setIcon('single_view_disabled', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('single_view_disabled', NULL, 'icons/discussion/');
             $link = new link ($this->uri(array('action'=>'singlethreadview', 'id'=>$topic_id)));
             $link->link = 'Single View';
             $string .= $this->objIcon->show().' '.$link->show();
@@ -374,10 +374,10 @@ GROUP BY tbl_forum_topic.id                ';
 
         // Threaded View
         if ($defaultSelected == 'thread') {
-            $this->objIcon->setIcon('threaded_view', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('threaded_view', NULL, 'icons/discussion/');
             $string .= $this->objIcon->show().' '.'Threaded View';
         } else {
-            $this->objIcon->setIcon('threaded_view_disabled', NULL, 'icons/forum/');
+            $this->objIcon->setIcon('threaded_view_disabled', NULL, 'icons/discussion/');
             $link = new link ($this->uri(array('action'=>'thread', 'id'=>$topic_id)));
             $link->link = 'Threaded View';
             $string .= $this->objIcon->show().' '.$link->show();
@@ -393,10 +393,10 @@ GROUP BY tbl_forum_topic.id                ';
         // Freemind View
         if($isRegistered) {
             if ($defaultSelected == 'viewtopicmindmap') {
-                $this->objIcon->setIcon('mindmap_view', NULL, 'icons/forum/');
+                $this->objIcon->setIcon('mindmap_view', NULL, 'icons/discussion/');
                 $string .= $this->objIcon->show().' '.'Mind Map View';
             } else {
-                $this->objIcon->setIcon('mindmap_view_disabled', NULL, 'icons/forum/');
+                $this->objIcon->setIcon('mindmap_view_disabled', NULL, 'icons/discussion/');
                 $link = new link ($this->uri(array('action'=>'viewtopicmindmap', 'id'=>$topic_id)));
                 $link->link = 'Mind Map View';
                 $string .= $this->objIcon->show().' '.$link->show();
@@ -424,7 +424,7 @@ GROUP BY tbl_forum_topic.id                ';
      * @return array Details of the topic
      */
     function getTopicDetails($topic_id) {
-        $sql = 'SELECT tbl_forum_topic.*, tbl_forum_discussiontype.*, tbl_forum_topic.id AS topic_id, tbl_forum_topic.status AS topicstatus, post_title FROM tbl_forum_topic INNER JOIN tbl_forum_post_text ON ( tbl_forum_topic.first_post = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1" ) INNER JOIN tbl_forum_discussiontype ON (tbl_forum_topic.type_id = tbl_forum_discussiontype.id) WHERE tbl_forum_topic.id = \''.$topic_id.'\' GROUP BY tbl_forum_topic.id LIMIT 1';
+        $sql = 'SELECT tbl_discussion_topic.*, tbl_discussion_discussiontype.*, tbl_discussion_topic.id AS topic_id, tbl_discussion_topic.status AS topicstatus, post_title FROM tbl_discussion_topic INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_topic.first_post = tbl_discussion_post_text.post_id AND tbl_discussion_post_text.original_post = "1" ) INNER JOIN tbl_discussion_discussiontype ON (tbl_discussion_topic.type_id = tbl_discussion_discussiontype.id) WHERE tbl_discussion_topic.id = \''.$topic_id.'\' GROUP BY tbl_discussion_topic.id LIMIT 1';
 
         $topic = $this->getArray($sql);
 
@@ -436,19 +436,19 @@ GROUP BY tbl_forum_topic.id                ';
     }
 
     /**
-     * Method to get the forum details of a topic
+     * Method to get the discussion details of a topic
      * @param string $topic_id Record Id of the topic
-     * @return array Details of the forum
+     * @return array Details of the discussion
      */
-    function getTopicForumDetails($topic_id) {
-        $sql = 'SELECT tbl_forum.* FROM tbl_forum_topic
-        INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id)
-        WHERE tbl_forum_topic.id = \''.$topic_id.'\' GROUP BY tbl_forum_topic.id LIMIT 1';
+    function getTopicDiscussionDetails($topic_id) {
+        $sql = 'SELECT tbl_discussion.* FROM tbl_discussion_topic
+        INNER JOIN tbl_discussion ON ( tbl_discussion_topic.discussion_id = tbl_discussion.id)
+        WHERE tbl_discussion_topic.id = \''.$topic_id.'\' GROUP BY tbl_discussion_topic.id LIMIT 1';
 
-        $forum = $this->getArray($sql);
+        $discussion = $this->getArray($sql);
 
-        if (count($forum) == 1) {
-            return $forum[0];
+        if (count($discussion) == 1) {
+            return $discussion[0];
         } else {
             return FALSE;
         }
@@ -481,7 +481,7 @@ GROUP BY tbl_forum_topic.id                ';
 
         // Delete lucene search entry
         $objIndexData = $this->getObject('indexdata', 'search');
-        $objIndexData->removeIndex('forum_topic_'.$id);
+        $objIndexData->removeIndex('discussion_topic_'.$id);
 
         return $this->delete('id', $id);
     }
@@ -585,13 +585,13 @@ GROUP BY tbl_forum_topic.id                ';
     }
 
     /**
-     * Function to get the number of topics in a forum
-     * @param string $forum_id Record Id of the Forum
+     * Function to get the number of topics in a discussion
+     * @param string $discussion_id Record Id of the Discussion
      * @param boolean $includeTangents Flag whether to include tangents in count or not
-     * @return int Number of Topics in that forum
+     * @return int Number of Topics in that discussion
      */
-    function getNumTopicsInForum($forum_id, $includeTangents=TRUE) {
-        $sql = ' WHERE forum_id=\''.$forum_id.'\'';
+    function getNumTopicsInDiscussion($discussion_id, $includeTangents=TRUE) {
+        $sql = ' WHERE discussion_id=\''.$discussion_id.'\'';
 
         if (!$includeTangents) {
             $sql .= ' AND topic_tangent_parent=\'0\' ';
@@ -601,14 +601,14 @@ GROUP BY tbl_forum_topic.id                ';
     }
 
     /**
-     * Function to get the number of topics in a forum
-     * @param string $forum_id Record Id of the Forum
+     * Function to get the number of topics in a discussion
+     * @param string $discussion_id Record Id of the Discussion
      * @param int $page Current Page
      * @param int $limit Number of Records per Page
      * @return string Paging
      */
-    function prepareTopicPagingLinks($forum_id, $page=1, $limit) {
-        $numPages = $this->getNumForumPages($forum_id, $limit, FALSE);
+    function prepareTopicPagingLinks($discussion_id, $page=1, $limit) {
+        $numPages = $this->getNumDiscussionPages($discussion_id, $limit, FALSE);
 
         if ($numPages == 1) {
             $paging = '';
@@ -625,7 +625,7 @@ GROUP BY tbl_forum_topic.id                ';
                     $paging .= ' <span class="confirm"><strong>'.$i.'</strong></span> &nbsp; ';
                     //}
                 } else {
-                    $link = new link($this->uri(array('action'=>'forum', 'id'=>$forum_id, 'page'=>$i)));
+                    $link = new link($this->uri(array('action'=>'discussion', 'id'=>$discussion_id, 'page'=>$i)));
 
                     // if ($numPages < 5) {
                     // $link->link = 'Page '.$i;
@@ -644,19 +644,19 @@ GROUP BY tbl_forum_topic.id                ';
     }
 
     /**
-     * Function to gets the number of pages a forum has depending on the amount of topics a page has
+     * Function to gets the number of pages a discussion has depending on the amount of topics a page has
      *
      * It has two functions:
      * 1) To calculate the number of pages for paging
      * 2) To determine if there are hacking via URL
      *
-     * @param string $forum_id Record Id of the Forum
+     * @param string $discussion_id Record Id of the Discussion
      * @param int $limit Number of Records per Page
      * @param boolean $includeTangents Flag whether to include tangents in count or not
      * @return int Number of Pages
      */
-    function getNumForumPages($forum_id, $limit, $includeTangents=TRUE) {
-        $totalTopics = $this->getNumTopicsInForum($forum_id, $includeTangents);
+    function getNumDiscussionPages($discussion_id, $limit, $includeTangents=TRUE) {
+        $totalTopics = $this->getNumTopicsInDiscussion($discussion_id, $includeTangents);
 
         // Remove Remainder, and divider
         // Check to prevent blank values causing a PHP fatal error
@@ -675,13 +675,13 @@ GROUP BY tbl_forum_topic.id                ';
     }
 
     /**
-     * Method to move a topic to another forum
+     * Method to move a topic to another discussion
      * @param string $id Record Id of the Topic
-     * @param string $forum Record Id of the new forum
+     * @param string $discussion Record Id of the new discussion
      * @return boolean result of move
      */
-    function switchTopicForum($id, $forum) {
-        return $this->update('id', $id, array('forum_id' => $forum));
+    function switchTopicDiscussion($id, $discussion) {
+        return $this->update('id', $id, array('discussion_id' => $discussion));
     }
 
     /**
@@ -704,21 +704,21 @@ GROUP BY tbl_forum_topic.id                ';
     /**
      * Insert a topic into the database
      *
-     * @param string $forum_id: Record ID of the Forum post is being made into
+     * @param string $discussion_id: Record ID of the Discussion post is being made into
      * @param string $type_id: Type of topic
      * @param string $first_post: Record Id of the first post
      * @param string $topic_tangent_parent: Record Id of tangent parent
      * @param string $userId: User ID of person starting the topic
      * @param string $dateLastUpdated: Date topic was started
      */
-    function insertSingleAPI($forum_id, $type_id, $topic_tangent_parent, $userID) {
+    function insertSingleAPI($discussion_id, $type_id, $topic_tangent_parent, $userID) {
         if ($topic_tangent_parent == 0) {
             $level = 1;
         }
         // provide support for tangents
 
         return $this->insert(array(
-                'forum_id'        => $forum_id,
+                'discussion_id'        => $discussion_id,
                 'type_id'         => $type_id,
                 'views'           => 0,
                 'replies'         => 0,

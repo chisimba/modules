@@ -6,10 +6,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 /**
 * Introduce Yourself
-* This class provides forum functionality to the introduceyourself module
+* This class provides discussion functionality to the introduceyourself module
 * @author Tohir Solomons
 * @copyright (c) 2005 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 class introduceyourself extends object
@@ -28,7 +28,7 @@ class introduceyourself extends object
     */
     function init()
     {
-        $this->objForum =& $this->getObject('dbforum');
+        $this->objDiscussion =& $this->getObject('dbdiscussion');
         $this->objTopic =& $this->getObject('dbtopic');
         $this->objPost =& $this->getObject('dbpost');
         $this->objPostText =& $this->getObject('dbposttext');
@@ -54,17 +54,17 @@ class introduceyourself extends object
         $type = $this->objDiscussionTypes->getRow('type_icon', 'introduceyourself');
         $this->_introTypeId = $type['id'];
         
-        // Get the Default Forum for a Context - auto creates one if necessary
-        $forum_id = $this->objForum->getContextForum(); // Get the Default forum
+        // Get the Default Discussion for a Context - auto creates one if necessary
+        $discussion_id = $this->objDiscussion->getContextDiscussion(); // Get the Default discussion
         
-        // Get the Number of Topics that are 'Introduce Yourself' in that forum
-        $numIntro = $this->objTopic->getRecordCount(' WHERE forum_id="'.$forum_id.'" AND type_id="'.$this->_introTypeId.'" ');
+        // Get the Number of Topics that are 'Introduce Yourself' in that discussion
+        $numIntro = $this->objTopic->getRecordCount(' WHERE discussion_id="'.$discussion_id.'" AND type_id="'.$this->_introTypeId.'" ');
         
         // IF there are no Introduce Yourself Topics - Create One
         if ($numIntro == '0') {
             //echo 'need to insert';
-            $topic_id = $this->objTopic->insertSingle($forum_id, $this->_introTypeId, 0, $this->userId, 'Introduce Your Self');
-            $this->objForum->updateLastTopic($forum_id, $topic_id);
+            $topic_id = $this->objTopic->insertSingle($discussion_id, $this->_introTypeId, 0, $this->userId, 'Introduce Your Self');
+            $this->objDiscussion->updateLastTopic($discussion_id, $topic_id);
         
             $post_parent = 0;
             $post_title = 'Introduce Your Self';
@@ -73,22 +73,22 @@ class introduceyourself extends object
             $original_post = 1; // YES
             $post_tangent_parent = 0;
             
-            $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $this->userId);
+            $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $discussion_id, $topic_id,  $this->userId);
             
             $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $this->userId);
             
             $this->objTopic->updateFirstPost($topic_id, $post_id);
             
-            $this->objForum->updateLastPost($forum_id, $post_id);
+            $this->objDiscussion->updateLastPost($discussion_id, $post_id);
         }
         
         // Now get the Introduce Yourself Topic Details
-        $topics = $this->objTopic->getAll('WHERE forum_id="'.$forum_id.'" AND type_id="'.$this->_introTypeId.'" ');
+        $topics = $this->objTopic->getAll('WHERE discussion_id="'.$discussion_id.'" AND type_id="'.$this->_introTypeId.'" ');
         
         $this->_topic = $topics[0];
     }
     /**
-    * Method to save an introduction into the forum
+    * Method to save an introduction into the discussion
     * @param string $userId Record Id of the User
     * @param string $message Introduction Message by the User
     */
@@ -99,7 +99,7 @@ class introduceyourself extends object
         
         $parentPostDetails = $this->objPost->getRow('id', $post_parent);
         
-        $forum_id = $this->_topic['forum_id'];
+        $discussion_id = $this->_topic['discussion_id'];
         $topic_id = $this->_topic['id'];
         $type_id = $this->_introTypeId;
         $post_title = 'Introduction by '.$this->objUser->fullname($userId);
@@ -108,11 +108,11 @@ class introduceyourself extends object
         $original_post = 1;
         $level = $parentPostDetails['level'];
         
-        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $userId, $level);
+        $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $discussion_id, $topic_id,  $userId, $level);
         $this->objPostText->insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $userId);
         
         $this->objTopic->updateLastPost($topic_id, $post_id);
-        $this->objForum->updateLastPost($forum_id, $post_id);
+        $this->objDiscussion->updateLastPost($discussion_id, $post_id);
     
     }
     

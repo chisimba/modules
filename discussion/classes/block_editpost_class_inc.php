@@ -52,14 +52,14 @@ class block_editpost extends object {
 
         $header = new htmlheading();
         $header->type = 1;
-        $header->str = $this->objLanguage->languageText('mod_forum_editposttitle', 'forum') . ': ' . stripslashes($post['post_title']);
+        $header->str = $this->objLanguage->languageText('mod_discussion_editposttitle', 'discussion') . ': ' . stripslashes($post['post_title']);
         echo $header->show();
 
 
         echo '<br/>';
-        $postReplyForm = new form('postReplyForm', $this->uri(array('module' => 'forum', 'action' => 'updatepost')));
+        $postReplyForm = new form('postReplyForm', $this->uri(array('module' => 'discussion', 'action' => 'updatepost')));
         $postReplyForm->displayType = 3;
-        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
+        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_discussion_addtitle', 'discussion'), 'required');
 
 
         $addTable = $this->getObject('htmltable', 'htmlelements');
@@ -115,21 +115,21 @@ class block_editpost extends object {
 
 // ------------------
 
-        if ($forum['attachments'] == 'Y') {
+        if ($discussion['attachments'] == 'Y') {
             $addTable->startRow();
 
-            /* $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+            /* $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion').':', 'attachments');
               $addTable->addCell($attachmentsLabel->show(), 100);
 
               $attachmentIframe = new iframe();
               $attachmentIframe->width='100%';
               $attachmentIframe->height='100';
               $attachmentIframe->frameborder='0';
-              $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id']));
+              $attachmentIframe->src= $this->uri(array('module' => 'discussion', 'action' => 'attachments', 'id'=>$temporaryId, 'discussion' => $discussion['id']));
              */
 
 
-            $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum') . ':', 'attachments');
+            $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion') . ':', 'attachments');
             $addTable->addCell($attachmentsLabel->show(), 120);
 
             $form = new form('saveattachment', $this->uri(array('action' => 'saveattachment')));
@@ -148,10 +148,10 @@ class block_editpost extends object {
             $topicHiddenInput->value = $post['topic_id'];
             $form->addToForm($topicHiddenInput->show());
 
-            $hiddenForumInput = new textinput('forum');
-            $hiddenForumInput->fldType = 'hidden';
-            $hiddenForumInput->value = $forum['id'];
-            $form->addToForm($hiddenForumInput->show());
+            $hiddenDiscussionInput = new textinput('discussion');
+            $hiddenDiscussionInput->fldType = 'hidden';
+            $hiddenDiscussionInput->value = $discussion['id'];
+            $form->addToForm($hiddenDiscussionInput->show());
 
             $hiddenPostId = new textinput('post_id');
             $hiddenPostId->fldType = 'hidden';

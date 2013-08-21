@@ -6,11 +6,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Discussion Forum Types of Topics Table
-* This class controls all functionality relating to the tbl_forum_discussiontype table
+* Discussion Discussion Types of Topics Table
+* This class controls all functionality relating to the tbl_discussion_discussiontype table
 * @author Tohir Solomons
 * @copyright (c) 2004 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 class dbDiscussionTypes extends dbTable
@@ -21,7 +21,7 @@ class dbDiscussionTypes extends dbTable
 	*/
 	function init()
 	{
-		parent::init('tbl_forum_discussiontype');
+		parent::init('tbl_discussion_discussiontype');
     }
     
     function getDiscussionTypes()

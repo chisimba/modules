@@ -6,11 +6,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Forum Posts Text Table
-* This class controls all functionality relating to the tbl_forum_post_text table
+* Discussion Posts Text Table
+* This class controls all functionality relating to the tbl_discussion_post_text table
 * @author Tohir Solomons
 * @copyright (c) 2004 University of the Western Cape
-* @package forum
+* @package discussion
 * @version 1
 */
 /**
@@ -25,7 +25,7 @@ class dbPostText extends dbTable
 	*/
 	function init()
 	{
-		parent::init('tbl_forum_post_text');
+		parent::init('tbl_discussion_post_text');
         $this->objTextStats =& $this->getObject('textstats', 'utilities');
         $this->objReadingEase =& $this->getObject('readingease', 'utilities');
     }
@@ -97,7 +97,7 @@ class dbPostText extends dbTable
     */
     function getPostLanguages($id, $language = NULL)
     {
-        $sql = 'SELECT id, language FROM tbl_forum_post_text WHERE post_id = "'.$id.'" ';
+        $sql = 'SELECT id, language FROM tbl_discussion_post_text WHERE post_id = "'.$id.'" ';
         if (isset($language)) {
             $sql .= ' AND language != "'.$language.'" ';
         }

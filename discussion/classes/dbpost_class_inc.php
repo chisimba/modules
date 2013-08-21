@@ -8,16 +8,16 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 $this->loadClass('link', 'htmlelements');
 
 /**
- * Forum Posts Table
- * This class controls all functionality relating to the tbl_forum_post table
+ * Discussion Posts Table
+ * This class controls all functionality relating to the tbl_discussion_post table
  * @author Tohir Solomons
  * @copyright (c) 2004 University of the Western Cape
- * @package forum
+ * @package discussion
  * @version 1
  */
 
 /**
- * This class returns arrays of recordset from the database table 'tbl_forum_post' and also helps with the display of topics
+ * This class returns arrays of recordset from the database table 'tbl_discussion_post' and also helps with the display of topics
  */
 class dbPost extends dbTable {
 
@@ -42,14 +42,14 @@ class dbPost extends dbTable {
         var $numOpenThreadDisplayDivs = 0;
 
         /**
-         *  $var Boolean Variable to flag whether to a forum is locked - affects replying to a post/editing/translating
+         *  $var Boolean Variable to flag whether to a discussion is locked - affects replying to a post/editing/translating
          */
-        var $forumLocked = FALSE;
+        var $discussionLocked = FALSE;
 
         /**
-         *  $var Array containing values for the rating of forums
+         *  $var Array containing values for the rating of discussions
          */
-        var $forumRatingsArray;
+        var $discussionRatingsArray;
 
         /**
          *  $var Boolean Variable to flag whether to show the ratings drop down
@@ -57,9 +57,9 @@ class dbPost extends dbTable {
         var $showRatings = FALSE;
 
         /**
-         *  $var String Variable to hold the type of forum - either context or workgroup
+         *  $var String Variable to hold the type of discussion - either context or workgroup
          */
-        var $forumtype = 'context';
+        var $discussiontype = 'context';
 
         /**
          * @var object To handle all post attachments
@@ -89,15 +89,15 @@ class dbPost extends dbTable {
          * Constructor method to define the table(default)
          */
         function init() {
-                parent::init('tbl_forum_post');
+                parent::init('tbl_discussion_post');
                 $this->objUserPic = $this->getObject('imageupload', 'useradmin');
                 $this->objSkin = $this->getObject('skin', 'skin');
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
-                $this->dbPostratings = $this->getObject('dbpost_ratings', 'forum');
+                $this->dbPostratings = $this->getObject('dbpost_ratings', 'discussion');
 
-                $this->objForum = $this->getObject('dbforum');
+                $this->objDiscussion = $this->getObject('dbdiscussion');
                 $this->objPostAttachments = $this->getObject('dbpostattachments');
                 $this->objPostText = $this->getObject('dbposttext');
 
@@ -109,8 +109,8 @@ class dbPost extends dbTable {
                 $this->objLanguageCode = $this->getObject('languagecode', 'language');
                 $this->objLanguage = $this->getObject('language', 'language');
 
-                // Load Forum Subscription classes
-                $this->objForumSubscriptions = $this->getObject('dbforumsubscriptions');
+                // Load Discussion Subscription classes
+                $this->objDiscussionSubscriptions = $this->getObject('dbdiscussionsubscriptions');
                 $this->objTopicSubscriptions = $this->getObject('dbtopicsubscriptions');
 
                 $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
@@ -132,7 +132,7 @@ class dbPost extends dbTable {
 
                 $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 
-                $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'forum');
+                $this->showFullName = $this->objSysConfig->getValue('SHOWFULLNAME', 'discussion');
 
                 if ($this->showFullName == '') {
                         $this->showFullName = TRUE;
@@ -156,21 +156,21 @@ class dbPost extends dbTable {
          * @param string $id Id - Optional, used by API
          * @return string $this->getLastInsertId()
          */
-        function insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $userId, $level = 1, $id = NULL) {
+        function insertSingle($post_parent, $post_tangent_parent, $discussion_id, $topic_id, $userId, $level = 1, $id = NULL) {
                 // Interim measure. Alternative, use regexp and replace with space
                 //$post_title = strip_tags($post_title);
                 //echo $post_parent;
 
                 if ($post_parent == '0') {
-                        $lastRightPointer = $this->getLastRightPointer($forum_id);
+                        $lastRightPointer = $this->getLastRightPointer($discussion_id);
                         $leftPointer = $lastRightPointer + 1;
                         $rightPointer = $lastRightPointer + 2;
                         $level = 1;
                 } else {
                         $lastRightPointer = $this->getPostRightPointer($post_parent);
-                        $updateRightSQL = 'UPDATE tbl_forum_post SET rght = rght + 2 WHERE rght > ' . ($lastRightPointer - 1);
+                        $updateRightSQL = 'UPDATE tbl_discussion_post SET rght = rght + 2 WHERE rght > ' . ($lastRightPointer - 1);
                         $this->getArray($updateRightSQL);
-                        $updateLeftSQL = 'UPDATE tbl_forum_post SET lft = lft + 2 WHERE lft > ' . ($lastRightPointer - 1);
+                        $updateLeftSQL = 'UPDATE tbl_discussion_post SET lft = lft + 2 WHERE lft > ' . ($lastRightPointer - 1);
                         $this->getArray($updateLeftSQL);
 
                         $leftPointer = $lastRightPointer;
@@ -195,12 +195,12 @@ class dbPost extends dbTable {
         }
 
         /**
-         * This method gets the last right pointer in a forum. Used when a new topic is post,
+         * This method gets the last right pointer in a discussion. Used when a new topic is post,
          * i.e. pointers for topic will be: left = lastright+1; right = lastright+2
-         * @param $forum Forum Id to get the last right pointer from
+         * @param $discussion Discussion Id to get the last right pointer from
          */
-        function getLastRightPointer($forum) {
-                $sql = 'SELECT tbl_forum_post.rght FROM tbl_forum_topic  INNER JOIN tbl_forum_post ON (tbl_forum_post.topic_id = tbl_forum_topic.id) WHERE tbl_forum_topic.forum_id = \'' . $forum . '\' ORDER BY rght DESC LIMIT 1';
+        function getLastRightPointer($discussion) {
+                $sql = 'SELECT tbl_discussion_post.rght FROM tbl_discussion_topic  INNER JOIN tbl_discussion_post ON (tbl_discussion_post.topic_id = tbl_discussion_topic.id) WHERE tbl_discussion_topic.discussion_id = \'' . $discussion . '\' ORDER BY rght DESC LIMIT 1';
 
                 $list = $this->getArray($sql);
 
@@ -217,7 +217,7 @@ class dbPost extends dbTable {
          * @return array Left and Right pointer of first post in a topic
          */
         function getTopicPointer($topic_id) {
-                $sql = 'SELECT lft, rght FROM tbl_forum_post WHERE topic_id=\'' . $topic_id . '\' AND post_parent = \'0\' ORDER BY level LIMIT 1';
+                $sql = 'SELECT lft, rght FROM tbl_discussion_post WHERE topic_id=\'' . $topic_id . '\' AND post_parent = \'0\' ORDER BY level LIMIT 1';
 
                 $array = $this->getArray($sql);
 
@@ -235,7 +235,7 @@ class dbPost extends dbTable {
          * @return int Order Number of last post +1 (Plus One)
          */
         function getLastPostOrder($topic_id) {
-                $sql = 'SELECT post_order FROM tbl_forum_post WHERE topic_id=\'' . $topic_id . '\' ORDER BY post_order DESC LIMIT 1';
+                $sql = 'SELECT post_order FROM tbl_discussion_post WHERE topic_id=\'' . $topic_id . '\' ORDER BY post_order DESC LIMIT 1';
                 $array = $this->getArray($sql);
 
                 if (count($array) == 0) {
@@ -251,7 +251,7 @@ class dbPost extends dbTable {
          * @return int Right Pointer Value
          */
         function getPostRightPointer($post_id) {
-                $sql = 'SELECT rght FROM tbl_forum_post WHERE id=\'' . $post_id . '\' LIMIT 1';
+                $sql = 'SELECT rght FROM tbl_discussion_post WHERE id=\'' . $post_id . '\' LIMIT 1';
                 $array = $this->getArray($sql);
 
                 if (count($array) == 0) {
@@ -273,16 +273,16 @@ class dbPost extends dbTable {
         function getThread($topic_id) {
                 $pointers = $this->getTopicPointer($topic_id);
 
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
-        tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post = "1")
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post.topic_id = \'' . $topic_id . '\' AND tbl_forum_post.lft >= \'' . $pointers['lft'] . '\' AND tbl_forum_post.rght <= \'' . $pointers['rght'] . '\'
-        GROUP BY tbl_forum_post.id ORDER BY lft';
+                $sql = 'SELECT tbl_discussion_post.*, tbl_discussion_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
+        tbl_discussion_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_discussion_post_ratings.rating FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id AND tbl_discussion_post_text.original_post = "1")
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        LEFT JOIN tbl_discussion_post_attachment ON (tbl_discussion_post.id = tbl_discussion_post_attachment.post_id)
+        LEFT JOIN tbl_discussion_post AS replypost ON (tbl_discussion_post.id = replypost.post_parent)
+        LEFT JOIN tbl_discussion_post_text AS languagecheck ON (tbl_discussion_post.id = languagecheck.post_id AND languagecheck.original_post="0" AND tbl_discussion_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_discussion_post_ratings ON (tbl_discussion_post.id = tbl_discussion_post_ratings.post_id)
+        WHERE tbl_discussion_post.topic_id = \'' . $topic_id . '\' AND tbl_discussion_post.lft >= \'' . $pointers['lft'] . '\' AND tbl_discussion_post.rght <= \'' . $pointers['rght'] . '\'
+        GROUP BY tbl_discussion_post.id ORDER BY lft';
 
                 return $this->getArray($sql);
         }
@@ -294,16 +294,16 @@ class dbPost extends dbTable {
          * @return array List of Posts
          */
         function getFlatThread($topic) {
-                $sql = 'SELECT tbl_forum_post.*,  tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
-        tbl_forum_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating
-        FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id  AND tbl_forum_post_text.original_post = \'1\')
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replypost ON (tbl_forum_post.id = replypost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post.topic_id = \'' . $topic . '\' GROUP BY tbl_forum_post.id ORDER BY post_order';
+                $sql = 'SELECT tbl_discussion_post.*,  tbl_discussion_post_text.*, tbl_users.firstname, tbl_users.surname, tbl_users.username,
+        tbl_discussion_post_attachment.attachment_id, replypost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_discussion_post_ratings.rating
+        FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id  AND tbl_discussion_post_text.original_post = \'1\')
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        LEFT JOIN tbl_discussion_post_attachment ON (tbl_discussion_post.id = tbl_discussion_post_attachment.post_id)
+        LEFT JOIN tbl_discussion_post AS replypost ON (tbl_discussion_post.id = replypost.post_parent)
+        LEFT JOIN tbl_discussion_post_text AS languagecheck ON (tbl_discussion_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_discussion_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_discussion_post_ratings ON (tbl_discussion_post.id = tbl_discussion_post_ratings.post_id)
+        WHERE tbl_discussion_post.topic_id = \'' . $topic . '\' GROUP BY tbl_discussion_post.id ORDER BY post_order';
 
                 return $this->getArray($sql);
         }
@@ -314,19 +314,19 @@ class dbPost extends dbTable {
          * @return array Details of the post
          */
         function getRootPost($topic) {
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_topic.*,  tbl_forum_post_text.*, forum_name, forum_id, tbl_users.firstname, tbl_users.surname, tbl_users.username,
-        tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage,
-        tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
-        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id AND tbl_forum_post_text.original_post=\'1\')
-        INNER JOIN tbl_forum_topic ON (tbl_forum_topic.id = tbl_forum_post.topic_id)
-        INNER JOIN tbl_forum ON (tbl_forum.id = tbl_forum_topic.forum_id)
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post.topic_id=\'' . $topic . '\' AND tbl_forum_post.post_parent = \'0\'
-        GROUP BY tbl_forum_post.id  LIMIT 1'; //AND tbl_forum_post.level = "1"
+                $sql = 'SELECT tbl_discussion_post.*, tbl_discussion_topic.*,  tbl_discussion_post_text.*, discussion_name, discussion_id, tbl_users.firstname, tbl_users.surname, tbl_users.username,
+        tbl_discussion_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage,
+        tbl_discussion_post_ratings.rating, tbl_discussion_post.lft as postleft, tbl_discussion_post.rght as postright
+        FROM tbl_discussion_post INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id AND tbl_discussion_post_text.original_post=\'1\')
+        INNER JOIN tbl_discussion_topic ON (tbl_discussion_topic.id = tbl_discussion_post.topic_id)
+        INNER JOIN tbl_discussion ON (tbl_discussion.id = tbl_discussion_topic.discussion_id)
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        LEFT JOIN tbl_discussion_post_attachment ON (tbl_discussion_post.id = tbl_discussion_post_attachment.post_id)
+        LEFT JOIN tbl_discussion_post AS replyPost ON (tbl_discussion_post.id = replyPost.post_parent)
+        LEFT JOIN tbl_discussion_post_text AS languagecheck ON (tbl_discussion_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_discussion_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_discussion_post_ratings ON (tbl_discussion_post.id = tbl_discussion_post_ratings.post_id)
+        WHERE tbl_discussion_post.topic_id=\'' . $topic . '\' AND tbl_discussion_post.post_parent = \'0\'
+        GROUP BY tbl_discussion_post.id  LIMIT 1'; //AND tbl_discussion_post.level = "1"
 
                 $results = $this->getArray($sql);
 
@@ -343,16 +343,16 @@ class dbPost extends dbTable {
          * @return array Details of the post
          */
         function getPostWithText($post) {
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_forum_post_ratings.rating, tbl_forum_post.lft as postleft, tbl_forum_post.rght as postright
-        FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id )
-        INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id)
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id  AND tbl_forum_post_text.language != languagecheck.language)
-        LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
-        WHERE tbl_forum_post_text.post_id = \'' . $post . '\' GROUP BY tbl_forum_post.id LIMIT 1';
+                $sql = 'SELECT tbl_discussion_post.*, tbl_discussion_post_text.*, tbl_discussion_topic.*, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_discussion_post.datelastupdated AS datelastupdated, tbl_discussion_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage, tbl_discussion_post_ratings.rating, tbl_discussion_post.lft as postleft, tbl_discussion_post.rght as postright
+        FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id )
+        INNER JOIN tbl_discussion_topic ON (tbl_discussion_post.topic_id = tbl_discussion_topic.id)
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        LEFT JOIN tbl_discussion_post_attachment ON (tbl_discussion_post.id = tbl_discussion_post_attachment.post_id)
+        LEFT JOIN tbl_discussion_post AS replyPost ON (tbl_discussion_post.id = replyPost.post_parent)
+        LEFT JOIN tbl_discussion_post_text AS languagecheck ON (tbl_discussion_post.id = languagecheck.post_id  AND tbl_discussion_post_text.language != languagecheck.language)
+        LEFT JOIN tbl_discussion_post_ratings ON (tbl_discussion_post.id = tbl_discussion_post_ratings.post_id)
+        WHERE tbl_discussion_post_text.post_id = \'' . $post . '\' GROUP BY tbl_discussion_post.id LIMIT 1';
 
                 $results = $this->getArray($sql);
 
@@ -370,15 +370,15 @@ class dbPost extends dbTable {
          * @return array Details of the post
          */
         function getPostInLanguage($postTextId) {
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_forum_topic.*, tbl_users.firstname, tbl_users.surname, tbl_forum_post.datelastupdated AS datelastupdated, tbl_forum_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage
-        FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON (tbl_forum_post.id = tbl_forum_post_text.post_id )
-        INNER JOIN tbl_forum_topic ON (tbl_forum_post.topic_id = tbl_forum_topic.id)
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        LEFT JOIN tbl_forum_post_attachment ON (tbl_forum_post.id = tbl_forum_post_attachment.post_id)
-        LEFT JOIN tbl_forum_post AS replyPost ON (tbl_forum_post.id = replyPost.post_parent)
-        LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND tbl_forum_post_text.language != languagecheck.language)
-        WHERE tbl_forum_post_text.id = \'' . $postTextId . '\' GROUP BY tbl_forum_post.id LIMIT 1';
+                $sql = 'SELECT tbl_discussion_post.*, tbl_discussion_post_text.*, tbl_discussion_topic.*, tbl_users.firstname, tbl_users.surname, tbl_discussion_post.datelastupdated AS datelastupdated, tbl_discussion_post_attachment.attachment_id, replyPost.id AS replypost, languagecheck.id AS anotherlanguage
+        FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_post_text ON (tbl_discussion_post.id = tbl_discussion_post_text.post_id )
+        INNER JOIN tbl_discussion_topic ON (tbl_discussion_post.topic_id = tbl_discussion_topic.id)
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        LEFT JOIN tbl_discussion_post_attachment ON (tbl_discussion_post.id = tbl_discussion_post_attachment.post_id)
+        LEFT JOIN tbl_discussion_post AS replyPost ON (tbl_discussion_post.id = replyPost.post_parent)
+        LEFT JOIN tbl_discussion_post_text AS languagecheck ON (tbl_discussion_post.id = languagecheck.post_id AND tbl_discussion_post_text.language != languagecheck.language)
+        WHERE tbl_discussion_post_text.id = \'' . $postTextId . '\' GROUP BY tbl_discussion_post.id LIMIT 1';
 
 
                 //return array('post_text'=>$sql);
@@ -431,15 +431,15 @@ class dbPost extends dbTable {
                 $moderatePostIcon = $this->objIcon->show();
 
                 //
-                $pointerSpan2 = "<span class='forumPointer2'></span>";
-                $pointerSpan3 = "<span class='forumPointer3'></span>";
-                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" >' . $this->objUser->getUserImage($post['userid']);
+                $pointerSpan2 = "<span class='discussionPointer2'></span>";
+                $pointerSpan3 = "<span class='discussionPointer3'></span>";
+                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="discussionProfileImg" >' . $this->objUser->getUserImage($post['userid']);
                 $contentDiv .= "</div>";
                 $this->threadDisplayLevel = $post['level'];
                 $return .= $contentDiv;
                 //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
-                $return .= '<div id="' . $post['post_id'] . '" class="newForumContainer" ' . $margin . '>' . "\r\n";
-                $return .= '<div class="newForumTopic">' . "\r\n";
+                $return .= '<div id="' . $post['post_id'] . '" class="newDiscussionContainer" ' . $margin . '>' . "\r\n";
+                $return .= '<div class="newDiscussionTopic">' . "\r\n";
                 // Check if user can edit post
                 if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost'])) {
 
@@ -450,8 +450,8 @@ class dbPost extends dbTable {
                                 $return .= '<p>';
                         }
 
-                        $editlink = new link($this->uri(array('action' => 'editpost', 'id' => $post['post_id'], 'type' => $this->forumtype)));
-//            $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
+                        $editlink = new link($this->uri(array('action' => 'editpost', 'id' => $post['post_id'], 'type' => $this->discussiontype)));
+//            $editlink->link = $this->objLanguage->languageText('mod_discussion_editpost', 'discussion');
 //                        $this->objIcon->setIcon('edit');
 //                        $this->objIcon->align = 'right';
 //                        $editlink->link = $this->objIcon->show();
@@ -463,16 +463,16 @@ class dbPost extends dbTable {
                         $tposteditLink->link = $this->objIcon->show();
                         $tposteditLink->cssClass = "postEditClass {$post['post_id']}";
                         $tposteditLink->cssId = $post['id'];
-                        $tposteditLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                        $tposteditLink->title = $this->objLanguage->languageText('mod_discussion_moderatepost', 'discussion');
                         $deleteLink = new link($this->uri(array('action' => 'moderatepost', 'id' => $post['post_id'])));
                         $deleteLink->link .= $moderatePostIcon;
-                        $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+                        $deleteLink->title = $this->objLanguage->languageText('mod_discussion_moderatepost', 'discussion');
                         $return .= $tposteditLink->show();
                 }
 
                 // Check if the contractible layers should be implemented
                 if ($makeContractible) {
-                        $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\'' . $post['post_id'] . '\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
+                        $return .= '<img src="modules/discussion/resources/contract.gif" align="right" onclick="expandcontent(\'' . $post['post_id'] . '\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
                 }
 //=========Decorating the date============
                 $Date = date('Y M d', mktime(0, 0, 0, substr($post['datelastupdated'], 5, 2), substr($post['datelastupdated'], 8, 2), substr($post['datelastupdated'], 0, 4)));
@@ -486,23 +486,23 @@ class dbPost extends dbTable {
                         $return .= '<div>' . $dateSpan . '<span class="strong">' . stripslashes($post['post_title']) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
                 } else {
                         // Start of the Title Area
-                        $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
+                        $return .= '<div class="discussionTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datelastupdated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datelastupdated']) . ' (' . $this->objTranslatedDate->getDifference($post['datelastupdated']) . ') </div>';
                 }
                 // Ebd Title Area
                 $return .= '</div>';
 
 
                 // Start of the content area
-                $return .= '<div class="newForumContent" id="' . $post['post_id'] . '" style="display:block">' . "\r\n";
+                $return .= '<div class="newDiscussionContent" id="' . $post['post_id'] . '" style="display:block">' . "\r\n";
                 if ($post['post_tangent_parent'] != '0' && $post['level'] == 1) {
                         $tangentParent = $this->getPostWithText($post['post_tangent_parent']);
-                        $return .= '<div class="forumTangentIndent">';
+                        $return .= '<div class="discussionTangentIndent">';
                         $link = & $this->getObject('link', 'htmlelements');
-                        $link->href = $this->uri(array('action' => 'thread', 'id' => $tangentParent['topic_id'], 'type' => $this->forumtype));
+                        $link->href = $this->uri(array('action' => 'thread', 'id' => $tangentParent['topic_id'], 'type' => $this->discussiontype));
                         $link->link = stripslashes($tangentParent['post_title']);
                         $link->anchor = $tangentParent['post_id'];
 
-                        $return .= '<strong>' . $this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum') . ' ' . $link->show() . $this->objLanguage->languageText('word_by', 'system') . $tangentParent['firstname'] . ' ' . $tangentParent['surname'] . '</strong><br /><br />';
+                        $return .= '<strong>' . $this->objLanguage->languageText('mod_discussion_topicisatangentto', 'discussion') . ' ' . $link->show() . $this->objLanguage->languageText('word_by', 'system') . $tangentParent['firstname'] . ' ' . $tangentParent['surname'] . '</strong><br /><br />';
                         $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
                         $return .= '</div>';
                 }
@@ -551,7 +551,7 @@ class dbPost extends dbTable {
                                         }
 
                                         /*
-                                          $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
+                                          $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->discussiontype)));
                                           $downloadlink->link = $attachment['filename'];
                                           //$downloadlink->target = '_blank';
                                           $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
@@ -564,17 +564,17 @@ class dbPost extends dbTable {
 
                 // Check if allowed to show ratings
                 // $this->repliesAllowed is a boolean that takes into consideration many things
-                // Is the forum unlocked? Is the post unlocked
+                // Is the discussion unlocked? Is the post unlocked
                 if ($this->showRatings && $this->repliesAllowed) {
                         // Start Ratings
                         $this->loadclass('dropdown', 'htmlelements');
                         $dropdown = new dropdown($post['post_id']);
 
                         if ($post['rating'] == NULL) {
-                                $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_forum_selectarating', 'forum') . '...');
+                                $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_discussion_selectarating', 'discussion') . '...');
                         }
 
-                        foreach ($this->forumRatingsArray as $rating) {
+                        foreach ($this->discussionRatingsArray as $rating) {
                                 $dropdown->addOption($rating['id'], $rating['rating_description']);
                         }
 
@@ -589,11 +589,11 @@ class dbPost extends dbTable {
 
                 //INNER POSTS
                 //get all posts
-                $statement = "SELECT * FROM tbl_forum_post WHERE post_parent = '{$post['post_id']}'";
+                $statement = "SELECT * FROM tbl_discussion_post WHERE post_parent = '{$post['post_id']}'";
                 $innerPosts = $this->getArray($statement);
                 foreach ($innerPosts as $innerPost) {
                         $dLink = "";
-                        $sqlState = "SELECT * FROM tbl_forum_post_text WHERE post_id = '{$innerPost['id']}'";
+                        $sqlState = "SELECT * FROM tbl_discussion_post_text WHERE post_id = '{$innerPost['id']}'";
 //            $postInfo = $this->getArray($sqlState);
                         $postInfo = $this->getPostWithText($innerPost['id']);
                         $return .= "<br/>";
@@ -619,7 +619,7 @@ class dbPost extends dbTable {
                                 $deleteLink->link = $moderatePostIcon;
                                 $deleteLink->cssId = $postInfo['post_id'];
                                 $deleteLink->cssClass = "postDeleteLink";
-                                $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
+                                $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_discussion_confirmdeletepost', 'discussion')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
                                 $dLink = $postEditLink->show() . $deleteConfirm . $deleteLink->show();
                         }
 
@@ -637,8 +637,8 @@ class dbPost extends dbTable {
                         $displaySpan = "<span class='numberindicator' >{$upperLink->show()} {$numberOfVotes} {$lowerLink->show()}</span>";
                         $ratingsDiv .= $displaySpan . "</div>";
                         //values to be used in query string
-                        $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_forum_topic');
-                        $forumID = "<span class='forumid' id='{$topicInfo['forum_id']}' ></span>";
+                        $topicInfo = $this->getRow('id', $post['topic_id'], 'tbl_discussion_topic');
+                        $discussionID = "<span class='discussionid' id='{$topicInfo['discussion_id']}' ></span>";
 
 //=========Decorating the date============
                         $Date = date('Y M d', mktime(0, 0, 0, substr($postInfo['datelastupdated'], 5, 2), substr($postInfo['datelastupdated'], 8, 2), substr($postInfo['datelastupdated'], 0, 4)));
@@ -647,8 +647,8 @@ class dbPost extends dbTable {
                         $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
                         $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                         //get parent info
-                        $conteiner = "\r\n" . ' <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $postInfo['post_title'] . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
-                <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
+                        $conteiner = "\r\n" . ' <div class="discussionProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newDiscussionContainer parent" >' . $dLink . '<div class="newDiscussionTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $postInfo['post_title'] . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datelastupdated']) . ' </div>
+                <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $discussionID . '" ></span></div>';
 //                                $return .= $conteiner;
                         //get inner post details
                         $innerAttachments = $this->objPostAttachments->getAttachments($postInfo['post_id']);
@@ -662,14 +662,14 @@ class dbPost extends dbTable {
                                         $attachment_path = $this->objFiles->getFilePath($files[0]['id']);
 //                                        $objIcon->setIcon('download');
                                         $downloadlink = new link($attachment_path);
-                                        $downloadlink->cssClass = "forumDownload";
+                                        $downloadlink->cssClass = "discussionDownload";
                                         $downloadlink->target = '_blank';
                                         $this->objIcon->setIcon('download');
                                         $downloadlink->link = $this->objLanguage->languageText('phrase_downloadattachment', 'system');
                                         $this->objIcon->setIcon('view');
                                         $viewLink = new link('javascript:void(0);');
                                         $viewLink->title = $this->objLanguage->languageText('phrase_viewattachment', 'system');
-                                        $viewLink->cssClass = "forumViewAttachment";
+                                        $viewLink->cssClass = "discussionViewAttachment";
                                         $viewLink->cssId = $attachment['id'];
                                         $viewLink->link = $this->objLanguage->languageText('phrase_viewattachment', 'system');
                                         $conteiner .= $this->objFileIcons->getFileIcon($attachment['filename']) . "&nbsp;&nbsp; <label >{$attachment['filename']}</label> &nbsp;" . $downloadlink->show() . '&nbsp; &nbsp;' . $viewLink->show() . '<br/> ' . "<div class='file-preview' id='{$attachment['id']}' >" . $this->objFilePreview->previewFile($attachment['attachment_id']) . '</div><br />';
@@ -695,13 +695,13 @@ class dbPost extends dbTable {
                          */
                         // Get the Post
                         $post = $this->getPostWithText($post['post_id']);
-                        // Get details of the Forum
-                        $forum = $this->objForum->getForum($post['forum_id']);
+                        // Get details of the Discussion
+                        $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
 
 
 
-                        // Do not show form if forum is locked
-                        if ($forum['forumlocked'] == 'Y') {
+                        // Do not show form if discussion is locked
+                        if ($discussion['discussionlocked'] == 'Y') {
                                 return NULL;
                         } else {
                                 // Generate Temporary Id
@@ -740,9 +740,9 @@ class dbPost extends dbTable {
 
 
                                 // Start of Form
-                                $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $this->forumtype)));
+                                $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $this->discussiontype)));
                                 $postReplyForm->displayType = 3;
-                                $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
+                                $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_discussion_addtitle', 'discussion'), 'required');
 
 
                                 $addTable = $this->newObject('htmltable', 'htmlelements');
@@ -767,11 +767,11 @@ class dbPost extends dbTable {
                                 // type of post
                                 $addTable->startRow();
 
-                                $addTable->addCell('<nobr>' . $this->objLanguage->languageText('mod_forum_typeofreply', 'forum') . ':</nobr>', 100);
+                                $addTable->addCell('<nobr>' . $this->objLanguage->languageText('mod_discussion_typeofreply', 'discussion') . ':</nobr>', 100);
 
                                 $objElement = new radio('replytype');
-                                $objElement->addOption('reply', $this->objLanguage->languageText('mod_forum_postasreply', 'forum'));
-                                $objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent', 'forum'));
+                                $objElement->addOption('reply', $this->objLanguage->languageText('mod_discussion_postasreply', 'discussion'));
+                                $objElement->addOption('tangent', $this->objLanguage->languageText('mod_discussion_postastangent', 'discussion'));
                                 //$objElement->addOption('moderate','Post Reply as Moderator');
 
                                 if ($mode == 'fix') {
@@ -835,22 +835,22 @@ class dbPost extends dbTable {
                                 $addTable->endRow();
 
                                 // ------------------
-//                                if ($forum['attachments'] == 'Y') {
+//                                if ($discussion['attachments'] == 'Y') {
 //                                        $addTable->startRow();
 //
-//                                        /*                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+//                                        /*                $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion').':', 'attachments');
 //                                          $addTable->addCell($attachmentsLabel->show(), 100);
 //
 //                                          $attachmentIframe = new iframe();
 //                                          $attachmentIframe->width='100%';
 //                                          $attachmentIframe->height='100';
 //                                          $attachmentIframe->frameborder='0';
-//                                          $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id'], 'type'=>$this->forumtype));
+//                                          $attachmentIframe->src= $this->uri(array('module' => 'discussion', 'action' => 'attachments', 'id'=>$temporaryId, 'discussion' => $discussion['id'], 'type'=>$this->discussiontype));
 //
 //                                          $addTable->addCell($attachmentIframe->show());
 //                                         */
 //
-//                                        $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum') . ':', 'attachments');
+//                                        $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion') . ':', 'attachments');
 //                                        $addTable->addCell($attachmentsLabel->show(), 120);
 //
 //                                        $form = new form('saveattachment', $this->uri(array('action' => 'saveattachment')));
@@ -876,10 +876,10 @@ class dbPost extends dbTable {
 //                                        $topicHiddenInput->value = $post['topic_id'];
 //                                        $form->addToForm($topicHiddenInput->show());
 //
-//                                        $hiddenForumInput = new textinput('forum');
-//                                        $hiddenForumInput->fldType = 'hidden';
-//                                        $hiddenForumInput->value = $forum['id'];
-//                                        $form->addToForm($hiddenForumInput->show());
+//                                        $hiddenDiscussionInput = new textinput('discussion');
+//                                        $hiddenDiscussionInput->fldType = 'hidden';
+//                                        $hiddenDiscussionInput->value = $discussion['id'];
+//                                        $form->addToForm($hiddenDiscussionInput->show());
 //
 //                                        $hiddenTemporaryId = new textinput('temporaryId');
 //                                        $hiddenTemporaryId->fldType = 'hidden';
@@ -890,38 +890,38 @@ class dbPost extends dbTable {
 //                                        $addTable->endRow();
 //                                }
                                 // ------------------------------
-                                // Show Forum Subscriptions if enabled
-//                                if ($forum['subscriptions'] == 'Y') {
+                                // Show Discussion Subscriptions if enabled
+//                                if ($discussion['subscriptions'] == 'Y') {
 //                                        // Get the number of topics a user is subscribed to
-//                                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
+//                                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['discussion_id'], $this->objUser->userId());
 //
 //                                        // Check whether the user is subscribed to the current topic
 //                                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
 //
-//                                        // Check whether the user is subscribed to the current forum
-//                                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
+//                                        // Check whether the user is subscribed to the current discussion
+//                                        $discussionSubscription = $this->objDiscussionSubscriptions->isSubscribedToDiscussion($post['discussion_id'], $this->objUser->userId());
 //
 //                                        $addTable->startRow();
-//                                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
+//                                        $addTable->addCell($this->objLanguage->languageText('mod_discussion_emailnotification', 'discussion', 'Email Notification') . ':');
 //                                        $subscriptionsRadio = new radio('subscriptions');
-//                                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-//                                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-//                                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+//                                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_discussion_donotsubscribetothread', 'discussion', 'Do not subscribe to this thread'));
+//                                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_discussion_notifytopic', 'discussion', 'Notify me via email when someone replies to this thread'));
+//                                        $subscriptionsRadio->addOption('discussionsubscribe', $this->objLanguage->languageText('mod_discussion_notifydiscussion', 'discussion', 'Notify me of ALL new topics and replies in this discussion.'));
 //                                        $subscriptionsRadio->setBreakSpace('<br />');
 //
-//                                        if ($forumSubscription) {
-//                                                $subscriptionsRadio->setSelected('forumsubscribe');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+//                                        if ($discussionSubscription) {
+//                                                $subscriptionsRadio->setSelected('discussionsubscribe');
+//                                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtodiscussion', 'discussion', 'You are currently subscribed to the discussion, receiving notification of all new posts and replies.');
 //                                        } else if ($topicSubscription) {
 //                                                $subscriptionsRadio->setSelected('topicsubscribe');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
+//                                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtotopic', 'discussion', 'You are already subscribed to this topic.');
 //                                        } else {
 //                                                $subscriptionsRadio->setSelected('nosubscriptions');
-//                                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+//                                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtonumbertopic', 'discussion', 'You are currently subscribed to [NUM] topics.');
 //                                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
 //                                        }
 //
-//                                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
+//                                        $div = '<div class="discussionTangentIndent">' . $subscribeMessage . '</div>';
 //
 //                                        $addTable->addCell($subscriptionsRadio->show() . $div);
 //                                        $addTable->endRow();
@@ -939,7 +939,7 @@ class dbPost extends dbTable {
 //                                $showCancel = TRUE;
 //                                if ($showCancel) {
 //                                        $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-//                                        $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->forumtype));
+//                                        $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->discussiontype));
 //                                        $cancelButton->setOnClick("window.location='$returnUrl'");
 //
 //                                        $addTable->addCell($submitButton->show() . ' / ' . $cancelButton->show());
@@ -963,13 +963,13 @@ class dbPost extends dbTable {
                          */
 //                        $this->loadClass('textarea', 'htmlelements');
                         $textArea = new textarea('commentsArea');
-                        $link = new link('javascript:void(0)'/* $this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->forumtype)) */);
+                        $link = new link('javascript:void(0)'/* $this->uri(array('action' => 'postreply', 'id' => $post['post_id'], 'type' => $this->discussiontype)) */);
                         $textArea->cssClass = "miniReply";
                         $textArea->cssId = $post['post_id'];
-                        $textArea->extra = "placeholder='{$this->objLanguage->languageText('mod_forum_postreply', 'forum')}'";
+                        $textArea->extra = "placeholder='{$this->objLanguage->languageText('mod_discussion_postreply', 'discussion')}'";
                         $link->cssClass = "buttonLink postReplyLink";
                         $link->cssId = $post['post_id'];
-                        $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
+                        $link->link = $this->objLanguage->languageText('mod_discussion_postreply', 'discussion');
 
                         /**
                          * @var object The attachment link
@@ -1003,12 +1003,12 @@ class dbPost extends dbTable {
 //                                echo $text;
 //                        }
                         //End of filter
-//            $meantime = '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
-//            $return .= '<br />'.'<img class="forumUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newForumTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
+//            $meantime = '<br />'.'<img class="discussionUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.$textArea->show().'<br/><br/>'.$link->show().'</div>';
+//            $return .= '<br />'.'<img class="discussionUserPicture" src="'.$this->objUserPic->userpicture($this->userId).'"  />'.'<div class="miniwrapper" >'.'<div class="replyContainer inner" ><div class="newDiscussionTopic Inner" ><strong>Re: '.$post['post_title'].'</strong></div>'.$textArea->show().'<br/><br/> &nbsp;&nbsp;'.$link->show().'<br/><br/></div></div>';
 
-                        $return .= '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="innerReplyDiv" >' . $forumID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div  ><span class="level" id="' . $post['level'] . '" ></span><span class="forumid" id="' . $topicInfo['forum_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newForumTopic Inner" ><strong><span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
-                        //add the attachment link if attachments are enabled in the forum
-                        if ($forum['attachments'] == 'Y') {
+                        $return .= '</div><br/><div class="clone" id="' . $post['post_id'] . '" > <div class="innerReplyDiv" >' . $discussionID . '<span class="topicid" id="' . $post['topic_id'] . '"  ></span></div><div  ><span class="level" id="' . $post['level'] . '" ></span><span class="discussionid" id="' . $topicInfo['discussion_id'] . '" ></span><span class="lang" id="' . $post['language'] . '" ></span><span class="lft" id="' . $post['lft'] . '" ></span><div class="newDiscussionTopic Inner" ><strong><span class="posttitle" id=" ' . $post['post_title'] . '" ></span></div><div class="content" ></div>';
+                        //add the attachment link if attachments are enabled in the discussion
+                        if ($discussion['attachments'] == 'Y') {
                                 $return .= $divAttachmentWrapper . $attachmentLink->show();
                         }
                         $return .= '<br/>' . $link->show() . '</div><br/>' . '
@@ -1022,10 +1022,10 @@ class dbPost extends dbTable {
                         $link = new link('javascript:loadTranslation(\'' . $post['post_id'] . '\', \'' . $post['language'] . '\');');
                         $link->link = $this->objLanguageCode->getLanguage($post['language']) . ' (' . strtoupper($post['language']) . ')';
 
-                        $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum') . ' <strong>' . $link->show() . '</strong>. ';
+                        $return .= $this->objLanguage->languageText('mod_discussion_postmadein', 'discussion') . ' <strong>' . $link->show() . '</strong>. ';
 
                         // Start text
-                        $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein', 'forum') . ' ';
+                        $return .= $this->objLanguage->languageText('mod_discussion_alsoavailablein', 'discussion') . ' ';
 
                         // Get list of languages
                         $languages = $this->objPostText->getPostLanguages($post['post_id'], $post['language']);
@@ -1035,7 +1035,7 @@ class dbPost extends dbTable {
                         // Loop through the languages
                         foreach ($languages as $language) {
                                 $link = new link('javascript:loadTranslation(\'' . $post['post_id'] . '\', \'' . $language['language'] . '\');');
-                                $link->href = $this->uri(array('action' => 'viewtranslation', 'id' => $language['id'], 'type' => $this->forumtype));
+                                $link->href = $this->uri(array('action' => 'viewtranslation', 'id' => $language['id'], 'type' => $this->discussiontype));
                                 $link->link = $this->objLanguageCode->getLanguage($language['language']) . ' (' . strtoupper($language['language']) . ')';
 
                                 $return .= $comma . $link->show();
@@ -1045,18 +1045,18 @@ class dbPost extends dbTable {
                         // Add a full stop for courtesy
                         $return .= '. ';
                 } else {
-//                        $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum') . ' <strong>' . $this->objLanguageCode->getLanguage($post['language']) . ' (' . strtoupper($post['language']) . ')</strong>. ';
+//                        $return .= $this->objLanguage->languageText('mod_discussion_postmadein', 'discussion') . ' <strong>' . $this->objLanguageCode->getLanguage($post['language']) . ' (' . strtoupper($post['language']) . ')</strong>. ';
                 }
 
-                if ($this->forumLocked == FALSE) {
+                if ($this->discussionLocked == FALSE) {
                         $translateLink = & $this->getObject('link', 'htmlelements');
-                        $translateLink->href = $this->uri(array('action' => 'translate', 'id' => $post['post_id'], 'type' => $this->forumtype));
-                        $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost', 'forum');
+                        $translateLink->href = $this->uri(array('action' => 'translate', 'id' => $post['post_id'], 'type' => $this->discussiontype));
+                        $translateLink->link = $this->objLanguage->languageText('mod_discussion_translatepost', 'discussion');
                 }
 
 
-                $return .= '</div>' . "\r\n"; // End newForumContent
-                $return .= '</div>' . "\r\n"; // End newForumContainer
+                $return .= '</div>' . "\r\n"; // End newDiscussionContent
+                $return .= '</div>' . "\r\n"; // End newDiscussionContainer
                 // Start of the contractible area for children of the posts
                 if ($makeContractible) {
                         $return .= '<div id="' . $post['post_id'] . '_child" style="display:block; ">' . "\r\n";
@@ -1067,38 +1067,38 @@ class dbPost extends dbTable {
                 $scriptaculous = $this->getObject('scriptaculous', 'prototype');
                 $this->appendArrayVar('headerParams', $scriptaculous->show('text/javascript'));
 
-                // Show Forum Subscriptions if enabled
-//                if ($forum['subscriptions'] == 'Y') {
+                // Show Discussion Subscriptions if enabled
+//                if ($discussion['subscriptions'] == 'Y') {
 //                        // Get the number of topics a user is subscribed to
-//                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
+//                        $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['discussion_id'], $this->objUser->userId());
 //
 //                        // Check whether the user is subscribed to the current topic
 //                        $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
 //
-//                        // Check whether the user is subscribed to the current forum
-//                        $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
+//                        // Check whether the user is subscribed to the current discussion
+//                        $discussionSubscription = $this->objDiscussionSubscriptions->isSubscribedToDiscussion($post['discussion_id'], $this->objUser->userId());
 //
 //                        $addTable->startRow();
-//                        $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
+//                        $addTable->addCell($this->objLanguage->languageText('mod_discussion_emailnotification', 'discussion', 'Email Notification') . ':');
 //                        $subscriptionsRadio = new radio('subscriptions');
-//                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-//                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-//                        $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+//                        $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_discussion_donotsubscribetothread', 'discussion', 'Do not subscribe to this thread'));
+//                        $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_discussion_notifytopic', 'discussion', 'Notify me via email when someone replies to this thread'));
+//                        $subscriptionsRadio->addOption('discussionsubscribe', $this->objLanguage->languageText('mod_discussion_notifydiscussion', 'discussion', 'Notify me of ALL new topics and replies in this discussion.'));
 //                        $subscriptionsRadio->setBreakSpace('<br />');
 //
-//                        if ($forumSubscription) {
-//                                $subscriptionsRadio->setSelected('forumsubscribe');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+//                        if ($discussionSubscription) {
+//                                $subscriptionsRadio->setSelected('discussionsubscribe');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtodiscussion', 'discussion', 'You are currently subscribed to the discussion, receiving notification of all new posts and replies.');
 //                        } else if ($topicSubscription) {
 //                                $subscriptionsRadio->setSelected('topicsubscribe');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtotopic', 'discussion', 'You are already subscribed to this topic.');
 //                        } else {
 //                                $subscriptionsRadio->setSelected('nosubscriptions');
-//                                $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+//                                $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtonumbertopic', 'discussion', 'You are currently subscribed to [NUM] topics.');
 //                                $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
 //                        }
 //
-//                        $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
+//                        $div = '<div class="discussionTangentIndent">' . $subscribeMessage . '</div>';
 //
 //                        $addTable->addCell($subscriptionsRadio->show() . $div);
 //                        $addTable->endRow();
@@ -1106,7 +1106,7 @@ class dbPost extends dbTable {
 //                }
                 // Load JavaScript Function
                 $this->appendArrayVar('headerParams', $this->getTranslationAjaxScript());
-                return $return . $this->getjavascriptFile('effects.js', 'forum');
+                return $return . $this->getjavascriptFile('effects.js', 'discussion');
 //         }
         }
 
@@ -1224,7 +1224,7 @@ class dbPost extends dbTable {
                 // Remove the first item
                 array_shift($threadArray);
 
-                // In the forum's case, each topic has only one root.
+                // In the discussion's case, each topic has only one root.
                 // This approach of adding children is done in that way.
                 // Loop through the posts
                 foreach ($threadArray as $thread) {
@@ -1250,7 +1250,7 @@ class dbPost extends dbTable {
         }
 
         /**
-         * Method to generate a tree node text for the forum
+         * Method to generate a tree node text for the discussion
          * Has more to do with the formatting of the array.
          * @param array $post Post with all the fields in an array
          * @param boolean $highlightPost Flag on whether to highlight the post or not
@@ -1263,7 +1263,7 @@ class dbPost extends dbTable {
                 $text = str_replace("\r\n", ' ', $text);
 
                 if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
-                        $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum') . ' ' . $this->objDateTime->formatTime($post['datelastupdated']);
+                        $datefield = $this->objLanguage->languageText('mod_discussion_todayat', 'discussion') . ' ' . $this->objDateTime->formatTime($post['datelastupdated']);
                 } else {
                         $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']) . ' - ' . $this->objDateTime->formatTime($post['datelastupdated']);
                 }
@@ -1290,23 +1290,23 @@ class dbPost extends dbTable {
                 }
 
                 $icon = & $this->getObject('geticon', 'htmlelements');
-                $icon->setIcon('gotopost', NULL, 'modules/forum');
+                $icon->setIcon('gotopost', NULL, 'modules/discussion');
 
                 return array('text' => $treenode, 'cssClass' => $cssClass, 'icon' => 'gotopost.gif');
         }
 
         /**
-         * Method to get the details of the last post in a forum
-         * @param string forum Record Id of the forum
+         * Method to get the details of the last post in a discussion
+         * @param string discussion Record Id of the discussion
          * @return array
          */
-        function getLastPost($forum) {
-                $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
-        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
-        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        WHERE tbl_forum_topic.forum_id = \'' . $forum . '\'
-        ORDER BY tbl_forum_post.datelastupdated DESC LIMIT 1';
+        function getLastPost($discussion) {
+                $sql = 'SELECT tbl_discussion_post_text. * , tbl_discussion_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
+        FROM tbl_discussion_post INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_post_text.post_id = tbl_discussion_post.id AND tbl_discussion_post_text.original_post=\'1\')
+        INNER JOIN tbl_discussion_topic ON ( tbl_discussion_post.topic_id = tbl_discussion_topic.id )
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        WHERE tbl_discussion_topic.discussion_id = \'' . $discussion . '\'
+        ORDER BY tbl_discussion_post.datelastupdated DESC LIMIT 1';
 
                 $results = $this->getArray($sql);
 
@@ -1318,18 +1318,18 @@ class dbPost extends dbTable {
         }
 
         /**
-         * gets the last n posts in a forum
-         * @param type $forum
+         * gets the last n posts in a discussion
+         * @param type $discussion
          * @param type $limit
          * @return type 
          */
-        function getLastNPosts($forum, $limit = 10) {
-                $sql = 'SELECT distinct tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
-        FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
-        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-        WHERE tbl_forum_topic.forum_id = \'' . $forum . '\'
-        ORDER BY tbl_forum_post.datelastupdated DESC LIMIT 10';
+        function getLastNPosts($discussion, $limit = 10) {
+                $sql = 'SELECT distinct tbl_discussion_post_text. * , tbl_discussion_post.topic_id, tbl_users.firstname, tbl_users.surname, tbl_users.username
+        FROM tbl_discussion_post INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_post_text.post_id = tbl_discussion_post.id AND tbl_discussion_post_text.original_post=\'1\')
+        INNER JOIN tbl_discussion_topic ON ( tbl_discussion_post.topic_id = tbl_discussion_topic.id )
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+        WHERE tbl_discussion_topic.discussion_id = \'' . $discussion . '\'
+        ORDER BY tbl_discussion_post.datelastupdated DESC LIMIT 10';
 
                 return $this->getArray($sql);
         }
@@ -1342,27 +1342,27 @@ class dbPost extends dbTable {
          * @param int $limit Number of Records to get
          */
         function getWorkGroupPosts($workgroup, $context, $limit = 10) {
-                // Get the workgroups forum record id
-                $workgroupForum = $this->objForum->getWorkgroupForum($context, $workgroup);
+                // Get the workgroups discussion record id
+                $workgroupDiscussion = $this->objDiscussion->getWorkgroupDiscussion($context, $workgroup);
 
                 // If none exists, return a message saying no records
-                // no forum is automatically created here. left until someone actually visits the forum
-                if ($workgroupForum == NULL) {
-                        return '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum') . '</div>';
+                // no discussion is automatically created here. left until someone actually visits the discussion
+                if ($workgroupDiscussion == NULL) {
+                        return '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_discussion_nopostsindiscussion', 'discussion') . '</div>';
                 } else {
-                        // If forum exists, get the last '10' posts or whatever limit is specified
-                        $sql = 'SELECT tbl_forum_post_text. * , tbl_forum_post.topic_id, tbl_users.firstname, tbl_users.surname
-            FROM tbl_forum_post INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
-            INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id )
-            LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
-            WHERE tbl_forum_topic.forum_id = \'' . $workgroupForum . '\'
-            ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT ' . $limit;
+                        // If discussion exists, get the last '10' posts or whatever limit is specified
+                        $sql = 'SELECT tbl_discussion_post_text. * , tbl_discussion_post.topic_id, tbl_users.firstname, tbl_users.surname
+            FROM tbl_discussion_post INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_post_text.post_id = tbl_discussion_post.id AND tbl_discussion_post_text.original_post=\'1\')
+            INNER JOIN tbl_discussion_topic ON ( tbl_discussion_post.topic_id = tbl_discussion_topic.id )
+            LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
+            WHERE tbl_discussion_topic.discussion_id = \'' . $workgroupDiscussion . '\'
+            ORDER BY tbl_discussion_post.dateLastUpdated DESC LIMIT ' . $limit;
 
                         $results = $this->getArray($sql);
 
                         // If there are no posts, return a message saying no recordss
                         if (count($results) == 0) {
-                                return '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_forum_nopostsinforum', 'forum') . '</div>';
+                                return '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_discussion_nopostsindiscussion', 'discussion') . '</div>';
                         } else {
 
                                 // Else prepare a table to display results
@@ -1371,7 +1371,7 @@ class dbPost extends dbTable {
                                 $objTable->cellspacing = 1;
 
                                 $objTable->startHeaderRow();
-                                $objTable->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'));
+                                $objTable->addHeaderCell($this->objLanguage->languageText('mod_discussion_topicconversation', 'discussion'));
                                 $objTable->addHeaderCell($this->objLanguage->languageText('word_message'), '60%');
                                 $objTable->addHeaderCell($this->objLanguage->languageText('word_author'), 100);
                                 $objTable->endHeaderRow();
@@ -1383,7 +1383,7 @@ class dbPost extends dbTable {
                                 foreach ($results as $post) {
                                         $objTable->startRow();
                                         // title is link to the posts
-                                        $titleLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $post['topic_id'], 'type' => 'workgroup', 'post' => $post['post_id']), 'forum'));
+                                        $titleLink = new link($this->uri(array('action' => 'viewtopic', 'id' => $post['topic_id'], 'type' => 'workgroup', 'post' => $post['post_id']), 'discussion'));
                                         $titleLink->link = $post['post_title'];
                                         $titleLink->anchor = $post['post_id'];
                                         $objTable->addCell($titleLink->show());
@@ -1415,12 +1415,12 @@ class dbPost extends dbTable {
         function showPostReplyForm($postId, $showCancel = TRUE) {
                 // Get the Post
                 $post = $this->getPostWithText($postId);
-                // Get details of the Forum
-                $forum = $this->objForum->getForum($post['forum_id']);
+                // Get details of the Discussion
+                $discussion = $this->objDiscussion->getDiscussion($post['discussion_id']);
 
 
-                // Do not show form if forum is locked
-                if ($forum['forumlocked'] == 'Y') {
+                // Do not show form if discussion is locked
+                if ($discussion['discussionlocked'] == 'Y') {
                         return NULL;
                 } else {
                         // Generate Temporary Id
@@ -1459,9 +1459,9 @@ class dbPost extends dbTable {
 
 
                         // Start of Form
-                        $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $this->forumtype)));
+                        $postReplyForm = new form('postReplyForm', $this->uri(array('action' => 'savepostreply', 'type' => $this->discussiontype)));
                         $postReplyForm->displayType = 3;
-                        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_forum_addtitle', 'forum'), 'required');
+                        $postReplyForm->addRule('title', $this->objLanguage->languageText('mod_discussion_addtitle', 'discussion'), 'required');
 
 
                         $addTable = $this->newObject('htmltable', 'htmlelements');
@@ -1486,11 +1486,11 @@ class dbPost extends dbTable {
                         // type of post
                         $addTable->startRow();
 
-                        $addTable->addCell('<nobr>' . $this->objLanguage->languageText('mod_forum_typeofreply', 'forum') . ':</nobr>', 100);
+                        $addTable->addCell('<nobr>' . $this->objLanguage->languageText('mod_discussion_typeofreply', 'discussion') . ':</nobr>', 100);
 
                         $objElement = new radio('replytype');
-                        $objElement->addOption('reply', $this->objLanguage->languageText('mod_forum_postasreply', 'forum'));
-                        $objElement->addOption('tangent', $this->objLanguage->languageText('mod_forum_postastangent', 'forum'));
+                        $objElement->addOption('reply', $this->objLanguage->languageText('mod_discussion_postasreply', 'discussion'));
+                        $objElement->addOption('tangent', $this->objLanguage->languageText('mod_discussion_postastangent', 'discussion'));
                         //$objElement->addOption('moderate','Post Reply as Moderator');
 
                         if ($mode == 'fix') {
@@ -1555,22 +1555,22 @@ class dbPost extends dbTable {
 
                         // ------------------
 
-                        if ($forum['attachments'] == 'Y') {
+                        if ($discussion['attachments'] == 'Y') {
                                 $addTable->startRow();
 
-                                /*                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+                                /*                $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion').':', 'attachments');
                                   $addTable->addCell($attachmentsLabel->show(), 100);
 
                                   $attachmentIframe = new iframe();
                                   $attachmentIframe->width='100%';
                                   $attachmentIframe->height='100';
                                   $attachmentIframe->frameborder='0';
-                                  $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id'], 'type'=>$this->forumtype));
+                                  $attachmentIframe->src= $this->uri(array('module' => 'discussion', 'action' => 'attachments', 'id'=>$temporaryId, 'discussion' => $discussion['id'], 'type'=>$this->discussiontype));
 
                                   $addTable->addCell($attachmentIframe->show());
                                  */
 
-                                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum') . ':', 'attachments');
+                                $attachmentsLabel = new label($this->objLanguage->languageText('mod_discussion_attachments', 'discussion') . ':', 'attachments');
                                 $addTable->addCell($attachmentsLabel->show(), 120);
 
                                 $form = new form('saveattachment', $this->uri(array('action' => 'saveattachment')));
@@ -1596,10 +1596,10 @@ class dbPost extends dbTable {
                                 $topicHiddenInput->value = $post['topic_id'];
                                 $form->addToForm($topicHiddenInput->show());
 
-                                $hiddenForumInput = new textinput('forum');
-                                $hiddenForumInput->fldType = 'hidden';
-                                $hiddenForumInput->value = $forum['id'];
-                                $form->addToForm($hiddenForumInput->show());
+                                $hiddenDiscussionInput = new textinput('discussion');
+                                $hiddenDiscussionInput->fldType = 'hidden';
+                                $hiddenDiscussionInput->value = $discussion['id'];
+                                $form->addToForm($hiddenDiscussionInput->show());
 
                                 $hiddenTemporaryId = new textinput('temporaryId');
                                 $hiddenTemporaryId->fldType = 'hidden';
@@ -1611,39 +1611,39 @@ class dbPost extends dbTable {
                         }
 
                         // ------------------------------
-                        // Show Forum Subscriptions if enabled
+                        // Show Discussion Subscriptions if enabled
 
-                        if ($forum['subscriptions'] == 'Y') {
+                        if ($discussion['subscriptions'] == 'Y') {
                                 // Get the number of topics a user is subscribed to
-//                                $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['forum_id'], $this->objUser->userId());
+//                                $numTopicSubscriptions = $this->objTopicSubscriptions->getNumTopicsSubscribed($post['discussion_id'], $this->objUser->userId());
 //
 //                                // Check whether the user is subscribed to the current topic
 //                                $topicSubscription = $this->objTopicSubscriptions->isSubscribedToTopic($post['topic_id'], $this->objUser->userId());
 //
-//                                // Check whether the user is subscribed to the current forum
-//                                $forumSubscription = $this->objForumSubscriptions->isSubscribedToForum($post['forum_id'], $this->objUser->userId());
+//                                // Check whether the user is subscribed to the current discussion
+//                                $discussionSubscription = $this->objDiscussionSubscriptions->isSubscribedToDiscussion($post['discussion_id'], $this->objUser->userId());
 //
 //                                $addTable->startRow();
-//                                $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification') . ':');
+//                                $addTable->addCell($this->objLanguage->languageText('mod_discussion_emailnotification', 'discussion', 'Email Notification') . ':');
 ////                                $subscriptionsRadio = new radio('subscriptions');
-////                                $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-////                                $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-////                                $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+////                                $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_discussion_donotsubscribetothread', 'discussion', 'Do not subscribe to this thread'));
+////                                $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_discussion_notifytopic', 'discussion', 'Notify me via email when someone replies to this thread'));
+////                                $subscriptionsRadio->addOption('discussionsubscribe', $this->objLanguage->languageText('mod_discussion_notifydiscussion', 'discussion', 'Notify me of ALL new topics and replies in this discussion.'));
 ////                                $subscriptionsRadio->setBreakSpace('<br />');
 //
-//                                if ($forumSubscription) {
-//                                        $subscriptionsRadio->setSelected('forumsubscribe');
-//                                        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+//                                if ($discussionSubscription) {
+//                                        $subscriptionsRadio->setSelected('discussionsubscribe');
+//                                        $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtodiscussion', 'discussion', 'You are currently subscribed to the discussion, receiving notification of all new posts and replies.');
 //                                } else if ($topicSubscription) {
 //                                        $subscriptionsRadio->setSelected('topicsubscribe');
-//                                        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtotopic', 'forum', 'You are already subscribed to this topic.');
+//                                        $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtotopic', 'discussion', 'You are already subscribed to this topic.');
 //                                } else {
 //                                        $subscriptionsRadio->setSelected('nosubscriptions');
-//                                        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+//                                        $subscribeMessage = $this->objLanguage->languageText('mod_discussion_youaresubscribedtonumbertopic', 'discussion', 'You are currently subscribed to [NUM] topics.');
 //                                        $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
 //                                }
 //
-//                                $div = '<div class="forumTangentIndent">' . $subscribeMessage . '</div>';
+//                                $div = '<div class="discussionTangentIndent">' . $subscribeMessage . '</div>';
 //
 //                                $addTable->addCell($subscriptionsRadio->show() . $div);
 //                                $addTable->endRow();
@@ -1661,7 +1661,7 @@ class dbPost extends dbTable {
                         //$submitButton->setToSubmit();
 //                        if ($showCancel) {
 //                                $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
-//                                $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->forumtype));
+//                                $returnUrl = $this->uri(array('action' => 'thread', 'id' => $post['topic_id'], 'type' => $this->discussiontype));
 //                                $cancelButton->setOnClick("window.location='$returnUrl'");
 //
 //                                $addTable->addCell($submitButton->show() . ' / ' . $cancelButton->show());
@@ -1697,7 +1697,7 @@ function clearForTangent()
 
         if (document.forms[\"postReplyForm\"].title.value == \"" . addslashes($title) . "\".split(\"'\").join(\"\'\"))
         {
-            alert ('" . $this->objLanguage->languageText('mod_forum_tangentsowntitles', 'forum') . " \"" . addslashes($title) . "\".\\n" . $this->objLanguage->languageText('mod_forum_changetitle', 'forum') . ".');
+            alert ('" . $this->objLanguage->languageText('mod_discussion_tangentsowntitles', 'discussion') . " \"" . addslashes($title) . "\".\\n" . $this->objLanguage->languageText('mod_discussion_changetitle', 'discussion') . ".');
             document.forms[\"postReplyForm\"].title.value = '';
             document.forms[\"postReplyForm\"].title.focus();
 
@@ -1729,7 +1729,7 @@ function clearForTangent()
          * @return string Id if it exists, else FALSE
          */
         function getIdFirstPostInTopic($topic_id) {
-                $sql = 'SELECT id FROM tbl_forum_post WHERE topic_id=\'' . $topic_id . '\' ORDER BY post_order LIMIT 1';
+                $sql = 'SELECT id FROM tbl_discussion_post WHERE topic_id=\'' . $topic_id . '\' ORDER BY post_order LIMIT 1';
                 $results = $this->getArray($sql);
 
                 if (count($results) > 0) {
@@ -1762,20 +1762,20 @@ function clearForTangent()
         }
 
         /**
-         * Method to get the forum details of a post
+         * Method to get the discussion details of a post
          * @param string $post_id Record Id of the post
-         * @return array Details of the forum
+         * @return array Details of the discussion
          */
-        function getPostForumDetails($post_id) {
-                $sql = 'SELECT tbl_forum.* FROM tbl_forum_post
-        INNER JOIN tbl_forum_topic ON ( tbl_forum_post.topic_id = tbl_forum_topic.id)
-        INNER JOIN tbl_forum ON ( tbl_forum_topic.forum_id = tbl_forum.id)
-        WHERE tbl_forum_topic.id = \'' . $post_id . '\' GROUP BY tbl_forum_post.id LIMIT 1';
+        function getPostDiscussionDetails($post_id) {
+                $sql = 'SELECT tbl_discussion.* FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_topic ON ( tbl_discussion_post.topic_id = tbl_discussion_topic.id)
+        INNER JOIN tbl_discussion ON ( tbl_discussion_topic.discussion_id = tbl_discussion.id)
+        WHERE tbl_discussion_topic.id = \'' . $post_id . '\' GROUP BY tbl_discussion_post.id LIMIT 1';
 
-                $forum = $this->getArray($sql);
+                $discussion = $this->getArray($sql);
 
-                if (count($forum) == 1) {
-                        return $forum[0];
+                if (count($discussion) == 1) {
+                        return $discussion[0];
                 } else {
                         return FALSE;
                 }
@@ -1847,7 +1847,7 @@ function clearForTangent()
                 }
 
                 // Check if there are any duplicate Left Values
-                $leftSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.lft = t2.lft) AND t1.topic_id = \'' . $topic . '\' AND t2.topic_id = \'' . $topic . '\' AND t1.id != t2.id GROUP BY t1.lft';
+                $leftSql = 'SELECT t1.id  FROM tbl_discussion_post t1, tbl_discussion_post t2 WHERE (t1.lft = t2.lft) AND t1.topic_id = \'' . $topic . '\' AND t2.topic_id = \'' . $topic . '\' AND t1.id != t2.id GROUP BY t1.lft';
                 $leftResults = $this->getArray($leftSql);
 
                 if (count($leftResults) > 0) {
@@ -1858,7 +1858,7 @@ function clearForTangent()
                 }
 
                 // Check if there are any duplicate Right Values
-                $rightSql = 'SELECT t1.id  FROM tbl_forum_post t1, tbl_forum_post t2 WHERE (t1.rght = t2.rght) AND t1.topic_id = \'' . $topic . '\' AND t2.topic_id = \'' . $topic . '\' AND t1.id != t2.id GROUP BY t1.lft';
+                $rightSql = 'SELECT t1.id  FROM tbl_discussion_post t1, tbl_discussion_post t2 WHERE (t1.rght = t2.rght) AND t1.topic_id = \'' . $topic . '\' AND t2.topic_id = \'' . $topic . '\' AND t1.id != t2.id GROUP BY t1.lft';
                 $rightResults = $this->getArray($rightSql);
 
                 if (count($rightResults) > 0) {
@@ -1873,7 +1873,7 @@ function clearForTangent()
         }
 
         /**
-         * Method to start a process of rebuilding a forum topic tree
+         * Method to start a process of rebuilding a discussion topic tree
          * @param string $topic Record Id of the Topic
          */
         function rebuildTopic($topic) {
@@ -1957,9 +1957,9 @@ function clearForTangent()
         }
 
         function getChildPostsSQL($topic, $left, $right) {
-                $sql = 'SELECT tbl_forum_post.*, tbl_forum_post_text.*, tbl_users.firstname, tbl_users.surname FROM tbl_forum_post
-        INNER JOIN tbl_forum_post_text ON ( tbl_forum_post_text.post_id = tbl_forum_post.id AND tbl_forum_post_text.original_post=\'1\')
-        LEFT  JOIN tbl_users ON ( tbl_forum_post.userId = tbl_users.userId )
+                $sql = 'SELECT tbl_discussion_post.*, tbl_discussion_post_text.*, tbl_users.firstname, tbl_users.surname FROM tbl_discussion_post
+        INNER JOIN tbl_discussion_post_text ON ( tbl_discussion_post_text.post_id = tbl_discussion_post.id AND tbl_discussion_post_text.original_post=\'1\')
+        LEFT  JOIN tbl_users ON ( tbl_discussion_post.userId = tbl_users.userId )
         WHERE topic_id=\'' . $topic . '\' AND lft>' . $left . ' AND rght<' . $right . ' ORDER BY lft';
 
                 return $this->getArray($sql);
@@ -1991,7 +1991,7 @@ function clearForTangent()
 
 function loadTranslation(post, lang) {
     var url = \'index.php\';
-    var pars = \'module=forum&action=loadtranslation&id=\'+post+\'&lang=\'+lang;
+    var pars = \'module=discussion&action=loadtranslation&id=\'+post+\'&lang=\'+lang;
     var myAjax = new Ajax.Request( url, {method: \'get\', parameters: pars, onLoading:function(response)
     {
         Effect.SlideUp($(\'text_\'+post));
@@ -2014,7 +2014,7 @@ function loadTranslation(post, lang) {
          * @return string Record Id of the last post
          */
         function getLastTopicPost($topicid) {
-                $results = $this->getAll(' WHERE topic_id = "' . $topicid . '" ORDER BY tbl_forum_post.dateLastUpdated DESC LIMIT 1');
+                $results = $this->getAll(' WHERE topic_id = "' . $topicid . '" ORDER BY tbl_discussion_post.dateLastUpdated DESC LIMIT 1');
 
                 if (count($results) == 0) {
                         return FALSE;
@@ -2044,21 +2044,21 @@ function loadTranslation(post, lang) {
          * @param string $dateLastUpdated: Date Post was made
          * @return string $this->getLastInsertId()
          */
-        function insertSingleAPI($post_parent, $post_tangent_parent, $forum_id, $topic_id, $userId, $level = 1) {
+        function insertSingleAPI($post_parent, $post_tangent_parent, $discussion_id, $topic_id, $userId, $level = 1) {
                 // Interim measure. Alternative, use regexp and replace with space
                 //$post_title = strip_tags($post_title);
                 //echo $post_parent;
 
                 if ($post_parent == '0') {
-                        // $lastRightPointer = $this->getLastRightPointer($forum_id);
+                        // $lastRightPointer = $this->getLastRightPointer($discussion_id);
                         //  $leftPointer = $lastRightPointer+1;
                         //  $rightPointer = $lastRightPointer+2;
                         $level = 1;
                 } else {
                         /*  $lastRightPointer = $this->getPostRightPointer($post_parent);
-                          $updateRightSQL = 'UPDATE tbl_forum_post SET rght = rght + 2 WHERE rght > '.($lastRightPointer-1);
+                          $updateRightSQL = 'UPDATE tbl_discussion_post SET rght = rght + 2 WHERE rght > '.($lastRightPointer-1);
                           $this->getArray($updateRightSQL);
-                          $updateLeftSQL = 'UPDATE tbl_forum_post SET lft = lft + 2 WHERE lft > '.($lastRightPointer-1);
+                          $updateLeftSQL = 'UPDATE tbl_discussion_post SET lft = lft + 2 WHERE lft > '.($lastRightPointer-1);
                           $this->getArray($updateLeftSQL);
 
                           $leftPointer = $lastRightPointer;
