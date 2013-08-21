@@ -357,7 +357,7 @@ class forum extends controller {
                                 return $this->runMailJobs();
 
                         case 'pullmail':
-                                return $this->pullMail($this->getParam('id'), $this->getParam('topic'));
+                                return $this->pullMail();
 
 //                        case 'savepostratings':
 //                                return $this->savePostRatings();
@@ -516,6 +516,7 @@ class forum extends controller {
                                                                 if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid'])) {
                                                                 }
                                                                 if ($objTopicSubScription->isSubscribedToTopic($topic_id, $userDetails['userid']) || $this->objUserContext->isContextMember($userId, $this->contextCode && $forumDetails['forum_visible'] == 'Y')) {
+                                                                        echo "<h1>{$cleanMessage}</h1>";
                                                                         //save thte message as a post
                                                                         $this->saveReply(NULL, $postParent, $forum_id, $topic_id, $post_title, $cleanMessage, $language, $userId);
                                                                         $this->emailBox->deleteEmail($index);
