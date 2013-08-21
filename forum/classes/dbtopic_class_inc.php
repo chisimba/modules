@@ -168,9 +168,22 @@ class dbtopic extends dbTable {
      * @return array Details of the topics
      */
     function showTopicsInForum($forum_id, $userId, $archiveDate = NULL, $order=NULL, $direction=NULL, $additionalWhere = NULL, $limit = NULL) {
-        $sql = 'SELECT tbl_forum_topic.id AS topic_id,tbl_forum_topic.*, tbl_forum_topic.status AS topicstatus, tbl_users.firstname, tbl_users.surname, tbl_users.username, tbl_forum_discussiontype.*, tbl_forum_post_text.post_title, tbl_forum_topic_read.id AS readtopic, tbl_forum_topic_read.post_id AS lastreadpost, lastPostUser.firstname AS lastfirstname, lastPostUser.surname AS lastsurname, lastPostUser.username AS lastusername, post2.datelastupdated AS lastdate, tangentCheck.id AS tangentcheck'
-
-                .' FROM tbl_forum_topic'
+        $sql = 'SELECT tbl_forum_topic.id AS topic_id,
+            tbl_forum_topic.*, 
+            tbl_forum_topic.status AS topicstatus, 
+            tbl_users.firstname, 
+            tbl_users.surname, tbl_users.username, 
+            tbl_forum_discussiontype.*, 
+            tbl_forum_post_text.post_title, 
+            tbl_forum_topic_read.id AS readtopic, 
+            tbl_forum_topic_read.post_id AS lastreadpost, 
+            lastPostUser.firstname AS lastfirstname, 
+            lastPostUser.surname AS lastsurname, 
+            lastPostUser.username AS lastusername, 
+            post2.datelastupdated AS lastdate, 
+            tangentCheck.id AS tangentcheck
+            
+            FROM tbl_forum_topic'
 
                 // Inner Joing Post to get the details
                 .' INNER JOIN tbl_forum_post ON (tbl_forum_topic.first_post = tbl_forum_post.id AND tbl_forum_post.post_parent=0)'
@@ -208,6 +221,7 @@ class dbtopic extends dbTable {
 
         // Order By
         $sql .= ' ORDER BY sticky DESC, ';
+        
 
         // Determine the ordering
         switch ($order) {
