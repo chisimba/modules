@@ -186,7 +186,7 @@ class block_newtopic extends object {
         $addTable->startRow();
 
         $languageLabel = new label($this->objLanguage->languageText('word_language', 'system') . ':', 'input_language');
-        $addTable->addCell($languageLabel->show(), 120);
+//        $addTable->addCell($languageLabel->show(), 120);
         $languageDropdown = new dropdown('language');
         $languageCodes = & $this->newObject('languagecode', 'language');
 // Sort Associative Array by Language, not ISO Code
