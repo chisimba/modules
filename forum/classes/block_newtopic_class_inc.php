@@ -215,7 +215,7 @@ class block_newtopic extends object {
         $addTable->addCell($htmlareaLabel->show(), 120, 'top', NULL, $messageCSS);
 
         $editor = &$this->newObject('htmlarea', 'htmlelements');
-        $editor->toolbarSet = 'simple';
+//        $editor->toolbarSet = 'simple';
         $editor->setName('message');
 
         $objContextCondition = &$this->getObject('contextcondition', 'contextpermissions');
