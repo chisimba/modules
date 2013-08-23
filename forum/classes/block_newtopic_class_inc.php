@@ -245,6 +245,7 @@ class block_newtopic extends object {
             $button = new button('save_attachment_button', 'Attach File');
             $button->cssClass = 'save';
             $button->extra = 'onclick="saveAttachment(this.parentNode)"';
+//            $form->addToForm($button->show());
             if (isset($files)) {
                 if (count($files) > 0) {
 

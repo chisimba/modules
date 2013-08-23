@@ -545,7 +545,7 @@ class forum extends controller {
                 $forum = $this->objForum->getForum($id);
 
                 $this->objMenuTools->addToBreadCrumbs(array($forum['forum_name']));
-                $this->setVar('breadcrumbs',array($forum['forum_name']));
+                $this->setVar('breadcrumbs', array($forum['forum_name']));
 
                 if ($this->ignoreGroupMembership == 'false') {
                         // Check if type is being passed for workgroup, else redirect to get the type
@@ -673,6 +673,7 @@ class forum extends controller {
          */
         public function saveNewTopic() {
 
+                $attachment_id = $_POST['attachment'];
                 $tempPostId = $_POST['temporaryId'];
 //                $this->saveTempAttachmentIfAny($tempPostId);
                 $forum_id = $_POST['forum'];
@@ -727,6 +728,8 @@ class forum extends controller {
 
                 $this->objForum->updateLastTopic($forum_id, $topic_id);
                 $post_id = $this->objPost->insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id, $this->userId);
+                $this->saveTempAttachmentIfAny($post_id, $attachment_id);
+                $this->handleAttachments($post_id, $attachment_id);
                 $this->objPostText->insertSingle($post_id, $post_title, $post_text, $language, $original_post, $this->userId);
                 $this->objTopic->updateFirstPost($topic_id, $post_id);
                 $this->objForum->updateLastPost($forum_id, $post_id);
@@ -1060,7 +1063,7 @@ class forum extends controller {
                         $forumLink = new link($this->uri(array('action' => 'forum', 'id' => $post['forum_id'])));
                         $forumLink->link = $forum['forum_name'];
                         $this->objMenuTools->addToBreadCrumbs(array($forumLink->show(), $post['post_title']));
-                        $this->setVar('breadcrumbs',array($forumLink->show(), $post['post_title']));
+                        $this->setVar('breadcrumbs', array($forumLink->show(), $post['post_title']));
                         // return the template
                         return 'forum_topic_flatview.php';
                 }
@@ -1732,7 +1735,7 @@ class forum extends controller {
                 $values = $this->objPostRatings->fetchAll($smt);
                 if ($currentRating >= 1) {
                         $currentRating -= 1;
-                        if (count($values) ==0 ) {
+                        if (count($values) == 0) {
                                 return $this->objPostRatings->insertRecord($post_id, $currentRating, $this->userId);
                         }
                 } else {
