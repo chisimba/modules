@@ -3,6 +3,25 @@
  * and open the template in the editor.
  */
 jQuery(document).ready(function() {
+        var topLink = jQuery('<a>', {
+                href: 'javascript:void(0);',
+                text: 'Top',
+                class: 'floatingSideNavigation',
+                id: 'top'
+        });
+        var bottonLink = jQuery('<a>', {
+                href: 'javascript:void(0);',
+                onclick: function(e) {
+                        e.preventDefault();
+                        jQuery('html').scrollTop();
+                },
+                text: 'Bottom',
+                class: 'floatingSideNavigation',
+                id: 'bottom'
+        });
+        jQuery('body').append(topLink);
+        jQuery('body').append(bottonLink);
+        jQuery('a.floatingSideNavigation#top').hide();
         jQuery('a').unbind('click');
         //hide the side topics
         jQuery('ul.indicator').hide();
@@ -11,7 +30,7 @@ jQuery(document).ready(function() {
         jQuery('div.hiddenOptions, div.attachmentwrapper, div.file-preview').hide();
         jQuery('div.filePreview').hide();
         jQuery('a.attachmentLink').hide();
-        jQuery('a.postDeleteLink, a.postEditClass').find('img').css('margin','10px 5px');
+        jQuery('a.postDeleteLink, a.postEditClass').find('img').css('margin', '10px 5px');
         jQuery('a.ratings').click(function(e) {
                 e.preventDefault()
         });
@@ -29,6 +48,12 @@ jQuery(document).ready(function() {
                 setTimeout(function() {
                         jQuery('.jqGenerated').remove();
                 }, 5000);
+        }
+        //get the number of forum posts and adjust the display
+        var divs = jQuery('.newForumContainer');
+        var numberOfDivs = jQuery(divs).length;
+        if (numberOfDivs < 2) {
+                jQuery(divs).css('margin-bottom', '100px');
         }
         /**
          * ===Send the message===
@@ -192,7 +217,7 @@ jQuery(document).ready(function() {
         //when clicking OK on the confirmation message
         jQuery('.ok').live('click', function(e) {
                 e.preventDefault();
-                jQuery(this).css('display','none');
+                jQuery(this).css('display', 'none');
                 window.location.reload();
         });
         /**
@@ -263,6 +288,7 @@ jQuery(document).ready(function() {
                         type: 'post',
                         data: 'post_id=' + post_id,
                         success: function() {
+//                                alert(data);
                                 window.location.reload()
                         }
                 })
@@ -397,6 +423,25 @@ jQuery(document).ready(function() {
                                 jQuery(popUpWrapper).append(cancel_button);
                         }
                 });
+        });
+        jQuery('a.floatingSideNavigation#top').on('click', function() {
+                jQuery('html, body').animate({
+                        scrollTop: '0px'
+                }, 500);
+        });
+        jQuery('a.floatingSideNavigation#bottom').on('click', function() {
+                jQuery('html, body').animate({
+                        scrollTop: jQuery(document).height()
+                }, 500);
+        });
+        jQuery(document).on('scroll',function(){
+                if(jQuery(this).scrollTop() >= 280){
+                        jQuery('a.floatingSideNavigation#top').show('fade');
+                }else{
+                        jQuery('a.floatingSideNavigation#top').hide();
+                }
+//                console.log(jQuery(this).scrollTop());
+//                console.log(jQuery('body').height());
         });
         /**
          * ===Trying to inform the user as to which file is selecteded===

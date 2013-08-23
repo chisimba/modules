@@ -160,7 +160,11 @@ class forumemail extends object {
 
                 // Add the Email to the array
                 foreach ($topicSubscribers as $user) {
-                        array_push($this->emailList, $user['emailaddress']);
+                        if ($this->objUser->email() == $user['emailaddress']) {
+                                continue;
+                        } else {
+                                array_push($this->emailList, $user['emailaddress']);
+                        }
                 }
 
                 $objTopic = & $this->getObject('dbtopic');
@@ -230,7 +234,6 @@ class forumemail extends object {
                         $body = '<html><head></head><body>' . $message . '</body></html>';
 
                         $from = $this->objDbConfig->getValue('forum_inbox_username');
-//                        $from = $postDetails['topic_id'] . '@' . 'chisimba.tohir.co.za';
                         $fromName = $this->objUser->fullname($senderId);
 
                         // Setup Alternate Message - Convert '&amp;' back to '&'
@@ -248,7 +251,7 @@ class forumemail extends object {
                         $this->objMailer->setValue('htmlbody', $message);
                         return $this->objMailer->send();
                 } else {
-                        var_dump($this->emailList);
+//                        var_dump($this->emailList);
                 }
         }
 

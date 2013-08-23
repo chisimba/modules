@@ -113,7 +113,7 @@ class block_newtopic extends object {
         $titleInput->setId('title');
         // Title
         $addTable->startRow();
-        $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system') . ':', 'input_title');
+        $subjectLabel = new label($this->objLanguage->languageText('word_title', 'system') . ':', 'input_title');
         $addTable->addCell($subjectLabel->show(), 120);
         if ($mode == 'fix') {
             $titleInput->value = $details['title'];
