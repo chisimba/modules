@@ -65,6 +65,13 @@ class dbPost extends dbTable {
          * @var object To handle all post attachments
          */
         var $objPostAttachments;
+        
+        /**
+         *
+         * @var object DOM
+         */
+        var $objDom;
+        
         var $showModeration;
 
         /**
@@ -90,6 +97,7 @@ class dbPost extends dbTable {
          */
         function init() {
                 parent::init('tbl_forum_post');
+                $this->objDom = new DOMDocument('utf-8');
                 $this->objUserPic = $this->getObject('imageupload', 'useradmin');
                 $this->objSkin = $this->getObject('skin', 'skin');
                 $this->objTrimStrings = $this->getObject('trimstr', 'strings');
@@ -592,11 +600,7 @@ class dbPost extends dbTable {
                 $this->objIcon->align = 'right';
                 // Set up Alt Text
                 $moderatePostIcon = $this->objIcon->show();
-
-                //
-                $pointerSpan2 = "<span class='forumPointer2'></span>";
-                $pointerSpan3 = "<span class='forumPointer3'></span>";
-                $contentDiv = "" . $pointerSpan2 . $pointerSpan3 . '<div class="forumProfileImg" >' . $this->objUser->getUserImage($post['userid']);
+                $contentDiv ='<div class="forumProfileImg" >' . $this->objUser->getUserImage($post['userid']);
                 $contentDiv .= "</div>";
                 $this->threadDisplayLevel = $post['level'];
                 $return .= $contentDiv;
@@ -711,15 +715,28 @@ class dbPost extends dbTable {
                         $attachments = $this->objPostAttachments->getAttachments($post['post_id']);
                         // By Pass if attachment has been deleted.
                         if (count($attachments) != 0) {
-                                $return .= '<br /><br /><br /><p><strong>' . $this->objLanguage->languageText('word_attachments') . ':</strong></p>';
+                                $return .= '<br /><br />';
                                 foreach ($attachments AS $attachment) {
                                         $files = $this->objPostAttachments->downloadAttachment($attachment['id']);
                                         if (count($files) > 0) {
                                                 $this->objFiles = $this->getObject('dbfile', 'filemanager');
                                                 $attachment_path = $this->objFiles->getFilePath($files[0]['id']);
                                                 $downloadlink = new link($attachment_path);
-                                                $downloadlink->link = $attachment['filename'];
-                                                $return .= $this->objFileIcons->getFileIcon($attachment['filename']) . ' ' . $downloadlink->show() . '<br />';
+                                                $downloadlink->cssClass = 'forumDownload';
+//                                                $downloadlink->link = $attachment['filename'];
+                                                $wrapperDiv = "<div class='file-preview' id='{$attachment['id']}' >";
+//                                                $this->objIcon->setIcon('download');
+                                                $downloadlink->link .= $this->objLanguage->languageText('word_download','system');
+                                                $previewLink = new link('javascript:void(0);');
+                                                $previewLink->cssClass = 'forumViewAttachment';
+                                                $previewLink->link = $this->objLanguage->languageText('phrase_viewattachment','system');
+                                                $previewLink->cssId = $attachment['id'];
+//                                                $wrapperDiv .= $downloadlink->show();
+//                                                $wrapperDiv .= $previewLink->show();
+                                                $wrapperDiv .= '<br/><br/>';
+                                                $wrapperDiv .= $this->objFilePreview->previewFile($files[0]['id']);
+                                                $wrapperDiv .= "</div>";
+                                                $return .= $this->objFileIcons->getFileIcon($attachment['filename']).'<strong>' . $attachment['filename']."</strong><br/><br/> {$downloadlink->show()} {$previewLink->show()}".$wrapperDiv . '<br />';
                                         }
                                 }
                         }
@@ -843,7 +860,7 @@ class dbPost extends dbTable {
                                                 $viewLink->cssClass = "forumViewAttachment";
                                                 $viewLink->cssId = $attachment['id'];
                                                 $viewLink->link = $this->objLanguage->languageText('phrase_viewattachment', 'system');
-                                                $conteiner .= $this->objFileIcons->getFileIcon($attachment['filename']) . "&nbsp;&nbsp; <label >{$attachment['filename']}</label> &nbsp;" . $downloadlink->show() . '&nbsp; &nbsp;' . $viewLink->show() . '<br/> ' . "<div class='file-preview' id='{$attachment['id']}' >" . $this->objFilePreview->previewFile($attachment['attachment_id']) . '</div><br />';
+                                                $conteiner .= $this->objFileIcons->getFileIcon($attachment['filename']) . "&nbsp;&nbsp; <label >{$attachment['filename']}</label> <br/><br/>" . $downloadlink->show() . '&nbsp; &nbsp;' . $viewLink->show() . '<br/> ' . "<div class='file-preview' id='{$attachment['id']}' >" . $this->objFilePreview->previewFile($attachment['attachment_id']) . '</div><br />';
                                                 //header('Content-Disposition: attachment; filename="' . $files[0]['filename'] . '"');
                                                 //readfile($location);
                                                 //--header('Location:'.$location); // Todo - Force Download
