@@ -25,10 +25,14 @@ class block_forumadmin extends object {
         var $objLanguage;
         var $objForum;
         var $contextForums;
+        var $objUser;
+        var $contextCode;
+        var $userContext;
 
         //put your code here
         public function init() {
-                $this->title = "Admin block";
+                $this->title = '';
+                $this->objUser = $this->getObject('user', 'security');
                 $this->loadClass('form', 'htmlelements');
                 $this->loadClass('button', 'htmlelements');
                 $this->loadClass('dropdown', 'htmlelements');
@@ -40,6 +44,7 @@ class block_forumadmin extends object {
                 $this->contextTitle = $this->contextObject->getTitle();
                 $this->contextCode = $this->contextObject->getContextCode();
                 $this->objLanguage = $this->getObject('language', 'language');
+                $this->userContext = $this->getObject('usercontext', 'context');
                 // Forum Classes
                 $this->objForum = & $this->getObject('dbforum');
                 $this->contextForums = $this->objForum->getAllContextForums($this->contextCode);
@@ -111,37 +116,38 @@ class block_forumadmin extends object {
                 $rowcount = "";
                 $forumsList = &$this->getVar('forumsList');
                 foreach ($this->contextForums as $forum) {
-                        $oddOrEven = ($rowcount == 0) ? "odd" : "even";
+                        if ($this->userContext->isContextMember($this->objUser->userId(), $this->contextCode) || $forum['forum_context'] == 'root') {
+                                $oddOrEven = ($rowcount == 0) ? "odd" : "even";
 
-                        $tableRow = array();
+                                $tableRow = array();
 
-                        $table->startRow();
+                                $table->startRow();
 
-                        $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['id'])));
-                        $forumLink->link = $forum['forum_name'];
-                        $forumLink->title = $this->objLanguage->languageText('mod_forum_gotoforum', 'forum');
+                                $forumLink = new link($this->uri(array('module' => 'forum', 'action' => 'forum', 'id' => $forum['id'])));
+                                $forumLink->link = $forum['forum_name'];
+                                $forumLink->title = $this->objLanguage->languageText('mod_forum_gotoforum', 'forum');
 
-                        if ($forum['defaultforum'] == 'Y') {
-                                $forumLinkStr = '<strong>* </strong>';
-                        } else {
-                                $forumLinkStr = ' &nbsp;&nbsp; ';
-                        }
+                                if ($forum['defaultforum'] == 'Y') {
+                                        $forumLinkStr = '<strong>* </strong>';
+                                } else {
+                                        $forumLinkStr = ' &nbsp;&nbsp; ';
+                                }
 
-                        $editLink = & new link($this->uri(array('module' => 'forum', 'action' => 'editforum', 'id' => $forum['id'])));
-                        $editLink->link = $this->objLanguage->languageText('word_edit', 'system');
-                        $editLink->title = $this->objLanguage->languageText('mod_forum_editForumSettings', 'forum');
+                                $editLink = & new link($this->uri(array('module' => 'forum', 'action' => 'editforum', 'id' => $forum['id'])));
+                                $editLink->link = $this->objLanguage->languageText('word_edit', 'system');
+                                $editLink->title = $this->objLanguage->languageText('mod_forum_editForumSettings', 'forum');
 
-                        $table->addCell($forumLinkStr . $forumLink->show() . ' (' . $editLink->show() . ')');
+                                $table->addCell($forumLinkStr . $forumLink->show() . ' (' . $editLink->show() . ')');
 
-                        //dropdown menu for adjusting forum visibility
-                        $visibility = new dropdown('visibility');
-                        $visibility->addOption('Y', 'Y');
-                        $visibility->addOption('N', 'N');
-                        $visibility->cssClass = $forum['id'];
-                        $visibility->setSelected($forum['forum_visible']);
-                        $data = 'forum_id='.$forum['id'].'&forum_visible=';
-                        //send an ajax call to change the forum's visibility
-                        $visibility->addOnChange("
+                                //dropdown menu for adjusting forum visibility
+                                $visibility = new dropdown('visibility');
+                                $visibility->addOption('Y', 'Y');
+                                $visibility->addOption('N', 'N');
+                                $visibility->cssClass = $forum['id'];
+                                $visibility->setSelected($forum['forum_visible']);
+                                $data = 'forum_id=' . $forum['id'] . '&forum_visible=';
+                                //send an ajax call to change the forum's visibility
+                                $visibility->addOnChange("
                                 var visibility_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -152,15 +158,15 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($visibility->show(), NULL, NULL, 'center');
+                                $table->addCell($visibility->show(), NULL, NULL, 'center');
 
-                        //dropdown menu for adjusting the forum lock status
-                        $locked = new dropdown('locked');
-                        $locked->addOption('Y', 'Y');
-                        $locked->addOption('N', 'N');
-                        $locked->cssClass = $forum['id'];
-                        $locked->setSelected($forum['forumlocked']);
-                        $locked->addOnChange("
+                                //dropdown menu for adjusting the forum lock status
+                                $locked = new dropdown('locked');
+                                $locked->addOption('Y', 'Y');
+                                $locked->addOption('N', 'N');
+                                $locked->cssClass = $forum['id'];
+                                $locked->setSelected($forum['forumlocked']);
+                                $locked->addOnChange("
                                 var visibility_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -171,15 +177,15 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($locked->show(), NULL, NULL, 'center');
+                                $table->addCell($locked->show(), NULL, NULL, 'center');
 
-                        //dropdown menu for adjusting the forum lock status
-                        $ratings = new dropdown('ratings');
-                        $ratings->addOption('Y', 'Y');
-                        $ratings->addOption('N', 'N');
-                        $ratings->cssClass = $forum['id'];
-                        $ratings->setSelected($forum['ratingsenabled']);
-                        $ratings->addOnChange("
+                                //dropdown menu for adjusting the forum lock status
+                                $ratings = new dropdown('ratings');
+                                $ratings->addOption('Y', 'Y');
+                                $ratings->addOption('N', 'N');
+                                $ratings->cssClass = $forum['id'];
+                                $ratings->setSelected($forum['ratingsenabled']);
+                                $ratings->addOnChange("
                                 var ratings_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -190,15 +196,15 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($ratings->show(), NULL, NULL, 'center');
+                                $table->addCell($ratings->show(), NULL, NULL, 'center');
 
-                        //dropdown menu for adjusting the forum lock status
-                        $studentStartsTopic = new dropdown('studentstarttopic');
-                        $studentStartsTopic->addOption('Y', 'Y');
-                        $studentStartsTopic->addOption('N', 'N');
-                        $studentStartsTopic->cssClass = $forum['id'];
-                        $studentStartsTopic->setSelected($forum['studentstarttopic']);
-                        $studentStartsTopic->addOnChange("
+                                //dropdown menu for adjusting the forum lock status
+                                $studentStartsTopic = new dropdown('studentstarttopic');
+                                $studentStartsTopic->addOption('Y', 'Y');
+                                $studentStartsTopic->addOption('N', 'N');
+                                $studentStartsTopic->cssClass = $forum['id'];
+                                $studentStartsTopic->setSelected($forum['studentstarttopic']);
+                                $studentStartsTopic->addOnChange("
                                 var students_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -209,16 +215,15 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($studentStartsTopic->show(), NULL, NULL, 'center');
+                                $table->addCell($studentStartsTopic->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['studentstarttopic'], NULL, NULL, 'center');
-
-                        //dropdown menu for adjusting the forum lock status
-                        $attachments = new dropdown('studentstarttopic');
-                        $attachments->addOption('Y', 'Y');
-                        $attachments->addOption('N', 'N');
-                        $attachments->cssClass = $forum['id'];
-                        $attachments->setSelected($forum['attachments']);
-                        $attachments->addOnChange("
+                                //dropdown menu for adjusting the forum lock status
+                                $attachments = new dropdown('studentstarttopic');
+                                $attachments->addOption('Y', 'Y');
+                                $attachments->addOption('N', 'N');
+                                $attachments->cssClass = $forum['id'];
+                                $attachments->setSelected($forum['attachments']);
+                                $attachments->addOnChange("
                                 var attachments_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -229,15 +234,15 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($attachments->show(), NULL, NULL, 'center');
+                                $table->addCell($attachments->show(), NULL, NULL, 'center');
 
-                         //dropdown menu for adjusting the forum lock status
-                        $subscriptions = new dropdown('studentstarttopic');
-                        $subscriptions->addOption('Y', 'Y');
-                        $subscriptions->addOption('N', 'N');
-                        $subscriptions->cssClass = $forum['id'];
-                        $subscriptions->setSelected($forum['subscriptions']);
-                        $subscriptions->addOnChange("
+                                //dropdown menu for adjusting the forum lock status
+                                $subscriptions = new dropdown('studentstarttopic');
+                                $subscriptions->addOption('Y', 'Y');
+                                $subscriptions->addOption('N', 'N');
+                                $subscriptions->cssClass = $forum['id'];
+                                $subscriptions->setSelected($forum['subscriptions']);
+                                $subscriptions->addOnChange("
                                 var subscription_value = jQuery(this).val();
                                 jQuery.ajax({
                                         url: 'index.php?module=forum&action=updateforumsetting',
@@ -248,52 +253,53 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                        $table->addCell($subscriptions->show(), NULL, NULL, 'center');
+                                $table->addCell($subscriptions->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['subscriptions'], NULL, NULL, 'center');
 
-                        if ($forum['archivedate'] == '0000-00-00' || $forum['archivedate'] == '') {
-                                $table->addCell('n/a', NULL, NULL, 'center');
-                        } else {
-                                $table->addCell($forum['archivedate'], NULL, NULL, 'center');
+                                if ($forum['archivedate'] == '0000-00-00' || $forum['archivedate'] == '') {
+                                        $table->addCell('n/a', NULL, NULL, 'center');
+                                } else {
+                                        $table->addCell($forum['archivedate'], NULL, NULL, 'center');
+                                }
+
+
+
+                                $editLink = new link($this->uri(array('module' => 'forum', 'action' => 'editforum', 'id' => $forum['id'])));
+                                $objIcon->setIcon('edit');
+                                $editLink->link = $objIcon->show();
+                                $editLink->alt = $this->objLanguage->languageText('word_edit', 'forum');
+                                $editLink->title = $this->objLanguage->languageText('mod_forum_editForumSettings', 'forum');
+
+                                $editDeleteLink = $editLink->show();
+
+                                if ($forum['defaultforum'] != 'Y') {
+                                        $deleteLink = new link($this->uri(array('module' => 'forum', 'action' => 'deleteforum', 'id' => $forum['id'])));
+                                        $objIcon->setIcon('delete');
+                                        $deleteLink->link = $objIcon->show();
+                                        $deleteLink->title = $this->objLanguage->languageText('mod_forum_deleteforum', 'forum');
+                                        $deleteLink->alt = $this->objLanguage->languageText('word_delete', 'forum');
+                                        $editDeleteLink .= ' &nbsp; ' . $deleteLink->show();
+                                }
+                                $table->addCell($editDeleteLink, NULL, NULL, NULL, 'nowrap');
+                                $table->endRow();
                         }
-
-
-
-                        $editLink = new link($this->uri(array('module' => 'forum', 'action' => 'editforum', 'id' => $forum['id'])));
-                        $objIcon->setIcon('edit');
-                        $editLink->link = $objIcon->show();
-                        $editLink->alt = $this->objLanguage->languageText('word_edit', 'forum');
-                        $editLink->title = $this->objLanguage->languageText('mod_forum_editForumSettings', 'forum');
-
-                        $editDeleteLink = $editLink->show();
-
-                        if ($forum['defaultforum'] != 'Y') {
-                                $deleteLink = new link($this->uri(array('module' => 'forum', 'action' => 'deleteforum', 'id' => $forum['id'])));
-                                $objIcon->setIcon('delete');
-                                $deleteLink->link = $objIcon->show();
-                                $deleteLink->title = $this->objLanguage->languageText('mod_forum_deleteforum', 'forum');
-                                $deleteLink->alt = $this->objLanguage->languageText('word_delete', 'forum');
-                                $editDeleteLink .= ' &nbsp; ' . $deleteLink->show();
-                        }
-                        $table->addCell($editDeleteLink, NULL, NULL, NULL, 'nowrap');
-                        $table->endRow();
                 }
 
 //                echo $table->show();
 
                 $form = new form('defaultforum', $this->uri(array('module' => 'forum', 'action' => 'setdefaultforum')));
                 $form->displayType = 3;
-                
+
                 $createLink = new link($this->uri(array('module' => 'forum', 'action' => 'createforum')));
                 $objIcon->setIcon('notes');
                 $createLink->cssClass = "sexybutton";
-                $createLink->link = $objIcon->show().'<br/><label class="menu" >'.$this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create new forum').'</label>';
-                
+                $createLink->link = $objIcon->show() . '<br/><label class="menu" >' . $this->objLanguage->languageText('mod_forum_createNewForum', 'forum', 'Create new forum') . '</label>';
+
 //                $backToForumListLink = new link($this->uri(NULL));
 //                $backToForumListLink->link = $this->objLanguage->languageText('mod_forum_backtoforumindex', 'forum');
                 $adminTable = new htmlTable();
                 $adminTable->startHeaderRow();
-                $adminTable->addHeaderCell($createLink->show(),NULL,NULL,'center');
+                $adminTable->addHeaderCell($createLink->show(), NULL, NULL, 'center');
                 $adminTable->endHeaderRow();
                 $form->addToForm($adminTable->show());
 

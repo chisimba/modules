@@ -800,6 +800,11 @@ class dbPost extends dbTable {
                                         $deleteLink->title = $this->objLanguage->languageText('phrase_delete_post', 'forum');
                                         $deleteLink->cssId = $postInfo['post_id'];
                                         $deleteLink->cssClass = "postDeleteLink";
+                                        $threadReply = new link('javascript:void(0);');
+                                        $threadReply->cssClass = "threadReplyLink";
+                                        $threadReply->cssId = "{$postInfo['post_id']}";
+                                        $this->objIcon->setIcon('reply');
+                                        $threadReply->link = $this->objIcon->show();
                                         if ($this->objUser->userId() == $innerPost['userid'] || $this->objUser->isContextAuthor()) {
                                                 $dLink .= $postEditLink->show();
                                         }

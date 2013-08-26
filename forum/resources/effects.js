@@ -449,4 +449,17 @@ jQuery(document).ready(function() {
         jQuery('input#hidden_fileselect').on('change', function() {
 
         });
+        jQuery('.threadReplyLink').on('click',function(){
+                var id = jQuery(this).attr('id');
+//                jQuery.ajax({
+//                        type: 'post',
+//                        url: 'index.php?module=forum&action=showeditpostpopup',
+//                        data: {
+//                                _id: id
+//                        },
+//                        success: function(data){
+//                                
+//                        }
+//                });
+        });
 });
