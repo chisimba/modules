@@ -239,7 +239,7 @@ jQuery(document).ready(function() {
                                 e.preventDefault();
                                 jQuery('div.attachmentwrapper').val('');
                                 jQuery('div.attachmentwrapper').toggle('fade');
-                                jQuery('a.attachmentLink').remove();
+                                jQuery(this).remove();
                         }
                 });
                 jQuery('div.attachmentwrapper').toggle('fade');

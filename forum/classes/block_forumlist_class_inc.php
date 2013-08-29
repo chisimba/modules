@@ -92,10 +92,11 @@ class block_forumlist extends object {
                 $admintable->endHeaderRow();
                 $homeForm->addToForm($admintable->show());
                 foreach ($forums as $forum) {
-                        if ($this->objUserContext->isContextMember($this->objUser->userId(), $forum['forum_context']) || $forum['forum_context'] == 'root') {
+                        $forumDetails = $this->contextObject->getContextDetails($forum['forum_context']);
+                        if ($this->objUserContext->isContextMember($this->objUser->userId(), $forum['forum_context']) || $forum['forum_context'] == 'root' || strtolower($forumDetails['access']) == 'public' || strtolower($forumDetails['access']) == 'open') {
 //                                
 //                        }
-                                if ($this->contextObject->isInContext() || $forum['forum_context'] == 'root') {
+//                                if ($this->contextObject->isInContext() || $forum['forum_context'] == 'root') {
 //                                echo $forum['forum_context'].'<br/>';
 //                                echo "<br/>In context mode {$this->contextObject->getContextCode()}<br/>";
 //                                if ($this->objUserContext->isContextMember($this->objUser->userId($this->objUser->email()), $this->contextObject->getContextCode()) || $forum['forum_context'] == 'root') {
@@ -174,7 +175,7 @@ class block_forumlist extends object {
                                         $tblclass->endRow();
                                         // Set rowcount for bitwise determination of odd or even
                                         $rowcount = ($rowcount == 0) ? 1 : 0;
-                                }
+//                                }
                         }
                 }
                 $homeForm->addToForm($tblclass->show());
