@@ -805,7 +805,7 @@ class dbPost extends dbTable {
                                         $threadReply->cssId = "{$postInfo['post_id']}";
                                         $this->objIcon->setIcon('reply');
                                         $threadReply->link = $this->objIcon->show();
-                                        if ($this->objUser->userId() == $innerPost['userid'] || $this->objUser->isContextAuthor()) {
+                                        if ($this->objUser->userId() == $innerPost['userid']) {
                                                 $dLink .= $postEditLink->show();
                                         }
                                         $deleteConfirm = "<div id='{$postInfo['post_id']}' class='deleteconfirm' ><div><p>{$this->objLanguage->languageText('mod_forum_confirmdeletepost', 'forum')}<br/><br/><br/>{$confimLink->show()} &nbsp;&nbsp;&nbsp;&nbsp;{$declineLink->show()}</p></div></div>";
