@@ -100,17 +100,17 @@ class block_forumadmin extends object {
                 $table->cellpadding = '5';
                 $table->border = '0';
                 $table->width = '98%';
-                $table->startHeaderRow();
+//                $table->startHeaderRow();
 //                $table->addCell('<p style=" layout-flow : vertical-ideographic;">Default</p>');
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_wordName', 'forum'));
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_visible', 'forum'), NULL, NULL, 'center');
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_forumlocked', 'forum'), NULL, NULL, 'center');
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_ratings', 'forum'), NULL, NULL, 'center');
-                $table->addHeaderCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics', 'forum')), NULL, NULL, 'center');
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_attachments', 'forum'), NULL, NULL, 'center');
-                $table->addHeaderCell('Email', NULL, NULL, 'center');
-                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_archivedate', 'forum'), NULL, NULL, 'center');
-                $table->addHeaderCell('&nbsp;');
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_wordName', 'forum'));
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_visible', 'forum'), NULL, NULL, 'center');
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_forumlocked', 'forum'), NULL, NULL, 'center');
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_ratings', 'forum'), NULL, NULL, 'center');
+//                $table->addHeaderCell(ucwords($this->objLanguage->code2Txt('mod_forum_studentsstartTopics', 'forum')), NULL, NULL, 'center');
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_attachments', 'forum'), NULL, NULL, 'center');
+//                $table->addHeaderCell('Email', NULL, NULL, 'center');
+//                $table->addHeaderCell($this->objLanguage->languageText('mod_forum_archivedate', 'forum'), NULL, NULL, 'center');
+//                $table->addHeaderCell('&nbsp;');
 
                 $oddOrEven = "";
                 $rowcount = "";
@@ -158,7 +158,7 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($visibility->show(), NULL, NULL, 'center');
+                                $table->addCell(''.$this->objLanguage->languageText('mod_forum_visible', 'forum').''.'<br/>'.$visibility->show(), NULL, NULL, 'center');
 
                                 //dropdown menu for adjusting the forum lock status
                                 $locked = new dropdown('locked');
@@ -177,7 +177,7 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($locked->show(), NULL, NULL, 'center');
+                                $table->addCell(''.$this->objLanguage->languageText('mod_forum_forumlocked', 'forum').'<br/>'.$locked->show(), NULL, NULL, 'center');
 
                                 //dropdown menu for adjusting the forum lock status
                                 $ratings = new dropdown('ratings');
@@ -196,7 +196,7 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($ratings->show(), NULL, NULL, 'center');
+                                $table->addCell(''.$this->objLanguage->languageText('mod_forum_ratings', 'forum').'<br/>'.$ratings->show(), NULL, NULL, 'center');
 
                                 //dropdown menu for adjusting the forum lock status
                                 $studentStartsTopic = new dropdown('studentstarttopic');
@@ -215,7 +215,7 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($studentStartsTopic->show(), NULL, NULL, 'center');
+                                $table->addCell(''.ucfirst($this->objLanguage->code2txt('mod_forum_studentsstartTopics', 'forum')).'<br/>'.$studentStartsTopic->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['studentstarttopic'], NULL, NULL, 'center');
                                 //dropdown menu for adjusting the forum lock status
                                 $attachments = new dropdown('studentstarttopic');
@@ -234,7 +234,7 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($attachments->show(), NULL, NULL, 'center');
+                                $table->addCell(''.$this->objLanguage->languageText('mod_forum_attachments', 'forum').'<br/>'.$attachments->show(), NULL, NULL, 'center');
 
                                 //dropdown menu for adjusting the forum lock status
                                 $subscriptions = new dropdown('studentstarttopic');
@@ -253,11 +253,11 @@ class block_forumadmin extends object {
                                         }
                                 });
                                 ");
-                                $table->addCell($subscriptions->show(), NULL, NULL, 'center');
+                                $table->addCell(''.ucfirst($this->objLanguage->languageText('word_email', 'system')).'<br/>'.$subscriptions->show(), NULL, NULL, 'center');
 //                        $table->addCell($forum['subscriptions'], NULL, NULL, 'center');
 
                                 if ($forum['archivedate'] == '0000-00-00' || $forum['archivedate'] == '') {
-                                        $table->addCell('n/a', NULL, NULL, 'center');
+                                        $table->addCell(''.$this->objLanguage->languageText('mod_forum_archivedate', 'forum').'<br/>'.'n/a', NULL, NULL, 'center');
                                 } else {
                                         $table->addCell($forum['archivedate'], NULL, NULL, 'center');
                                 }

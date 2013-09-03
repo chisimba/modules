@@ -5,7 +5,6 @@
 jQuery(document).ready(function() {
         var topLink = jQuery('<a>', {
                 href: 'javascript:void(0);',
-                text: 'Top',
                 class: 'floatingSideNavigation',
                 id: 'top'
         });
@@ -15,7 +14,6 @@ jQuery(document).ready(function() {
                         e.preventDefault();
                         jQuery('html').scrollTop();
                 },
-                text: 'Bottom',
                 class: 'floatingSideNavigation',
                 id: 'bottom'
         });
@@ -209,8 +207,8 @@ jQuery(document).ready(function() {
                                 postid: link_id,
                                 topic_id: topic_id
                         },
-                        success: function(data) {
-                                jQuery('body').append('<div class="blurPopUp"><span id="confirm">Post deleted successfuly<br/><br/><a href="#" class="ok" >OK</a></span></div>');
+                        success: function() {
+                                jQuery('body').append('<span id="confirm" style="margin: 5% 40%;" >Post deleted successfuly<br/><br/><a href="#" class="ok" >OK</a></span>');
                         }
                 });
         });

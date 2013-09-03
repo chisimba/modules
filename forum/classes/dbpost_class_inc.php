@@ -103,6 +103,7 @@ class dbPost extends dbTable {
                 $this->objTrimStrings = $this->getObject('trimstr', 'strings');
                 $this->trimstrObj = $this->getObject('trimstr', 'strings');
                 $this->objFileIcons = $this->newObject('fileicons', 'files');
+                $this->objFileIcons->size = 'large';
                 $this->objFilePreview = $this->getObject('filepreview', 'filemanager');
                 $this->dbPostratings = $this->getObject('dbpost_ratings', 'forum');
                 $this->objForum = $this->getObject('dbforum');
@@ -664,7 +665,7 @@ class dbPost extends dbTable {
 
                 if ($this->showFullName) {
                         // Start of the Title Area
-                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 65) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
+                        $return .= '<div>' . $dateSpan . '<span class="strong">' . $this->objTrimStrings->strTrim($post['post_title'], 50) . '</span><br/> <strong>' . $this->objLanguage->languageText('word_by', 'system') . ': ' . $post['firstname'] . ' ' . $post['surname'] . '</strong><br/>' . strtolower($this->objLanguage->languageText('word_at', 'system')) . ' ' . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ')' . ' <strong>' . '</strong>  <br/> </div>';
                 } else {
                         // Start of the Title Area
                         $return .= '<div class="forumTopicTitle"><strong>' . stripslashes($post['post_title']) . '</strong><br />by ' . $post['username'] . ' - ' . $this->objDateTime->formatDateOnly($post['datecreated']) . $this->objLanguage->languageText('word_at', 'system') . $this->objDateTime->formatTime($post['datecreated']) . ' (' . $this->objTranslatedDate->getDifference($post['datecreated']) . ') </div>';
@@ -736,7 +737,7 @@ class dbPost extends dbTable {
                                                 $wrapperDiv .= '<br/><br/>';
                                                 $wrapperDiv .= $this->objFilePreview->previewFile($files[0]['id']);
                                                 $wrapperDiv .= "</div>";
-                                                $return .= $this->objFileIcons->getFileIcon($attachment['filename']).'<strong>' . $attachment['filename']."</strong><br/><br/> {$downloadlink->show()} {$previewLink->show()}".$wrapperDiv . '<br />';
+                                                $return .= $this->objFileIcons->getFileIcon($attachment['filename']).'' . $attachment['filename']."<br/><br/> {$downloadlink->show()} {$previewLink->show()}".$wrapperDiv . '<br />';
                                         }
                                 }
                         }
@@ -797,7 +798,7 @@ class dbPost extends dbTable {
                                         $postEditLink->cssId = $postInfo['post_id'];
                                         $deleteLink = new link('#'/* $this->uri(array('action' => 'moderatepost', 'id' => $postInfo[0]['post_id'])) */);
                                         $deleteLink->link = $moderatePostIcon;
-                                        $deleteLink->title = $this->objLanguage->languageText('phrase_delete_post', 'forum');
+                                        $deleteLink->title = $this->objLanguage->languageText('phrase_delete_post', 'system');
                                         $deleteLink->cssId = $postInfo['post_id'];
                                         $deleteLink->cssClass = "postDeleteLink";
                                         $threadReply = new link('javascript:void(0);');
@@ -841,7 +842,7 @@ class dbPost extends dbTable {
 //                                $day = '<div class="date-day-inner" >' . substr($Date, 9, 2) . '</div>';
 //                                $dateSpan = '<div class="date-wrapper-inner" >' . $day . '' . $month . '' . $year . '</div>';
                                 //get parent info
-                                $conteiner = "\r\n" . '<div class="all-wrapper" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 65) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datecreated']) . ' </div>
+                                $conteiner = "\r\n" . '<div class="all-wrapper" > <div class="forumProfileImg" >' . $this->objUser->getUserImage($innerPost['userid']) . '</div> <div class="innerReplyDiv" >' . '</div><div id="' . $postInfo['post_id'] . '" class="newForumContainer parent" >' . $dLink . '<div class="newForumTopic Inner" >' . $dateSpan . ' <span class="strong"> ' . $this->objLanguage->languageText('word_re', 'system') . ': ' . $this->objTrimStrings->strTrim($postInfo['post_title'], 50) . '</span> <br />' . $postInfo['firstname'] . ' ' . $postInfo['surname'] . '<br/>' . $this->objTranslatedDate->getDifference($postInfo['datecreated']) . ' </div>
                 <div class="postText"  id="' . $postInfo['post_id'] . '" >' . $this->objWashoutFilters->parseText($postInfo['post_text']) . '<span class="' . $forumID . '" ></span></div>';
 //                                $return .= $conteiner;
                                 //get inner post details

@@ -30,6 +30,7 @@ class block_forumview extends object {
     var $forumid;
     var $contextObject;
     var $objIcon;
+    var $objForumSubscriptions;
 
     //put your code here
     public function init() {
@@ -49,6 +50,7 @@ class block_forumview extends object {
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
 //                $this->objGroups = $this->getObject('groupadmin_model', 'groupadmin');
         $this->objForum = $this->getObject('dbforum', 'forum');
+        $this->objForumSubscriptions = $this->getObject('dbforumsubscriptions','forum');
         $this->contextObject = & $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->contextObject->getContextCode();
         $this->objTopic = $this->getObject('dbtopic', 'forum');
@@ -141,6 +143,19 @@ class block_forumview extends object {
             $newTopicLink->link .= "<br/><label class='menu' >{$this->objLanguage->languageText('mod_forum_startnewtopic', 'forum')}";
             $tblTopic->addHeaderCell($newTopicLink->show(), NULL, NULL, 'center', NULL);
         }
+        $tblAdmin->endHeaderRow();
+        //subscribtions
+        $subscriptionLink = new link('javascript:void(0);');
+        $subscriptionLink->cssClass = 'sexybutton';
+        $subscriptionLink->cssId = 'forum-subscription-link';
+        if($this->objForumSubscriptions->isSubscribedToForum($this->forumDetails['id'], $this->objUser->userId())){
+                $this->objIcon->setIcon('alerts-on');
+                $subscriptionLink->link = $this->objIcon->show().'<br/>'.$this->objLanguage->languageText('phrase_unsubscribetoforum','system');
+        }  else {
+                $this->objIcon->setIcon('alerts');
+                $subscriptionLink->link = $this->objIcon->show().'<br/>'.$this->objLanguage->languageText('phrase_subscribetoforum','system');
+        }
+//        $tblTopic->addHeaderCell($subscriptionLink->show(), NULL, NULL, 'center', NULL);
         $tblTopic->endHeaderRow();
 //                $tblAdmin->endHeaderRow();
         $tblTopic->endRow();

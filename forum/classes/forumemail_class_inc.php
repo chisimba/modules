@@ -176,7 +176,11 @@ class forumemail extends object {
 
                 // Add the Email to the array
                 foreach ($forumSubscribers as $user) {
-                        array_push($this->emailList, $user['emailaddress']);
+                        if ($this->objUser->email() == $user['emailaddress']) {
+                                continue;
+                        } else {
+                                array_push($this->emailList, $user['emailaddress']);
+                        }
                 }
 
                 // Remove duplicate emails
