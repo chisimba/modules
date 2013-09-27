@@ -130,6 +130,7 @@ class cmslayouts extends object {
 
         //Supressing the menu if the "none" menu style was selected for frontpage items.
         if ($style == 'none_frontpage') {
+            
             $showMenu = TRUE;
             if ($contentId != '') {
                 $frontPage = $this->_objFrontPage->getFrontPage($contentId);
@@ -173,7 +174,7 @@ class cmslayouts extends object {
             $menuKey = $this->getParam('menustate', '');
             $menucontent = $objMenu->getMenuText($menuKey);
             if ($menucontent == '') {
-                $leftSide = '';
+                $leftSide .= '';
             }
         }
 
