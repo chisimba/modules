@@ -583,7 +583,7 @@ $this->_objJQuery->loadSimpleTreePlugin();
 
             case 'editmenu':
 
-                $submit = $this->getParam('save');
+                $submit = $this->getParam('save','');
                 if ($submit != '') {
                     $this->_objPageMenu->addMenu();
                 }
