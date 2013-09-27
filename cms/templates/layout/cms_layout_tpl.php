@@ -162,4 +162,3 @@ $cssLayout->setMiddleColumnContent($this->getBreadCrumbs() . $this->getContent()
 
 echo $cssLayout->show();
 
-$this->setVar('footerStr', $this->footerStr);
