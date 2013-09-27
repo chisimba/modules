@@ -296,15 +296,9 @@ class cms extends controller {
      */
     private function _getMenuChildNodes() {
         $this->setPageTemplate('');
-
-        //Retrieve the section id from the querystring
         $id = $this->getParam('id');
-        //var_dump($id);
         $content = $this->_objSimpleTree->getMenuChildNodes($id, TRUE);
-        //var_dump($content);
-
         $this->setVar('content', $content);
-
         return "menu_child_node_tpl.php";
     }
 
@@ -382,7 +376,7 @@ class cms extends controller {
                 $mcount++;
             }
             //thump together an email string (this must be html email as the post is html
-            $objMailer = $this->getObject('email', 'mail');
+            $objMailer = $this->getObject('mailer', 'mail');
             //munge together the bodyText...
             $bodyText = $this->objLanguage->languageText("mod_cms_yourfriend", "cms") . ", " . $sendername . ", " .
                     $this->objLanguage->languageText("mod_cms_interestedin", "cms") . ": <br /> " .
@@ -548,11 +542,8 @@ class cms extends controller {
     private function _serverpc() {
         // cannot require any login, as remote clients use this. Auth is done internally
         $this->requiresLogin();
-
         // start the server.
         $this->objRPC->serve();
-        // break to be pedantic, although not strictly needed.
-        // break;
     }
 
     /**
@@ -570,6 +561,9 @@ class cms extends controller {
         }
     }
 
+    
+    
+    
     //THE METHODS BELOW HERE SEEM TO SERVE NO PURPOSE.-------------------------
 
     /**

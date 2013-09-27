@@ -64,6 +64,53 @@ class cmslayouts extends object {
             exit();
         }
     }
+    
+    /**
+     *
+     * Get an author fullname with small user image (avatar)
+     * 
+     * @param string $userId The user Id to render
+     * @return string Formatted HTML result
+     * @access private
+     * 
+     */
+    private function getAuthorDisplay($userId, $lbWritten)
+    {
+        $fullName = $this->objUser->fullName($userId);
+        $userImg =  $this->objUser->getSmallUserImage($userId);
+        return "<div class='cms_author'>" . $userImg . $lbWritten . " " 
+          . $fullName . "</div>";
+    }
+    
+    /**
+     *
+     * Get formatted date
+     * 
+     * @param string $authDate The date to render
+     * @param string $dispType The type of rendering, default or human
+     * @return string Formatted HTML result
+     * @access private
+     * 
+     */
+    private function getDateDisplay($authDate, $dispType='human')
+    {
+        switch ($dispType) {
+            case 'default':
+            case NULL:
+                $authDate = $this->objDate->formatDate($authDate);
+                break;
+            case 'human':
+                $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+                $fixedTime = strtotime($authDate);
+                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                $authDate = $objHumanizeDate->getDifference($fixedTime);
+                break;
+            default:
+                $authDate = $this->objDate->formatDate($authDate);
+                break;
+        }
+        return "<div class='cms_date'>$authDate</div>";
+    }
 
     /**
      * Method to get the left side menu
@@ -530,6 +577,7 @@ duration: 0.25
      * @access public
      */
     public function getFrontPageContent($displayId = NULL) {
+        // Set up language items
         $lbRead = $this->objLanguage->languageText('phrase_readmore');
         $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
         $arrFrontPages = $this->_objFrontPage->getFrontPages(TRUE);
@@ -567,9 +615,7 @@ duration: 0.25
             }
 
             // Adding Author
-            $showAuthorText = '<p><span class="date">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span>';
-            $showAuthorText .= '</p>';
-
+            $showAuthorText = $this->getAuthorDisplay($page['created_by'], $lbWritten);
             if (isset($page['show_author'])) {
                 if ($page['show_author'] == 'g') {
                     //Checking the global sys config
@@ -587,7 +633,7 @@ duration: 0.25
 
 
             // Adding Date
-            $showDateText = '<em><span class="date">' . $this->objDate->formatDate($page['created']) . '</span></em><br />';
+            $showDateText = $this->getDateDisplay($page['created']);
 
             if (isset($page['show_date'])) {
                 if ($page['show_date'] == 'g') {
@@ -605,15 +651,15 @@ duration: 0.25
             $pageStr .= $showDateText;
 
             if (trim($page['introtext']) != '') {
-                $pageStr .= stripslashes($page['introtext']);
-                $pageStr .= '<br />';
+                $pageStr .= '<div class="cmssummary">' 
+                  . stripslashes($page['introtext']) . '</div>';
             }
 
             $pageStr .= $page['body'];
             
             $objLayer = new layer();
             $objLayer->str = "<div class='CMS-frontpage-item'>" 
-              . $pageStr . "<div>";
+              . $pageStr . "</div>";
             $objLayer->id = 'cmscontent';
             
             return $objLayer->show();
@@ -656,13 +702,13 @@ duration: 0.25
                     if ($show_content) {
                         // Adding Written By
                         if (isset($page['show_author']) && $page['show_author'] != 1) {
-                            $pageStr .= '<p><span class="user">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span></p>';
+                            $pageStr .= $this->getAuthorDisplay($page['created_by'], $lbWritten);
                         }
 
                         // Adding Date
                         if (isset($page['show_date']) && $page['show_date'] != 1) {
                             if (isset($page['created']) && !empty($page['created'])) {
-                                $pageStr .= '<span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
+                                $pageStr .= $this->getDateDisplay($page['created']);
                             }
                         }
 
@@ -686,13 +732,13 @@ duration: 0.25
                         // Display the page title and introduction
                         // Adding Written By
                         if (isset($page['show_author']) && $page['show_author'] != 1) {
-                            $pageStr .= '<p><span class="user">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span></p>';
+                            $pageStr .= $this->getAuthorDisplay($page['created_by'], $lbWritten);
                         }
 
                         // Adding Date
                         if (isset($page['show_date']) && $page['show_date'] != 1) {
                             if (isset($page['created']) && !empty($page['created'])) {
-                                $pageStr .= '<span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
+                                $pageStr .= $this->getDateDisplay($page['created']);
                             }
                         }
 
@@ -921,7 +967,7 @@ duration: 0.25
                     // Adding Written By
                     if (isset($page['show_author']) && $page['show_author'] != 1) {
                         if (isset($page['created_by'])) {
-                            $pageStr .= '<span class="minute">' . $lbWritten . '&nbsp;' . $this->objUser->fullname($page['created_by']) . '</span>';
+                            $pageStr .= $this->getAuthorDisplay($page['created_by'], $lbWritten);
                         }
                     }
 
@@ -1441,21 +1487,20 @@ duration: 0.25
                     if ($globalShowAuthor == 'n') {
                         $tblShowAuthor = false;
                     } else {
-                        $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
+                        $strBody = $this->getAuthorDisplay($page['created_by'], $lbWritten);
                     }
                     break;
 
                 default:
-                    $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
+                    $strBody = $this->getAuthorDisplay($page['created_by'], $lbWritten);
                     break;
             }
         } else {
-            $strBody = "<p><span class='date'>$lbWritten " . $this->objUser->fullname($page['created_by']) . '</span></p>';
+            $strBody = $this->getAuthorDisplay($page['created_by'], $lbWritten);
         }
 
         // Adding Date
-        $showDateText = '<em><span class="date">' . $this->objDate->formatDate($page['created']) . '</span>';
-        $showDateText .= '<br /></em>';
+        $showDateText = $this->getDateDisplay($page['created']);
 
         if (isset($page['show_date'])) {
             if ($page['show_date'] == 'g') {
