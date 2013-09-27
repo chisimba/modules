@@ -180,6 +180,7 @@ class cmslayouts extends object {
 
 
         // Additional items for the left side menu
+        // @FIX BROKEN RSS FEED
         //$leftSide .= $this->additionalMenuItems($rss);
 
         return $leftSide;
@@ -1020,10 +1021,20 @@ duration: 0.25
             $intId = Null;
             $intTitle = Null;
         } else {
-            $showIntro = $arrSection['showintroduction'];
+            // Just to prevent warnings if the section has no pages
+            if (array_key_exists ('showintroduction', $arrSection)) {
+                $showIntro = $arrSection['showintroduction'];
+            } else {
+                $showIntro = FALSE;
+            }
             $description = $arrSection['description'];
             $orderType = $arrSection['ordertype'];
-            $showDate = $arrSection['showdate'];
+            // Just to prevent warnings if the section has no pages
+            if (array_key_exists ('showdate', $arrSection)) {
+                $showDate = $arrSection['showdate'];
+            } else {
+                $showDate = FALSE;
+            }
             $imagesrc = $arrSection['link'];
             $intId = $arrSection['id'];
             $intTitle = $arrSection['title'];
