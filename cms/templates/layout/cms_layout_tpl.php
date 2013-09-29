@@ -29,7 +29,9 @@ if (!isset($rss)) {
 //Content ID if any
 $contentId = $this->getParam('id', '');
 
+// This is where the menu gets inserted. 
 $leftSide = $this->objLayout->getLeftMenu($currentNode, $rss, $contentId);
+
 $leftSide .= '<div id="cmsleftblockscontainer">';
 
 // Add blocks
@@ -142,7 +144,9 @@ if (!empty($pageBlocks)) {
 
         //TODO: Add support for hiding fields to core block module
 
-        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 'default', $showTitle, $cssClass, $cssId);
+        $rightSide .= $objBlocks->showBlock($blockToShow['blockname'], 
+          $blockToShow['moduleid'], NULL, 20, TRUE, $showToggle, 
+          'default', $showTitle, $cssClass, $cssId);
     }
 }
 if ($objModule) {
@@ -156,9 +160,10 @@ if ($hasBlocks) {
 } else {
     $cssLayout->setNumColumns(2);
 }
+
 $cssLayout->setLeftColumnContent($leftSide . '<br />');
 
-$cssLayout->setMiddleColumnContent($this->getBreadCrumbs() . $this->getContent() . '<br />' . $searchResults);
+$cssLayout->setMiddleColumnContent($this->getBreadCrumbs() 
+  . $this->getContent() . '<br />' . $searchResults);
 
 echo $cssLayout->show();
-

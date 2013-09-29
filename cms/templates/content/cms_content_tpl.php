@@ -1,5 +1,4 @@
 <?php
-
 echo "<div class='CMS-frontpage-item'>" . $content . "</div>";
 if($fromadmin)
 {

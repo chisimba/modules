@@ -335,7 +335,9 @@ class cms extends controller {
             $content = $this->bbcode->parseText($content);
             $this->setVar('content', $content);
         } else {
-            $this->setVar('content', '<div class="noRecordsMessage">' . $this->objLanguage->languageText('mod_cms_novisiblesections', 'cms') . '</div>');
+            $this->setVar('content', '<div class="noRecordsMessage">' 
+              . $this->objLanguage->languageText('mod_cms_novisiblesections', 'cms') 
+              . '</div>');
         }
         //Return the populated section template
         return 'cms_section_tpl.php';

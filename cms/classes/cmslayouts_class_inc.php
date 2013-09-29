@@ -64,7 +64,7 @@ class cmslayouts extends object {
             exit();
         }
     }
-    
+
     /**
      *
      * Get an author fullname with small user image (avatar)
@@ -74,14 +74,13 @@ class cmslayouts extends object {
      * @access private
      * 
      */
-    private function getAuthorDisplay($userId, $lbWritten)
-    {
+    private function getAuthorDisplay($userId, $lbWritten) {
         $fullName = $this->objUser->fullName($userId);
-        $userImg =  $this->objUser->getSmallUserImage($userId);
-        return "<div class='cms_author'>" . $userImg . $lbWritten . " " 
-          . $fullName . "</div>";
+        $userImg = $this->objUser->getSmallUserImage($userId);
+        return "<div class='cms_author'>" . $userImg . $lbWritten . " "
+                . $fullName . "</div>";
     }
-    
+
     /**
      *
      * Get formatted date
@@ -92,8 +91,7 @@ class cmslayouts extends object {
      * @access private
      * 
      */
-    private function getDateDisplay($authDate, $dispType='human')
-    {
+    private function getDateDisplay($authDate, $dispType = 'human') {
         switch ($dispType) {
             case 'default':
             case NULL:
@@ -130,7 +128,7 @@ class cmslayouts extends object {
 
         //Supressing the menu if the "none" menu style was selected for frontpage items.
         if ($style == 'none_frontpage') {
-            
+
             $showMenu = TRUE;
             if ($contentId != '') {
                 $frontPage = $this->_objFrontPage->getFrontPage($contentId);
@@ -252,20 +250,20 @@ class cmslayouts extends object {
         $jQuery = $this->newObject('jquery', 'jquery');
 
         //Testing jQuery 1.2.6 SuperFish Menu
-        $jQuery->loadSuperFishMenuPlugin();
+        $jQuery->loadSuperFishMenuPlugin('1.7.4');
 
         ob_start();
         ?>
 
-        <script type="text/javascript"> 
+        <script type="text/javascript">
             // initialise Superfish
-            jQuery(document).ready(function(){
+            jQuery(document).ready(function() {
                 jQuery("ul.sf-menu").superfish({
-                    animation: {opacity:'show'},   // slide-down effect without fade-in
-                    width: 300,
-                    delay:     0,               // 1.2 second delay on mouseout
+                    animation: {opacity: 'show'},
+                    animationOut:  {opacity:'hide'},
+                    delay: 0, // 1.2 second delay on mouseout
                     speed: 'fast',
-                    dropShadows: false
+                    cssArrows: true
                 });
             });
 
@@ -290,10 +288,7 @@ class cmslayouts extends object {
         $table->startRow();
         $table->addCell($objLayer->show());
         $table->endRow();
-
         return $table->show();
-//$display = $objTreeMenu->getSimpleCMSTree($currentNode);
-//return $display;
     }
 
     /**
@@ -653,17 +648,17 @@ duration: 0.25
             $pageStr .= $showDateText;
 
             if (trim($page['introtext']) != '') {
-                $pageStr .= '<div class="cmssummary">' 
-                  . stripslashes($page['introtext']) . '</div>';
+                $pageStr .= '<div class="cmssummary">'
+                        . stripslashes($page['introtext']) . '</div>';
             }
 
             $pageStr .= $page['body'];
-            
+
             $objLayer = new layer();
-            $objLayer->str = "<div class='CMS-frontpage-item'>" 
-              . $pageStr . "</div>";
+            $objLayer->str = "<div class='CMS-frontpage-item'>"
+                    . $pageStr . "</div>";
             $objLayer->id = 'cmscontent';
-            
+
             return $objLayer->show();
         }
 
@@ -1022,7 +1017,7 @@ duration: 0.25
             $intTitle = Null;
         } else {
             // Just to prevent warnings if the section has no pages
-            if (array_key_exists ('showintroduction', $arrSection)) {
+            if (array_key_exists('showintroduction', $arrSection)) {
                 $showIntro = $arrSection['showintroduction'];
             } else {
                 $showIntro = FALSE;
@@ -1030,7 +1025,7 @@ duration: 0.25
             $description = $arrSection['description'];
             $orderType = $arrSection['ordertype'];
             // Just to prevent warnings if the section has no pages
-            if (array_key_exists ('showdate', $arrSection)) {
+            if (array_key_exists('showdate', $arrSection)) {
                 $showDate = $arrSection['showdate'];
             } else {
                 $showDate = FALSE;
@@ -1284,7 +1279,7 @@ duration: 0.25
                 'action' => 'showsection',
                 'module' => 'cms',
                 'sectionid' => $page['sectionid']
-                    ));
+            ));
             $bmurl = urlencode($bmurl);
             $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=" . $bmurl . "&amp;title=" . urlencode(addslashes($page['title']));
             $bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="' . $this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms") . '"/>';
@@ -1371,7 +1366,7 @@ duration: 0.25
             'sectionid' => $page['sectionid'],
             'module' => 'cms',
             'id' => $page['id']
-                ));
+        ));
         //PDF Icon
         $pdficon = $this->newObject('geticon', 'htmlelements');
         $pdficon->setIcon('filetypes/pdf');
@@ -1572,8 +1567,8 @@ duration: 0.25
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
         $mform = new form('mail2friend', $this->uri(array(
-                            'action' => 'mail2friend', 'id' => $m2fdata['id']
-                        )));
+                    'action' => 'mail2friend', 'id' => $m2fdata['id']
+        )));
         $mfieldset = $this->newObject('fieldset', 'htmlelements');
         //$mfieldset->setLegend($this->objLanguage->languageText('mod_blog_sendmail2friend', 'blog'));
         $mtable = $this->newObject('htmltable', 'htmlelements');
@@ -1812,13 +1807,13 @@ duration: 0.25
         $this->objUser = $this->getObject('user', 'security');
         if ($rdata == NULL) {
             $rssform = new form('addrss', $this->uri(array(
-                                'action' => 'addrss'
-                            )));
+                        'action' => 'addrss'
+            )));
         } else {
             $rdata = $rdata[0];
             $rssform = new form('addrss', $this->uri(array(
-                                'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
-                            )));
+                        'action' => 'rssedit', 'mode' => 'edit', 'id' => $rdata['id']
+            )));
         }
         //add rules
         $rssform->addRule('rssurl', $this->objLanguage->languageText("mod_cms_phrase_rssurlreq", "cmsadmin"), 'required');
@@ -1900,7 +1895,7 @@ duration: 0.25
                             //'url' => $rows['url'],
                             //'description' => $rows['description'],
                             'module' => 'cmsadmin'
-                        )));
+                )));
                 $delIcon = $this->objIcon->getDeleteIconWithConfirm($rows['id'], array(
                     'module' => 'cmsadmin',
                     'action' => 'deleterss',
@@ -1931,10 +1926,10 @@ duration: 0.25
         //COMMENTS
         if ($icon == TRUE) {
             $objLink = new link($this->uri(array(
-                                'action' => 'viewsingle',
-                                'postid' => $post['id'],
-                                'userid' => $post['userid']
-                                    ), 'blog'));
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
+                            ), 'blog'));
             $comment_icon = $this->newObject('geticon', 'htmlelements');
             $comment_icon->setIcon('comment');
             $lblView = $this->objLanguage->languageText("mod_blog_addcomment", "blog");
@@ -1944,10 +1939,10 @@ duration: 0.25
             return $objLink->show();
         } else {
             $objLink = new href($this->uri(array(
-                                'action' => 'viewsingle',
-                                'postid' => $post['id'],
-                                'userid' => $post['userid']
-                            )), $this->objLanguage->languageText("mod_blog_comments", "blog"), NULL);
+                        'action' => 'viewsingle',
+                        'postid' => $post['id'],
+                        'userid' => $post['userid']
+                    )), $this->objLanguage->languageText("mod_blog_comments", "blog"), NULL);
             return $objLink->show();
         }
     }

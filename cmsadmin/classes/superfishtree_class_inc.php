@@ -68,8 +68,6 @@ class superfishtree extends object {
 
         $menu_html = '<div id="superfishadminmenu">' . $this->show($current, TRUE, 'cmsadmin', 'addsection', 'addcontent') . '</div>';
 
-        //echo $menu_html; exit;
-
         return $menu_html;
     }
 
@@ -78,20 +76,9 @@ class superfishtree extends object {
      * @return string
      */
     public function getCMSTree($current) {
-        /*
-          $script = "<script type='text/javascript'>
-          jQuery(document).ready(function(){
-          jQuery('#cmsleftblockscontainer').css('padding', '10px');
-          var height = jQuery('#chis_sf_menu').height();
-          window.console.log('height : ' + height);
-          jQuery('#cmsleftblockscontainer').insertAfter('#chis_sf_menu');
-          });
-
-          </script>";
-          //$this->appendArrayVar('headerParams', $script);
-         */
-        $menu_html = '<div id="superfishmenu">' . $this->show($current, TRUE, 'cms', 'showfulltext', 'showfulltext') . '</div>';
-
+        $menu_html = '<div id="superfishmenu">' 
+          . $this->show($current, TRUE, 'cms', 'showfulltext', 'showfulltext') 
+          . '</div>';
         return $menu_html;
     }
 
@@ -102,7 +89,8 @@ class superfishtree extends object {
      * @return string
      * @access public
      */
-    public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent') {
+    public function show($currentNode, $admin, $module = 'cms', 
+      $sectionAction = 'showsection', $contentAction = 'showcontent') {
         $html = $this->showTree($currentNode, $admin, $module, $sectionAction, $contentAction);
         return $html;
     }
@@ -115,22 +103,20 @@ class superfishtree extends object {
      * @author Charl Mert
      * @access public
      */
-    public function showTree($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent') {
+    public function showTree($currentNode, $admin, $module = 'cms', 
+      $sectionAction = 'showsection', $contentAction = 'showcontent') {
+        
         //check if there are any root nodes
-
         if ($this->getChildNodeCount(0) > 0) {
             $html = "<div id=\"chis_sf_menu\" class=\"chis_sf_menu\">\n
                          <ul class=\"sf-menu sf-vertical\">\n";
-            //$html .= $this->buildLevel(0, $currentNode, $admin, $module, $sectionAction, $contentAction);
-
             $html .= $this->buildTree(0, $admin, $module, $sectionAction, $contentAction);
-
             $html .= '</ul></div><!-- end: superfish tree div -->';
         } else {
             $html = '';
         }
-
         return $html;
+        
     }
 
     /**
@@ -140,10 +126,11 @@ class superfishtree extends object {
      * @return string
      * @access public
      */
-    public function buildTree($currentNodeId, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent', $isChild = false) {
+    public function buildTree($currentNodeId, $admin, $module = 'cms', 
+      $sectionAction = 'showsection', $contentAction = 'showcontent', 
+      $isChild = false) {
         //gets all the child nodes of id
         $nodes = $this->getChildNodes($currentNodeId, $admin);
-
         $html = '';
         if (!empty($nodes)) {
             foreach ($nodes as $node) {
@@ -169,9 +156,6 @@ class superfishtree extends object {
 
                 //var_dump($currentNodeId);
                 $sec = $this->_objSec->getSection($currentNodeId);
-                //var_dump('CURR : '.$sec['title']);
-                //var_dump('NODE : '.$node['title']);
-
                 $html .= '<li>' . $link . "\n";
                 //If the Section has child sections recurse
 
@@ -195,16 +179,7 @@ class superfishtree extends object {
                             } else {
                                 $link = $cNode['title'];
                             }
-
-                            // small fix here for problem with wraparounds
-                            if (strlen($cNode['title']) > 24) {
-                                $link.="<br />\n";
-                            }
-
                             $contentItem .= '<li>' . $link . '</li>' . "\n";
-
-                            //echo "CONTENT NODE HERE : "; 
-                            //var_dump($cNode); 
                         }
                     }
                 }
@@ -240,13 +215,7 @@ class superfishtree extends object {
             $html = "<div id=\"chis_sf_menu\" class=\"chis_sf_menu\">\n
                          <ul class=\"sf-menu sf-vertical\">\n";
             // build the home link
-            //$nodeUri = $this->uri(array(),'cms');
-            //$text = $this->objLanguage->languageText('word_home');
-            //$link = '<a href="'.$nodeUri.'">'.$text.'</a>'."\n";
-            //start the tree building
-            //$html .= "<li class='root'>$link <ul>\n";
             $html .= $this->buildLevel(0, $currentNode, $admin, $module, $sectionAction, $contentAction);
-            //$html .= '</ul> </li>'."\n";
             $html .= '</ul></div><!-- end: superfish tree div -->';
         } else {
             $html = '';
@@ -267,17 +236,6 @@ class superfishtree extends object {
         $nodes = $this->getChildNodes($parentId, $admin);
 
         //get the list of nodes that need to stay open for the currently selected node
-
-        /*
-          echo "PARENT IDs : [".$parentId."]<br/>";
-          if ($parentId == 'gen9Srv16Nme30_2000_1207657570' && $parentId != 0){
-          echo "PARENT ID : ".$parentId.'<br/>';
-          //var_dump($nodes);
-          echo "Node Title : ". $nodes['title'];
-          }
-         */
-
-        //var_dump($nodes);
         if (!empty($nodes)) {
 
 
