@@ -978,10 +978,12 @@ class wicid extends controller {
 
         $documents = $this->documents->getdocuments($this->mode, $rejected, $active);
         $toapprove = "approve selected";
+        $tounapprove = "unapprove selected";
         $todelete = "delete selected";
         $submitval = strip_tags($submitval);
         //Returns zero if strings match
         $doapprove = strcmp($submitval, $toapprove);
+        $dounapprove = strcmp($submitval, $tounapprove);
         $dodelete = strcmp($submitval, $todelete);
         //Check and execute action
         if ($doapprove == 0) {
@@ -1014,7 +1016,37 @@ class wicid extends controller {
                     return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were approved. Note: Only records with attachments can be approved.'));
                 }
             }
-        } elseif ($todelete == 0) {
+        } elseif($dounapprove == 0){
+            $countunapproved = 0;
+            $countnotunapproved = 0;
+            //Step through the documents and approve those selected
+            if (isset($documents)) {
+                foreach ($documents as $document) {
+                    //if ($document['attachmentstatus'] != "No")
+                    if ($this->getParam($document['id'] . '_app') == 'execute') {
+                        $check = $this->documents->unApproveDocs($document['id']);
+                        if ($check > 0) {
+                            $countunapproved++;
+                        } else {
+                            $countnotunapproved++;
+                        }
+                    }
+                }
+            }
+            if ($countunapproved > 0) {
+                if ($countnotunapproved > 0) {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countunapproved . ' record(s) reset to unapproved successfully. ' . $countnotunapproved . ' record(s) were NOT reset to unappproved.'));
+                } else {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countunapproved . ' record(s) set to unapproved successfully.'));
+                }
+            } else {
+                if ($countunapproved > 0) {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => $countunapproved . ' record(s) were NOT set to unapproved.'));
+                } else {
+                    return $this->nextAction($sourceaction, array('active' => 'Y', 'start' => $start, 'folder' => $folder, 'rcount' => $rcount, 'rowcount' => $rowcount, 'message' => 'No records were set to unapproved.'));
+                }
+            }
+    } elseif ($todelete == 0) {
             $countdeleted = 0;
             //Step through the documents and approve those selected
             if (isset($documents)) {

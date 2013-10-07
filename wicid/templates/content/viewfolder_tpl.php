@@ -142,6 +142,11 @@ if ($filecount > 0) {
     $button->setToSubmit();
 
     $form->addToForm(" </br> " . $button->show());
+    
+    $unapprovebutton = new button('submit', $this->objLanguage->languageText('mod_wicid_unapproveselected', 'wicid', 'Unapprove Selected'));
+    $unapprovebutton->setToSubmit();
+
+    $form->addToForm(" </br> " . $unapprovebutton->show());
 }
 
 //Add Navigations

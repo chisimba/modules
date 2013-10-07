@@ -482,6 +482,28 @@ class dbdocuments extends dbtable {
         }
         return $countapproved;
     }
+    
+    /**
+     * sets active to N and deleteDoc to N for the submitted docs
+     * @param <type> $docids
+     */
+    function unApproveDocs($docids) {
+        $data = array('active' => 'N', 'deleteDoc' => 'N');
+        $ids = explode(",", $docids);
+        $userid = $this->userutils->getUserId();
+        $ext = '.na';
+        $dir = $this->objSysConfig->getValue('FILES_DIR', 'wicid');
+        $countapproved = 0;
+        foreach ($ids as $id) {
+            //Check if record has an attachment
+            $checkupload = $this->getAll("where id='" . $id . "' and upload='Y'");
+            if (!empty($checkupload)) {
+                $countapproved++;
+                $this->update('id', $id, $data);                
+            }
+        }
+        return $countapproved;
+    }
 
     /**
      * sets delete to by setting deleteDoc value to Y to docs with supplied id
