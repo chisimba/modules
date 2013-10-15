@@ -1715,6 +1715,9 @@ class eportfolio extends controller {
                 //		exit;
                 return $this->removeUserFromGroup($this->getParam('userid'), $this->getParam('group'));
                 break;
+            case 'removeallusers':
+                return $this->removeAllUsersFromGroup($this->getParam('userId'), $this->getParam('group'));
+                break;
 
             case "viewothersportfolio":
                 $this->setLayoutTemplate('eportfolio_layout_tpl.php');
@@ -1760,6 +1763,31 @@ class eportfolio extends controller {
         $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
         return $this->nextAction('viewgroups', array(
             'message' => 'userdeletedfromgroup'
+        ));
+    }
+
+    /**
+     * Method to remove a user from a group
+     * @param string $userId User Id of the User
+     * @param string $group Group to be deleted from - either lecturers, students or guest
+     */
+    private function removeAllUsersFromGroup($arrUserId = NULL, $groupId = NULL) {
+        if (is_null($arrUserId) || empty($arrUserId)) {
+            return $this->nextAction(NULL, array(
+                'message' => 'nouseridprovidedfordelete'
+            ));
+        }
+        foreach ($arrUserId as $userId) {
+            //$pkId = $this->objUser->PKId($userId);
+            //Check if class groupops exists
+            if (class_exists('groupops', false)) {
+                $permid = $this->objGroupsOps->getUserByUserId($userId);
+            }
+            $pkId = $permid['perm_user_id'];
+            $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
+        }
+        return $this->nextAction('viewgroups', array(
+            'message' => 'usersdeletedfromgroup'
         ));
     }
 
@@ -2082,7 +2110,7 @@ class eportfolio extends controller {
             }
         }
         if ($this->getParam('button') == 'cancel' && $groupId <> '') {
-            
+
         }
         // After processing return to main
         return $this->nextAction('view_assertion', array());
@@ -2129,7 +2157,7 @@ class eportfolio extends controller {
             }
         }
         if ($this->getParam('button') == 'cancel' && $groupId <> '') {
-            
+
         }
         // After processing return to main
         return $this->nextAction('view_assertion', array());
