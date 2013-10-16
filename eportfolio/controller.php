@@ -1749,8 +1749,14 @@ class eportfolio extends controller {
      * @param string $group Group to be deleted from - either lecturers, students or guest
      */
     private function removeUserFromGroup($userId = NULL, $groupId = NULL) {
-        if ($userId == '') {
+        if (is_null($userId)) {
+/*
             return $this->nextAction(NULL, array(
+                'message' => 'nouseridprovidedfordelete'
+            ));
+*/
+            return $this->nextAction('viewgroups', array(
+                'id' => $groupId,
                 'message' => 'nouseridprovidedfordelete'
             ));
         }
@@ -1759,9 +1765,13 @@ class eportfolio extends controller {
         if (class_exists('groupops', false)) {
             $permid = $this->objGroupsOps->getUserByUserId($userId);
         }
+        //log_debug('#!$1:'.var_export($permid, TRUE));
         $pkId = $permid['perm_user_id'];
+        //log_debug('#!$2:'.var_export($pkId, TRUE));
         $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
+        //log_debug('#!$3:'.var_export($deleteMember, TRUE));
         return $this->nextAction('viewgroups', array(
+            'id' => $groupId,
             'message' => 'userdeletedfromgroup'
         ));
     }
@@ -1772,9 +1782,16 @@ class eportfolio extends controller {
      * @param string $group Group to be deleted from - either lecturers, students or guest
      */
     private function removeAllUsersFromGroup($arrUserId = NULL, $groupId = NULL) {
-        if (is_null($arrUserId) || empty($arrUserId)) {
+        //log_debug('#!'.var_export($arrUserId, TRUE));
+        if (is_null($arrUserId)) {
+/*
             return $this->nextAction(NULL, array(
                 'message' => 'nouseridprovidedfordelete'
+            ));
+*/
+            return $this->nextAction('viewgroups', array(
+                'id' => $groupId,
+                'message' => 'nouseridsprovidedfordelete'
             ));
         }
         foreach ($arrUserId as $userId) {
@@ -1787,6 +1804,7 @@ class eportfolio extends controller {
             $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
         }
         return $this->nextAction('viewgroups', array(
+            'id' => $groupId,
             'message' => 'usersdeletedfromgroup'
         ));
     }

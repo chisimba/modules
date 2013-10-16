@@ -27,6 +27,10 @@ if (isset($showconfirmation) && $showconfirmation) {
         echo '<ul><li><span class="confirm">' . $this->objLanguage->languageText('phrase_eportfolio_nouseridprovidedfordelete', 'eportfolio') . '</span></li>';
         echo '</ul>';
     }
+    if ($this->getParam('message') == 'nouseridsprovidedfordelete') {
+        echo '<ul><li><span class="confirm">' . $this->objLanguage->languageText('phrase_eportfolio_nouseridsprovidedfordelete', 'eportfolio') . '</span></li>';
+        echo '</ul>';
+    }
     if ($this->getParam('message') == 'usersupdated') {
         echo '<ul><li><span class="confirm">' . $this->objLanguage->languageText('phrase_eportfolio_usersupdated', 'eportfolio') . '</span></li>';
         echo '</ul>';
