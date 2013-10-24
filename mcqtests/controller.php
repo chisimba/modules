@@ -100,6 +100,7 @@ class mcqtests extends controller {
      * @return
      */
     public function init() {
+        $this->objSysConfig = $this->newObject ('dbsysconfig','sysconfig');
         // Check if the assignment module is registered and can be linked to.
         $this->objModules = $this->newObject('modules', 'modulecatalogue');
         $this->assignment = FALSE;
@@ -188,6 +189,9 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
+            case '_':
+                $this->unsetSession('qData');
+                return $this->nextAction(NULL, array());
             case 'newhome':
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
@@ -2626,8 +2630,15 @@ class mcqtests extends controller {
         $fieldlist = 'id,name,totalmark,timed,duration,description,testtype,qsequence,asequence';
         $test = $this->dbTestadmin->getTests('', $fieldlist, $this->getParam('id'));
         $results = $this->dbMarked->getSelectedAnswers($this->userId, $testId);
+        //
+        $allowScrambledQuestions = strtoupper($this->objSysConfig->getValue('PREVIEW_SCRAMBLED_QUESTIONS', 'mcqtests', 'TRUE'))==='TRUE';
+        $allowScrambledAnswers = strtoupper($this->objSysConfig->getValue('PREVIEW_SCRAMBLED_ANSWERS', 'mcqtests', 'TRUE'))==='TRUE';
+        //
         // new code for scrambling tests
-        if ($test[0]['qsequence'] == 'Scrambled' || $test[0]['asequence'] == 'Scrambled') {
+        if (
+            $test[0]['qsequence'] == 'Scrambled' && $allowScrambledQuestions
+            || $test[0]['asequence'] == 'Scrambled' && $allowScrambledAnswers
+        ) {
             $qData = $this->getSession('qData');
             if (isset($qData) && !empty($qData)) {
                 $data = array_slice($qData, $num, 10);
@@ -2647,7 +2658,7 @@ class mcqtests extends controller {
             } else {
                 $qData = $this->dbQuestions->getQuestions($test[0]['id']);
                 if (!empty($qData)) {
-                    if ($test[0]['qsequence'] == 'Scrambled') {
+                    if ($test[0]['qsequence'] == 'Scrambled' && $allowScrambledQuestions) {
                         shuffle($qData);
                     }
                     foreach ($qData as $key => $line) {
@@ -2656,7 +2667,7 @@ class mcqtests extends controller {
                     $qData[0]['count'] = count($qData);
                     foreach ($qData as $key => $line) {
                         $answers = $this->dbAnswers->getAnswers($line['id']);
-                        if ($test[0]['asequence'] == 'Scrambled') {
+                        if ($test[0]['asequence'] == 'Scrambled' && $allowScrambledAnswers) {
                             shuffle($answers);
                         }
                         $qData[$key]['answers'] = $answers;
