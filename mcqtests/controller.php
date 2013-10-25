@@ -189,9 +189,9 @@ class mcqtests extends controller {
         }
         // Now the main switch for $action
         switch ($action) {
-            case '_':
-                $this->unsetSession('qData');
-                return $this->nextAction(NULL, array());
+            //case '_':
+            //    $this->unsetSession('qData');
+            //    return $this->nextAction(NULL, array());
             case 'newhome':
                 if ($this->objCond->isContextMember('Students')) {
                     $this->unsetSession('taketest');
