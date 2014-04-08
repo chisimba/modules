@@ -92,7 +92,11 @@ class mcqtests extends controller {
      * @var object to hold formmanager class
      */
     public $formManager;
-
+    /**
+     *
+     * @var integer questions per page in action==answertest
+     */
+    protected $questionsPerPage = 1;
     /**
      * Method to construct the class.
      *
@@ -2463,7 +2467,7 @@ class mcqtests extends controller {
         if ($test[0]['qsequence'] == 'Scrambled' || $test[0]['asequence'] == 'Scrambled') {
             $qData = $this->getSession('qData');
             if (isset($qData) && !empty($qData)) {
-                $data = array_slice($qData, $num, 10);
+                $data = array_slice($qData, $num, $this->questionsPerPage); //=10
                 $data[0]['count'] = count($qData);
                 $data[0]['qnum'] = $num;
                 foreach ($data as $key => $line) {
@@ -2495,14 +2499,14 @@ class mcqtests extends controller {
                         $qData[$key]['answers'] = $answers;
                     }
                     $this->setSession('qData', $qData);
-                    $data = array_slice($qData, $num, 10);
+                    $data = array_slice($qData, $num, $this->questionsPerPage); //=10
                     $data[0]['count'] = count($qData);
                     $data[0]['qnum'] = $num;
                 }
             }
         } else { // [[ JOC
             // original code
-            $data = $this->dbQuestions->getQuestions($test[0]['id'], 'questionorder > ' . $num . ' ORDER BY questionorder LIMIT 10'); //10
+            $data = $this->dbQuestions->getQuestions($test[0]['id'], "questionorder > {$num} ORDER BY questionorder LIMIT {$this->questionsPerPage}"); //=10
             if (!empty($data)) {
                 foreach ($data as $key => $line) {
                     $answers = $this->dbAnswers->getAnswers($line['id']);

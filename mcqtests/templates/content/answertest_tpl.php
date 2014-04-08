@@ -405,12 +405,11 @@ $javascript = "<script language=\"javascript\" type=\"text/javascript\">
     </script>";
 echo $javascript;
 $nav = '<p align="center"><b>'.$gotoLabel.'</b></p><p align="center">';
-$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], 10) .'</p>'; //10
+$nav.= $this->generateLinks($data[0]['questionorder'], $data[0]['count'], $this->questionsPerPage) .'</p>'; //=10
 $str.= $nav;
 $objLayer = new layer();
 $objLayer->padding = '10px';
 $objLayer->str = $str;
 $pageLayer = $objLayer->show();
 echo "<div class='mcq_main'>" . $ret . $pageLayer . "</div>";
-
 ?>
